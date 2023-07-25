@@ -1,0 +1,987 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class StructureType
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class StructureType
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Types_StructureType.md&amp;value=---%0Auid%3A%20L5Sharp.Types.StructureType%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Types.StructureType">
+
+
+
+  <h1 id="L5Sharp_Types_StructureType" data-uid="L5Sharp.Types.StructureType" class="text-break">
+    Class StructureType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Types.html">Types</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> that represents a structure containing members of different types.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class StructureType : LogixType, ILogixSerializable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="L5Sharp.LogixType.html">LogixType</a></div>
+      <div><span class="xref">StructureType</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a></div>
+      <div><a class="xref" href="L5Sharp.Types.ModuleDefined.CHANNEL_AI_I.html">CHANNEL_AI_I</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.ALARM.html">ALARM</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.ALARM_DIGITAL.html">ALARM_DIGITAL</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.CONTROL.html">CONTROL</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.COUNTER.html">COUNTER</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.MESSAGE.html">MESSAGE</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.PHASE.html">PHASE</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.PID.html">PID</a></div>
+      <div><a class="xref" href="L5Sharp.Types.Predefined.TIMER.html">TIMER</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_DataChanged">LogixType.DataChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_As__1">LogixType.As&lt;TLogixType&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Clone">LogixType.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Equals_System_Object_">LogixType.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_GetHashCode">LogixType.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Member_System_String_">LogixType.Member(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_RaiseDataChanged_System_Object_">LogixType.RaiseDataChanged(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_ToString">LogixType.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
+  </div>
+  </dd></dl>
+
+
+
+  <h2 id="L5Sharp_Types_StructureType_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+This type is a building block for all <code>Predefined</code> data types. Inherit from this class to create custom
+user defined data types that can be used to create in memory representation of the tags for those types.
+Inherit from <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a> if you want the ability to mutate the member structure after instantiation.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Types_StructureType__ctor_" data-uid="L5Sharp.Types.StructureType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType__ctor_System_String_" data-uid="L5Sharp.Types.StructureType.#ctor(System.String)">
+  StructureType(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected StructureType(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> is null or empty.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType__ctor_" data-uid="L5Sharp.Types.StructureType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType__ctor_System_String_System_Collections_Generic_IEnumerable_L5Sharp_LogixMember__" data-uid="L5Sharp.Types.StructureType.#ctor(System.String,System.Collections.Generic.IEnumerable{L5Sharp.LogixMember})">
+  StructureType(string, IEnumerable&lt;LogixMember&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> with the provided name and collection of <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> objects.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected StructureType(string name, IEnumerable&lt;LogixMember&gt; members)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the structure type.</p>
+</dd>
+    <dt><code>members</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>&gt;</dt>
+    <dd><p>The members of the structure type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> is null or empty.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>members</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType__ctor_" data-uid="L5Sharp.Types.StructureType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Types.StructureType.#ctor(System.Xml.Linq.XElement)">
+  StructureType(XElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected StructureType(XElement element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>The element to parse as the new member object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>element</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
+    <dd><p><code>element</code> does not have required attributes.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_Types_StructureType_Class_" data-uid="L5Sharp.Types.StructureType.Class*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_Class" data-uid="L5Sharp.Types.StructureType.Class">
+  Class
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The class (atomic, predefined, user-defined) that the type belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override DataTypeClass Class { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.DataTypeClass.html">DataTypeClass</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.DataTypeClass.html">DataTypeClass</a> option representing the class type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StructureType_Family_" data-uid="L5Sharp.Types.StructureType.Family*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_Family" data-uid="L5Sharp.Types.StructureType.Family">
+  Family
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The family (string or none) of the type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override DataTypeFamily Family { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.DataTypeFamily.html">DataTypeFamily</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.DataTypeFamily.html">DataTypeFamily</a> option representing the family value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StructureType_Members_" data-uid="L5Sharp.Types.StructureType.Members*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_Members" data-uid="L5Sharp.Types.StructureType.Members">
+  Members
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The collection of <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> objects that make up the structure of the type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override IEnumerable&lt;LogixMember&gt; Members { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> objects</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StructureType_Name_" data-uid="L5Sharp.Types.StructureType.Name*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_Name" data-uid="L5Sharp.Types.StructureType.Name">
+  Name
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The name of the logix type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string Name { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> name identifying the logix type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Types_StructureType_AddMember_" data-uid="L5Sharp.Types.StructureType.AddMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_AddMember_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.StructureType.AddMember(L5Sharp.LogixMember)">
+  AddMember(LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds the provided member to the structure type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void AddMember(LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The member to add.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType_AddMembers_" data-uid="L5Sharp.Types.StructureType.AddMembers*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_AddMembers_System_Collections_Generic_ICollection_L5Sharp_LogixMember__" data-uid="L5Sharp.Types.StructureType.AddMembers(System.Collections.Generic.ICollection{L5Sharp.LogixMember})">
+  AddMembers(ICollection&lt;LogixMember&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L170"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds the provided collection of members to the structure type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void AddMembers(ICollection&lt;LogixMember&gt; members)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>members</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>&gt;</dt>
+    <dd><p>The collection of members to add.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>members</code> is null or any member in <code>members</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType_ClearMembers_" data-uid="L5Sharp.Types.StructureType.ClearMembers*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_ClearMembers" data-uid="L5Sharp.Types.StructureType.ClearMembers">
+  ClearMembers()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L188"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Clears all members from the structure type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ClearMembers()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StructureType_GetMember_" data-uid="L5Sharp.Types.StructureType.GetMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_GetMember__1_System_String_" data-uid="L5Sharp.Types.StructureType.GetMember``1(System.String)">
+  GetMember&lt;TLogixType&gt;(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the logix type for the specified member.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected TLogixType GetMember&lt;TLogixType&gt;(string? name = null) where TLogixType : LogixType</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The member name to find.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TLogixType</span></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> representing the data of the specified member.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TLogixType</code></dt>
+    <dd><p>The logix type to return.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Types_StructureType_GetMember__1_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This method is for users implementing custom user defined or predefined types.
+Use this as the getter for all member's logix types.
+The user of CallerMemberName allows the member name to be omitted assuming it matches the name of the calling property.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>A member with the specified name was not found in the member collection.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType_InsertMember_" data-uid="L5Sharp.Types.StructureType.InsertMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_InsertMember_System_Int32_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.StructureType.InsertMember(System.Int32,L5Sharp.LogixMember)">
+  InsertMember(int, LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L203"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Inserts the provided member at the specified index of the structure type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void InsertMember(int index, LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero-based index at which item should be inserted.</p>
+</dd>
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The member to insert.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>index is less than 0. -or- index is greater than the length of
+the member collection.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType_RemoveMember_" data-uid="L5Sharp.Types.StructureType.RemoveMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_RemoveMember_System_Int32_" data-uid="L5Sharp.Types.StructureType.RemoveMember(System.Int32)">
+  RemoveMember(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L231"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes a member at the specified index from the structure type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RemoveMember(int index)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero-based index of the member to remove.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StructureType_RemoveMember_" data-uid="L5Sharp.Types.StructureType.RemoveMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_RemoveMember_System_String_" data-uid="L5Sharp.Types.StructureType.RemoveMember(System.String)">
+  RemoveMember(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L217"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes a member with the specified name from the structure type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RemoveMember(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the member to remove.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StructureType_ReplaceMember_" data-uid="L5Sharp.Types.StructureType.ReplaceMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_ReplaceMember_System_Int32_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.StructureType.ReplaceMember(System.Int32,L5Sharp.LogixMember)">
+  ReplaceMember(int, LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L290"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces a member at the specified index with the provided member instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ReplaceMember(int index, LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zer-based index at which to replace the member.</p>
+</dd>
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The member to replace the current member with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType_ReplaceMember_" data-uid="L5Sharp.Types.StructureType.ReplaceMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_ReplaceMember_System_String_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.StructureType.ReplaceMember(System.String,L5Sharp.LogixMember)">
+  ReplaceMember(string, LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L246"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces a member having the specified name with the provided member instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ReplaceMember(string name, LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the member to replace.</p>
+</dd>
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The member to replace the current member with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> does not exists in the structure type.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType_ReplaceMember_" data-uid="L5Sharp.Types.StructureType.ReplaceMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_ReplaceMember_System_String_L5Sharp_LogixType_" data-uid="L5Sharp.Types.StructureType.ReplaceMember(System.String,L5Sharp.LogixType)">
+  ReplaceMember(string, LogixType)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces a member having the specified name with a new member instance of the same name and provided <a class="xref" href="L5Sharp.LogixType.html">LogixType</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ReplaceMember(string name, LogixType type)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the member to replace.</p>
+</dd>
+    <dt><code>type</code> <a class="xref" href="L5Sharp.LogixType.html">LogixType</a></dt>
+    <dd><p>The <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> data to update the specified member with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>type</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> does not exists in the structure type.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StructureType_Serialize_" data-uid="L5Sharp.Types.StructureType.Serialize*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_Serialize" data-uid="L5Sharp.Types.StructureType.Serialize">
+  Serialize()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> representing the serialized L5X data for a given object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override XElement Serialize()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> containing the XML data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StructureType_SetMember_" data-uid="L5Sharp.Types.StructureType.SetMember*"></a>
+
+  <h3 id="L5Sharp_Types_StructureType_SetMember__1___0_System_String_" data-uid="L5Sharp.Types.StructureType.SetMember``1(``0,System.String)">
+  SetMember&lt;TLogixType&gt;(TLogixType, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L131"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds or updates the specified member's logix type with the provided value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void SetMember&lt;TLogixType&gt;(TLogixType value, string? name = null) where TLogixType : LogixType</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <span class="xref">TLogixType</span></dt>
+    <dd><p>The logix type value to set.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the member to set.</p>
+</dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TLogixType</code></dt>
+    <dd><p>The logix type parameter of the member.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Types_StructureType_SetMember__1___0_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+This method is for users implementing custom user defined or predefined types.
+Use this as the setter for all members of the type.
+</p>
+<p>
+Internally this will update the underlying member collection.
+If the member already exists, the data type value will be set to the provided value,
+otherwise a new member will be added at the end of the member collection.
+This allows the user to initialize member properties in a default constructor in the derived class.
+Note that the order in which members exist in the underlying collection matters when importing logix type tag data.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>name</code> or <code>value</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StructureType.cs/#L20" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

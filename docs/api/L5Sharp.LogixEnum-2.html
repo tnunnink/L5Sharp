@@ -1,0 +1,1218 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class LogixEnum&lt;TEnum, TValue&gt;
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class LogixEnum&lt;TEnum, TValue&gt;
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_LogixEnum_2.md&amp;value=---%0Auid%3A%20L5Sharp.LogixEnum%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.LogixEnum`2">
+
+
+
+  <h1 id="L5Sharp_LogixEnum_2" data-uid="L5Sharp.LogixEnum`2" class="text-break">
+    Class LogixEnum&lt;TEnum, TValue&gt;
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A base class for all logix enumeration types.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class LogixEnum&lt;TEnum, TValue&gt; : IEquatable&lt;LogixEnum&lt;TEnum, TValue&gt;&gt;, IComparable&lt;LogixEnum&lt;TEnum, TValue&gt;&gt; where TEnum : LogixEnum&lt;TEnum, TValue&gt; where TValue : IEquatable&lt;TValue&gt;, IComparable&lt;TValue&gt;</code></pre>
+  </div>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEnum</code></dt>
+    <dd><p>The type that is inheriting from this class.</p>
+</dd>
+    <dt><code>TValue</code></dt>
+    <dd><p>The type of the inner value.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">LogixEnum&lt;TEnum, TValue&gt;</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;&gt;</div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.Enums.CaptureSizeType.html">CaptureSizeType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.ConnectionPriority.html">ConnectionPriority</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.ConnectionType.html">ConnectionType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.DataFormat.html">DataFormat</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.DataTypeClass.html">DataTypeClass</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.DataTypeFamily.html">DataTypeFamily</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.ElectronicKeying.html">ElectronicKeying</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.ExternalAccess.html">ExternalAccess</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.Function.html">Function</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.ModuleCategory.html">ModuleCategory</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.OnlineEditType.html">OnlineEditType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.Operator.html">Operator</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.PassThroughOption.html">PassThroughOption</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.PenType.html">PenType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.ProductionTrigger.html">ProductionTrigger</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.ProgramType.html">ProgramType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.RoutineType.html">RoutineType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.RungType.html">RungType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.SFCExecutionControl.html">SFCExecutionControl</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.SFCLastScan.html">SFCLastScan</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.SFCRestartPosition.html">SFCRestartPosition</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.SheetOrientation.html">SheetOrientation</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.SheetSize.html">SheetSize</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TagType.html">TagType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TagUsage.html">TagUsage</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TaskEventTrigger.html">TaskEventTrigger</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TaskType.html">TaskType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TransmissionType.html">TransmissionType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TriggerOperation.html">TriggerOperation</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TriggerTargetType.html">TriggerTargetType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.TriggerType.html">TriggerType</a></div>
+      <div><a class="xref" href="L5Sharp.Enums.Use.html">Use</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="L5Sharp_LogixEnum_2_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This code was taken from <a href="https://github.com/ardalis/SmartEnum">https://github.com/ardalis/SmartEnum</a> and modified to suit needs of this library.
+Wanted to remove and external dependencies and not rely on other packages.
+This class provided some base functionality for working with a logix enum type.
+This includes methods for retrieving all enums of a specified type, and parsing enums from a name or value.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_LogixEnum_2__ctor_" data-uid="L5Sharp.LogixEnum`2.#ctor*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2__ctor_System_String__1_" data-uid="L5Sharp.LogixEnum`2.#ctor(System.String,`1)">
+  LogixEnum(string, TValue)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates an enumeration with the specified name and value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected LogixEnum(string name, TValue value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The common name of the enumeration option.</p>
+</dd>
+    <dt><code>value</code> <span class="xref">TValue</span></dt>
+    <dd><p>The corresponding value of the enumeration option.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>name</code> or <code>value</code> are null.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_LogixEnum_2_Name_" data-uid="L5Sharp.LogixEnum`2.Name*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_Name" data-uid="L5Sharp.LogixEnum`2.Name">
+  Name
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The display name of the enumeration type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> common enumeration field name.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_Value_" data-uid="L5Sharp.LogixEnum`2.Value*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_Value" data-uid="L5Sharp.LogixEnum`2.Value">
+  Value
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The value of the enumeration type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TValue Value { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TValue</span></dt>
+    <dd><p>A value of the specified enumeration type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_LogixEnum_2_All_" data-uid="L5Sharp.LogixEnum`2.All*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_All" data-uid="L5Sharp.LogixEnum`2.All">
+  All()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns all enumeration options for the specified enumeration type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;TEnum&gt; All()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;TEnum&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing all enumeration values of the specified type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_CompareTo_" data-uid="L5Sharp.LogixEnum`2.CompareTo*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_CompareTo_L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.CompareTo(L5Sharp.LogixEnum{`0,`1})">
+  CompareTo(LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L236"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compares this instance to a specified <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> and returns an indication of
+their relative values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int CompareTo(LogixEnum&lt;TEnum, TValue&gt; other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> value to compare to this instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A signed number indicating the relative values of this instance and <code class="paramref">other</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_Equals_" data-uid="L5Sharp.LogixEnum`2.Equals*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_Equals_L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.Equals(L5Sharp.LogixEnum{`0,`1})">
+  Equals(LogixEnum&lt;TEnum, TValue&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L206"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a value indicating whether this instance is equal to a specified <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool Equals(LogixEnum&lt;TEnum, TValue&gt;? other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> value to compare to this instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if <code class="paramref">other</code> has the same value as this instance; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_Equals_" data-uid="L5Sharp.LogixEnum`2.Equals*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_Equals_System_Object_" data-uid="L5Sharp.LogixEnum`2.Equals(System.Object)">
+  Equals(object)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The object to compare with the current object.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_FromName_" data-uid="L5Sharp.LogixEnum`2.FromName*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_FromName_System_String_System_Boolean_" data-uid="L5Sharp.LogixEnum`2.FromName(System.String,System.Boolean)">
+  FromName(string, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the item associated with the specified name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TEnum FromName(string name, bool ignoreCase = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the item to get.</p>
+</dd>
+    <dt><code>ignoreCase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> to ignore case during the comparison; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TEnum</span></dt>
+    <dd><p>The item associated with the specified name.
+If the specified name is not found, throws a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code class="paramref">name</code> is <code>null</code>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a></dt>
+    <dd><p><code class="paramref">name</code> does not exist.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_TryFromName_System_String__0__">TryFromName(string?, out TEnum?)</a></div>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_TryFromName_System_String_System_Boolean__0__">TryFromName(string?, bool, out TEnum?)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_LogixEnum_2_FromValue_" data-uid="L5Sharp.LogixEnum`2.FromValue*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_FromValue__1_" data-uid="L5Sharp.LogixEnum`2.FromValue(`1)">
+  FromValue(TValue)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an item associated with the specified value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TEnum FromValue(TValue value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <span class="xref">TValue</span></dt>
+    <dd><p>The value of the item to get.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TEnum</span></dt>
+    <dd><p>The first item found that is associated with the specified value.
+If the specified value is not found, throws a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a></dt>
+    <dd><p><code class="paramref">value</code> does not exist.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_FromValue__1__0_">FromValue(TValue, TEnum)</a></div>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_TryFromValue__1__0__">TryFromValue(TValue?, out TEnum?)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_LogixEnum_2_FromValue_" data-uid="L5Sharp.LogixEnum`2.FromValue*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_FromValue__1__0_" data-uid="L5Sharp.LogixEnum`2.FromValue(`1,`0)">
+  FromValue(TValue, TEnum)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L158"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an item associated with the specified value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TEnum FromValue(TValue value, TEnum defaultValue)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <span class="xref">TValue</span></dt>
+    <dd><p>The value of the item to get.</p>
+</dd>
+    <dt><code>defaultValue</code> <span class="xref">TEnum</span></dt>
+    <dd><p>The value to return when item not found.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TEnum</span></dt>
+    <dd><p>The first item found that is associated with the specified value.
+If the specified value is not found, returns <code class="paramref">defaultValue</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_FromValue__1_">FromValue(TValue)</a></div>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_TryFromValue__1__0__">TryFromValue(TValue?, out TEnum?)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_LogixEnum_2_GetHashCode_" data-uid="L5Sharp.LogixEnum`2.GetHashCode*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_GetHashCode" data-uid="L5Sharp.LogixEnum`2.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A hash code for the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_ToString_" data-uid="L5Sharp.LogixEnum`2.ToString*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_ToString" data-uid="L5Sharp.LogixEnum`2.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L189"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string that represents the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_TryFromName_" data-uid="L5Sharp.LogixEnum`2.TryFromName*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_TryFromName_System_String_System_Boolean__0__" data-uid="L5Sharp.LogixEnum`2.TryFromName(System.String,System.Boolean,`0@)">
+  TryFromName(string?, bool, out TEnum?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the item associated with the specified name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool TryFromName(string? name, bool ignoreCase, out TEnum? result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the item to get.</p>
+</dd>
+    <dt><code>ignoreCase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> to ignore case during the comparison; otherwise, <code>false</code>.</p>
+</dd>
+    <dt><code>result</code> <span class="xref">TEnum</span></dt>
+    <dd><p>When this method returns, contains the item associated with the specified name, if the name is found;
+otherwise, <code>null</code>. This parameter is passed uninitialized.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> contains an item with the specified name; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code class="paramref">name</code> is <code>null</code>.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_FromName_System_String_System_Boolean_">FromName(string, bool)</a></div>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_TryFromName_System_String__0__">TryFromName(string?, out TEnum?)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_LogixEnum_2_TryFromName_" data-uid="L5Sharp.LogixEnum`2.TryFromName*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_TryFromName_System_String__0__" data-uid="L5Sharp.LogixEnum`2.TryFromName(System.String,`0@)">
+  TryFromName(string?, out TEnum?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the item associated with the specified name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool TryFromName(string? name, out TEnum? result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the item to get.</p>
+</dd>
+    <dt><code>result</code> <span class="xref">TEnum</span></dt>
+    <dd><p>When this method returns, contains the item associated with the specified name, if the key is found;
+otherwise, <code>null</code>. This parameter is passed uninitialized.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> contains an item with the specified name; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code class="paramref">name</code> is <code>null</code>.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_FromName_System_String_System_Boolean_">FromName(string, bool)</a></div>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_TryFromName_System_String_System_Boolean__0__">TryFromName(string?, bool, out TEnum?)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_LogixEnum_2_TryFromValue_" data-uid="L5Sharp.LogixEnum`2.TryFromValue*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_TryFromValue__1__0__" data-uid="L5Sharp.LogixEnum`2.TryFromValue(`1,`0@)">
+  TryFromValue(TValue?, out TEnum?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an item associated with the specified value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool TryFromValue(TValue? value, out TEnum? result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <span class="xref">TValue</span></dt>
+    <dd><p>The value of the item to get.</p>
+</dd>
+    <dt><code>result</code> <span class="xref">TEnum</span></dt>
+    <dd><p>When this method returns, contains the item associated with the specified value, if the value is found;
+otherwise, <code>null</code>. This parameter is passed uninitialized.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> contains an item with the specified name; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_FromValue__1_">FromValue(TValue)</a></div>
+    <div><a class="xref" href="L5Sharp.LogixEnum-2.html#L5Sharp_LogixEnum_2_FromValue__1__0_">FromValue(TValue, TEnum)</a></div>
+    </dd>
+  </dl>
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="L5Sharp_LogixEnum_2_op_Equality_" data-uid="L5Sharp.LogixEnum`2.op_Equality*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_Equality_L5Sharp_LogixEnum__0__1__L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.op_Equality(L5Sharp.LogixEnum{`0,`1},L5Sharp.LogixEnum{`0,`1})">
+  operator ==(LogixEnum&lt;TEnum, TValue&gt;, LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L218"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs equality check on the provided <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> types.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(LogixEnum&lt;TEnum, TValue&gt; left, LogixEnum&lt;TEnum, TValue&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of the enumeration to check.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of the enumeration to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the types are equal; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_op_Explicit_" data-uid="L5Sharp.LogixEnum`2.op_Explicit*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_Explicit__1__L5Sharp_LogixEnum__0__1_" data-uid="L5Sharp.LogixEnum`2.op_Explicit(`1)~L5Sharp.LogixEnum{`0,`1}">
+  explicit operator LogixEnum&lt;TEnum, TValue&gt;(TValue)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L295"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static explicit operator LogixEnum&lt;TEnum, TValue&gt;(TValue value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <span class="xref">TValue</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_op_GreaterThan_" data-uid="L5Sharp.LogixEnum`2.op_GreaterThan*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_GreaterThan_L5Sharp_LogixEnum__0__1__L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.op_GreaterThan(L5Sharp.LogixEnum{`0,`1},L5Sharp.LogixEnum{`0,`1})">
+  operator &gt;(LogixEnum&lt;TEnum, TValue&gt;, LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compares this instance to a specified <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> and returns an indication if
+<code>left</code> is greater than <code>right</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator &gt;(LogixEnum&lt;TEnum, TValue&gt; left, LogixEnum&lt;TEnum, TValue&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if left is greater than <code>right</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_op_GreaterThanOrEqual_" data-uid="L5Sharp.LogixEnum`2.op_GreaterThanOrEqual*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_GreaterThanOrEqual_L5Sharp_LogixEnum__0__1__L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.op_GreaterThanOrEqual(L5Sharp.LogixEnum{`0,`1},L5Sharp.LogixEnum{`0,`1})">
+  operator &gt;=(LogixEnum&lt;TEnum, TValue&gt;, LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L278"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compares this instance to a specified <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> and returns an indication if
+<code>left</code> is greater than or equal to <code>right</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator &gt;=(LogixEnum&lt;TEnum, TValue&gt; left, LogixEnum&lt;TEnum, TValue&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if left is greater than or equal to <code>right</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_op_Implicit_" data-uid="L5Sharp.LogixEnum`2.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_Implicit_L5Sharp_LogixEnum__0__1____1" data-uid="L5Sharp.LogixEnum`2.op_Implicit(L5Sharp.LogixEnum{`0,`1})~`1">
+  implicit operator TValue(LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L287"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Implicitly converts the provided <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to the underlying value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator TValue(LogixEnum&lt;TEnum, TValue&gt; logixEnum)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>logixEnum</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>The enumeration type.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TValue</span></dt>
+    <dd><p>A value representing the</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_op_Inequality_" data-uid="L5Sharp.LogixEnum`2.op_Inequality*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_Inequality_L5Sharp_LogixEnum__0__1__L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.op_Inequality(L5Sharp.LogixEnum{`0,`1},L5Sharp.LogixEnum{`0,`1})">
+  operator !=(LogixEnum&lt;TEnum, TValue&gt;, LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L227"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs equality check on the provided <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> types.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(LogixEnum&lt;TEnum, TValue&gt; left, LogixEnum&lt;TEnum, TValue&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of the enumeration to check.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of the enumeration to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the types are NOT equal; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_op_LessThan_" data-uid="L5Sharp.LogixEnum`2.op_LessThan*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_LessThan_L5Sharp_LogixEnum__0__1__L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.op_LessThan(L5Sharp.LogixEnum{`0,`1},L5Sharp.LogixEnum{`0,`1})">
+  operator &lt;(LogixEnum&lt;TEnum, TValue&gt;, LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L247"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compares this instance to a specified <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> and returns an indication if
+<code>left</code> is less than <code>right</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator &lt;(LogixEnum&lt;TEnum, TValue&gt; left, LogixEnum&lt;TEnum, TValue&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if left is less than <code>right</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixEnum_2_op_LessThanOrEqual_" data-uid="L5Sharp.LogixEnum`2.op_LessThanOrEqual*"></a>
+
+  <h3 id="L5Sharp_LogixEnum_2_op_LessThanOrEqual_L5Sharp_LogixEnum__0__1__L5Sharp_LogixEnum__0__1__" data-uid="L5Sharp.LogixEnum`2.op_LessThanOrEqual(L5Sharp.LogixEnum{`0,`1},L5Sharp.LogixEnum{`0,`1})">
+  operator &lt;=(LogixEnum&lt;TEnum, TValue&gt;, LogixEnum&lt;TEnum, TValue&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L258"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compares this instance to a specified <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> and returns an indication if
+<code>left</code> is less than or equal to <code>right</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator &lt;=(LogixEnum&lt;TEnum, TValue&gt; left, LogixEnum&lt;TEnum, TValue&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum</a>&lt;TEnum, TValue&gt;</dt>
+    <dd><p>An instance of <a class="xref" href="L5Sharp.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a> to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if left is less than or equal to <code>right</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixEnum.cs/#L20" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1200 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Controller
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Controller
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Components_Controller.md&amp;value=---%0Auid%3A%20L5Sharp.Components.Controller%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Components.Controller">
+
+
+
+  <h1 id="L5Sharp_Components_Controller" data-uid="L5Sharp.Components.Controller" class="text-break">
+    Class Controller
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Components.html">Components</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A logix <code>Controller</code> component. Contains the properties that comprise the L5X Controller element.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Controller : LogixComponent&lt;Controller&gt;, ILogixSerializable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a></div>
+      <div><a class="xref" href="L5Sharp.LogixComponent-1.html">LogixComponent</a>&lt;<a class="xref" href="L5Sharp.Components.Controller.html">Controller</a>&gt;</div>
+      <div><span class="xref">Controller</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Use">LogixComponent&lt;Controller&gt;.Use</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Name">LogixComponent&lt;Controller&gt;.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Description">LogixComponent&lt;Controller&gt;.Description</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_AddAfter__0_">LogixComponent&lt;Controller&gt;.AddAfter(Controller)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_AddBefore__0_">LogixComponent&lt;Controller&gt;.AddBefore(Controller)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Clone">LogixComponent&lt;Controller&gt;.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Remove">LogixComponent&lt;Controller&gt;.Remove()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;Controller&gt;.Replace(Controller)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_">LogixElement.GetValue&lt;T&gt;(Func&lt;XElement, XElement&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_Xml_Linq_XName_System_String_">LogixElement.GetValue&lt;T&gt;(XName, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetRequiredValue__1_System_String_">LogixElement.GetRequiredValue&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetProperty__1_System_String_">LogixElement.GetProperty&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetComplex__1_System_String_">LogixElement.GetComplex&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetContainer__1_System_String_">LogixElement.GetContainer&lt;TChild&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetDateTime_System_String_System_String_">LogixElement.GetDateTime(string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_String_">LogixElement.SetValue&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_">LogixElement.SetValue&lt;T&gt;(T, Func&lt;XElement, XElement&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_Xml_Linq_XName_System_String_">LogixElement.SetValue&lt;T&gt;(T, XName, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetRequiredValue__1___0_System_String_">LogixElement.SetRequiredValue&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetProperty__1___0_System_String_">LogixElement.SetProperty&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetComplex__1___0_System_String_">LogixElement.SetComplex&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetContainer__1_L5Sharp_LogixContainer___0__System_String_">LogixElement.SetContainer&lt;TChild&gt;(LogixContainer&lt;TChild&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetDateTime_System_Nullable_System_DateTime__System_String_System_String_">LogixElement.SetDateTime(DateTime?, string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
+  </div>
+  </dd></dl>
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Components_Controller__ctor_" data-uid="L5Sharp.Components.Controller.#ctor*"></a>
+
+  <h3 id="L5Sharp_Components_Controller__ctor" data-uid="L5Sharp.Components.Controller.#ctor">
+  Controller()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Controller.html">Controller</a> with default values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Controller()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller__ctor_" data-uid="L5Sharp.Components.Controller.#ctor*"></a>
+
+  <h3 id="L5Sharp_Components_Controller__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.Controller.#ctor(System.Xml.Linq.XElement)">
+  Controller(XElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Controller.html">Controller</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Controller(XElement element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> to initialize the type with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>element</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_Components_Controller_CanUseRPIFromProducer_" data-uid="L5Sharp.Components.Controller.CanUseRPIFromProducer*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_CanUseRPIFromProducer" data-uid="L5Sharp.Components.Controller.CanUseRPIFromProducer">
+  CanUseRPIFromProducer
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L238"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify whether the consumed tags in the controller can connect to the producer with an
+RPI provided by the producer (true or false)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? CanUseRPIFromProducer { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_CommDriver_" data-uid="L5Sharp.Components.Controller.CommDriver*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_CommDriver" data-uid="L5Sharp.Components.Controller.CommDriver">
+  CommDriver
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the type of communication driver. This is the name of the selected driver in
+RSLinx® software. This is exported only if you select manual configuration of the
+communication driver in RSLinx® software.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? CommDriver { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_CommPath_" data-uid="L5Sharp.Components.Controller.CommPath*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_CommPath" data-uid="L5Sharp.Components.Controller.CommPath">
+  CommPath
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the devices in the communication path. The communication path ends with the
+controller (\Backplane\1). This is exported only if you select manual configuration of the
+communication path in RSLinx® software.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? CommPath { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_ControllerLanguage_" data-uid="L5Sharp.Components.Controller.ControllerLanguage*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_ControllerLanguage" data-uid="L5Sharp.Components.Controller.ControllerLanguage">
+  ControllerLanguage
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L228"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the controller project language for a project document at on project.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ControllerLanguage { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_CurrentProjectLanguage_" data-uid="L5Sharp.Components.Controller.CurrentProjectLanguage*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_CurrentProjectLanguage" data-uid="L5Sharp.Components.Controller.CurrentProjectLanguage">
+  CurrentProjectLanguage
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L210"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the current project language for a project documentation project.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? CurrentProjectLanguage { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_DefaultProjectLanguage_" data-uid="L5Sharp.Components.Controller.DefaultProjectLanguage*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_DefaultProjectLanguage" data-uid="L5Sharp.Components.Controller.DefaultProjectLanguage">
+  DefaultProjectLanguage
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L219"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the default project language for a project document at on project.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? DefaultProjectLanguage { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_DownloadCustomProperties_" data-uid="L5Sharp.Components.Controller.DownloadCustomProperties*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_DownloadCustomProperties" data-uid="L5Sharp.Components.Controller.DownloadCustomProperties">
+  DownloadCustomProperties
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L272"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates the download custom properties configuration setting of the project.
+Only applies if the project is already configured to DownloadProjectDocumentation</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? DownloadCustomProperties { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Components_Controller_DownloadCustomProperties_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Rockwell Automation® recommends setting this attribute to false only during startup
+testing to improve download speeds during commissioning testing. It should be set to true
+for the normal operating state of a system.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Components_Controller_DownloadProjectDocumentationAndExtendedProperties_" data-uid="L5Sharp.Components.Controller.DownloadProjectDocumentationAndExtendedProperties*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_DownloadProjectDocumentationAndExtendedProperties" data-uid="L5Sharp.Components.Controller.DownloadProjectDocumentationAndExtendedProperties">
+  DownloadProjectDocumentationAndExtendedProperties
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L257"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates the download project documentation configuration setting of the project.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? DownloadProjectDocumentationAndExtendedProperties { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_EtherNetIPMode_" data-uid="L5Sharp.Components.Controller.EtherNetIPMode*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_EtherNetIPMode" data-uid="L5Sharp.Components.Controller.EtherNetIPMode">
+  EtherNetIPMode
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L283"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The EtherNet/IP™ Mode describes the relationship between the CIP™ EtherNet/IP™ ports
+and the physical Ethernet ports. The CIP™ EtherNet/IP™ port can be configured as one of two modes:
+Dual-IP, Linear/DLR</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? EtherNetIPMode { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_InhibitAutomaticFirmwareUpdate_" data-uid="L5Sharp.Components.Controller.InhibitAutomaticFirmwareUpdate*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_InhibitAutomaticFirmwareUpdate" data-uid="L5Sharp.Components.Controller.InhibitAutomaticFirmwareUpdate">
+  InhibitAutomaticFirmwareUpdate
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify whether to inhibit the automatic update of controller firmware.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? InhibitAutomaticFirmwareUpdate { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_LastModifiedDate_" data-uid="L5Sharp.Components.Controller.LastModifiedDate*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_LastModifiedDate" data-uid="L5Sharp.Components.Controller.LastModifiedDate">
+  LastModifiedDate
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The date/time the current project was last modified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime LastModifiedDate { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a> representing the date and time of modification.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_MajorFaultProgram_" data-uid="L5Sharp.Components.Controller.MajorFaultProgram*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_MajorFaultProgram" data-uid="L5Sharp.Components.Controller.MajorFaultProgram">
+  MajorFaultProgram
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of the program to be executed when a major fault occurs.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? MajorFaultProgram { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the name of the program.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_MatchProjectToController_" data-uid="L5Sharp.Components.Controller.MatchProjectToController*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_MatchProjectToController" data-uid="L5Sharp.Components.Controller.MatchProjectToController">
+  MatchProjectToController
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify whether to be sure that the project matches the controller or not.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? MatchProjectToController { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_PassThroughConfiguration_" data-uid="L5Sharp.Components.Controller.PassThroughConfiguration*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_PassThroughConfiguration" data-uid="L5Sharp.Components.Controller.PassThroughConfiguration">
+  PassThroughConfiguration
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L248"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates the pass through state of documentation for the project.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PassThroughOption? PassThroughConfiguration { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.PassThroughOption.html">PassThroughOption</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.PassThroughOption.html">PassThroughOption</a> representing the configured value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_PowerLossProgram_" data-uid="L5Sharp.Components.Controller.PowerLossProgram*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_PowerLossProgram" data-uid="L5Sharp.Components.Controller.PowerLossProgram">
+  PowerLossProgram
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Name of the program to be executed upon restart after a power loss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? PowerLossProgram { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the name of the program.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_ProcessorType_" data-uid="L5Sharp.Components.Controller.ProcessorType*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_ProcessorType" data-uid="L5Sharp.Components.Controller.ProcessorType">
+  ProcessorType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The catalog number representing the processor of the controller component.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ProcessorType { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the alpha numeric catalog number.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_ProjectCreationDate_" data-uid="L5Sharp.Components.Controller.ProjectCreationDate*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_ProjectCreationDate" data-uid="L5Sharp.Components.Controller.ProjectCreationDate">
+  ProjectCreationDate
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The date/time the current project was created.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime ProjectCreationDate { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a> representing the date and time of creation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_ProjectSN_" data-uid="L5Sharp.Components.Controller.ProjectSN*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_ProjectSN" data-uid="L5Sharp.Components.Controller.ProjectSN">
+  ProjectSN
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L183"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the serial number of the controller. If a serial number is specified, it is
+imported into the project regardless of the MatchProjectToController setting. Type a 32-bit,
+hexadecimal number with the 16# prefix, such as 16#0012_E2BC.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ProjectSN { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_RedundancyInfo_" data-uid="L5Sharp.Components.Controller.RedundancyInfo*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_RedundancyInfo" data-uid="L5Sharp.Components.Controller.RedundancyInfo">
+  RedundancyInfo
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L292"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <a class="xref" href="L5Sharp.Elements.RedundancyInfo.html">RedundancyInfo</a> object that specifies the redundancy configuration of the controller.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RedundancyInfo? RedundancyInfo { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Elements.RedundancyInfo.html">RedundancyInfo</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_Revision_" data-uid="L5Sharp.Components.Controller.Revision*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_Revision" data-uid="L5Sharp.Components.Controller.Revision">
+  Revision
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The revision or hardware version of the controller.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Revision? Revision { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.Revision.html">Revision</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Core.Revision.html">Revision</a> value representing the major/minor version of the controller</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_SFCExecutionControl_" data-uid="L5Sharp.Components.Controller.SFCExecutionControl*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_SFCExecutionControl" data-uid="L5Sharp.Components.Controller.SFCExecutionControl">
+  SFCExecutionControl
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify whether the SFC executes the current active steps before returning control
+(CurrentActive) or whether the SFC executes all threads until reaching a false transition
+(UntilFalse).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SFCExecutionControl? SFCExecutionControl { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.SFCExecutionControl.html">SFCExecutionControl</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_SFCLastScan_" data-uid="L5Sharp.Components.Controller.SFCLastScan*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_SFCLastScan" data-uid="L5Sharp.Components.Controller.SFCLastScan">
+  SFCLastScan
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L171"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify how the SFC manages its state on a last scan. Select AutomaticReset,
+ProgrammaticReset, or DontScan.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SFCLastScan? SFCLastScan { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.SFCLastScan.html">SFCLastScan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_SFCRestartPosition_" data-uid="L5Sharp.Components.Controller.SFCRestartPosition*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_SFCRestartPosition" data-uid="L5Sharp.Components.Controller.SFCRestartPosition">
+  SFCRestartPosition
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L161"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify whether the SFC restarts at the most recently executed step (MostRecent) or at the
+initial step (InitialStep).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SFCRestartPosition? SFCRestartPosition { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.SFCRestartPosition.html">SFCRestartPosition</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_SafetyInfo_" data-uid="L5Sharp.Components.Controller.SafetyInfo*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_SafetyInfo" data-uid="L5Sharp.Components.Controller.SafetyInfo">
+  SafetyInfo
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L301"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <a class="xref" href="L5Sharp.Elements.SafetyInfo.html">SafetyInfo</a> object that specifies the safety configuration of the controller.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SafetyInfo? SafetyInfo { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Elements.SafetyInfo.html">SafetyInfo</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_ShareUnusedTimeSlice_" data-uid="L5Sharp.Components.Controller.ShareUnusedTimeSlice*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_ShareUnusedTimeSlice" data-uid="L5Sharp.Components.Controller.ShareUnusedTimeSlice">
+  ShareUnusedTimeSlice
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify whether to share an unused <a class="xref" href="L5Sharp.Components.Controller.html#L5Sharp_Components_Controller_TimeSlice">TimeSlice</a> or not.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? ShareUnusedTimeSlice { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Controller_TimeSlice_" data-uid="L5Sharp.Components.Controller.TimeSlice*"></a>
+
+  <h3 id="L5Sharp_Components_Controller_TimeSlice" data-uid="L5Sharp.Components.Controller.TimeSlice">
+  TimeSlice
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Percentage of available CPU time (10...90) that is assigned to communication.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? TimeSlice { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Controller.cs/#L16" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>L5Sharp </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="L5Sharp ">
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/blob/main/docfx/index.md/#L1">
+  </head>
+
+  <script type="module">
+    import options from './public/main.js'
+    import { init } from './public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="l5sharp">L5Sharp</h1>
+
+<p>A C# library for interacting with Rockwell's L5X import/export files.
+The goal of this project was to provide a simple and reusable library for
+querying and manipulating L5X files to aid in the creation of tools that
+automate tasks related RSLogix5000 PLC development.</p>
+<p>If you would like to contribute, have feedback or questions, please reach out!
+If you are using or like the progress being made, please leave a star. Thanks!</p>
+<h2 id="quick-start">Quick Start</h2>
+<p>Install package from Nuget.</p>
+<pre><code class="lang-powershell">Install-Package L5Sharp
+</code></pre>
+<p>The main entry point to the L5X is the <code>LogixContent</code> class.
+Use the factory methods <code>Load</code> to load a L5S file or <code>Parse</code> to parse a L5X string.</p>
+<pre><code class="lang-c#">var content = LogixContent.Load(&quot;C:\PathToMyFile\FileName.L5X&quot;);
+</code></pre>
+<p>Quickly query any type using the <code>Find&lt;T&gt;()</code> method on the content class.</p>
+<pre><code class="lang-csharp">var tags = content.Find&lt;Tag&gt;();
+</code></pre>
+<p>NOTE: <code>Find&lt;T&gt;()</code> just returns an <code>IEnumerable&lt;T&gt;</code>, so it is essentially read only,
+but allows you to form more complex queries using LINQ and the strongly typed
+components in the library. To mutate components, see the following section.</p>
+<h3 id="components">Components</h3>
+<p>Query or mutate components in the file using the top level <code>LogixContainer</code> collections,
+such as <code>Tag</code>, <code>DataType</code>, <code>Module</code>, <code>Program</code>, and more.</p>
+<p>The following shows some simple querying via the controller tags container:</p>
+<pre><code class="lang-c#">//Get all controller tags. 
+var controllerTags = content.Tags;
+
+//Get a tag by name.
+var myTag = content.Tags.Find(&quot;MyTag&quot;);
+
+//Use LINQ to query further.
+var timerTypeTags = content.Tags.Where(t =&gt; t.DataType == &quot;TIMER&quot;);
+</code></pre>
+<p>The following shows some simple modifications via the controller tags container:</p>
+<pre><code class="lang-csharp">//Add a new component.
+var tag = new Tag { Name = &quot;MyTag&quot;, Value = 100 };
+content.Tags.Add(tag);
+
+//Remove an existing component.
+content.Tags.Remove(&quot;MyTag&quot;);
+
+//Repalce an existing component.
+content.Tags.Find(&quot;MyTag&quot;).Replace(tag);
+
+//Save changes when done.
+content.Save(&quot;C:\PathToMyOutputFile\FileName.L5X&quot;);
+</code></pre>
+<p>See ... for more information.</p>
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/docfx/index.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

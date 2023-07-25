@@ -1,0 +1,2472 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/tnunnink/Documents/GitHub/L5Sharp/docfx",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Catalog.CatalogEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Catalog.CatalogEntry.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Catalog.ModuleCatalog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Catalog.ModuleCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Catalog.PortInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Catalog.PortInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Catalog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Catalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.AddOnInstruction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.AddOnInstruction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Controller.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Controller.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.DataType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.DataType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.DataTypeMember.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.DataTypeMember.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.LocalTag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.LocalTag.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Module.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Module.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Parameter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Parameter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Pen.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Pen.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Program.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Program.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Routine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Routine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Tag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Tag.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Task.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Task.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.Trend.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.Trend.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.WatchList.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.WatchList.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Components.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Components.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.Address.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.Address.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.Dimensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.Dimensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.NeutralText.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.NeutralText.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.ProductType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.ProductType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.Revision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.Revision.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.ScanRate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.ScanRate.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.TagName.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.TagName.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.TagNameComparer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.TagNameComparer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.TaskPriority.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.TaskPriority.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.Vendor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.Vendor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.Watchdog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.Watchdog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Core.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Core.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.Connection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.Connection.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.Line.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.Line.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.ParameterConnection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.ParameterConnection.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.Port.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.Port.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.RedundancyInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.RedundancyInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.Rung.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.Rung.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.SafetyInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.SafetyInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.WatchTag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.WatchTag.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.CaptureSizeType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.CaptureSizeType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.ConnectionPriority.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.ConnectionPriority.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.ConnectionType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.ConnectionType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.DataFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.DataFormat.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.DataTypeClass.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.DataTypeClass.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.DataTypeFamily.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.DataTypeFamily.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.ElectronicKeying.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.ElectronicKeying.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.ExternalAccess.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.ExternalAccess.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.Function.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.Function.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.Instruction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.Instruction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.ModuleCategory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.ModuleCategory.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.OnlineEditType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.OnlineEditType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.Operator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.Operator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.PassThroughOption.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.PassThroughOption.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.PenType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.PenType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.ProductionTrigger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.ProductionTrigger.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.ProgramType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.ProgramType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.Radix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.Radix.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.RoutineType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.RoutineType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.RungType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.RungType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.SFCExecutionControl.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.SFCExecutionControl.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.SFCLastScan.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.SFCLastScan.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.SFCRestartPosition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.SFCRestartPosition.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.Scope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.Scope.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.SheetOrientation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.SheetOrientation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.SheetSize.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.SheetSize.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TagType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TagType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TagUsage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TagUsage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TaskEventTrigger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TaskEventTrigger.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TaskType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TaskType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TransmissionType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TransmissionType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TriggerOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TriggerOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TriggerTargetType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TriggerTargetType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.TriggerType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.TriggerType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.Use.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.Use.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.ILogixSerializable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.ILogixSerializable.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.L5X.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.L5X.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.L5XException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.L5XException.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.L5XName.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.L5XName.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.L5XParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.L5XParser.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Logix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Logix.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixComponent-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixComponent-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixContainer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixContainer-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixContent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixContent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixElement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixElement.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixEnum-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixEnum-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixMember.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixMember.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixSerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixSerializer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.LogixType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.LogixType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.ScanMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.ScanMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Catalog.LogixCatalogTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Catalog.LogixCatalogTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Catalog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Catalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.DataTypeMemberTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.DataTypeMemberTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.DataTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.DataTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.ModuleTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.ModuleTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.ProgramTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.ProgramTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.RoutineTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.RoutineTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.TagTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.TagTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.TaskTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.TaskTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Components.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Components.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.AddressTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.AddressTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.DimensionsTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.DimensionsTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.NeutralTextTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.NeutralTextTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.PortTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.PortTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.ProductTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.ProductTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.RevisionTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.RevisionTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.ScanRateTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.ScanRateTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.TagNameTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.TagNameTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.TaskPriorityTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.TaskPriorityTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.VendorTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.VendorTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.WatchdogTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.WatchdogTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Core.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Core.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.ConnectionPriorityTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.ConnectionPriorityTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.ConnectionTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.ConnectionTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.DataFormatTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.DataFormatTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.DataTypeClassTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.DataTypeClassTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.DataTypeFamilyTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.DataTypeFamilyTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.ExternalAccessTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.ExternalAccessTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.FunctionTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.FunctionTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.InstructionTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.InstructionTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.KeyingStateTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.KeyingStateTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.ModuleTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.ModuleTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.OperationTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.OperationTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.ProductionTriggerTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.ProductionTriggerTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.ProgramTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.ProgramTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixAsciiTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixAsciiTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixBinaryTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixBinaryTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixDateTimeNsTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixDateTimeNsTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixDateTimeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixDateTimeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixDecimalTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixDecimalTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixExponentialTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixExponentialTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixFloatTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixFloatTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixHexTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixHexTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixNullTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixNullTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixOctalTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixOctalTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RadixTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RadixTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RoutineTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RoutineTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.RungTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.RungTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.ScopeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.ScopeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.TagTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.TagTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.TagUsageTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.TagUsageTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.TaskTriggerTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.TaskTriggerTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.TaskTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.TaskTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.TransmissionTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.TransmissionTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.UseTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.UseTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Enums.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Examples.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Examples.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Known.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Known.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixContentDataTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixContentDataTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixContentExportTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixContentExportTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixContentMergeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixContentMergeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixContentTagTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixContentTagTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixContentTasksTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixContentTasksTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixContentTemplateTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixContentTemplateTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixDataTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixDataTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixMemberTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixMemberTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.LogixTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.LogixTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.ProofTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.ProofTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.BoolGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.BoolGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.DintGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.DintGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.IntGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.IntGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.LintGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.LintGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.RealGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.RealGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.SintGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.SintGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.UDintGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.UDintGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.UIntGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.UIntGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.ULintGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.ULintGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.USintGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.USintGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Specimens.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Specimens.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.ArrayTypeGenericTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.ArrayTypeGenericTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.ArrayTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.ArrayTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.AtomicTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.AtomicTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.BoolTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.BoolTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.DintTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.DintTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.IntTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.IntTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.LintTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.LintTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.RealTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.RealTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.SintTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.SintTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.UDintTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.UDintTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.UIntTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.UIntTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.ULintTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.ULintTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.USintTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.USintTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Atomics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Atomics.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.ComplexTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.ComplexTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Custom.MyNestedType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Custom.MyNestedType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Custom.MyNestedTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Custom.MyNestedTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Custom.MySimpleType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Custom.MySimpleType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Custom.MySimpleTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Custom.MySimpleTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Custom.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Custom.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.AlarmAnalogTest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.AlarmAnalogTest.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.AlarmDigitalTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.AlarmDigitalTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.AlarmTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.AlarmTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.ControlTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.ControlTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.CounterTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.CounterTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.MessageTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.MessageTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.StringTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.StringTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.TimerTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.TimerTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.Predefined.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.Predefined.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.StringTypeTests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.StringTypeTests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.Types.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.Types.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Tests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Tests.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.ArrayType-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.ArrayType-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.ArrayType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.ArrayType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomic.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.AtomicType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.AtomicType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.BOOL.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.BOOL.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.DINT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.DINT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.INT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.INT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.LINT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.LINT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.LREAL.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.LREAL.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.REAL.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.REAL.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.SINT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.SINT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.UDINT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.UDINT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.UINT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.UINT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.ULINT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.ULINT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.USINT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.USINT.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Atomics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Atomics.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.ComplexType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.ComplexType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.ModuleDefined.CHANNEL_AI_I.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.ModuleDefined.CHANNEL_AI_I.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.ModuleDefined.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.ModuleDefined.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.NullType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.NullType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.ALARM.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.ALARM.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.ALARM_ANALOG.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.ALARM_ANALOG.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.ALARM_DIGITAL.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.ALARM_DIGITAL.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.CONTROL.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.CONTROL.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.COUNTER.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.COUNTER.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.MESSAGE.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.MESSAGE.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.PHASE.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.PHASE.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.PID.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.PID.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.STRING.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.STRING.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.TIMER.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.TIMER.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.Predefined.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.Predefined.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.StringType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.StringType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.StructureType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.StructureType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Types.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Types.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "articles/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

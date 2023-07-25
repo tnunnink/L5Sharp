@@ -1,0 +1,926 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SINT
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SINT
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Types_Atomics_SINT.md&amp;value=---%0Auid%3A%20L5Sharp.Types.Atomics.SINT%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Types.Atomics.SINT">
+
+
+
+  <h1 id="L5Sharp_Types_Atomics_SINT" data-uid="L5Sharp.Types.Atomics.SINT" class="text-break">
+    Class SINT
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L9"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Types.html">Types</a>.<a class="xref" href="L5Sharp.Types.Atomics.html">Atomics</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Represents a <b>SINT</b> Logix atomic data type, or a type analogous to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class SINT : AtomicType, ILogixSerializable, IComparable, IConvertible</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="L5Sharp.LogixType.html">LogixType</a></div>
+      <div><a class="xref" href="L5Sharp.Types.AtomicType.html">AtomicType</a></div>
+      <div><span class="xref">SINT</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable">IComparable</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iconvertible">IConvertible</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="L5Sharp.Types.AtomicType.html#L5Sharp_Types_AtomicType_Family">AtomicType.Family</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.AtomicType.html#L5Sharp_Types_AtomicType_Class">AtomicType.Class</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.AtomicType.html#L5Sharp_Types_AtomicType_Members">AtomicType.Members</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.AtomicType.html#L5Sharp_Types_AtomicType_ToString">AtomicType.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.AtomicType.html#L5Sharp_Types_AtomicType_ToString_L5Sharp_Enums_Radix_">AtomicType.ToString(Radix)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.AtomicType.html#L5Sharp_Types_AtomicType_Serialize">AtomicType.Serialize()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_DataChanged">LogixType.DataChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_As__1">LogixType.As&lt;TLogixType&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Clone">LogixType.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Member_System_String_">LogixType.Member(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
+  </div>
+  </dd></dl>
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Types_Atomics_SINT__ctor_" data-uid="L5Sharp.Types.Atomics.SINT.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT__ctor" data-uid="L5Sharp.Types.Atomics.SINT.#ctor">
+  SINT()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new default <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SINT()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT__ctor_" data-uid="L5Sharp.Types.Atomics.SINT.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT__ctor_L5Sharp_Enums_Radix_" data-uid="L5Sharp.Types.Atomics.SINT.#ctor(L5Sharp.Enums.Radix)">
+  SINT(Radix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> value with the provided radix format.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SINT(Radix radix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>radix</code> <a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a></dt>
+    <dd><p>The <a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a> number format of the value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT__ctor_" data-uid="L5Sharp.Types.Atomics.SINT.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT__ctor_System_SByte_" data-uid="L5Sharp.Types.Atomics.SINT.#ctor(System.SByte)">
+  SINT(sbyte)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> with the provided value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SINT(sbyte value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a></dt>
+    <dd><p>The value to initialize the type with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT__ctor_" data-uid="L5Sharp.Types.Atomics.SINT.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT__ctor_System_SByte_L5Sharp_Enums_Radix_" data-uid="L5Sharp.Types.Atomics.SINT.#ctor(System.SByte,L5Sharp.Enums.Radix)">
+  SINT(sbyte, Radix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> with the provided value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SINT(sbyte value, Radix radix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a></dt>
+    <dd><p>The value to initialize the type with.</p>
+</dd>
+    <dt><code>radix</code> <a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a></dt>
+    <dd><p>The optional radix format of the value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_MaxValue" data-uid="L5Sharp.Types.Atomics.SINT.MaxValue">
+  MaxValue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Represents the largest possible value of <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const sbyte MaxValue = 127</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_MinValue" data-uid="L5Sharp.Types.Atomics.SINT.MinValue">
+  MinValue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Represents the smallest possible value of <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const sbyte MinValue = -128</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_Item_" data-uid="L5Sharp.Types.Atomics.SINT.Item*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_Item_System_Int32_" data-uid="L5Sharp.Types.Atomics.SINT.Item(System.Int32)">
+  this[int]
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets bit member's data type value at the specified bit index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BOOL this[int bit] { get; }</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>bit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero based bit index of the value to get.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a> representing the value of the specified bit value (0/1).</p>
+</dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p><code>bit</code> is out of range of the atomic type bit length.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_Name_" data-uid="L5Sharp.Types.Atomics.SINT.Name*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_Name" data-uid="L5Sharp.Types.Atomics.SINT.Name">
+  Name
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The name of the logix type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string Name { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> name identifying the logix type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_Radix_" data-uid="L5Sharp.Types.Atomics.SINT.Radix*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_Radix" data-uid="L5Sharp.Types.Atomics.SINT.Radix">
+  Radix
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The radix format for the <a class="xref" href="L5Sharp.Types.AtomicType.html">AtomicType</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Radix Radix { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a> representing the format of the atomic type value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_CompareTo_" data-uid="L5Sharp.Types.Atomics.SINT.CompareTo*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_CompareTo_System_Object_" data-uid="L5Sharp.Types.Atomics.SINT.CompareTo(System.Object)">
+  CompareTo(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L86"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CompareTo(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>An object to compare with this instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A value that indicates the relative order of the objects being compared. The return value has these meanings:<br>
+Value</p>
+<p>Meaning</p>
+<p>Less than zero</p>
+<p>This instance precedes <code class="paramref">obj</code> in the sort order.</p>
+<p>Zero</p>
+<p>This instance occurs in the same position in the sort order as <code class="paramref">obj</code>.</p>
+<p>Greater than zero</p>
+<p>This instance follows <code class="paramref">obj</code> in the sort order.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code class="paramref">obj</code> is not the same type as this instance.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_Equals_" data-uid="L5Sharp.Types.Atomics.SINT.Equals*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_Equals_System_Object_" data-uid="L5Sharp.Types.Atomics.SINT.Equals(System.Object)">
+  Equals(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The object to compare with the current object.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_GetBytes_" data-uid="L5Sharp.Types.Atomics.SINT.GetBytes*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_GetBytes" data-uid="L5Sharp.Types.Atomics.SINT.GetBytes">
+  GetBytes()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the <a class="xref" href="L5Sharp.Types.AtomicType.html">AtomicType</a> value as an array of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a> values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override byte[] GetBytes()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>An array of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a> representing the value of the type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_GetHashCode_" data-uid="L5Sharp.Types.Atomics.SINT.GetHashCode*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_GetHashCode" data-uid="L5Sharp.Types.Atomics.SINT.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A hash code for the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_OnMemberDataChanged_" data-uid="L5Sharp.Types.Atomics.SINT.OnMemberDataChanged*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_OnMemberDataChanged_System_Object_System_EventArgs_" data-uid="L5Sharp.Types.Atomics.SINT.OnMemberDataChanged(System.Object,System.EventArgs)">
+  OnMemberDataChanged(object, EventArgs)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L146"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Executes the logic to update the atomic value and forward the data changed event up the type/member hierarchy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnMemberDataChanged(object sender, EventArgs e)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>sender</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The member sending the change event.</p>
+</dd>
+    <dt><code>e</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></dt>
+    <dd><p>The event args of the event.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Types_Atomics_SINT_OnMemberDataChanged_System_Object_System_EventArgs__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Atomic members (bits) represent the value of the type. When the member data changed event is triggered,
+we want to intercept that on the parent atomic type in order to change/update the reflected value. We can do that
+by getting the changed member (sender) name (bit number) and value (bit value) and setting to get the updated
+value. However, since atomic types ar immutable, we have to send the changed value up the chain to the parent
+member (Tag, DataValue, DataValueMember) so that it can replace it's data type with the new atomic value. This is
+captured in <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_Parse_" data-uid="L5Sharp.Types.Atomics.SINT.Parse*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_Parse_System_String_" data-uid="L5Sharp.Types.Atomics.SINT.Parse(System.String)">
+  Parse(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses the provided string value to a new <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SINT Parse(string value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The string value to parse.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> representing the parsed value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.formatexception">FormatException</a></dt>
+    <dd><p>The <a class="xref" href="L5Sharp.Types.Atomics.SINT.html#L5Sharp_Types_Atomics_SINT_Radix">Radix</a> format can not be inferred from <code>value</code>.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_op_Implicit_" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_op_Implicit_L5Sharp_Types_Atomics_SINT__System_SByte" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit(L5Sharp.Types.Atomics.SINT)~System.SByte">
+  implicit operator sbyte(SINT)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L171"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts the provided <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator sbyte(SINT atomic)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>atomic</code> <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a> type value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_op_Implicit_" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_op_Implicit_L5Sharp_Types_Atomics_SINT__System_String" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit(L5Sharp.Types.Atomics.SINT)~System.String">
+  implicit operator string(SINT)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L185"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Implicitly converts the provided <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator string(SINT value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A new <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_op_Implicit_" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_op_Implicit_System_SByte__L5Sharp_Types_Atomics_SINT" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit(System.SByte)~L5Sharp.Types.Atomics.SINT">
+  implicit operator SINT(sbyte)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a> to a <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator SINT(sbyte value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_Atomics_SINT_op_Implicit_" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_Atomics_SINT_op_Implicit_System_String__L5Sharp_Types_Atomics_SINT" data-uid="L5Sharp.Types.Atomics.SINT.op_Implicit(System.String)~L5Sharp.Types.Atomics.SINT">
+  implicit operator SINT(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Implicitly converts a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> to a <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator SINT(string value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a></dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Types.Atomics.SINT.html">SINT</a> value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Atomics/SINT.cs/#L9" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

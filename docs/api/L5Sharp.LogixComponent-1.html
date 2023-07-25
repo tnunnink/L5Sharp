@@ -1,0 +1,684 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class LogixComponent&lt;TComponent&gt;
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class LogixComponent&lt;TComponent&gt;
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_LogixComponent_1.md&amp;value=---%0Auid%3A%20L5Sharp.LogixComponent%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.LogixComponent`1">
+
+
+
+  <h1 id="L5Sharp_LogixComponent_1" data-uid="L5Sharp.LogixComponent`1" class="text-break">
+    Class LogixComponent&lt;TComponent&gt;
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A common logix element that is able to be identified by name.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class LogixComponent&lt;TComponent&gt; : LogixElement, ILogixSerializable where TComponent : LogixComponent&lt;TComponent&gt;</code></pre>
+  </div>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TComponent</code></dt>
+    <dd></dd>
+  </dl>
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a></div>
+      <div><span class="xref">LogixComponent&lt;TComponent&gt;</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.Components.AddOnInstruction.html">AddOnInstruction</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Controller.html">Controller</a></div>
+      <div><a class="xref" href="L5Sharp.Components.DataType.html">DataType</a></div>
+      <div><a class="xref" href="L5Sharp.Components.DataTypeMember.html">DataTypeMember</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Module.html">Module</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Parameter.html">Parameter</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Pen.html">Pen</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Program.html">Program</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Routine.html">Routine</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Tag.html">Tag</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Task.html">Task</a></div>
+      <div><a class="xref" href="L5Sharp.Components.Trend.html">Trend</a></div>
+      <div><a class="xref" href="L5Sharp.Components.WatchList.html">WatchList</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_">LogixElement.GetValue&lt;T&gt;(Func&lt;XElement, XElement&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_Xml_Linq_XName_System_String_">LogixElement.GetValue&lt;T&gt;(XName, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetRequiredValue__1_System_String_">LogixElement.GetRequiredValue&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetProperty__1_System_String_">LogixElement.GetProperty&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetComplex__1_System_String_">LogixElement.GetComplex&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetContainer__1_System_String_">LogixElement.GetContainer&lt;TChild&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetDateTime_System_String_System_String_">LogixElement.GetDateTime(string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_String_">LogixElement.SetValue&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_">LogixElement.SetValue&lt;T&gt;(T, Func&lt;XElement, XElement&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_Xml_Linq_XName_System_String_">LogixElement.SetValue&lt;T&gt;(T, XName, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetRequiredValue__1___0_System_String_">LogixElement.SetRequiredValue&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetProperty__1___0_System_String_">LogixElement.SetProperty&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetComplex__1___0_System_String_">LogixElement.SetComplex&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetContainer__1_L5Sharp_LogixContainer___0__System_String_">LogixElement.SetContainer&lt;TChild&gt;(LogixContainer&lt;TChild&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetDateTime_System_Nullable_System_DateTime__System_String_System_String_">LogixElement.SetDateTime(DateTime?, string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
+  </div>
+  </dd></dl>
+
+
+
+  <h2 id="L5Sharp_LogixComponent_1_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This is the base class for all logix component classes. All components can be identified by a unique name that
+is typically subject to the some naming constraints defined by a Rockwell. Logix internally may create
+components that do not adhere to the naming constraints, which is why the property is a simple string.
+Names should be unique any attempt to create duplicated names should fail.
+All components also contain a simple string description and <a class="xref" href="L5Sharp.Enums.Use.html">Use</a> to identify the purpose of the component.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_LogixComponent_1__ctor_" data-uid="L5Sharp.LogixComponent`1.#ctor*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1__ctor" data-uid="L5Sharp.LogixComponent`1.#ctor">
+  LogixComponent()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new default <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> initialized with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> having the
+L5XType name of the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected LogixComponent()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixComponent_1__ctor_" data-uid="L5Sharp.LogixComponent`1.#ctor*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.LogixComponent`1.#ctor(System.Xml.Linq.XElement)">
+  LogixComponent(XElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected LogixComponent(XElement element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>The L5X <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> to initialize the entity with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>element</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_LogixComponent_1_Description_" data-uid="L5Sharp.LogixComponent`1.Description*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_Description" data-uid="L5Sharp.LogixComponent`1.Description">
+  Description
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The description of the component.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Description { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> containing the component description.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_LogixComponent_1_Name_" data-uid="L5Sharp.LogixComponent`1.Name*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_Name" data-uid="L5Sharp.LogixComponent`1.Name">
+  Name
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The unique name of the component.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual string Name { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the component name if it exists; otherwise, and empty string.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixComponent_1_Name_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The name servers as a unique identifier for various types of components.
+In most cases, the component name should satisfy Logix naming constraints of alphanumeric and
+underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
+Validation is not performed by this library, so importing components with invalid names may fail.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_LogixComponent_1_Use_" data-uid="L5Sharp.LogixComponent`1.Use*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_Use" data-uid="L5Sharp.LogixComponent`1.Use">
+  Use
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Use">Use</a> of the component within the L5X file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Use? Use { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.Use.html">Use</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixComponent_1_Use_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Typically used when exporting individual components (DataType, AOI, Module) to indicate whether the component
+is the target of the L5X content, or exists solely as a context or dependency of the target component. When
+saving a project as an L5X, the top level controller component is the target, and all other components will
+not have this property.</p>
+</div>
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_LogixComponent_1_AddAfter_" data-uid="L5Sharp.LogixComponent`1.AddAfter*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_AddAfter__0_" data-uid="L5Sharp.LogixComponent`1.AddAfter(`0)">
+  AddAfter(TComponent)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a new component of the same type directly after this component in the L5X document.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddAfter(TComponent component)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>component</code> <span class="xref">TComponent</span></dt>
+    <dd><p>The component to add.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixComponent_1_AddAfter__0__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This method requires the component be attached to the L5X or <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a>, as it will
+access the parent of the underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> to perform the function.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>component</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>No parent exists for the underlying element.
+This could happen if the component was created in memory and not yet added to the L5X.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_LogixComponent_1_AddBefore_" data-uid="L5Sharp.LogixComponent`1.AddBefore*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_AddBefore__0_" data-uid="L5Sharp.LogixComponent`1.AddBefore(`0)">
+  AddBefore(TComponent)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a new component of the same type directly before this component in the L5X document.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddBefore(TComponent component)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>component</code> <span class="xref">TComponent</span></dt>
+    <dd><p>The component to add.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixComponent_1_AddBefore__0__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This method requires the component be attached to the L5X or <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a>, as it will
+access the parent of the underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> to perform the function.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>component</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>No parent exists for the underlying element.
+This could happen if the component was created in memory and not yet added to the L5X.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_LogixComponent_1_Clone_" data-uid="L5Sharp.LogixComponent`1.Clone*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_Clone" data-uid="L5Sharp.LogixComponent`1.Clone">
+  Clone()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L145"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a new deep cloned instance of the current <a class="xref" href="L5Sharp.LogixComponent-1.html">LogixComponent&lt;TComponent&gt;</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TComponent Clone()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TComponent</span></dt>
+    <dd><p>A new instance of the specified component with the same property values.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixComponent_1_Clone_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This method will simply deserialize a new instance using the current underlying element data.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>The object being cloned does not have a constructor accepting a
+single <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> argument.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_LogixComponent_1_Remove_" data-uid="L5Sharp.LogixComponent`1.Remove*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_Remove" data-uid="L5Sharp.LogixComponent`1.Remove">
+  Remove()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes the component from it's parent container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Remove()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixComponent_1_Remove_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This method requires the component be attached to the L5X or <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a>, as it will
+access the parent of the underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> to perform the function.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>No parent exists for the underlying element.
+This could happen if the component was created in memory and not yet added to the L5X.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_LogixComponent_1_Replace_" data-uid="L5Sharp.LogixComponent`1.Replace*"></a>
+
+  <h3 id="L5Sharp_LogixComponent_1_Replace__0_" data-uid="L5Sharp.LogixComponent`1.Replace(`0)">
+  Replace(TComponent)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces the component instance with a new instance of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Replace(TComponent component)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>component</code> <span class="xref">TComponent</span></dt>
+    <dd><p>The new component to replace this component with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixComponent_1_Replace__0__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This method requires the component be attached to the L5X or <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a>, as it will
+access the parent of the underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> to perform the function.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>component</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>No parent exists for the underlying element.
+This could happen if the component was created in memory and not yet added to the L5X.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixComponent.cs/#L21" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

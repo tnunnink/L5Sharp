@@ -1,0 +1,595 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ArrayType&lt;TLogixType&gt;
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ArrayType&lt;TLogixType&gt;
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Types_ArrayType_1.md&amp;value=---%0Auid%3A%20L5Sharp.Types.ArrayType%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Types.ArrayType`1">
+
+
+
+  <h1 id="L5Sharp_Types_ArrayType_1" data-uid="L5Sharp.Types.ArrayType`1" class="text-break">
+    Class ArrayType&lt;TLogixType&gt;
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L291"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Types.html">Types</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A generic <a class="xref" href="L5Sharp.Types.ArrayType.html">ArrayType</a> that provides strongly type element access to indices of the array.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ArrayType&lt;TLogixType&gt; : ArrayType, ILogixSerializable, IEnumerable&lt;LogixType&gt;, IEnumerable&lt;TLogixType&gt;, IEnumerable where TLogixType : LogixType</code></pre>
+  </div>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TLogixType</code></dt>
+    <dd><p>The logic type the array contains.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="L5Sharp.LogixType.html">LogixType</a></div>
+      <div><a class="xref" href="L5Sharp.Types.ArrayType.html">ArrayType</a></div>
+      <div><span class="xref">ArrayType&lt;TLogixType&gt;</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.LogixType.html">LogixType</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;TLogixType&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_Name">ArrayType.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_Family">ArrayType.Family</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_Class">ArrayType.Class</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_Dimensions">ArrayType.Dimensions</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_Radix">ArrayType.Radix</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_Members">ArrayType.Members</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_Serialize">ArrayType.Serialize()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_New__1_L5Sharp_Core_Dimensions_">ArrayType.New&lt;TDataType&gt;(Dimensions)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.ArrayType.html#L5Sharp_Types_ArrayType_OfType__1">ArrayType.OfType&lt;TLogixType&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_DataChanged">LogixType.DataChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_As__1">LogixType.As&lt;TLogixType&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Clone">LogixType.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Equals_System_Object_">LogixType.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_GetHashCode">LogixType.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Member_System_String_">LogixType.Member(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_ToString">LogixType.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
+  </div>
+  </dd></dl>
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Types_ArrayType_1__ctor_" data-uid="L5Sharp.Types.ArrayType`1.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1__ctor_System_Array_" data-uid="L5Sharp.Types.ArrayType`1.#ctor(System.Array)">
+  ArrayType(Array)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L299"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new array type from the provided logix array object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ArrayType(Array array)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>array</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a></dt>
+    <dd><p>An array of logix types</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>array</code> or any element of <code>array</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ArrayType_1__ctor_" data-uid="L5Sharp.Types.ArrayType`1.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Types.ArrayType`1.#ctor(System.Xml.Linq.XElement)">
+  ArrayType(XElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L294"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.ArrayType.html">ArrayType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ArrayType(XElement element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>The element to parse.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>element</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
+    <dd><p><code>element</code> does not have required attributes or elements.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_Types_ArrayType_1_Item_" data-uid="L5Sharp.Types.ArrayType`1.Item*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1_Item_System_UInt16_" data-uid="L5Sharp.Types.ArrayType`1.Item(System.UInt16)">
+  this[ushort]
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L307"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> instance at the specified index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TLogixType this[ushort x] { get; set; }</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>x</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The index of the array element</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TLogixType</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ArrayType_1_Item_" data-uid="L5Sharp.Types.ArrayType`1.Item*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1_Item_System_UInt16_System_UInt16_" data-uid="L5Sharp.Types.ArrayType`1.Item(System.UInt16,System.UInt16)">
+  this[ushort, ushort]
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L318"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> instance at the specified index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TLogixType this[ushort x, ushort y] { get; set; }</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>x</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The x index of the array element</p>
+</dd>
+    <dt><code>y</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The y index of the array element</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TLogixType</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ArrayType_1_Item_" data-uid="L5Sharp.Types.ArrayType`1.Item*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1_Item_System_UInt16_System_UInt16_System_UInt16_" data-uid="L5Sharp.Types.ArrayType`1.Item(System.UInt16,System.UInt16,System.UInt16)">
+  this[ushort, ushort, ushort]
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> instance at the specified index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TLogixType this[ushort x, ushort y, ushort z] { get; set; }</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>x</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The x index of the array element</p>
+</dd>
+    <dt><code>y</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The y index of the array element</p>
+</dd>
+    <dt><code>z</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The z index of the array element</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TLogixType</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Types_ArrayType_1_GetEnumerator_" data-uid="L5Sharp.Types.ArrayType`1.GetEnumerator*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1_GetEnumerator" data-uid="L5Sharp.Types.ArrayType`1.GetEnumerator">
+  GetEnumerator()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L358"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns an enumerator that iterates through the collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerator&lt;TLogixType&gt; GetEnumerator()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1">IEnumerator</a>&lt;TLogixType&gt;</dt>
+    <dd><p>An enumerator that can be used to iterate through the collection.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="L5Sharp_Types_ArrayType_1_op_Implicit_" data-uid="L5Sharp.Types.ArrayType`1.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1_op_Implicit__0_0__0__0____L5Sharp_Types_ArrayType__0_" data-uid="L5Sharp.Types.ArrayType`1.op_Implicit(`0[0:,0:,0:])~L5Sharp.Types.ArrayType{`0}">
+  implicit operator ArrayType&lt;TLogixType&gt;(TLogixType[,,])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L355"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Implicitly converts the provided array of logix type objects to an <a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType&lt;TLogixType&gt;</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator ArrayType&lt;TLogixType&gt;(TLogixType[,,] array)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>array</code> TLogixType[,,]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType</a>&lt;TLogixType&gt;</dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType&lt;TLogixType&gt;</a> containing the elements of the provided array.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ArrayType_1_op_Implicit_" data-uid="L5Sharp.Types.ArrayType`1.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1_op_Implicit__0_0__0____L5Sharp_Types_ArrayType__0_" data-uid="L5Sharp.Types.ArrayType`1.op_Implicit(`0[0:,0:])~L5Sharp.Types.ArrayType{`0}">
+  implicit operator ArrayType&lt;TLogixType&gt;(TLogixType[,])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L348"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Implicitly converts the provided array of logix type objects to an <a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType&lt;TLogixType&gt;</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator ArrayType&lt;TLogixType&gt;(TLogixType[,] array)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>array</code> TLogixType[,]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType</a>&lt;TLogixType&gt;</dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType&lt;TLogixType&gt;</a> containing the elements of the provided array.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ArrayType_1_op_Implicit_" data-uid="L5Sharp.Types.ArrayType`1.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_ArrayType_1_op_Implicit__0____L5Sharp_Types_ArrayType__0_" data-uid="L5Sharp.Types.ArrayType`1.op_Implicit(`0[])~L5Sharp.Types.ArrayType{`0}">
+  implicit operator ArrayType&lt;TLogixType&gt;(TLogixType[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L341"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Implicitly converts the provided array of logix type objects to an <a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType&lt;TLogixType&gt;</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator ArrayType&lt;TLogixType&gt;(TLogixType[] array)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>array</code> TLogixType[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType</a>&lt;TLogixType&gt;</dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Types.ArrayType-1.html">ArrayType&lt;TLogixType&gt;</a> containing the elements of the provided array.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L291" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

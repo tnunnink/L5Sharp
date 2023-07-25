@@ -1,0 +1,1697 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NeutralText
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NeutralText
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Core_NeutralText.md&amp;value=---%0Auid%3A%20L5Sharp.Core.NeutralText%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Core.NeutralText">
+
+
+
+  <h1 id="L5Sharp_Core_NeutralText" data-uid="L5Sharp.Core.NeutralText" class="text-break">
+    Class NeutralText
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Core.html">Core</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A wrapper class around the textual representation of the ladder logic notation called neutral text.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class NeutralText</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">NeutralText</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="L5Sharp_Core_NeutralText_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Neutral text can represent a single instruction or a full rung (collection of instructions).
+Each instruction contains sets of tag names and values known as operands.
+This class provides functions for extracting the textual information into strongly type classes that are easier
+to work with.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Core_NeutralText__ctor_" data-uid="L5Sharp.Core.NeutralText.#ctor*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText__ctor_System_String_" data-uid="L5Sharp.Core.NeutralText.#ctor(System.String)">
+  NeutralText(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> object with the provided text input.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NeutralText(string text)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>text</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string input that represents a neutral text format. The text may contain</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>When text is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.formatexception">FormatException</a></dt>
+    <dd><p>When text is null.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_Core_NeutralText_Empty_" data-uid="L5Sharp.Core.NeutralText.Empty*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_Empty" data-uid="L5Sharp.Core.NeutralText.Empty">
+  Empty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Represents a new empty instance of the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static NeutralText Empty { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>An empty <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_IsBalanced_" data-uid="L5Sharp.Core.NeutralText.IsBalanced*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_IsBalanced" data-uid="L5Sharp.Core.NeutralText.IsBalanced">
+  IsBalanced
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether the current neutral text value has balanced brackets and parentheses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsBalanced { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the text has balanced brackets and parentheses; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_IsEmpty_" data-uid="L5Sharp.Core.NeutralText.IsEmpty*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_IsEmpty" data-uid="L5Sharp.Core.NeutralText.IsEmpty">
+  IsEmpty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L86"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether the current neutral text value is an empty string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsEmpty { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the text empty; otherwise <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_IsSingle_" data-uid="L5Sharp.Core.NeutralText.IsSingle*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_IsSingle" data-uid="L5Sharp.Core.NeutralText.IsSingle">
+  IsSingle
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether the current neutral text value is a single instruction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsSingle { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the text represents a single instruction. <code>false</code> if not, meaning the text is a
+collection of multiple instruction patterns.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Core_NeutralText_ContainsKey_" data-uid="L5Sharp.Core.NeutralText.ContainsKey*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_ContainsKey_System_String_" data-uid="L5Sharp.Core.NeutralText.ContainsKey(System.String)">
+  ContainsKey(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a value indicating whether a specified instruction key occurs within this neutral text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ContainsKey(string instructionKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>instructionKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The instruction name to seek.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if this text contains the instruction key; otherwise, false..</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_ContainsSignature_" data-uid="L5Sharp.Core.NeutralText.ContainsSignature*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_ContainsSignature_L5Sharp_Enums_Instruction_" data-uid="L5Sharp.Core.NeutralText.ContainsSignature(L5Sharp.Enums.Instruction)">
+  ContainsSignature(Instruction)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L113"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a value indicating whether a specified instruction signature occurs within this neutral text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ContainsSignature(Instruction instruction)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>instruction</code> <a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></dt>
+    <dd><p>The instruction for which to seek.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if this text contains the signature pattern defined by <code>instruction</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_ContainsTag_" data-uid="L5Sharp.Core.NeutralText.ContainsTag*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_ContainsTag_L5Sharp_Core_TagName_System_Collections_Generic_IEqualityComparer_L5Sharp_Core_TagName__" data-uid="L5Sharp.Core.NeutralText.ContainsTag(L5Sharp.Core.TagName,System.Collections.Generic.IEqualityComparer{L5Sharp.Core.TagName})">
+  ContainsTag(TagName, IEqualityComparer&lt;TagName&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a value indication whether a specified tag name occurs within this neutral text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ContainsTag(TagName tagName, IEqualityComparer&lt;TagName&gt;? comparer = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tagName</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>The tag name to seek.</p>
+</dd>
+    <dt><code>comparer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>&gt;</dt>
+    <dd><p>The optional equality comparer to user for evaluating tag equivalence.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if <code>tagName</code> is contained withing the text and passes the equality check
+specified by <code>comparer</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_ContainsText_" data-uid="L5Sharp.Core.NeutralText.ContainsText*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_ContainsText_L5Sharp_Core_NeutralText_" data-uid="L5Sharp.Core.NeutralText.ContainsText(L5Sharp.Core.NeutralText)">
+  ContainsText(NeutralText)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L142"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a value indicating whether a specified subtext occurs within this neutral text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ContainsText(NeutralText text)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>text</code> <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>The neutral text to seek.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if <code>text</code> occurs within this text, or if text is an empty string (&quot;&quot;);
+otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_Equals_" data-uid="L5Sharp.Core.NeutralText.Equals*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_Equals_System_Object_" data-uid="L5Sharp.Core.NeutralText.Equals(System.Object)">
+  Equals(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L346"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The object to compare with the current object.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_GetHashCode_" data-uid="L5Sharp.Core.NeutralText.GetHashCode*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_GetHashCode" data-uid="L5Sharp.Core.NeutralText.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L357"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A hash code for the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_HasPattern_" data-uid="L5Sharp.Core.NeutralText.HasPattern*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_HasPattern_System_String_" data-uid="L5Sharp.Core.NeutralText.HasPattern(System.String)">
+  HasPattern(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Runs the provided regex pattern against the neutral text and indicates whether the patterns is matched.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasPattern(string regex)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>regex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The regex pattern to test against.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if <code>regex</code> is a match against this neutral text value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_Instructions_" data-uid="L5Sharp.Core.NeutralText.Instructions*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_Instructions" data-uid="L5Sharp.Core.NeutralText.Instructions">
+  Instructions()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L155"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a collection of <a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a> objects that were found in the current neutral text value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Instruction&gt; Instructions()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing <a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a> objects found in the text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_Keys_" data-uid="L5Sharp.Core.NeutralText.Keys*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_Keys" data-uid="L5Sharp.Core.NeutralText.Keys">
+  Keys()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L180"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a collection of instruction keys or names that occur in the current neutral text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;string&gt; Keys()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the names/keys of al found instructions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_Operands_" data-uid="L5Sharp.Core.NeutralText.Operands*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_Operands" data-uid="L5Sharp.Core.NeutralText.Operands">
+  Operands()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L191"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a collection of all found operands in the current neutral text value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;string&gt; Operands()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the instruction(s) operand arguments found in the current text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_NeutralText_Operands_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This will return a flat list of operands for all instructions. If you want to get operands
+and corresponding instruction key, use the <a class="xref" href="L5Sharp.Core.NeutralText.html#L5Sharp_Core_NeutralText_OperandsByKey">OperandsByKey()</a> methods, which will return found
+operands along with the corresponding instruction.</p>
+</div>
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Core.NeutralText.html#L5Sharp_Core_NeutralText_OperandsByKey">OperandsByKey()</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_OperandsByKey_" data-uid="L5Sharp.Core.NeutralText.OperandsByKey*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_OperandsByKey" data-uid="L5Sharp.Core.NeutralText.OperandsByKey">
+  OperandsByKey()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L200"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a collection of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair">KeyValuePair</a> with the key being the instruction and corresponding
+operand arguments as the value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;KeyValuePair&lt;string, IEnumerable&lt;string&gt;&gt;&gt; OperandsByKey()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;&gt;&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair">KeyValuePair</a> objects containing instruction key
+and corresponding operands values.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_OperandsByKey_" data-uid="L5Sharp.Core.NeutralText.OperandsByKey*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_OperandsByKey_L5Sharp_Enums_Instruction_" data-uid="L5Sharp.Core.NeutralText.OperandsByKey(L5Sharp.Enums.Instruction)">
+  OperandsByKey(Instruction)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L220"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a collection of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair">KeyValuePair</a> with the key being the instruction and corresponding
+operand arguments as the value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;KeyValuePair&lt;Instruction, IEnumerable&lt;string&gt;&gt;&gt; OperandsByKey(Instruction instruction)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>instruction</code> <a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;&gt;&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair">KeyValuePair</a> objects containing instruction key
+and corresponding operands values.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_OperandsByKey_" data-uid="L5Sharp.Core.NeutralText.OperandsByKey*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_OperandsByKey_System_String_" data-uid="L5Sharp.Core.NeutralText.OperandsByKey(System.String)">
+  OperandsByKey(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L210"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a collection of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair">KeyValuePair</a> with the key being the instruction and corresponding
+operand arguments as the value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;KeyValuePair&lt;string, IEnumerable&lt;string&gt;&gt;&gt; OperandsByKey(string key)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;&gt;&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair">KeyValuePair</a> objects containing instruction key
+and corresponding operands values.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_References_" data-uid="L5Sharp.Core.NeutralText.References*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_References" data-uid="L5Sharp.Core.NeutralText.References">
+  References()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L231"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a collection of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair&lt;TKey, TValue&gt;</a> with the key being a tag found in the
+neutral text instance, and the value being it's corresponding instruction sub text where it is referenced
+within the neutral text instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;KeyValuePair&lt;TagName, NeutralText&gt;&gt; References()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>, <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> of <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair">KeyValuePair</a> objects containing
+<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> and <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> pairs.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_Split_" data-uid="L5Sharp.Core.NeutralText.Split*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_Split" data-uid="L5Sharp.Core.NeutralText.Split">
+  Split()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L246"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the current neutral text into a collection of sub-texts representing each individual instruction found
+in the current text value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;NeutralText&gt; Split()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> objects that represent
+each individual instruction text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_SplitBy_" data-uid="L5Sharp.Core.NeutralText.SplitBy*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_SplitBy_L5Sharp_Enums_Instruction_" data-uid="L5Sharp.Core.NeutralText.SplitBy(L5Sharp.Enums.Instruction)">
+  SplitBy(Instruction)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L254"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the current neutral text into a collection of sub-texts representing a specific single instruction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;NeutralText&gt; SplitBy(Instruction instruction)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>instruction</code> <a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> objects that represent
+each individual instruction text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_SplitBy_" data-uid="L5Sharp.Core.NeutralText.SplitBy*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_SplitBy_System_Collections_Generic_IEnumerable_L5Sharp_Enums_Instruction__" data-uid="L5Sharp.Core.NeutralText.SplitBy(System.Collections.Generic.IEnumerable{L5Sharp.Enums.Instruction})">
+  SplitBy(IEnumerable&lt;Instruction&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L262"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the current neutral text into a collection of sub-texts representing a set of specific instructions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;NeutralText&gt; SplitBy(IEnumerable&lt;Instruction&gt; instructions)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>instructions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> objects that represent
+each individual instruction text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_SplitBy_" data-uid="L5Sharp.Core.NeutralText.SplitBy*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_SplitBy_System_Collections_Generic_IEnumerable_System_String__" data-uid="L5Sharp.Core.NeutralText.SplitBy(System.Collections.Generic.IEnumerable{System.String})">
+  SplitBy(IEnumerable&lt;string&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L280"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the current neutral text into a collection of sub-texts matching a set of regex patterns.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;NeutralText&gt; SplitBy(IEnumerable&lt;string&gt; patterns)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>patterns</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>A collection of regular expressions for which to match against.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> objects that match the
+specified patterns.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_SplitBy_" data-uid="L5Sharp.Core.NeutralText.SplitBy*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_SplitBy_System_String_" data-uid="L5Sharp.Core.NeutralText.SplitBy(System.String)">
+  SplitBy(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L271"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the current neutral text into a collection of sub-texts matching a specific regex pattern.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;NeutralText&gt; SplitBy(string pattern)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pattern</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The regular expression for which to match against.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> objects that match the
+specified pattern.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_SplitByKey_" data-uid="L5Sharp.Core.NeutralText.SplitByKey*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_SplitByKey_System_String_" data-uid="L5Sharp.Core.NeutralText.SplitByKey(System.String)">
+  SplitByKey(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L289"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the current neutral text into a collection of sub-texts having a specific instruction key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;NeutralText&gt; SplitByKey(string key)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The instruction key to match against.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> objects that represent
+each individual instruction text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_SplitByKeys_" data-uid="L5Sharp.Core.NeutralText.SplitByKeys*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_SplitByKeys_System_Collections_Generic_IEnumerable_System_String__" data-uid="L5Sharp.Core.NeutralText.SplitByKeys(System.Collections.Generic.IEnumerable{System.String})">
+  SplitByKeys(IEnumerable&lt;string&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L298"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the current neutral text into a collection of sub-texts having a set of instruction keys.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;NeutralText&gt; SplitByKeys(IEnumerable&lt;string&gt; keys)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>keys</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>A collection of instruction keys to match against.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> objects that represent
+each individual instruction text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_Tags_" data-uid="L5Sharp.Core.NeutralText.Tags*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_Tags" data-uid="L5Sharp.Core.NeutralText.Tags">
+  Tags()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L307"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a collection of tag names found in the current neutral text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;TagName&gt; Tags()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> of <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> values that were in from the current text.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Core.NeutralText.html#L5Sharp_Core_NeutralText_TagsIn_L5Sharp_Enums_Instruction_">TagsIn(Instruction)</a></div>
+    <div><a class="xref" href="L5Sharp.Core.NeutralText.html#L5Sharp_Core_NeutralText_TagsIn_System_String_">TagsIn(string)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_TagsIn_" data-uid="L5Sharp.Core.NeutralText.TagsIn*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_TagsIn_L5Sharp_Enums_Instruction_" data-uid="L5Sharp.Core.NeutralText.TagsIn(L5Sharp.Enums.Instruction)">
+  TagsIn(Instruction)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L326"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a collection of tag names found in the current neutral text that are operands or arguments to a specific instruction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;TagName&gt; TagsIn(Instruction instruction)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>instruction</code> <a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></dt>
+    <dd><p>The instruction for which to find tags as arguments to.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing tag names found in the specified instruction.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Core.NeutralText.html#L5Sharp_Core_NeutralText_TagsIn_System_String_">TagsIn(string)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_TagsIn_" data-uid="L5Sharp.Core.NeutralText.TagsIn*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_TagsIn_System_String_" data-uid="L5Sharp.Core.NeutralText.TagsIn(System.String)">
+  TagsIn(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L337"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets all tags found in the current neutral text that are arguments to a specific instruction key value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;TagName&gt; TagsIn(string key)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the instruction for which to get tags.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing tag names found in the specified instruction.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Core.NeutralText.html#L5Sharp_Core_NeutralText_TagsIn_L5Sharp_Enums_Instruction_">TagsIn(Instruction)</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_ToString_" data-uid="L5Sharp.Core.NeutralText.ToString*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_ToString" data-uid="L5Sharp.Core.NeutralText.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L343"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string that represents the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="L5Sharp_Core_NeutralText_op_Equality_" data-uid="L5Sharp.Core.NeutralText.op_Equality*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_op_Equality_L5Sharp_Core_NeutralText_L5Sharp_Core_NeutralText_" data-uid="L5Sharp.Core.NeutralText.op_Equality(L5Sharp.Core.NeutralText,L5Sharp.Core.NeutralText)">
+  operator ==(NeutralText?, NeutralText?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L365"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if the provided objects are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(NeutralText? left, NeutralText? right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if the provided objects are equal; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_op_Implicit_" data-uid="L5Sharp.Core.NeutralText.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_op_Implicit_L5Sharp_Core_NeutralText__System_String" data-uid="L5Sharp.Core.NeutralText.op_Implicit(L5Sharp.Core.NeutralText)~System.String">
+  implicit operator string(NeutralText)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts a <code>NeutralText</code> object to a <code>string</code> object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator string(NeutralText text)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>text</code> <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>the <code>NeutralText</code> instance to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <code>string</code> that represents the value of the <code>NeutralText</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_op_Implicit_" data-uid="L5Sharp.Core.NeutralText.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_op_Implicit_System_String__L5Sharp_Core_NeutralText" data-uid="L5Sharp.Core.NeutralText.op_Implicit(System.String)~L5Sharp.Core.NeutralText">
+  implicit operator NeutralText(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts a <code>string</code> object to a <code>NeutralText</code> object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator NeutralText(string text)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>text</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>the <code>string</code> instance to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>A <code>NeutralText</code> that represents the value of the <code>string</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_NeutralText_op_Inequality_" data-uid="L5Sharp.Core.NeutralText.op_Inequality*"></a>
+
+  <h3 id="L5Sharp_Core_NeutralText_op_Inequality_L5Sharp_Core_NeutralText_L5Sharp_Core_NeutralText_" data-uid="L5Sharp.Core.NeutralText.op_Inequality(L5Sharp.Core.NeutralText,L5Sharp.Core.NeutralText)">
+  operator !=(NeutralText?, NeutralText?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L373"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if the provided objects are not equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(NeutralText? left, NeutralText? right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if the provided objects are not equal; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+    </dd>
+  </dl>
+
+
+  <h2 id="seealso">See Also</h2>
+  <div class="seealso">
+      <div><a class="xref" href="L5Sharp.Enums.Instruction.html">Instruction</a></div>
+      <div><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></div>
+  </div>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/NeutralText.cs/#L20" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

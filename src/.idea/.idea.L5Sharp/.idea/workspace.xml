@@ -7,8 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Finishing all main logix components and attempting to finish most testing to complete project">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Catalog/ModuleCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Catalog/ModuleCatalog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/LocalTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/LocalTag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixData.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -352,7 +355,7 @@
       <workItem from="1689710535616" duration="10163000" />
       <workItem from="1689783804369" duration="2224000" />
       <workItem from="1689802133525" duration="21759000" />
-      <workItem from="1690031790030" duration="8676000" />
+      <workItem from="1690031790030" duration="13983000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -697,7 +700,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="264" />
+    <option name="localTasksCounter" value="265" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -712,25 +715,25 @@
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 12% 12722/14414" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 12% 12758/14420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 12% 12722/14414" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 20% 5238/6565" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 12% 12758/14420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 20% 5274/6571" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 12% 12722/14414" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 20% 5238/6565" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.12.0.0, .NETStandard,Version=v2.1) 20% 5238/6565" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 12% 12758/14420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 20% 5274/6571" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.12.0.0, .NETStandard,Version=v2.1) 20% 5274/6571" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 12% 12722/14414" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 20% 5238/6565" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(0.12.0.0, .NETStandard,Version=v2.1) 20% 5238/6565" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp 20% 5238/6565" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 12% 12758/14420" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 20% 5274/6571" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(0.12.0.0, .NETStandard,Version=v2.1) 20% 5274/6571" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="L5Sharp 20% 5274/6571" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -756,7 +759,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="reorg and reworking repos" />
     <MESSAGE value="Massive commit with reworked serialization. Still working through component updates. Overhaul of interfaces more to abstract base classes." />
     <MESSAGE value="reorg. preping to update array type" />
     <MESSAGE value="rework of logix types array type and atomic type conversions implicit and explicit." />
@@ -781,7 +783,8 @@
     <MESSAGE value="Update atomic types IConvertible implmentation to local class to make explicit and performant. Fixing tests." />
     <MESSAGE value="reworked member and how logix type values are set." />
     <MESSAGE value="Finishing all main logix components and attempting to finish most testing to complete project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finishing all main logix components and attempting to finish most testing to complete project" />
+    <MESSAGE value="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

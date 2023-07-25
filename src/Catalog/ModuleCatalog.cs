@@ -47,7 +47,7 @@ namespace L5Sharp.Catalog
         }
 
         /// <summary>
-        /// Gets a <see cref="CatalogEntry"/> instance for the provided <see cref="CatalogNumber"/>.
+        /// Gets a <see cref="CatalogEntry"/> instance for the provided <c>catalogNumber</c>
         /// </summary>
         /// <param name="catalogNumber">The catalog number of the <see cref="Module"/> to lookup.</param>
         /// <returns>A <see cref="CatalogEntry"/> instance for the specified catalogNumber if found in the current
@@ -70,7 +70,7 @@ namespace L5Sharp.Catalog
         }
 
         /// <summary>
-        /// Gets a <see cref="CatalogEntry"/> instance for the provided <see cref="CatalogNumber"/>.
+        /// Gets a <see cref="CatalogEntry"/> instance for the provided <c>catalogNumber</c>.
         /// </summary>
         /// <param name="catalogNumber">The catalog number of the <see cref="Module"/> to lookup.</param>
         /// <returns>A <see cref="CatalogEntry"/> instance for the specified catalogNumber if found in the current

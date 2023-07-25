@@ -1,0 +1,765 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ComplexType
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ComplexType
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Types_ComplexType.md&amp;value=---%0Auid%3A%20L5Sharp.Types.ComplexType%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Types.ComplexType">
+
+
+
+  <h1 id="L5Sharp_Types_ComplexType" data-uid="L5Sharp.Types.ComplexType" class="text-break">
+    Class ComplexType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Types.html">Types</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A mutable <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> allowing the user to further extend or transform the structure of a complex
+logix type after instantiation of the object.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ComplexType : StructureType, ILogixSerializable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="L5Sharp.LogixType.html">LogixType</a></div>
+      <div><a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a></div>
+      <div><span class="xref">ComplexType</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Name">StructureType.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Family">StructureType.Family</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Class">StructureType.Class</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Members">StructureType.Members</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Serialize">StructureType.Serialize()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_GetMember__1_System_String_">StructureType.GetMember&lt;TLogixType&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_SetMember__1___0_System_String_">StructureType.SetMember&lt;TLogixType&gt;(TLogixType, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_AddMember_L5Sharp_LogixMember_">StructureType.AddMember(LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_AddMembers_System_Collections_Generic_ICollection_L5Sharp_LogixMember__">StructureType.AddMembers(ICollection&lt;LogixMember&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ClearMembers">StructureType.ClearMembers()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_InsertMember_System_Int32_L5Sharp_LogixMember_">StructureType.InsertMember(int, LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_RemoveMember_System_String_">StructureType.RemoveMember(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_RemoveMember_System_Int32_">StructureType.RemoveMember(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ReplaceMember_System_String_L5Sharp_LogixMember_">StructureType.ReplaceMember(string, LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ReplaceMember_System_String_L5Sharp_LogixType_">StructureType.ReplaceMember(string, LogixType)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ReplaceMember_System_Int32_L5Sharp_LogixMember_">StructureType.ReplaceMember(int, LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_DataChanged">LogixType.DataChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_As__1">LogixType.As&lt;TLogixType&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Clone">LogixType.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Equals_System_Object_">LogixType.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_GetHashCode">LogixType.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_Member_System_String_">LogixType.Member(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_RaiseDataChanged_System_Object_">LogixType.RaiseDataChanged(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_ToString">LogixType.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_BuildUserTypes_L5Sharp_Types_ComplexType_">LogixExtensions.BuildUserTypes(ComplexType)</a>
+  </div>
+  </dd></dl>
+
+
+
+  <h2 id="L5Sharp_Types_ComplexType_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This type simply exposes methods for modifying the underlying members collection of a structure type.
+Users can inherit from this type if they wish to mutate user defined types after instantiation. All structure type
+elements in the L5X will be deserialized as a complex type unless a specific type is found for them (e.g., TIMER).
+Predefined types will inherit structure type as they should not be mutated.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Types_ComplexType__ctor_" data-uid="L5Sharp.Types.ComplexType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType__ctor" data-uid="L5Sharp.Types.ComplexType.#ctor">
+  ComplexType()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new empty <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a> with the name 'ComplexType' indicating this represents some generic
+or non-descriptive type with members configured by the user.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComplexType()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ComplexType__ctor_" data-uid="L5Sharp.Types.ComplexType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType__ctor_System_String_" data-uid="L5Sharp.Types.ComplexType.#ctor(System.String)">
+  ComplexType(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a> with the provided name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComplexType(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the logix type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> is null or empty.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ComplexType__ctor_" data-uid="L5Sharp.Types.ComplexType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType__ctor_System_String_System_Collections_Generic_IEnumerable_L5Sharp_LogixMember__" data-uid="L5Sharp.Types.ComplexType.#ctor(System.String,System.Collections.Generic.IEnumerable{L5Sharp.LogixMember})">
+  ComplexType(string, IEnumerable&lt;LogixMember&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a> with the provided name and member collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComplexType(string name, IEnumerable&lt;LogixMember&gt; members)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the logix type.</p>
+</dd>
+    <dt><code>members</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> is null or empty.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>members</code> is null or any member in <code>members</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ComplexType__ctor_" data-uid="L5Sharp.Types.ComplexType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Types.ComplexType.#ctor(System.Xml.Linq.XElement)">
+  ComplexType(XElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComplexType(XElement element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>The element to parse as the new member object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>element</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
+    <dd><p><code>element</code> does not have required attributes.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Types_ComplexType_Add_" data-uid="L5Sharp.Types.ComplexType.Add*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Add_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Add(L5Sharp.LogixMember)">
+  Add(LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds the provided member to the end of the type member collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Add(LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> to add.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ComplexType_AddRange_" data-uid="L5Sharp.Types.ComplexType.AddRange*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_AddRange_System_Collections_Generic_ICollection_L5Sharp_LogixMember__" data-uid="L5Sharp.Types.ComplexType.AddRange(System.Collections.Generic.ICollection{L5Sharp.LogixMember})">
+  AddRange(ICollection&lt;LogixMember&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds the provided member collection to the end of the type member collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddRange(ICollection&lt;LogixMember&gt; members)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>members</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>&gt;</dt>
+    <dd><p>The collection of <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> to add.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>members</code> or any object in <code>members</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ComplexType_Clear_" data-uid="L5Sharp.Types.ComplexType.Clear*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Clear" data-uid="L5Sharp.Types.ComplexType.Clear">
+  Clear()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes all members from the current type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ComplexType_Insert_" data-uid="L5Sharp.Types.ComplexType.Insert*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Insert_System_Int32_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Insert(System.Int32,L5Sharp.LogixMember)">
+  Insert(int, LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Inserts the provided member at the specified index of the type member collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Insert(int index, LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero-based index at which item should be inserted.</p>
+</dd>
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The member to insert.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>index is less than 0. -or- index is greater than the length of
+the member collection.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ComplexType_Remove_" data-uid="L5Sharp.Types.ComplexType.Remove*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Remove_System_Int32_" data-uid="L5Sharp.Types.ComplexType.Remove(System.Int32)">
+  Remove(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes a member at the specified index from the type member collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Remove(int index)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero-based index of the member to remove.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ComplexType_Remove_" data-uid="L5Sharp.Types.ComplexType.Remove*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Remove_System_String_" data-uid="L5Sharp.Types.ComplexType.Remove(System.String)">
+  Remove(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes a member with the specified name from the type member collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Remove(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the member to remove.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_ComplexType_Replace_" data-uid="L5Sharp.Types.ComplexType.Replace*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Replace_System_Int32_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Replace(System.Int32,L5Sharp.LogixMember)">
+  Replace(int, LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces a member at the specified index with the provided member instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Replace(int index, LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zer-based index at which to replace the member.</p>
+</dd>
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The member to replace the current member with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ComplexType_Replace_" data-uid="L5Sharp.Types.ComplexType.Replace*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Replace_System_String_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Replace(System.String,L5Sharp.LogixMember)">
+  Replace(string, LogixMember)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces a member having the specified name with the provided member instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Replace(string name, LogixMember member)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the member to replace.</p>
+</dd>
+    <dt><code>member</code> <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a></dt>
+    <dd><p>The member to replace the current member with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>member</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> does not exists in the structure type.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_ComplexType_Replace_" data-uid="L5Sharp.Types.ComplexType.Replace*"></a>
+
+  <h3 id="L5Sharp_Types_ComplexType_Replace_System_String_L5Sharp_LogixType_" data-uid="L5Sharp.Types.ComplexType.Replace(System.String,L5Sharp.LogixType)">
+  Replace(string, LogixType)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces a member having the specified name with a new member instance of the same name and
+provided <a class="xref" href="L5Sharp.LogixType.html">LogixType</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Replace(string name, LogixType type)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the member to replace.</p>
+</dd>
+    <dt><code>type</code> <a class="xref" href="L5Sharp.LogixType.html">LogixType</a></dt>
+    <dd><p>The <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> data to update the specified member with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>type</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code>name</code> does not exists in the structure type.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L17" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1100 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TagName
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TagName
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Core_TagName.md&amp;value=---%0Auid%3A%20L5Sharp.Core.TagName%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Core.TagName">
+
+
+
+  <h1 id="L5Sharp_Core_TagName" data-uid="L5Sharp.Core.TagName" class="text-break">
+    Class TagName
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Core.html">Core</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A string wrapper representing a Logix <code>TagName</code>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class TagName : IComparable&lt;TagName&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">TagName</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="L5Sharp_Core_TagName_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This value type class make working with string tag name easier by providing
+methods fo analyzing and breaking the tag name into constituent parts (members).</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Core_TagName__ctor_" data-uid="L5Sharp.Core.TagName.#ctor*"></a>
+
+  <h3 id="L5Sharp_Core_TagName__ctor_System_String_" data-uid="L5Sharp.Core.TagName.#ctor(System.String)">
+  TagName(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> object with the provided string tag name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TagName(string tagName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tagName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The string that represents the tag name value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>tagName is null.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_Core_TagName_Depth_" data-uid="L5Sharp.Core.TagName.Depth*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Depth" data-uid="L5Sharp.Core.TagName.Depth">
+  Depth
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A number representing the depth, or number of members from the root tag name, of the current tag name value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Depth { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Depth_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This value represents the number of members between the root tag and last member name (i.e. one less than
+the number of members in the tag name). This is helpful for filtering tag descendents. Note that array
+indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
+are descendent member names of the root tag 'MyTag' member.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Core_TagName_Empty_" data-uid="L5Sharp.Core.TagName.Empty*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Empty" data-uid="L5Sharp.Core.TagName.Empty">
+  Empty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the static empty <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TagName Empty { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_IsEmpty_" data-uid="L5Sharp.Core.TagName.IsEmpty*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_IsEmpty" data-uid="L5Sharp.Core.TagName.IsEmpty">
+  IsEmpty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the current <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value is empty.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsEmpty { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_IsQualified_" data-uid="L5Sharp.Core.TagName.IsQualified*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_IsQualified" data-uid="L5Sharp.Core.TagName.IsQualified">
+  IsQualified
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the current <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> is a valid representation of a tag name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsQualified { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_Member_" data-uid="L5Sharp.Core.TagName.Member*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Member" data-uid="L5Sharp.Core.TagName.Member">
+  Member
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the member name, or the last member of <a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Members">Members</a>, of the tag name value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Member { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Member_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The <code>Member</code> of a tag name represents the last member name of the string. This is the string after the final
+member separator character.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Core_TagName_Members_" data-uid="L5Sharp.Core.TagName.Members*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Members" data-uid="L5Sharp.Core.TagName.Members">
+  Members
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a collection of string names representing each individual member of the full tag name value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;string&gt; Members { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Members_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Each member of a tag name can be represented by a string, array bracket, or bit index value.
+For example, MyTag[1].MemberName.5 has 4 members.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Core_TagName_Operand_" data-uid="L5Sharp.Core.TagName.Operand*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Operand" data-uid="L5Sharp.Core.TagName.Operand">
+  Operand
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the operand portion of the <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Operand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Operand_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The <code>Operand</code> of a tag name represents the part of the name after <a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Root">Root</a>. This value will always be
+the full tag name value without the leading root name. The operand will include the leading '.' character.</p>
+</div>
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Path">Path</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_TagName_Path_" data-uid="L5Sharp.Core.TagName.Path*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Path" data-uid="L5Sharp.Core.TagName.Path">
+  Path
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the member path of the tag name value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Path { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Path_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The <code>Path</code> of a tag name represents a name relative to <a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Root">Root</a>. The value will always be the full tag name
+without the leading root name. This is similar to <a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Operand">Operand</a>, except that is also removes any
+leading member separator character ('.').</p>
+</div>
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Operand">Operand</a></div>
+    </dd>
+  </dl>
+
+
+  <a id="L5Sharp_Core_TagName_Root_" data-uid="L5Sharp.Core.TagName.Root*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Root" data-uid="L5Sharp.Core.TagName.Root">
+  Root
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the tag or root portion of the <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Root { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Root_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+The root portion of a given tag name is simply the beginning part of the tag name up to the first
+member separator character ('.'). For Module defined tags, this includes the colon separator.
+</p>
+<p>
+This value can be swapped out easily using <a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Rename_System_String_">Rename(string)</a> to return a new <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> with the
+newly specified root tag name value.
+</p>
+</div>
+
+
+  <dl class="typelist seealso">
+    <dt>See Also</dt>
+    <dd>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Operand">Operand</a></div>
+    <div><a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Path">Path</a></div>
+    </dd>
+  </dl>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Core_TagName_Combine_" data-uid="L5Sharp.Core.TagName.Combine*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Combine_System_Collections_Generic_IEnumerable_System_String__" data-uid="L5Sharp.Core.TagName.Combine(System.Collections.Generic.IEnumerable{System.String})">
+  Combine(IEnumerable&lt;string&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Combines a collection of member names into a single <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TagName Combine(IEnumerable&lt;string&gt; members)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>members</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The collection of strings that represent the member names of the tag name value.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>A new <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value that is the combination of all provided member names.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If a provided name does not match the member pattern format.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Core_TagName_Combine_" data-uid="L5Sharp.Core.TagName.Combine*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Combine_System_String___" data-uid="L5Sharp.Core.TagName.Combine(System.String[])">
+  Combine(params string[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Combines a series of strings into a single <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value, inserting member separator
+characters as needed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TagName Combine(params string[] members)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>members</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
+    <dd><p>The series of strings that, in order, comprise the full tag name value.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>value that represents the combination of all provided member names.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If any provided member does not match the member pattern format.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Core_TagName_CompareTo_" data-uid="L5Sharp.Core.TagName.CompareTo*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_CompareTo_L5Sharp_Core_TagName_" data-uid="L5Sharp.Core.TagName.CompareTo(L5Sharp.Core.TagName)">
+  CompareTo(TagName?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CompareTo(TagName? other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>An object to compare with this instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A value that indicates the relative order of the objects being compared. The return value has these meanings:<br>
+Value</p>
+<p>Meaning</p>
+<p>Less than zero</p>
+<p>This instance precedes <code class="paramref">other</code> in the sort order.</p>
+<p>Zero</p>
+<p>This instance occurs in the same position in the sort order as <code class="paramref">other</code>.</p>
+<p>Greater than zero</p>
+<p>This instance follows <code class="paramref">other</code> in the sort order.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_Contains_" data-uid="L5Sharp.Core.TagName.Contains*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Contains_L5Sharp_Core_TagName_" data-uid="L5Sharp.Core.TagName.Contains(L5Sharp.Core.TagName)">
+  Contains(TagName)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L189"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if the provided tagName is contained within the current value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Contains(TagName tagName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tagName</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>The tag name to evaluate as a sub path or contained tag name path.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if tagName is contained within the current value; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>tagName is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Core_TagName_Equals_" data-uid="L5Sharp.Core.TagName.Equals*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Equals_L5Sharp_Core_TagName_L5Sharp_Core_TagName_System_Collections_Generic_IEqualityComparer_L5Sharp_Core_TagName__" data-uid="L5Sharp.Core.TagName.Equals(L5Sharp.Core.TagName,L5Sharp.Core.TagName,System.Collections.Generic.IEqualityComparer{L5Sharp.Core.TagName})">
+  Equals(TagName, TagName, IEqualityComparer&lt;TagName&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L205"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines whether the specified <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> objects are equal using the specified <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer&lt;T&gt;</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Equals(TagName first, TagName second, IEqualityComparer&lt;TagName&gt; comparer)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>first</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>A tag name object to compare.</p>
+</dd>
+    <dt><code>second</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>A tag name object to compare.</p>
+</dd>
+    <dt><code>comparer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>&gt;</dt>
+    <dd><p>The equality comparer to use for comparison.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the tag name are equal according too the provided comparer; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Equals_L5Sharp_Core_TagName_L5Sharp_Core_TagName_System_Collections_Generic_IEqualityComparer_L5Sharp_Core_TagName___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Use the prebuilt <a class="xref" href="L5Sharp.Core.TagNameComparer.html">TagNameComparer</a> class for several predefined comparers.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Core_TagName_Equals_" data-uid="L5Sharp.Core.TagName.Equals*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Equals_System_Object_" data-uid="L5Sharp.Core.TagName.Equals(System.Object)">
+  Equals(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L209"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The object to compare with the current object.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_GetHashCode_" data-uid="L5Sharp.Core.TagName.GetHashCode*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_GetHashCode" data-uid="L5Sharp.Core.TagName.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L220"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A hash code for the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_Rename_" data-uid="L5Sharp.Core.TagName.Rename*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_Rename_System_String_" data-uid="L5Sharp.Core.TagName.Rename(System.String)">
+  Rename(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L229"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a new tag name with the root <a class="xref" href="L5Sharp.Core.TagName.html#L5Sharp_Core_TagName_Root">Root</a> value replaced with the provided string tag.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TagName Rename(string tag)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tag</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The new root tag name value to replace.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> with the new root tag value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Core_TagName_Rename_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Note that this doesn't change the current tag name value, rather, returns a new object with the changed
+value. This ensures the immutability of <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Core_TagName_ToString_" data-uid="L5Sharp.Core.TagName.ToString*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_ToString" data-uid="L5Sharp.Core.TagName.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L232"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string that represents the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="L5Sharp_Core_TagName_op_Equality_" data-uid="L5Sharp.Core.TagName.op_Equality*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_op_Equality_L5Sharp_Core_TagName_L5Sharp_Core_TagName_" data-uid="L5Sharp.Core.TagName.op_Equality(L5Sharp.Core.TagName,L5Sharp.Core.TagName)">
+  operator ==(TagName?, TagName?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if the provided objects are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(TagName? left, TagName? right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if the provided objects are equal; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_op_Implicit_" data-uid="L5Sharp.Core.TagName.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_op_Implicit_L5Sharp_Core_TagName__System_String" data-uid="L5Sharp.Core.TagName.op_Implicit(L5Sharp.Core.TagName)~System.String">
+  implicit operator string(TagName)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts a <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator string(TagName tagName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tagName</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>The <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A new <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> value representing the value of the tag name.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_op_Implicit_" data-uid="L5Sharp.Core.TagName.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_op_Implicit_System_String__L5Sharp_Core_TagName" data-uid="L5Sharp.Core.TagName.op_Implicit(System.String)~L5Sharp.Core.TagName">
+  implicit operator TagName(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> to a <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator TagName(string tagName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tagName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>A new <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value representing the value of the tag name.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_TagName_op_Inequality_" data-uid="L5Sharp.Core.TagName.op_Inequality*"></a>
+
+  <h3 id="L5Sharp_Core_TagName_op_Inequality_L5Sharp_Core_TagName_L5Sharp_Core_TagName_" data-uid="L5Sharp.Core.TagName.op_Inequality(L5Sharp.Core.TagName,L5Sharp.Core.TagName)">
+  operator !=(TagName?, TagName?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L248"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if the provided objects are not equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(TagName? left, TagName? right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if the provided objects are not equal; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/TagName.cs/#L16" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

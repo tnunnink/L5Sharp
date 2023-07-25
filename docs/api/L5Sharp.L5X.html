@@ -1,0 +1,911 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class L5X
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class L5X
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_L5X.md&amp;value=---%0Auid%3A%20L5Sharp.L5X%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.L5X">
+
+
+
+  <h1 id="L5Sharp_L5X" data-uid="L5Sharp.L5X" class="text-break">
+    Class L5X
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> decorator that adds members for interacting with the root L5X content. This class should
+represent the root RSLogix5000Content element of the L5X file.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class L5X : XElement, IXmlLineInfo, IXmlSerializable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject">XObject</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode">XNode</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer">XContainer</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></div>
+      <div><span class="xref">L5X</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.ixmllineinfo">IXmlLineInfo</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.serialization.ixmlserializable">IXmlSerializable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.ancestorsandself#system-xml-linq-xelement-ancestorsandself">XElement.AncestorsAndSelf()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.ancestorsandself#system-xml-linq-xelement-ancestorsandself(system-xml-linq-xname)">XElement.AncestorsAndSelf(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.attribute">XElement.Attribute(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.attributes#system-xml-linq-xelement-attributes">XElement.Attributes()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.attributes#system-xml-linq-xelement-attributes(system-xml-linq-xname)">XElement.Attributes(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.descendantnodesandself">XElement.DescendantNodesAndSelf()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.descendantsandself#system-xml-linq-xelement-descendantsandself">XElement.DescendantsAndSelf()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.descendantsandself#system-xml-linq-xelement-descendantsandself(system-xml-linq-xname)">XElement.DescendantsAndSelf(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.getdefaultnamespace">XElement.GetDefaultNamespace()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.getnamespaceofprefix">XElement.GetNamespaceOfPrefix(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.getprefixofnamespace">XElement.GetPrefixOfNamespace(XNamespace)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-io-stream)">XElement.Load(Stream)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-io-stream-system-xml-linq-loadoptions)">XElement.Load(Stream, LoadOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-io-textreader)">XElement.Load(TextReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-io-textreader-system-xml-linq-loadoptions)">XElement.Load(TextReader, LoadOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-string)">XElement.Load(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-string-system-xml-linq-loadoptions)">XElement.Load(string, LoadOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-xml-xmlreader)">XElement.Load(XmlReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.load#system-xml-linq-xelement-load(system-xml-xmlreader-system-xml-linq-loadoptions)">XElement.Load(XmlReader, LoadOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.loadasync#system-xml-linq-xelement-loadasync(system-io-stream-system-xml-linq-loadoptions-system-threading-cancellationtoken)">XElement.LoadAsync(Stream, LoadOptions, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.loadasync#system-xml-linq-xelement-loadasync(system-io-textreader-system-xml-linq-loadoptions-system-threading-cancellationtoken)">XElement.LoadAsync(TextReader, LoadOptions, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.loadasync#system-xml-linq-xelement-loadasync(system-xml-xmlreader-system-xml-linq-loadoptions-system-threading-cancellationtoken)">XElement.LoadAsync(XmlReader, LoadOptions, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.parse#system-xml-linq-xelement-parse(system-string)">XElement.Parse(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.parse#system-xml-linq-xelement-parse(system-string-system-xml-linq-loadoptions)">XElement.Parse(string, LoadOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.removeall">XElement.RemoveAll()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.removeattributes">XElement.RemoveAttributes()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.replaceall#system-xml-linq-xelement-replaceall(system-object)">XElement.ReplaceAll(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.replaceall#system-xml-linq-xelement-replaceall(system-object())">XElement.ReplaceAll(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.replaceattributes#system-xml-linq-xelement-replaceattributes(system-object)">XElement.ReplaceAttributes(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.replaceattributes#system-xml-linq-xelement-replaceattributes(system-object())">XElement.ReplaceAttributes(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.save#system-xml-linq-xelement-save(system-io-stream)">XElement.Save(Stream)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.save#system-xml-linq-xelement-save(system-io-stream-system-xml-linq-saveoptions)">XElement.Save(Stream, SaveOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.save#system-xml-linq-xelement-save(system-io-textwriter)">XElement.Save(TextWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.save#system-xml-linq-xelement-save(system-io-textwriter-system-xml-linq-saveoptions)">XElement.Save(TextWriter, SaveOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.save#system-xml-linq-xelement-save(system-string)">XElement.Save(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.save#system-xml-linq-xelement-save(system-string-system-xml-linq-saveoptions)">XElement.Save(string, SaveOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.save#system-xml-linq-xelement-save(system-xml-xmlwriter)">XElement.Save(XmlWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.saveasync#system-xml-linq-xelement-saveasync(system-io-stream-system-xml-linq-saveoptions-system-threading-cancellationtoken)">XElement.SaveAsync(Stream, SaveOptions, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.saveasync#system-xml-linq-xelement-saveasync(system-io-textwriter-system-xml-linq-saveoptions-system-threading-cancellationtoken)">XElement.SaveAsync(TextWriter, SaveOptions, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.saveasync#system-xml-linq-xelement-saveasync(system-xml-xmlwriter-system-threading-cancellationtoken)">XElement.SaveAsync(XmlWriter, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.setattributevalue">XElement.SetAttributeValue(XName, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.setelementvalue">XElement.SetElementValue(XName, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.setvalue">XElement.SetValue(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.writeto">XElement.WriteTo(XmlWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.writetoasync">XElement.WriteToAsync(XmlWriter, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.emptysequence">XElement.EmptySequence</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.firstattribute">XElement.FirstAttribute</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.hasattributes">XElement.HasAttributes</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.haselements">XElement.HasElements</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.isempty">XElement.IsEmpty</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.lastattribute">XElement.LastAttribute</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.name">XElement.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.nodetype">XElement.NodeType</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement.value">XElement.Value</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.add#system-xml-linq-xcontainer-add(system-object)">XContainer.Add(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.add#system-xml-linq-xcontainer-add(system-object())">XContainer.Add(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.addfirst#system-xml-linq-xcontainer-addfirst(system-object)">XContainer.AddFirst(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.addfirst#system-xml-linq-xcontainer-addfirst(system-object())">XContainer.AddFirst(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.createwriter">XContainer.CreateWriter()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.descendantnodes">XContainer.DescendantNodes()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.descendants#system-xml-linq-xcontainer-descendants">XContainer.Descendants()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.descendants#system-xml-linq-xcontainer-descendants(system-xml-linq-xname)">XContainer.Descendants(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.element">XContainer.Element(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.elements#system-xml-linq-xcontainer-elements">XContainer.Elements()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.elements#system-xml-linq-xcontainer-elements(system-xml-linq-xname)">XContainer.Elements(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.nodes">XContainer.Nodes()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.removenodes">XContainer.RemoveNodes()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.replacenodes#system-xml-linq-xcontainer-replacenodes(system-object)">XContainer.ReplaceNodes(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.replacenodes#system-xml-linq-xcontainer-replacenodes(system-object())">XContainer.ReplaceNodes(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.firstnode">XContainer.FirstNode</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xcontainer.lastnode">XContainer.LastNode</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.addafterself#system-xml-linq-xnode-addafterself(system-object)">XNode.AddAfterSelf(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.addafterself#system-xml-linq-xnode-addafterself(system-object())">XNode.AddAfterSelf(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.addbeforeself#system-xml-linq-xnode-addbeforeself(system-object)">XNode.AddBeforeSelf(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.addbeforeself#system-xml-linq-xnode-addbeforeself(system-object())">XNode.AddBeforeSelf(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.ancestors#system-xml-linq-xnode-ancestors">XNode.Ancestors()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.ancestors#system-xml-linq-xnode-ancestors(system-xml-linq-xname)">XNode.Ancestors(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.comparedocumentorder">XNode.CompareDocumentOrder(XNode, XNode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.createreader#system-xml-linq-xnode-createreader">XNode.CreateReader()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.createreader#system-xml-linq-xnode-createreader(system-xml-linq-readeroptions)">XNode.CreateReader(ReaderOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.deepequals">XNode.DeepEquals(XNode, XNode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.elementsafterself#system-xml-linq-xnode-elementsafterself">XNode.ElementsAfterSelf()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.elementsafterself#system-xml-linq-xnode-elementsafterself(system-xml-linq-xname)">XNode.ElementsAfterSelf(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.elementsbeforeself#system-xml-linq-xnode-elementsbeforeself">XNode.ElementsBeforeSelf()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.elementsbeforeself#system-xml-linq-xnode-elementsbeforeself(system-xml-linq-xname)">XNode.ElementsBeforeSelf(XName)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.isafter">XNode.IsAfter(XNode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.isbefore">XNode.IsBefore(XNode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.nodesafterself">XNode.NodesAfterSelf()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.nodesbeforeself">XNode.NodesBeforeSelf()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.readfrom">XNode.ReadFrom(XmlReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.readfromasync">XNode.ReadFromAsync(XmlReader, CancellationToken)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.remove">XNode.Remove()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.replacewith#system-xml-linq-xnode-replacewith(system-object)">XNode.ReplaceWith(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.replacewith#system-xml-linq-xnode-replacewith(system-object())">XNode.ReplaceWith(params object[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.tostring#system-xml-linq-xnode-tostring">XNode.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.tostring#system-xml-linq-xnode-tostring(system-xml-linq-saveoptions)">XNode.ToString(SaveOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.documentordercomparer">XNode.DocumentOrderComparer</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.equalitycomparer">XNode.EqualityComparer</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.nextnode">XNode.NextNode</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode.previousnode">XNode.PreviousNode</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.addannotation">XObject.AddAnnotation(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.annotation#system-xml-linq-xobject-annotation(system-type)">XObject.Annotation(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.annotations#system-xml-linq-xobject-annotations(system-type)">XObject.Annotations(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.annotations#system-xml-linq-xobject-annotations-1">XObject.Annotations&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.annotation#system-xml-linq-xobject-annotation-1">XObject.Annotation&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.removeannotations#system-xml-linq-xobject-removeannotations(system-type)">XObject.RemoveAnnotations(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.removeannotations#system-xml-linq-xobject-removeannotations-1">XObject.RemoveAnnotations&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.baseuri">XObject.BaseUri</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.document">XObject.Document</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.parent">XObject.Parent</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.changed">XObject.Changed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xobject.changing">XObject.Changing</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_LogixName_System_Xml_Linq_XElement_">LogixExtensions.LogixName(XElement)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ModuleTagName_System_Xml_Linq_XNode_System_String_">LogixExtensions.ModuleTagName(XNode, string)</a>
+  </div>
+  </dd></dl>
+
+
+
+  <h2 id="L5Sharp_L5X_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Most of these methods and properties are meant to be internal and are used by <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a>.
+However, the user can use this type if they need direct access to the underlying XML to perform custom query
+or extend the API.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_L5X__ctor_" data-uid="L5Sharp.L5X.#ctor*"></a>
+
+  <h3 id="L5Sharp_L5X__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.L5X.#ctor(System.Xml.Linq.XElement)">
+  L5X(XElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.L5X.html">L5X</a> instance wrapping the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public L5X(XElement content)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>content</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="L5Sharp_L5X_DateTimeFormat" data-uid="L5Sharp.L5X.DateTimeFormat">
+  DateTimeFormat
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The date/time format for the L5X content.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string DateTimeFormat = &quot;ddd MMM d HH:mm:ss yyyy&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_L5X_ContainsContext_" data-uid="L5Sharp.L5X.ContainsContext*"></a>
+
+  <h3 id="L5Sharp_L5X_ContainsContext" data-uid="L5Sharp.L5X.ContainsContext">
+  ContainsContext
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the value indicating whether the current L5X is contextual..</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? ContainsContext { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_L5X_ExportDate_" data-uid="L5Sharp.L5X.ExportDate*"></a>
+
+  <h3 id="L5Sharp_L5X_ExportDate" data-uid="L5Sharp.L5X.ExportDate">
+  ExportDate
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the date time that the L5X file was exported.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime? ExportDate { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_L5X_Owner_" data-uid="L5Sharp.L5X.Owner*"></a>
+
+  <h3 id="L5Sharp_L5X_Owner" data-uid="L5Sharp.L5X.Owner">
+  Owner
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the owner that exported the current L5X file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Owner { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_L5X_SchemaRevision_" data-uid="L5Sharp.L5X.SchemaRevision*"></a>
+
+  <h3 id="L5Sharp_L5X_SchemaRevision" data-uid="L5Sharp.L5X.SchemaRevision">
+  SchemaRevision
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the value of the schema revision for the current L5X content.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Revision? SchemaRevision { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.Revision.html">Revision</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Core.Revision.html">Revision</a> type that represent the major/minor revision of the L5X schema.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_L5X_SchemaRevision_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This is always 1.0. If the R</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_L5X_SoftwareRevision_" data-uid="L5Sharp.L5X.SoftwareRevision*"></a>
+
+  <h3 id="L5Sharp_L5X_SoftwareRevision" data-uid="L5Sharp.L5X.SoftwareRevision">
+  SoftwareRevision
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the value of the software revision for the current L5X content.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Revision? SoftwareRevision { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.Revision.html">Revision</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Core.Revision.html">Revision</a> type that represent the major/minor revision of the software.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_L5X_TargetName_" data-uid="L5Sharp.L5X.TargetName*"></a>
+
+  <h3 id="L5Sharp_L5X_TargetName" data-uid="L5Sharp.L5X.TargetName">
+  TargetName
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the name of the Logix component that is the target of the current L5X context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? TargetName { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_L5X_TargetType_" data-uid="L5Sharp.L5X.TargetType*"></a>
+
+  <h3 id="L5Sharp_L5X_TargetType" data-uid="L5Sharp.L5X.TargetType">
+  TargetType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the type of Logix component that is the target of the current L5X context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? TargetType { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_L5X_GetContainer_" data-uid="L5Sharp.L5X.GetContainer*"></a>
+
+  <h3 id="L5Sharp_L5X_GetContainer_System_String_" data-uid="L5Sharp.L5X.GetContainer(System.String)">
+  GetContainer(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L134"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a top level container element from the root controller element of the L5X.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XElement GetContainer(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the container to retrieve.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> representing the container with the provided name.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
+    <dd><p>The element does not exist.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_L5X_GetController_" data-uid="L5Sharp.L5X.GetController*"></a>
+
+  <h3 id="L5Sharp_L5X_GetController" data-uid="L5Sharp.L5X.GetController">
+  GetController()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the root controller element of the L5X file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XElement GetController()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5X.cs/#L19" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

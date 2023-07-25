@@ -1,0 +1,767 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Task
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Task
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Components_Task.md&amp;value=---%0Auid%3A%20L5Sharp.Components.Task%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Components.Task">
+
+
+
+  <h1 id="L5Sharp_Components_Task" data-uid="L5Sharp.Components.Task" class="text-break">
+    Class Task
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Components.html">Components</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A logix <code>Task</code> component. Contains the properties that comprise the L5X Task element.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Task : LogixComponent&lt;Task&gt;, ILogixSerializable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a></div>
+      <div><a class="xref" href="L5Sharp.LogixComponent-1.html">LogixComponent</a>&lt;<a class="xref" href="L5Sharp.Components.Task.html">Task</a>&gt;</div>
+      <div><span class="xref">Task</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Use">LogixComponent&lt;Task&gt;.Use</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Name">LogixComponent&lt;Task&gt;.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Description">LogixComponent&lt;Task&gt;.Description</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_AddAfter__0_">LogixComponent&lt;Task&gt;.AddAfter(Task)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_AddBefore__0_">LogixComponent&lt;Task&gt;.AddBefore(Task)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Clone">LogixComponent&lt;Task&gt;.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Remove">LogixComponent&lt;Task&gt;.Remove()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;Task&gt;.Replace(Task)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_">LogixElement.GetValue&lt;T&gt;(Func&lt;XElement, XElement&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_Xml_Linq_XName_System_String_">LogixElement.GetValue&lt;T&gt;(XName, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetRequiredValue__1_System_String_">LogixElement.GetRequiredValue&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetProperty__1_System_String_">LogixElement.GetProperty&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetComplex__1_System_String_">LogixElement.GetComplex&lt;T&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetContainer__1_System_String_">LogixElement.GetContainer&lt;TChild&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetDateTime_System_String_System_String_">LogixElement.GetDateTime(string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_String_">LogixElement.SetValue&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_">LogixElement.SetValue&lt;T&gt;(T, Func&lt;XElement, XElement&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetValue__1___0_System_Xml_Linq_XName_System_String_">LogixElement.SetValue&lt;T&gt;(T, XName, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetRequiredValue__1___0_System_String_">LogixElement.SetRequiredValue&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetProperty__1___0_System_String_">LogixElement.SetProperty&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetComplex__1___0_System_String_">LogixElement.SetComplex&lt;T&gt;(T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetContainer__1_L5Sharp_LogixContainer___0__System_String_">LogixElement.SetContainer&lt;TChild&gt;(LogixContainer&lt;TChild&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_SetDateTime_System_Nullable_System_DateTime__System_String_System_String_">LogixElement.SetDateTime(DateTime?, string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
+  </div>
+  <div>
+      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
+  </div>
+  </dd></dl>
+
+
+
+  <h2 id="L5Sharp_Components_Task_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Observe these guidelines when defining a task:<br>
+• Tasks must be defined after programs and before controller objects.<br>
+• There is a maximum of 32 tasks.<br>
+• There is one continuous task only.<br>
+• A program can be scheduled under one task only.<br>
+• Scheduled programs must be defined (must exist).<br></p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Components_Task__ctor_" data-uid="L5Sharp.Components.Task.#ctor*"></a>
+
+  <h3 id="L5Sharp_Components_Task__ctor" data-uid="L5Sharp.Components.Task.#ctor">
+  Task()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Task.html">Task</a> with default values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Components_Task__ctor_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>By default uses <a class="xref" href="L5Sharp.Enums.TaskType.html#L5Sharp_Enums_TaskType_Periodic">Periodic</a>, 10ms <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_Priority">Priority</a>, 10ms <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_Rate">Rate</a>,
+and 500ms <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_Watchdog">Watchdog</a>.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Components_Task__ctor_" data-uid="L5Sharp.Components.Task.#ctor*"></a>
+
+  <h3 id="L5Sharp_Components_Task__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.Task.#ctor(System.Xml.Linq.XElement)">
+  Task(XElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Task.html">Task</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task(XElement element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> to initialize the type with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>element</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_Components_Task_DisableUpdateOutputs_" data-uid="L5Sharp.Components.Task.DisableUpdateOutputs*"></a>
+
+  <h3 id="L5Sharp_Components_Task_DisableUpdateOutputs" data-uid="L5Sharp.Components.Task.DisableUpdateOutputs">
+  DisableUpdateOutputs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The value indicating whether the task is set to disable updating output values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool DisableUpdateOutputs { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>; <code>true</code> if the task has disabled update outputs; otherwise <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_EnableTimeout_" data-uid="L5Sharp.Components.Task.EnableTimeout*"></a>
+
+  <h3 id="L5Sharp_Components_Task_EnableTimeout" data-uid="L5Sharp.Components.Task.EnableTimeout">
+  EnableTimeout
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The value indicating whether timeouts are enabled for the event task. Only used for event tasks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? EnableTimeout { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd><p>If the task is an event type task, <code>true</code> indicating that timeouts are enabled, <code>false</code> to indicate
+they are disabled. Returns <code>null</code> for non-event tasks.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_EventTag_" data-uid="L5Sharp.Components.Task.EventTag*"></a>
+
+  <h3 id="L5Sharp_Components_Task_EventTag" data-uid="L5Sharp.Components.Task.EventTag">
+  EventTag
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The tag name that the event task consumes. Only used for event tasks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TagName? EventTag { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value indicating what tag to consume. Returns <code>null</code> for non-event tasks.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Components_Task_EventTag_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Only used for event tasks with a Consumed Tag trigger or a Module Input Data State Change trigger.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Components_Task_EventTrigger_" data-uid="L5Sharp.Components.Task.EventTrigger*"></a>
+
+  <h3 id="L5Sharp_Components_Task_EventTrigger" data-uid="L5Sharp.Components.Task.EventTrigger">
+  EventTrigger
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The trigger for the event task. Only used for event tasks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TaskEventTrigger? EventTrigger { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.TaskEventTrigger.html">TaskEventTrigger</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.TaskEventTrigger.html">TaskEventTrigger</a> value indicating what triggers the task. Returns <code>null</code> for non-event tasks.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_InhibitTask_" data-uid="L5Sharp.Components.Task.InhibitTask*"></a>
+
+  <h3 id="L5Sharp_Components_Task_InhibitTask" data-uid="L5Sharp.Components.Task.InhibitTask">
+  InhibitTask
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The value indicating whether the task is inhibited.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool InhibitTask { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>; <code>true</code> if the task is inhibited; otherwise <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_Priority_" data-uid="L5Sharp.Components.Task.Priority*"></a>
+
+  <h3 id="L5Sharp_Components_Task_Priority" data-uid="L5Sharp.Components.Task.Priority">
+  Priority
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The scan priority of the task component. Default of 10.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TaskPriority Priority { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.TaskPriority.html">TaskPriority</a></dt>
+    <dd><blockquote>
+<p>A <a class="xref" href="L5Sharp.Core.TaskPriority.html">TaskPriority</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> priority of the task.</p>
+</blockquote>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_Rate_" data-uid="L5Sharp.Components.Task.Rate*"></a>
+
+  <h3 id="L5Sharp_Components_Task_Rate" data-uid="L5Sharp.Components.Task.Rate">
+  Rate
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The scan rate (ms) of the task component. Default of 10.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ScanRate? Rate { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.ScanRate.html">ScanRate</a>?</dt>
+    <dd><blockquote>
+<p>A <a class="xref" href="L5Sharp.Core.ScanRate.html">ScanRate</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> rate of the task.</p>
+</blockquote>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_ScheduledPrograms_" data-uid="L5Sharp.Components.Task.ScheduledPrograms*"></a>
+
+  <h3 id="L5Sharp_Components_Task_ScheduledPrograms" data-uid="L5Sharp.Components.Task.ScheduledPrograms">
+  ScheduledPrograms
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The collection of program names that are scheduled to the task.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;string&gt; ScheduledPrograms { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the string program names.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Components_Task_ScheduledPrograms_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This member just returns the read only list of scheduled programs. To modify the list, use</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Components_Task_Type_" data-uid="L5Sharp.Components.Task.Type*"></a>
+
+  <h3 id="L5Sharp_Components_Task_Type" data-uid="L5Sharp.Components.Task.Type">
+  Type
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the type of the task component (Continuous, Periodic, Event).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TaskType? Type { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.TaskType.html">TaskType</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.TaskType.html">TaskType</a> enum representing the type of the task.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_Watchdog_" data-uid="L5Sharp.Components.Task.Watchdog*"></a>
+
+  <h3 id="L5Sharp_Components_Task_Watchdog" data-uid="L5Sharp.Components.Task.Watchdog">
+  Watchdog
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The watchdog rate (ms) of the task component. Default of 500.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Watchdog Watchdog { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.Watchdog.html">Watchdog</a></dt>
+    <dd><blockquote>
+<p>A <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_Watchdog">Watchdog</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> watchdog of the task.</p>
+</blockquote>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Components_Task_Cancel_" data-uid="L5Sharp.Components.Task.Cancel*"></a>
+
+  <h3 id="L5Sharp_Components_Task_Cancel_System_String_" data-uid="L5Sharp.Components.Task.Cancel(System.String)">
+  Cancel(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes the specified program name from the underlying list of <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_ScheduledPrograms">ScheduledPrograms</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Cancel(string program)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>program</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the program to cancel.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Task_Schedule_" data-uid="L5Sharp.Components.Task.Schedule*"></a>
+
+  <h3 id="L5Sharp_Components_Task_Schedule_System_String_" data-uid="L5Sharp.Components.Task.Schedule(System.String)">
+  Schedule(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds the provided program name to the underlying list of <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_ScheduledPrograms">ScheduledPrograms</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Schedule(string program)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>program</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the program to schedule.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L25" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
