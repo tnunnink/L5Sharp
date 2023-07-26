@@ -48,7 +48,7 @@ using LINQ and the strongly typed objects in the library.
 The following is some basic examples of how you can use this library
 to query and modify the L5X content.
 
-### Querying 
+#### Querying 
 Once the LogixContent is created, you can use the container properties
 to get access to all of the primary L5X components, 
 such as `Tag`, `DataType`, `Module`, `Program`, and more. 
@@ -63,7 +63,7 @@ var tag = content.Tags.Find("MyTag");
 //Use LINQ to query further.
 var results = content.Tags.Where(t => t.DataType == "TIMER");
 ```
-### Modifying
+#### Modifying
 Modifying components is simple as well. 
 The same component collection interface offers methods for adding,
 removing, and replacing components. 
