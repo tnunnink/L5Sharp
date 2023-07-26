@@ -40,9 +40,9 @@ public class LogixMember : ILogixSerializable
     /// <summary>
     /// Creates a new <see cref="LogixMember"/> object with the provided name and logix type.
     /// </summary>
-    /// <param name="name">The name of the member.</param>
-    /// <param name="type">The <see cref="LogixType"/> object representing the member's data type data.</param>
-    /// <exception cref="ArgumentNullException">name or datatype are null.</exception>
+    /// <param name="name">The name of the member. If <c>null</c> will default to an empty string.</param>
+    /// <param name="type">The <see cref="LogixType"/> representing the member's data. If <c>null</c>
+    /// will default to <see cref="NullType"/>.</param>
     public LogixMember(string? name, LogixType? type)
     {
         Name = name ?? string.Empty;

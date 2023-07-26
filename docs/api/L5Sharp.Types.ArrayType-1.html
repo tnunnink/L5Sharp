@@ -210,7 +210,7 @@
   <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ArrayType.cs/#L299"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new array type from the provided logix array object.</p>
+  <div class="markdown level1 summary"><p>Creates a new array type from the provided array object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -221,7 +221,8 @@
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>array</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.array">Array</a></dt>
-    <dd><p>An array of logix types</p>
+    <dd><p>An array of logix types. Array can not be empty, contain null items,
+or objects of different logix type.</p>
 </dd>
   </dl>
 
@@ -236,10 +237,15 @@
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
-    <dd><p><code>array</code> or any element of <code>array</code> is null.</p>
+    <dd><p><code>array</code> is null.</p>
 </dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
-    <dd></dd>
+    <dd><p><code>array</code> contains no elements, <code>null</code> or <code>NullType</code> elements,
+or objects with different logix type names.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p><code>array</code> rank is greater than 3 dimensions.</p>
+</dd>
   </dl>
 
 

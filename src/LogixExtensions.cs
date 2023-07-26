@@ -92,7 +92,7 @@ public static class LogixExtensions
         where TComponent : LogixComponent<TComponent>
     {
         var element = container.Serialize();
-        var component = element.Elements().SingleOrDefault(e => e.LogixName() == name);
+        var component = element.Elements().FirstOrDefault(e => e.LogixName() == name);
         return component is not null ? LogixSerializer.Deserialize<TComponent>(component) : default;
     }
 

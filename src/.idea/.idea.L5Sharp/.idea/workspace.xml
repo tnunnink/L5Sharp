@@ -8,8 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../docfx/toc.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docfx/toc.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docfx/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/../docfx/index.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/ArrayType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +56,8 @@
     <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/CompositeWorkItem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItemDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Reflect.cs" root0="SKIP_HIGHLIGHTING" />
@@ -93,6 +99,7 @@
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Types/ArrayType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Examples.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -354,6 +361,7 @@
       <workItem from="1689783804369" duration="2224000" />
       <workItem from="1689802133525" duration="21759000" />
       <workItem from="1690031790030" duration="14853000" />
+      <workItem from="1690375923800" duration="3095000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -785,36 +793,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Enums/Radix.cs</url>
-          <line>583</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Enums\Radix.cs" initialLine="583" containingFunctionPresentation="Method 'Parse'">
-            <startOffsets>
-              <option value="20580" />
-            </startOffsets>
-            <endOffsets>
-              <option value="20581" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Types/Atomics/LINT.cs</url>
-          <line>26</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\Types\Atomics\LINT.cs" initialLine="26" containingFunctionPresentation="Constructor 'LINT'">
-            <startOffsets>
-              <option value="689" />
-            </startOffsets>
-            <endOffsets>
-              <option value="690" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="90" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Member" memberName="Target" />

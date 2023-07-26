@@ -4,6 +4,7 @@ using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests
 {
@@ -34,6 +35,33 @@ namespace L5Sharp.Tests
         }
 
         [Test]
+        public void QueryForTimerTagsAndReturnTheirTagNameDescriptionAndPresetValue()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            var results = content.Find<Tag>()
+                .SelectMany(t => t.Members())
+                .Where(t => t.DataType == "TIMER")
+                .Select(t => new { t.TagName, t.Comment, t.Value.As<TIMER>().PRE })
+                .ToList();
+
+            results.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void METHOD()
+        {
+            var content = LogixContent.Load(Known.Test);
+
+            content.Tags.AddRange(new List<Tag>
+            {
+                new() { Name = "tag01", Value = 100 },
+                new() { Name = "tag02", Value = new TIMER { PRE = 2000 } },
+                new() { Name = "tag03", Value = "This is a string tag value" }
+            });
+        }
+
+        [Test]
         public void Controller_WhenCalled_ReturnsControllerInstance()
         {
             var content = LogixContent.Load(Known.Test);
@@ -59,10 +87,10 @@ namespace L5Sharp.Tests
             array.Should().NotBeNull();
             array.Should().BeOfType<ArrayType>();
             array.Members.ToList().Should().NotBeEmpty();
-            array[0,0].Should().NotBeNull();
-            array[0,0].Should().Be(0);
-            array[2,4].Should().NotBeNull();
-            array[2,4].Should().Be(0);
+            array[0, 0].Should().NotBeNull();
+            array[0, 0].Should().Be(0);
+            array[2, 4].Should().NotBeNull();
+            array[2, 4].Should().Be(0);
         }
 
         [Test]

@@ -23,11 +23,15 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     private readonly List<LogixMember> _members;
 
     /// <summary>
-    /// Creates a new array type from the provided logix array object.
+    /// Creates a new array type from the provided array object.
     /// </summary>
-    /// <param name="array">An array of logix types</param>
-    /// <exception cref="ArgumentNullException"><c>array</c> or any element of <c>array</c> is null.</exception>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="array">An array of logix types. Array can not be empty, contain null items,
+    /// or objects of different logix type.
+    /// </param>
+    /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>array</c> contains no elements, <c>null</c> or <c>NullType</c> elements,
+    /// or objects with different logix type names.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><c>array</c> rank is greater than 3 dimensions.</exception>
     public ArrayType(Array array)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
@@ -39,10 +43,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
             throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
         if (collection.Select(t => t.Name).Distinct().Count() != 1)
             throw new ArgumentException("Array can not be initialized with different logix type items.", nameof(array));
-
-        Name = collection.First().Name;
+        
         Dimensions = Dimensions.FromArray(array);
-        Radix = collection.First() is AtomicType atomicType ? atomicType.Radix : Radix.Null;
         _members = Dimensions.Indices().Zip(collection, (i, t) =>
         {
             var member = new LogixMember(i, t);
@@ -60,11 +62,9 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     public ArrayType(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
-
-        Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
+        
         Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ??
                      throw new L5XException(L5XName.Dimensions, element);
-        Radix = element.Attribute(L5XName.Radix)?.Value.Parse<Radix>() ?? Radix.Null;
         _members = element.Elements().Select(e =>
         {
             var member = new LogixMember(e);
@@ -74,7 +74,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     }
 
     /// <inheritdoc />
-    public override string Name { get; }
+    public override string Name => $"{this.First().Name}{Dimensions.ToIndex()}";
 
     /// <inheritdoc />
     public override DataTypeFamily Family => this.First().Family;
@@ -89,11 +89,11 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     public Dimensions Dimensions { get; }
 
     /// <summary>
-    /// Gets the radix format of the the atomic type array.
+    /// Gets the radix format of the the array type elements.
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> format if the array is an atomic type array;
     /// otherwise, <see cref="Enums.Radix.Null"/>.</value>
-    public Radix Radix { get; }
+    public Radix Radix => this.First() is AtomicType atomicType ? atomicType.Radix : Radix.Null;
 
     /// <inheritdoc />
     public override IEnumerable<LogixMember> Members => _members.AsEnumerable();
