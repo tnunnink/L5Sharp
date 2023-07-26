@@ -38,7 +38,7 @@ var results = content.Find<Tag>()
 ```
 The above query gets all tags and their nested tag members of type TIMER and returns the TagName,
 Comment, and Preset value in a flat list.
->[!NOTE]
+>NOTE:
 >`Find<T>()` returns an `IEnumerable<T>`, allowing for complex queries
 using LINQ and the strongly typed objects in the library.
 > Since `Find<T>()` queries the entire L5X for the specified type, the above query
