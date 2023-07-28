@@ -63,16 +63,6 @@ public sealed class INT : AtomicType, IComparable, IConvertible
     public override Radix Radix { get; }
 
     /// <summary>
-    /// Represents the largest possible value of <see cref="INT"/>.
-    /// </summary>
-    public const short MaxValue = short.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="INT"/>.
-    /// </summary>
-    public const short MinValue = short.MinValue;
-
-    /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>

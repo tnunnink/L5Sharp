@@ -64,21 +64,11 @@ public sealed class REAL : AtomicType, IComparable, IConvertible
     /// <inheritdoc />
     public override Radix Radix { get; }
 
-    /// <summary>
-    /// Represents the largest possible value of <see cref="REAL"/>.
-    /// </summary>
-    public const float MaxValue = float.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="REAL"/>.
-    /// </summary>
-    public const float MinValue = float.MinValue;
-
     /// <inheritdoc />
     public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         return obj switch
         {
@@ -177,7 +167,8 @@ public sealed class REAL : AtomicType, IComparable, IConvertible
     byte IConvertible.ToByte(IFormatProvider provider) => (byte)_value;
 
     /// <inheritdoc />
-    char IConvertible.ToChar(IFormatProvider provider) => (char)_value;
+    char IConvertible.ToChar(IFormatProvider provider) => 
+        throw new InvalidCastException($"Conversion from {Name} to {nameof(Char)} is not supported.");
 
     /// <inheritdoc />
     DateTime IConvertible.ToDateTime(IFormatProvider provider) =>

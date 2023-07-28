@@ -59,7 +59,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
 
-            array.Name.Should().Be("DINT");
+            array.Name.Should().Be("DINT[4]");
             array.Dimensions.Length.Should().Be(4);
             array.Radix.Should().Be(Radix.Decimal);
             array.Class.Should().Be(DataTypeClass.Atomic);
@@ -76,7 +76,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType(new TIMER[] { new() { PRE = 1000 }, new() { PRE = 2000 }, new() { PRE = 3000 } });
 
-            array.Name.Should().Be("TIMER");
+            array.Name.Should().Be("TIMER[3]");
             array.Dimensions.Length.Should().Be(3);
             array.Radix.Should().Be(Radix.Null);
             array.Class.Should().Be(DataTypeClass.Predefined);
@@ -92,7 +92,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType(new STRING[] { "Test", "Test", "Test" });
 
-            array.Name.Should().Be("STRING");
+            array.Name.Should().Be("STRING[3]");
             array.Dimensions.Length.Should().Be(3);
             array.Radix.Should().Be(Radix.Null);
             array.Class.Should().Be(DataTypeClass.Predefined);
@@ -350,7 +350,7 @@ namespace L5Sharp.Tests.Types
         {
             ArrayType array = new DINT[] { 1, 2, 3, 4 };
 
-            FluentActions.Invoking(() => array[0] = new TIMER()).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => array[0] = new TIMER()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -412,7 +412,7 @@ namespace L5Sharp.Tests.Types
 
             var name = array.ToString();
 
-            name.Should().Be("DINT");
+            name.Should().Be("DINT[3]");
         }
 
         [Test]
@@ -448,11 +448,11 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void AsArray_ValidType_ShouldNotBeNull()
+        public void Of_ValidType_ShouldNotBeNull()
         {
             var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
 
-            var casted = array.OfType<DINT>();
+            var casted = array.Of<DINT>();
             casted.Should().NotBeNull();
             casted.Dimensions.Length.Should().Be(4);
 
@@ -566,7 +566,7 @@ namespace L5Sharp.Tests.Types
 
             var array = new ArrayType<LogixType>(element);
 
-            array.Name.Should().Be("REAL");
+            array.Name.Should().Be("REAL[5]");
             array.Dimensions.Should().Be(new Dimensions(5));
             array.Class.Should().Be(DataTypeClass.Atomic);
             array.Family.Should().Be(DataTypeFamily.None);
@@ -595,7 +595,7 @@ namespace L5Sharp.Tests.Types
 
             var array = new ArrayType<LogixType>(element);
 
-            array.Name.Should().Be("TIMER");
+            array.Name.Should().Be("TIMER[5]");
             array.Dimensions.Should().Be(new Dimensions(5));
             array.Class.Should().Be(DataTypeClass.Predefined);
             array.Family.Should().Be(DataTypeFamily.None);

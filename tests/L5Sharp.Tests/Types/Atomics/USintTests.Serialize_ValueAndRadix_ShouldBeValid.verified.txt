@@ -1,0 +1,1 @@
+﻿<DataValue DataType="USINT" Radix="Hex" Value="16#7b" />

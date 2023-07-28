@@ -94,18 +94,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void MaxValue_WhenCalled_ShouldBeExpected()
-        {
-            SINT.MaxValue.Should().Be(sbyte.MaxValue);
-        }
-
-        [Test]
-        public void MinValue_WhenCalled_ShouldBeExpected()
-        {
-            SINT.MinValue.Should().Be(sbyte.MinValue);
-        }
-
-        [Test]
         public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
         {
             var type = new SINT(33);

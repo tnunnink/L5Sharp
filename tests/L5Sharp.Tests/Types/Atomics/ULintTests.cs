@@ -45,18 +45,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void MaxValue_WhenCalled_ShouldBeExpected()
-        {
-            ULINT.MaxValue.Should().Be(ulong.MaxValue);
-        }
-        
-        [Test]
-        public void MinValue_WhenCalled_ShouldBeExpected()
-        {
-            ULINT.MinValue.Should().Be(ulong.MinValue);
-        }
-
-        [Test]
         public void SetValue_ValidShort_ShouldBeExpected()
         {
             ULINT type = _random;

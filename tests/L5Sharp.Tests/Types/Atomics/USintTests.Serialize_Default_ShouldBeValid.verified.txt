@@ -1,0 +1,1 @@
+﻿<DataValue DataType="USINT" Radix="Decimal" Value="0" />

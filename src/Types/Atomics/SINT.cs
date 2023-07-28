@@ -63,16 +63,6 @@ public sealed class SINT : AtomicType, IComparable, IConvertible
     public override Radix Radix { get; }
 
     /// <summary>
-    /// Represents the largest possible value of <see cref="SINT"/>.
-    /// </summary>
-    public const sbyte MaxValue = sbyte.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="SINT"/>.
-    /// </summary>
-    public const sbyte MinValue = sbyte.MinValue;
-    
-    /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>

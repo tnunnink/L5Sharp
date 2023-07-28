@@ -166,6 +166,18 @@
       <None Update="Components\ModuleTests.Serialize_Initialized_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
+      <None Update="Types\Atomics\USintTests.Serialize_Default_ShouldBeValid.verified.txt">
+        <DependentUpon>USintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\BoolTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>BoolTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\RealTests.Serialize_Value_ShouldBeValid.verified.txt">
+        <DependentUpon>RealTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\NullTypeTests.SerializeShouldBeVerified.verified.txt">
+        <DependentUpon>NullTypeTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

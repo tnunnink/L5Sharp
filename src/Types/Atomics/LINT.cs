@@ -63,16 +63,6 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
     public override Radix Radix { get; }
 
     /// <summary>
-    /// Represents the largest possible value of <see cref="LINT"/>.
-    /// </summary>
-    public const long MaxValue = long.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="LINT"/>.
-    /// </summary>
-    public const long MinValue = long.MinValue;
-
-    /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>

@@ -207,7 +207,7 @@ public class LogixMember : ILogixSerializable
     {
         var element = new XElement(L5XName.ArrayMember);
         element.Add(new XAttribute(L5XName.Name, name));
-        element.Add(new XAttribute(L5XName.DataType, type.Name));
+        element.Add(new XAttribute(L5XName.DataType, type.TypeName));
         element.Add(new XAttribute(L5XName.Dimensions, type.Dimensions));
         if (type.Radix != Radix.Null) element.Add(new XAttribute(L5XName.Radix, type.Radix));
         element.Add(type.Members.Select(m =>

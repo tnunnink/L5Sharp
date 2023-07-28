@@ -67,16 +67,6 @@ public sealed class DINT : AtomicType, IComparable, IConvertible
     public override Radix Radix { get; }
 
     /// <summary>
-    /// Represents the largest possible value of <see cref="DINT"/>.
-    /// </summary>
-    public const int MaxValue = int.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="DINT"/>.
-    /// </summary>
-    public const int MinValue = int.MinValue;
-
-    /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>

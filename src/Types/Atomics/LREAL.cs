@@ -64,21 +64,11 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
     /// <inheritdoc />
     public override Radix Radix { get; }
 
-    /// <summary>
-    /// Represents the largest possible value of <see cref="LREAL"/>.
-    /// </summary>
-    public const double MaxValue = double.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="LREAL"/>.
-    /// </summary>
-    public const double MinValue = double.MinValue;
-
     /// <inheritdoc />
     public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         return obj switch
         {

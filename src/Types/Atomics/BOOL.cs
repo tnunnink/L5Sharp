@@ -31,6 +31,17 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
         _value = value;
         Radix = Radix.Decimal;
     }
+    
+    /// <summary>
+    /// Creates a new <see cref="BOOL"/> with the provided value.
+    /// </summary>
+    /// <param name="value">The <see cref="int"/> value to initialize the type with. All non-zero value
+    /// will be evaluated as <c>true</c>.</param>
+    public BOOL(int value)
+    {
+        _value = value != 0;
+        Radix = Radix.Decimal;
+    }
 
     /// <summary>
     /// Creates a new <see cref="BOOL"/> value with the provided radix format.
@@ -67,7 +78,7 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
     public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         return obj switch
         {
@@ -85,7 +96,7 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
         return obj switch
         {
             BOOL value => value._value == _value,
-            AtomicType value => base.Equals(value),
+            AtomicType value => _value.Equals((bool)Convert.ChangeType(value, typeof(bool))),
             ValueType value => _value.Equals(Convert.ChangeType(value, typeof(bool))),
             _ => false
         };

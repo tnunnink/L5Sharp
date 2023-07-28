@@ -43,7 +43,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
             throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
         if (collection.Select(t => t.Name).Distinct().Count() != 1)
             throw new ArgumentException("Array can not be initialized with different logix type items.", nameof(array));
-        
+
         Dimensions = Dimensions.FromArray(array);
         _members = Dimensions.Indices().Zip(collection, (i, t) =>
         {
@@ -62,7 +62,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     public ArrayType(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
-        
+
         Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ??
                      throw new L5XException(L5XName.Dimensions, element);
         _members = element.Elements().Select(e =>
@@ -97,12 +97,17 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
 
     /// <inheritdoc />
     public override IEnumerable<LogixMember> Members => _members.AsEnumerable();
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public string TypeName => this.First().Name;
 
     /// <inheritdoc />
     public override XElement Serialize()
     {
         var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, Name));
+        element.Add(new XAttribute(L5XName.DataType, this.First().Name));
         element.Add(new XAttribute(L5XName.Dimensions, Dimensions));
         if (Radix != Radix.Null) element.Add(new XAttribute(L5XName.Radix, Radix));
         element.Add(_members.Select(m =>
@@ -171,6 +176,13 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// <param name="array"></param>
     /// <returns>A new <see cref="ArrayType{TLogixType}"/> containing the elements of the provided array.</returns>
     public static implicit operator ArrayType(LogixType[] array) => new(array);
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="array"></param>
+    /// <returns></returns>
+    public static implicit operator LogixType[](ArrayType array) => array.ToArray();
 
     /// <summary>
     /// Implicitly converts the provided array of logix type objects to an <see cref="ArrayType{TLogixType}"/>.
@@ -240,8 +252,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast.</typeparam>
     /// <returns>A <see cref="ArrayType{TLogixType}"/> of the specified.</returns>
-    public ArrayType<TLogixType> OfType<TLogixType>() where TLogixType : LogixType =>
-        new(this.Cast<TLogixType>().ToArray());
+    public ArrayType<TLogixType> Of<TLogixType>() where TLogixType : LogixType => this.Cast<TLogixType>().ToArray();
 
     /// <summary>
     /// Handles getting the logix type at the specified index of the current array from the underlying member collection. 
@@ -254,7 +265,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         var member = Members.SingleOrDefault(m => m.Name == index);
 
         if (member is null)
-            throw new ArgumentOutOfRangeException(nameof(index), $"The index '{index}' is outside the bound of the array.");
+            throw new ArgumentOutOfRangeException(nameof(index),
+                $"The index '{index}' is outside the bound of the array.");
 
         return member.DataType;
     }
@@ -273,11 +285,12 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         var member = Members.SingleOrDefault(m => m.Name == index);
 
         if (member is null)
-            throw new ArgumentOutOfRangeException(nameof(index), $"The index '{index}' is outside the bound of the array.");
+            throw new ArgumentOutOfRangeException(nameof(index),
+                $"The index '{index}' is outside the bound of the array.");
 
         member.DataType = value;
     }
-    
+
     /// <summary>
     /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
     /// </summary>

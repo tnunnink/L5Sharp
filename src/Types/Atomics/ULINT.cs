@@ -63,16 +63,6 @@ public sealed class ULINT : AtomicType, IComparable, IConvertible
     public override Radix Radix { get; }
 
     /// <summary>
-    /// Represents the largest possible value of <see cref="ULINT"/>.
-    /// </summary>
-    public const ulong MaxValue = ulong.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="ULINT"/>.
-    /// </summary>
-    public const ulong MinValue = ulong.MinValue;
-    
-    /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>
@@ -83,7 +73,7 @@ public sealed class ULINT : AtomicType, IComparable, IConvertible
         throw new ArgumentOutOfRangeException($"The bit index {bit} is out of range for a {Name} atomic value.");
 
     /// <inheritdoc />
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         return obj switch
         {

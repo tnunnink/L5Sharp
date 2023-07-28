@@ -15,17 +15,39 @@ namespace L5Sharp.Types;
 /// <remarks>
 /// <para>
 /// A logix string type has predefined members <see cref="LEN"/> and <see cref="DATA"/>, which contain the
-/// current string length and set of ASCII characters, respectively. This class is inherited by
-/// <see cref="Predefined.STRING"/>, which is Rockwell's built in base string type. You may also create instance of
-/// this class providing a string value and type name.
+/// current string length and set of ASCII characters representing the string value, respectively.
+/// This class is inherited by <see cref="Predefined.STRING"/>, which is Rockwell's built in base string type.
 /// </para>
 /// <para>
 /// StringType has special cases in terms of it's L5X structure. Rockwell treats strings sort of like a value type,
-/// giving it it's own <see cref="DataFormat"/>. However, when serialized as a member of a complex structure, the data
+/// giving it a special <see cref="DataFormat"/>. However, when serialized as a member of a complex structure, the data
 /// looks more like a generic structure type.</para>
 /// </remarks>
 public class StringType : LogixType, IEnumerable<char>
 {
+    private readonly List<LogixMember> _members;
+    
+    /// <summary>
+    /// Creates a new <see cref="StringType"/> initialized with default name and data.
+    /// </summary>
+    /// <remarks>This creates a default instance named "StringType" with an empty string.</remarks>
+    public StringType()
+    {
+        Name = nameof(StringType);
+        _members = GenerateMembers(string.Empty).ToList();
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="StringType"/> initialized with default name and provided string data.
+    /// </summary>
+    /// <param name="value">The string value to initialize the type with.</param>
+    /// <remarks>This creates a instance named "StringType" with the provided string value.</remarks>
+    public StringType(string value)
+    {
+        Name = nameof(StringType);
+        _members = GenerateMembers(value).ToList();
+    }
+
     /// <summary>
     /// Creates a new <see cref="StringType"/> instance with the provided data.
     /// </summary>
@@ -38,18 +60,22 @@ public class StringType : LogixType, IEnumerable<char>
             throw new ArgumentException("Name can not be null or empty for a string type object.");
 
         Name = name;
-        DATA = GetData(value);
-        DATA.DataChanged += OnDataChanged;
+        _members = GenerateMembers(value).ToList();
     }
 
     /// <summary>
-    /// Creates a new <see cref="StringType"/> instance with the provided data.
+    /// Creates a new <see cref="StringType"/> object with the provided name and string value.
     /// </summary>
     /// <param name="name">The name of the string type.</param>
     /// <param name="value">The string value of the type.</param>
     /// <param name="length"></param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c>value</c> is longer than <c>length</c>.</exception>
+    /// <remarks>
+    /// This constructor is meant for derived classes that what to limit the length of the input string
+    /// data when initializing the string type object. This is used by <c>STRING</c>, Rockwell's predefined string type,
+    /// which limits strings to a 82 character length.
+    /// </remarks>
     protected StringType(string name, string value, int length)
     {
         if (string.IsNullOrEmpty(name))
@@ -60,8 +86,7 @@ public class StringType : LogixType, IEnumerable<char>
                 $"The length {value.Length} of value can not be greater than {length} characters.");
 
         Name = name;
-        DATA = GetData(value);
-        DATA.DataChanged += OnDataChanged;
+        _members = GenerateMembers(value).ToList();
     }
 
     /// <summary>
@@ -74,21 +99,12 @@ public class StringType : LogixType, IEnumerable<char>
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
 
-        if (element.Attribute(L5XName.Format)?.Value == DataFormat.String)
-        {
-            Name = element.Ancestors().FirstOrDefault()?.Attribute(L5XName.DataType)?.Value ??
-                   throw new L5XException(L5XName.DataType, element);
-            DATA = GetData(element.Value);
-            DATA.DataChanged += OnDataChanged;
-            return;
-        }
+        //We can get either a string format or a string structure member here.
+        var name = DetermineName(element);
+        var value = DetermineValue(element);
 
-        Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
-        var value = element.Elements(L5XName.DataValueMember)
-                        .FirstOrDefault(e => e.Attribute(L5XName.Name)?.Value == nameof(DATA))?.Value ??
-                    throw new L5XException(L5XName.DataValueMember, element);
-        DATA = GetData(value);
-        DATA.DataChanged += OnDataChanged;
+        Name = name;
+        _members = GenerateMembers(value).ToList();
     }
 
     /// <inheritdoc />
@@ -101,20 +117,19 @@ public class StringType : LogixType, IEnumerable<char>
     public override DataTypeClass Class => DataTypeClass.Unknown;
 
     /// <inheritdoc />
-    public override IEnumerable<LogixMember> Members => new List<LogixMember>
-        { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
+    public override IEnumerable<LogixMember> Members => _members.AsEnumerable();
 
     /// <summary>
     /// Gets the character length value of the string. 
     /// </summary>
     /// <returns>A <see cref="DINT"/> logix atomic value representing the integer length of the string.</returns>
-    public DINT LEN => ToString().Length;
+    public DINT LEN => Member(nameof(LEN))!.DataType.As<DINT>();
 
     /// <summary>
     /// Gets the array of bytes that represent the ASCII encoded string value.
     /// </summary>
     /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
-    public ArrayType<SINT> DATA { get; }
+    public ArrayType<SINT> DATA => Member(nameof(DATA))!.DataType.As<ArrayType<SINT>>();
 
     /// <inheritdoc />
     public IEnumerator<char> GetEnumerator() => ToString().GetEnumerator();
@@ -190,4 +205,43 @@ public class StringType : LogixType, IEnumerable<char>
     /// When the DATA array type data change event fires, forward the call by raising this types data changed event.
     /// </summary>
     private void OnDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
+    
+    /// <summary>
+    /// Determines the string type name from a given element. This is slightly tricky because we have different places
+    /// to look depending on if this is a string formatted element or a nested string structure.
+    /// </summary>
+    private static string DetermineName(XElement element)
+    {
+        if (element.Attribute(L5XName.Format)?.Value == DataFormat.String)
+            return element.Ancestors().FirstOrDefault()?.Attribute(L5XName.DataType)?.Value
+                   ?? throw new L5XException(L5XName.DataType, element);
+        
+        return element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
+    }
+    
+    /// <summary>
+    /// Determines the string type name from a given element. This is slightly tricky because we have different places
+    /// to look depending on if this is a string formatted element or a nested string structure. 
+    /// </summary>
+    private static string DetermineValue(XElement element)
+    {
+        if (element.Attribute(L5XName.Format)?.Value == DataFormat.String)
+            return element.Value;
+        
+        return element.Elements(L5XName.DataValueMember)
+                   .FirstOrDefault(e => e.Attribute(L5XName.Name)?.Value == nameof(DATA))?.Value
+               ?? throw new L5XException(L5XName.DataValueMember, element);
+    }
+
+    /// <summary>
+    /// Generates the static string type logix members given the string data.
+    /// </summary>
+    private IEnumerable<LogixMember> GenerateMembers(string value)
+    {
+        var len = new LogixMember(nameof(LEN), new DINT(value.Length));
+        var data = new LogixMember(nameof(DATA), new ArrayType<SINT>(GetData(value)));
+        data.DataChanged += OnDataChanged;
+
+        return new List<LogixMember> { len, data };
+    }
 }

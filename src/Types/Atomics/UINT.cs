@@ -63,16 +63,6 @@ public sealed class UINT : AtomicType, IComparable, IConvertible
     public override Radix Radix { get; }
 
     /// <summary>
-    /// Represents the largest possible value of <see cref="UINT"/>.
-    /// </summary>
-    public const ushort MaxValue = ushort.MaxValue;
-
-    /// <summary>
-    /// Represents the smallest possible value of <see cref="UINT"/>.
-    /// </summary>
-    public const ushort MinValue = ushort.MinValue;
-    
-    /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
     /// <param name="bit">The zero based bit index of the value to get.</param>
