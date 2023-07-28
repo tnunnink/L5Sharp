@@ -182,7 +182,11 @@ public static class LogixData
     /// <summary>
     /// Handles deserializing an array element to a <see cref="ArrayType"/>.
     /// </summary>
-    private static LogixType DeserializeArray(XElement element) => new ArrayType<LogixType>(element);
+    private static LogixType DeserializeArray(XElement element)
+    {
+        
+        return new ArrayType<LogixType>(element);
+    }
 
     /// <summary>
     /// Handles deserializing an array index element to a logix type, either atomic, string, or structure,
