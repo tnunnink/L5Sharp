@@ -8,8 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixExtensionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docfx/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/../docfx/index.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogixExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogixExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Types/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Types/StringType.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -358,7 +361,8 @@
       <workItem from="1689783804369" duration="2224000" />
       <workItem from="1689802133525" duration="21759000" />
       <workItem from="1690031790030" duration="14853000" />
-      <workItem from="1690375923800" duration="4211000" />
+      <workItem from="1690375923800" duration="4443000" />
+      <workItem from="1690397793923" duration="4326000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -790,6 +794,23 @@
     <option name="LAST_COMMIT_MESSAGE" value="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixExtensionTests.cs</url>
+          <line>14</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\LogixExtensionTests.cs" initialLine="14" containingFunctionPresentation="Method 'Tags_WhenCalled_GetsAllTagsEverywhereIncludingModuleAndAoi'">
+            <startOffsets>
+              <option value="309" />
+            </startOffsets>
+            <endOffsets>
+              <option value="336" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Member" memberName="Target" />

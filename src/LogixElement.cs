@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
@@ -38,6 +39,16 @@ public abstract class LogixElement : ILogixSerializable
     /// L5X data.
     /// </summary>
     protected readonly XElement Element;
+
+    /// <summary>
+    /// An indication as to whether this element is attached to a L5X document.
+    /// </summary>
+    /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
+    /// <remarks>
+    /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
+    /// If so we will assume this element is attached to an overall L5X document.
+    /// </remarks>
+    public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
@@ -173,8 +184,8 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets a child <see cref="LogixElement"/> deserialized as the specified type if it exists.
-    /// If the element does not exist, returns <c>default</c> value of the generic type parameter.
+    /// Gets a immediate child element of the specified member name if it exists and deserializes it as the
+    /// specific generic type parameter. If the element does not exist, returns <c>default</c>.
     /// </summary>
     /// <param name="name">The name of the child element.</param>
     /// <typeparam name="T">The return type of the element.</typeparam>
@@ -183,7 +194,7 @@ public abstract class LogixElement : ILogixSerializable
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
-    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible for derived classes.
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>

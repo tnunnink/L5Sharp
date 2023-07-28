@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace L5Sharp.Enums;
 
@@ -16,27 +15,6 @@ public abstract class Scope : LogixEnum<Scope, string>
     /// Gets the corresponding L5XName for the current <see cref="Scope"/>.
     /// </summary>
     public abstract XName XName { get; }
-
-    /// <summary>
-    /// Gets the <see cref="Scope"/> option for the provided <see cref="XElement"/>.
-    /// </summary>
-    /// <param name="element">A <see cref="XElement"/> for which to determine the scope of.</param>
-    /// <returns>A <see cref="Scope"/> representing the first found container of the provided element.</returns>
-    public static Scope FromElement(XElement element)
-    {
-        var containers = All().Select(s => s.XName.ToString());
-        
-        var ancestor = element.Ancestors().FirstOrDefault(a => containers.Any(c => c == a.Name))?.Name.ToString();
-
-        return ancestor switch
-        {
-            L5XName.Routine => Routine,
-            L5XName.Program => Program,
-            L5XName.AddOnInstructionDefinition => Instruction,
-            L5XName.Controller => Controller,
-            _ => Null
-        };
-    }
 
     /// <summary>
     /// Represents a Null <see cref="Scope"/> value.

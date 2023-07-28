@@ -8,7 +8,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Provides a wrapper around the string port address value to indicate what type of address the value is.
 /// </summary>
-public class Address : IEquatable<Address>
+public class Address
 {
     private readonly string _address;
 
@@ -67,6 +67,20 @@ public class Address : IEquatable<Address>
     /// <param name="address">The value to convert.</param>
     /// <returns>A <see cref="string"/> representing the address value.</returns>
     public static implicit operator string(Address address) => address.ToString();
+    
+    /// <summary>
+    /// Converts the current <see cref="string"/> to a <see cref="Address"/> value.
+    /// </summary>
+    /// <param name="address">The value to convert.</param>
+    /// <returns>A <see cref="Address"/> representing the address value.</returns>
+    public static implicit operator Address(byte address) => new(address.ToString());
+        
+    /// <summary>
+    /// Converts the current <see cref="Address"/> to a <see cref="string"/> value.
+    /// </summary>
+    /// <param name="address">The value to convert.</param>
+    /// <returns>A <see cref="string"/> representing the address value.</returns>
+    public static implicit operator byte(Address address) => byte.Parse(address._address);
         
     /// <summary>
     /// Creates a new <see cref="Address"/> instance from the provided <see cref="IPAddress"/> object.
@@ -76,9 +90,7 @@ public class Address : IEquatable<Address>
     /// <exception cref="ArgumentNullException">ipAddress is null.</exception>
     public static Address FromIP(IPAddress ipAddress)
     {
-        if (ipAddress is null)
-            throw new ArgumentNullException(nameof(ipAddress));
-
+        if (ipAddress is null) throw new ArgumentNullException(nameof(ipAddress));
         return new Address(ipAddress.ToString());
     }
         
@@ -130,19 +142,16 @@ public class Address : IEquatable<Address>
     public override string ToString() => _address;
 
     /// <inheritdoc />
-    public bool Equals(Address? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        return ReferenceEquals(this, other) ||
-               string.Equals(_address, other._address, StringComparison.OrdinalIgnoreCase);
-    }
-
-    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        return obj.GetType() == GetType() && Equals((Address)obj);
+        return obj switch
+        {
+            Address other => string.Equals(_address, other._address, StringComparison.OrdinalIgnoreCase),
+            string other => string.Equals(_address, other, StringComparison.OrdinalIgnoreCase),
+            byte other => string.Equals(_address, other.ToString(), StringComparison.OrdinalIgnoreCase),
+            IPAddress other => string.Equals(_address, other.ToString(), StringComparison.OrdinalIgnoreCase),
+            _ => false
+        };
     }
 
     /// <inheritdoc />

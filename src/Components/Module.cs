@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using L5Sharp.Catalog;
 using L5Sharp.Core;
 using L5Sharp.Elements;
@@ -32,6 +30,7 @@ public class Module : LogixComponent<Module>
         SafetyEnabled = default;
         Keying = ElectronicKeying.CompatibleModule;
         Ports = new LogixContainer<Port>();
+        Communications = new Communications();
     }
 
     /// <inheritdoc />
@@ -40,7 +39,11 @@ public class Module : LogixComponent<Module>
     }
 
     /// <inheritdoc />
-    //To prevent exceptions since Module is the only component that does not require name, we are overriding it as so.
+    /// <remarks>
+    /// Module components don't all have a name attribute (e.g. VFD peripheral modules). For this reason,
+    /// the name property is overriden to not be a required field for this component type. If the name is not found,
+    /// this property returns an empty string.
+    /// </remarks>
     public override string Name
     {
         get => GetValue<string>() ?? string.Empty;
@@ -48,7 +51,8 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// The catalog number uniquely identifies the module. This is a rockwell defined convention.
+    /// Specify the catalog number that uniquely identifies the module. This is a rockwell defined convention,
+    /// and represents the identity of the module type.
     /// </summary>
     /// <value>A <see cref="string"/> value containing the catalog number.</value>
     public string? CatalogNumber
@@ -142,7 +146,8 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="int"/> representing the id of the parent port. Default is zero.</value>
     public int ParentPortId
     {
-        get => GetValue<int>();
+        // ReSharper disable once ExplicitCallerInfoArgument I don't like the L5X name...
+        get => GetValue<int>(L5XName.ParentModPortId);
         set => SetValue(value);
     }
 
@@ -187,8 +192,8 @@ public class Module : LogixComponent<Module>
                 Element.Element(L5XName.EKey)?.Remove();
                 return;
             }
-                
-            if (Element.Element(L5XName.EKey) is null) 
+
+            if (Element.Element(L5XName.EKey) is null)
             {
                 Element.Add(new XElement(L5XName.EKey, new XAttribute(L5XName.State, value)));
                 return;
@@ -199,8 +204,14 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// A collection of <see cref="Port"/> that define the module's connection within the module tree.
+    /// A collection of <see cref="Port"/> elements that define the module's connection within the module tree.
     /// </summary>
+    /// <value>A <see cref="LogixContainer{TElement}"/> of <see cref="Port"/> objects.</value>
+    /// <remarks>
+    /// Ports define how a module's peripherals are connected to other module's, forming the network or tree of
+    /// devices used to communicated with a controller and field equipment. Ports must have a unique id, a type,
+    /// and address.
+    /// </remarks>
     public LogixContainer<Port> Ports
     {
         get => GetContainer<Port>();
@@ -208,30 +219,11 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// A <see cref="Tag"/> containing the configuration data for the module.
+    /// 
     /// </summary>
-    public Tag? Config
+    public Communications? Communications
     {
-        get
-        {
-            var element = Element.Descendants(L5XName.ConfigTag).FirstOrDefault();
-            return element is null ? default : new Tag(element) { Name = element.ModuleTagName() };
-        }
-    }
-
-    /// <summary>
-    /// A collection of <see cref="Connection"/> defining the input and output connection specific to the module.
-    /// </summary>
-    public LogixContainer<Connection> Connections
-    {
-        get
-        {
-            var connections = Element.Element(L5XName.Communications)?.Element(L5XName.Connections);
-            
-            if (connections is null)
-                throw new InvalidOperationException("Could not find connections container for module element.");
-            
-            return new LogixContainer<Connection>(connections);
-        }
+        get => GetComplex<Communications>();
+        set => SetComplex(value);
     }
 }

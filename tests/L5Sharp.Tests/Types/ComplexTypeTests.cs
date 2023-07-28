@@ -590,7 +590,7 @@ public class ComplexTypeTests
             new("UserType", new MySimpleType())
         });
 
-        var userTypes = type.BuildUserTypes().ToList();
+        var userTypes = type.ToUDT().ToList();
 
         userTypes.Should().HaveCount(1);
     }

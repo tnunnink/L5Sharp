@@ -3,7 +3,6 @@ using L5Sharp.Components;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Types.Predefined;
-using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests;
 
@@ -99,7 +98,7 @@ public class ProofTests
     {
         var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Transfer\Site.L5X");
 
-        var config = content.Modules.Get("R0S4").Config;
+        var config = content.Modules.Get("R0S4").Communications?.ConfigTag;
 
         var comment = config?.Member("CH0CountLimit")?.Comment;
 

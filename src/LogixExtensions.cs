@@ -20,7 +20,18 @@ namespace L5Sharp;
 /// </summary>
 public static class LogixExtensions
 {
-    #region CommonExtensions
+    #region GenericExtensions
+
+    /// <summary>
+    /// Gets the <c>Name</c> attribute value for the current <see cref="XElement"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> instance.</param>
+    /// <returns>A <see cref="string"/> representing the name value if found; Otherwise, <c>empty</c>.</returns>
+    /// <remarks>
+    /// This is a helper since we access and use the name attribute so often I just wanted to make
+    /// the code more concise.
+    /// </remarks>
+    public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
 
     /// <summary>
     /// Gets the element's attached <see cref="LogixContent"/> instance if it exists. 
@@ -37,6 +48,32 @@ public static class LogixExtensions
         return content is not null ? new LogixContent(content) : default;
     }
 
+    /// <summary>
+    /// Determines if the current string is a value <see cref="TagName"/> string.
+    /// </summary>
+    /// <param name="input">The string input to analyze.</param>
+    /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
+    public static bool IsTagName(this string input) => Regex.IsMatch(input,
+        @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
+
+    /// <summary>
+    /// Tests the current string to indicate whether it is a valid Logix component name value. 
+    /// </summary>
+    /// <param name="name">The string name to test.</param>
+    /// <returns><c>true</c> if <c>name</c> passes the Logix component name requirements; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// Valid name must contain only alphanumeric or underscores, start with a letter or underscore,
+    /// and be between 1 and 40 characters.
+    /// </remarks>
+    public static bool IsComponentName(this string name)
+    {
+        if (string.IsNullOrEmpty(name)) return false;
+        var characters = name.ToCharArray();
+        if (name.Length > 40) return false;
+        if (!(char.IsLetter(characters[0]) || characters[0] == '_')) return false;
+        return characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_');
+    }
+
     #endregion
 
     #region ComponentExtensions
@@ -47,22 +84,38 @@ public static class LogixExtensions
     /// <value>A <see cref="Enums.Scope"/> option indicating the container type for the scoped component.</value>
     /// <remarks>
     /// </remarks>
-    public static Scope Scope(this LogixElement component) => Enums.Scope.FromElement(component.Serialize());
+    public static Scope Scope(this LogixElement component)
+    {
+        var containers = Enums.Scope.All().Select(s => s.XName.ToString());
+
+        var ancestor = component.Serialize().Ancestors()
+            .FirstOrDefault(a => containers.Any(c => c == a.Name))?.Name.ToString();
+
+        return ancestor switch
+        {
+            L5XName.Routine => Enums.Scope.Routine,
+            L5XName.Program => Enums.Scope.Program,
+            L5XName.AddOnInstructionDefinition => Enums.Scope.Instruction,
+            L5XName.Controller => Enums.Scope.Controller,
+            _ => Enums.Scope.Null
+        };
+    }
 
     /// <summary>
-    /// The scope name of the component.
+    /// Gets the name of the scoped container for the current logix element.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the container (program, controller, routine) name of the component.</value>
+    /// <value>A <see cref="string"/> containing the container (program, controller, routine) name of the component.</value>
     /// <remarks>
     /// </remarks>
     public static string ScopeName(this LogixElement component)
     {
         var containers = Enums.Scope.All().Select(s => s.XName.ToString());
 
-        var ancestor = component.Serialize().Ancestors()
-            .FirstOrDefault(a => containers.Any(c => c == a.Name))?.LogixName();
+        var logixName = component.Serialize().Ancestors()
+            .FirstOrDefault(a => containers.Any(c => c == a.Name))
+            ?.LogixName();
 
-        return ancestor ?? string.Empty;
+        return logixName ?? string.Empty;
     }
 
     #endregion
@@ -127,27 +180,6 @@ public static class LogixExtensions
 
     #endregion
 
-    #region DataTypeExtensions
-
-    /// <summary>
-    /// Returns all <see cref="DataType"/> instances that are dependent on the specified data type name.
-    /// </summary>
-    /// <param name="dataTypes">The logix collection of data types.</param>
-    /// <param name="name">The name of the data type for which to find dependencies.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="DataType"/> that are dependent on the specified data type name.</returns>
-    /// <remarks>
-    /// This extension serves as an example of how one could extend the API of specific component collections to
-    /// add custom XML queries against the source L5X and return materialized components.
-    /// </remarks>
-    public static IEnumerable<DataType> DependentsOf(this LogixContainer<DataType> dataTypes, string name)
-    {
-        return dataTypes.Serialize().Descendants(L5XName.DataType)
-            .Where(e => e.Descendants(L5XName.Member).Any(m => m.Attribute(L5XName.DataType)?.Value == name))
-            .Select(e => new DataType(e));
-    }
-
-    #endregion
-
     #region LogixTypeExtensions
 
     /// <summary>
@@ -157,7 +189,7 @@ public static class LogixExtensions
     /// <param name="type">The structure type for which to generate a list of user defined type objects.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing a <see cref="DataType"/> for each user type in the
     /// structure's type/member hierarchy</returns>
-    public static IEnumerable<DataType> BuildUserTypes(this ComplexType type)
+    public static IEnumerable<DataType> ToUDT(this StructureType type)
     {
         var results = new List<DataType>();
 
@@ -183,14 +215,63 @@ public static class LogixExtensions
 
         foreach (var member in type.Members)
             if (member.DataType is ComplexType structureType)
-                results.AddRange(structureType.BuildUserTypes());
+                results.AddRange(structureType.ToUDT());
 
         return results;
     }
 
     #endregion
 
+    #region DataTypeExtensions
+
+    /// <summary>
+    /// Returns all <see cref="DataType"/> instances that are dependent on the specified data type name.
+    /// </summary>
+    /// <param name="dataTypes">The logix collection of data types.</param>
+    /// <param name="name">The name of the data type for which to find dependencies.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="DataType"/> that are dependent on the specified data type name.</returns>
+    /// <remarks>
+    /// This extension serves as an example of how one could extend the API of specific component collections to
+    /// add custom XML queries against the source L5X and return materialized components.
+    /// </remarks>
+    public static IEnumerable<DataType> DependentsOf(this LogixContainer<DataType> dataTypes, string name)
+    {
+        return dataTypes.Serialize().Descendants(L5XName.DataType)
+            .Where(e => e.Descendants(L5XName.Member).Any(m => m.Attribute(L5XName.DataType)?.Value == name))
+            .Select(e => new DataType(e));
+    }
+
+    #endregion
+
     #region TagExtensions
+
+    /// <summary>
+    /// Returns all <see cref="Tag"/> objects in the entire L5X, including controller, program, AOI, and module tags.
+    /// </summary>
+    /// <param name="content">The <see cref="LogixContent"/> representing the L5X file to query.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all <see cref="Tag"/> objects in the L5X.</returns>
+    /// <remarks>
+    /// Rockwell certainly is not consistent in terms of where tags are serialized in the L5X, though it has reasoning.
+    /// The API of this library sort of reflects that with all the different places to look for tag objects
+    /// (controller, programs, AOIs, Modules).
+    /// This extension is here to support a single interface through which to retrieve a flat list of all tags in the L5X
+    /// regardless of container and element name. This method supports controller, program, AOI, and module config, input,
+    /// and outputs tags.
+    /// </remarks>
+    public static IEnumerable<Tag> Tags(this LogixContent content)
+    {
+        var supportedNames = new List<string>
+        {
+            L5XName.Tag,
+            L5XName.LocalTag,
+            L5XName.ConfigTag,
+            L5XName.InputTag,
+            L5XName.OutputTag
+        };
+
+        return content.L5X.Descendants().Where(e => supportedNames.Any(n => n == e.Name)).Select(e => new Tag(e));
+    }
+
 
     /// <summary>
     /// Returns a filtered collection of <see cref="Tag"/> that are contained in the specified program name.
@@ -219,8 +300,8 @@ public static class LogixExtensions
     #region InstructionExtensions
 
     /// <summary>
-    /// Returns the AOI instruction logic with the parameters of the instruction replaced with the provided neutral
-    /// text signature arguments.
+    /// Returns the AOI instruction logic with the parameters tag names replaced with the operand tag names of the
+    /// provided neutral text signature.
     /// </summary>
     /// <param name="instruction">The <see cref="AddOnInstruction"/> component.</param>
     /// <param name="text">The text signature of the instruction arguments.</param>
@@ -238,11 +319,11 @@ public static class LogixExtensions
         if (text is null)
             throw new ArgumentNullException(nameof(text));
 
-        // All instructions primary logic is contained in the routine names 'Logic'
+        // All instructions primary logic is contained in the routine named 'Logic'
         var logic = instruction.Routines.FirstOrDefault(r => r.Name == "Logic");
 
-        var rll = logic?.Content<Rung>();
-        if (rll is null) return Enumerable.Empty<NeutralText>();
+        var rungs = logic?.Content<Rung>();
+        if (rungs is null) return Enumerable.Empty<NeutralText>();
 
         //Skip first operand as it is always the AOI tag, which does not have corresponding parameter within the logic.
         var arguments = text.Operands().Select(o => o.ToString()).Skip(1).ToList();
@@ -254,7 +335,7 @@ public static class LogixExtensions
         var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
 
         //Replace all parameter names with argument names in the instruction logic text, and return the results.
-        return rll.Select(r => r.Text)
+        return rungs.Select(r => r.Text)
             .Select(t => mapping.Aggregate(t, (current, pair) =>
             {
                 if (!pair.Argument.IsTagName()) return current;
@@ -291,12 +372,22 @@ public static class LogixExtensions
         .ToIPAddress();
 
     /// <summary>
-    /// Gets the parent module of this module component.
+    /// Gets the <c>Local</c> module or module that represents the controller of the module collection.
+    /// </summary>
+    /// <param name="modules">A collection of modules.</param>
+    /// <returns>A single <see cref="Module"/> which is named local if found; Otherwise, <c>null</c>.</returns>
+    /// <remarks>This is a helper to concisely get the controller or root local module from the modules collection.</remarks>
+    public static Module? Local(this IEnumerable<Module> modules) => modules.SingleOrDefault(m => m.Name == "Local");
+
+    /// <summary>
+    /// Gets the parent module of this module component defined in the current L5X content.
     /// </summary>
     /// <returns>A <see cref="Module"/> representing the parent of this module if it exists; otherwise, <c>null</c>.</returns>
     /// <remarks>
-    /// This method relies on the object being attached to the L5X hierarchy in order to find it's parent. If the module
-    /// was created in memory and not yet added to the L5X, then this method will return <c>null</c>.
+    /// The L5X structure serializes modules in a flat list with each element having properties (ParentModule, ParentModPortId)
+    /// defining the parent/child IO tree relationship. It would be nice to navigate this hierarchy programatically,
+    /// hence the reason for this extension method. Of course, this requires the module is attached to the L5X content.
+    /// In-memory created modules will inherently return an empty collection, as there is no L5X structure to introspect.
     /// </remarks>
     public static Module? Parent(this Module module)
     {
@@ -305,12 +396,18 @@ public static class LogixExtensions
     }
 
     /// <summary>
-    /// Gets the child modules of this module component.
+    /// Gets the child modules of this module component defined in the current L5X content. 
     /// </summary>
     /// <returns>
-    /// A <see cref="IEnumerable{T}"/> of <see cref="Module"/> components that have the parent module configured
-    /// as the current module.
+    /// A <see cref="IEnumerable{T}"/> of <see cref="Module"/> components that have the <c>ParentModule</c> property
+    /// configured as the name of this module.
     /// </returns>
+    /// <remarks>
+    /// The L5X structure serializes modules in a flat list with each element having properties (ParentModule, ParentModPortId)
+    /// defining the parent/child IO tree relationship. It would be nice to navigate this hierarchy programatically,
+    /// hence the reason for this extension method. Of course, this requires the module is attached to the L5X content.
+    /// In-memory created modules will inherently return an empty collection, as there is no L5X structure to introspect.
+    /// </remarks>
     public static IEnumerable<Module> Modules(this Module module)
     {
         return module.Serialize().Parent?.Elements()
@@ -321,26 +418,92 @@ public static class LogixExtensions
 
     /// <summary>
     /// Returns a collection of all non-null <see cref="Tag"/> objects for the current Module, including all
-    /// input, output, and config tags.
+    /// config, input, and output tags.
     /// </summary>
     /// <value>An <see cref="IEnumerable{T}"/> containing the base tags for the Module.</value>
+    /// <remarks>
+    /// Since module tags are nested within different layers of complex types, it can be difficult to just
+    /// get a single list of all module tags. This extension makes that easy by sifting through the object and returning
+    /// a flat list containing all non-null config, input, and output tags defined for the <see cref="Module"/> component.
+    /// </remarks>
     public static IEnumerable<Tag> Tags(this Module module)
     {
         var tags = new List<Tag>();
 
-        if (module.Config is not null)
-            tags.Add(module.Config);
+        if (module.Communications is null) return tags;
 
-        foreach (var connection in module.Connections)
+        if (module.Communications.ConfigTag is not null)
+            tags.Add(module.Communications.ConfigTag);
+
+        foreach (var connection in module.Communications.Connections)
         {
-            if (connection.Input is not null)
-                tags.Add(connection.Input);
+            if (connection.InputTag is not null)
+                tags.Add(connection.InputTag);
 
-            if (connection.Output is not null)
-                tags.Add(connection.Output);
+            if (connection.OutputTag is not null)
+                tags.Add(connection.OutputTag);
         }
 
         return tags;
+    }
+
+    /// <summary>
+    /// Returns the module's config tag object contained in the communications element.
+    /// </summary>
+    /// <param name="module">The current <see cref="Module"/> component.</param>
+    /// <returns>A <see cref="Tag"/> containing the module's config tag data.</returns>
+    /// <remarks>This is a simple helper to make accessing the module config data more concise.</remarks>
+    public static Tag? Config(this Module module) => module.Communications?.ConfigTag;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="child"></param>
+    /// <param name="address"></param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public static void Add(this Module parent, Module child, Address? address = default)
+    {
+        var parentPort = parent.Ports.FirstOrDefault(p => p.Upstream is false);
+
+        if (parentPort is null)
+            throw new InvalidOperationException();
+
+        if (parentPort.Type == "Ethernet" && address is null) address = Address.DefaultIP();
+        if (parentPort.Address.IsSlot && parent.IsAttached && address is null) address = parent.NextSlot();
+        address ??= Address.DefaultSlot();
+
+        var childPort = new Port { Id = 1, Type = parentPort.Type, Address = address, Upstream = true };
+
+        child.ParentModule = parent.Name;
+        child.ParentPortId = parentPort.Id;
+        child.Ports.Add(childPort);
+
+        //Adds the module to the underlying collection.
+        if (!child.IsAttached) parent.Serialize().Parent.Add(child.Serialize());
+    }
+
+    /// <summary>
+    /// Gets the next largest slot number for the current module by introspecting the slot numbers of all other
+    /// child modules of this parent module. 
+    /// </summary>
+    /// <param name="module">The current <see cref="Module"/> component.</param>
+    /// <returns>
+    /// A <see cref="Address"/> containing the next highest slot number in the rack/chassis.
+    /// </returns>
+    public static Address NextSlot(this Module module)
+    {
+        var children = module.Serialize().Parent?.Elements()
+            .Where(m => m.Attribute(L5XName.ParentModule)?.Value == module.Name);
+
+        var next = children?.Select(c => c.Descendants(L5XName.Port)
+                .FirstOrDefault(p => p.Attribute(L5XName.Upstream)?.Value.Parse<bool>() is true &&
+                                     byte.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
+                ?.Attribute(L5XName.Address)?.Value.Parse<byte>())
+            .OrderByDescending(b => b)
+            .FirstOrDefault();
+
+        return next.HasValue ? Address.Slot(next.Value) : Address.DefaultSlot();
     }
 
     #endregion
@@ -457,92 +620,14 @@ public static class LogixExtensions
 
     #endregion
 
-    #region ElementExtensions
-
-    /// <summary>
-    /// Gets the <c>Name</c> attribute value for the current <see cref="XElement"/>.
-    /// </summary>
-    /// <param name="element">The <see cref="XElement"/> instance.</param>
-    /// <returns>A <see cref="string"/> representing the name value.</returns>
-    /// <remarks>
-    /// This is a helper since we access and use the name attribute so often I just wanted to make
-    /// the code more concise.
-    /// </remarks>
-    public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-
-    /// <summary>
-    /// A helper for determining a <c>Module</c> tag name for an input, output, or config tag element.
-    /// </summary>
-    /// <param name="element">The current module tag element.</param>
-    /// <param name="suffix">The string suffix to append to the determines tag name. Default is 'C' for config tag.</param>
-    /// <returns>A <see cref="string"/> representing the tag name of the module tag.</returns>
-    public static string ModuleTagName(this XNode element, string suffix = "C")
-    {
-        var moduleName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.Name)?.Value;
-
-        var parentName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.ParentModule)?.Value;
-
-        var slot = element
-            .Ancestors(L5XName.Module)
-            .Descendants(L5XName.Port)
-            .Where(p => bool.Parse(p.Attribute(L5XName.Upstream)?.Value!)
-                        && p.Attribute(L5XName.Type)?.Value != "Ethernet"
-                        && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
-            .Select(p => p.Attribute(L5XName.Address)?.Value)
-            .FirstOrDefault();
-
-        return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";
-    }
-
-    #endregion
-
-    #region StringExtensions
+    #region InternalExtensions
 
     /// <summary>
     /// Determines if the current string is equal to string.Empty.
     /// </summary>
     /// <param name="value">The string input to analyze.</param>
     /// <returns>true if the string is empty. Otherwise false.</returns>
-    public static bool IsEmpty(this string value) => value.Equals(string.Empty);
-
-    /// <summary>
-    /// Tests the current string to indicate whether it is a valid Logix component name value. 
-    /// </summary>
-    /// <param name="name">The string name to test.</param>
-    /// <returns><c>true</c> if <c>name</c> passes the Logix component name requirements; otherwise, <c>false</c>.</returns>
-    /// <remarks>
-    /// Valid name must contain only alphanumeric or underscores, start with a letter or underscore,
-    /// and be between 1 and 40 characters.
-    /// </remarks>
-    public static bool IsComponentName(this string name)
-    {
-        if (string.IsNullOrEmpty(name)) return false;
-        var characters = name.ToCharArray();
-        if (name.Length > 40) return false;
-        if (!(char.IsLetter(characters[0]) || characters[0] == '_')) return false;
-        return characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_');
-    }
-
-    /// <summary>
-    /// Determines if the current string is a value <see cref="TagName"/> string.
-    /// </summary>
-    /// <param name="input">The string input to analyze.</param>
-    /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
-    public static bool IsTagName(this string input) => Regex.IsMatch(input,
-        @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
-
-    /// <summary>
-    /// Converts this string value to a <see cref="TagName"/> value type.
-    /// </summary>
-    /// <param name="value">The string value.</param>
-    /// <returns>A <see cref="TagName"/> containing the text representing the tag name value.</returns>
-    public static TagName ToTagName(this string value) => new(value);
-
-    #endregion
-
-    #region InternalExtensions
+    internal static bool IsEmpty(this string value) => value.Equals(string.Empty);
 
     /// <summary>
     /// Returns the string value as a <see cref="XName"/> value object.

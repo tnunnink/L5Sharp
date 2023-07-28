@@ -76,7 +76,7 @@ public class StringType : LogixType, IEnumerable<char>
 
         if (element.Attribute(L5XName.Format)?.Value == DataFormat.String)
         {
-            Name = element.Ancestors(L5XName.Tag).FirstOrDefault()?.Attribute(L5XName.DataType)?.Value ??
+            Name = element.Ancestors().FirstOrDefault()?.Attribute(L5XName.DataType)?.Value ??
                    throw new L5XException(L5XName.DataType, element);
             DATA = GetData(element.Value);
             DATA.DataChanged += OnDataChanged;
@@ -101,7 +101,8 @@ public class StringType : LogixType, IEnumerable<char>
     public override DataTypeClass Class => DataTypeClass.Unknown;
 
     /// <inheritdoc />
-    public override IEnumerable<LogixMember> Members => new List<LogixMember> { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
+    public override IEnumerable<LogixMember> Members => new List<LogixMember>
+        { new(nameof(LEN), LEN), new(nameof(DATA), DATA) };
 
     /// <summary>
     /// Gets the character length value of the string. 
@@ -184,7 +185,7 @@ public class StringType : LogixType, IEnumerable<char>
             ? Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray()
             : new SINT[] { new() };
     }
-    
+
     /// <summary>
     /// When the DATA array type data change event fires, forward the call by raising this types data changed event.
     /// </summary>

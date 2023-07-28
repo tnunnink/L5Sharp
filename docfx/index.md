@@ -80,7 +80,7 @@ var tag = content.Tags[4];
 ```c#
 var tag = content.Tags.Get("MyTag");
 ```
->[!CAUTION]
+>[!WARNING]
 > `Get()` will throw an exception if the component name was not found or more than one component with
 > the specified name exists in the container. This is synonymous with `Single()` from LINQ.
 
@@ -101,7 +101,7 @@ configure their properties, and add them to the container.
 var tag = new Tag { Name = "MyTag", Value = 100 };
 content.Tags.Add(tag);
 ```
->[!CAUTION]
+>[!WARNING]
 > Components are not validated as they are created or added to a L5X container. Therefore, adding
 > duplicate component names or components with invalid property values may results in import failures.
 

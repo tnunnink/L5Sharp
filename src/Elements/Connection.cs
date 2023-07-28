@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Enums;
@@ -150,8 +149,13 @@ public sealed class Connection : LogixElement
     }
 
     /// <summary>
-    /// Gets the suffix for <see cref="Input"/> tag. 
+    /// The character used to define the tag name for the <see cref="InputTag"/> element. 
     /// </summary>
+    /// <value>A <see cref="string"/> containing the suffix character if it exists; Otherwise, will default as 'I'.</value>
+    /// <remarks>
+    /// This value is used in determining the module tag name. Not all modules serialize this property,
+    /// but still use 'I' as the suffix character for input tags. Therefore, we will default to 'I' if not found.
+    /// </remarks>
     public string InputTagSuffix
     {
         get => GetValue<string>() ?? "I";
@@ -159,8 +163,13 @@ public sealed class Connection : LogixElement
     }
 
     /// <summary>
-    /// Gets the suffix for <see cref="Output"/> tag.
+    /// The character used to define the tag name for the <see cref="OutputTag"/> element.
     /// </summary>
+    /// <value>A <see cref="string"/> containing the suffix character if it exists; Otherwise, will default as 'O'.</value>
+    /// <remarks>
+    /// This value is used in determining the module tag name. Not all modules serialize this property,
+    /// but still use 'O' as the suffix character for output tags. Therefore, we will default to 'O' if not found.
+    /// </remarks>
     public string OutputTagSuffix
     {
         get => GetValue<string>() ?? "O";
@@ -168,26 +177,22 @@ public sealed class Connection : LogixElement
     }
 
     /// <summary>
-    /// Gets the Tag that represents the input channel data for the <see cref="Connection"/>.
+    /// Gets the Tag that represents the input channel data for the <see cref="Connection"/> element.
     /// </summary>
-    public Tag? Input
+    /// <value>A <see cref="Tag"/> component containing the module defined data structure for the input connection data.</value>
+    public Tag? InputTag
     {
-        get
-        {
-            var element = Element.Descendants(L5XName.InputTag).FirstOrDefault();
-            return element is null ? default : new Tag(element) { Name = element.ModuleTagName(InputTagSuffix) };
-        }
+        get => GetComplex<Tag>();
+        set => SetComplex(value);
     }
 
     /// <summary>
-    /// Gets the Tag that represents the output channel data for the <see cref="Connection"/>.
+    /// Gets the Tag that represents the output channel data for the <see cref="Connection"/> element.
     /// </summary>
-    public Tag? Output
+    /// <value>A <see cref="Tag"/> component containing the module defined data structure for the output connection data.</value>
+    public Tag? OutputTag
     {
-        get
-        {
-            var element = Element.Descendants(L5XName.OutputTag).FirstOrDefault();
-            return element is null ? default : new Tag(element) { Name = element.ModuleTagName(OutputTagSuffix) };
-        }
+        get => GetComplex<Tag>();
+        set => SetComplex(value);
     }
 }

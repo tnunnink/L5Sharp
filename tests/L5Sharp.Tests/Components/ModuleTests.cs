@@ -37,7 +37,7 @@ public class ModuleTests
         module.MajorFault.Should().BeFalse();
         module.Keying.Should().Be(ElectronicKeying.CompatibleModule);
         module.Ports.Should().NotBeNull();
-        module.Config.Should().BeNull();
+        module.Communications?.ConfigTag.Should().BeNull();
     }
 
     [Test]
@@ -105,11 +105,17 @@ public class ModuleTests
             SafetyEnabled = true,
             MajorFault = true,
             Keying = ElectronicKeying.Disabled,
-            Ports = new LogixContainer<Port> { new() { Id = 1, Type = "ICP", Address = "1", Upstream = true } },
+            Ports = new LogixContainer<Port> { new() { Id = 1, Type = "ICP", Address = "1", Upstream = true } }
         };
 
         var xml = module.Serialize().ToString();
 
         return Verify(xml);
+    }
+
+    [Test]
+    public void METHOD()
+    {
+        
     }
 }

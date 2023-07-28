@@ -49,7 +49,7 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
     /// <summary>
     /// The unique name of the component.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the component name if it exists; otherwise, and empty string.</value>
+    /// <value>A <see cref="string"/> representing the component name.</value>
     /// <remarks>
     /// The name servers as a unique identifier for various types of components.
     /// In most cases, the component name should satisfy Logix naming constraints of alphanumeric and
@@ -65,7 +65,7 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
     /// <summary>
     /// The description of the component.
     /// </summary>
-    /// <value>A <see cref="string"/> containing the component description.</value>
+    /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public string? Description
     {
         get => GetProperty<string>();
@@ -186,4 +186,8 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
 
         Element.ReplaceWith(component.Serialize());
     }
+
+    /// <inheritdoc />
+    /// <remarks>This override returns the component name of the type.</remarks>
+    public override string ToString() => Name;
 }
