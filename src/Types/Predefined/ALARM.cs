@@ -1,4 +1,5 @@
-﻿using L5Sharp.Enums;
+﻿using System.Xml.Linq;
+using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
 
 // ReSharper disable InconsistentNaming I want to keep the naming consistent with Logix (for now).
@@ -39,6 +40,11 @@ public sealed class ALARM : StructureType
         ROCPosLimitInv = new BOOL();
         ROCNegLimitInv = new BOOL();
         ROCPeriodInv = new BOOL();
+    }
+    
+    /// <inheritdoc />
+    public ALARM(XElement element) : base(element)
+    {
     }
 
     /// <inheritdoc />

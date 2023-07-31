@@ -281,7 +281,7 @@ public class TagTests
 
         tag.Value = new DINT[] { 4, 3, 2, 1 };
 
-        tag.Value.Should().BeOfType<ArrayType>();
+        tag.Value.Should().BeOfType<ArrayType<DINT>>();
         tag.Value.As<ArrayType>()[0].Should().Be(4);
         tag.Value.As<ArrayType>()[1].Should().Be(3);
         tag.Value.As<ArrayType>()[2].Should().Be(2);
@@ -296,7 +296,7 @@ public class TagTests
         //array length does not matter. indices will be join on what is available.
         tag.Value = new TIMER[] { new() { PRE = 100 }, new() { PRE = 200 }, new() { PRE = 300 } };
 
-        tag.Value.Should().BeOfType<ArrayType>();
+        tag.Value.Should().BeOfType<ArrayType<TIMER>>();
         tag.Value.As<ArrayType>()[0].As<TIMER>().PRE.Should().Be(100);
         tag.Value.As<ArrayType>()[1].As<TIMER>().PRE.Should().Be(200);
         tag.Value.As<ArrayType>()[2].As<TIMER>().PRE.Should().Be(300);

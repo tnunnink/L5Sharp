@@ -35,4 +35,57 @@ public class ArrayTypeGenericTests
         type.Should().BeOfType<DINT>();
         type.Should().Be(4);
     }
+    
+    [Test]
+    public void CastingGenericArrayToLowerType()
+    {
+        var array = new ArrayType<LogixType>(new DINT[] { 1, 2, 3, 4 });
+
+        array.Should().BeOfType<ArrayType<LogixType>>();
+
+        array.Should().NotBeOfType<ArrayType<DINT>>();
+
+        var casted = array.Of<DINT>();
+
+        casted.Should().BeOfType<ArrayType<DINT>>();
+    }
+    
+    [Test]
+    public void DownCastingArrayToLogixTypeShouldWork()
+    {
+        var array = (LogixType) new ArrayType<LogixType>(new DINT[] { 1, 2, 3, 4 });
+
+        if (array is ArrayType arrayType)
+        {
+            Assert.Pass();
+        }
+
+        Assert.Fail();
+    }
+
+    [Test]
+    public void Of_ValidType_ShouldBeExpectedType()
+    {
+        var array = new ArrayType(new DINT[] { 1, 2, 3, 4 });
+
+        array.Should().BeOfType<ArrayType>();
+
+        var casted = array.Of<DINT>();
+
+        casted.Should().BeOfType<ArrayType<DINT>>();
+    }
+    
+    [Test]
+    public void CastingGenericArrayToLowerTypeShouldFail()
+    {
+        var array = new ArrayType<LogixType>(new DINT[] { 1, 2, 3, 4 });
+
+        array.Should().BeOfType<ArrayType<LogixType>>();
+
+        array.Should().NotBeOfType<ArrayType<DINT>>();
+
+        var casted = array.Of<DINT>();
+
+        casted.Should().BeOfType<ArrayType<DINT>>();
+    }
 }

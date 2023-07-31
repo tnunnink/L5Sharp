@@ -77,7 +77,7 @@ public class Tag : LogixComponent<Tag>
     public override string Name
     {
         get => GetTagName();
-        set => Element.SetValue(value);
+        set => SetValue(value);
     }
 
     /// <summary>

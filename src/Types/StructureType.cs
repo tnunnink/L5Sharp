@@ -56,7 +56,7 @@ public abstract class StructureType : LogixType
     protected StructureType(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
-        Name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
+        Name = element.Get<string>(L5XName.DataType);
         _members = element.Elements().Select(e =>
         {
             var member = new LogixMember(e);
@@ -298,9 +298,12 @@ public abstract class StructureType : LogixType
     }
 
     /// <summary>
-    /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
+    /// Raises the local logix type <c>DataChanged</c> event, allowing nested member data change event to bubble up the
+    /// to the root member.
     /// </summary>
-    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
+    /// <param name="sender">The object that initiated the data change event.</param>
+    /// <param name="e">The event arguments of the data changed event.</param>
+    protected virtual void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
 
     /// <summary>
     /// Remove old event handler and attach new to ensure no memory leak.

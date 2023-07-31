@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -638,6 +639,20 @@ public static class LogixExtensions
     internal static XName XName(this string value) => System.Xml.Linq.XName.Get(value);
 
     /// <summary>
+    /// A concise method for getting a required attribute value parsed as the specified type from a XElement object.
+    /// </summary>
+    /// <param name="element">The element containing the attribute to retrieve.</param>
+    /// <param name="name">The name of the attribute value to get.</param>
+    /// <typeparam name="T">The type to parse the attribute value as.</typeparam>
+    /// <returns>The value of the element's specified attribute value parsed as the specified generic type parameter.</returns>
+    /// <exception cref="L5XException">No attribute with <c>name</c> exists for the current element.</exception>
+    internal static T Get<T>(this XElement element, XName name)
+    {
+        var value = element.Attribute(name)?.Value;
+        return value is not null ? value.Parse<T>() : throw new L5XException(name, element);
+    }
+
+    /// <summary>
     /// Gets the L5X element name for the specified type. 
     /// </summary>
     /// <param name="type">The type to get the L5X element name for.</param>
@@ -650,6 +665,42 @@ public static class LogixExtensions
     {
         var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
         return attribute is not null ? attribute.TypeName : type.Name;
+    }
+
+    /// <summary>
+    /// Builds a deserialization expression delegate which returns the specified type using the current type information.
+    /// </summary>
+    /// <param name="type">The current type for which to build the expression.</param>
+    /// <typeparam name="TReturn">The return type of the expression delegate.</typeparam>
+    /// <returns>A <see cref="Func{TResult}"/> which accepts a <see cref="XElement"/> and returns the specified
+    /// return type.</returns>
+    /// <remarks>
+    /// This extension is the basis for how we build the deserialization functions using reflection and
+    /// expression trees. Using compiled expression trees is much more efficient that calling the invoke method for a type's
+    /// constructor info obtained via reflection. This method make all the necessary check on the current type, ensuring the
+    /// deserializer delegate will execute without exception.
+    /// </remarks>
+    internal static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)
+    {
+        if (type is null) throw new ArgumentNullException(nameof(type));
+
+        if (type.IsAbstract)
+            throw new ArgumentException($"Can not build deserializer expression for abstract type '{type.Name}'.");
+
+        if (!typeof(TReturn).IsAssignableFrom(type))
+            throw new ArgumentException(
+                $"The type {type.Name} is not assignable (inherited) from '{typeof(TReturn).Name}'.");
+
+        var constructor = type.GetConstructor(new[] { typeof(XElement) });
+
+        if (constructor is null || !constructor.IsPublic)
+            throw new ArgumentException(
+                $"Can not build expression for type '{type.Name}' without public constructor accepting a XElement parameter.");
+
+        var parameter = Expression.Parameter(typeof(XElement), "element");
+        var factory = Expression.New(constructor, parameter);
+        var lambda = Expression.Lambda(factory, parameter);
+        return (Func<XElement, TReturn>)lambda.Compile();
     }
 
     /// <summary>

@@ -12,39 +12,28 @@ namespace L5Sharp;
 /// <summary>
 /// A specialized static factory for deserializing <see cref="LogixType"/> objects from <see cref="XElement"/>.
 /// </summary>
+/// <remarks>
+/// This class is build to specifically find and create concrete instances of atomic, predefined, and custom
+/// user defined logix types at runtime. This allows the user to cast a given logix type down to the most specific
+/// type as it is deserialized from the L5X tag data structure.
+/// </remarks>
 public static class LogixData
 {
     /// <summary>
-    /// The global constructor cache for all <see cref="StructureType"/> objects. This is what we are using to create
-    /// strongly typed structure type objects at runtime.
+    /// A system wide lookup of all <see cref="LogixType"/> objects by L5XType name obtained using reflection. This does
+    /// not include the internal generic types such as StructureType, ComplexType, StringType, ArrayType, or ArrayType{T},
+    /// or NullType, but rather types that can be instantiated (atomic or complex) for which we may need to create a generic
+    /// array of.
     /// </summary>
-    private static readonly Lazy<Dictionary<string, ConstructorInfo>> Constructors =
-        new(() =>
-        {
-            return ScanMode switch
-            {
-                ScanMode.None => new Dictionary<string, ConstructorInfo>(),
-                ScanMode.Internal => ScanTypes(typeof(LogixData).Assembly)
-                    .ToDictionary(k => k.Key, k => k.Value),
-                ScanMode.All => AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(ScanTypes)
-                    .ToDictionary(k => k.Key, k => k.Value),
-                _ => throw new ArgumentOutOfRangeException(nameof(ScanMode),
-                    "Can evaluate constructor cache from current scan mode.")
-            };
-        });
+    private static readonly Dictionary<string, Type> Lookup =
+        AppDomain.CurrentDomain.GetAssemblies().SelectMany(FindLogixTypes).ToDictionary(k => k.L5XType(), v => v);
 
     /// <summary>
-    /// The <see cref="ScanMode"/> specifying how <see cref="LogixData"/> should perform reflection scanning
-    /// for types to pre-register for deserialization.
+    /// The global cache for all <see cref="StructureType"/> and <see cref="StringType"/> object deserializer
+    /// delegate functions. This is what we are using to create strongly typed logix type objects at runtime.
     /// </summary>
-    /// <remarks>
-    /// This class will perform reflection based scanning for types matching the all the following criteria:
-    /// Public non-abstract classes that derive from <see cref="LogixElement"/> or <see cref="LogixType"/> and have public
-    /// constructors accepting a <see cref="XElement"/> object. Types match this criteria will be cached and constructed
-    /// at runtime. 
-    /// </remarks>
-    public static ScanMode ScanMode { get; set; } = ScanMode.All;
+    private static readonly Lazy<Dictionary<string, Func<XElement, LogixType>>> Deserializers = new(() =>
+        AppDomain.CurrentDomain.GetAssemblies().SelectMany(Introspect).ToDictionary(k => k.Key, k => k.Value));
 
     /// <summary>
     /// Returns the singleton null <see cref="LogixType"/> object.
@@ -89,9 +78,9 @@ public static class LogixData
     /// <summary>
     /// Determines if a type with the specified type name is registered for deserialization.
     /// </summary>
-    /// <param name="name">The type name to check.</param>
+    /// <param name="dataType">The data type name to check.</param>
     /// <returns><c>true</c> if the type is registered; otherwise, <c>false</c>.</returns>
-    public static bool IsRegistered(string name) => Constructors.Value.Keys.Any(t => t == name);
+    public static bool IsRegistered(string dataType) => Deserializers.Value.ContainsKey(dataType);
 
     /// <summary>
     /// Register a custom <see cref="StructureType"/> so that it may be instantiated during deserialization of a L5X.
@@ -104,17 +93,10 @@ public static class LogixData
     public static void Register<TStructure>() where TStructure : StructureType
     {
         var type = typeof(TStructure);
-
-        if (type.IsAbstract) throw new ArgumentException("Can not register abstract types for deserialization.");
-
-        var constructor = type.GetConstructor(new[] { typeof(XElement) });
-        if (constructor is null)
-            throw new ArgumentException(
-                $"Can not register type without a constructor accepting a single {typeof(XElement)} object.");
-
         var key = type.L5XType();
+        var deserializer = type.Deserializer<LogixType>();
 
-        if (!Constructors.Value.TryAdd(key, constructor))
+        if (!Deserializers.Value.TryAdd(key, deserializer))
             throw new InvalidOperationException($"The type {key} is already registered.");
     }
 
@@ -126,14 +108,11 @@ public static class LogixData
     /// <param name="assembly">The assembly to scan.</param>
     /// <exception cref="InvalidOperationException">A type is already registered.</exception>
     /// <remarks>
-    /// This is to assist with easily registering types within a specific assembly. Note that if <see cref="ScanMode"/>
-    /// is set to <see cref="ScanMode.All"/>, all assemblies in the app domain will automatically be scanned.
-    /// Therefore, only use this method if <see cref="ScanMode"/> is set to <see cref="ScanMode.Internal"/> or
-    /// <see cref="ScanMode.None"/>.
+    /// This is to assist with easily registering types within a specific assembly.
     /// </remarks>
     public static void Scan(Assembly assembly)
     {
-        foreach (var pair in ScanTypes(assembly).Where(pair => !Constructors.Value.TryAdd(pair.Key, pair.Value)))
+        foreach (var pair in Introspect(assembly).Where(pair => !Deserializers.Value.TryAdd(pair.Key, pair.Value)))
             throw new InvalidOperationException($"The type {pair.Key} is already registered.");
     }
 
@@ -174,18 +153,31 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeAtomic(XElement element)
     {
-        var name = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
-        var value = element.Attribute(L5XName.Value)?.Value ?? throw new L5XException(L5XName.Value, element);
-        return Atomic.Parse(name, value);
+        var dataType = element.Get<string>(L5XName.DataType);
+        var value = element.Get<string>(L5XName.Value);
+        return Atomic.Parse(dataType, value);
     }
 
     /// <summary>
-    /// Handles deserializing an array element to a <see cref="ArrayType"/>.
+    /// Handles deserializing an array element to a <see cref="ArrayType"/>...todo comment further
     /// </summary>
     private static LogixType DeserializeArray(XElement element)
     {
-        
-        return new ArrayType<LogixType>(element);
+        var dataType = element.Get<string>(L5XName.DataType);
+
+        //We either know the type (atomic or registered), or we create the generic string or complex type.
+        var type = Lookup.TryGetValue(dataType, out var known) ? known
+            : HasStringStructure(element) ? typeof(StringType)
+            : typeof(ComplexType);
+
+        var arrayType = typeof(ArrayType<>).MakeGenericType(type);
+
+        if (Deserializers.Value.TryGetValue(arrayType.FullName, out var cached))
+            return cached.Invoke(element);
+
+        var deserializer = arrayType.Deserializer<LogixType>();
+        Deserializers.Value.Add(arrayType.FullName, deserializer);
+        return deserializer.Invoke(element);
     }
 
     /// <summary>
@@ -194,12 +186,12 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeElement(XElement element)
     {
+        var dataType = element.Parent?.Get<string>(L5XName.DataType) ??
+                       throw new L5XException(L5XName.DataType, element);
         var value = element.Attribute(L5XName.Value);
         var structure = element.Element(L5XName.Structure);
-        var name = element.Parent?.Attribute(L5XName.DataType)?.Value ??
-                   throw new L5XException(L5XName.DataType, element);
 
-        return value is not null ? Atomic.Parse(name, value.Value) :
+        return value is not null ? Atomic.Parse(dataType, value.Value) :
             structure is not null ? DeserializeStructure(structure) :
             throw new L5XException(element);
     }
@@ -207,14 +199,14 @@ public static class LogixData
     /// <summary>
     /// Handles deserializing an element to a <see cref="StructureType"/> logix type.
     /// Will check for registered types to create the concrete type if available.
-    /// Otherwise we resort to a more generic <see cref="StringType"/> of string or <see cref="ComplexType"/> for everything else.
+    /// Otherwise we resort to a more generic <see cref="StringType"/> of string element structures or
+    /// <see cref="ComplexType"/> for everything else.
     /// </summary>
     private static LogixType DeserializeStructure(XElement element)
     {
-        var dataType = element.Attribute(L5XName.DataType)?.Value ?? throw new L5XException(L5XName.DataType, element);
+        var dataType = element.Get<string>(L5XName.DataType);
 
-        if (IsRegistered(dataType))
-            return DeserializeType(dataType, element);
+        if (IsRegistered(dataType)) return Deserializers.Value[dataType].Invoke(element);
 
         return HasStringStructure(element) ? new StringType(element) : new ComplexType(element);
     }
@@ -226,83 +218,72 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeString(XElement element)
     {
-        var dataType = element.Parent?.Attribute(L5XName.DataType)?.Value ??
+        var dataType = element.Parent?.Get<string>(L5XName.DataType) ??
                        throw new L5XException(L5XName.DataType, element);
 
-        return IsRegistered(dataType) ? DeserializeType(dataType, element) : new StringType(element);
+        return IsRegistered(dataType) ? Deserializers.Value[dataType].Invoke(element) : new StringType(element);
     }
 
     /// <summary>
-    /// Determines if the provided element has a structure that indicates it is a <see cref="StringType"/> structure.
+    /// Determines if the provided element has a structure that represents a <see cref="StringType"/> structure,
+    /// structure member, array, or array member. This is needed to determine if we are deserializing a complex type
+    /// or string type. String structure is unique in that it will have a data value member called DATA with a ASCII
+    /// radix, a non-null element value, and a data type attribute value equal to that of the parent structure element attribute.
     /// </summary>
     private static bool HasStringStructure(XElement element)
     {
-        return element.Descendants(L5XName.DataValueMember).Any(e =>
-            e?.Value is not null
-            && e.Attribute(L5XName.Name)?.Value == "DATA"
-            && e.Attribute(L5XName.DataType)?.Value == element.Attribute(L5XName.DataType)?.Value
-            && e.Attribute(L5XName.Radix)?.Value == "ASCII");
-    }
+        //If this is a structure or structure member it could potentially be the string structure.
+        if (element.Name == L5XName.Structure || element.Name == L5XName.StructureMember)
+        {
+            return element.Elements(L5XName.DataValueMember).Any(e =>
+                e?.Value is not null
+                && e.Attribute(L5XName.Name)?.Value == "DATA"
+                && e.Attribute(L5XName.DataType)?.Value == e.Parent?.Attribute(L5XName.DataType)?.Value
+                && e.Attribute(L5XName.Radix)?.Value == "ASCII");
+        }
 
-    /// <summary>
-    /// Performs deserialization of the specified structure type name by getting the cached constructor for the type
-    /// and invoking it.
-    /// </summary>
-    private static LogixType DeserializeType(string typeName, XElement element) =>
-        (LogixType)Constructor(typeName).Invoke(new object[] { element });
+        //If this is an array or array member, we need to get elements and check if they are all string structure or not.
+        if (element.Name == L5XName.Array || element.Name == L5XName.ArrayMember)
+        {
+            return element.Elements().Select(e => e.Element(L5XName.Structure)).All(HasStringStructure);
+        }
 
-    /// <summary>
-    /// Gets a constructor info object provided the type name.
-    /// </summary>
-    private static ConstructorInfo Constructor(string typeName)
-    {
-        if (!Constructors.Value.TryGetValue(typeName, out var constructor))
-            throw new InvalidOperationException($"Type '{typeName}' is not registered for deserialization.");
-
-        return constructor;
+        return false;
     }
 
     /// <summary>
     /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
-    /// inheriting from <see cref="StructureType"/> that have the supported deserialization constructor, and returns
-    /// the "L5XType" and <see cref="ConstructorInfo"/> pair for fast lookup. 
+    /// inheriting from <see cref="StructureType"/> or <see cref="StringType"/> that have the supported
+    /// deserialization constructor, and returns the <c>L5XType</c> and compiled deserialization delegate pair.
+    /// This is used to initialize the set of concrete deserializer functions for all know predefined and user defined
+    /// logix type objects.
     /// </summary>
-    private static IEnumerable<KeyValuePair<string, ConstructorInfo>> ScanTypes(Assembly assembly)
+    private static IEnumerable<KeyValuePair<string, Func<XElement, LogixType>>> Introspect(Assembly assembly)
     {
         var types = assembly.GetTypes().Where(t =>
-            t.IsDerivativeOf(typeof(StructureType)) | t.IsDerivativeOf(typeof(StringType))
+            (typeof(StructureType).IsAssignableFrom(t) || typeof(StringType).IsAssignableFrom(t))
             && t != typeof(ComplexType) && t != typeof(StringType)
             && t is { IsAbstract: false, IsPublic: true }
             && t.GetConstructor(new[] { typeof(XElement) }) is not null);
 
         foreach (var type in types)
         {
-            var constructor = type.GetConstructor(new[] { typeof(XElement) });
-            yield return new KeyValuePair<string, ConstructorInfo>(type.L5XType(), constructor);
+            var deserializer = type.Deserializer<LogixType>();
+            yield return new KeyValuePair<string, Func<XElement, LogixType>>(type.L5XType(), deserializer);
         }
     }
-}
-
-/// <summary>
-/// An enum option specifying how <see cref="LogixData"/> should scan for custom structure types.
-/// </summary>
-public enum ScanMode
-{
-    /// <summary>
-    /// Indicates that <see cref="LogixData"/> should scan internal and external assemblies for
-    /// <see cref="StructureType"/> matching the deserialization criteria.
-    /// </summary>
-    All,
 
     /// <summary>
-    /// Indicates that <see cref="LogixData"/> should scan only internal assemblies for
-    /// <see cref="StructureType"/> matching the deserialization criteria.
+    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
+    /// inheriting from <see cref="LogixType"/>. 
     /// </summary>
-    Internal,
-
-    /// <summary>
-    /// Indicates that <see cref="LogixData"/> should not perform reflection scanning for
-    /// <see cref="StructureType"/> to automatically register for deserialization.
-    /// </summary>
-    None
+    private static IEnumerable<Type> FindLogixTypes(Assembly assembly)
+    {
+        return assembly.GetTypes().Where(t =>
+            t.IsDerivativeOf(typeof(LogixType))
+            && t is { IsAbstract: false, IsPublic: true }
+            && t != typeof(ComplexType) && t != typeof(StringType)
+            && t != typeof(ArrayType) && t != typeof(ArrayType<>)
+            && t != typeof(NullType));
+    }
 }

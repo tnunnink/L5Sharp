@@ -11,23 +11,11 @@ namespace L5Sharp;
 /// </summary>
 public static class LogixSerializer
 {
-    private static readonly Lazy<Dictionary<Type, ConstructorInfo>> Constructors = new(() =>
-    {
-        var dictionary = new Dictionary<Type, ConstructorInfo>();
-
-        var types = typeof(LogixSerializer).Assembly.GetTypes().Where(t =>
-            t.IsDerivativeOf(typeof(LogixElement))
-            && t is { IsAbstract: false, IsPublic: true }
-            && t.GetConstructor(new[] { typeof(XElement) }) is not null);
-
-        foreach (var type in types)
-        {
-            var constructor = type.GetConstructor(new[] { typeof(XElement) });
-            dictionary.TryAdd(type, constructor);
-        }
-
-        return dictionary;
-    });
+    /// <summary>
+    /// The global cache for all <see cref="LogixElement"/> object deserializer delegate functions.
+    /// </summary>
+    private static readonly Lazy<Dictionary<Type, Func<XElement, LogixElement>>> Deserializers = new(() =>
+        Introspect(typeof(LogixSerializer).Assembly).ToDictionary(k => k.Key, v => v.Value));
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.
@@ -36,10 +24,11 @@ public static class LogixSerializer
     /// <typeparam name="TElement">The return type of the deserialized element.</typeparam>
     /// <returns>A new object of the specified type representing the deserialized element.</returns>
     /// <remarks>
-    /// The return object must specify a constructor accepting a single <see cref="XElement"/> for deserialization to work.
+    /// The return object must specify a public constructor accepting a <see cref="XElement"/> parameter for
+    /// deserialization to work.
     /// </remarks>
     public static TElement Deserialize<TElement>(XElement element) where TElement : LogixElement =>
-        (TElement)Constructor(typeof(TElement)).Invoke(new object[] { element });
+        (TElement)Deserializer(typeof(TElement)).Invoke(element);
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.
@@ -50,30 +39,42 @@ public static class LogixSerializer
     /// <remarks>
     /// The return object must specify a constructor accepting a single <see cref="XElement"/> for deserialization to work.
     /// </remarks>
-    public static object Deserialize(Type type, XElement element) => Constructor(type).Invoke(new object[] { element });
+    public static object Deserialize(Type type, XElement element) => Deserializer(type).Invoke(element);
 
     /// <summary>
-    /// Handles getting the constructor for the specified type. If the type is not cached, this method will check
+    /// Handles getting the deserializer delegate for the specified type. If the type is not cached, this method will check
     /// if the type inherits <see cref="LogixElement"/> and has a valid constructor. If so, it will add to the
-    /// global constructor cache and return the <see cref="ConstructorInfo"/> object.
+    /// global deserializer cache and return the deserializer delegate function.
     /// </summary>
-    private static ConstructorInfo Constructor(Type type)
+    private static Func<XElement, LogixElement> Deserializer(Type type)
     {
-        if (Constructors.Value.TryGetValue(type, out var constructor))
-            return constructor;
+        if (Deserializers.Value.TryGetValue(type, out var cached))
+            return cached;
 
-        if (!type.IsDerivativeOf(typeof(LogixElement)))
-            throw new ArgumentException(
-                $"LogixSerializer is only compatible for types inheriting from {typeof(LogixElement)}");
+        var deserializer = type.Deserializer<LogixElement>();
+        if (!Deserializers.Value.TryAdd(type, deserializer))
+            throw new InvalidOperationException($"The type {type.Name} is already registered.");    
+        return deserializer;
+    }
 
-        var info = type.GetConstructor(new[] { typeof(XElement) });
+    /// <summary>
+    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
+    /// inheriting from <see cref="LogixElement"/> that have the supported deserialization constructor,
+    /// and returns the <c>L5XType</c> and compiled deserialization delegate pair. This is used to initialize the
+    /// set of concrete deserializer functions for all known logix element objects.
+    /// </summary>
+    private static IEnumerable<KeyValuePair<Type, Func<XElement, LogixElement>>> Introspect(Assembly assembly)
+    {
+        var types = assembly.GetTypes().Where(t =>
+            typeof(LogixElement).IsDerivativeOf(t)
+            && t is { IsAbstract: false, IsPublic: true }
+            && t.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(XElement) },
+                null) is not null);
 
-        if (info is null)
-            throw new InvalidOperationException(
-                @$"No element constructor defined for type {type}.
-                     Class must specify constructor accepting a single {typeof(XElement)} to be deserialized.");
-
-        Constructors.Value.TryAdd(type, info);
-        return info;
+        foreach (var type in types)
+        {
+            var deserializer = type.Deserializer<LogixElement>();
+            yield return new KeyValuePair<Type, Func<XElement, LogixElement>>(type, deserializer);
+        }
     }
 }

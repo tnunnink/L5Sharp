@@ -20,7 +20,7 @@ public sealed class STRING : StringType
     }
 
     /// <inheritdoc />
-    public STRING(XElement element) : base(element)
+    public STRING(XElement element) : base(element, PredefinedLength)
     {
     }
 
