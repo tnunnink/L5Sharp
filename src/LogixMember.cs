@@ -282,9 +282,9 @@ public class LogixMember : ILogixSerializable
     private void OnDataTypeChanged(object sender, EventArgs e)
     {
         //If the sender is an atomic type (which is intercepted by atomic types)
-        //  then we realize this is a value change and need to replace the member type with the new value.
+        //then we realize this is a value change and need to replace the member type with the new value.
         //This is the only way we can update the atomic value on the L5X for a bit member change, since
-        //  atomic bit members don't exist in the L5X data structure.
+        //atomic bit members don't exist in the L5X data structure.
         //Note that setting DataType this way will in turn trigger the member's data changed event. 
         if (sender is AtomicType atomicType)
         {

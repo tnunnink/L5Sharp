@@ -178,6 +178,12 @@
       <None Update="Types\NullTypeTests.SerializeShouldBeVerified.verified.txt">
         <DependentUpon>NullTypeTests.cs</DependentUpon>
       </None>
+      <None Update="Types\StringTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\StringTypeTests.SerializeStructure_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringTypeTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

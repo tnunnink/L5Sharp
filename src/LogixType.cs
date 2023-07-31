@@ -102,8 +102,10 @@ public abstract class LogixType : ILogixSerializable
         Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
-    /// Handles raising the <see cref="DataChanged"/> event for the type with the provided object sender.
+    /// Raising the <see cref="DataChanged"/> event for the type with the provided object sender.
     /// </summary>
+    /// <param name="sender">The objet initiating the data changed event. This could be this object, or a descendent
+    /// member or type in the data hierarchy.</param>
     protected void RaiseDataChanged(object sender) => DataChanged?.Invoke(sender, EventArgs.Empty);
 
     /// <inheritdoc />

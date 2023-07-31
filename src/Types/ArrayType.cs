@@ -45,6 +45,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
             throw new ArgumentException("Array can not be initialized with different logix type items.", nameof(array));
 
         Dimensions = Dimensions.FromArray(array);
+        
         _members = Dimensions.Indices().Zip(collection, (i, t) =>
         {
             var member = new LogixMember(i, t);
@@ -63,8 +64,8 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
 
-        Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ??
-                     throw new L5XException(L5XName.Dimensions, element);
+        Dimensions = element.Get<Dimensions>(L5XName.Dimensions);
+        
         _members = element.Elements().Select(e =>
         {
             var member = new LogixMember(e);
@@ -73,7 +74,17 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
         }).ToList();
     }
 
+    /// <summary>
+    /// The name of the logix type the array contains.
+    /// </summary>
+    /// <value>A <see cref="string"/> containing the text name of the logix type for which the array contains.</value>
+    /// <remarks>This is used to delineate from the <see cref="Name"/> property of the array type which is the type name and
+    /// the dimensions index concatenated. The type name is used for serialization.</remarks>
+    public string TypeName => this.First().Name;
+
     /// <inheritdoc />
+    /// <remarks>The name of an array type will be the name of it's contained element types with the dimensions index
+    /// text appended. This helps differentiate types when querying so we don't return arrays and type</remarks>
     public override string Name => $"{this.First().Name}{Dimensions.ToIndex()}";
 
     /// <inheritdoc />
@@ -83,7 +94,7 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
     public override DataTypeClass Class => this.First().Class;
 
     /// <summary>
-    /// Gets the dimensions of the the array.
+    /// The dimensions of the the array, which defined the length and rank of the array's elements.
     /// </summary>
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions.</value>
     public Dimensions Dimensions { get; }
@@ -97,17 +108,12 @@ public class ArrayType : LogixType, IEnumerable<LogixType>
 
     /// <inheritdoc />
     public override IEnumerable<LogixMember> Members => _members.AsEnumerable();
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    public string TypeName => this.First().Name;
 
     /// <inheritdoc />
     public override XElement Serialize()
     {
         var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, this.First().Name));
+        element.Add(new XAttribute(L5XName.DataType, TypeName));
         element.Add(new XAttribute(L5XName.Dimensions, Dimensions));
         if (Radix != Radix.Null) element.Add(new XAttribute(L5XName.Radix, Radix));
         element.Add(_members.Select(m =>
