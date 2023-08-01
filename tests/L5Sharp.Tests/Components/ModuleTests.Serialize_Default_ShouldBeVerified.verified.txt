@@ -1,4 +1,8 @@
-﻿<Module Name="" CatalogNumber="" Vendor="0" ProductType="0" ProductCode="0" Major="1" Minor="0" ParentModule="" ParentPortId="0" Inhibited="false" MajorFault="false" SafetyEnabled="false">
+﻿<Module Name="" CatalogNumber="" Vendor="0" ProductType="0" ProductCode="0" Major="1" Minor="0" ParentModule="" ParentModPortId="0" Inhibited="false" MajorFault="false" SafetyEnabled="false">
   <EKey State="CompatibleModule" />
   <Ports />
+  <Communications>
+    <ConfigTag />
+    <Connections />
+  </Communications>
 </Module>

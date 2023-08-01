@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -53,7 +54,7 @@ public abstract class LogixType : ILogixSerializable
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="LogixMember"/> objects</value>
     public abstract IEnumerable<LogixMember> Members { get; }
-    
+
     /// <summary>
     /// An event that triggers when the <see cref="LogixType"/> members collection changes.
     /// </summary>
@@ -64,11 +65,11 @@ public abstract class LogixType : ILogixSerializable
     public event EventHandler? DataChanged;
 
     /// <summary>
-    /// Casts the <see cref="LogixType"/> to the type of the generic argument.
+    /// Casts the <see cref="LogixType"/> to the type of the generic parameter.
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
     /// <exception cref="InvalidCastException">The object can not be casted to the specified type.</exception>
-    /// <returns>The instance casted as the specified generic type argument.</returns>
+    /// <returns>The logix type object casted as the specified generic type parameter.</returns>
     public TLogixType As<TLogixType>() where TLogixType : LogixType => (TLogixType)this;
 
     /// <summary>
@@ -227,7 +228,7 @@ public abstract class LogixType : ILogixSerializable
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(float value) => new REAL(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="double"/> to a <see cref="LogixType"/>.
     /// </summary>
@@ -275,21 +276,21 @@ public abstract class LogixType : ILogixSerializable
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
-    public static implicit operator LogixType(LogixType[] value) => new ArrayType(value);
+    public static implicit operator LogixType(LogixType[] value) => ((Array)value).ToArrayType();
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixType"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
-    public static implicit operator LogixType(LogixType[,] value) => new ArrayType(value);
+    public static implicit operator LogixType(LogixType[,] value) => value.ToArrayType();
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixType"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
-    public static implicit operator LogixType(LogixType[,,] value) => new ArrayType(value);
+    public static implicit operator LogixType(LogixType[,,] value) => value.ToArrayType();
 
     /// <summary>
     /// Converts the provided <see cref="Dictionary{TKey,TValue}"/> to a <see cref="LogixType"/>.

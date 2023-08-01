@@ -14,7 +14,7 @@ public abstract class Scope : LogixEnum<Scope, string>
     /// <summary>
     /// Gets the corresponding L5XName for the current <see cref="Scope"/>.
     /// </summary>
-    public abstract XName XName { get; }
+    public abstract string L5XName { get; }
 
     /// <summary>
     /// Represents a Null <see cref="Scope"/> value.
@@ -48,7 +48,7 @@ public abstract class Scope : LogixEnum<Scope, string>
         {
         }
 
-        public override XName XName => string.Empty;
+        public override string L5XName => string.Empty;
     }
     
     private class ControllerScope : Scope
@@ -57,7 +57,7 @@ public abstract class Scope : LogixEnum<Scope, string>
         {
         }
 
-        public override XName XName => L5XName.Controller;
+        public override string L5XName => L5Sharp.L5XName.Controller;
     }
     
     private class ProgramScope : Scope
@@ -66,7 +66,7 @@ public abstract class Scope : LogixEnum<Scope, string>
         {
         }
 
-        public override XName XName => L5XName.Program;
+        public override string L5XName => L5Sharp.L5XName.Program;
     }
     
     private class RoutineScope : Scope
@@ -75,7 +75,7 @@ public abstract class Scope : LogixEnum<Scope, string>
         {
         }
 
-        public override XName XName => L5XName.Routine;
+        public override string L5XName => L5Sharp.L5XName.Routine;
     }
     
     private class InstructionScope : Scope
@@ -84,6 +84,6 @@ public abstract class Scope : LogixEnum<Scope, string>
         {
         }
 
-        public override XName XName => L5XName.AddOnInstructionDefinition;
+        public override string L5XName => L5Sharp.L5XName.AddOnInstructionDefinition;
     }
 }

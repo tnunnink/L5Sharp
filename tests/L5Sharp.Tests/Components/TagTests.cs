@@ -107,7 +107,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new DINT[] { 0, 1, 2, 3, 4 } };
 
-        tag.Value.Should().BeOfType<ArrayType>();
+        tag.Value.Should().BeOfType<ArrayType<DINT>>();
         tag.Dimensions.Should().Be(new Dimensions(5));
         tag.Value.As<ArrayType>()[0].Should().Be(0);
         tag.Value.As<ArrayType>()[1].Should().Be(1);

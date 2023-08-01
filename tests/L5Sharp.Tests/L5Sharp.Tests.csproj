@@ -76,9 +76,6 @@
       <None Update="Types\ArrayTypeTests.Serialize_SimpleTwoDimensional_ShouldBeVerified.verified.txt">
         <DependentUpon>ArrayTypeTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ArrayTypeTests.Serialize_ComplexTypeArray_ShouldBeVerified.verified.txt">
-        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
-      </None>
       <None Update="Components\DataTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>DataTypeTests.cs</DependentUpon>
       </None>
@@ -183,6 +180,12 @@
       </None>
       <None Update="Types\StringTypeTests.SerializeStructure_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>StringTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayTypeTests.Serialize_StringTypeArray_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayTypeTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

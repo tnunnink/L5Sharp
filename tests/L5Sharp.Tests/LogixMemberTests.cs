@@ -145,7 +145,7 @@ public class LogixMemberTests
         var member = new LogixMember(element);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<ArrayType>();
+        member.DataType.Should().BeOfType<ArrayType<REAL>>();
         member.DataType.As<ArrayType>()[0].Should().Be(1.1f);
         member.DataType.As<ArrayType>()[1].Should().Be(2.2f);
         member.DataType.As<ArrayType>()[2].Should().Be(3.3f);
@@ -189,7 +189,7 @@ public class LogixMemberTests
         var member = new LogixMember(element);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<ArrayType>();
+        member.DataType.Should().BeOfType<ArrayType<TIMER>>();
         member.DataType.As<ArrayType>()[0].Should().BeOfType<TIMER>();
         member.DataType.As<ArrayType>()[1].Should().BeOfType<TIMER>();
         member.DataType.As<ArrayType>()[2].Should().BeOfType<TIMER>();
@@ -223,7 +223,7 @@ public class LogixMemberTests
         var member = new LogixMember(element);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<ArrayType>();
+        member.DataType.Should().BeOfType<ArrayType<STRING>>();
         member.DataType.As<ArrayType>()[0].Should().BeOfType<STRING>();
         member.DataType.As<ArrayType>()[1].Should().BeOfType<STRING>();
         member.DataType.As<ArrayType>()[2].Should().BeOfType<STRING>();
@@ -261,7 +261,7 @@ public class LogixMemberTests
         var dataType = member.DataType;
 
         dataType.Should().NotBeNull();
-        dataType.Should().BeOfType<ArrayType>();
+        dataType.Should().BeOfType<ArrayType<DINT>>();
         dataType.As<ArrayType>()[0].Should().Be(1);
         dataType.As<ArrayType>()[1].Should().Be(2);
         dataType.As<ArrayType>()[2].Should().Be(3);

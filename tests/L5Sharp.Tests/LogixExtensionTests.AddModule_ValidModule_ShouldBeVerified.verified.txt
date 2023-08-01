@@ -6290,7 +6290,7 @@
       </public>
     </ExtendedProperties>
   </Module>
-  <Module Name="Test" CatalogNumber="WhoCares" Vendor="0" ProductType="0" ProductCode="0" Major="1" Minor="3" ParentModule="Local" ParentPortId="1" Inhibited="false" MajorFault="false" SafetyEnabled="false">
+  <Module Name="Test" CatalogNumber="WhoCares" Vendor="0" ProductType="0" ProductCode="0" Major="1" Minor="3" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="false" SafetyEnabled="false">
     <EKey State="CompatibleModule" />
     <Ports>
       <Port Id="1" Type="ICP" Address="9" Upstream="true" />

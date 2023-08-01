@@ -75,6 +75,61 @@ public static class LogixExtensions
         return characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_');
     }
 
+    /// <summary>
+    /// Converts the current one dimensional array of logix type objects to a <see cref="ArrayType{TLogixType}"/>
+    /// of the concrete logix type. 
+    /// </summary>
+    /// <param name="array">The array to convert.</param>
+    /// <typeparam name="TLogixType">The logix type of the elements of the array.</typeparam>
+    /// <returns>An <see cref="ArrayType{TLogixType}"/> representing the current array containing all the elements
+    /// of the array.</returns>
+    /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
+    /// <remarks>
+    /// This extension uses reflection and compiled lambda functions to create the concrete generic array type
+    /// from the current logix type array, and is used by logix type for implicitly converting arrays to a logix type.
+    /// </remarks>
+    public static ArrayType<TLogixType> ToArrayType<TLogixType>(this IEnumerable<TLogixType> array) 
+        where TLogixType : LogixType
+    {
+        if (array is null) throw new ArgumentNullException(nameof(array));
+        var arrayType = typeof(ArrayType<>).MakeGenericType(typeof(TLogixType));
+        var parameterType = typeof(TLogixType[]);
+        var constructor = arrayType.GetConstructor(new[] { parameterType })!;
+        var parameter = Expression.Parameter(parameterType, "array");
+        var creator = Expression.New(constructor, parameter);
+        var lambda = Expression.Lambda<Func<TLogixType[], ArrayType<TLogixType>>>(creator, parameter);
+        var func = lambda.Compile();
+        return func.Invoke(array.ToArray());
+    }
+    
+    /// <summary>
+    /// Converts the current array object to a <see cref="ArrayType{TLogixType}"/> of the concrete logix type by
+    /// inspecting the first element's type in the array. 
+    /// </summary>
+    /// <param name="array">The array to convert.</param>
+    /// <returns>
+    /// An <see cref="ArrayType"/> representing the containing all the elements of the array object as
+    /// the the concrete generic type array.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
+    /// <remarks>
+    /// This extension uses reflection and compiled lambda functions to create the concrete array type
+    /// from the current logix type array, and is used by logix type for implicitly converting arrays to a logix type.
+    /// </remarks>
+    public static ArrayType ToArrayType(this Array array)
+    {
+        if (array is null) throw new ArgumentNullException(nameof(array));
+        var type = array.Cast<LogixType>().First().GetType();
+        var arrayType = typeof(ArrayType<>).MakeGenericType(type);
+        var parameterType = typeof(Array);
+        var constructor = arrayType.GetConstructor(new[] { parameterType })!;
+        var parameter = Expression.Parameter(parameterType, "array");
+        var creator = Expression.New(constructor, parameter);
+        var lambda = Expression.Lambda<Func<Array, ArrayType>>(creator, parameter);
+        var func = lambda.Compile();
+        return func.Invoke(array);
+    }
+
     #endregion
 
     #region ComponentExtensions
@@ -87,7 +142,7 @@ public static class LogixExtensions
     /// </remarks>
     public static Scope Scope(this LogixElement component)
     {
-        var containers = Enums.Scope.All().Select(s => s.XName.ToString());
+        var containers = Enums.Scope.All().Where(s => s != Enums.Scope.Null).Select(s => s.L5XName.ToString());
 
         var ancestor = component.Serialize().Ancestors()
             .FirstOrDefault(a => containers.Any(c => c == a.Name))?.Name.ToString();
@@ -110,7 +165,7 @@ public static class LogixExtensions
     /// </remarks>
     public static string ScopeName(this LogixElement component)
     {
-        var containers = Enums.Scope.All().Select(s => s.XName.ToString());
+        var containers = Enums.Scope.All().Select(s => s.L5XName.ToString());
 
         var logixName = component.Serialize().Ancestors()
             .FirstOrDefault(a => containers.Any(c => c == a.Name))

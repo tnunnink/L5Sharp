@@ -37,7 +37,7 @@ public class ModuleTests
         module.MajorFault.Should().BeFalse();
         module.Keying.Should().Be(ElectronicKeying.CompatibleModule);
         module.Ports.Should().NotBeNull();
-        module.Communications?.ConfigTag.Should().BeNull();
+        module.Communications?.ConfigTag.Should().NotBeNull();
     }
 
     [Test]
@@ -111,11 +111,5 @@ public class ModuleTests
         var xml = module.Serialize().ToString();
 
         return Verify(xml);
-    }
-
-    [Test]
-    public void METHOD()
-    {
-        
     }
 }

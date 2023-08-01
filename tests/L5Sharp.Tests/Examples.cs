@@ -4,6 +4,7 @@ using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Types;
+using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests
@@ -82,10 +83,10 @@ namespace L5Sharp.Tests
 
             var tags = content.Tags.Get("MultiDimensionalArray");
 
-            var array = tags.Value.As<ArrayType>();
+            var array = tags.Value.As<ArrayType<DINT>>();
 
             array.Should().NotBeNull();
-            array.Should().BeOfType<ArrayType>();
+            array.Should().BeOfType<ArrayType<DINT>>();
             array.Members.ToList().Should().NotBeEmpty();
             array[0, 0].Should().NotBeNull();
             array[0, 0].Should().Be(0);

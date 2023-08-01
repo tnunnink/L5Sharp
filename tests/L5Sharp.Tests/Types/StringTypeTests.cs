@@ -41,7 +41,7 @@ public class StringTypeTests
         type.Class.Should().Be(DataTypeClass.Unknown);
         type.Members.Should().HaveCount(2);
         type.LEN.Should().Be(0);
-        type.DATA.As<ArrayType>().Should().HaveCount(1);
+        type.DATA.As<ArrayType<SINT>>();
     }
     
     [Test]

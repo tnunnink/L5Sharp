@@ -148,7 +148,8 @@ public class Module : LogixComponent<Module>
     {
         // ReSharper disable once ExplicitCallerInfoArgument I don't like the L5X name...
         get => GetValue<int>(L5XName.ParentModPortId);
-        set => SetValue(value);
+        // ReSharper disable once ExplicitCallerInfoArgument I don't like the L5X name...
+        set => SetValue(value, L5XName.ParentModPortId);
     }
 
     /// <summary>

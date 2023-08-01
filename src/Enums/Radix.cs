@@ -87,13 +87,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </returns>
     public static Radix Default(LogixType type)
     {
-        if (type is ArrayType arrayType)
-            type = arrayType.First();
-
         if (type is not AtomicType atomicType)
             return Null;
 
-        return atomicType is REAL ? Float : Decimal;
+        return atomicType is REAL or LREAL ? Float : Decimal;
     }
 
     /// <summary>
@@ -103,9 +100,6 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>true if the current radix value is valid for the given data type instance; otherwise, false.</returns>
     public bool SupportsType(LogixType type)
     {
-        if (type is ArrayType arrayType)
-            type = arrayType.First();
-
         if (type is not AtomicType atomicType)
             return Equals(Null);
 
