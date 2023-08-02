@@ -25,21 +25,7 @@ public static class Logix
     /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
     public static Tag Tag<TLogixType>(string name) where TLogixType : LogixType, new() =>
         new() { Name = name, Value = new TLogixType() };
-
-    /// <summary>
-    /// Creates a new <see cref="Task"/> component with the provide properties.
-    /// </summary>
-    /// <param name="name">The name of the task.</param>
-    /// <param name="type">The <see cref="Enums.TaskType"/> specifying the type of task.</param>
-    /// <param name="description">The description of the task.</param>
-    /// <returns>A <see cref="Components.Task"/> component with the provided property values.</returns>
-    public static Task Task(string? name = null, TaskType? type = null, string? description = null) => new()
-    {
-        Name = name ?? string.Empty,
-        Type = type ?? TaskType.Periodic,
-        Description = description ?? string.Empty
-    };
-
+    
     /// <summary>
     /// Creates a new <see cref="Components.Module"/> with the provided name and catalog number.
     /// </summary>

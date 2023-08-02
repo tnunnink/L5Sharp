@@ -187,6 +187,12 @@
       <None Update="Types\ArrayTypeTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt">
         <DependentUpon>ArrayTypeTests.cs</DependentUpon>
       </None>
+      <None Update="Types\Predefined\AlarmAnalogTest.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
+        <DependentUpon>AlarmAnalogTest.cs</DependentUpon>
+      </None>
+      <None Update="Types\Predefined\AlarmDigitalTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
+        <DependentUpon>AlarmDigitalTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

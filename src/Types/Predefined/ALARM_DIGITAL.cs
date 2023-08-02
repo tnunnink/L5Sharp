@@ -18,6 +18,11 @@ public sealed class ALARM_DIGITAL : StructureType
     /// </summary>
     public ALARM_DIGITAL() : base(nameof(ALARM_DIGITAL))
     {
+        Severity = new DINT();
+        MinDurationPRE = new DINT();
+        ShelveDuration = new DINT();
+        MaxShelveDuration = new DINT();
+        ProgTime = new LINT(Radix.DateTime);
         EnableIn = new BOOL();
         In = new BOOL();
         InFault = new BOOL();
@@ -41,31 +46,6 @@ public sealed class ALARM_DIGITAL : StructureType
         OperEnable = new BOOL();
         AlarmCountReset = new BOOL();
         UseProgTime = new BOOL();
-        ProgTime = new LINT(Radix.DateTime);
-        Severity = new DINT();
-        MinDurationPRE = new DINT();
-        ShelveDuration = new DINT();
-        MaxShelveDuration = new DINT();
-        EnableOut = new BOOL();
-        InAlarm = new BOOL();
-        Acked = new BOOL();
-        InAlarmUnack = new BOOL();
-        Suppressed = new BOOL();
-        Shelved = new BOOL();
-        Disabled = new BOOL();
-        Commissioned = new BOOL();
-        MinDurationACC = new DINT();
-        AlarmCount = new DINT();
-        InAlarmTime = new LINT(Radix.DateTime);
-        AckTime = new LINT(Radix.DateTime);
-        RetToNormalTime = new LINT(Radix.DateTime);
-        AlarmCountResetTime = new LINT(Radix.DateTime);
-        ShelveTime = new LINT(Radix.DateTime);
-        UnshelveTime = new LINT(Radix.DateTime);
-        Status = new DINT();
-        InstructFault = new BOOL();
-        InFaulted = new BOOL();
-        SeverityInv = new BOOL();
     }
 
     /// <inheritdoc />
@@ -336,186 +316,6 @@ public sealed class ALARM_DIGITAL : StructureType
     public DINT MaxShelveDuration
     {
         get => GetMember<DINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="EnableOut"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL EnableOut
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="InAlarm"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL InAlarm
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="Acked"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL Acked
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="InAlarmUnack"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL InAlarmUnack
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="Suppressed"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL Suppressed
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="Shelved"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL Shelved
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="Disabled"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL Disabled
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="Commissioned"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL Commissioned
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="MinDurationACC"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public DINT MinDurationACC
-    {
-        get => GetMember<DINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="AlarmCount"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public DINT AlarmCount
-    {
-        get => GetMember<DINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="InAlarmTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public LINT InAlarmTime
-    {
-        get => GetMember<LINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="AckTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public LINT AckTime
-    {
-        get => GetMember<LINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="RetToNormalTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public LINT RetToNormalTime
-    {
-        get => GetMember<LINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="AlarmCountResetTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public LINT AlarmCountResetTime
-    {
-        get => GetMember<LINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="ShelveTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public LINT ShelveTime
-    {
-        get => GetMember<LINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="UnshelveTime"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public LINT UnshelveTime
-    {
-        get => GetMember<LINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="Status"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public DINT Status
-    {
-        get => GetMember<DINT>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="InstructFault"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL InstructFault
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="InFaulted"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL InFaulted
-    {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="SeverityInv"/> member of the <see cref="ALARM_DIGITAL"/> data type.
-    /// </summary>
-    public BOOL SeverityInv
-    {
-        get => GetMember<BOOL>();
         set => SetMember(value);
     }
 }

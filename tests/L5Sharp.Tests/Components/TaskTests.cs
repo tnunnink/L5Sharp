@@ -15,7 +15,7 @@ namespace L5Sharp.Tests.Components
 
             task.Should().NotBeNull();
         }
-        
+
         [Test]
         public void New_Default_ShouldHaveDefaults()
         {
@@ -31,7 +31,7 @@ namespace L5Sharp.Tests.Components
             task.DisableUpdateOutputs.Should().BeFalse();
             task.ScheduledPrograms.Should().BeEmpty();
         }
-        
+
         [Test]
         public void New_WithValues_ShouldHaveExpectedValues()
         {
@@ -61,7 +61,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void Clone_WhenCalled_ShouldBeAllNewReferences()
         {
-            var task = Logix.Task("Test");
+            var task = new Task { Name = "Test" };
 
             var clone = task.Clone();
 
@@ -71,7 +71,7 @@ namespace L5Sharp.Tests.Components
             clone.Name = "NewName";
             clone.Name.Should().NotBeSameAs(task.Name);
             task.Name.Should().Be("Test");
-            
+
             clone.Type = TaskType.Event;
             task.Type.Should().Be(TaskType.Periodic);
         }
@@ -80,7 +80,7 @@ namespace L5Sharp.Tests.Components
         public void Schedule_ValidName_ShouldHaveExpectedPrograms()
         {
             var task = new Task();
-            
+
             task.Schedule("Test");
 
             task.ScheduledPrograms.Should().HaveCount(1);
@@ -90,7 +90,7 @@ namespace L5Sharp.Tests.Components
         public void Cancel_Existing_ShouldHaveExpectedPrograms()
         {
             var task = new Task();
-            
+
             task.Schedule("Test");
             task.ScheduledPrograms.Should().HaveCount(1);
 
@@ -122,14 +122,14 @@ namespace L5Sharp.Tests.Components
                 InhibitTask = true,
                 DisableUpdateOutputs = true
             };
-            
+
             task.Schedule("Program1");
             task.Schedule("Test");
             task.Schedule("Another");
             task.Schedule("Another");
 
             var xml = task.Serialize().ToString();
-            
+
             return Verify(xml);
         }
     }

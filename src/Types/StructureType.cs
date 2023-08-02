@@ -102,10 +102,12 @@ public abstract class StructureType : LogixType
     {
         var type = Members.SingleOrDefault(m => m.Name == name)?.DataType;
 
-        if (type is null)
-            throw new InvalidOperationException($"No member with name {name} exists for the structure type {Name}");
-
-        return (TLogixType)type;
+        return type switch
+        {
+            null => throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}"),
+            AtomicType atomicType => (TLogixType)Convert.ChangeType(atomicType, typeof(TLogixType)),
+            _ => (TLogixType)type
+        };
     }
 
     /// <summary>
@@ -252,7 +254,7 @@ public abstract class StructureType : LogixType
 
         if (index == -1)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
-        
+
         Resubscribe(_members[index], member);
         _members[index] = member;
         RaiseDataChanged(this);
@@ -274,7 +276,7 @@ public abstract class StructureType : LogixType
 
         if (index == -1)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
-        
+
         var member = new LogixMember(name, type);
         Resubscribe(_members[index], member);
         _members[index] = member;
