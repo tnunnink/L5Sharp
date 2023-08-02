@@ -123,15 +123,15 @@ public class L5X : XElement
     /// <summary>
     /// Gets the root controller element of the L5X file. 
     /// </summary>
-    public XElement GetController() => Element(L5XName.Controller) ?? throw new L5XException(L5XName.Controller, this);
+    public XElement GetController() => Element(L5XName.Controller) ?? throw this.L5XError(L5XName.Controller);
 
     /// <summary>
     /// Gets a top level container element from the root controller element of the L5X.
     /// </summary>
     /// <param name="name">The name of the container to retrieve.</param>
     /// <returns>A <see cref="XElement"/> representing the container with the provided name.</returns>
-    /// <exception cref="L5XException">The element does not exist.</exception>
-    public XElement GetContainer(string name) => GetController().Element(name) ?? throw new L5XException(name, this);
+    /// <exception cref="InvalidOperationException">The element does not exist.</exception>
+    public XElement GetContainer(string name) => GetController().Element(name) ?? throw this.L5XError(name);
 
     /// <summary>
     /// Merges all top level containers and their immediate child elements between the current L5X content and the
@@ -164,7 +164,7 @@ public class L5X : XElement
         document.Add(this);
         document.Save(fileName);
     }
-    
+
     /// <summary>
     /// If no root controller element exists, adds new context controller and moves all root elements into that controller
     /// element. Then adds missing top level containers to ensure consistent structure of the root L5X.

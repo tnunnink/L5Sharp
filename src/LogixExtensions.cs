@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Components;
@@ -700,11 +701,11 @@ public static class LogixExtensions
     /// <param name="name">The name of the attribute value to get.</param>
     /// <typeparam name="T">The type to parse the attribute value as.</typeparam>
     /// <returns>The value of the element's specified attribute value parsed as the specified generic type parameter.</returns>
-    /// <exception cref="L5XException">No attribute with <c>name</c> exists for the current element.</exception>
+    /// <exception cref="InvalidOperationException">No attribute with <c>name</c> exists for the current element.</exception>
     internal static T Get<T>(this XElement element, XName name)
     {
         var value = element.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : throw new L5XException(name, element);
+        return value is not null ? value.Parse<T>() : throw element.L5XError(name);
     }
 
     /// <summary>
@@ -720,6 +721,23 @@ public static class LogixExtensions
     {
         var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
         return attribute is not null ? attribute.TypeName : type.Name;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    internal static InvalidOperationException L5XError(this XElement element, XName name)
+    {
+        var message = $"The required attribute or child element '{name}' does not exist for {element.Name}.";
+        var line = ((IXmlLineInfo)element).HasLineInfo() ? ((IXmlLineInfo)element).LineNumber : -1;
+        var exception = new InvalidOperationException(message);
+        exception.Data.Add("target", name);
+        exception.Data.Add("line", line);
+        exception.Data.Add("element", element);
+        return exception;
     }
 
     /// <summary>
@@ -756,28 +774,6 @@ public static class LogixExtensions
         var factory = Expression.New(constructor, parameter);
         var lambda = Expression.Lambda(factory, parameter);
         return (Func<XElement, TReturn>)lambda.Compile();
-    }
-
-    /// <summary>
-    /// Determines if a type is derived from the base type, even if the base type is a generic type.
-    /// </summary>
-    /// <param name="type">The type to test.</param>
-    /// <param name="baseType">The base type to check.</param>
-    /// <returns><c>true</c> if <c>type</c> inherits directly or indirectly from <c>baseType</c>.</returns>
-    internal static bool IsDerivativeOf(this Type type, Type baseType)
-    {
-        if (type == baseType) return false;
-
-        var current = type.BaseType;
-
-        while (current != typeof(object) && current != null)
-        {
-            var definition = current.IsGenericType ? current.GetGenericTypeDefinition() : current;
-            if (definition == baseType) return true;
-            current = current.BaseType;
-        }
-
-        return false;
     }
 
     #endregion

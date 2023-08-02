@@ -55,7 +55,7 @@ public class LogixMember : ILogixSerializable
     /// </summary>
     /// <param name="element">The element to parse as the new member object.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="L5XException"><c>element</c> does not have required attributes or elements.</exception>
+    /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
     public LogixMember(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
@@ -175,7 +175,7 @@ public class LogixMember : ILogixSerializable
     {
         if (type is AtomicType)
             throw new ArgumentException($"Can not set {current.Name} with atomic type {type.Name}.");
-        
+
         var clone = current.Clone();
 
         var pairs = clone.Members.Join(type.Members, m => m.Name, m => m.Name,

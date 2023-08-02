@@ -145,12 +145,12 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter.
-    /// If the attribute does not exist, throw a <see cref="L5XException"/>.
+    /// If the attribute does not exist, throw a <see cref="InvalidOperationException"/>.
     /// </summary>
     /// <param name="name">The name of the attribute.</param>
     /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>The value of attribute parsed as the generic type parameter.</returns>
-    /// <exception cref="L5XException">No attribute with the provided name was found on <see cref="Element"/>.</exception>
+    /// <exception cref="InvalidOperationException">No attribute with the provided name was found on <see cref="Element"/>.</exception>
     /// <remarks>
     /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
@@ -159,7 +159,7 @@ public abstract class LogixElement : ILogixSerializable
     protected T GetRequiredValue<T>([CallerMemberName] string? name = null)
     {
         var value = Element.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : throw new L5XException(name!, Element);
+        return value is not null ? value.Parse<T>() : throw Element.L5XError(name!);
     }
 
     /// <summary>
@@ -211,7 +211,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <param name="name">The name of the child container collection (e.g. Members).</param>
     /// <typeparam name="TChild">The child element type.</typeparam>
     /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
-    /// <exception cref="L5XException">A child element with <c>name</c> does not exist.</exception>
+    /// <exception cref="InvalidOperationException">A child element with <c>name</c> does not exist.</exception>
     /// <remarks>
     /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
@@ -221,7 +221,7 @@ public abstract class LogixElement : ILogixSerializable
         where TChild : LogixElement
     {
         var container = Element.Element(name);
-        if (container is null) throw new L5XException(name!, Element);
+        if (container is null) throw Element.L5XError(name);
         return new LogixContainer<TChild>(container);
     }
 
@@ -285,7 +285,7 @@ public abstract class LogixElement : ILogixSerializable
     protected void SetValue<T>(T? value, Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
     {
         var element = selector.Invoke(Element);
-        if (element is null) throw new L5XException(name!, Element);
+        if (element is null) throw Element.L5XError(name!);
         element.SetAttributeValue(name, value);
     }
 

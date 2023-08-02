@@ -39,7 +39,6 @@ public sealed class Line : LogixElement
     /// <summary>
     /// The logic of the <see cref="Line"/> as a <see cref="NeutralText"/> value.
     /// </summary>
-    /// <exception cref="L5XException">The text element of the rung element does not exist.</exception>    
     public NeutralText Text
     {
         get => Element.Value;

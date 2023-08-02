@@ -66,7 +66,7 @@ public static class LogixSerializer
     private static IEnumerable<KeyValuePair<Type, Func<XElement, LogixElement>>> Introspect(Assembly assembly)
     {
         var types = assembly.GetTypes().Where(t =>
-            typeof(LogixElement).IsDerivativeOf(t)
+            typeof(LogixElement).IsAssignableFrom(t)
             && t is { IsAbstract: false, IsPublic: true }
             && t.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(XElement) },
                 null) is not null);

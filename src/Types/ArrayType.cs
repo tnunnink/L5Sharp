@@ -61,7 +61,7 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// </summary>
     /// <param name="element">The element to parse.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="L5XException"><c>element</c> does not have required attributes or elements.</exception>
+    /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
     protected internal ArrayType(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));

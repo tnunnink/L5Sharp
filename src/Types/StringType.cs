@@ -30,7 +30,7 @@ public class StringType : StructureType, IEnumerable<char>
     /// </summary>
     /// <param name="element">The element to parse as the new member object.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="L5XException"><c>element</c> does not have a data type attribute or required LEN and DATA members.</exception>
+    /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
     public StringType(XElement element) : base(DetermineName(element), GenerateMembers(DetermineValue(element)))
     {
     }

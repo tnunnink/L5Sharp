@@ -46,7 +46,7 @@ public class WatchList : LogixComponent<WatchList>
         {
             var tag = Element.Elements(L5XName.WatchTag)
                 .FirstOrDefault(e => e.Attribute(L5XName.Specifier)?.Value == specifier);
-            return tag is not null ? new WatchTag(tag) : throw new L5XException(specifier, Element);
+            return tag is not null ? new WatchTag(tag) : throw Element.L5XError(specifier!);
         }
         set
         {

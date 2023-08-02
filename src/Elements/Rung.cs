@@ -67,7 +67,6 @@ public sealed class Rung : LogixElement
     /// <summary>
     /// The logic of the <see cref="Rung"/> as a <see cref="NeutralText"/> value.
     /// </summary>
-    /// <exception cref="L5XException">The text element of the rung element does not exist.</exception>
     public NeutralText Text
     {
         get => GetProperty<NeutralText>() ?? NeutralText.Empty;

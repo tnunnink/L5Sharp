@@ -102,7 +102,7 @@ public class Routine : LogixComponent<Routine>
     /// </summary>
     /// <typeparam name="TElement">The content element type to return.</typeparam>
     /// <returns>A <see cref="LogixContainer{TElement}"/> with access to the root content and specified element types.</returns>
-    /// <exception cref="L5XException">No content element corresponding to the specified <see cref="Type"/> exists for the
+    /// <exception cref="InvalidOperationException">No content element corresponding to the specified <see cref="Type"/> exists for the
     /// underlying <see cref="XElement"/>. This can happen if the provided element is not valid.</exception>
     /// <remarks>
     /// This method offers a dynamic interface for accessing content of any routine type. If the underlying routine
@@ -114,7 +114,7 @@ public class Routine : LogixComponent<Routine>
 
         return content is not null
             ? new LogixContainer<TElement>(content)
-            : throw new L5XException(ContentName(Type), Element);
+            : throw Element.L5XError(ContentName(Type));
     }
 
     /// <summary>

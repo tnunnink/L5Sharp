@@ -52,7 +52,7 @@ public abstract class StructureType : LogixType
     /// </summary>
     /// <param name="element">The element to parse as the new member object.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="L5XException"><c>element</c> does not have required attributes.</exception>
+    /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
     protected StructureType(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));

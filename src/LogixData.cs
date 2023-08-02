@@ -186,14 +186,13 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeElement(XElement element)
     {
-        var dataType = element.Parent?.Get<string>(L5XName.DataType) ??
-                       throw new L5XException(L5XName.DataType, element);
+        var dataType = element.Parent?.Get<string>(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
         var value = element.Attribute(L5XName.Value);
         var structure = element.Element(L5XName.Structure);
 
-        return value is not null ? Atomic.Parse(dataType, value.Value) :
-            structure is not null ? DeserializeStructure(structure) :
-            throw new L5XException(element);
+        return value is not null ? Atomic.Parse(dataType, value.Value)
+            : structure is not null ? DeserializeStructure(structure)
+            : throw element.L5XError(L5XName.Element);
     }
 
     /// <summary>
@@ -205,9 +204,7 @@ public static class LogixData
     private static LogixType DeserializeStructure(XElement element)
     {
         var dataType = element.Get<string>(L5XName.DataType);
-
         if (IsRegistered(dataType)) return Deserializers.Value[dataType].Invoke(element);
-
         return HasStringStructure(element) ? new StringType(element) : new ComplexType(element);
     }
 
@@ -218,9 +215,7 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeString(XElement element)
     {
-        var dataType = element.Parent?.Get<string>(L5XName.DataType) ??
-                       throw new L5XException(L5XName.DataType, element);
-
+        var dataType = element.Parent?.Get<string>(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
         return IsRegistered(dataType) ? Deserializers.Value[dataType].Invoke(element) : new StringType(element);
     }
 
@@ -280,7 +275,7 @@ public static class LogixData
     private static IEnumerable<Type> FindLogixTypes(Assembly assembly)
     {
         return assembly.GetTypes().Where(t =>
-            t.IsDerivativeOf(typeof(LogixType))
+            typeof(LogixType).IsAssignableFrom(t)
             && t is { IsAbstract: false, IsPublic: true }
             && t != typeof(ComplexType) && t != typeof(StringType)
             && t != typeof(ArrayType) && t != typeof(ArrayType<>)
