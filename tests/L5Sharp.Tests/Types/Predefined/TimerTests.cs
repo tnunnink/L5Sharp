@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Types.Predefined
     public class TimerTests
     {
         [Test]
-        public void New_WhenCalled_ShouldNotBeNull()
+        public void New_Default_ShouldNotBeNull()
         {
             var type = new TIMER();
 

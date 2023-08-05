@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using L5Sharp.Core;
+using L5Sharp.Common;
 using L5Sharp.Enums;
 using Task = L5Sharp.Components.Task;
 

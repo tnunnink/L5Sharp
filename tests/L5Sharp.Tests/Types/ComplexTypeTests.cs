@@ -578,20 +578,4 @@ public class ComplexTypeTests
 
         return Verify(xml);
     }
-
-    [Test]
-    public void BuildUserTypes_ValidUserType_ShouldWork()
-    {
-        var type = new ComplexType("Test", new List<LogixMember>
-        {
-            new("Atomic", 1),
-            new("String", "Test Value"),
-            new("Structure", new TIMER { PRE = 2000 }),
-            new("UserType", new MySimpleType())
-        });
-
-        var userTypes = type.ToUDT().ToList();
-
-        userTypes.Should().HaveCount(1);
-    }
 }

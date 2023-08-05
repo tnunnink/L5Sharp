@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="BoolTest" TargetType="DataType"
+                    ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Sat Mar 04 21:37:56 2023"
+                    ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+    <Controller Use="Context" Name="TestController">
+        <DataTypes Use="Context">
+            <DataType Use="Target" Name="BoolTest" Family="NoFamily" Class="User">
+                <Description>
+                    <![CDATA[This is a test import data type]]>
+                </Description>
+                <Members>
+                    <Member Name="Member01" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="Member02" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="Member03" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="Member04" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                    <Member Name="Member05" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false"
+                            ExternalAccess="Read/Write"/>
+                </Members>
+            </DataType>
+        </DataTypes>
+    </Controller>
+</RSLogix5000Content>

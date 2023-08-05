@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using L5Sharp.Core;
+using L5Sharp.Common;
 using NUnit.Framework;
 
 namespace L5Sharp.Tests.Core

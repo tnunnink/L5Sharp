@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using L5Sharp.Common;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Elements;
 using NUnit.Framework;
 

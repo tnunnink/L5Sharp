@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="6.11.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0"/>
+        <PackageReference Include="NUnit" Version="3.13.3"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.4.2"/>
+        <PackageReference Include="NUnit.Analyzers" Version="3.6.1"/>
+        <PackageReference Include="coverlet.collector" Version="3.2.0"/>
+        <PackageReference Include="Verify.NUnit" Version="20.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.csproj" />
+      <ProjectReference Include="..\..\src\L5Sharp.Extensions\L5Sharp.Extensions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="TestFiles\BoolTest.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\Empty.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\Test.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="LogixExtensionTests.AddModule_ValidModule_ShouldBeVerified.verified.txt">
+        <ParentFile>LogixExtensionTests</ParentFile>
+        <DependentUpon>LogixExtensionTests.cs</DependentUpon>
+      </None>
+    </ItemGroup>
+
+
+</Project>

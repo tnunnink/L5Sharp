@@ -1,0 +1,1 @@
+﻿<DataValue DataType="LREAL" Radix="Float" Value="1.23" />

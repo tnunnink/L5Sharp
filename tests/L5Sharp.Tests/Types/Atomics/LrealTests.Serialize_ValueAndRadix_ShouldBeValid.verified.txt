@@ -1,0 +1,1 @@
+﻿<DataValue DataType="LREAL" Radix="Exponential" Value="1.2300000000000000e+000" />

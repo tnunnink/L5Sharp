@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using L5Sharp.Common;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
 using Task = System.Threading.Tasks.Task;
@@ -31,7 +31,7 @@ public class ModuleTests
         module.ProductType.Should().Be(ProductType.Unknown);
         module.ProductCode.Should().Be(0);
         module.ParentModule.Should().BeEmpty();
-        module.ParentPortId.Should().Be(0);
+        module.ParentModPortId.Should().Be(0);
         module.Inhibited.Should().BeFalse();
         module.SafetyEnabled.Should().BeFalse();
         module.MajorFault.Should().BeFalse();
@@ -53,7 +53,7 @@ public class ModuleTests
             ProductType = ProductType.Analog,
             ProductCode = 1,
             ParentModule = "Local",
-            ParentPortId = 1,
+            ParentModPortId = 1,
             Inhibited = true,
             SafetyEnabled = true,
             MajorFault = true,
@@ -70,7 +70,7 @@ public class ModuleTests
         module.ProductType.Should().Be(ProductType.Analog);
         module.ProductCode.Should().Be(1);
         module.ParentModule.Should().Be("Local");
-        module.ParentPortId.Should().Be(1);
+        module.ParentModPortId.Should().Be(1);
         module.Inhibited.Should().Be(true);
         module.SafetyEnabled.Should().Be(true);
         module.MajorFault.Should().Be(true);
@@ -100,7 +100,7 @@ public class ModuleTests
             ProductType = ProductType.Analog,
             ProductCode = 1,
             ParentModule = "Local",
-            ParentPortId = 1,
+            ParentModPortId = 1,
             Inhibited = true,
             SafetyEnabled = true,
             MajorFault = true,

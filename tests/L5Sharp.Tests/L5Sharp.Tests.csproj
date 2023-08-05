@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\L5Sharp.csproj" />
+        <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -193,6 +193,27 @@
       <None Update="Types\Predefined\AlarmDigitalTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
         <DependentUpon>AlarmDigitalTests.cs</DependentUpon>
       </None>
+      <None Update="Types\Predefined\ControlTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>ControlTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\ULintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>ULintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\UDintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>UDintTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Atomics\LrealTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
+        <DependentUpon>LrealTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Predefined\MessageTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>MessageTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Predefined\CounterTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>CounterTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Predefined\AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>AlarmTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -203,6 +224,10 @@
 
     <ItemGroup>
       <EmbeddedResource Remove="Serialization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Catalog\" />
     </ItemGroup>
 
 </Project>

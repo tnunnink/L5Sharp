@@ -1,10 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp", "L5Sharp.csproj", "{1C401968-C9AA-41AF-8D18-93605D123AFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp", "L5Sharp.Core\L5Sharp.csproj", "{1C401968-C9AA-41AF-8D18-93605D123AFF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{337B58B2-5647-4088-8CB3-50B3752B04D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests", "..\tests\L5Sharp.Tests\L5Sharp.Tests.csproj", "{FED5FACA-5568-4A3F-94C0-536D9E36CA26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Extensions", "L5Sharp.Extensions\L5Sharp.Extensions.csproj", "{D02B233A-8DA1-4DB8-8678-82DEE1F7E98D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Extensions.Tests", "..\tests\L5Sharp.Extensions.Tests\L5Sharp.Extensions.Tests.csproj", "{1AF29F54-9314-40DB-B496-B26A96C4F54C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,8 +24,17 @@ Global
 		{FED5FACA-5568-4A3F-94C0-536D9E36CA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FED5FACA-5568-4A3F-94C0-536D9E36CA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FED5FACA-5568-4A3F-94C0-536D9E36CA26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D02B233A-8DA1-4DB8-8678-82DEE1F7E98D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02B233A-8DA1-4DB8-8678-82DEE1F7E98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02B233A-8DA1-4DB8-8678-82DEE1F7E98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02B233A-8DA1-4DB8-8678-82DEE1F7E98D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AF29F54-9314-40DB-B496-B26A96C4F54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AF29F54-9314-40DB-B496-B26A96C4F54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AF29F54-9314-40DB-B496-B26A96C4F54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF29F54-9314-40DB-B496-B26A96C4F54C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FED5FACA-5568-4A3F-94C0-536D9E36CA26} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
+		{1AF29F54-9314-40DB-B496-B26A96C4F54C} = {337B58B2-5647-4088-8CB3-50B3752B04D8}
 	EndGlobalSection
 EndGlobal

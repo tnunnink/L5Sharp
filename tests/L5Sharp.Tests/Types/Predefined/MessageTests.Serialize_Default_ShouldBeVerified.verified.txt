@@ -1,0 +1,1 @@
+﻿<MessageParameters MessageType="" RequestedLength="0" ConnectedFlag="0" ConnectionPath="" CommTypeCode="0" ServiceCode="16#0000" ObjectType="16#0000" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" DestinationTag="" CacheConnections="0" LargePacketUsage="0" />

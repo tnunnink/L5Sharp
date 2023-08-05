@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using L5Sharp.Common;
 using L5Sharp.Components;
-using L5Sharp.Core;
 using L5Sharp.Enums;
 using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
@@ -159,25 +159,6 @@ public class TagTests
         parent.Should().NotBeNull();
         parent?.Value.Should().BeOfType<MySimpleType>();
         parent?.TagName.Should().Be("Test.Simple");
-    }
-
-    [Test]
-    public void Names_WhenCalled_ContainsExpectedNames()
-    {
-        var tag = new Tag { Name = "Test", Value = new TIMER() };
-
-        var names = tag.Names().ToList();
-
-        names.Should().Contain("Test");
-        names.Should().Contain("Test.PRE");
-        names.Should().Contain("Test.PRE.0");
-        names.Should().Contain("Test.PRE.31");
-        names.Should().Contain("Test.ACC");
-        names.Should().Contain("Test.ACC.0");
-        names.Should().Contain("Test.ACC.31");
-        names.Should().Contain("Test.DN");
-        names.Should().Contain("Test.TT");
-        names.Should().Contain("Test.EN");
     }
 
     #endregion
@@ -629,49 +610,18 @@ public class TagTests
     }
 
     #endregion
-
-
+    
     [Test]
-    public void Add_StructureType_ShouldThrowInvalidOperationException()
+    public void Tag_ValidParameters_ShouldBeExpected()
     {
-        var tag = new Tag { Name = "Test", Value = new TIMER() };
+        var tag = Tag.New<TIMER>("MyTimer");
 
-        FluentActions.Invoking(() => tag.Add("Test", 123)).Should().Throw<InvalidOperationException>();
+        tag.Name.Should().Be("MyTimer");
+        tag.Value.Should().BeOfType<TIMER>();
     }
 
-    [Test]
-    public void Add_ComplexType_ShouldUpdateStructure()
-    {
-        var tag = new Tag { Name = "Test", Value = new MySimpleType() };
 
-        tag.Add("Test", 123);
-
-        tag["Test"].Should().NotBeNull();
-        tag["Test"].Value.Should().BeOfType<DINT>();
-        tag["Test"].Value.Should().Be(123);
-    }
-
-    [Test]
-    public Task Add_ComplexType_ShouldBeVerified()
-    {
-        var tag = new Tag { Name = "Test", Value = new MySimpleType() };
-
-        tag.Add("Test", 123);
-
-        var xml = tag.Serialize().ToString();
-        return Verify(xml);
-    }
-
-    [Test]
-    public Task Remove_ValidTag_ShouldBeVerified()
-    {
-        var tag = new Tag { Name = "Test", Value = new MySimpleType() };
-
-        tag.Remove("M3");
-
-        var xml = tag.Serialize().ToString();
-        return Verify(xml);
-    }
+    
 
     [Test]
     public void With_RootTagValidValue_ShouldUpdateValue()

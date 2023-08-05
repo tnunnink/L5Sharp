@@ -1,0 +1,1 @@
+﻿<DataValue DataType="UDINT" Radix="Decimal" Value="0" />

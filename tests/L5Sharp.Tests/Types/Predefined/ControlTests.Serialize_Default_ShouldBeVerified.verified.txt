@@ -1,0 +1,12 @@
+﻿<Structure DataType="CONTROL">
+  <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+  <DataValueMember Name="POS" DataType="DINT" Radix="Decimal" Value="0" />
+  <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+  <DataValueMember Name="EU" DataType="BOOL" Value="0" />
+  <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+  <DataValueMember Name="EM" DataType="BOOL" Value="0" />
+  <DataValueMember Name="ER" DataType="BOOL" Value="0" />
+  <DataValueMember Name="UL" DataType="BOOL" Value="0" />
+  <DataValueMember Name="IN" DataType="BOOL" Value="0" />
+  <DataValueMember Name="FD" DataType="BOOL" Value="0" />
+</Structure>
