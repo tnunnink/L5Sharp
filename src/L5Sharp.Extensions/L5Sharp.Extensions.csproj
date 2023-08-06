@@ -11,7 +11,7 @@
         <Version>0.1.0</Version>
         <AssemblyVersion>0.1.0</AssemblyVersion>
         <FileVersion>0.1.0.0</FileVersion>
-        <Description>C# library for querying and manipulating RSLogix 5000 L5X files.</Description>
+        <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

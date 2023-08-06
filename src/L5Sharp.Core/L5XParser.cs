@@ -46,6 +46,7 @@ public static class L5XParser
         { typeof(Radix), Radix.FromValue },
         { typeof(RoutineType), RoutineType.FromValue },
         { typeof(RungType), RungType.FromValue },
+        { typeof(SamplesType), SamplesType.FromValue },
         { typeof(Scope), Scope.FromValue },
         { typeof(SFCExecutionControl), SFCExecutionControl.FromValue },
         { typeof(SFCRestartPosition), SFCRestartPosition.FromValue },

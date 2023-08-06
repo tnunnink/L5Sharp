@@ -19,7 +19,7 @@ public class RedundancyInfo : LogixElement
     }
 
     /// <summary>
-    /// Creates a new <see cref="WatchTag"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="RedundancyInfo"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>

@@ -66,9 +66,6 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="Common.Vendor"/> entity that contains the id and name of the vendor.</value>
     /// <remarks>
     /// All modules have a vendor representing the manufacturer of the module.
-    /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
-    /// <see cref="ModuleCatalog"/> for catalog lookup. When deserializing from L5X file, typically only the vendor
-    /// id is available on the module element.
     /// </remarks>
     public Vendor? Vendor
     {
@@ -81,9 +78,6 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <remarks>
     /// All modules have a product type representing the product category of the module.
-    /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
-    /// <see cref="ModuleCatalog"/> for catalog lookup.
-    /// This value will be validated by Logix upon import of the L5X. 
     /// </remarks>
     public ProductType? ProductType
     {
@@ -96,8 +90,6 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <remarks>
     /// This is a unique value that identifies the module and is assigned by Logix.
-    /// This value can be retrieved as part of the <see cref="CatalogEntry"/> object obtained using a
-    /// <see cref="ModuleCatalog"/> for catalog lookup, or when deserializing from an L5X file.
     /// </remarks>
     public ushort ProductCode
     {

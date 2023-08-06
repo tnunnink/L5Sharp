@@ -83,6 +83,8 @@ var result = content.Tags.Find("MyTag").Replace(tag);
 content.Save("C:\PathToMyOutputFile\FileName.L5X");
 ```
 
+## Project Structure
+
 
 ## Documentation
 See my project GitHub Page [here](https://tnunnink.github.io/L5Sharp/index.html) for more in depth articles and API documentation.

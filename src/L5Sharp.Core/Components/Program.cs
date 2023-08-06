@@ -5,9 +5,7 @@ using L5Sharp.Enums;
 namespace L5Sharp.Components;
 
 /// <summary>
-/// A logix <c>Program</c> component. Contains the properties that comprise the L5X Program element. This type is a
-/// container type. It does not include tags and routines. To access these sub-components, use the corresponding
-/// component collection API on the <see cref="LogixContent"/> class.
+/// A logix <c>Program</c> component. Contains the properties that comprise the L5X Program element.
 /// </summary>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">

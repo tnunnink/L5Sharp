@@ -489,8 +489,7 @@ public class Tag : LogixComponent<Tag>
                 $"Can not mutate tag data for parent type {Parent.DataType} as it is not a complex type instance.");
 
         complexType.Replace(TagName.Member, value);
-        var member = complexType.Member(TagName.Member);
-        return new Tag(Root, member!, Parent);
+        return Root[TagName];
     }
 
     /// <inheritdoc />

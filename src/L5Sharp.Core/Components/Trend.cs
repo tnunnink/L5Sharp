@@ -8,6 +8,10 @@ namespace L5Sharp.Components;
 /// <summary>
 /// A logix <c>Trend</c> component. Contains the properties that comprise the L5X Trend element.
 /// </summary>
+/// <remarks>
+/// Observe these guidelines when defining a trend:<br/>
+///     • A trend can support as many as eight pen declarations.<br/>
+/// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
@@ -18,6 +22,7 @@ public class Trend : LogixComponent<Trend>
     public Trend()
     {
         SamplePeriod = 1;
+        CaptureSizeType = CaptureSizeType.Samples;
     }
 
     /// <inheritdoc />
@@ -47,7 +52,11 @@ public class Trend : LogixComponent<Trend>
     /// Define how the capture size is specified.
     /// </summary>
     /// <value>A <see cref="CaptureSize"/> representing the capture size option. Type Samples, TimePeriod, or NoLimit.</value>
-    public CaptureSizeType CaptureSizeType { get; set; } = CaptureSizeType.Samples;
+    public CaptureSizeType? CaptureSizeType
+    {
+        get => GetValue<CaptureSizeType>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Specify the number of samples for each capture.
@@ -58,7 +67,11 @@ public class Trend : LogixComponent<Trend>
     /// whichever is greater. If the CaptureSizeType is TimePeriod, the range is SamplePeriod...2 hours or
     /// (SamplePeriod * 1000), whichever is greater
     /// </remarks>
-    public int CaptureSize { get; set; }
+    public int CaptureSize
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Specify the type of the start trigger
@@ -185,10 +198,19 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<TagName>();
         set => SetValue(value);
     }
+    
+    /// <summary>
+    /// Define how pre-samples are specified. Type Samples or TimePeriod.
+    /// </summary>
+    public SamplesType? PreSamplesType
+    {
+        get => GetValue<SamplesType>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// Specify the number of pre-samples (0...1000) if the PreSampleType is Samples. Specify a time period 
-    /// (0...(SamplePeriod ∗ 1000)) that covers pre-samples if the PreSampleType is TimePeriod
+    /// (0...(SamplePeriod ∗ 1000)) that covers pre-samples if the PreSampleType is TimePeriod.
     /// </summary>
     public int? PreSamples
     {
@@ -319,6 +341,34 @@ public class Trend : LogixComponent<Trend>
     public TagName? StopTriggerTargetTag2
     {
         get => GetValue<TagName>();
+        set => SetValue(value);
+    }
+    
+    /// <summary>
+    /// Define how post-samples are specified. Type Samples or TimePeriod.
+    /// </summary>
+    public SamplesType? PostSamplesType
+    {
+        get => GetValue<SamplesType>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Specify the number of post-samples (0...1000) if the PostSampleType is Samples. Specify a time period
+    /// (0...(SamplePeriod ∗ 1000)) that covers post-samples if the PostSampleType is TimePeriod.
+    /// </summary>
+    public int? PostSamples
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Specify the version of the Trend feature.
+    /// </summary>
+    public int? TrendxVersion
+    {
+        get => GetValue<int>();
         set => SetValue(value);
     }
 

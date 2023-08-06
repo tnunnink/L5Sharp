@@ -18,12 +18,23 @@ public class SafetyInfo : LogixElement
     }
 
     /// <summary>
-    /// Creates a new <see cref="WatchTag"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="SafetyInfo"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public SafetyInfo(XElement element) : base(element)
     {
+    }
+
+    /// <summary>
+    /// Specifies the safety signature control as defined in the controller properties
+    /// </summary>
+    /// <value>A <see cref="string"/> representing the safety signature.</value>
+    /// <remarks>This value is exported only; it is ignored on import.</remarks>
+    public string? SafetySignature
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
     }
     
     /// <summary>

@@ -9,6 +9,22 @@ namespace L5Sharp.Components;
 /// <summary>
 /// A logix <c>Controller</c> component. Contains the properties that comprise the L5X Controller element.
 /// </summary>
+/// <remarks>
+/// <para>A controller component may or may not contains various properties depending on if the exported L5X file
+/// was a full project file or just a component export file. This is indicated in the <see cref="L5X"/> by the property
+/// <c>ContainsContext</c>, which if true, means the controller element exists simply to contain other components that
+/// are needed by the <c>TargetName</c> for successful re-imports of the content, and therefore will typically only have
+/// a name, revision, and processor type.</para>
+/// <para>
+/// Observe these guidelines when defining a controller:<br/>
+///     • All declarations must be ordered in the prescribed syntax.<br/>
+///     • The maximum number of tasks vary by the controller type.<br/>
+///     • There can be only one continuous task.<br/>
+///     • Programs can be scheduled under only one task.<br/>
+///     • There can be a maximum of 1000 programs under a task.<br/>
+///     • Scheduled programs must be defined.<br/>
+/// </para>
+/// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
@@ -292,6 +308,15 @@ public class Controller : LogixComponent<Controller>
     public RedundancyInfo? RedundancyInfo
     {
         get => GetComplex<RedundancyInfo>();
+        set => SetComplex(value);
+    }
+    
+    /// <summary>
+    /// The <see cref="Elements.Security"/> object that specifies the security configuration of the controller.
+    /// </summary>
+    public Security? Security
+    {
+        get => GetComplex<Security>();
         set => SetComplex(value);
     }
     
