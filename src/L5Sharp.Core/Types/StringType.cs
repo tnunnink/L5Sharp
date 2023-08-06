@@ -119,7 +119,7 @@ public class StringType : StructureType, IEnumerable<char>
 
     /// <inheritdoc />
     public override string ToString() =>
-        Encoding.ASCII.GetString(DATA.Cast<SINT>().Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
+        Encoding.ASCII.GetString(DATA.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
 
     /// <inheritdoc />
     public override XElement Serialize()
@@ -233,6 +233,7 @@ public class StringType : StructureType, IEnumerable<char>
     private static IEnumerable<LogixMember> GenerateMembers(string? value)
     {
         value ??= string.Empty;
+        value = value.TrimStart('\'').TrimEnd('\'');
         var len = new LogixMember(nameof(LEN), new DINT(value.Length));
         var data = new LogixMember(nameof(DATA), new ArrayType<SINT>(GetData(value)));
         return new List<LogixMember> { len, data };
@@ -246,10 +247,11 @@ public class StringType : StructureType, IEnumerable<char>
     private static IEnumerable<LogixMember> GenerateMembers(string? value, ushort length)
     {
         value ??= string.Empty;
-
+        value = value.TrimStart('\'').TrimEnd('\'');
+        
         if (value.Length > length)
-            throw new ArgumentOutOfRangeException(
-                $"The length {value.Length} of value can not be greater than {length} characters.");
+            throw new ArgumentOutOfRangeException(nameof(value),
+                $"The string length {value.Length} is greater than the predefined length {length}.");
 
         var len = new LogixMember(nameof(LEN), new DINT(value.Length));
         var data = new LogixMember(nameof(DATA), ArrayType.New<SINT>(length))

@@ -3,7 +3,7 @@ using FluentAssertions;
 using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Enums;
-using Task = System.Threading.Tasks.Task;
+using L5Sharp.Samples;
 
 namespace L5Sharp.Core.Tests;
 
@@ -29,7 +29,7 @@ public class LogixContentExportTests
     [Test]
     public void Export_DataType_WriteToFileForImport()
     {
-        const string output = @"C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\Samples\Generated\DataType.L5X";
+        var output = Export.BoolTest;
 
         var component = new DataType
         {

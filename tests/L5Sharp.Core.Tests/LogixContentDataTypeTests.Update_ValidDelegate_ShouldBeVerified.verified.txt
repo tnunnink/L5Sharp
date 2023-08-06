@@ -125,7 +125,7 @@ Dint Array]]></Description>
     <Members>
       <Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
       <Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Hex" Hidden="false" Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
-        <Description><![CDATA[Test Boolean update]]></Description>
+        <Description><![CDATA[Test Bool]]></Description>
       </Member>
       <Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
         <Description><![CDATA[Test Sint]]></Description>
@@ -134,16 +134,22 @@ Dint Array]]></Description>
         <Description><![CDATA[Test Int]]></Description>
       </Member>
       <Member Name="DintMember" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="None">
-        <Description><![CDATA[Test Dint comment]]></Description>
+        <Description><![CDATA[Test Dint]]></Description>
       </Member>
       <Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
         <Description><![CDATA[Test Lint]]></Description>
       </Member>
-      <Member Name="NewMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
-        <Description><![CDATA[This is a test member]]></Description>
+      <Member Name="RealMember" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[Test Real]]></Description>
       </Member>
-      <Member Name="ZZZZZZZZZZSimpleType7" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
-      <Member Name="A1" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZSimpleType7" BitNumber="0" ExternalAccess="Read/Write" />
+    </Members>
+  </DataType>
+  <DataType Name="TestType" Family="NoFamily" Class="User">
+    <Description><![CDATA[This is an update test]]></Description>
+    <Members>
+      <Member Name="Timers" DataType="TIMER" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write" />
+      <Member Name="Number" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write" />
+      <Member Name="Flag" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read Only" />
     </Members>
   </DataType>
 </DataTypes>

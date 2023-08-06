@@ -23,7 +23,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\L5Sharp.Core\L5Sharp.csproj" />
-      <ProjectReference Include="..\L5Sharp.csproj" />
     </ItemGroup>
 
 </Project>

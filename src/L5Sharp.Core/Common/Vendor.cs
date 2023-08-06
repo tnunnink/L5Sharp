@@ -9,8 +9,7 @@ namespace L5Sharp.Common;
 /// <remarks>
 /// This object is a simple entity type wrapper that groups the vendor id and name.
 /// Vendor's are defined by Rockwell and assigned unique Id and name.
-/// This information is obtained from the L5X or from the <see cref="ModuleCatalog"/> service by lookup of a given
-/// catalog number. Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
+/// Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
 /// </remarks>
 public class Vendor
 {
