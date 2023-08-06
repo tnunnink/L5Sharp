@@ -18,7 +18,7 @@ The following are some high level goals this project aimed to accomplish.
 There are two separate packages as described below.
 
 | Project            | Description                                                        |
-|:-------------------|--------------------------------------------------------------------|
+|:-------------------|:-------------------------------------------------------------------|
 | L5Sharp            | Contains core components, elements, base classes, and logix types. |
 | L5Sharp.Extensions | Contains useful methods for core classes extending the base API.   |
 
