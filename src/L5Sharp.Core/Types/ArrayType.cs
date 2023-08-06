@@ -9,10 +9,12 @@ using L5Sharp.Enums;
 namespace L5Sharp.Types;
 
 /// <summary>
-/// A <see cref="L5Sharp.LogixType"/> that represents an array of other logix types (either atomic or structure).
+/// A abstract <see cref="L5Sharp.LogixType"/> that represents an array of other logix types (either atomic or structure).
+/// 
 /// </summary>
 /// <remarks>
-/// 
+/// This class implements some of the base array type functionality for the generic derived class
+/// <see cref="ArrayType{TLogixType}"/>, but is abstract to force instantiation of the generic class.
 /// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -87,7 +89,8 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <inheritdoc />
     /// <remarks>
     /// The name of an array type will be the name of it's contained element types with the dimensions index
-    /// text appended. This helps differentiate types when querying so we don't return arrays and type
+    /// text appended. This helps differentiate types when querying so we don't return both the base type and arrays of
+    /// the specified base type. This is also similar to how the name appears from the logix designer.
     /// </remarks>
     public override string Name => $"{_elements.First().DataType.Name}{Dimensions.ToIndex()}";
 
@@ -98,16 +101,17 @@ public abstract class ArrayType : LogixType, IEnumerable
     public override DataTypeClass Class => _elements.First().DataType.Class;
 
     /// <summary>
-    /// The dimensions of the the array, which defined the length and rank of the array's elements.
+    /// The dimensions of the the array, which define the length and rank of the array's elements.
     /// </summary>
     /// <value>A <see cref="Common.Dimensions"/> value representing the array dimensions.</value>
+    /// <remarks>Array type must have non-empty dimensions to be constructed.</remarks>
     public Dimensions Dimensions { get; }
 
     /// <summary>
     /// Gets the radix format of the the array type elements.
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> format if the array is an atomic type array;
-    /// otherwise, <see cref="Enums.Radix.Null"/>.</value>
+    /// otherwise, the radix <see cref="Enums.Radix.Null"/> format.</value>
     public Radix Radix => _elements.First().DataType is AtomicType atomicType ? atomicType.Radix : Radix.Null; 
     
     /// <inheritdoc />

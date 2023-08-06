@@ -19,7 +19,6 @@
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2023</Copyright>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>

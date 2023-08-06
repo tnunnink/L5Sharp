@@ -86,4 +86,7 @@ content.Save("C:\PathToMyOutputFile\FileName.L5X");
 
 ## Documentation
 See my project GitHub Page [here](https://tnunnink.github.io/L5Sharp/index.html) for more in depth articles and API documentation.
+The documentation is always a work in progress. If you think something is unclear or can be approved upon,
+feel free to let me know or ask via the issues on this project repo.
+
 

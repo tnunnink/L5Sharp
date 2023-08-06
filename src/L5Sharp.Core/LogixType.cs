@@ -52,7 +52,12 @@ public abstract class LogixType : ILogixSerializable
     /// <summary>
     /// The collection of <see cref="LogixMember"/> objects that make up the structure of the type.
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="LogixMember"/> objects</value>
+    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="LogixMember"/> objects.</value>
+    /// <remarks>
+    /// All logix types, with the exception of a <c>BOOL</c> and <c>REAL/LREAL</c>, have what can be considered
+    /// members. Every derived type must implement this property for which it returns a collection of members, forming
+    /// the type/member hierarchy of the logix type.
+    /// </remarks>
     public abstract IEnumerable<LogixMember> Members { get; }
 
     /// <summary>
@@ -81,7 +86,7 @@ public abstract class LogixType : ILogixSerializable
     public LogixType Clone() => LogixData.Deserialize(new XElement(Serialize()));
 
     /// <inheritdoc />
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;

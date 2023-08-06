@@ -3,7 +3,7 @@ using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
-namespace L5Sharp.Tests.Types.Custom;
+namespace L5Sharp.Samples.Types;
 
 public class MySimpleType : ComplexType
 {
