@@ -14,16 +14,31 @@ The following are some high level goals this project aimed to accomplish.
 3. Make it easy and seamless to extend the API to support custom queries or functions.
 4. Support strongly typed mutable tag data, so we can reference complex structures statically at compile time.
 
-## Feedback
-If you like or use this project, leave a star. If you have questions or issues,
-please post in the [issues](https://github.com/tnunnink/L5Sharp/issues) tab
-of the project repository. Any feedback is always appreciated. Enjoy!
+## Packages
+There are two separate packages as described below.
+
+| Project            | Description                                                        |
+|:-------------------|--------------------------------------------------------------------|
+| L5Sharp            | Contains core components, elements, base classes, and logix types. |
+| L5Sharp.Extensions | Contains useful methods for core classes extending the base API.   |
+
+The core `L5Sharp` project attempts to simply model the L5X schema without adding too
+much ancillary functionality. This way the project hopefully won't change very often. 
+Changes should (ideally) only be precipitated by bug fixes or further understanding of the L5X schema. 
+
+Any custom or additional helper functionality will be added to the `L5Sharp.Extensions` project. This allows you to opt in
+only if you like or need to use these additional features. If you wish to create you own, you can achieve this
+using C# extension methods and LINQ to XML for the core classes, all of which implement `ILogixSerializable` to retrieve
+the underlying `XElement` object.
 
 ## Quick Start
 Install package from Nuget.
 ```powershell
 Install-Package L5Sharp
 ```
+>If you want both packages, you can install `L5Sharp.Extensions`, which has a dependency on `L5Sharp`.
+>
+
 Load an L5X file using the primary entry point `LogixContent` class.
 ```c#
 var content = LogixContent.Load("C:\PathToMyFile\FileName.L5X");
@@ -66,7 +81,7 @@ var results = content.Tags.Where(t => t.DataType == "TIMER");
 #### Modifying
 Modifying components is simple as well. 
 The same component collection interface offers methods for adding,
-removing, and replacing components. 
+removing, and updating components. 
 
 ```csharp
 //Add a new component.
@@ -79,16 +94,28 @@ var result = content.Tags.Remove("MyTag");
 //Repalce an existing component.
 var result = content.Tags.Find("MyTag").Replace(tag);
 
+//Configure individual properties.
+var tag = content.Tags.Get("MyTag");
+tag.Value = 100;
+tag.Description = "This is an update";
+tag.ExternalAccess = ExternalAccess.ReadOnly;
+tag.Constant = true;
+
+//Apply update funtion to all components that satisfy a condition.
+content.Tags.Update(t => t.DataType == "TIMER", t => t.Description = "Updated TIMER description");
+
 //Save changes when done.
 content.Save("C:\PathToMyOutputFile\FileName.L5X");
 ```
 
-## Project Structure
-
-
 ## Documentation
 See my project GitHub Page [here](https://tnunnink.github.io/L5Sharp/index.html) for more in depth articles and API documentation.
 The documentation is always a work in progress. If you think something is unclear or can be approved upon,
-feel free to let me know or ask via the issues on this project repo.
+feel free to let me know or ask in the [issues](https://github.com/tnunnink/L5Sharp/issues) tab of the project repository.
+
+## Feedback
+If you like or use this project, leave a star. If you have questions or issues,
+please post in the [issues](https://github.com/tnunnink/L5Sharp/issues) tab
+of the project repository. Any feedback is always appreciated. Enjoy!
 
 

@@ -21,8 +21,9 @@
         <Copyright>Copyright (c) Timothy Nunnink 2023</Copyright>
     </PropertyGroup>
 
+
     <ItemGroup>
-      <ProjectReference Include="..\L5Sharp.Core\L5Sharp.csproj" />
+      <PackageReference Include="L5Sharp" Version="0.13.0" />
     </ItemGroup>
 
 </Project>

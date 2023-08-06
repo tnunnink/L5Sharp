@@ -7,22 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="removed todos">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/ProductType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/ProductType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Vendor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Vendor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/L5Sharp.Extensions.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/L5Sharp.Extensions.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.Add_ValidComponent_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.Add_ValidComponent_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.RemoveAt_ValidIndex_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.RemoveAt_ValidIndex_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.Update_ValidDelegateAndCondition_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.Update_ValidDelegateAndCondition_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.Update_ValidDelegate_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentDataTypeTests.Update_ValidDelegate_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentExportTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentExportTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Known.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Known.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/L5Sharp.Samples.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/L5Sharp.Samples.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Test.xml" afterDir="false" />
-    </list>
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="fixing tests" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +57,7 @@
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixData.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -343,7 +328,7 @@
       <workItem from="1690996047748" duration="2680000" />
       <workItem from="1691010901673" duration="9940000" />
       <workItem from="1691162874058" duration="8398000" />
-      <workItem from="1691260107995" duration="12021000" />
+      <workItem from="1691260107995" duration="12427000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -688,7 +673,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="276" />
+    <option name="localTasksCounter" value="277" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -724,7 +709,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="reorganized extensions into LogixExtensions.cs class. All extensions will be placed in this class under regions. Also continued to update atomic classes and perform testing" />
     <MESSAGE value="More Logix Type testing" />
     <MESSAGE value="More testing and more clean up and modifications." />
     <MESSAGE value="Fixed bug with tag value update for nested members not triggering update of underlying XML since LogixType is a complex object. I added a new event called DataChanged for all logix types to fire when their data is set. Structure and Array types will bubble the events of their members up to root event for tag to know if the users changes the data structure at any point." />
@@ -749,7 +733,8 @@
     <MESSAGE value="reorg, project names changes, documentation" />
     <MESSAGE value="finishing properties for main components and updating comments/docs" />
     <MESSAGE value="removed todos" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed todos" />
+    <MESSAGE value="fixing tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing tests" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
