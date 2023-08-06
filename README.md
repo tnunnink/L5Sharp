@@ -27,7 +27,7 @@ much ancillary functionality. This way the project hopefully won't change very o
 Changes should (ideally) only be precipitated by bug fixes or further understanding of the L5X schema. 
 
 Any custom or additional helper functionality will be added to the `L5Sharp.Extensions` project. This allows you to opt in
-only if you like or need to use these additional features. If you wish to create you own, you can achieve this
+only if you like or need to use these additional features. If you wish to create your own, you can achieve this
 using C# extension methods and LINQ to XML for the core classes, all of which implement `ILogixSerializable` to retrieve
 the underlying `XElement` object.
 
@@ -109,9 +109,9 @@ content.Save("C:\PathToMyOutputFile\FileName.L5X");
 ```
 
 ## Documentation
-See my project GitHub Page [here](https://tnunnink.github.io/L5Sharp/index.html) for more in depth articles and API documentation.
-The documentation is always a work in progress. If you think something is unclear or can be approved upon,
-feel free to let me know or ask in the [issues](https://github.com/tnunnink/L5Sharp/issues) tab of the project repository.
+See my GitHub Page [here](https://tnunnink.github.io/L5Sharp/index.html) for more in depth articles and API documentation.
+The documentation is always a work in progress. If you think something is unclear or can be improved upon,
+feel free to let me know in the [issues](https://github.com/tnunnink/L5Sharp/issues) tab of the project repository.
 
 ## Feedback
 If you like or use this project, leave a star. If you have questions or issues,
