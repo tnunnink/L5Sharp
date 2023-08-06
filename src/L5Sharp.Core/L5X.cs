@@ -192,7 +192,6 @@ public class L5X : XElement
 
     /// <summary>
     /// Given to top level containers, adds or replaces all child elements matching based on the logix name of the elements.
-    /// todo This will likely fail for elements without a logix name (module).
     /// </summary>
     private static void MergeContainers(XContainer target, XContainer source, bool overwrite)
     {

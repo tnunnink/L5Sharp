@@ -160,7 +160,7 @@ public static class LogixData
     }
 
     /// <summary>
-    /// Handles deserializing an array element to a <see cref="ArrayType"/>...todo comment further
+    /// Handles deserializing an array element to a <see cref="ArrayType"/>...
     /// </summary>
     private static LogixType DeserializeArray(XElement element)
     {
