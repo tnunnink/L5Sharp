@@ -19,11 +19,20 @@
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2023</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
 
     <ItemGroup>
-      <PackageReference Include="L5Sharp" Version="0.13.0" />
+        <PackageReference Include="L5Sharp" Version="0.13.0"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="..\..\README.md">
+            <Link>README.md</Link>
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </Content>
     </ItemGroup>
 
 </Project>

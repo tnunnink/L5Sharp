@@ -21,7 +21,6 @@
         <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        
     </PropertyGroup>
 
     <ItemGroup>
