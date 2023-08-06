@@ -2,6 +2,7 @@
 using L5Sharp.Components;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
+using L5Sharp.Samples;
 using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests;

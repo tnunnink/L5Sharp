@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Samples;
 
 namespace L5Sharp.Tests;
 
@@ -9,7 +10,7 @@ public class LogixContentMergeTests
     public void Merge_DataTypeFileToTestFile_ShouldContainUpdatedComponent()
     {
         var content = LogixContent.Load(Known.Test);
-        var dataType = LogixContent.Load(Known.DataTypeContent);
+        var dataType = LogixContent.Load(Export.BoolTest);
         
         content.Import(dataType);
 

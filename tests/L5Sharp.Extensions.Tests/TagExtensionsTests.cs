@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Extensions.Tests.TestTypes;
+using L5Sharp.Samples;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
 using Task = System.Threading.Tasks.Task;

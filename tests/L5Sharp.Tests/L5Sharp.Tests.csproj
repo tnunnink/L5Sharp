@@ -18,6 +18,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.csproj" />
+        <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -32,12 +33,6 @@
       </None>
       <None Update="Serialization\ConnectionSerializerTests.Serialize_ValidComponent_ShouldBeApproved.verified.txt">
         <DependentUpon>ConnectionSerializerTests.cs</DependentUpon>
-      </None>
-      <None Update="TestFiles\Test.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\Empty.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Serialization\TagSerializerTests.Serialize_SimpleIntArray_ShouldBeApproved.verified.txt">
         <DependentUpon>TagSerializerTests.cs</DependentUpon>
@@ -59,9 +54,6 @@
       </None>
       <None Update="Serialization\StructureMemberSerializerTests.SerializeArrayMembers_ShouldBeApproved.verified.txt">
         <DependentUpon>StructureMemberSerializerTests.cs</DependentUpon>
-      </None>
-      <None Update="TestFiles\BoolTest.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Remove="Serialization\**" />
       <None Update="Types\Custom\MyNestedTypeTests.SetSimpleM4_Valid_ShouldBeValid.verified.txt">
@@ -226,8 +218,5 @@
       <EmbeddedResource Remove="Serialization\**" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Catalog\" />
-    </ItemGroup>
 
 </Project>

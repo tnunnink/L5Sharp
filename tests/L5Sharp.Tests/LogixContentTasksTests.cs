@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Samples;
 
 namespace L5Sharp.Tests;
 

@@ -1,13 +1,15 @@
 ﻿using System.Xml.Linq;
 using L5Sharp.Enums;
+using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
-namespace L5Sharp.Tests.Types.Custom
+namespace L5Sharp.Samples.Types
 {
     /// <summary>
     /// A test type used to test nested complex data structure code
