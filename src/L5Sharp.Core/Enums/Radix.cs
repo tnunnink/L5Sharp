@@ -554,10 +554,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         protected override string Specifier => "'";
 
-        protected override bool HasFormat(string input)
-        {
-            return !input.IsEmpty() && input.StartsWith("'") && input.EndsWith("'");
-        }
+        protected override bool HasFormat(string input) => Regex.IsMatch(input, Pattern);
 
         public override string Format(AtomicType atomic)
         {

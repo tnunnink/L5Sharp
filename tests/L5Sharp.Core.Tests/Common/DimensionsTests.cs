@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Common;
-using NUnit.Framework;
 
-namespace L5Sharp.Core.Tests.Core
+namespace L5Sharp.Core.Tests.Common
 {
     [TestFixture]
     public class DimensionsTests

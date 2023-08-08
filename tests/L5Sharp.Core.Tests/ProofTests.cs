@@ -47,4 +47,14 @@ public class ProofTests
 
         results.Should().NotBeEmpty();
     }
+
+    [Test]
+    public void String_Testing()
+    {
+        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Site.L5X");
+
+        var tags = content.Find<Tag>().Where(t => t.DataType == "STRING").ToList();
+
+        tags.Should().NotBeEmpty();
+    }
 }

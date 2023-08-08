@@ -84,6 +84,28 @@ public class Tag : LogixComponent<Tag>
         get => GetTagName();
         set => SetValue(value);
     }
+    
+    /// <summary>
+    /// The description (either root, comment, or parent) for the tag or tag member.
+    /// </summary>
+    /// <value>A <see cref="string"/> containing the text description for the tag.</value>
+    /// <remarks>
+    /// <para>
+    /// If this is the root tag, this will return the root/base description.
+    /// If this is a nested tag member, this will look for a configured comment (as comments are stored in a different
+    /// element in the L5X), and return the value if found. If the comment is not found for the tag member,
+    /// this will return the parent description, which mimics the pass through feature of logix tag documentation.
+    /// </para>
+    /// <para>
+    /// Setting this value for a nested tag member will update the underlying comments element for the tag.
+    /// Setting this value for the root tag will simply update the root tag description element.
+    /// </para>
+    /// </remarks>
+    public override string? Description
+    {
+        get => GetDescription();
+        set => SetDescription(value);
+    }
 
     /// <summary>
     /// The root tag of this <see cref="Tag"/> member.
@@ -222,21 +244,6 @@ public class Tag : LogixComponent<Tag>
     {
         get => GetValue<bool?>();
         set => SetValue(value);
-    }
-
-    /// <summary>
-    /// The comment of the tag member, which is either the root tag description, the inherited (pass through)
-    /// description of the parent member, or the specific comment value found on the underlying tag element.
-    /// </summary>
-    /// <value>A <see cref="string"/> containing the text description for the tag.</value>
-    /// <remarks>
-    /// Setting this value for a nested tag member will update the underlying comments element for the tag.
-    /// Setting this value for the root tag will simply update the <see cref="LogixComponent{TComponent}.Description"/> property.
-    /// </remarks>
-    public string? Comment
-    {
-        get => GetComment();
-        set => SetComment(value);
     }
 
     /// <summary>
@@ -566,26 +573,31 @@ public class Tag : LogixComponent<Tag>
     /// <summary>
     /// Handles getting a comment value for the current tag name operand. 
     /// </summary>
-    private string? GetComment()
+    private string? GetDescription()
     {
+        if (Parent is null) return Element.Element(L5XName.Description)?.Value;
+        
         var comment = Element.Descendants(L5XName.Comment)
             .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
                 StringComparison.OrdinalIgnoreCase));
 
-        return comment is not null ? comment.Value : Parent is not null ? Parent.Description : Description;
+        return comment is not null ? comment.Value : Parent.Description;
     }
 
     /// <summary>
     /// Handles setting a comment element of the root tag structure for the current tag name operand. 
     /// </summary>
-    private void SetComment(string? value)
+    private void SetDescription(string? value)
     {
-        //If the parent is null forward to description (because it's the root tag)
+        //If the parent is null forward set to base description implementation which is essentially
+        //setting the description element of the root tag component.
         if (Parent is null)
         {
-            Description = value;
+            base.Description = value;
             return;
         }
+        
+        //Child descriptions are set in the comments element of a tag.
 
         if (string.IsNullOrEmpty(value))
         {
@@ -616,7 +628,7 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Generates a new comment element with the provided value.
+    /// Generates a new comment element with the provided value and current tag operand.
     /// </summary>
     private XElement GenerateComment(string value)
     {

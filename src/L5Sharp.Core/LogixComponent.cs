@@ -66,7 +66,7 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
     /// The description of the component.
     /// </summary>
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
-    public string? Description
+    public virtual string? Description
     {
         get => GetProperty<string>();
         set

@@ -17,12 +17,12 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             type.Should().NotBeNull();
         }
-        
+
         [Test]
         public void New_Default_ShouldHaveEmptyValue()
         {
             var type = new STRING();
-            
+
             type.ToString().Should().BeEmpty();
         }
 
@@ -45,7 +45,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
             data.Should().NotBeNull();
             data?.DataType.Should().NotBeNull();
             data?.DataType.Name.Should().NotBeNull();
-            
+
             var len = type.Members.FirstOrDefault(m => m.Name == "LEN");
             len.Should().NotBeNull();
             len?.DataType.Should().NotBeNull();
@@ -66,15 +66,26 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             type.ToString().Should().BeEmpty();
         }
-        
+
+        [Test]
+        public void New_AsciiStringValue_ShouldBeExpectedValue()
+        {
+            const string text =
+                "'$0B$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'";
+
+            var type = new STRING(text);
+
+            type.ToString().Should().Be("'$0B'");
+        }
+
         [Test]
         public void SetValue_OutOfRangeString_ShouldThrowArgumentOutOfRangeException()
         {
             STRING type = "";
 
             FluentActions.Invoking(() =>
-            type =
-                "This is a really long test string to see if the argument out of range exception will work. The string length must be less than eighty two characters in length. Do you think this is long enough?")
+                    type =
+                        "This is a really long test string to see if the argument out of range exception will work. The string length must be less than eighty two characters in length. Do you think this is long enough?")
                 .Should().Throw<ArgumentOutOfRangeException>();
         }
 
@@ -96,7 +107,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             type.Should().BeEquivalentTo("This is a test");
         }
-        
+
         [Test]
         public void ImplicitOperator_string_ShouldBeExpected()
         {
@@ -115,7 +126,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void TypeEquals_AreNotEqual_ShouldBeFalse()
         {
@@ -126,7 +137,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void TypeEquals_AreSame_ShouldBeTrue()
         {
@@ -136,8 +147,8 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             result.Should().BeTrue();
         }
-        
-        
+
+
         [Test]
         public void TypeEquals_Null_ShouldBeFalse()
         {
@@ -147,7 +158,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void ObjectEquals_AreEqual_ShouldBeTrue()
         {
@@ -158,7 +169,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ObjectEquals_AreSame_ShouldBeTrue()
         {
@@ -168,7 +179,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void ObjectEquals_Null_ShouldBeFalse()
         {
@@ -189,7 +200,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OperatorNotEquals_AreEqual_ShouldBeFalse()
         {

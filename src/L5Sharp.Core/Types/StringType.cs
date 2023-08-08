@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
@@ -25,8 +26,10 @@ namespace L5Sharp.Types;
 /// </remarks>
 public class StringType : StructureType, IEnumerable<char>
 {
+    private const string LogixAsciiPattern = @"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]";
+
     /// <summary>
-    /// Creates a new <see cref="StructureType"/> initialized from the provided <see cref="XElement"/> data.
+    /// Creates a new <see cref="StringType"/> initialized from the provided <see cref="XElement"/> data.
     /// </summary>
     /// <param name="element">The element to parse as the new member object.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
@@ -73,17 +76,27 @@ public class StringType : StructureType, IEnumerable<char>
     /// <exception cref="ArgumentOutOfRangeException"><c>value</c> is longer than <c>length</c>.</exception>
     /// <remarks>
     /// This constructor allows you to instantiate a string type with a specified DATA length so that values
-    /// of different lengths may be assigned.
+    /// of different lengths may be assigned. This is meant to be used by deriving classes such as the predefined
+    /// Rockwell <c>STRING</c> type and any other user defined string type.
     /// </remarks>
     protected StringType(string name, string value, ushort length) : base(name, GenerateMembers(value, length))
     {
     }
 
     /// <summary>
-    /// 
+    /// Creates a new <see cref="StringType"/> initialized from the provided <see cref="XElement"/> and data length value.
     /// </summary>
-    /// <param name="element"></param>
-    /// <param name="length"></param>
+    /// <param name="element">The element to parse as the new member object.</param>
+    /// <param name="length">The length to initialize DATA with.
+    /// This should be greater or equal than the length of the value found on the provided element object.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><c>element</c> contains a value longer than <c>length</c>.</exception>
+    /// <remarks>
+    /// This constructor allows you to instantiate a string type with a specified DATA length so that values
+    /// of different lengths may be assigned. This is meant to be used by deriving classes such as the predefined
+    /// Rockwell <c>STRING</c> type and any other user defined string type.
+    /// </remarks>
     protected StringType(XElement element, ushort length) : base(DetermineName(element),
         GenerateMembers(DetermineValue(element), length))
     {
@@ -96,6 +109,11 @@ public class StringType : StructureType, IEnumerable<char>
     /// Gets the LEN member of the string type structure. 
     /// </summary>
     /// <value>A <see cref="DINT"/> logix atomic value representing the integer length of the string.</value>
+    /// <remarks>
+    /// Setting this value will do nothing. The LEN member of a string type is a computed value based on the
+    /// length of <see cref="DATA"/> (non-zero characters only). Internally, the data changed event is captured to sync
+    /// this property value with that of the string length.
+    /// </remarks>
     public DINT LEN
     {
         get => GetMember<DINT>();
@@ -118,8 +136,7 @@ public class StringType : StructureType, IEnumerable<char>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <inheritdoc />
-    public override string ToString() =>
-        Encoding.ASCII.GetString(DATA.Where(s => s > 0).Select(b => (byte)(sbyte)b).ToArray());
+    public override string ToString() => ToString(DATA);
 
     /// <inheritdoc />
     public override XElement Serialize()
@@ -230,12 +247,11 @@ public class StringType : StructureType, IEnumerable<char>
     /// <summary>
     /// Generates the static string type logix members given the string data.
     /// </summary>
-    private static IEnumerable<LogixMember> GenerateMembers(string? value)
+    private static IEnumerable<LogixMember> GenerateMembers(string value)
     {
-        value ??= string.Empty;
-        value = value.TrimStart('\'').TrimEnd('\'');
-        var len = new LogixMember(nameof(LEN), new DINT(value.Length));
-        var data = new LogixMember(nameof(DATA), new ArrayType<SINT>(GetData(value)));
+        var array = ToArray(value);
+        var len = new LogixMember(nameof(LEN), new DINT(array.Length));
+        var data = new LogixMember(nameof(DATA), new ArrayType<SINT>(array));
         return new List<LogixMember> { len, data };
     }
 
@@ -244,20 +260,16 @@ public class StringType : StructureType, IEnumerable<char>
     /// DATA array length. This method will create the SINT array of the specified length and then
     /// assign the provided value.
     /// </summary>
-    private static IEnumerable<LogixMember> GenerateMembers(string? value, ushort length)
+    private static IEnumerable<LogixMember> GenerateMembers(string value, ushort length)
     {
-        value ??= string.Empty;
-        value = value.TrimStart('\'').TrimEnd('\'');
-        
-        if (value.Length > length)
-            throw new ArgumentOutOfRangeException(nameof(value),
-                $"The string length {value.Length} is greater than the predefined length {length}.");
+        var array = ToArray(value);
 
-        var len = new LogixMember(nameof(LEN), new DINT(value.Length));
-        var data = new LogixMember(nameof(DATA), ArrayType.New<SINT>(length))
-        {
-            DataType = GetData(value)
-        };
+        if (array.Length > length)
+            throw new ArgumentOutOfRangeException(nameof(value),
+                $"The string value '{value}' length {value.Length} is greater than the predefined length {length}.");
+
+        var len = new LogixMember(nameof(LEN), new DINT(array.Length));
+        var data = new LogixMember(nameof(DATA), ArrayType.New<SINT>(length)) { DataType = array };
 
         return new List<LogixMember> { len, data };
     }
@@ -265,10 +277,21 @@ public class StringType : StructureType, IEnumerable<char>
     /// <summary>
     /// Converts the provided string value to a SINT array. Handles empty or null string. SINT array can not be empty.
     /// </summary>
-    private static SINT[] GetData(string value)
+    private static SINT[] ToArray(string value)
     {
-        return !string.IsNullOrEmpty(value)
-            ? Encoding.ASCII.GetBytes(value).Select(b => new SINT((sbyte)b, Radix.Ascii)).ToArray()
-            : new SINT[] { new() };
+        if (string.IsNullOrEmpty(value)) return new SINT[] { new() };
+        value = value.TrimStart('\'').TrimEnd('\'');
+        var matches = Regex.Matches(value, LogixAsciiPattern, RegexOptions.Compiled);
+        return matches.Select(m => SINT.Parse(m.Value)).ToArray();
+    }
+
+    /// <summary>
+    /// Converts the provided SINT array into a string value. Will trim bytes that are zero.
+    /// </summary>
+    private static string ToString(IEnumerable<SINT> array)
+    {
+        var ascii = array.Where(s => s > 0)
+            .Select(s => s.ToString(Radix.Ascii).TrimStart('\'').TrimEnd('\'')).ToArray();
+        return $"'{string.Join(string.Empty, ascii)}'";
     }
 }

@@ -40,7 +40,6 @@ public class TagTests
         tag.TagName.Should().Be(TagName.Empty);
         tag.Usage.Should().BeNull();
         tag.AliasFor.Should().BeNull();
-        tag.Comment.Should().BeNull();
         tag.Unit.Should().BeNull();
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
@@ -74,7 +73,6 @@ public class TagTests
         tag.TagType.Should().Be(TagType.Alias);
         tag.AliasFor.Should().Be("SomeOtherTag");
         tag.TagName.Should().Be("Test");
-        tag.Comment.Should().Be("This is a test");
         tag.Unit.Should().BeNull();
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();

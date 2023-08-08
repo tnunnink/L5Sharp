@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
 using L5Sharp.Common;
-using L5Sharp.Components;
 using L5Sharp.Elements;
-using NUnit.Framework;
 
-namespace L5Sharp.Core.Tests.Core
+namespace L5Sharp.Core.Tests.Elements
 {
     [TestFixture]
     public class PortTests
@@ -38,7 +36,7 @@ namespace L5Sharp.Core.Tests.Core
                 Type = "ICP",
                 Address = "0",
                 Upstream = true,
-                BusSize = 17,
+                BusSize = 17
             };
 
             port.Id.Should().Be(1);

@@ -2,9 +2,8 @@
 using FluentAssertions;
 using L5Sharp.Common;
 using L5Sharp.Enums;
-using NUnit.Framework.Internal;
 
-namespace L5Sharp.Core.Tests.Core
+namespace L5Sharp.Core.Tests.Common
 {
     [TestFixture]
     public class NeutralTextTests
