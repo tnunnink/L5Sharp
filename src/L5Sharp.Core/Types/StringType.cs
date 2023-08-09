@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using L5Sharp.Enums;
@@ -114,11 +113,7 @@ public class StringType : StructureType, IEnumerable<char>
     /// length of <see cref="DATA"/> (non-zero characters only). Internally, the data changed event is captured to sync
     /// this property value with that of the string length.
     /// </remarks>
-    public DINT LEN
-    {
-        get => GetMember<DINT>();
-        set => SetMember(value);
-    }
+    public DINT LEN => ToString().Length;
 
     /// <summary>
     /// Gets the array of bytes that represent the ASCII encoded string value.
@@ -141,10 +136,12 @@ public class StringType : StructureType, IEnumerable<char>
     /// <inheritdoc />
     public override XElement Serialize()
     {
+        var value = ToString();
+
         var element = new XElement(L5XName.Data);
         element.Add(new XAttribute(L5XName.Format, DataFormat.String));
-        element.Add(new XAttribute(L5XName.Length, ToString().Length));
-        element.Add(new XCData(ToString()));
+        element.Add(new XAttribute(L5XName.Length, value.Length));
+        element.Add(new XCData(value));
         return element;
     }
 
@@ -205,7 +202,7 @@ public class StringType : StructureType, IEnumerable<char>
         return element;
     }
 
-    /// <inheritdoc />
+    /*/// <inheritdoc />
     /// <remarks>
     /// The <see cref="LEN"/> member of the string type structure should be determined by the length of the string.
     /// There is really no way to enforce or sync it's value other than conveniently intercepting any data changed event
@@ -213,10 +210,11 @@ public class StringType : StructureType, IEnumerable<char>
     /// </remarks>
     protected override void OnMemberDataChanged(object sender, EventArgs e)
     {
+        var member =
         var length = ToString().Length;
         if (LEN != length) LEN = length;
         base.OnMemberDataChanged(sender, e);
-    }
+    }*/
 
     /// <summary>
     /// Determines the string type name from a given element. This is slightly tricky because we have different places
@@ -269,9 +267,25 @@ public class StringType : StructureType, IEnumerable<char>
                 $"The string value '{value}' length {value.Length} is greater than the predefined length {length}.");
 
         var len = new LogixMember(nameof(LEN), new DINT(array.Length));
-        var data = new LogixMember(nameof(DATA), ArrayType.New<SINT>(length)) { DataType = array };
+        var data = new LogixMember(nameof(DATA), GenerateData(array, length));
 
         return new List<LogixMember> { len, data };
+    }
+
+    /// <summary>
+    /// Generates an array type with the predefined length and initializes the array to the provided array. Will fill
+    /// remaining array with default SINT/Ascii values.
+    /// </summary>
+    private static ArrayType<SINT> GenerateData(IReadOnlyList<SINT> array, ushort length)
+    {
+        var data = new SINT[length];
+
+        for (var i = 0; i < length; i++)
+        {
+            data[i] = i < array.Count ? new SINT(array[i], Radix.Ascii) : new SINT(Radix.Ascii);
+        }
+
+        return new ArrayType<SINT>(data);
     }
 
     /// <summary>
@@ -279,10 +293,14 @@ public class StringType : StructureType, IEnumerable<char>
     /// </summary>
     private static SINT[] ToArray(string value)
     {
-        if (string.IsNullOrEmpty(value)) return new SINT[] { new() };
+        if (string.IsNullOrEmpty(value)) return new SINT[] { new(Radix.Ascii) };
         value = value.TrimStart('\'').TrimEnd('\'');
         var matches = Regex.Matches(value, LogixAsciiPattern, RegexOptions.Compiled);
-        return matches.Select(m => SINT.Parse(m.Value)).ToArray();
+        return matches.Select(m =>
+        {
+            var parsed = (SINT)Radix.Ascii.Parse($"'{m.Value}'");
+            return new SINT(parsed, Radix.Ascii);
+        }).ToArray();
     }
 
     /// <summary>
@@ -292,6 +310,6 @@ public class StringType : StructureType, IEnumerable<char>
     {
         var ascii = array.Where(s => s > 0)
             .Select(s => s.ToString(Radix.Ascii).TrimStart('\'').TrimEnd('\'')).ToArray();
-        return $"'{string.Join(string.Empty, ascii)}'";
+        return $"{string.Join(string.Empty, ascii)}";
     }
 }

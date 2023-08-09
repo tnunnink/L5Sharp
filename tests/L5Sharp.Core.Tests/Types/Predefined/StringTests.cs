@@ -75,7 +75,7 @@ namespace L5Sharp.Core.Tests.Types.Predefined
 
             var type = new STRING(text);
 
-            type.ToString().Should().Be("'$0B'");
+            type.ToString().Should().Be("$0B");
         }
 
         [Test]

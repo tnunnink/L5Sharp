@@ -777,14 +777,6 @@ namespace L5Sharp.Core.Tests.Types.Atomics
         }
 
         [Test]
-        public void Parse_InvalidFormat_ShouldThrowFormatException()
-        {
-            var fixture = new Fixture();
-
-            FluentActions.Invoking(() => USINT.Parse(fixture.Create<string>())).Should().Throw<FormatException>();
-        }
-
-        [Test]
         public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new USINT();

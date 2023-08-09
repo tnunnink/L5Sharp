@@ -115,16 +115,6 @@ public class StringTypeTests
     }
 
     [Test]
-    public void LEN_SetValue_ShouldStillBeSameAsStringLength()
-    {
-        var type = new StringType("this is a test");
-
-        type.LEN = 20;
-
-        type.LEN.Should().Be(14);
-    }
-
-    [Test]
     public void DATA_GetValue_ShouldBeExpected()
     {
         var type = new StringType("This is a test");

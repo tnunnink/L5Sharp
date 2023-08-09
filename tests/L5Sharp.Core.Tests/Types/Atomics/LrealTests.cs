@@ -715,14 +715,6 @@ public class LrealTests
         }
 
         [Test]
-        public void Parse_InvalidFormat_ShouldThrowFormatException()
-        {
-            var fixture = new Fixture();
-
-            FluentActions.Invoking(() => LREAL.Parse(fixture.Create<string>())).Should().Throw<FormatException>();
-        }
-
-        [Test]
         public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new LREAL();

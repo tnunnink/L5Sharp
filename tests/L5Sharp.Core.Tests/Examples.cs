@@ -14,7 +14,7 @@ namespace L5Sharp.Core.Tests
     public class Examples
     {
         [Test]
-        public void New_ValidFile_ShouldNotBeNull()
+        public void LoadL5XFileUsingTheLogixContentLoadMethod()
         {
             var content = LogixContent.Load(Known.Test);
 
@@ -22,13 +22,13 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void New_ValidFile_ShouldHaveExpectedContent()
+        public void AccessL5XWhichHasContentPropertiesAndRepresentsRootXml()
         {
             var content = LogixContent.Load(Known.Test);
 
             content.L5X.Should().NotBeNull();
-            content.L5X.SchemaRevision.Should().Be(new Revision());
-            content.L5X.SoftwareRevision.Should().Be(new Revision(32, 02));
+            content.L5X.SchemaRevision.Should().Be("1.0");
+            content.L5X.SoftwareRevision.Should().Be("32.02");
             content.L5X.TargetName.Should().Be("TestController");
             content.L5X.TargetType.Should().Be("Controller");
             content.L5X.ContainsContext.Should().Be(false);
@@ -51,9 +51,11 @@ namespace L5Sharp.Core.Tests
         }
 
         [Test]
-        public void METHOD()
+        public void AddAListOfTagsToTheControllerTagsContainer()
         {
             var content = LogixContent.Load(Known.Test);
+
+            var count = content.Tags.Count();
 
             content.Tags.AddRange(new List<Tag>
             {
@@ -61,10 +63,12 @@ namespace L5Sharp.Core.Tests
                 new() { Name = "tag02", Value = new TIMER { PRE = 2000 } },
                 new() { Name = "tag03", Value = "This is a string tag value" }
             });
+
+            content.Tags.Count().Should().Be(count + 3);
         }
 
         [Test]
-        public void Controller_WhenCalled_ReturnsControllerInstance()
+        public void AccessControllerProperties()
         {
             var content = LogixContent.Load(Known.Test);
 
@@ -122,8 +126,7 @@ namespace L5Sharp.Core.Tests
         public void GetTagsOfASpecificDataType()
         {
             var content = LogixContent.Load(Known.Test);
-
-            //This would return tags that are arrays of timers too
+            
             var timers = content.Tags.Where(t => t.DataType == "TIMER");
 
             timers.Should().NotBeEmpty();

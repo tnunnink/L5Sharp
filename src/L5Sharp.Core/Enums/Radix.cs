@@ -510,7 +510,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         public override string Format(AtomicType atomic)
         {
             ValidateType(atomic);
-            
+
             if (atomic is LREAL lreal)
             {
                 return ((double)lreal).ToString("e16", CultureInfo.InvariantCulture);
@@ -554,7 +554,8 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         protected override string Specifier => "'";
 
-        protected override bool HasFormat(string input) => Regex.IsMatch(input, Pattern);
+        protected override bool HasFormat(string input) =>
+            input.StartsWith(Specifier) && input.EndsWith(Specifier) && Regex.IsMatch(input, Pattern);
 
         public override string Format(AtomicType atomic)
         {

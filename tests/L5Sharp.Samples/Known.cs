@@ -25,6 +25,6 @@ namespace L5Sharp.Samples
 
     public static class Export
     {
-        public static readonly string BoolTest = Path.Combine(Known.SamplesDirectory, "DataTypes\\BoolTest.xml");
+        public static readonly string BoolTest = Path.Combine(Known.SamplesDirectory, "DataTypes\\BoolTest.L5X");
     }
 }

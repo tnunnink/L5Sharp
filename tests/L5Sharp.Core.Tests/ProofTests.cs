@@ -51,7 +51,7 @@ public class ProofTests
     [Test]
     public void String_Testing()
     {
-        var content = LogixContent.Load(@"C:\Users\tnunnink\Local\Tests\L5X\Site.L5X");
+        var content = LogixContent.Load(Known.Test);
 
         var tags = content.Find<Tag>().Where(t => t.DataType == "STRING").ToList();
 
