@@ -48,11 +48,11 @@ Get started by querying any type across the L5X using the `Find<T>()` and LINQ e
 var results = content.Find<Tag>()
                 .SelectMany(t => t.Members())
                 .Where(t => t.DataType == "TIMER")
-                .Select(t => new { t.TagName, t.Comment, t.Value.As<TIMER>().PRE })
+                .Select(t => new { t.TagName, t.Description, t.Value.As<TIMER>().PRE })
                 .ToList();
 ```
 The above query gets all tags and their nested tag members of type TIMER and returns the TagName,
-Comment, and Preset value in a flat list.
+Description, and Preset value in a flat list.
 >`Find<T>()` returns an `IEnumerable<T>`, allowing for complex queries
 using LINQ and the strongly typed objects in the library.
 > Since `Find<T>()` queries the entire L5X for the specified type, the above query
