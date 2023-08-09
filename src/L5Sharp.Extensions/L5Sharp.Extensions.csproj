@@ -21,11 +21,6 @@
         <Copyright>Copyright (c) Timothy Nunnink 2023</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
-
-    <ItemGroup>
-        <PackageReference Include="L5Sharp" Version="0.14.0" />
-    </ItemGroup>
     
     <ItemGroup>
         <Content Include="..\..\README.md">
@@ -33,6 +28,10 @@
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="L5Sharp" Version="0.14.0" />
     </ItemGroup>
 
 </Project>

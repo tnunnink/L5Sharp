@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="fixed README.md" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="upgraded L5Sharp" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -331,7 +331,7 @@
       <workItem from="1691434052013" duration="3147000" />
       <workItem from="1691442435898" duration="9577000" />
       <workItem from="1691514225681" duration="7992000" />
-      <workItem from="1691589924970" duration="4480000" />
+      <workItem from="1691589924970" duration="5181000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -676,7 +676,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="286" />
+    <option name="localTasksCounter" value="287" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -712,7 +712,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Update atomic types IConvertible implmentation to local class to make explicit and performant. Fixing tests." />
     <MESSAGE value="reworked member and how logix type values are set." />
     <MESSAGE value="Finishing all main logix components and attempting to finish most testing to complete project" />
     <MESSAGE value="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;" />
@@ -737,7 +736,8 @@
     <MESSAGE value="Continued to revise the StringType.cs to account for ASCII formatted string values. Fixed tests that were broken from changes. Reorg." />
     <MESSAGE value="update version" />
     <MESSAGE value="fixed README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed README.md" />
+    <MESSAGE value="upgraded L5Sharp" />
+    <option name="LAST_COMMIT_MESSAGE" value="upgraded L5Sharp" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

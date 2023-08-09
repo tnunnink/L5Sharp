@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Common;
 using L5Sharp.Components;
-using L5Sharp.Extensions;
-using L5Sharp.Extensions.Tests;
 using L5Sharp.Samples;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
