@@ -7,7 +7,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="upgraded L5Sharp" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5XParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5XParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Common/RevisionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Common/RevisionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Components/ModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Components/ModuleTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProofTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProofTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Known.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Known.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,6 +64,7 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/CompositeWorkItem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItemDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Reflect.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/L5Sharp.Extensions/DataTypeExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Core.Tests/Types/Atomics/BoolTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -331,7 +344,8 @@
       <workItem from="1691434052013" duration="3147000" />
       <workItem from="1691442435898" duration="9577000" />
       <workItem from="1691514225681" duration="7992000" />
-      <workItem from="1691589924970" duration="5181000" />
+      <workItem from="1691589924970" duration="5594000" />
+      <workItem from="1691671939157" duration="7078000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -676,7 +690,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="287" />
+    <option name="localTasksCounter" value="289" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -712,8 +726,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="reworked member and how logix type values are set." />
-    <MESSAGE value="Finishing all main logix components and attempting to finish most testing to complete project" />
     <MESSAGE value="Made LogixElement.cs not generic and the Clone method return simple LogixElement. Added generic method for casting. made new CLone method in component to return string type. Did this so that we can create element derivatives from other elements and use them in container since they don't also need to implement LogixElement&lt;OfTheStrongType&gt;" />
     <MESSAGE value="Fixing module issues and reworked the structure to match L5X. Updated docs and extensions and tests" />
     <MESSAGE value="Atomic and string testing" />
@@ -737,9 +749,28 @@
     <MESSAGE value="update version" />
     <MESSAGE value="fixed README.md" />
     <MESSAGE value="upgraded L5Sharp" />
-    <option name="LAST_COMMIT_MESSAGE" value="upgraded L5Sharp" />
+    <MESSAGE value="fixed errors" />
+    <MESSAGE value="version change" />
+    <option name="LAST_COMMIT_MESSAGE" value="version change" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Samples/Known.cs</url>
+          <line>25</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Samples\Known.cs" initialLine="25" containingFunctionPresentation="Method 'GetPath'">
+            <startOffsets>
+              <option value="1009" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1056" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Member" memberName="Target" />

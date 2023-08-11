@@ -13,7 +13,7 @@ namespace L5Sharp.Common;
 /// This value type class make working with string tag name easier by providing
 /// methods fo analyzing and breaking the tag name into constituent parts (members).
 /// </remarks>
-public sealed class TagName : IComparable<TagName>
+public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
 {
     private readonly string _tagName;
 
@@ -206,6 +206,13 @@ public sealed class TagName : IComparable<TagName>
         comparer.Equals(first, second);
 
     /// <inheritdoc />
+    public bool Equals(TagName? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        return ReferenceEquals(this, other) || StringComparer.OrdinalIgnoreCase.Equals(_tagName, other._tagName);
+    }
+
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj switch
@@ -217,7 +224,10 @@ public sealed class TagName : IComparable<TagName>
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
+    public override int GetHashCode()
+    {
+        return _tagName.GetHashCode();
+    }
 
     /// <summary>
     /// Returns a new tag name with the root <see cref="Root"/> value replaced with the provided string tag.

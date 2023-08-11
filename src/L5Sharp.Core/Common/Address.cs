@@ -10,7 +10,7 @@ namespace L5Sharp.Common;
 /// </summary>
 public class Address
 {
-    private readonly string _address;
+    private readonly string _value;
 
     /// <summary>
     /// Creates a new <see cref="Address"/> with the provided string value.
@@ -19,20 +19,20 @@ public class Address
     /// <exception cref="ArgumentNullException"></exception>
     public Address(string address)
     {
-        _address = address ?? throw new ArgumentNullException(nameof(address));
+        _value = address ?? throw new ArgumentNullException(nameof(address));
     }
         
     /// <summary>
     /// Indicates whether the current <see cref="Address"/> is a slot number address.
     /// </summary>
     /// <returns>true if the address value is a valid byte address; otherwise, false.</returns>
-    public bool IsSlot => byte.TryParse(_address, out _);
+    public bool IsSlot => byte.TryParse(_value, out _);
 
     /// <summary>
     /// Indicates whether the current <see cref="Address"/> is a IPv4 address.
     /// </summary>
     /// <returns>true if the address value is a valid IPv4 address; otherwise, false.</returns>
-    public bool IsIPv4 => _address.Count(c => c == '.') == 3 && IPAddress.TryParse(_address, out _);
+    public bool IsIPv4 => _value.Count(c => c == '.') == 3 && IPAddress.TryParse(_value, out _);
 
     /// <summary>
     /// Indicates whether the current <see cref="Address"/> is a host name address.
@@ -42,12 +42,12 @@ public class Address
     /// A host name must start with a letter, contain only alpha-numeric characters or special characters '.' and '-',
     /// and have a maximum length of 64 characters.
     /// </remarks>
-    public bool IsHostName => Regex.IsMatch(_address, @"^[A-Za-z][A-Za-z0-9\.-]{1,63}$", RegexOptions.Compiled);
+    public bool IsHostName => Regex.IsMatch(_value, @"^[A-Za-z][A-Za-z0-9\.-]{1,63}$", RegexOptions.Compiled);
 
     /// <summary>
     /// Indicates that the address value is an empty string.
     /// </summary>
-    public bool IsEmpty => _address.IsEmpty();
+    public bool IsEmpty => _value.IsEmpty();
 
     /// <summary>
     /// Represents no address value, or an empty string.
@@ -80,7 +80,7 @@ public class Address
     /// </summary>
     /// <param name="address">The value to convert.</param>
     /// <returns>A <see cref="string"/> representing the address value.</returns>
-    public static implicit operator byte(Address address) => byte.Parse(address._address);
+    public static implicit operator byte(Address address) => byte.Parse(address._value);
         
     /// <summary>
     /// Creates a new <see cref="Address"/> instance from the provided <see cref="IPAddress"/> object.
@@ -126,8 +126,8 @@ public class Address
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
     public IPAddress ToIPAddress() => IsIPv4
-        ? IPAddress.Parse(_address)
-        : throw new InvalidOperationException($"The current address '{_address}' is not a valid IP address");
+        ? IPAddress.Parse(_value)
+        : throw new InvalidOperationException($"The current address '{_value}' is not a valid IP address");
 
     /// <summary>
     /// 
@@ -135,27 +135,27 @@ public class Address
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
     public byte ToSlot() => IsSlot
-        ? byte.Parse(_address)
-        : throw new InvalidOperationException($"The current address '{_address}' is not a valid slot number");
+        ? byte.Parse(_value)
+        : throw new InvalidOperationException($"The current address '{_value}' is not a valid slot number");
 
     /// <inheritdoc />
-    public override string ToString() => _address;
+    public override string ToString() => _value;
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj switch
         {
-            Address other => string.Equals(_address, other._address, StringComparison.OrdinalIgnoreCase),
-            string other => string.Equals(_address, other, StringComparison.OrdinalIgnoreCase),
-            byte other => string.Equals(_address, other.ToString(), StringComparison.OrdinalIgnoreCase),
-            IPAddress other => string.Equals(_address, other.ToString(), StringComparison.OrdinalIgnoreCase),
+            Address other => string.Equals(_value, other._value, StringComparison.OrdinalIgnoreCase),
+            string other => string.Equals(_value, other, StringComparison.OrdinalIgnoreCase),
+            byte other => string.Equals(_value, other.ToString(), StringComparison.OrdinalIgnoreCase),
+            IPAddress other => string.Equals(_value, other.ToString(), StringComparison.OrdinalIgnoreCase),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _address.GetHashCode();
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.

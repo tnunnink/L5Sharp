@@ -110,7 +110,7 @@ public class Module : LogixComponent<Module>
         {
             var major = Element.Attribute(L5XName.Major)?.Value;
             var minor = Element.Attribute(L5XName.Minor)?.Value;
-            return major is not null && minor is not null ? Revision.Parse($"{major}.{minor}") : default;
+            return major is not null && minor is not null ? new Revision($"{major}.{minor}") : default;
         }
         set
         {

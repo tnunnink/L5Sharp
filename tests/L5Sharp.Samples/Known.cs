@@ -1,18 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 
 namespace L5Sharp.Samples
 {
     public static class Known
     {
-        // Get the directory where the currently executing assembly is located
-        public static readonly string SamplesDirectory =
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ??
-            throw new InvalidOperationException("Can not find directory.");
+        public static readonly string Directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 
-        public static readonly string Test = Path.Combine(SamplesDirectory, "Test.xml");
-        public static readonly string Empty = Path.Combine(SamplesDirectory, "Empty.xml");
+        public static readonly string Test = Path.Combine(Directory, "Test.xml");
+        public static readonly string Empty = Path.Combine(Directory, "Empty.xml");
         public const string Template = @"C:\Users\tnunnink\Local\Transfer\Template.L5X";
 
         public const string DataType = "SimpleType";
@@ -25,6 +21,6 @@ namespace L5Sharp.Samples
 
     public static class Export
     {
-        public static readonly string BoolTest = Path.Combine(Known.SamplesDirectory, "DataTypes\\BoolTest.L5X");
+        public static readonly string BoolTest = Path.Combine(Known.Directory, "DataTypes\\BoolTest.L5X");
     }
 }

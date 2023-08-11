@@ -29,8 +29,41 @@ namespace L5Sharp.Core.Tests.Common
         {
             var revision = new Revision();
 
-            revision.Major.Should().Be(1);
-            revision.Minor.Should().Be(0);
+            revision.Major.Should().Be("1");
+            revision.Minor.Should().Be("0");
+        }
+
+        [Test]
+        public void New_ValidString_ShouldHaveExpectedValue()
+        {
+            var revision = new Revision("1.2");
+
+            revision.Should().NotBeNull();
+            revision.Should().Be("1.2");
+        }
+
+        [Test]
+        public void New_NoMajorVersion_ShouldThrowFormatException()
+        {
+            FluentActions.Invoking(() => new Revision(".12")).Should().Throw<FormatException>();
+        }
+        
+        [Test]
+        public void New_NoMinorVersion_ShouldThrowFormatException()
+        {
+            FluentActions.Invoking(() => new Revision("1")).Should().Throw<FormatException>();
+        }
+        
+        [Test]
+        public void New_NullString_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new Revision(null!)).Should().Throw<ArgumentException>();
+        }
+        
+        [Test]
+        public void New_EmptyString_ShouldThrowArgumentException()
+        {
+            FluentActions.Invoking(() => new Revision(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -38,24 +71,35 @@ namespace L5Sharp.Core.Tests.Common
         {
             var revision = new Revision(1, 23);
 
-            revision.Should().Be(1.23);
+            revision.Should().Be("1.23");
         }
-        
+
         [Test]
         public void New_DoubleValue_ShouldHaveExpectedValues()
         {
             var revision = new Revision(1.23);
 
-            revision.Should().Be(1.23);
+            revision.Should().Be("1.23");
         }
 
         [Test]
-        public void Equals_Equal_ShouldBeTrue()
+        public void Equals_EqualRevision_ShouldBeTrue()
         {
             var first = new Revision();
             var second = new Revision();
 
             var result = first.Equals(second);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void Equals_EqualString_ShouldBeTrue()
+        {
+            var first = new Revision();
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var result = first.Equals("1.0");
 
             result.Should().BeTrue();
         }
@@ -84,11 +128,12 @@ namespace L5Sharp.Core.Tests.Common
         [Test]
         public void GetHashCode_WhenCalled_ShouldNotBeZero()
         {
+            var expected = "1.0".GetHashCode();
             var revision = new Revision();
 
             var hash = revision.GetHashCode();
 
-            hash.Should().NotBe(0);
+            hash.Should().Be(expected);
         }
 
         [Test]
@@ -112,7 +157,7 @@ namespace L5Sharp.Core.Tests.Common
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void OperatorGreaterThan_FirstGreaterThanSecond_ShouldBeTrue()
         {
@@ -123,7 +168,7 @@ namespace L5Sharp.Core.Tests.Common
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OperatorLessThan_FirstGreaterThanSecond_ShouldBeFalse()
         {
@@ -134,7 +179,7 @@ namespace L5Sharp.Core.Tests.Common
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void OperatorGreaterThanOrEqual_FirstGreaterThanSecond_ShouldBeTrue()
         {
@@ -145,7 +190,7 @@ namespace L5Sharp.Core.Tests.Common
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OperatorLessThanOrEqual_FirstGreaterThanSecond_ShouldBeFalse()
         {
@@ -155,6 +200,42 @@ namespace L5Sharp.Core.Tests.Common
             var result = first <= second;
 
             result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ToString_WhenCalled_ShouldBeExpectedValue()
+        {
+            var revision = new Revision();
+
+            var result = revision.ToString();
+
+            result.Should().Be("1.0");
+        }
+
+        [Test]
+        public void Operator_StringToRevision_ShouldBeExpectedValue()
+        {
+            Revision revision = "1.23";
+
+            revision.Should().Be("1.23");
+        }
+
+        [Test]
+        public void Operator_RevisionToString_ShouldHaveExpectedValue()
+        {
+            var revision = new Revision();
+
+            string result = revision;
+
+            result.Should().Be("1.0");
+        }
+
+        [Test]
+        public void Operator_Double_ShouldBeExpectedValue()
+        {
+            Revision revision = 1.23;
+
+            revision.Should().Be("1.23");
         }
     }
 }

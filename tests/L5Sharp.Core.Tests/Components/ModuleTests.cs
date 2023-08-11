@@ -65,7 +65,7 @@ public class ModuleTests
         module.Name.Should().Be("Test");
         module.Description.Should().Be("This is a test module");
         module.CatalogNumber.Should().Be("ABCD-1234");
-        module.Revision.Should().Be( 1.3);
+        module.Revision.Should().Be("1.3");
         module.Vendor.Should().Be(Vendor.Rockwell);
         module.ProductType.Should().Be(ProductType.Analog);
         module.ProductCode.Should().Be(1);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace L5Sharp.Common;
 
@@ -9,14 +10,30 @@ namespace L5Sharp.Common;
 public sealed class Revision : IComparable
 {
     private const string RevisionSeparator = ".";
+    private readonly string _value;
 
     /// <summary>
     /// Creates a new default <see cref="Revision"/> with value 1.0.
     /// </summary>
     public Revision()
     {
-        Major = 1;
-        Minor = 0;
+        _value = "1.0";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    public Revision(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Revision value can not be null or empty.");
+
+        if (!Regex.IsMatch(value, @"^[0-9]+\.[0-9]+$", RegexOptions.Compiled))
+            throw new FormatException(
+                $"Value '{value}' is invalid revision format. Revision format must be Major.Minor.");
+
+        _value = value;
     }
 
     /// <summary>
@@ -26,30 +43,27 @@ public sealed class Revision : IComparable
     /// <param name="minor">The value of the minor revision. Will default to 0 if not provided.</param>
     public Revision(ushort major, ushort minor = 0)
     {
-        Major = major;
-        Minor = minor;
+        _value = $"{major}.{minor}";
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="Revision"/> with the specified value.
     /// </summary>
     /// <param name="value">The double value representing the revision number.</param>
     public Revision(double value)
     {
-        Revision revision = value;
-        Major = revision.Major;
-        Minor = revision.Minor;
+        _value = value.ToString(CultureInfo.InvariantCulture);
     }
 
     /// <summary>
     /// The major revision of the <see cref="Revision"/> value.
     /// </summary>
-    public ushort Major { get; }
+    public string Major => _value.Split(RevisionSeparator)[0];
 
     /// <summary>
     /// The minor revision of the <see cref="Revision"/> value.
     /// </summary>
-    public ushort Minor { get; }
+    public string Minor => _value.Split(RevisionSeparator)[1];
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -57,11 +71,8 @@ public sealed class Revision : IComparable
         return obj switch
         {
             null => 1,
-            Revision other => Major.CompareTo(other.Major) != 0
-                ? Major.CompareTo(other.Major)
-                : Minor.CompareTo(other.Minor),
-            double other => other.CompareTo(this),
-            string other => string.Compare(ToString(), other, StringComparison.Ordinal),
+            Revision other => string.Compare(_value, other._value, StringComparison.Ordinal),
+            string value => string.Compare(_value, value, StringComparison.Ordinal),
             _ => throw new ArgumentException($"Can not compare {obj.GetType()} with Revision value.")
         };
     }
@@ -71,48 +82,17 @@ public sealed class Revision : IComparable
     {
         return obj switch
         {
-            Revision other => Major == other.Major && Minor == other.Minor,
-            double value => value == this,
-            string value => value == ToString(),
+            Revision other => string.Equals(_value, other._value, StringComparison.Ordinal),
+            string value => string.Equals(_value, value, StringComparison.Ordinal),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => Major.GetHashCode() ^ Minor.GetHashCode();
-
-    /// <summary>
-    /// Parses the string input into a new <see cref="Revision"/> value.
-    /// </summary>
-    /// <param name="value">The string revision value to parse.</param>
-    /// <returns>A new Revision value that represents the value of the provided string revision.</returns>
-    /// <exception cref="ArgumentException">value is empty, null, does not have the character '.', has more or less
-    /// than 2 revision numbers, or can not be parsed to a byte.</exception>
-    public static Revision Parse(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
-        if (!value.Contains(RevisionSeparator))
-            throw new ArgumentException($"Value must have character '{RevisionSeparator}'.");
-
-        var revisions = value.Split('.');
-
-        if (revisions.Length != 2)
-            throw new ArgumentException(
-                $"Value {value} does not have Major.Minor pattern. Must only have a major and minor revision number to correctly parse.");
-
-        if (!ushort.TryParse(revisions[0], out var major))
-            throw new ArgumentException($"Major revision could not be parsed to a {typeof(ushort)}.");
-
-        if (!ushort.TryParse(revisions[1], out var minor))
-            throw new ArgumentException($"Minor revision could not be parsed to a {typeof(ushort)}.");
-
-        return new Revision(major, minor);
-    }
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <inheritdoc />
-    public override string ToString() => $"{Major}{RevisionSeparator}{Minor}";
+    public override string ToString() => _value;
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -163,22 +143,6 @@ public sealed class Revision : IComparable
     public static bool operator <=(Revision left, Revision right) => left.CompareTo(right) <= 0;
 
     /// <summary>
-    /// Converts a <see cref="Revision"/> to a <see cref="double"/>.
-    /// </summary>
-    /// <param name="revision">The revision value to convert.</param>
-    /// <returns>A new <see cref="double"/> value representing a major and minor revision.</returns>
-    public static implicit operator double(Revision revision) =>
-        double.Parse($"{revision.Major}{RevisionSeparator}{revision.Minor}");
-
-    /// <summary>
-    /// Converts a <see cref="double"/> to a <see cref="Revision"/>.
-    /// </summary>
-    /// <param name="revision">The revision value to convert.</param>
-    /// <returns>A new <see cref="Revision"/> value representing a major and minor revision.</returns>
-    public static implicit operator Revision(double revision) =>
-        Parse(revision.ToString(CultureInfo.InvariantCulture));
-    
-    /// <summary>
     /// Converts a <see cref="Revision"/> to a <see cref="string"/>.
     /// </summary>
     /// <param name="revision">The revision value to convert.</param>
@@ -190,5 +154,12 @@ public sealed class Revision : IComparable
     /// </summary>
     /// <param name="revision">The revision value to convert.</param>
     /// <returns>A new <see cref="Revision"/> value representing a major and minor revision.</returns>
-    public static implicit operator Revision(string revision) => Parse(revision);
+    public static implicit operator Revision(string revision) => new(revision);
+    
+    /// <summary>
+    /// Converts a <see cref="string"/> to a <see cref="Revision"/>.
+    /// </summary>
+    /// <param name="revision">The revision value to convert.</param>
+    /// <returns>A new <see cref="Revision"/> value representing a major and minor revision.</returns>
+    public static implicit operator Revision(double revision) => new(revision);
 }

@@ -63,7 +63,7 @@ public static class L5XParser
         { typeof(TriggerType), TriggerType.FromValue },
         { typeof(Use), s => Use.FromName(s) },
         { typeof(Dimensions), Dimensions.Parse },
-        { typeof(Revision), Revision.Parse },
+        { typeof(Revision), s => new Revision(s) },
         { typeof(TagName), s => new TagName(s) },
         { typeof(NeutralText), s => new NeutralText(s) },
         { typeof(TaskPriority), s => TaskPriority.Parse(s) },
