@@ -264,7 +264,7 @@ public class LogixMember : ILogixSerializable
         data.Add(new XAttribute(L5XName.Name, nameof(type.DATA)));
         data.Add(new XAttribute(L5XName.DataType, type.Name));
         data.Add(new XAttribute(L5XName.Radix, Radix.Ascii));
-        data.Add(new XCData(type.ToString()));
+        data.Add(new XCData($"'{type}'"));
         element.Add(data);
 
         return element;

@@ -41,13 +41,6 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
         @"[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\]|[0-9][0-9]?$";
 
     /// <summary>
-    /// A regex pattern for matching each individual possible member portion of a full tag name.
-    /// Used to split incoming string into member parts. 
-    /// </summary>
-    private const string MemberPattern =
-        @"^(?:[A-Za-z_][\w+:]{0,39})?(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:[0-9][0-9]?)?$";
-
-    /// <summary>
     /// Creates a new <see cref="TagName"/> object with the provided string tag name.
     /// </summary>
     /// <param name="tagName">The string that represents the tag name value.</param>
@@ -114,7 +107,8 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     public IEnumerable<string> Members => Regex.Matches(_tagName, MembersPattern).Select(m => m.Value);
 
     /// <summary>
-    /// A number representing the depth, or number of members from the root tag name, of the current tag name value.
+    /// A zero-based number representing the depth of the tag name value. In other words, the number of members
+    /// between this tag name and the root.
     /// </summary>
     /// <remarks>
     /// This value represents the number of members between the root tag and last member name (i.e. one less than

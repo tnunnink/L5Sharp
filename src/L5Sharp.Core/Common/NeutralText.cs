@@ -24,7 +24,7 @@ public sealed class NeutralText
     /// <summary>
     /// The regex pattern for Logix tag names without starting and ending anchors.
     /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e. instruction keys)
-    /// Use this patter for tag names within text, such as longer
+    /// Use this pattern for tag names within text, such as longer
     /// </summary>
     private const string TagNamePattern =
         @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?";
@@ -58,7 +58,7 @@ public sealed class NeutralText
     /// <summary>
     /// Creates a new <see cref="NeutralText"/> object with the provided text input.
     /// </summary>
-    /// <param name="text">A string input that represents a neutral text format. The text may contain </param>
+    /// <param name="text">A string input that represents a neutral text format.</param>
     /// <exception cref="ArgumentNullException">When text is null.</exception>
     /// <exception cref="FormatException">When text is null.</exception>
     public NeutralText(string text)
@@ -73,7 +73,8 @@ public sealed class NeutralText
     public bool IsBalanced => TextIsBalanced(_text, '[', ']') && TextIsBalanced(_text, '(', ')');
 
     /// <summary>
-    /// Indicates whether the current neutral text value is a single instruction.
+    /// Indicates whether the current neutral text value is a single instruction, as opposed to a rung/line
+    /// of multiple instructions.
     /// </summary>
     /// <value><c>true</c> if the text represents a single instruction. <c>false</c> if not, meaning the text is a
     /// collection of multiple instruction patterns.</value>
@@ -89,7 +90,7 @@ public sealed class NeutralText
     /// Represents a new empty instance of the <see cref="NeutralText"/>.
     /// </summary>
     /// <returns>An empty <see cref="NeutralText"/> object.</returns>
-    public static NeutralText Empty => new(string.Empty);
+    public static NeutralText Empty => new("");
 
     /// <summary>
     /// Converts a <c>NeutralText</c> object to a <c>string</c> object.

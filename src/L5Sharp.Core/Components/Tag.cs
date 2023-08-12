@@ -58,7 +58,7 @@ public class Tag : LogixComponent<Tag>
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
     /// tag member objects.
     /// </remarks>
-    private Tag(Tag root, LogixMember member, Tag parent) : base(root.Element)
+    protected Tag(Tag root, LogixMember member, Tag parent) : base(root.Element)
     {
         _member = member ?? throw new ArgumentNullException(nameof(member));
         Root = root ?? throw new ArgumentNullException(nameof(root));
@@ -84,7 +84,7 @@ public class Tag : LogixComponent<Tag>
         get => GetTagName();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// The description (either root, comment, or parent) for the tag or tag member.
     /// </summary>
@@ -138,11 +138,14 @@ public class Tag : LogixComponent<Tag>
     /// The full tag name path of the <see cref="Tag"/>.
     /// </summary>
     /// <value>A <see cref="Common.TagName"/> containing the full dot-down path of the tag member name.</value>
-    /// 
+    /// <remarks>
+    /// This property will always represent the fully qualified tag name path, which includes nested tag
+    /// member object.  
+    /// </remarks>
     public TagName TagName => Parent is not null ? TagName.Combine(Parent.TagName, _member.Name) : new TagName(Name);
 
     /// <summary>
-    /// The name of the data type that <c>Value</c> represents. 
+    /// The name of the data type the tag represents. 
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the tag data type.</value>
     /// <remarks>
@@ -518,12 +521,11 @@ public class Tag : LogixComponent<Tag>
             .FirstOrDefault(e => e.Attribute(L5XName.Format) is not null
                                  && DataFormat.All().Where(f => f != DataFormat.L5K)
                                      .Any(f => f.Value == e.Attribute(L5XName.Format)!.Value));
-
-        // If uninitialized, add the root data to the base tag element and update the tag attributes.
+        
         if (data is null)
             Element.Add(GenerateData(value));
         else
-            data.ReplaceNodes(value.Serialize());
+            data.ReplaceWith(GenerateData(value));
 
         SetTagAttributes(value);
     }
@@ -571,16 +573,70 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Handles getting a comment value for the current tag name operand. 
+    /// Handles determining the tag name of the current object from the underlying XElement. This handles module
+    /// tag elements (ConfigTag, InputTag, OutputTag) as well as normal component elements (Tag, LocalTag).
+    /// </summary>
+    private string GetTagName()
+    {
+        var xName = Element.Name;
+
+        if (xName == L5XName.ConfigTag || xName == L5XName.InputTag || xName == L5XName.OutputTag)
+            return ModuleTagName(Element);
+
+        return Element.Attribute(L5XName.Name)?.Value ?? string.Empty;
+    }
+
+    /// <summary>
+    /// A helper for determining a module tag name for an input, output, or config tag element. This involves getting
+    /// the tag suffix, module name, parent module name, and configured slot number.
+    /// </summary>
+    private static string ModuleTagName(XElement element)
+    {
+        var suffix = DetermineModuleSuffix(element);
+
+        var moduleName = element.Ancestors(L5XName.Module)
+            .FirstOrDefault()?.Attribute(L5XName.Name)?.Value;
+
+        var parentName = element.Ancestors(L5XName.Module)
+            .FirstOrDefault()?.Attribute(L5XName.ParentModule)?.Value;
+
+        var slot = element
+            .Ancestors(L5XName.Module)
+            .Descendants(L5XName.Port)
+            .Where(p => bool.TryParse(p.Attribute(L5XName.Upstream)?.Value!, out _)
+                        && p.Attribute(L5XName.Type)?.Value != "Ethernet"
+                        && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
+            .Select(p => p.Attribute(L5XName.Address)?.Value)
+            .FirstOrDefault();
+
+        return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";
+    }
+
+    private static string DetermineModuleSuffix(XElement element)
+    {
+        if (element.Name == L5XName.ConfigTag) return "C";
+
+        if (element.Name == L5XName.InputTag)
+            return element.Parent?.Attribute(L5XName.InputTagSuffix)?.Value ?? "I";
+
+        if (element.Name == L5XName.OutputTag)
+            return element.Parent?.Attribute(L5XName.OutputTagSuffix)?.Value ?? "O";
+
+        throw new ArgumentException($"Module tag element name {element.Name} not valid.");
+    }
+
+    /// <summary>
+    /// Handles getting a comment value for the current tag. 
     /// </summary>
     private string? GetDescription()
     {
         if (Parent is null) return Element.Element(L5XName.Description)?.Value;
-        
+
         var comment = Element.Descendants(L5XName.Comment)
             .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
                 StringComparison.OrdinalIgnoreCase));
 
+        //logix descriptions propagates to their children when not overriden. This mimics that.
         return comment is not null ? comment.Value : Parent.Description;
     }
 
@@ -596,9 +652,8 @@ public class Tag : LogixComponent<Tag>
             base.Description = value;
             return;
         }
-        
-        //Child descriptions are set in the comments element of a tag.
 
+        //Child descriptions are set in the comments element of a tag.
         if (string.IsNullOrEmpty(value))
         {
             Element.Descendants(L5XName.Comment)
@@ -611,7 +666,7 @@ public class Tag : LogixComponent<Tag>
         if (comments is null)
         {
             comments = new XElement(L5XName.Comments);
-            Element.Add(comments);
+            Element.Add(comments); //todo this may not add in correct position although idk if Rockwell cares
         }
 
         var comment = comments.Elements(L5XName.Comment)
@@ -624,18 +679,7 @@ public class Tag : LogixComponent<Tag>
             return;
         }
 
-        comments.Add(GenerateComment(value));
-    }
-
-    /// <summary>
-    /// Generates a new comment element with the provided value and current tag operand.
-    /// </summary>
-    private XElement GenerateComment(string value)
-    {
-        var comment = new XElement(L5XName.Comment);
-        comment.Add(new XAttribute(L5XName.Operand, TagName.Operand.ToUpper()));
-        comment.Add(new XCData(value));
-        return comment;
+        comments.Add(GenerateDescriptor(value, L5XName.Comment));
     }
 
     /// <summary>
@@ -678,73 +722,18 @@ public class Tag : LogixComponent<Tag>
             return;
         }
 
-        units.Add(GenerateUnit(value));
+        units.Add(GenerateDescriptor(value, L5XName.EngineeringUnit));
     }
 
     /// <summary>
-    /// Generates a new unit element with the provided value.
+    /// Generates a new comment/unit descriptor element with the provided value and name.
     /// </summary>
-    private XElement GenerateUnit(string value)
+    private XElement GenerateDescriptor(string value, string name)
     {
-        var element = new XElement(L5XName.EngineeringUnit);
+        var element = new XElement(name);
         element.Add(new XAttribute(L5XName.Operand, TagName.Operand.ToUpper()));
         element.Add(new XCData(value));
         return element;
-    }
-
-    /// <summary>
-    /// Handles determining the tag name of the current object from the underlying XElement. This handles module
-    /// tag elements (ConfigTag, InputTag, OutputTag) as well as normal component elements (Tag, LocalTag).
-    /// </summary>
-    private string GetTagName()
-    {
-        var xName = Element.Name;
-
-        if (xName == L5XName.ConfigTag || xName == L5XName.InputTag || xName == L5XName.OutputTag)
-            return ModuleTagName(Element);
-
-        return Element.Attribute(L5XName.Name) is not null
-            ? Element.Attribute(L5XName.Name)!.Value
-            : string.Empty;
-    }
-
-    /// <summary>
-    /// A helper for determining a module tag name for an input, output, or config tag element. This involves getting
-    /// the tag suffix, module name, parent module name, and configured slot number.
-    /// </summary>
-    private static string ModuleTagName(XElement element)
-    {
-        var suffix = DetermineModuleSuffix(element);
-
-        var moduleName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.Name)?.Value;
-
-        var parentName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.ParentModule)?.Value;
-
-        var slot = element
-            .Ancestors(L5XName.Module)
-            .Descendants(L5XName.Port)
-            .Where(p => bool.Parse(p.Attribute(L5XName.Upstream)?.Value!)
-                        && p.Attribute(L5XName.Type)?.Value != "Ethernet"
-                        && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
-            .Select(p => p.Attribute(L5XName.Address)?.Value)
-            .FirstOrDefault();
-
-        return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";
-    }
-
-    private static string DetermineModuleSuffix(XElement element)
-    {
-        if (element.Name == L5XName.ConfigTag) return "C";
-
-        if (element.Name == L5XName.InputTag)
-            return element.Parent?.Attribute(L5XName.InputTagSuffix)?.Value ?? "I";
-
-        if (element.Name == L5XName.OutputTag)
-            return element.Parent?.Attribute(L5XName.OutputTagSuffix)?.Value ?? "O";
-
-        throw new ArgumentException($"Module tag element name {element.Name} not valid.");
     }
 
     #endregion

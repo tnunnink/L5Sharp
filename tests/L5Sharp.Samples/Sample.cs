@@ -1,0 +1,314 @@
+﻿namespace L5Sharp.Samples;
+
+public static class Sample
+{
+    public static class Tag
+    {
+        public static string TestComplexType()
+        {
+            return
+                @"<Tag Name=""TestComplexTag"" TagType=""Base"" DataType=""ComplexType"" Constant=""false"" ExternalAccess=""None"">
+                <Description>
+                    <![CDATA[Base]]>
+                </Description>
+                <Data Format=""L5K"">
+                    <![CDATA[[[0,0,0,0,0,0.00000000e+000],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038
+		,-3.40282347e+038,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000
+		,0,5.60519386e-045,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0
+		,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]],[[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0
+		,0,0,0,0,0.00000000e+000]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]]]>
+                </Data>
+                <Data Format=""Decorated"">
+                    <Structure DataType=""ComplexType"">
+                        <StructureMember Name=""SimpleMember"" DataType=""SimpleType"">
+                            <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+                            <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_000""/>
+                            <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII"" Value=""'$00$00$00$00'""/>
+                            <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""RealMember"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                        </StructureMember>
+                        <StructureMember Name=""CounterMember"" DataType=""COUNTER"">
+                            <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""CU"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""CD"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""OV"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""UN"" DataType=""BOOL"" Value=""0""/>
+                        </StructureMember>
+                        <StructureMember Name=""TimeMember"" DataType=""TIMER"">
+                            <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+                        </StructureMember>
+                        <StructureMember Name=""AlarmMember"" DataType=""ALARM"">
+                            <DataValueMember Name=""EnableIn"" DataType=""BOOL"" Value=""1""/>
+                            <DataValueMember Name=""In"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                            <DataValueMember Name=""HHLimit"" DataType=""REAL"" Radix=""Float"" Value=""3.40282347e+038""/>
+                            <DataValueMember Name=""HLimit"" DataType=""REAL"" Radix=""Float"" Value=""3.40282347e+038""/>
+                            <DataValueMember Name=""LLimit"" DataType=""REAL"" Radix=""Float"" Value=""-3.40282347e+038""/>
+                            <DataValueMember Name=""LLLimit"" DataType=""REAL"" Radix=""Float"" Value=""-3.40282347e+038""/>
+                            <DataValueMember Name=""Deadband"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                            <DataValueMember Name=""ROCPosLimit"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                            <DataValueMember Name=""ROCNegLimit"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                            <DataValueMember Name=""ROCPeriod"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                            <DataValueMember Name=""EnableOut"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""HHAlarm"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""HAlarm"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""LAlarm"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""LLAlarm"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""ROCPosAlarm"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""ROCNegAlarm"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""ROC"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                            <DataValueMember Name=""Status"" DataType=""DINT"" Radix=""Hex"" Value=""16#0000_0000""/>
+                            <DataValueMember Name=""InstructFault"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""DeadbandInv"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""ROCPosLimitInv"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""ROCNegLimitInv"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""ROCPeriodInv"" DataType=""BOOL"" Value=""0""/>
+                        </StructureMember>
+                        <StructureMember Name=""AOIType"" DataType=""aoi_Test"">
+                            <DataValueMember Name=""EnableIn"" DataType=""BOOL"" Value=""1""/>
+                            <DataValueMember Name=""EnableOut"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""InputTest"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""OutputTest"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""Config"" DataType=""INT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""Test"" DataType=""BOOL"" Value=""0""/>
+                            <DataValueMember Name=""New"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""Alias"" DataType=""BOOL"" Value=""0""/>
+                        </StructureMember>
+                        <ArrayMember Name=""SimplArray"" DataType=""SimpleType"" Dimensions=""5"">
+                            <Element Index=""[0]"">
+                                <Structure DataType=""SimpleType"">
+                                    <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                                    <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+                                    <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_000""/>
+                                    <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                                     Value=""'$00$00$00$00'""/>
+                                    <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+                                    <DataValueMember Name=""RealMember"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                                </Structure>
+                            </Element>
+                            <Element Index=""[1]"">
+                                <Structure DataType=""SimpleType"">
+                                    <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                                    <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+                                    <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_000""/>
+                                    <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                                     Value=""'$00$00$00$00'""/>
+                                    <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+                                    <DataValueMember Name=""RealMember"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                                </Structure>
+                            </Element>
+                            <Element Index=""[2]"">
+                                <Structure DataType=""SimpleType"">
+                                    <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                                    <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+                                    <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_000""/>
+                                    <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                                     Value=""'$00$00$00$00'""/>
+                                    <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+                                    <DataValueMember Name=""RealMember"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                                </Structure>
+                            </Element>
+                            <Element Index=""[3]"">
+                                <Structure DataType=""SimpleType"">
+                                    <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                                    <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+                                    <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_000""/>
+                                    <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                                     Value=""'$00$00$00$00'""/>
+                                    <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+                                    <DataValueMember Name=""RealMember"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                                </Structure>
+                            </Element>
+                            <Element Index=""[4]"">
+                                <Structure DataType=""SimpleType"">
+                                    <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+                                    <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+                                    <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_000""/>
+                                    <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII""
+                                                     Value=""'$00$00$00$00'""/>
+                                    <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+                                    <DataValueMember Name=""RealMember"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+                                </Structure>
+                            </Element>
+                        </ArrayMember>
+                        <DataValueMember Name=""NewMember"" DataType=""BOOL"" Value=""0""/>
+                        <StructureMember Name=""StringMember"" DataType=""STRING"">
+                            <DataValueMember Name=""LEN"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""DATA"" DataType=""STRING"" Radix=""ASCII"">
+                                <![CDATA[]]>
+                            </DataValueMember>
+                        </StructureMember>
+                        <StructureMember Name=""MyStringMember"" DataType=""MyStringType"">
+                            <DataValueMember Name=""LEN"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+                            <DataValueMember Name=""DATA"" DataType=""MyStringType"" Radix=""ASCII"">
+                                <![CDATA[]]>
+                            </DataValueMember>
+                        </StructureMember>
+                    </Structure>
+                </Data>
+            </Tag>";
+        }
+
+        public static string TestSimpleType()
+        {
+            return
+                @"<Tag Name=""TestSimpleTag"" TagType=""Base"" DataType=""SimpleType"" Constant=""false"" ExternalAccess=""Read Only"">
+            <Data Format=""L5K"">
+            <![CDATA[[0,0,14,1,0,0.00000000e+000]]]>
+            </Data>
+            <Data Format=""Decorated"">
+            <Structure DataType=""SimpleType"">
+            <DataValueMember Name=""BoolMember"" DataType=""BOOL"" Value=""0""/>
+            <DataValueMember Name=""SintMember"" DataType=""SINT"" Radix=""Hex"" Value=""16#00""/>
+            <DataValueMember Name=""IntMember"" DataType=""INT"" Radix=""Octal"" Value=""8#000_016""/>
+            <DataValueMember Name=""DintMember"" DataType=""DINT"" Radix=""ASCII"" Value=""'$00$00$00$01'""/>
+            <DataValueMember Name=""LintMember"" DataType=""LINT"" Radix=""Decimal"" Value=""0""/>
+            <DataValueMember Name=""RealMember"" DataType=""REAL"" Radix=""Float"" Value=""0.0""/>
+            </Structure>
+            </Data>
+            </Tag>";
+        }
+
+        public static string TestStringType()
+        {
+            return
+                @"<Tag Name=""TestStringTag"" TagType=""Base"" DataType=""MyStringType"" Constant=""false"" ExternalAccess=""None"">
+            <Description>
+            <![CDATA[String]]>
+        </Description>
+            <Comments>
+            <Comment Operand="".DATA"">
+            <![CDATA[Data]]>
+        </Comment>
+            </Comments>
+            <Data Format=""L5K"">
+            <![CDATA[[17,'This is a $$ tests$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+            ]]]>
+            </Data>
+            <Data Format=""String"" Length=""17"">
+            <![CDATA['This is a $$ tests']]>
+            </Data>
+            </Tag>";
+        }
+
+        public static string TestTimerTag()
+        {
+            return
+                @"<Tag Name=""TestTimer"" TagType=""Base"" DataType=""TIMER"" Constant=""false"" ExternalAccess=""None"">
+            <Comments>
+            <Comment Operand="".PRE"">
+            <![CDATA[Test Timer PRE]]>
+            </Comment>
+            </Comments>
+            <Data Format=""L5K"">
+            <![CDATA[[0,1000,0]]]>
+            </Data>
+            <Data Format=""Decorated"">
+            <Structure DataType=""TIMER"">
+            <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""1000""/>
+            <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""0""/>
+            <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""0""/>
+            <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""0""/>
+            <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""0""/>
+            </Structure>
+            </Data>
+            </Tag>";
+        }
+
+        public static string TestSimpleBool()
+        {
+            return @"<Tag Name=""SimpleBool"" TagType=""Base"" DataType=""BOOL"" Radix=""Decimal"" Constant=""false""
+                 ExternalAccess=""Read/Write"">
+                <Data Format=""L5K"">
+                    <![CDATA[0]]>
+                </Data>
+                <Data Format=""Decorated"">
+                    <DataValue DataType=""BOOL"" Radix=""Decimal"" Value=""0""/>
+                </Data>
+            </Tag>";
+        }
+
+        public static string TestSimpleDint()
+        {
+            return @"<Tag Name=""SimpleDint"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false""
+                 ExternalAccess=""None"">
+                <Data Format=""L5K"">
+                    <![CDATA[123392]]>
+                </Data>
+                <Data Format=""Decorated"">
+                    <DataValue DataType=""DINT"" Radix=""Decimal"" Value=""123392""/>
+                </Data>
+            </Tag>";
+        }
+
+        public static string TestSimpleInt()
+        {
+            return
+                @"<Tag Name=""SimpleInt"" TagType=""Base"" DataType=""INT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""None"">
+            <Description>
+            <![CDATA[This is a simple integer tag]]>
+            </Description>
+            <Data Format=""L5K"">
+            <![CDATA[4321]]>
+            </Data>
+            <Data Format=""Decorated"">
+            <DataValue DataType=""INT"" Radix=""Decimal"" Value=""4321""/>
+            </Data>
+            </Tag>";
+        }
+
+        public static string TestSimpleLint()
+        {
+            return @"<Tag Name=""SimpleLint"" TagType=""Base"" DataType=""LINT"" Radix=""Decimal"" Constant=""false""
+        ExternalAccess=""None"">
+            <Data Format=""L5K"">
+            <![CDATA[123]]>
+            </Data>
+            <Data Format=""Decorated"">
+            <DataValue DataType=""LINT"" Radix=""Decimal"" Value=""123""/>
+            </Data>
+            </Tag>";
+        }
+
+        public static string TestSimpleReal()
+        {
+            return
+                @"<Tag Name=""SimpleReal"" TagType=""Base"" DataType=""REAL"" Radix=""Float"" Constant=""false"" ExternalAccess=""None"">
+            <Data Format=""L5K"">
+            <![CDATA[1.23000000e+000]]>
+            </Data>
+            <Data Format=""Decorated"">
+            <DataValue DataType=""REAL"" Radix=""Float"" Value=""1.23""/>
+            </Data>
+            </Tag>";
+        }
+
+        public static string TestSimpleSint()
+        {
+            return
+                @"<Tag Name=""SimpleSint"" TagType=""Base"" DataType=""SINT"" Radix=""Hex"" Constant=""false"" ExternalAccess=""None"">
+            <Comments>
+            <Comment Operand="".0"">
+            <![CDATA[This is a test]]>
+            </Comment>
+            </Comments>
+            <Data Format=""L5K"">
+            <![CDATA[12]]>
+            </Data>
+            <Data Format=""Decorated"">
+            <DataValue DataType=""SINT"" Radix=""Hex"" Value=""16#0c""/>
+            </Data>
+            </Tag>";
+        }
+    }
+}

@@ -1,1 +1,1 @@
-﻿<Data Format="String" Length="24"><![CDATA[This is the string value]]></Data>
+﻿<Data Format="String" Length="24"><![CDATA['This is the string value']]></Data>

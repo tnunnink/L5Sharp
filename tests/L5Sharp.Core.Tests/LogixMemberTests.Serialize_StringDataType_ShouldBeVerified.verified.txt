@@ -1,4 +1,4 @@
 ﻿<StructureMember Name="Test" DataType="STRING">
   <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="27" />
-  <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[This is a string type value]]></DataValueMember>
+  <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['This is a string type value']]></DataValueMember>
 </StructureMember>

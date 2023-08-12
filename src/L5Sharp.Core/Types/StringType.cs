@@ -141,7 +141,7 @@ public class StringType : StructureType, IEnumerable<char>
         var element = new XElement(L5XName.Data);
         element.Add(new XAttribute(L5XName.Format, DataFormat.String));
         element.Add(new XAttribute(L5XName.Length, value.Length));
-        element.Add(new XCData(value));
+        element.Add(new XCData($"'{value}'"));
         return element;
     }
 
@@ -196,25 +196,11 @@ public class StringType : StructureType, IEnumerable<char>
         data.Add(new XAttribute(L5XName.Name, nameof(DATA)));
         data.Add(new XAttribute(L5XName.DataType, Name));
         data.Add(new XAttribute(L5XName.Radix, Radix.Ascii));
-        data.Add(new XCData(value));
+        data.Add(new XCData($"'{value}'"));
         element.Add(data);
 
         return element;
     }
-
-    /*/// <inheritdoc />
-    /// <remarks>
-    /// The <see cref="LEN"/> member of the string type structure should be determined by the length of the string.
-    /// There is really no way to enforce or sync it's value other than conveniently intercepting any data changed event
-    /// for the string type members and setting/resetting LEN to avoid any inconsistencies.
-    /// </remarks>
-    protected override void OnMemberDataChanged(object sender, EventArgs e)
-    {
-        var member =
-        var length = ToString().Length;
-        if (LEN != length) LEN = length;
-        base.OnMemberDataChanged(sender, e);
-    }*/
 
     /// <summary>
     /// Determines the string type name from a given element. This is slightly tricky because we have different places

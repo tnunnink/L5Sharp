@@ -2,7 +2,7 @@
   <DataValueMember Name="Indy" DataType="BOOL" Value="0" />
   <StructureMember Name="Str" DataType="STRING">
     <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
-    <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+    <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
   </StructureMember>
   <StructureMember Name="Tmr" DataType="TIMER">
     <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
@@ -70,31 +70,31 @@
     <Element Index="[0]">
       <Structure DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
       </Structure>
     </Element>
     <Element Index="[1]">
       <Structure DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
       </Structure>
     </Element>
     <Element Index="[2]">
       <Structure DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
       </Structure>
     </Element>
     <Element Index="[3]">
       <Structure DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
       </Structure>
     </Element>
     <Element Index="[4]">
       <Structure DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA[]]></DataValueMember>
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
       </Structure>
     </Element>
   </ArrayMember>

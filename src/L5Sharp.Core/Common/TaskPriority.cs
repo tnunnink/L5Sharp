@@ -59,7 +59,7 @@ public readonly struct TaskPriority : IEquatable<TaskPriority>
     public override string ToString() => _priority.ToString();
 
     /// <inheritdoc />
-    public override bool Equals(object obj) => obj is TaskPriority other && Equals(other);
+    public override bool Equals(object? obj) => obj is TaskPriority other && Equals(other);
 
     /// <inheritdoc />
     public override int GetHashCode() => _priority.GetHashCode();

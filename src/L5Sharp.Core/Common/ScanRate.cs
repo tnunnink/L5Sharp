@@ -60,7 +60,7 @@ public readonly struct ScanRate : IEquatable<ScanRate>
     public bool Equals(ScanRate other) => _rate.Equals(other._rate);
 
     /// <inheritdoc />
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj switch
         {

@@ -68,7 +68,7 @@ public readonly struct Watchdog : IEquatable<Watchdog>
     public bool Equals(Watchdog other) => _watchdog.Equals(other._watchdog);
 
     /// <inheritdoc />
-    public override bool Equals(object obj) => obj is Watchdog other && Equals(other);
+    public override bool Equals(object? obj) => obj is Watchdog other && Equals(other);
 
     /// <inheritdoc />
     public override int GetHashCode() => _watchdog.GetHashCode();

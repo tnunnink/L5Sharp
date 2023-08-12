@@ -1,7 +1,9 @@
-﻿using FluentAssertions;
+﻿using System.Xml.Linq;
+using FluentAssertions;
 using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Samples;
 using L5Sharp.Samples.Types;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
@@ -157,6 +159,171 @@ public class TagTests
         parent.Should().NotBeNull();
         parent?.Value.Should().BeOfType<MySimpleType>();
         parent?.TagName.Should().Be("Test.Simple");
+    }
+
+    #endregion
+
+    #region DeserializeTests
+
+    [Test]
+    public void New_NullElement_ShouldThrowArgumentNullException()
+    {
+        FluentActions.Invoking(() => new Tag(null!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void New_ElementWithNoData_ShouldHaveExpectedValues()
+    {
+        const string xml = @"<Tag Name=""Test"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""Read/Write"" />";
+        var element = XElement.Parse(xml);
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("Test");
+        tag.Description.Should().BeNull();
+        tag.DataType.Should().Be("NULL");
+        tag.Dimensions.Should().Be(Dimensions.Empty);
+        tag.Radix.Should().Be(Radix.Null);
+        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.TagType.Should().Be(TagType.Base);
+        tag.Constant.Should().BeFalse();
+        tag.Value.Should().Be(LogixData.Null);
+    }
+
+    [Test]
+    public void New_TestSimpleBool_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestSimpleBool());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("SimpleBool");
+        tag.DataType.Should().Be(nameof(BOOL));
+        tag.Value.Should().BeOfType<BOOL>();
+        tag.Value.Should().Be(0);
+    }
+    
+    [Test]
+    public void New_TestSimpleSint_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestSimpleSint());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("SimpleSint");
+        tag.DataType.Should().Be(nameof(SINT));
+        tag.Radix.Should().Be(Radix.Hex);
+        tag.Value.Should().BeOfType<SINT>();
+        tag.Value.Should().Be(12);
+    }
+    
+    [Test]
+    public void New_TestSimpleInt_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestSimpleInt());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("SimpleInt");
+        tag.DataType.Should().Be(nameof(INT));
+        tag.Value.Should().BeOfType<INT>();
+        tag.Value.Should().Be(4321);
+    }
+    
+    [Test]
+    public void New_TestSimpleDint_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestSimpleDint());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("SimpleDint");
+        tag.DataType.Should().Be(nameof(DINT));
+        tag.Value.Should().BeOfType<DINT>();
+        tag.Value.Should().Be(123392);
+    }
+    
+    [Test]
+    public void New_TestSimpleLint_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestSimpleLint());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("SimpleLint");
+        tag.DataType.Should().Be(nameof(LINT));
+        tag.Value.Should().BeOfType<LINT>();
+        tag.Value.Should().Be(123);
+    }
+    
+    [Test]
+    public void New_TestSimpleReal_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestSimpleReal());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("SimpleReal");
+        tag.DataType.Should().Be(nameof(REAL));
+        tag.Value.Should().BeOfType<REAL>();
+        tag.Value.Should().Be(1.23f);
+    }
+    
+    [Test]
+    public void New_TestStringType_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestStringType());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("TestStringTag");
+        tag.DataType.Should().Be("MyStringType");
+        tag.Value.Should().BeOfType<StringType>();
+        tag.Value.Should().Be("This is a $ tests");
+    }
+    
+    [Test]
+    public void New_TestTimerType_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestTimerTag());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("TestTimer");
+        tag.DataType.Should().Be("TIMER");
+        tag.Value.Should().BeOfType<TIMER>();
+        tag["PRE"].Value.Should().Be(1000);
+        tag["PRE"].Description.Should().Be("Test Timer PRE");
+    }
+    
+    [Test]
+    public void New_TestSimpleType_ShouldHaveExpectedValues()
+    {
+        var element = XElement.Parse(Sample.Tag.TestSimpleType());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("TestSimpleTag");
+        tag.DataType.Should().Be("SimpleType");
+        tag.Constant.Should().BeFalse();
+        tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        tag.Value.Should().BeOfType<ComplexType>();
+        tag.Member("BoolMember").Should().NotBeNull();
+        tag.Member("SintMember").Should().NotBeNull();
+        tag.Member("IntMember").Should().NotBeNull();
+        tag.Member("DintMember").Should().NotBeNull();
+        tag.Member("LintMember").Should().NotBeNull();
+        tag.Member("RealMember").Should().NotBeNull();
     }
 
     #endregion
@@ -608,7 +775,7 @@ public class TagTests
     }
 
     #endregion
-    
+
     [Test]
     public void Tag_ValidParameters_ShouldBeExpected()
     {
@@ -618,8 +785,6 @@ public class TagTests
         tag.Value.Should().BeOfType<TIMER>();
     }
 
-
-    
 
     [Test]
     public void With_RootTagValidValue_ShouldUpdateValue()
