@@ -7,7 +7,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Common;
-using L5Sharp.Enums;
 
 namespace L5Sharp;
 
@@ -26,21 +25,6 @@ public static class LogixExtensions
     /// the code more concise.
     /// </remarks>
     public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-    
-    /// <summary>
-    /// Gets the element's attached <see cref="LogixContent"/> instance if it exists. 
-    /// </summary>
-    /// <returns>If the current element is attached to a L5X document (i.e. has a root content element),
-    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.</returns>
-    /// <remarks>
-    /// This allows attached logix elements to reach back up to the content file in order to traverse or retrieve
-    /// other elements in the L5X. This is helpful for other extensions that need rely on the L5X to perform functions.
-    /// </remarks>
-    public static LogixContent? Content(this ILogixSerializable element)
-    {
-        var content = element.Serialize().Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
-        return content is not null ? new LogixContent(content) : default;
-    }
 
     /// <summary>
     /// Determines if the current string is a value <see cref="TagName"/> string.
@@ -49,64 +33,6 @@ public static class LogixExtensions
     /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
     public static bool IsTagName(this string input) => Regex.IsMatch(input,
         @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
-
-    /// <summary>
-    /// Tests the current string to indicate whether it is a valid Logix component name value. 
-    /// </summary>
-    /// <param name="name">The string name to test.</param>
-    /// <returns><c>true</c> if <c>name</c> passes the Logix component name requirements; otherwise, <c>false</c>.</returns>
-    /// <remarks>
-    /// Valid name must contain only alphanumeric or underscores, start with a letter or underscore,
-    /// and be between 1 and 40 characters.
-    /// </remarks>
-    public static bool IsComponentName(this string name)
-    {
-        if (string.IsNullOrEmpty(name)) return false;
-        var characters = name.ToCharArray();
-        if (name.Length > 40) return false;
-        if (!(char.IsLetter(characters[0]) || characters[0] == '_')) return false;
-        return characters.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '_');
-    }
-
-    /// <summary>
-    /// The scope type of the component.
-    /// </summary>
-    /// <value>A <see cref="Enums.Scope"/> option indicating the container type for the scoped component.</value>
-    /// <remarks>
-    /// </remarks>
-    public static Scope Scope(this LogixElement component)
-    {
-        var containers = Enums.Scope.All().Where(s => s != Enums.Scope.Null).Select(s => s.L5XName.ToString());
-
-        var ancestor = component.Serialize().Ancestors()
-            .FirstOrDefault(a => containers.Any(c => c == a.Name))?.Name.ToString();
-
-        return ancestor switch
-        {
-            L5XName.Routine => Enums.Scope.Routine,
-            L5XName.Program => Enums.Scope.Program,
-            L5XName.AddOnInstructionDefinition => Enums.Scope.Instruction,
-            L5XName.Controller => Enums.Scope.Controller,
-            _ => Enums.Scope.Null
-        };
-    }
-
-    /// <summary>
-    /// Gets the name of the scoped container for the current logix element.
-    /// </summary>
-    /// <value>A <see cref="string"/> containing the container (program, controller, routine) name of the component.</value>
-    /// <remarks>
-    /// </remarks>
-    public static string ScopeName(this LogixElement component)
-    {
-        var containers = Enums.Scope.All().Select(s => s.L5XName.ToString());
-
-        var logixName = component.Serialize().Ancestors()
-            .FirstOrDefault(a => containers.Any(c => c == a.Name))
-            ?.LogixName();
-
-        return logixName ?? string.Empty;
-    }
 
     /// <summary>
     /// Determines if a component with the specified name exists in the container.
@@ -184,18 +110,14 @@ public static class LogixExtensions
     internal static XName XName(this string value) => System.Xml.Linq.XName.Get(value);
 
     /// <summary>
-    /// A concise method for getting a required attribute value parsed as the specified type from a XElement object.
+    /// A concise method for getting a required attribute value from a XElement object.
     /// </summary>
     /// <param name="element">The element containing the attribute to retrieve.</param>
     /// <param name="name">The name of the attribute value to get.</param>
-    /// <typeparam name="T">The type to parse the attribute value as.</typeparam>
-    /// <returns>The value of the element's specified attribute value parsed as the specified generic type parameter.</returns>
+    /// <returns>The <see cref="string"/> value of the element's specified attribute.</returns>
     /// <exception cref="InvalidOperationException">No attribute with <c>name</c> exists for the current element.</exception>
-    internal static T Get<T>(this XElement element, XName name)
-    {
-        var value = element.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : throw element.L5XError(name);
-    }
+    internal static string Get(this XElement element, XName name) =>
+        element.Attribute(name)?.Value ?? throw element.L5XError(name);
 
     /// <summary>
     /// Gets the L5X element name for the specified type. 
@@ -244,7 +166,7 @@ public static class LogixExtensions
     /// <remarks>
     /// This extension is the basis for how we build the deserialization functions using reflection and
     /// expression trees. Using compiled expression trees is much more efficient that calling the invoke method for a type's
-    /// constructor info obtained via reflection. This method make all the necessary check on the current type, ensuring the
+    /// constructor info obtained via reflection. This method makes all the necessary check on the current type, ensuring the
     /// deserializer delegate will execute without exception.
     /// </remarks>
     internal static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)

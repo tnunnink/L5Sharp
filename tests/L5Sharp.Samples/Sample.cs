@@ -2,7 +2,7 @@
 
 public static class Sample
 {
-    public static class Tag
+    public static class TagElement
     {
         public static string TestComplexType()
         {

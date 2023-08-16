@@ -17,14 +17,14 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
 {
     private readonly string _tagName;
 
-    private const string ArrayBracketStart = "[";
-    private const string MemberSeparator = ".";
+    private const char ArrayBracketStart = '[';
+    private const char MemberSeparator = '.';
 
     /// <summary>
     /// A regex pattern for getting the base tag of the tag name string.
-    /// Use this patter to capture the root or base of a tag name value.
+    /// Use this pattern to capture the root or base of a tag name value.
     /// </summary>
-    private const string TagPattern = @"^[A-Za-z_][\w+:]{1,39}";
+    private const string RootPattern = "^.[^.[]*";
 
     /// <summary>
     /// A regex pattern for a Logix tag name with starting and ending anchors.
@@ -56,7 +56,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// <remarks>
     /// <para>
     /// The root portion of a given tag name is simply the beginning part of the tag name up to the first
-    /// member separator character ('.'). For Module defined tags, this includes the colon separator.
+    /// member separator character ('.' or '['). For Module defined tags, this includes the colon separator.
     /// </para>
     /// <para>
     /// This value can be swapped out easily using <see cref="Rename"/> to return a new <see cref="TagName"/> with the
@@ -65,7 +65,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </remarks>
     /// <seealso cref="Operand"/>
     /// <seealso cref="Path"/>
-    public string Root => Regex.Match(_tagName, TagPattern).Value;
+    public string Root => Regex.Match(_tagName, RootPattern).Value;
 
     /// <summary>
     /// Gets the operand portion of the <see cref="TagName"/> value.
@@ -132,6 +132,28 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// Gets the static empty <see cref="TagName"/> value.
     /// </summary>
     public static TagName Empty => new(string.Empty);
+
+    /// <summary>
+    /// Concatenates two strings to produce a new <see cref="TagName"/> value. This method will also insert the '.'
+    /// member separator character if not found at the beginning of <c>right</c>.
+    /// </summary>
+    /// <param name="left">The first or left side of the tag name to concatenate.</param>
+    /// <param name="right">The second or right side of the tag name to concatenate.</param>
+    /// <returns>A <see cref="TagName"/> representing the combination of <c>left</c> and <c>right</c>.</returns>
+    /// <remarks>
+    /// This method would be more performant than <see cref="Combine(string[])"/>, assuming there are just
+    /// two strings to join together, as it does not iterate a collection and build a string with a string builder
+    /// class. This method simply joins to strings using a string format syntax.
+    /// </remarks>
+    public static TagName Concat(string left, string right)
+    {
+        if (string.IsNullOrEmpty(right)) return left;
+        
+        if (right[0] == ArrayBracketStart || right[0] == MemberSeparator)
+            return new TagName($"{left}{right}");
+        
+        return new TagName($"{left}{MemberSeparator}{right}");
+    }
 
     /// <summary>
     /// Combines a series of strings into a single <see cref="TagName"/> value, inserting member separator
@@ -218,10 +240,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     }
 
     /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        return _tagName.GetHashCode();
-    }
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
 
     /// <summary>
     /// Returns a new tag name with the root <see cref="Root"/> value replaced with the provided string tag.

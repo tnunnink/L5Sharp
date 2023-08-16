@@ -8,11 +8,6 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.csproj" />
-    </ItemGroup>
-
-
-    <ItemGroup>
       <None Update="Empty.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

@@ -2,9 +2,9 @@
 using FluentAssertions;
 using L5Sharp.Common;
 using L5Sharp.Components;
+using L5Sharp.Core.Tests.Types.Custom;
 using L5Sharp.Enums;
 using L5Sharp.Samples;
-using L5Sharp.Samples.Types;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -31,20 +31,22 @@ public class TagTests
         var tag = new Tag();
 
         tag.Name.Should().BeEmpty();
-        tag.Value.Should().Be(LogixData.Null);
+        tag.Description.Should().BeNull();
         tag.DataType.Should().Be("NULL");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-        tag.Description.Should().BeNull();
+        tag.Value.Should().Be(LogixData.Null);
         tag.Constant.Should().BeFalse();
         tag.TagType.Should().Be(TagType.Base);
-        tag.TagName.Should().Be(TagName.Empty);
         tag.Usage.Should().BeNull();
         tag.AliasFor.Should().BeNull();
         tag.Unit.Should().BeNull();
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
+        tag.TagName.Should().Be(TagName.Empty);
+        tag.Scope.Should().Be(Scope.Null);
+        tag.IsAttached.Should().BeFalse();
     }
 
     [Test]
@@ -174,7 +176,8 @@ public class TagTests
     [Test]
     public void New_ElementWithNoData_ShouldHaveExpectedValues()
     {
-        const string xml = @"<Tag Name=""Test"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""Read/Write"" />";
+        const string xml =
+            @"<Tag Name=""Test"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""Read/Write"" />";
         var element = XElement.Parse(xml);
 
         var tag = new Tag(element);
@@ -194,7 +197,7 @@ public class TagTests
     [Test]
     public void New_TestSimpleBool_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestSimpleBool());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleBool());
 
         var tag = new Tag(element);
 
@@ -204,11 +207,11 @@ public class TagTests
         tag.Value.Should().BeOfType<BOOL>();
         tag.Value.Should().Be(0);
     }
-    
+
     [Test]
     public void New_TestSimpleSint_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestSimpleSint());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleSint());
 
         var tag = new Tag(element);
 
@@ -219,11 +222,11 @@ public class TagTests
         tag.Value.Should().BeOfType<SINT>();
         tag.Value.Should().Be(12);
     }
-    
+
     [Test]
     public void New_TestSimpleInt_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestSimpleInt());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleInt());
 
         var tag = new Tag(element);
 
@@ -233,11 +236,11 @@ public class TagTests
         tag.Value.Should().BeOfType<INT>();
         tag.Value.Should().Be(4321);
     }
-    
+
     [Test]
     public void New_TestSimpleDint_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestSimpleDint());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleDint());
 
         var tag = new Tag(element);
 
@@ -247,11 +250,11 @@ public class TagTests
         tag.Value.Should().BeOfType<DINT>();
         tag.Value.Should().Be(123392);
     }
-    
+
     [Test]
     public void New_TestSimpleLint_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestSimpleLint());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleLint());
 
         var tag = new Tag(element);
 
@@ -261,11 +264,11 @@ public class TagTests
         tag.Value.Should().BeOfType<LINT>();
         tag.Value.Should().Be(123);
     }
-    
+
     [Test]
     public void New_TestSimpleReal_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestSimpleReal());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleReal());
 
         var tag = new Tag(element);
 
@@ -275,11 +278,11 @@ public class TagTests
         tag.Value.Should().BeOfType<REAL>();
         tag.Value.Should().Be(1.23f);
     }
-    
+
     [Test]
     public void New_TestStringType_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestStringType());
+        var element = XElement.Parse(Sample.TagElement.TestStringType());
 
         var tag = new Tag(element);
 
@@ -289,11 +292,11 @@ public class TagTests
         tag.Value.Should().BeOfType<StringType>();
         tag.Value.Should().Be("This is a $ tests");
     }
-    
+
     [Test]
     public void New_TestTimerType_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestTimerTag());
+        var element = XElement.Parse(Sample.TagElement.TestTimerTag());
 
         var tag = new Tag(element);
 
@@ -304,11 +307,11 @@ public class TagTests
         tag["PRE"].Value.Should().Be(1000);
         tag["PRE"].Description.Should().Be("Test Timer PRE");
     }
-    
+
     [Test]
     public void New_TestSimpleType_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.Tag.TestSimpleType());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleType());
 
         var tag = new Tag(element);
 
@@ -324,6 +327,22 @@ public class TagTests
         tag.Member("DintMember").Should().NotBeNull();
         tag.Member("LintMember").Should().NotBeNull();
         tag.Member("RealMember").Should().NotBeNull();
+    }
+
+    [Test]
+    public void New_TestComplexType_ShouldHaveExpectedValue()
+    {
+        var element = XElement.Parse(Sample.TagElement.TestComplexType());
+
+        var tag = new Tag(element);
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("TestComplexTag");
+        tag.DataType.Should().Be("ComplexType");
+        tag.Dimensions.Should().Be(Dimensions.Empty);
+        tag.Radix.Should().Be(Radix.Null);
+        tag.ExternalAccess.Should().Be(ExternalAccess.None);
+        tag.Constant.Should().BeFalse();
     }
 
     #endregion
@@ -521,31 +540,6 @@ public class TagTests
     #endregion
 
     #region MembersTesting
-
-    [Test]
-    public void Member_ArrayIndexValid_ShouldBeExpected()
-    {
-        var tag = new Tag { Name = "Test", Value = new DINT[] { 1, 2, 3, 4 } };
-
-        var member = tag[2];
-
-        member.Should().NotBeNull();
-        member.TagName.Should().Be("Test[2]");
-        member.Value.Should().BeOfType<DINT>();
-        member.Value.Should().Be(3);
-        member.DataType.Should().Be("DINT");
-        member.Dimensions.Should().Be(Dimensions.Empty);
-        member.Radix.Should().Be(Radix.Decimal);
-        member.Description.Should().BeNull();
-    }
-
-    [Test]
-    public void Member_ArrayIndexInvalid_ShouldThrowArgumentException()
-    {
-        var tag = new Tag { Name = "Test", Value = new DINT[] { 1, 2, 3, 4 } };
-
-        FluentActions.Invoking(() => tag[4]).Should().Throw<ArgumentException>();
-    }
 
     [Test]
     public void Member_NameIndexValid_ShouldBeExpected()
@@ -776,8 +770,51 @@ public class TagTests
 
     #endregion
 
+    #region DescriptionTests
+
     [Test]
-    public void Tag_ValidParameters_ShouldBeExpected()
+    public Task SetDescription_OnRoot_ShouldUpdateRootDescriptionElement()
+    {
+        var tag = new Tag { Name = "Test", Value = 100, Description = "This is a description test" };
+
+        var xml = tag.Serialize().ToString();
+
+        return Verify(xml);
+    }
+
+    [Test]
+    public Task SetDescription_OnMemberTag_ShouldCreateAndUpdateCommentsElement()
+    {
+        var tag = new Tag { Name = "Test", Value = new TIMER(), Description = "This is a description test" };
+
+        tag["PRE"].Description = "This is a member comment";
+
+        var xml = tag.Serialize().ToString();
+        return Verify(xml);
+    }
+
+    [Test]
+    public void GetDescription_OnMemberTag_ShouldHaveInheritedParentDescription()
+    {
+        var tag = new Tag { Name = "Test", Value = new TIMER(), Description = "TIMER TAG" };
+
+        var comment = tag["PRE"].Description;
+
+        comment.Should().Be("TIMER TAG");
+    }
+
+    #endregion
+
+    [Test]
+    public void ToString_WhenCalled_ShouldReturnTagName()
+    {
+        var tag = new Tag { Name = "Test", Value = true };
+
+        tag.ToString().Should().Be("Test");
+    }
+
+    [Test]
+    public void New_ValidParameters_ShouldBeExpected()
     {
         var tag = Tag.New<TIMER>("MyTimer");
 

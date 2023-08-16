@@ -26,7 +26,7 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// The array's collection of <see cref="LogixMember"/> objects representing the elements of the array type.
     /// </summary>
     private readonly List<LogixMember> _elements;
-    
+
     /// <summary>
     /// Creates a new array type from the provided array object.
     /// </summary>
@@ -49,7 +49,7 @@ public abstract class ArrayType : LogixType, IEnumerable
             throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
         if (collection.Select(t => t.GetType()).Distinct().Count() != 1)
             throw new ArgumentException("Array can not be initialized with different logix type items.", nameof(array));
-        
+
         _elements = Dimensions.Indices().Zip(collection, (i, t) =>
         {
             var member = new LogixMember(i, t);
@@ -57,7 +57,7 @@ public abstract class ArrayType : LogixType, IEnumerable
             return member;
         }).ToList();
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="ArrayType"/> initialized from the provided <see cref="XElement"/> data.
     /// </summary>
@@ -68,7 +68,8 @@ public abstract class ArrayType : LogixType, IEnumerable
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
 
-        Dimensions = element.Get<Dimensions>(L5XName.Dimensions);
+        Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ??
+                     throw element.L5XError(L5XName.Dimensions);
 
         _elements = element.Elements().Select(e =>
         {
@@ -85,7 +86,7 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <remarks>This is used to delineate from the <see cref="LogixType.Name"/> property of the array type
     /// which is the type name and the dimensions index concatenated. The type name is used for serialization.</remarks>
     public string TypeName => _elements.First().DataType.Name;
-    
+
     /// <inheritdoc />
     /// <remarks>
     /// The name of an array type will be the name of it's contained element types with the dimensions index
@@ -112,8 +113,8 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// </summary>
     /// <value>A <see cref="Enums.Radix"/> format if the array is an atomic type array;
     /// otherwise, the radix <see cref="Enums.Radix.Null"/> format.</value>
-    public Radix Radix => _elements.First().DataType is AtomicType atomicType ? atomicType.Radix : Radix.Null; 
-    
+    public Radix Radix => _elements.First().DataType is AtomicType atomicType ? atomicType.Radix : Radix.Null;
+
     /// <inheritdoc />
     public override IEnumerable<LogixMember> Members => _elements.AsEnumerable();
 
@@ -152,7 +153,7 @@ public abstract class ArrayType : LogixType, IEnumerable
         get => GetIndex<LogixType>($"[{x},{y},{z}]");
         set => SetIndex($"[{x},{y},{z}]", value);
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="ArrayType{TDataType}"/> of the specified type with the length of the provided dimensions.
     /// </summary>
@@ -195,7 +196,7 @@ public abstract class ArrayType : LogixType, IEnumerable
                 throw new ArgumentException($"The Rank {dimensions.Rank} is not valid.");
         }
     }
-    
+
     /// <summary>
     /// Casts the current <see cref="ArrayType"/> to an <see cref="ArrayType{TLogixType}"/> of the specified logix
     /// type generic parameter.
@@ -203,7 +204,7 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <typeparam name="TLogixType">The logix type to cast.</typeparam>
     /// <returns>A <see cref="ArrayType{TLogixType}"/> of the specified.</returns>
     public ArrayType<TLogixType> Of<TLogixType>() where TLogixType : LogixType => this.Cast<TLogixType>().ToArray();
-    
+
     /// <inheritdoc />
     public override XElement Serialize()
     {
@@ -234,7 +235,7 @@ public abstract class ArrayType : LogixType, IEnumerable
 
         return element;
     }
-    
+
     /// <summary>
     /// Handles getting the logix type at the specified index of the current array from the underlying member collection. 
     /// </summary>
@@ -274,7 +275,7 @@ public abstract class ArrayType : LogixType, IEnumerable
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => _elements.GetEnumerator();
-    
+
     /// <summary>
     /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
     /// </summary>
@@ -303,7 +304,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     public ArrayType(Array array) : base(array)
     {
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="ArrayType{TLogixType}"/> initialized with the provided one dimensional array.
     /// </summary>
@@ -314,7 +315,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     public ArrayType(TLogixType[] array) : base(array)
     {
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="ArrayType{TLogixType}"/> initialized with the provided two dimensional array.
     /// </summary>
@@ -325,7 +326,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     public ArrayType(TLogixType[,] array) : base(array)
     {
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="ArrayType{TLogixType}"/> initialized with the provided three dimensional array.
     /// </summary>

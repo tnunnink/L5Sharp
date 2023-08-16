@@ -1,0 +1,15 @@
+﻿<Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="TIMER">
+  <Description><![CDATA[This is a description test]]></Description>
+  <Comments>
+    <Comment Operand=".PRE"><![CDATA[This is a member comment]]></Comment>
+  </Comments>
+  <Data Format="Decorated">
+    <Structure DataType="TIMER">
+      <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+      <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+      <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+    </Structure>
+  </Data>
+</Tag>

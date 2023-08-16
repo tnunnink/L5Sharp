@@ -21,6 +21,49 @@ public static class TagExtensions
     /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the this tag name and all child tag names.
     /// </returns>
     public static IEnumerable<TagName> TagNames(this Tag tag) => tag.Members().Select(t => t.TagName);
+    
+    /*/// <summary>
+    /// The scoped name represents the <see cref="TagName"/> of the tag component, with the program specifier and
+    /// <see cref="ContainerName"/> prepended if this is a program scoped tag. Therefore, this represents the absolute
+    /// global identifier for the tag across the L5X scope.
+    /// </summary>
+    /// <value>
+    /// If this tag is a controller tag, then <see cref="TagName"/>. If this tag is a program tag,
+    /// then <see cref="TagName"/> and <see cref="ContainerName"/> in the format
+    /// 'Program:{ContainerName}.{TagName}'.
+    /// </value>
+    /// <remarks>
+    /// <para>
+    /// This value is determined based on the <see cref="Scope"/> of the tag. This name provides a consistent
+    /// global unique identified for a given tag object.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the L5X of the tag component, but one that adds a lot of value as it
+    /// helps identify a tag within the L5X file. This is why it is part of the core component model.
+    /// </para>
+    /// </remarks>
+    /// <seealso cref="Scope"/>
+    /// <seealso cref="ContainerName"/>
+    public static TagName ScopedName(this Tag tag) => tag.Scope == Scope.Program ? $"Program:{ContainerName}.{TagName}" : TagName;
+
+    /// <summary>
+    /// Gets the name of the scoped container for the current logix element.
+    /// </summary>
+    /// <value> A <see cref="string"/> containing the name of the containing program or controller for which this tag
+    /// belongs. If this tag has not container (i.e. <c>Null</c> scope), then returns <c>null</c>.</value>
+    /// <remarks>
+    /// <para>
+    /// This value is retrieved from the ancestors of the underlying element. If not ancestors exists, meaning this
+    /// tag has no scope, then this property will be <c>null</c>.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the L5X of the tag component, but one that adds a lot of value as it
+    /// helps identify tags within the L5X file. This is why it is part of the core component model.
+    /// </para>
+    /// </remarks>
+    /// <seealso cref="Scope"/>
+    /// <seealso cref="ScopedName"/>
+    public string? ContainerName => Element.Ancestors(Scope.Name).FirstOrDefault()?.LogixName();*/
 
     /// <summary>
     /// Adds a new member to the tag's complex data structure.
@@ -101,6 +144,13 @@ public static class TagExtensions
 
         return content.L5X.Descendants().Where(e => supportedNames.Any(n => n == e.Name)).Select(e => new Tag(e));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="content"></param>
+    /// <returns></returns>
+    public static TagDictionary TagDictionary(this LogixContent content) => new(content);
     
     /// <summary>
     /// Returns a filtered collection of <see cref="Tag"/> that are contained in the specified program name.

@@ -56,7 +56,7 @@ public abstract class StructureType : LogixType
     protected StructureType(XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
-        Name = element.Get<string>(L5XName.DataType);
+        Name = element.Get(L5XName.DataType);
         _members = element.Elements().Select(e =>
         {
             var member = new LogixMember(e);

@@ -58,7 +58,7 @@ public class Tag : LogixComponent<Tag>
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
     /// tag member objects.
     /// </remarks>
-    protected Tag(Tag root, LogixMember member, Tag parent) : base(root.Element)
+    private Tag(Tag root, LogixMember member, Tag parent) : base(root.Element)
     {
         _member = member ?? throw new ArgumentNullException(nameof(member));
         Root = root ?? throw new ArgumentNullException(nameof(root));
@@ -106,43 +106,6 @@ public class Tag : LogixComponent<Tag>
         get => GetDescription();
         set => SetDescription(value);
     }
-
-    /// <summary>
-    /// The root tag of this <see cref="Tag"/> member.
-    /// </summary>
-    /// <value>A <see cref="Tag"/> representing the root tag.</value>
-    /// <remarks>
-    /// This property helps model the hierarchical structure of a tag object. Tags has a <see cref="Value"/>
-    /// which can represent a nested complex data type. This class models this by keeping references to the <c>Root</c>
-    /// and <c>Parent</c> tags for each tag object. All tags should have a <c>Root</c>.
-    /// </remarks>
-    /// <seealso cref="Parent"/>
-    public Tag Root { get; }
-
-    /// <summary>
-    /// The parent tag of this <see cref="Tag"/> member.
-    /// </summary>
-    /// <value>
-    /// A <see cref="Tag"/> representing the immediate parent tag of the this tag member. Will be <c>null</c>
-    /// for all root tag objects.
-    /// </value>
-    /// <remarks>
-    /// This property helps model the hierarchical structure of a tag object. Tags has a <see cref="Value"/>
-    /// which can represent a nested complex data type. This class models this by keeping references to the <c>Root</c>
-    /// and <c>Parent</c> tags for each tag object. Only nested tag members should have a <c>Parent</c>.
-    /// </remarks>
-    /// <seealso cref="Root"/>
-    public Tag? Parent { get; }
-
-    /// <summary>
-    /// The full tag name path of the <see cref="Tag"/>.
-    /// </summary>
-    /// <value>A <see cref="Common.TagName"/> containing the full dot-down path of the tag member name.</value>
-    /// <remarks>
-    /// This property will always represent the fully qualified tag name path, which includes nested tag
-    /// member object.  
-    /// </remarks>
-    public TagName TagName => Parent is not null ? TagName.Combine(Parent.TagName, _member.Name) : new TagName(Name);
 
     /// <summary>
     /// The name of the data type the tag represents. 
@@ -261,50 +224,61 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Creates a new <see cref="Components.Tag"/> with the provided name and specified type parameter.
+    /// The parent tag of this <see cref="Tag"/> member.
     /// </summary>
-    /// <param name="name">The name of the tag.</param>
-    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have parameterless constructor to create.</typeparam>
-    /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
-    public static Tag New<TLogixType>(string name) where TLogixType : LogixType, new() =>
-        new() { Name = name, Value = new TLogixType() };
+    /// <value>
+    /// A <see cref="Tag"/> representing the immediate parent tag of the this tag member. Will be <c>null</c>
+    /// for all root tag objects.
+    /// </value>
+    /// <remarks>
+    /// This property helps model the hierarchical structure of a tag object. Tags has a <see cref="Value"/>
+    /// which can represent a nested complex data type. This class models this by keeping references to the <c>Root</c>
+    /// and <c>Parent</c> tags for each tag object. Only nested tag members should have a <c>Parent</c>.
+    /// </remarks>
+    /// <seealso cref="Root"/>
+    public Tag? Parent { get; }
 
     /// <summary>
-    /// Gets an element of the tag array if the underlying value type is a <see cref="ArrayType"/>.
+    /// The root tag of this <see cref="Tag"/> member.
     /// </summary>
-    /// <param name="index">The index of the element to retrieve.</param>
-    /// <exception cref="ArgumentException"><c>index</c> does not represent a valid member for the tag data structure.</exception>
-    public Tag this[ushort index]
-    {
-        get
-        {
-            var name = $"[{index}]";
-            var member = Value.Member(name);
-            if (member is null)
-                throw new ArgumentException(
-                    $"No element with index '{name}' exists in the tag data structure for type {DataType}.");
-            return new Tag(Root, member, this);
-        }
-    }
+    /// <value>A <see cref="Tag"/> representing the root tag.</value>
+    /// <remarks>
+    /// This property helps model the hierarchical structure of a tag object. Tags has a <see cref="Value"/>
+    /// which can represent a nested complex data type. This class models this by keeping references to the <c>Root</c>
+    /// and <c>Parent</c> tags for each tag object. All tags should have a <c>Root</c>.
+    /// </remarks>
+    /// <seealso cref="Parent"/>
+    public Tag Root { get; }
 
     /// <summary>
-    /// Gets an element of the tag array if the underlying value type is a <see cref="ArrayType"/>.
+    /// The full tag name path of the <see cref="Tag"/>.
     /// </summary>
-    /// <param name="x">The index of the element to retrieve.</param>
-    /// /// <param name="y">The index of the element to retrieve.</param>
-    /// <exception cref="ArgumentException"><c>index</c> does not represent a valid member for the tag data structure.</exception>
-    public Tag this[ushort x, ushort y]
-    {
-        get
-        {
-            var name = $"[{x},{y}]";
-            var member = Value.Member(name);
-            if (member is null)
-                throw new ArgumentException(
-                    $"No element with index '{name}' exists in the tag data structure for type {DataType}.");
-            return new Tag(Root, member, this);
-        }
-    }
+    /// <value>A <see cref="Common.TagName"/> containing the full dot-down path of the tag member name.</value>
+    /// <remarks>
+    /// <para>
+    /// This property will always represent the fully qualified tag name path, which includes nested tag
+    /// member object. This property is determined using the hierarchical structure of the tag component.
+    /// </para>
+    /// </remarks>
+    public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
+
+    /// <summary>
+    /// The scope type of the tag component, indicating whether the tag is a global controller tag, a local program tag.
+    /// or neither.
+    /// </summary>
+    /// <value>A <see cref="Enums.Scope"/> option indicating the container type for the tag.</value>
+    /// <remarks>
+    /// <para>
+    /// The scope of a tag component is determined from the ancestors of the underlying element. If the first parent is
+    /// program element, the tag is program scoped. If the first element is a controller element, the tag is controller
+    /// scoped. If ancestors of these types are not found, we assume the tag has no/null scope.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the L5X of the tag component, but one that adds a lot of value as it
+    /// helps identify tags within the L5X file. This is why it is part of the core component model.
+    /// </para>
+    /// </remarks>
+    public Scope Scope => Scope.FromElement(Element);
 
     /// <summary>
     /// Gets the tag member having the provided tag name value. The tag name can represent either an immediate member
@@ -370,8 +344,8 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects.</returns>
     /// <remarks>
-    /// This recursively traverses the hierarchical data structure of the tag and returns all
-    /// child/descendant tags, as well as this tag.
+    /// This recursively traverses the hierarchical data structure of tag's <see cref="Value"/> and returns all
+    /// descendant tags, as well as this tag.
     /// </remarks>
     public IEnumerable<Tag> Members()
     {
@@ -393,7 +367,7 @@ public class Tag : LogixComponent<Tag>
     /// <param name="predicate">A predicate expression specifying the tag name filter.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects that satisfy the predicate.</returns>
     /// <remarks>
-    /// This recursively traverses the hierarchical data structure of the tag and returns all
+    /// This recursively traverses the hierarchical data structure of tag's <see cref="Value"/> and returns all
     /// tags that satisfy the specified predicate.
     /// </remarks>
     public IEnumerable<Tag> Members(Predicate<TagName> predicate)
@@ -421,7 +395,7 @@ public class Tag : LogixComponent<Tag>
     /// <param name="predicate">A predicate expression specifying the tag filter.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects that satisfy the predicate.</returns>
     /// <remarks>
-    /// This recursively traverses the hierarchical data structure of the tag and returns all
+    /// This recursively traverses the hierarchical data structure of tag's <see cref="Value"/> and returns all
     /// tags that satisfy the specified predicate.
     /// </remarks>
     public IEnumerable<Tag> Members(Predicate<Tag> predicate)
@@ -464,6 +438,18 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
+    /// Creates a new <see cref="Components.Tag"/> with the provided name and specified type parameter.
+    /// </summary>
+    /// <param name="name">The name of the tag.</param>
+    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have parameterless constructor to create.</typeparam>
+    /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
+    public static Tag New<TLogixType>(string name) where TLogixType : LogixType, new() =>
+        new() { Name = name, Value = new TLogixType() };
+
+    /// <inheritdoc />
+    public override string ToString() => TagName;
+
+    /// <summary>
     /// Returns as new <see cref="Tag"/> with the updated data type value provided. 
     /// </summary>
     /// <param name="value">The <see cref="LogixType"/> value to change to.</param>
@@ -502,9 +488,6 @@ public class Tag : LogixComponent<Tag>
         return Root[TagName.Path];
     }
 
-    /// <inheritdoc />
-    public override string ToString() => TagName;
-
     #region Internal
 
     /// <summary>
@@ -517,11 +500,9 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     private void SetData(LogixType value)
     {
-        var data = Element.Elements()
-            .FirstOrDefault(e => e.Attribute(L5XName.Format) is not null
-                                 && DataFormat.All().Where(f => f != DataFormat.L5K)
-                                     .Any(f => f.Value == e.Attribute(L5XName.Format)!.Value));
-        
+        var data = Element.Elements().FirstOrDefault(e =>
+            DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
+
         if (data is null)
             Element.Add(GenerateData(value));
         else
@@ -666,7 +647,12 @@ public class Tag : LogixComponent<Tag>
         if (comments is null)
         {
             comments = new XElement(L5XName.Comments);
-            Element.Add(comments); //todo this may not add in correct position although idk if Rockwell cares
+
+            //This is to place comments right after description if it exists, otherwise as the first element.
+            if (Element.FirstNode is XElement element && element.Name == L5XName.Description)
+                Element.FirstNode.AddAfterSelf(comments);
+            else
+                Element.AddFirst(comments);
         }
 
         var comment = comments.Elements(L5XName.Comment)

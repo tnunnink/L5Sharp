@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Samples;
@@ -44,7 +43,7 @@ public class ProofTests
     {
         var content = LogixContent.Load(Known.Test);
 
-        var results = content.Find<Tag>().Where(t => t.Scope() == Scope.Program && t.DataType == "DINT");
+        var results = content.Find<Tag>().Where(t => t.Scope == Scope.Program && t.DataType == "DINT");
 
         results.Should().NotBeEmpty();
     }

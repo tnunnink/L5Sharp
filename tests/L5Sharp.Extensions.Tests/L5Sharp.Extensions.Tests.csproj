@@ -20,7 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.csproj" />
       <ProjectReference Include="..\..\src\L5Sharp.Extensions\L5Sharp.Extensions.csproj" />
       <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
@@ -40,6 +39,7 @@
         <DependentUpon>LogixExtensionTests.cs</DependentUpon>
       </None>
     </ItemGroup>
+
 
 
 </Project>

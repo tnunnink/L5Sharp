@@ -33,7 +33,7 @@ public static class LogixData
     /// delegate functions. This is what we are using to create strongly typed logix type objects at runtime.
     /// </summary>
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixType>>> Deserializers = new(() =>
-        AppDomain.CurrentDomain.GetAssemblies().SelectMany(Introspect).ToDictionary(k => k.Key, k => k.Value));
+        AppDomain.CurrentDomain.GetAssemblies().Distinct().SelectMany(Introspect).ToDictionary(k => k.Key, k => k.Value));
 
     /// <summary>
     /// Returns the singleton null <see cref="LogixType"/> object.
@@ -123,13 +123,8 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeData(XContainer element)
     {
-        var supportedFormats = DataFormat.All().Where(f => f != DataFormat.L5K);
-
-        //Don't specify element name to support both Data and DefaultData elements.
-        //Just look for elements with supportable Format attribute.
         var data = element.Elements()
-            .FirstOrDefault(e => e.Attribute(L5XName.Format) is not null
-                                 && supportedFormats.Any(f => f.Value == e.Attribute(L5XName.Format)!.Value));
+            .FirstOrDefault(e => DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
         return data is not null ? Deserialize(data) : Null;
     }
@@ -154,8 +149,8 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeAtomic(XElement element)
     {
-        var dataType = element.Get<string>(L5XName.DataType);
-        var value = element.Get<string>(L5XName.Value);
+        var dataType = element.Get(L5XName.DataType);
+        var value = element.Get(L5XName.Value);
         return Atomic.Parse(dataType, value);
     }
 
@@ -164,7 +159,7 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeArray(XElement element)
     {
-        var dataType = element.Get<string>(L5XName.DataType);
+        var dataType = element.Get(L5XName.DataType);
 
         //We either know the type (atomic or registered), or we create the generic string or complex type.
         var type = Lookup.TryGetValue(dataType, out var known) ? known
@@ -187,7 +182,7 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeElement(XElement element)
     {
-        var dataType = element.Parent?.Get<string>(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
+        var dataType = element.Parent?.Get(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
         var value = element.Attribute(L5XName.Value);
         var structure = element.Element(L5XName.Structure);
 
@@ -204,7 +199,7 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeStructure(XElement element)
     {
-        var dataType = element.Get<string>(L5XName.DataType);
+        var dataType = element.Get(L5XName.DataType);
         if (IsRegistered(dataType)) return Deserializers.Value[dataType].Invoke(element);
         return HasStringStructure(element) ? new StringType(element) : new ComplexType(element);
     }
@@ -216,7 +211,7 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeString(XElement element)
     {
-        var dataType = element.Parent?.Get<string>(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
+        var dataType = element.Parent?.Get(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
         return IsRegistered(dataType) ? Deserializers.Value[dataType].Invoke(element) : new StringType(element);
     }
 

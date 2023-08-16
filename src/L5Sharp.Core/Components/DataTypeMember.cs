@@ -56,8 +56,6 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// </summary>
     /// <value>
     /// A <see cref="Dimensions"/> representing the array dimensions of the member.
-    /// Default is <see cref="Dimensions.Empty"/>.
-    /// Members should not have multidimensional arrays.
     /// </value>
     public Dimensions? Dimension
     {
@@ -70,8 +68,6 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// </summary>
     /// <value>
     /// A <see cref="Enums.Radix"/> representing the value type format of the member.
-    /// Default is <see cref="Enums.Radix.Null"/>.
-    /// Should be <see cref="Enums.Radix.Null"/> for all non atomic types.
     /// </value>
     public Radix? Radix
     {
@@ -84,7 +80,6 @@ public class DataTypeMember : LogixComponent<DataTypeMember>
     /// </summary>
     /// <value>
     /// A <see cref="Enums.ExternalAccess"/> representing read/write access of the member.
-    /// Default is <see cref="Enums.ExternalAccess.ReadWrite"/>.
     /// </value>
     public ExternalAccess? ExternalAccess
     {

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
-using L5Sharp.Extensions.Tests.TestTypes;
+using L5Sharp.Extensions.Tests.Types;
 using L5Sharp.Samples;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
@@ -73,5 +73,26 @@ public class TagExtensionsTests
 
         var xml = tag.Serialize().ToString();
         return Verify(xml);
+    }
+
+    [Test]
+    public void TagDictionary_WhenCalled_ShouldNotBeNull()
+    {
+        var content = LogixContent.Load(Known.Test);
+
+        var dictionary = content.TagDictionary();
+
+        dictionary.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void TagDictionaryFind_ExistingTag_ShouldWorkFast()
+    {
+        var content = LogixContent.Load(Known.Test);
+        var dictionary = content.TagDictionary();
+
+        var tag = dictionary.Find("TestSimpleTag.DintMember.1");
+
+        tag.Should().NotBeNull();
     }
 }

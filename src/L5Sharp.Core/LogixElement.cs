@@ -51,12 +51,6 @@ public abstract class LogixElement : ILogixSerializable
     public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
 
     /// <summary>
-    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
-    /// </summary>
-    /// <returns>A <see cref="XElement"/> representing the serialized entity.</returns>
-    public virtual XElement Serialize() => Element;
-
-    /// <summary>
     /// Returns a new deep cloned instance of the current type.
     /// </summary>
     /// <returns>A new <see cref="LogixElement"/> type with the same property values.</returns>
@@ -76,6 +70,29 @@ public abstract class LogixElement : ILogixSerializable
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public TElement Clone<TElement>() where TElement : LogixElement =>
         (TElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
+
+    /// <summary>
+    /// Returns a <see cref="LogixContent"/> instance  wrapping the current element's root L5X element if it exists. 
+    /// </summary>
+    /// <returns>
+    /// If the current element is attached to a L5X document (i.e. has a root content element),
+    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.
+    /// </returns>
+    /// <remarks>
+    /// This allows attached logix elements to reach up to the content file in order to traverse or retrieve
+    /// other elements in the L5X. This is helpful for other extensions that need rely on the L5X to perform functions.
+    /// </remarks>
+    public LogixContent? L5X()
+    {
+        var content = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
+        return content is not null ? new LogixContent(content) : default;
+    }
+
+    /// <summary>
+    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
+    /// </summary>
+    /// <returns>A <see cref="XElement"/> representing the serialized entity.</returns>
+    public virtual XElement Serialize() => Element;
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.

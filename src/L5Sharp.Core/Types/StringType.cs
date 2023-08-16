@@ -211,7 +211,7 @@ public class StringType : StructureType, IEnumerable<char>
         if (element.Attribute(L5XName.Format)?.Value == DataFormat.String)
             return element.Ancestors().FirstOrDefault()?.Attribute(L5XName.DataType)?.Value ?? nameof(StringType);
 
-        return element.Get<string>(L5XName.DataType);
+        return element.Get(L5XName.DataType);
     }
 
     /// <summary>

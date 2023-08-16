@@ -206,6 +206,12 @@
       <None Update="Types\Predefined\AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>AlarmTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.SetDescription_OnRoot_ShouldUpdateRootDescriptionElement.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.SetDescription_OnMemberTag_ShouldCreateAndUpdateCommentsElement.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

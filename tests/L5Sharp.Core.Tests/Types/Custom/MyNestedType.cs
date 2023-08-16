@@ -8,7 +8,7 @@ using L5Sharp.Types.Predefined;
 
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
-namespace L5Sharp.Samples.Types
+namespace L5Sharp.Core.Tests.Types.Custom
 {
     /// <summary>
     /// A test type used to test nested complex data structure code

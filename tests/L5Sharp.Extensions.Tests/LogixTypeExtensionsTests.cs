@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using L5Sharp.Extensions.Tests.TestTypes;
+using L5Sharp.Extensions.Tests.Types;
 using L5Sharp.Types;
 using L5Sharp.Types.Predefined;
 
