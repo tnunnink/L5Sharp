@@ -42,7 +42,7 @@ public class Address
     /// A host name must start with a letter, contain only alpha-numeric characters or special characters '.' and '-',
     /// and have a maximum length of 64 characters.
     /// </remarks>
-    public bool IsHostName => Regex.IsMatch(_value, @"^[A-Za-z][A-Za-z0-9\.-]{1,63}$", RegexOptions.Compiled);
+    public bool IsHostName => Regex.IsMatch(_value, "^[A-Za-z][A-Za-z0-9.-]{1,63}$");
 
     /// <summary>
     /// Indicates that the address value is an empty string.

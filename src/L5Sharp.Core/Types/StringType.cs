@@ -281,7 +281,7 @@ public class StringType : StructureType, IEnumerable<char>
     {
         if (string.IsNullOrEmpty(value)) return new SINT[] { new(Radix.Ascii) };
         value = value.TrimStart('\'').TrimEnd('\'');
-        var matches = Regex.Matches(value, LogixAsciiPattern, RegexOptions.Compiled);
+        var matches = Regex.Matches(value, LogixAsciiPattern);
         return matches.Select(m =>
         {
             var parsed = (SINT)Radix.Ascii.Parse($"'{m.Value}'");

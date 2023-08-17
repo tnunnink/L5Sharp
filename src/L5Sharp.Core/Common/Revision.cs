@@ -29,7 +29,7 @@ public sealed class Revision : IComparable
         if (string.IsNullOrEmpty(value))
             throw new ArgumentException("Revision value can not be null or empty.");
 
-        if (!Regex.IsMatch(value, @"^[0-9]+\.[0-9]+$", RegexOptions.Compiled))
+        if (!Regex.IsMatch(value, @"^[0-9]+\.[0-9]+$"))
             throw new FormatException(
                 $"Value '{value}' is invalid revision format. Revision format must be Major.Minor.");
 

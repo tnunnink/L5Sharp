@@ -293,7 +293,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
 
-            var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
+            var formatted = Regex.Replace(converted, Pattern, ByteSeparator);
 
             return $"{Specifier}{formatted}";
         }
@@ -327,7 +327,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
 
-            var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
+            var formatted = Regex.Replace(converted, Pattern, ByteSeparator);
 
             return $"{Specifier}{formatted}";
         }
@@ -431,7 +431,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
 
-            var formatted = Regex.Replace(converted, Pattern, ByteSeparator, RegexOptions.Compiled);
+            var formatted = Regex.Replace(converted, Pattern, ByteSeparator);
 
             return $"{Specifier}{formatted}";
         }
@@ -674,7 +674,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var formatted = time.ToString("yyyy-MM-dd-HH:mm:ss.ffffff");
 
-            var str = Regex.Replace(formatted, InsertPattern, Separator, RegexOptions.Compiled);
+            var str = Regex.Replace(formatted, InsertPattern, Separator);
 
             return $"{Specifier}{str}{Suffix}";
         }
@@ -721,7 +721,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var formatted = localTime.ToString("yyyy-MM-dd-HH:mm:ss.fffffff00(UTCzzz)");
 
-            var str = Regex.Replace(formatted, InsertPattern, Separator, RegexOptions.Compiled);
+            var str = Regex.Replace(formatted, InsertPattern, Separator);
 
             return $"{Specifier}{str}";
         }

@@ -7,7 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="updated versions" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="fixed bug with FindAll">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -354,7 +356,7 @@
       <workItem from="1691850041212" duration="18950000" />
       <workItem from="1692062034129" duration="950000" />
       <workItem from="1692107016442" duration="19313000" />
-      <workItem from="1692213662519" duration="15302000" />
+      <workItem from="1692213662519" duration="16524000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -699,7 +701,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="297" />
+    <option name="localTasksCounter" value="298" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -709,7 +711,7 @@
     <option name="coveragePercentColumnWidth" value="33" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="375" />
+    <option name="symbolColumnWidth" value="322" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -735,7 +737,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="reorg for test solutions." />
     <MESSAGE value="reorg, project names changes, documentation" />
     <MESSAGE value="finishing properties for main components and updating comments/docs" />
     <MESSAGE value="removed todos" />
@@ -760,7 +761,8 @@
     <MESSAGE value="TagDictionary.cs and extension development for optimized serach of tag objects in L5X" />
     <MESSAGE value="removed performance project" />
     <MESSAGE value="updated versions" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated versions" />
+    <MESSAGE value="fixed bug with FindAll" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bug with FindAll" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

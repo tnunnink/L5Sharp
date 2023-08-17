@@ -214,7 +214,7 @@ public sealed class Dimensions : IEquatable<Dimensions>
 
         if (value.IsEmpty()) return Empty;
 
-        var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
+        var numbers = Regex.Matches(value, @"\d+")
             .Select(m => ushort.Parse(m.Value))
             .ToList();
 
@@ -251,7 +251,7 @@ public sealed class Dimensions : IEquatable<Dimensions>
             return false;
         }
 
-        var numbers = Regex.Matches(value, @"\d+", RegexOptions.Compiled)
+        var numbers = Regex.Matches(value, @"\d+")
             .Select(m => ushort.Parse(m.Value))
             .ToList();
 

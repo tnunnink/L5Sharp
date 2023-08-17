@@ -17,7 +17,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
 {
     private readonly string _tagName;
 
-    private const char ArrayBracketStart = '[';
+    private const char ArraySeparator = '[';
     private const char MemberSeparator = '.';
 
     /// <summary>
@@ -25,6 +25,12 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// Use this pattern to capture the root or base of a tag name value.
     /// </summary>
     private const string RootPattern = "^.[^.[]*";
+    
+    /// <summary>
+    /// A regex patter for getting the number of array or member separator character in the tag name string.
+    /// This is used to determine depth.
+    /// </summary>
+    private const string SeparatorPattern = @"(?<=[\w\]])[.\[]";
 
     /// <summary>
     /// A regex pattern for a Logix tag name with starting and ending anchors.
@@ -39,6 +45,12 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     private const string MembersPattern =
         @"[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\]|[0-9][0-9]?$";
+    
+    /// <summary>
+    /// A regex patter for matching the last tag name member of the full tag name value.
+    /// This is used to quickly get <c>Member</c> without iterating each character or <c>Members</c>.
+    /// </summary>
+    private const string MemberPattern = @"(?:(?<=\.)|\[)?[^.\[]+$";
 
     /// <summary>
     /// Creates a new <see cref="TagName"/> object with the provided string tag name.
@@ -95,7 +107,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// The <c>Member</c> of a tag name represents the last member name of the string. This is the string after the final
     /// member separator character.
     /// </remarks>
-    public string Member => Members.Last();
+    public string Member => Regex.Match(_tagName, MemberPattern).Value;
 
     /// <summary>
     /// Returns a collection of string names representing each individual member of the full tag name value.
@@ -116,7 +128,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
     /// are descendent member names of the root tag 'MyTag' member.
     /// </remarks>
-    public int Depth => Members.Count() - 1;
+    public int Depth => Regex.Matches(_tagName, SeparatorPattern).Count;
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="TagName"/> value is empty.
@@ -149,7 +161,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     {
         if (string.IsNullOrEmpty(right)) return left;
         
-        if (right[0] == ArrayBracketStart || right[0] == MemberSeparator)
+        if (right[0] == ArraySeparator || right[0] == MemberSeparator)
             return new TagName($"{left}{right}");
         
         return new TagName($"{left}{MemberSeparator}{right}");
@@ -279,7 +291,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
 
         foreach (var member in members)
         {
-            if (!(member.StartsWith(ArrayBracketStart) || member.StartsWith(MemberSeparator)) && builder.Length > 1)
+            if (!(member.StartsWith(ArraySeparator) || member.StartsWith(MemberSeparator)) && builder.Length > 1)
                 builder.Append(MemberSeparator);
 
             builder.Append(member);
