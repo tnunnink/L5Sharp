@@ -326,7 +326,7 @@ public class TagNameComparer : IEqualityComparer<TagName>
     {
         if (ReferenceEquals(x, y)) return true;
         if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
-        return x.Equals(y);
+        return string.Equals(x.ToString(), y.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 
     /// <inheritdoc />
