@@ -175,7 +175,7 @@ public class TagDictionary : IEnumerable<Tag>
 
         foreach (var container in _tags)
         {
-            if (container.Value.TryGetValue(tagName, out var element))
+            if (container.Value.TryGetValue(tagName.Root, out var element))
                 results.Add(new Tag(element));
         }
 

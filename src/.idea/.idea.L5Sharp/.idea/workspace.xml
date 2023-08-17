@@ -7,25 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TagDictionaryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/CatalogEntry.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/CatalogEntry.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/ModuleCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/ModuleCatalog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/PortInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/PortInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/L5Sharp.Extensions.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/L5Sharp.Extensions.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/ModuleExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/ModuleExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/RungExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/RungExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/TagDictionary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/TagDictionary.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/TagExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/TagExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentMergeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentMergeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixCatalogTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixCatalogTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixExtensionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixExtensionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TagExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TagExtensionsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/L5Sharp.Performance.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/L5Sharp.Performance.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" afterDir="false" />
-    </list>
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="updated versions" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -81,20 +63,17 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/ba/836aeb60/TagNameComparer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/be/99a637b1/TagMember.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b83136e25b969e8651140cb2bfccdf77bcef866584ea32cca75bc4e4b478b67/ObjectExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Enums/DataFormat.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixData.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixElement.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Common/TagName.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Extensions/Catalog/CatalogEntry.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Extensions/Catalog/ModuleCatalog.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/L5Sharp.Extensions/DataTypeExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Core.Tests/ProofTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Core.Tests/LogixContentMergeTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Extensions.Tests/LogixTypeExtensionsTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Extensions.Tests/LogixCatalogTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Extensions.Tests/LogixExtensionTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Extensions.Tests/TagExtensionsTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -375,7 +354,7 @@
       <workItem from="1691850041212" duration="18950000" />
       <workItem from="1692062034129" duration="950000" />
       <workItem from="1692107016442" duration="19313000" />
-      <workItem from="1692213662519" duration="9897000" />
+      <workItem from="1692213662519" duration="15302000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -720,7 +699,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="293" />
+    <option name="localTasksCounter" value="297" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -730,7 +709,7 @@
     <option name="coveragePercentColumnWidth" value="33" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="322" />
+    <option name="symbolColumnWidth" value="375" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -756,10 +735,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="ArrayType.cs fixes and optimizations." />
-    <MESSAGE value="removed L5XException.cs and added extension for throwing invalid operation exception as replacement." />
-    <MESSAGE value="testing alarm types. removed un-serialized properties" />
-    <MESSAGE value="separated extensions from core functionality by creating new project to contains all current and future extension methods. Reorganized files and namespaces." />
     <MESSAGE value="reorg for test solutions." />
     <MESSAGE value="reorg, project names changes, documentation" />
     <MESSAGE value="finishing properties for main components and updating comments/docs" />
@@ -781,7 +756,11 @@
     <MESSAGE value="Testing and fix to StringType.cs to add '' characters to serialized output." />
     <MESSAGE value="Update to Tag API. Made Scope.cs part of base model. Updated enums. More testings. Added performance testing for Tag lookup to see if we lost any speed with new updates. Attempting to optimize deserialization of tag data and tag objects as much as possible. reorganized some extensions." />
     <MESSAGE value="updated version" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated version" />
+    <MESSAGE value="updated TagNameComparer.Qualified comparison to use string ordinal ignore case comparison." />
+    <MESSAGE value="TagDictionary.cs and extension development for optimized serach of tag objects in L5X" />
+    <MESSAGE value="removed performance project" />
+    <MESSAGE value="updated versions" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated versions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
