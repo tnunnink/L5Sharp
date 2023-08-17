@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Catalog;
+﻿namespace L5Sharp.Extensions.Catalog;
 
 /// <summary>
 /// A entity class representing the data returned from a module catalog entry.

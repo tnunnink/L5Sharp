@@ -75,24 +75,5 @@ public class TagExtensionsTests
         return Verify(xml);
     }
 
-    [Test]
-    public void TagDictionary_WhenCalled_ShouldNotBeNull()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var dictionary = content.TagDictionary();
-
-        dictionary.Should().NotBeNull();
-    }
-    
-    [Test]
-    public void TagDictionaryFind_ExistingTag_ShouldWorkFast()
-    {
-        var content = LogixContent.Load(Known.Test);
-        var dictionary = content.TagDictionary();
-
-        var tag = dictionary.Find("TestSimpleTag.DintMember.1");
-
-        tag.Should().NotBeNull();
-    }
+   
 }

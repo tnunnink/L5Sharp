@@ -31,26 +31,6 @@ public class LogixExtensionTests
     }
     
     [Test]
-    public void Tags_WhenCalled_GetsAllTagsEverywhereIncludingModuleAndAoi()
-    {
-        var content = LogixContent.Load(Known.Test);
-        
-        var tags = content.Tags().ToList();
-
-        tags.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void FindByTagName_ValidTagNameWithDefaultComparer_ShouldHaveExpectedCount()
-    {
-        var content = LogixContent.Load(Known.Test);
-
-        var results = content.Tags().Find("LocalComplex.CounterMember.PRE", TagNameComparer.Qualified).ToList();
-
-        results.Should().HaveCount(1);
-    }
-    
-    [Test]
     public void Names_WhenCalled_ContainsExpectedNames()
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };

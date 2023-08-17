@@ -41,7 +41,7 @@ public static class RungExtensions
         var code = new List<NeutralText>();
         var collection = rungs.ToList();
 
-        var content = collection.FirstOrDefault()?.Content();
+        var content = collection.FirstOrDefault()?.L5X();
         if (content is null)
             throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
 
@@ -68,18 +68,5 @@ public static class RungExtensions
         }
 
         return code;
-    }
-
-    /// <summary>
-    /// Filters the current collection to text contained in the specified container.
-    /// </summary>
-    /// <param name="rungs">The collection of <see cref="Rung"/> to filter.</param>
-    /// <param name="container">The container name in which to filter the text collection.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Rung"/> filtered to the specific container..</returns>
-    /// <remarks><c>container</c> can be either a program, routine, or instruction name. You can also chain calls in any order
-    /// to scope the rung collection to a specific combination of program/routine or instruction/routine.</remarks>
-    public static IEnumerable<Rung> In(this IEnumerable<Rung> rungs, string container)
-    {
-        return rungs.Where(r => r.ScopeName() == container);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Catalog;
 using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Enums;

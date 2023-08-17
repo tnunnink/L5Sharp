@@ -8,41 +8,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/L5Sharp.Extensions/TagDictionary.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Components/TagTests.SetDescription_OnMemberTag_ShouldCreateAndUpdateCommentsElement.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Components/TagTests.SetDescription_OnRoot_ShouldUpdateRootDescriptionElement.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/TagPerformanceTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/L5Sharp.Performance.Tests.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TagDictionaryTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/DataFormat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Enums/DataFormat.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Enums/Scope.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/CatalogEntry.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/CatalogEntry.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/ModuleCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/ModuleCatalog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/PortInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/Catalog/PortInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/L5Sharp.Extensions.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/L5Sharp.Extensions.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/ModuleExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/ModuleExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/RungExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/RungExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/TagDictionary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/TagDictionary.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Extensions/TagExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Extensions/TagExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.sln" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Components/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Enums/ScopeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Enums/ScopeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/L5Sharp.Core.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/L5Sharp.Core.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProofTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/ProofTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Types/Custom/MyNestedTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Types/Custom/MyNestedTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Types/Custom/MySimpleTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Types/Custom/MySimpleTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/L5Sharp.Extensions.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/L5Sharp.Extensions.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixTypeExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixTypeExtensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentMergeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/LogixContentMergeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixCatalogTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixCatalogTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixExtensionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/LogixExtensionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TagExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TagExtensionsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TestTypes/MyNestedType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/Types/MyNestedType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TestTypes/MySimpleType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/Types/MySimpleType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/L5Sharp.Samples.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/L5Sharp.Samples.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Sample.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Sample.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Types/MyNestedType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Types/Custom/MyNestedType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Types/MySimpleType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Types/Custom/MySimpleType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/L5Sharp.Performance.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/L5Sharp.Performance.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,16 +71,22 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItemDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/nunit/nunit/c933a883ea25263ec575a654dae69fa38000edd9/src/NUnitFramework/framework/Internal/Reflect.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4293f3fa21d447708ff0dc6da7e4b1b15fa00/2f/99313342/LogixExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/65f43d2b821d47babc04d87df19c61695ea00/7e/ccc54a7c/TagNameComparer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/79c168b1be96433fb0378c8c43bf3523a378/87/9e60cd5d/BitArray.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/be35e8e0a22e49eb829d2c52a1e087607778/4c/b468309b/XName.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/41/8e3c2160/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/74/263f747c/Tag.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/8e/a32b1a18/TagName.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/a0/f4402a65/ILogixTag.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/8e/a32b1a18/TagName.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/a0/f4402a65/ILogixTag.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/ba/836aeb60/TagNameComparer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ddc2631f0c944969970637c3c348aad17e800/be/99a637b1/TagMember.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b83136e25b969e8651140cb2bfccdf77bcef866584ea32cca75bc4e4b478b67/ObjectExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Enums/DataFormat.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixData.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Types/ArrayType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/L5Sharp.Extensions/DataTypeExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Core.Tests/ProofTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -106,7 +94,7 @@
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Core.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Extensions.Tests/LogixTypeExtensionsTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Performance.Tests/TagTests.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -386,7 +374,8 @@
       <workItem from="1691671939157" duration="21347000" />
       <workItem from="1691850041212" duration="18950000" />
       <workItem from="1692062034129" duration="950000" />
-      <workItem from="1692107016442" duration="14880000" />
+      <workItem from="1692107016442" duration="19313000" />
+      <workItem from="1692213662519" duration="9897000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -731,7 +720,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="291" />
+    <option name="localTasksCounter" value="293" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -767,8 +756,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Atomic and string testing" />
-    <MESSAGE value="Think through Array" />
     <MESSAGE value="ArrayType.cs fixes and optimizations." />
     <MESSAGE value="removed L5XException.cs and added extension for throwing invalid operation exception as replacement." />
     <MESSAGE value="testing alarm types. removed un-serialized properties" />
@@ -792,7 +779,9 @@
     <MESSAGE value="version change" />
     <MESSAGE value="Made Revision.cs based on string value to fix issues with double rounding. Fixed tests" />
     <MESSAGE value="Testing and fix to StringType.cs to add '' characters to serialized output." />
-    <option name="LAST_COMMIT_MESSAGE" value="Testing and fix to StringType.cs to add '' characters to serialized output." />
+    <MESSAGE value="Update to Tag API. Made Scope.cs part of base model. Updated enums. More testings. Added performance testing for Tag lookup to see if we lost any speed with new updates. Attempting to optimize deserialization of tag data and tag objects as much as possible. reorganized some extensions." />
+    <MESSAGE value="updated version" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -64,6 +64,46 @@ public class ProgramTests
     }
 
     [Test]
+    public void AddTag_ValidTag_ShouldHaveExpectedCount()
+    {
+        var program = new Program();
+
+        program.Tags.Add(new Tag { Name = "Test", Value = 1234 });
+
+        program.Tags.Should().HaveCount(1);
+    }
+    
+    [Test]
+    public Task AddTag_ValidTag_ShouldBeVerified()
+    {
+        var program = new Program();
+
+        program.Tags.Add(new Tag { Name = "Test", Value = 1234 });
+
+        return Verify(program.Serialize().ToString());
+    }
+
+    [Test]
+    public void AddRoutine_ValidRoutine_ShouldHaveExpectedCount()
+    {
+        var program = new Program();
+
+        program.Routines.Add(new Routine { Name = "Test", Description = "This is a test", Type = RoutineType.RLL });
+
+        program.Routines.Should().HaveCount(1);
+    }
+    
+    [Test]
+    public Task AddRoutine_ValidRoutine_ShouldBeVerified()
+    {
+        var program = new Program();
+
+        program.Routines.Add(new Routine { Name = "Test", Description = "This is a test", Type = RoutineType.RLL });
+
+        return Verify(program.Serialize().ToString());
+    }
+
+    [Test]
     public Task Serialize_Initialized_ShouldBeVerified()
     {
         var program = new Program

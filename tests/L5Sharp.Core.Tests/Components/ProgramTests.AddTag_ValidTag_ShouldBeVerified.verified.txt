@@ -1,0 +1,10 @@
+﻿<Program Name="" Type="Normal" TestEdits="false" Disabled="false" UseAsFolder="false">
+  <Tags>
+    <Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal">
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Radix="Decimal" Value="1234" />
+      </Data>
+    </Tag>
+  </Tags>
+  <Routines />
+</Program>

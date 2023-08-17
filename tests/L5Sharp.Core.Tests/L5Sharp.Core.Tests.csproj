@@ -212,6 +212,9 @@
       <None Update="Components\TagTests.SetDescription_OnMemberTag_ShouldCreateAndUpdateCommentsElement.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
+      <None Update="Components\ProgramTests.AddRoutine_ValidRoutine_ShouldBeVerified.verified.txt">
+        <DependentUpon>ProgramTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

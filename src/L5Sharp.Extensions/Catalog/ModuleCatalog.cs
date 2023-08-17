@@ -5,9 +5,8 @@ using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Components;
-using L5Sharp.Extensions.Catalog;
 
-namespace L5Sharp.Catalog
+namespace L5Sharp.Extensions.Catalog
 {
     /// <summary>
     /// A service that allows lookups for <see cref="CatalogEntry"/> objects based on catalog numbers.
@@ -148,7 +147,7 @@ namespace L5Sharp.Catalog
                 var major = revision.Attribute(Number)?.Value;
                 var minor = revision.Attribute(DefaultMinorRev)?.Value;
 
-                yield return Revision.Parse($"{major}.{minor}");
+                yield return new Revision($"{major}.{minor}");
             }
         }
 

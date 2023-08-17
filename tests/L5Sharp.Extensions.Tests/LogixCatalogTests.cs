@@ -1,5 +1,5 @@
 using FluentAssertions;
-using L5Sharp.Catalog;
+using L5Sharp.Extensions.Catalog;
 
 namespace L5Sharp.Extensions.Tests
 {
