@@ -1,0 +1,556 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Struct TaskPriority
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Struct TaskPriority
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Common_TaskPriority.md&amp;value=---%0Auid%3A%20L5Sharp.Common.TaskPriority%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="L5Sharp.Common.TaskPriority">
+
+
+
+  <h1 id="L5Sharp_Common_TaskPriority" data-uid="L5Sharp.Common.TaskPriority" class="text-break">
+    Struct TaskPriority
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Common.html">Common</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A configurable property of a <a class="xref" href="L5Sharp.Components.Task.html">Task</a> that controls the order in which the Logix Controller
+will scan the given Task.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly struct TaskPriority : IEquatable&lt;TaskPriority&gt;</code></pre>
+  </div>
+
+
+
+
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="L5Sharp_Common_TaskPriority_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p><a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a> is a simple byte value that must be between 1 and 15.
+Attempting to set the <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a> to a value outside that range will result in an
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a>.
+This parameter will control the scan order of task components as related to other tasks.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="L5Sharp_Common_TaskPriority__ctor_" data-uid="L5Sharp.Common.TaskPriority.#ctor*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority__ctor_System_Byte_" data-uid="L5Sharp.Common.TaskPriority.#ctor(System.Byte)">
+  TaskPriority(byte)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new instance of <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a> with the provided value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TaskPriority(byte priority)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>priority</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>The value of the priority. Must be a value between 1 and 15.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>priority is less than 1 -or- greater than 15.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="L5Sharp_Common_TaskPriority_Equals_" data-uid="L5Sharp.Common.TaskPriority.Equals*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_Equals_L5Sharp_Common_TaskPriority_" data-uid="L5Sharp.Common.TaskPriority.Equals(L5Sharp.Common.TaskPriority)">
+  Equals(TaskPriority)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(TaskPriority other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>An object to compare with this object.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the current object is equal to the <code class="paramref">other</code> parameter; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Common_TaskPriority_Equals_" data-uid="L5Sharp.Common.TaskPriority.Equals*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_Equals_System_Object_" data-uid="L5Sharp.Common.TaskPriority.Equals(System.Object)">
+  Equals(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The object to compare with the current instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">obj</code> and this instance are the same type and represent the same value; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Common_TaskPriority_GetHashCode_" data-uid="L5Sharp.Common.TaskPriority.GetHashCode*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_GetHashCode" data-uid="L5Sharp.Common.TaskPriority.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A 32-bit signed integer that is the hash code for this instance.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Common_TaskPriority_Parse_" data-uid="L5Sharp.Common.TaskPriority.Parse*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_Parse_System_String_" data-uid="L5Sharp.Common.TaskPriority.Parse(System.String)">
+  Parse(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses a string value into a <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TaskPriority Parse(string str)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>str</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The string to parse.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a> value if the parse was successful; otherwise; the default value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Common_TaskPriority_ToString_" data-uid="L5Sharp.Common.TaskPriority.ToString*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_ToString" data-uid="L5Sharp.Common.TaskPriority.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the fully qualified type name of this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The fully qualified type name.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="L5Sharp_Common_TaskPriority_op_Equality_" data-uid="L5Sharp.Common.TaskPriority.op_Equality*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_op_Equality_L5Sharp_Common_TaskPriority_L5Sharp_Common_TaskPriority_" data-uid="L5Sharp.Common.TaskPriority.op_Equality(L5Sharp.Common.TaskPriority,L5Sharp.Common.TaskPriority)">
+  operator ==(TaskPriority, TaskPriority)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if the provided objects are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(TaskPriority left, TaskPriority right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if the provided objects are equal; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Common_TaskPriority_op_Implicit_" data-uid="L5Sharp.Common.TaskPriority.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_op_Implicit_L5Sharp_Common_TaskPriority__System_Byte" data-uid="L5Sharp.Common.TaskPriority.op_Implicit(L5Sharp.Common.TaskPriority)~System.Byte">
+  implicit operator byte(TaskPriority)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts a <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a> to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator byte(TaskPriority priority)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>priority</code> <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a> value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Common_TaskPriority_op_Implicit_" data-uid="L5Sharp.Common.TaskPriority.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_op_Implicit_System_Byte__L5Sharp_Common_TaskPriority" data-uid="L5Sharp.Common.TaskPriority.op_Implicit(System.Byte)~L5Sharp.Common.TaskPriority">
+  implicit operator TaskPriority(byte)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a> to a <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator TaskPriority(byte priority)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>priority</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a> value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Common_TaskPriority_op_Inequality_" data-uid="L5Sharp.Common.TaskPriority.op_Inequality*"></a>
+
+  <h3 id="L5Sharp_Common_TaskPriority_op_Inequality_L5Sharp_Common_TaskPriority_L5Sharp_Common_TaskPriority_" data-uid="L5Sharp.Common.TaskPriority.op_Inequality(L5Sharp.Common.TaskPriority,L5Sharp.Common.TaskPriority)">
+  operator !=(TaskPriority, TaskPriority)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if the provided objects are not equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(TaskPriority left, TaskPriority right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+    <dt><code>right</code> <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
+    <dd><p>An object to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>true if the provided objects are not equal; otherwise, false.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Common/TaskPriority.cs/#L16" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

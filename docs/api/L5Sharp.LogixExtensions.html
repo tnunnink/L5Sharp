@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_LogixExtensions" data-uid="L5Sharp.LogixExtensions" class="text-break">
     Class LogixExtensions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -143,52 +143,11 @@
 </h2>
 
 
-  <a id="L5Sharp_LogixExtensions_BuildUserTypes_" data-uid="L5Sharp.LogixExtensions.BuildUserTypes*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_BuildUserTypes_L5Sharp_Types_ComplexType_" data-uid="L5Sharp.LogixExtensions.BuildUserTypes(L5Sharp.Types.ComplexType)">
-  BuildUserTypes(ComplexType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L160"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Traverses the type/member hierarchy of the <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> data and builds a collection of
-<a class="xref" href="L5Sharp.Components.DataType.html">DataType</a> objects based on all the user defined types in the tree.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;DataType&gt; BuildUserTypes(this ComplexType type)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>type</code> <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a></dt>
-    <dd><p>The structure type for which to generate a list of user defined type objects.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.DataType.html">DataType</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing a <a class="xref" href="L5Sharp.Components.DataType.html">DataType</a> for each user type in the
-structure's type/member hierarchy</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
   <a id="L5Sharp_LogixExtensions_Contains_" data-uid="L5Sharp.LogixExtensions.Contains*"></a>
 
   <h3 id="L5Sharp_LogixExtensions_Contains__1_L5Sharp_LogixContainer___0__System_String_" data-uid="L5Sharp.LogixExtensions.Contains``1(L5Sharp.LogixContainer{``0},System.String)">
   Contains&lt;TComponent&gt;(LogixContainer&lt;TComponent&gt;, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines if a component with the specified name exists in the container.</p>
@@ -231,100 +190,11 @@ structure's type/member hierarchy</p>
 
 
 
-  <a id="L5Sharp_LogixExtensions_Content_" data-uid="L5Sharp.LogixExtensions.Content*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_" data-uid="L5Sharp.LogixExtensions.Content(L5Sharp.ILogixSerializable)">
-  Content(ILogixSerializable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L34"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the element's attached <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a> instance if it exists.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static LogixContent? Content(this ILogixSerializable element)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>element</code> <a class="xref" href="L5Sharp.ILogixSerializable.html">ILogixSerializable</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a></dt>
-    <dd><p>If the current element is attached to a L5X document (i.e. has a root content element),
-then a new <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a> instance wrapping the root; Otherwise, <code>null</code>.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This allows attached logix elements to reach back up to the content file in order to traverse or retrieve
-other elements in the L5X. This is helpful for other extensions that need rely on the L5X to perform functions.</p>
-</div>
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_DependentsOf_" data-uid="L5Sharp.LogixExtensions.DependentsOf*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_DependentsOf_L5Sharp_LogixContainer_L5Sharp_Components_DataType__System_String_" data-uid="L5Sharp.LogixExtensions.DependentsOf(L5Sharp.LogixContainer{L5Sharp.Components.DataType},System.String)">
-  DependentsOf(LogixContainer&lt;DataType&gt;, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L142"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Returns all <a class="xref" href="L5Sharp.Components.DataType.html">DataType</a> instances that are dependent on the specified data type name.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;DataType&gt; DependentsOf(this LogixContainer&lt;DataType&gt; dataTypes, string name)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>dataTypes</code> <a class="xref" href="L5Sharp.LogixContainer-1.html">LogixContainer</a>&lt;<a class="xref" href="L5Sharp.Components.DataType.html">DataType</a>&gt;</dt>
-    <dd><p>The logix collection of data types.</p>
-</dd>
-    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The name of the data type for which to find dependencies.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.DataType.html">DataType</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> of <a class="xref" href="L5Sharp.Components.DataType.html">DataType</a> that are dependent on the specified data type name.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_DependentsOf_L5Sharp_LogixContainer_L5Sharp_Components_DataType__System_String__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This extension serves as an example of how one could extend the API of specific component collections to
-add custom XML queries against the source L5X and return materialized components.</p>
-</div>
-
-
-
-
   <a id="L5Sharp_LogixExtensions_Find_" data-uid="L5Sharp.LogixExtensions.Find*"></a>
 
   <h3 id="L5Sharp_LogixExtensions_Find__1_L5Sharp_LogixContainer___0__System_String_" data-uid="L5Sharp.LogixExtensions.Find``1(L5Sharp.LogixContainer{``0},System.String)">
   Find&lt;TComponent&gt;(LogixContainer&lt;TComponent&gt;, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a component with the specified name if it exists in the container, otherwise returns <code>null</code>.</p>
@@ -368,57 +238,11 @@ add custom XML queries against the source L5X and return materialized components
 
 
 
-  <a id="L5Sharp_LogixExtensions_Flatten_" data-uid="L5Sharp.LogixExtensions.Flatten*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Flatten_System_Collections_Generic_IEnumerable_L5Sharp_Elements_Rung__" data-uid="L5Sharp.LogixExtensions.Flatten(System.Collections.Generic.IEnumerable{L5Sharp.Elements.Rung})">
-  Flatten(IEnumerable&lt;Rung&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L374"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Returns a flat list of <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> representing all base and nested AOI logic in the
-collection of <a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a> objects.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;NeutralText&gt; Flatten(this IEnumerable&lt;Rung&gt; rungs)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>rungs</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a>&gt;</dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing all the <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>, including nested instruction
-text, found in the rung collection.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_Flatten_System_Collections_Generic_IEnumerable_L5Sharp_Elements_Rung___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This extension was specifically created to assist in getting a flat list of logic, including
-nested AOI logic, for specialized querying purposes, such as finding tag references within nested logic.
-This method will replace the instruction logic parameters with the neutral text operands of the instruction signature,
-so to get the effective flattened list of executing <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> code.</p>
-</div>
-
-
-
-
   <a id="L5Sharp_LogixExtensions_Get_" data-uid="L5Sharp.LogixExtensions.Get*"></a>
 
   <h3 id="L5Sharp_LogixExtensions_Get__1_L5Sharp_LogixContainer___0__System_String_" data-uid="L5Sharp.LogixExtensions.Get``1(L5Sharp.LogixContainer{``0},System.String)">
   Get&lt;TComponent&gt;(LogixContainer&lt;TComponent&gt;, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a component with the specified name from the container.</p>
@@ -468,268 +292,14 @@ so to get the effective flattened list of executing <a class="xref" href="L5Shar
 
 
 
-  <a id="L5Sharp_LogixExtensions_IP_" data-uid="L5Sharp.LogixExtensions.IP*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_IP_L5Sharp_Components_Module_" data-uid="L5Sharp.LogixExtensions.IP(L5Sharp.Components.Module)">
-  IP(Module)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L289"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the IP address of the current module if one exists. If the module does not have an IP, returns null.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IPAddress? IP(this Module module)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>module</code> <a class="xref" href="L5Sharp.Components.Module.html">Module</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.ipaddress">IPAddress</a></dt>
-    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.ipaddress">IPAddress</a> representing the IP of the module.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_IP_L5Sharp_Components_Module__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This is a helper property that just looks for <a class="xref" href="L5Sharp.Elements.Port.html">Port</a> for an Ethernet port with a
-valid IP address.</p>
-</div>
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_In_" data-uid="L5Sharp.LogixExtensions.In*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_In_System_Collections_Generic_IEnumerable_L5Sharp_Components_Tag__L5Sharp_Enums_Scope_" data-uid="L5Sharp.LogixExtensions.In(System.Collections.Generic.IEnumerable{L5Sharp.Components.Tag},L5Sharp.Enums.Scope)">
-  In(IEnumerable&lt;Tag&gt;, Scope)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L212"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Returns a filtered collection of <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> that have the specified <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> value.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;Tag&gt; In(this IEnumerable&lt;Tag&gt; tags, Scope scope)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>tags</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.Tag.html">Tag</a>&gt;</dt>
-    <dd><p>A collection of <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> objects.</p>
-</dd>
-    <dt><code>scope</code> <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a></dt>
-    <dd><p>The <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> to filter the tags for.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.Tag.html">Tag</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing tags in the specified program.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_In_" data-uid="L5Sharp.LogixExtensions.In*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_In_System_Collections_Generic_IEnumerable_L5Sharp_Components_Tag__System_String_" data-uid="L5Sharp.LogixExtensions.In(System.Collections.Generic.IEnumerable{L5Sharp.Components.Tag},System.String)">
-  In(IEnumerable&lt;Tag&gt;, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L201"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Returns a filtered collection of <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> that are contained in the specified program name.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;Tag&gt; In(this IEnumerable&lt;Tag&gt; tags, string programName)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>tags</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.Tag.html">Tag</a>&gt;</dt>
-    <dd><p>A collection of <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> objects.</p>
-</dd>
-    <dt><code>programName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The program name to filter the tags for.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.Tag.html">Tag</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing tags in the specified program.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_In_" data-uid="L5Sharp.LogixExtensions.In*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_In_System_Collections_Generic_IEnumerable_L5Sharp_Elements_Rung__System_String_" data-uid="L5Sharp.LogixExtensions.In(System.Collections.Generic.IEnumerable{L5Sharp.Elements.Rung},System.String)">
-  In(IEnumerable&lt;Rung&gt;, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L416"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Filters the current collection to text contained in the specified container.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;Rung&gt; In(this IEnumerable&lt;Rung&gt; rungs, string container)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>rungs</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a>&gt;</dt>
-    <dd><p>The collection of <a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a> to filter.</p>
-</dd>
-    <dt><code>container</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The container name in which to filter the text collection.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing <a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a> filtered to the specific container..</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_In_System_Collections_Generic_IEnumerable_L5Sharp_Elements_Rung__System_String__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p><code>container</code> can be either a program, routine, or instruction name. You can also chain calls in any order
-to scope the rung collection to a specific combination of program/routine or instruction/routine.</p>
-</div>
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_IsComponentName_" data-uid="L5Sharp.LogixExtensions.IsComponentName*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_IsComponentName_System_String_" data-uid="L5Sharp.LogixExtensions.IsComponentName(System.String)">
-  IsComponentName(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L519"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Tests the current string to indicate whether it is a valid Logix component name value.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsComponentName(this string name)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The string name to test.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p><code>true</code> if <code>name</code> passes the Logix component name requirements; otherwise, <code>false</code>.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_IsComponentName_System_String__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Valid name must contain only alphanumeric or underscores, start with a letter or underscore,
-and be between 1 and 40 characters.</p>
-</div>
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_IsEmpty_" data-uid="L5Sharp.LogixExtensions.IsEmpty*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_IsEmpty_System_String_" data-uid="L5Sharp.LogixExtensions.IsEmpty(System.String)">
-  IsEmpty(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L508"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Determines if the current string is equal to string.Empty.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsEmpty(this string value)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The string input to analyze.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>true if the string is empty. Otherwise false.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
   <a id="L5Sharp_LogixExtensions_IsTagName_" data-uid="L5Sharp.LogixExtensions.IsTagName*"></a>
 
   <h3 id="L5Sharp_LogixExtensions_IsTagName_System_String_" data-uid="L5Sharp.LogixExtensions.IsTagName(System.String)">
   IsTagName(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L533"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Determines if the current string is a value <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> string.</p>
+  <div class="markdown level1 summary"><p>Determines if the current string is a value <a class="xref" href="L5Sharp.Common.TagName.html">TagName</a> string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -761,60 +331,11 @@ and be between 1 and 40 characters.</p>
 
 
 
-  <a id="L5Sharp_LogixExtensions_Logic_" data-uid="L5Sharp.LogixExtensions.Logic*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Logic_L5Sharp_Components_AddOnInstruction_L5Sharp_Core_NeutralText_" data-uid="L5Sharp.LogixExtensions.Logic(L5Sharp.Components.AddOnInstruction,L5Sharp.Core.NeutralText)">
-  Logic(AddOnInstruction, NeutralText)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L236"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Returns the AOI instruction logic with the parameters of the instruction replaced with the provided neutral
-text signature arguments.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;NeutralText&gt; Logic(this AddOnInstruction instruction, NeutralText text)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>instruction</code> <a class="xref" href="L5Sharp.Components.AddOnInstruction.html">AddOnInstruction</a></dt>
-    <dd><p>The <a class="xref" href="L5Sharp.Components.AddOnInstruction.html">AddOnInstruction</a> component.</p>
-</dd>
-    <dt><code>text</code> <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
-    <dd><p>The text signature of the instruction arguments.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> representing all the instruction's
-logic, with each instruction parameter tag name replaced with the arguments from the provided text.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_Logic_L5Sharp_Components_AddOnInstruction_L5Sharp_Core_NeutralText__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This is helpful when trying to perform deep analysis on logic. By &quot;flattening&quot; the logic we can
-reason or evaluate it as if it was written in line. Currently only supports <a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a>
-content or code type.</p>
-</div>
-
-
-
-
   <a id="L5Sharp_LogixExtensions_LogixName_" data-uid="L5Sharp.LogixExtensions.LogixName*"></a>
 
   <h3 id="L5Sharp_LogixExtensions_LogixName_System_Xml_Linq_XElement_" data-uid="L5Sharp.LogixExtensions.LogixName(System.Xml.Linq.XElement)">
   LogixName(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L471"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <code>Name</code> attribute value for the current <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
@@ -835,7 +356,7 @@ content or code type.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the name value.</p>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the name value if found; Otherwise, <code>empty</code>.</p>
 </dd>
   </dl>
 
@@ -853,134 +374,11 @@ the code more concise.</p>
 
 
 
-  <a id="L5Sharp_LogixExtensions_ModuleTagName_" data-uid="L5Sharp.LogixExtensions.ModuleTagName*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_ModuleTagName_System_Xml_Linq_XNode_System_String_" data-uid="L5Sharp.LogixExtensions.ModuleTagName(System.Xml.Linq.XNode,System.String)">
-  ModuleTagName(XNode, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L479"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>A helper for determining a <code>Module</code> tag name for an input, output, or config tag element.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string ModuleTagName(this XNode element, string suffix = &quot;C&quot;)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xnode">XNode</a></dt>
-    <dd><p>The current module tag element.</p>
-</dd>
-    <dt><code>suffix</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The string suffix to append to the determines tag name. Default is 'C' for config tag.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the tag name of the module tag.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_Modules_" data-uid="L5Sharp.LogixExtensions.Modules*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Modules_L5Sharp_Components_Module_" data-uid="L5Sharp.LogixExtensions.Modules(L5Sharp.Components.Module)">
-  Modules(Module)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L314"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the child modules of this module component.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;Module&gt; Modules(this Module module)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>module</code> <a class="xref" href="L5Sharp.Components.Module.html">Module</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.Module.html">Module</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> of <a class="xref" href="L5Sharp.Components.Module.html">Module</a> components that have the parent module configured
-as the current module.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_Parent_" data-uid="L5Sharp.LogixExtensions.Parent*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Parent_L5Sharp_Components_Module_" data-uid="L5Sharp.LogixExtensions.Parent(L5Sharp.Components.Module)">
-  Parent(Module)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L301"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the parent module of this module component.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Module? Parent(this Module module)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>module</code> <a class="xref" href="L5Sharp.Components.Module.html">Module</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Components.Module.html">Module</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Components.Module.html">Module</a> representing the parent of this module if it exists; otherwise, <code>null</code>.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_Parent_L5Sharp_Components_Module__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This method relies on the object being attached to the L5X hierarchy in order to find it's parent. If the module
-was created in memory and not yet added to the L5X, then this method will return <code>null</code>.</p>
-</div>
-
-
-
-
   <a id="L5Sharp_LogixExtensions_Remove_" data-uid="L5Sharp.LogixExtensions.Remove*"></a>
 
   <h3 id="L5Sharp_LogixExtensions_Remove__1_L5Sharp_LogixContainer___0__System_String_" data-uid="L5Sharp.LogixExtensions.Remove``1(L5Sharp.LogixContainer{``0},System.String)">
   Remove&lt;TComponent&gt;(LogixContainer&lt;TComponent&gt;, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a component with the specified name from the container.</p>
@@ -1017,289 +415,11 @@ was created in memory and not yet added to the L5X, then this method will return
 
 
 
-  <a id="L5Sharp_LogixExtensions_Routine_" data-uid="L5Sharp.LogixExtensions.Routine*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Routine_L5Sharp_Elements_Rung_" data-uid="L5Sharp.LogixExtensions.Routine(L5Sharp.Elements.Rung)">
-  Routine(Rung)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L355"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the parent <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Routine_L5Sharp_Elements_Rung_">Routine(Rung)</a> of this <a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a> instance if it is attached.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Routine? Routine(this Rung rung)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>rung</code> <a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a></dt>
-    <dd><p>The current <a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a> object.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Components.Routine.html">Routine</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Routine_L5Sharp_Elements_Rung_">Routine(Rung)</a> instance representing the containing routine of the rung if found; Otherwise, <code>null</code>.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_Scope_" data-uid="L5Sharp.LogixExtensions.Scope*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_" data-uid="L5Sharp.LogixExtensions.Scope(L5Sharp.LogixElement)">
-  Scope(LogixElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L50"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The scope type of the component.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Scope Scope(this LogixElement component)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>component</code> <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> option indicating the container type for the scoped component.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_ScopeName_" data-uid="L5Sharp.LogixExtensions.ScopeName*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_" data-uid="L5Sharp.LogixExtensions.ScopeName(L5Sharp.LogixElement)">
-  ScopeName(LogixElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L58"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The scope name of the component.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string ScopeName(this LogixElement component)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>component</code> <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the container (program, controller, routine) name of the component.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_Slot_" data-uid="L5Sharp.LogixExtensions.Slot*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Slot_L5Sharp_Components_Module_" data-uid="L5Sharp.LogixExtensions.Slot(L5Sharp.Components.Module)">
-  Slot(Module)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L278"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static byte? Slot(this Module module)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>module</code> <a class="xref" href="L5Sharp.Components.Module.html">Module</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>?</dt>
-    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a> representing the slot number of the module.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_Slot_L5Sharp_Components_Module__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This is a helper that just looks for an upstream <a class="xref" href="L5Sharp.Elements.Port.html">Port</a> with a valid slot byte number.</p>
-</div>
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_Tags_" data-uid="L5Sharp.LogixExtensions.Tags*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_Tags_L5Sharp_Components_Module_" data-uid="L5Sharp.LogixExtensions.Tags(L5Sharp.Components.Module)">
-  Tags(Module)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L327"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Returns a collection of all non-null <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> objects for the current Module, including all
-input, output, and config tags.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;Tag&gt; Tags(this Module module)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>module</code> <a class="xref" href="L5Sharp.Components.Module.html">Module</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Components.Tag.html">Tag</a>&gt;</dt>
-    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing the base tags for the Module.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_ToTagLookup_" data-uid="L5Sharp.LogixExtensions.ToTagLookup*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_ToTagLookup_System_Collections_Generic_IEnumerable_L5Sharp_Core_NeutralText__" data-uid="L5Sharp.LogixExtensions.ToTagLookup(System.Collections.Generic.IEnumerable{L5Sharp.Core.NeutralText})">
-  ToTagLookup(IEnumerable&lt;NeutralText&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L435"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Returns all referenced tag names and their corresponding list of <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> logic references in
-the current collection of <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Dictionary&lt;TagName, List&lt;NeutralText&gt;&gt; ToTagLookup(this IEnumerable&lt;NeutralText&gt; text)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>text</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;</dt>
-    <dd><p>A collection of <a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a> rung logic.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="L5Sharp.Core.TagName.html">TagName</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a>&gt;&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary&lt;TKey, TValue&gt;</a> where each tag name is a key and it's corresponding value is
-a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List&lt;T&gt;</a> containing all the logic referencing the tag found in the file.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixExtensions_ToTagLookup_System_Collections_Generic_IEnumerable_L5Sharp_Core_NeutralText___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This is useful for performing quick lookup of logic references by tag name.</p>
-</div>
-
-
-
-
-  <a id="L5Sharp_LogixExtensions_ToTagName_" data-uid="L5Sharp.LogixExtensions.ToTagName*"></a>
-
-  <h3 id="L5Sharp_LogixExtensions_ToTagName_System_String_" data-uid="L5Sharp.LogixExtensions.ToTagName(System.String)">
-  ToTagName(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L541"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Converts this string value to a <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TagName ToTagName(this string value)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The string value.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> containing the text representing the tag name value.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixExtensions.cs/#L21" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixExtensions.cs/#L16" class="edit-link">Edit this page</a>
         </div>
 
         

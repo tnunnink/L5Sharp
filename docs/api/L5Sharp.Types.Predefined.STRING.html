@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Types_Predefined_STRING" data-uid="L5Sharp.Types.Predefined.STRING" class="text-break">
     Class STRING
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L10"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -103,6 +103,7 @@
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
       <div><a class="xref" href="L5Sharp.LogixType.html">LogixType</a></div>
+      <div><a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a></div>
       <div><a class="xref" href="L5Sharp.Types.StringType.html">StringType</a></div>
       <div><span class="xref">STRING</span></div>
     </dd>
@@ -122,13 +123,7 @@
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_Name">StringType.Name</a>
-    </div>
-    <div>
       <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_Family">StringType.Family</a>
-    </div>
-    <div>
-      <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_Members">StringType.Members</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_LEN">StringType.LEN</a>
@@ -155,6 +150,12 @@
       <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_SerializeStructure">StringType.SerializeStructure()</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Name">StructureType.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Members">StructureType.Members</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_DataChanged">LogixType.DataChanged</a>
     </div>
     <div>
@@ -177,13 +178,6 @@
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -197,7 +191,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_STRING__ctor" data-uid="L5Sharp.Types.Predefined.STRING.#ctor">
   STRING()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new empty <a class="xref" href="L5Sharp.Types.Predefined.STRING.html">STRING</a> type.</p>
@@ -224,7 +218,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_STRING__ctor_System_String_" data-uid="L5Sharp.Types.Predefined.STRING.#ctor(System.String)">
   STRING(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.Predefined.STRING.html">STRING</a> with the provided value.</p>
@@ -266,10 +260,10 @@
 
   <h3 id="L5Sharp_Types_Predefined_STRING__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Types.Predefined.STRING.#ctor(System.Xml.Linq.XElement)">
   STRING(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -297,8 +291,8 @@
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
     <dd><p><code>element</code> is null.</p>
 </dd>
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
-    <dd><p><code>element</code> does not have a data type attribute.</p>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p><code>element</code> does not have required attributes or child elements.</p>
 </dd>
   </dl>
 
@@ -312,7 +306,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_STRING_Class" data-uid="L5Sharp.Types.Predefined.STRING.Class">
   Class
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L40"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The class (atomic, predefined, user-defined) that the type belongs to.</p>
@@ -349,7 +343,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_STRING_op_Implicit_L5Sharp_Types_Predefined_STRING__System_String" data-uid="L5Sharp.Types.Predefined.STRING.op_Implicit(L5Sharp.Types.Predefined.STRING)~System.String">
   implicit operator string(STRING)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Converts the provided <a class="xref" href="L5Sharp.Types.Predefined.STRING.html">STRING</a> to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> value.</p>
@@ -388,7 +382,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_STRING_op_Implicit_System_String__L5Sharp_Types_Predefined_STRING" data-uid="L5Sharp.Types.Predefined.STRING.op_Implicit(System.String)~L5Sharp.Types.Predefined.STRING">
   implicit operator STRING(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Converts the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> to a <a class="xref" href="L5Sharp.Types.Predefined.STRING.html">STRING</a> value.</p>
@@ -427,7 +421,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/STRING.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/STRING.cs/#L10" class="edit-link">Edit this page</a>
         </div>
 
         

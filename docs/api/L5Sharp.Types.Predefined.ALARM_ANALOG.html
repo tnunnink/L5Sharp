@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Types_Predefined_ALARM_ANALOG" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG" class="text-break">
     Class ALARM_ANALOG
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -160,13 +160,6 @@
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -180,7 +173,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG__ctor" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.#ctor">
   ALARM_ANALOG()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type instance.</p>
@@ -207,7 +200,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.#ctor(System.Xml.Linq.XElement)">
   ALARM_ANALOG(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
@@ -238,8 +231,8 @@
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
     <dd><p><code>element</code> is null.</p>
 </dd>
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
-    <dd><p><code>element</code> does not have required attributes.</p>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p><code>element</code> does not have required attributes or child elements.</p>
 </dd>
   </dl>
 
@@ -253,7 +246,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_AckRequired" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AckRequired">
   AckRequired
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L231"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L173"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_AckRequired">AckRequired</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -281,43 +274,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_AckTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AckTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_AckTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AckTime">
-  AckTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1149"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_AckTime">AckTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT AckTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmCountReset_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AlarmCountReset*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmCountReset" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AlarmCountReset">
   AlarmCountReset
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L555"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L497"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmCountReset">AlarmCountReset</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -345,107 +306,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmCountResetTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AlarmCountResetTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmCountResetTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AlarmCountResetTime">
-  AlarmCountResetTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1167"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmCountResetTime">AlarmCountResetTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT AlarmCountResetTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmLimitsInv_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AlarmLimitsInv*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmLimitsInv" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AlarmLimitsInv">
-  AlarmLimitsInv
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1230"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_AlarmLimitsInv">AlarmLimitsInv</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL AlarmLimitsInv { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_AnyInAlarmUnack_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AnyInAlarmUnack*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_AnyInAlarmUnack" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.AnyInAlarmUnack">
-  AnyInAlarmUnack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L771"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_AnyInAlarmUnack">AnyInAlarmUnack</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL AnyInAlarmUnack { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_Class_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Class*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_Class" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Class">
   Class
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The class (atomic, predefined, user-defined) that the type belongs to.</p>
@@ -474,43 +339,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_Commissioned_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Commissioned*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_Commissioned" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Commissioned">
-  Commissioned
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1023"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_Commissioned">Commissioned</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL Commissioned { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_Deadband_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Deadband*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_Deadband" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Deadband">
   Deadband
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L699"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L641"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_Deadband">Deadband</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -538,75 +371,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_DeadbandInv_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.DeadbandInv*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_DeadbandInv" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.DeadbandInv">
-  DeadbandInv
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1239"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_DeadbandInv">DeadbandInv</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL DeadbandInv { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_Disabled_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Disabled*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_Disabled" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Disabled">
-  Disabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1014"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_Disabled">Disabled</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL Disabled { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_EnableIn_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.EnableIn*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_EnableIn" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.EnableIn">
   EnableIn
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L110"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_EnableIn">EnableIn</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -634,107 +403,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_EnableOut_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.EnableOut*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_EnableOut" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.EnableOut">
-  EnableOut
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L753"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_EnableOut">EnableOut</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL EnableOut { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HAcked_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HAcked*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HAcked" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HAcked">
-  HAcked
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L852"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HAcked">HAcked</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HAcked { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HAlarmCount_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HAlarmCount*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HAlarmCount" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HAlarmCount">
-  HAlarmCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1068"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HAlarmCount">HAlarmCount</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT HAlarmCount { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HEnabled_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HEnabled*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HEnabled" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HEnabled">
   HEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L204"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HEnabled">HEnabled</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -762,75 +435,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHAcked_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHAcked*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHAcked" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHAcked">
-  HHAcked
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L843"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHAcked">HHAcked</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HHAcked { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHAlarmCount_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHAlarmCount*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHAlarmCount" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHAlarmCount">
-  HHAlarmCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1050"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHAlarmCount">HHAlarmCount</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT HHAlarmCount { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHEnabled_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHEnabled*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHEnabled" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHEnabled">
   HHEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L195"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHEnabled">HHEnabled</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -858,107 +467,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarm_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHInAlarm*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarm" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHInAlarm">
-  HHInAlarm
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L780"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarm">HHInAlarm</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HHInAlarm { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarmTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHInAlarmTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarmTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHInAlarmTime">
-  HHInAlarmTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1041"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarmTime">HHInAlarmTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT HHInAlarmTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarmUnack_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHInAlarmUnack*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarmUnack" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHInAlarmUnack">
-  HHInAlarmUnack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L897"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHInAlarmUnack">HHInAlarmUnack</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HHInAlarmUnack { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHLimit_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHLimit*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHLimit" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHLimit">
   HHLimit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L600"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L542"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHLimit">HHLimit</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -990,7 +503,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHMinDurationEnable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHMinDurationEnable">
   HHMinDurationEnable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L564"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L506"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHMinDurationEnable">HHMinDurationEnable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1022,7 +535,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHOperAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHOperAck">
   HHOperAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L267"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L209"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHOperAck">HHOperAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1054,7 +567,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHOperShelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHOperShelve">
   HHOperShelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L402"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L344"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHOperShelve">HHOperShelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1086,7 +599,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHOperUnshelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHOperUnshelve">
   HHOperUnshelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L465"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L407"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHOperUnshelve">HHOperUnshelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1118,7 +631,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHProgAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHProgAck">
   HHProgAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L258"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L200"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHProgAck">HHProgAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1150,7 +663,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHSeverity" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHSeverity">
   HHSeverity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L609"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L551"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHSeverity">HHSeverity</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1178,139 +691,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHShelved_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHShelved*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HHShelved" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HHShelved">
-  HHShelved
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L960"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HHShelved">HHShelved</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HHShelved { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarm_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HInAlarm*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarm" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HInAlarm">
-  HInAlarm
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L789"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarm">HInAlarm</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HInAlarm { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarmTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HInAlarmTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarmTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HInAlarmTime">
-  HInAlarmTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1059"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarmTime">HInAlarmTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT HInAlarmTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarmUnack_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HInAlarmUnack*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarmUnack" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HInAlarmUnack">
-  HInAlarmUnack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L906"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HInAlarmUnack">HInAlarmUnack</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HInAlarmUnack { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HLimit_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HLimit*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HLimit" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HLimit">
   HLimit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L618"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L560"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HLimit">HLimit</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1342,7 +727,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HMinDurationEnable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HMinDurationEnable">
   HMinDurationEnable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L573"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L515"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HMinDurationEnable">HMinDurationEnable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1374,7 +759,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HOperAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HOperAck">
   HOperAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L285"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L227"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HOperAck">HOperAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1406,7 +791,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HOperShelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HOperShelve">
   HOperShelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L411"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L353"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HOperShelve">HOperShelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1438,7 +823,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HOperUnshelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HOperUnshelve">
   HOperUnshelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L474"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L416"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HOperUnshelve">HOperUnshelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1470,7 +855,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HProgAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HProgAck">
   HProgAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L218"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HProgAck">HProgAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1502,7 +887,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HSeverity" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HSeverity">
   HSeverity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L627"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L569"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HSeverity">HSeverity</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1530,43 +915,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_HShelved_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HShelved*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_HShelved" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.HShelved">
-  HShelved
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L969"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_HShelved">HShelved</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL HShelved { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_In_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.In*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_In" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.In">
   In
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_In">In</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1594,43 +947,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_InAlarm_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InAlarm*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_InAlarm" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InAlarm">
-  InAlarm
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L762"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_InAlarm">InAlarm</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL InAlarm { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_InFault_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InFault*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_InFault" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InFault">
   InFault
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_InFault">InFault</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1658,139 +979,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_InFaulted_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InFaulted*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_InFaulted" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InFaulted">
-  InFaulted
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1212"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_InFaulted">InFaulted</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL InFaulted { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_InstructFault_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InstructFault*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_InstructFault" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.InstructFault">
-  InstructFault
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1203"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_InstructFault">InstructFault</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL InstructFault { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LAcked_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LAcked*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LAcked" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LAcked">
-  LAcked
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L861"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LAcked">LAcked</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LAcked { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LAlarmCount_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LAlarmCount*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LAlarmCount" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LAlarmCount">
-  LAlarmCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1086"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LAlarmCount">LAlarmCount</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT LAlarmCount { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LEnabled_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LEnabled*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LEnabled" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LEnabled">
   LEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L213"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L155"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LEnabled">LEnabled</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -1818,171 +1011,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarm_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LInAlarm*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarm" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LInAlarm">
-  LInAlarm
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L798"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarm">LInAlarm</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LInAlarm { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarmTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LInAlarmTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarmTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LInAlarmTime">
-  LInAlarmTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1077"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarmTime">LInAlarmTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT LInAlarmTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarmUnack_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LInAlarmUnack*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarmUnack" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LInAlarmUnack">
-  LInAlarmUnack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L915"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LInAlarmUnack">LInAlarmUnack</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LInAlarmUnack { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLAcked_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLAcked*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLAcked" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLAcked">
-  LLAcked
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L870"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLAcked">LLAcked</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LLAcked { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLAlarmCount_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLAlarmCount*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLAlarmCount" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLAlarmCount">
-  LLAlarmCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1104"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLAlarmCount">LLAlarmCount</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT LLAlarmCount { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLEnabled_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLEnabled*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLEnabled" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLEnabled">
   LLEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L222"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L164"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLEnabled">LLEnabled</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2010,107 +1043,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarm_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLInAlarm*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarm" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLInAlarm">
-  LLInAlarm
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L807"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarm">LLInAlarm</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LLInAlarm { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarmTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLInAlarmTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarmTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLInAlarmTime">
-  LLInAlarmTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1095"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarmTime">LLInAlarmTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT LLInAlarmTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarmUnack_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLInAlarmUnack*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarmUnack" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLInAlarmUnack">
-  LLInAlarmUnack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L924"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLInAlarmUnack">LLInAlarmUnack</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LLInAlarmUnack { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLLimit_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLLimit*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLLimit" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLLimit">
   LLLimit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L654"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L596"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLLimit">LLLimit</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2142,7 +1079,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLMinDurationEnable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLMinDurationEnable">
   LLMinDurationEnable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L591"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L533"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLMinDurationEnable">LLMinDurationEnable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2174,7 +1111,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLOperAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLOperAck">
   LLOperAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L321"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L263"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLOperAck">LLOperAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2206,7 +1143,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLOperShelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLOperShelve">
   LLOperShelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L429"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L371"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLOperShelve">LLOperShelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2238,7 +1175,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLOperUnshelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLOperUnshelve">
   LLOperUnshelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L492"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L434"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLOperUnshelve">LLOperUnshelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2270,7 +1207,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLProgAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLProgAck">
   LLProgAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L312"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L254"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLProgAck">LLProgAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2302,7 +1239,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLSeverity" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLSeverity">
   LLSeverity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L663"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L605"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLSeverity">LLSeverity</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2330,43 +1267,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLShelved_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLShelved*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLShelved" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLShelved">
-  LLShelved
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L987"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLShelved">LLShelved</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LLShelved { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLimit_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLimit*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LLimit" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LLimit">
   LLimit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L636"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L578"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LLimit">LLimit</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2398,7 +1303,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LMinDurationEnable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LMinDurationEnable">
   LMinDurationEnable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L582"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L524"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LMinDurationEnable">LMinDurationEnable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2430,7 +1335,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LOperAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LOperAck">
   LOperAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L303"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L245"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LOperAck">LOperAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2462,7 +1367,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LOperShelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LOperShelve">
   LOperShelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L420"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L362"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LOperShelve">LOperShelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2494,7 +1399,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LOperUnshelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LOperUnshelve">
   LOperUnshelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L483"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L425"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LOperUnshelve">LOperUnshelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2526,7 +1431,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LProgAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LProgAck">
   LProgAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L294"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L236"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LProgAck">LProgAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2558,7 +1463,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LSeverity" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LSeverity">
   LSeverity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L645"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L587"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LSeverity">LSeverity</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2586,43 +1491,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_LShelved_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LShelved*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_LShelved" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.LShelved">
-  LShelved
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L978"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_LShelved">LShelved</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL LShelved { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_MaxShelveDuration_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.MaxShelveDuration*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_MaxShelveDuration" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.MaxShelveDuration">
   MaxShelveDuration
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L690"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L632"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_MaxShelveDuration">MaxShelveDuration</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2650,43 +1523,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_MinDurationACC_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.MinDurationACC*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_MinDurationACC" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.MinDurationACC">
-  MinDurationACC
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1032"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_MinDurationACC">MinDurationACC</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT MinDurationACC { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_MinDurationPRE_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.MinDurationPRE*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_MinDurationPRE" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.MinDurationPRE">
   MinDurationPRE
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L672"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L614"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_MinDurationPRE">MinDurationPRE</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2718,7 +1559,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_OperAckAll" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.OperAckAll">
   OperAckAll
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L249"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L191"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_OperAckAll">OperAckAll</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2750,7 +1591,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_OperDisable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.OperDisable">
   OperDisable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L528"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L470"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_OperDisable">OperDisable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2782,7 +1623,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_OperEnable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.OperEnable">
   OperEnable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L546"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L488"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_OperEnable">OperEnable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2814,7 +1655,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_OperSuppress" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.OperSuppress">
   OperSuppress
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L375"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L317"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_OperSuppress">OperSuppress</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2846,7 +1687,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_OperUnsuppress" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.OperUnsuppress">
   OperUnsuppress
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L393"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L335"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_OperUnsuppress">OperUnsuppress</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2878,7 +1719,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ProgAckAll" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ProgAckAll">
   ProgAckAll
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L182"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ProgAckAll">ProgAckAll</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2910,7 +1751,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ProgDisable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ProgDisable">
   ProgDisable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L519"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L461"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ProgDisable">ProgDisable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2942,7 +1783,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ProgEnable" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ProgEnable">
   ProgEnable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L537"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L479"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ProgEnable">ProgEnable</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -2974,7 +1815,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ProgSuppress" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ProgSuppress">
   ProgSuppress
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L366"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L308"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ProgSuppress">ProgSuppress</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3006,7 +1847,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ProgUnshelveAll" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ProgUnshelveAll">
   ProgUnshelveAll
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L456"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L398"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ProgUnshelveAll">ProgUnshelveAll</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3038,7 +1879,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ProgUnsuppress" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ProgUnsuppress">
   ProgUnsuppress
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L384"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L326"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ProgUnsuppress">ProgUnsuppress</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3066,203 +1907,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROC_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROC*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROC" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROC">
-  ROC
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L834"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROC">ROC</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public REAL ROC { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.REAL.html">REAL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegAcked_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegAcked*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegAcked" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegAcked">
-  ROCNegAcked
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L888"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegAcked">ROCNegAcked</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCNegAcked { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegAlarmCount_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegAlarmCount*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegAlarmCount" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegAlarmCount">
-  ROCNegAlarmCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1140"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegAlarmCount">ROCNegAlarmCount</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT ROCNegAlarmCount { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarm_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegInAlarm*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarm" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegInAlarm">
-  ROCNegInAlarm
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L825"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarm">ROCNegInAlarm</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCNegInAlarm { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarmTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegInAlarmTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarmTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegInAlarmTime">
-  ROCNegInAlarmTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1131"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarmTime">ROCNegInAlarmTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT ROCNegInAlarmTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarmUnack_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegInAlarmUnack*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarmUnack" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegInAlarmUnack">
-  ROCNegInAlarmUnack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L942"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegInAlarmUnack">ROCNegInAlarmUnack</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCNegInAlarmUnack { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegLimit_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegLimit*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegLimit" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegLimit">
   ROCNegLimit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L726"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L668"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegLimit">ROCNegLimit</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3290,43 +1939,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegLimitInv_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegLimitInv*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegLimitInv" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegLimitInv">
-  ROCNegLimitInv
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1257"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegLimitInv">ROCNegLimitInv</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCNegLimitInv { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegOperAck_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegOperAck*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegOperAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegOperAck">
   ROCNegOperAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L357"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L299"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegOperAck">ROCNegOperAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3358,7 +1975,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegOperShelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegOperShelve">
   ROCNegOperShelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L447"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L389"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegOperShelve">ROCNegOperShelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3390,7 +2007,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegOperUnshelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegOperUnshelve">
   ROCNegOperUnshelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L510"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L452"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegOperUnshelve">ROCNegOperUnshelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3422,7 +2039,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegProgAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegProgAck">
   ROCNegProgAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L348"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L290"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegProgAck">ROCNegProgAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3454,7 +2071,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegSeverity" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegSeverity">
   ROCNegSeverity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L735"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L677"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegSeverity">ROCNegSeverity</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3482,43 +2099,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegShelved_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegShelved*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegShelved" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCNegShelved">
-  ROCNegShelved
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1005"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCNegShelved">ROCNegShelved</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCNegShelved { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPeriod_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPeriod*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPeriod" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPeriod">
   ROCPeriod
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L744"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L686"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPeriod">ROCPeriod</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3546,203 +2131,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPeriodInv_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPeriodInv*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPeriodInv" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPeriodInv">
-  ROCPeriodInv
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1266"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPeriodInv">ROCPeriodInv</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCPeriodInv { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosAcked_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosAcked*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosAcked" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosAcked">
-  ROCPosAcked
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L879"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosAcked">ROCPosAcked</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCPosAcked { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosAlarmCount_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosAlarmCount*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosAlarmCount" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosAlarmCount">
-  ROCPosAlarmCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1122"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosAlarmCount">ROCPosAlarmCount</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT ROCPosAlarmCount { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarm_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosInAlarm*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarm" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosInAlarm">
-  ROCPosInAlarm
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L816"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarm">ROCPosInAlarm</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCPosInAlarm { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarmTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosInAlarmTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarmTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosInAlarmTime">
-  ROCPosInAlarmTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1113"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarmTime">ROCPosInAlarmTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT ROCPosInAlarmTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarmUnack_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosInAlarmUnack*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarmUnack" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosInAlarmUnack">
-  ROCPosInAlarmUnack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L933"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosInAlarmUnack">ROCPosInAlarmUnack</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCPosInAlarmUnack { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosLimit_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosLimit*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosLimit" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosLimit">
   ROCPosLimit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L708"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L650"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosLimit">ROCPosLimit</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3770,43 +2163,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosLimitInv_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosLimitInv*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosLimitInv" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosLimitInv">
-  ROCPosLimitInv
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1248"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosLimitInv">ROCPosLimitInv</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCPosLimitInv { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosOperAck_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosOperAck*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosOperAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosOperAck">
   ROCPosOperAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L339"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L281"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosOperAck">ROCPosOperAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3838,7 +2199,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosOperShelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosOperShelve">
   ROCPosOperShelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L438"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L380"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosOperShelve">ROCPosOperShelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3870,7 +2231,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosOperUnshelve" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosOperUnshelve">
   ROCPosOperUnshelve
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L501"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L443"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosOperUnshelve">ROCPosOperUnshelve</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3902,7 +2263,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosProgAck" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosProgAck">
   ROCPosProgAck
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L272"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosProgAck">ROCPosProgAck</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3934,7 +2295,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosSeverity" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosSeverity">
   ROCPosSeverity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L717"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L659"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosSeverity">ROCPosSeverity</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -3962,107 +2323,11 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosShelved_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosShelved*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosShelved" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ROCPosShelved">
-  ROCPosShelved
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L996"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ROCPosShelved">ROCPosShelved</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL ROCPosShelved { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_RetToNormalTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.RetToNormalTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_RetToNormalTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.RetToNormalTime">
-  RetToNormalTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1158"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_RetToNormalTime">RetToNormalTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT RetToNormalTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_SeverityInv_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.SeverityInv*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_SeverityInv" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.SeverityInv">
-  SeverityInv
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1221"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_SeverityInv">SeverityInv</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL SeverityInv { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ShelveDuration_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ShelveDuration*"></a>
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ShelveDuration" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ShelveDuration">
   ShelveDuration
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L681"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L623"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ShelveDuration">ShelveDuration</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
@@ -4090,134 +2355,6 @@
 
 
 
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_ShelveTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ShelveTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_ShelveTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.ShelveTime">
-  ShelveTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1176"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_ShelveTime">ShelveTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT ShelveTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_Status_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Status*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_Status" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Status">
-  Status
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1194"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_Status">Status</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DINT Status { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.DINT.html">DINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_Suppressed_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Suppressed*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_Suppressed" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Suppressed">
-  Suppressed
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L951"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_Suppressed">Suppressed</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BOOL Suppressed { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.BOOL.html">BOOL</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_Predefined_ALARM_ANALOG_UnshelveTime_" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.UnshelveTime*"></a>
-
-  <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_UnshelveTime" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.UnshelveTime">
-  UnshelveTime
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L1185"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html#L5Sharp_Types_Predefined_ALARM_ANALOG_UnshelveTime">UnshelveTime</a> member of the <a class="xref" href="L5Sharp.Types.Predefined.ALARM_ANALOG.html">ALARM_ANALOG</a> data type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LINT UnshelveTime { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Types.Atomics.LINT.html">LINT</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -4226,7 +2363,7 @@
 
   <h3 id="L5Sharp_Types_Predefined_ALARM_ANALOG_Serialize" data-uid="L5Sharp.Types.Predefined.ALARM_ANALOG.Serialize">
   Serialize()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L158"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> representing the serialized L5X data for a given object.</p>
@@ -4259,7 +2396,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/Predefined/ALARM_ANALOG.cs/#L14" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs/#L14" class="edit-link">Edit this page</a>
         </div>
 
         

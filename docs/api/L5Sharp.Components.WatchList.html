@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_WatchList" data-uid="L5Sharp.Components.WatchList" class="text-break">
     Class WatchList
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -144,13 +144,22 @@
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;WatchList&gt;.Replace(WatchList)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;WatchList&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -218,24 +227,8 @@
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -249,7 +242,7 @@
 
   <h3 id="L5Sharp_Components_WatchList__ctor" data-uid="L5Sharp.Components.WatchList.#ctor">
   WatchList()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new default <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> initialized with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> having the
@@ -277,7 +270,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_WatchList__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.WatchList.#ctor(System.Xml.Linq.XElement)">
   WatchList(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></p>
@@ -320,7 +313,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_WatchList_Item_System_Int32_" data-uid="L5Sharp.Components.WatchList.Item(System.Int32)">
   this[int]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accesses a <a class="xref" href="L5Sharp.Elements.WatchTag.html">WatchTag</a> at the specified index of the <a class="xref" href="L5Sharp.Components.WatchList.html">WatchList</a>.</p>
@@ -358,7 +351,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_WatchList_Item_System_String_" data-uid="L5Sharp.Components.WatchList.Item(System.String)">
   this[string]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accesses a <a class="xref" href="L5Sharp.Elements.WatchTag.html">WatchTag</a> of the <a class="xref" href="L5Sharp.Components.WatchList.html">WatchList</a> with the specifier tag name.</p>
@@ -400,7 +393,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_WatchList_Add_L5Sharp_Elements_WatchTag_" data-uid="L5Sharp.Components.WatchList.Add(L5Sharp.Elements.WatchTag)">
   Add(WatchTag)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a <a class="xref" href="L5Sharp.Elements.WatchTag.html">WatchTag</a> to the end of the <a class="xref" href="L5Sharp.Components.WatchList.html">WatchList</a>.</p>
@@ -439,7 +432,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_WatchList_Remove_System_String_" data-uid="L5Sharp.Components.WatchList.Remove(System.String)">
   Remove(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes the first <a class="xref" href="L5Sharp.Elements.WatchTag.html">WatchTag</a> found in the <a class="xref" href="L5Sharp.Components.WatchList.html">WatchList</a> with the provided specifier name.</p>
@@ -472,7 +465,7 @@ L5XType name of the element.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/WatchList.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/WatchList.cs/#L16" class="edit-link">Edit this page</a>
         </div>
 
         

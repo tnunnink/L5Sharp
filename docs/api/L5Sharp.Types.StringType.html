@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Types_StringType" data-uid="L5Sharp.Types.StringType" class="text-break">
     Class StringType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -92,7 +92,7 @@
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class StringType : LogixType, ILogixSerializable, IEnumerable&lt;char&gt;, IEnumerable</code></pre>
+    <pre><code class="lang-csharp hljs">public class StringType : StructureType, ILogixSerializable, IEnumerable&lt;char&gt;, IEnumerable</code></pre>
   </div>
 
 
@@ -103,6 +103,7 @@
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
       <div><a class="xref" href="L5Sharp.LogixType.html">LogixType</a></div>
+      <div><a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a></div>
       <div><span class="xref">StringType</span></div>
     </dd>
   </dl>
@@ -126,6 +127,51 @@
   <dl class="typelist derived">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Name">StructureType.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Class">StructureType.Class</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_Members">StructureType.Members</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_GetMember__1_System_String_">StructureType.GetMember&lt;TLogixType&gt;(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_SetMember__1___0_System_String_">StructureType.SetMember&lt;TLogixType&gt;(TLogixType, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_AddMember_L5Sharp_LogixMember_">StructureType.AddMember(LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_AddMembers_System_Collections_Generic_ICollection_L5Sharp_LogixMember__">StructureType.AddMembers(ICollection&lt;LogixMember&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ClearMembers">StructureType.ClearMembers()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_InsertMember_System_Int32_L5Sharp_LogixMember_">StructureType.InsertMember(int, LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_RemoveMember_System_String_">StructureType.RemoveMember(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_RemoveMember_System_Int32_">StructureType.RemoveMember(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ReplaceMember_System_String_L5Sharp_LogixMember_">StructureType.ReplaceMember(string, LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ReplaceMember_System_String_L5Sharp_LogixType_">StructureType.ReplaceMember(string, LogixType)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ReplaceMember_System_Int32_L5Sharp_LogixMember_">StructureType.ReplaceMember(int, LogixMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_OnMemberDataChanged_System_Object_System_EventArgs_">StructureType.OnMemberDataChanged(object, EventArgs)</a>
+    </div>
     <div>
       <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_DataChanged">LogixType.DataChanged</a>
     </div>
@@ -155,26 +201,18 @@
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  </dd></dl>
 
 
 
   <h2 id="L5Sharp_Types_StringType_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
 A logix string type has predefined members <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_LEN">LEN</a> and <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_DATA">DATA</a>, which contain the
-current string length and set of ASCII characters, respectively. This class is inherited by
-<a class="xref" href="L5Sharp.Types.Predefined.STRING.html">STRING</a>, which is Rockwell's built in base string type. You may also create instance of
-this class providing a string value and type name.
+current string length and set of ASCII characters representing the string value, respectively.
+This class is inherited by <a class="xref" href="L5Sharp.Types.Predefined.STRING.html">STRING</a>, which is Rockwell's built in base string type.
 </p>
 <p>
 StringType has special cases in terms of it's L5X structure. Rockwell treats strings sort of like a value type,
-giving it it's own <a class="xref" href="L5Sharp.Enums.DataFormat.html">DataFormat</a>. However, when serialized as a member of a complex structure, the data
+giving it a special <a class="xref" href="L5Sharp.Enums.DataFormat.html">DataFormat</a>. However, when serialized as a member of a complex structure, the data
 looks more like a generic structure type.</p>
 </div>
 
@@ -185,9 +223,75 @@ looks more like a generic structure type.</p>
 
   <a id="L5Sharp_Types_StringType__ctor_" data-uid="L5Sharp.Types.StringType.#ctor*"></a>
 
+  <h3 id="L5Sharp_Types_StringType__ctor" data-uid="L5Sharp.Types.StringType.#ctor">
+  StringType()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> initialized with default name and data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StringType()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Types_StringType__ctor_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This creates a default instance named &quot;StringType&quot; with an empty string.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Types_StringType__ctor_" data-uid="L5Sharp.Types.StringType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_StringType__ctor_System_String_" data-uid="L5Sharp.Types.StringType.#ctor(System.String)">
+  StringType(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> initialized with default name and provided string data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StringType(string value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The string value to initialize the type with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Types_StringType__ctor_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This creates a instance named &quot;StringType&quot; with the provided string value.</p>
+</div>
+
+
+
+
+  <a id="L5Sharp_Types_StringType__ctor_" data-uid="L5Sharp.Types.StringType.#ctor*"></a>
+
   <h3 id="L5Sharp_Types_StringType__ctor_System_String_System_String_" data-uid="L5Sharp.Types.StringType.#ctor(System.String,System.String)">
   StringType(string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L63"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> instance with the provided data.</p>
@@ -227,17 +331,17 @@ looks more like a generic structure type.</p>
 
   <a id="L5Sharp_Types_StringType__ctor_" data-uid="L5Sharp.Types.StringType.#ctor*"></a>
 
-  <h3 id="L5Sharp_Types_StringType__ctor_System_String_System_String_System_Int32_" data-uid="L5Sharp.Types.StringType.#ctor(System.String,System.String,System.Int32)">
-  StringType(string, string, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <h3 id="L5Sharp_Types_StringType__ctor_System_String_System_String_System_UInt16_" data-uid="L5Sharp.Types.StringType.#ctor(System.String,System.String,System.UInt16)">
+  StringType(string, string, ushort)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> instance with the provided data.</p>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> object with the provided name and string value.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected StringType(string name, string value, int length)</code></pre>
+    <pre><code class="lang-csharp hljs">protected StringType(string name, string value, ushort length)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -248,8 +352,10 @@ looks more like a generic structure type.</p>
     <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>The string value of the type.</p>
 </dd>
-    <dt><code>length</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
+    <dt><code>length</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The length to initialize DATA with.
+This should be greater or equal than the length of <code>value</code>.</p>
+</dd>
   </dl>
 
 
@@ -259,6 +365,11 @@ looks more like a generic structure type.</p>
 
 
 
+  <h4 class="section" id="L5Sharp_Types_StringType__ctor_System_String_System_String_System_UInt16__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This constructor allows you to instantiate a string type with a specified DATA length so that values
+of different lengths may be assigned. This is meant to be used by deriving classes such as the predefined
+Rockwell <code>STRING</code> type and any other user defined string type.</p>
+</div>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
@@ -276,10 +387,10 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Types.StringType.#ctor(System.Xml.Linq.XElement)">
   StringType(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -307,8 +418,62 @@ looks more like a generic structure type.</p>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
     <dd><p><code>element</code> is null.</p>
 </dd>
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
-    <dd><p><code>element</code> does not have a data type attribute.</p>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p><code>element</code> does not have required attributes or child elements.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="L5Sharp_Types_StringType__ctor_" data-uid="L5Sharp.Types.StringType.#ctor*"></a>
+
+  <h3 id="L5Sharp_Types_StringType__ctor_System_Xml_Linq_XElement_System_UInt16_" data-uid="L5Sharp.Types.StringType.#ctor(System.Xml.Linq.XElement,System.UInt16)">
+  StringType(XElement, ushort)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> and data length value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected StringType(XElement element, ushort length)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
+    <dd><p>The element to parse as the new member object.</p>
+</dd>
+    <dt><code>length</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>The length to initialize DATA with.
+This should be greater or equal than the length of the value found on the provided element object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_Types_StringType__ctor_System_Xml_Linq_XElement_System_UInt16__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This constructor allows you to instantiate a string type with a specified DATA length so that values
+of different lengths may be assigned. This is meant to be used by deriving classes such as the predefined
+Rockwell <code>STRING</code> type and any other user defined string type.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code>element</code> is null.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p><code>element</code> does not have required attributes or child elements.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p><code>element</code> contains a value longer than <code>length</code>.</p>
 </dd>
   </dl>
 
@@ -318,44 +483,11 @@ looks more like a generic structure type.</p>
 </h2>
 
 
-  <a id="L5Sharp_Types_StringType_Class_" data-uid="L5Sharp.Types.StringType.Class*"></a>
-
-  <h3 id="L5Sharp_Types_StringType_Class" data-uid="L5Sharp.Types.StringType.Class">
-  Class
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L101"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The class (atomic, predefined, user-defined) that the type belongs to.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override DataTypeClass Class { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Enums.DataTypeClass.html">DataTypeClass</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Enums.DataTypeClass.html">DataTypeClass</a> option representing the class type.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Types_StringType_DATA_" data-uid="L5Sharp.Types.StringType.DATA*"></a>
 
   <h3 id="L5Sharp_Types_StringType_DATA" data-uid="L5Sharp.Types.StringType.DATA">
   DATA
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the array of bytes that represent the ASCII encoded string value.</p>
@@ -363,7 +495,7 @@ looks more like a generic structure type.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ArrayType&lt;SINT&gt; DATA { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ArrayType&lt;SINT&gt; DATA { get; set; }</code></pre>
   </div>
 
 
@@ -388,7 +520,7 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType_Family" data-uid="L5Sharp.Types.StringType.Family">
   Family
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The family (string or none) of the type.</p>
@@ -421,10 +553,10 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType_LEN" data-uid="L5Sharp.Types.StringType.LEN">
   LEN
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L116"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the character length value of the string.</p>
+  <div class="markdown level1 summary"><p>Gets the LEN member of the string type structure.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -446,72 +578,11 @@ looks more like a generic structure type.</p>
 
 
 
-
-
-
-
-  <a id="L5Sharp_Types_StringType_Members_" data-uid="L5Sharp.Types.StringType.Members*"></a>
-
-  <h3 id="L5Sharp_Types_StringType_Members" data-uid="L5Sharp.Types.StringType.Members">
-  Members
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L104"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The collection of <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> objects that make up the structure of the type.</p>
+  <h4 class="section" id="L5Sharp_Types_StringType_LEN_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Setting this value will do nothing. The LEN member of a string type is a computed value based on the
+length of <a class="xref" href="L5Sharp.Types.StringType.html#L5Sharp_Types_StringType_DATA">DATA</a> (non-zero characters only). Internally, the data changed event is captured to sync
+this property value with that of the string length.</p>
 </div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override IEnumerable&lt;LogixMember&gt; Members { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>&gt;</dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> containing <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> objects</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Types_StringType_Name_" data-uid="L5Sharp.Types.StringType.Name*"></a>
-
-  <h3 id="L5Sharp_Types_StringType_Name" data-uid="L5Sharp.Types.StringType.Name">
-  Name
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L95"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The name of the logix type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string Name { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> name identifying the logix type.</p>
-</dd>
-  </dl>
-
-
-
-
 
 
 
@@ -524,7 +595,7 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType_Equals_System_Object_" data-uid="L5Sharp.Types.StringType.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
@@ -563,7 +634,7 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType_GetEnumerator" data-uid="L5Sharp.Types.StringType.GetEnumerator">
   GetEnumerator()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L129"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns an enumerator that iterates through the collection.</p>
@@ -596,7 +667,7 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType_GetHashCode" data-uid="L5Sharp.Types.StringType.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L160"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
@@ -629,7 +700,7 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType_Serialize" data-uid="L5Sharp.Types.StringType.Serialize">
   Serialize()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> representing the serialized L5X data for a given object.</p>
@@ -662,7 +733,7 @@ looks more like a generic structure type.</p>
 
   <h3 id="L5Sharp_Types_StringType_SerializeStructure" data-uid="L5Sharp.Types.StringType.SerializeStructure">
   SerializeStructure()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L181"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A custom serialization method that returns the string type as a structure element, instead of the string formatted
@@ -696,7 +767,7 @@ L5X structure.</p>
 
   <h3 id="L5Sharp_Types_StringType_ToString" data-uid="L5Sharp.Types.StringType.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L124"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L134"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
@@ -725,11 +796,93 @@ L5X structure.</p>
 
 
 
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="L5Sharp_Types_StringType_op_Implicit_" data-uid="L5Sharp.Types.StringType.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_StringType_op_Implicit_L5Sharp_Types_StringType__System_String" data-uid="L5Sharp.Types.StringType.op_Implicit(L5Sharp.Types.StringType)~System.String">
+  implicit operator string(StringType)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L174"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts the provided <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator string(StringType input)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>input</code> <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> type value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Types_StringType_op_Implicit_" data-uid="L5Sharp.Types.StringType.op_Implicit*"></a>
+
+  <h3 id="L5Sharp_Types_StringType_op_Implicit_System_String__L5Sharp_Types_StringType" data-uid="L5Sharp.Types.StringType.op_Implicit(System.String)~L5Sharp.Types.StringType">
+  implicit operator StringType(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> to a <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator StringType(string input)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>input</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The value to convert.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Types.StringType.html">StringType</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Types.StringType.html">StringType</a> type value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/StringType.cs/#L27" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/StringType.cs/#L26" class="edit-link">Edit this page</a>
         </div>
 
         

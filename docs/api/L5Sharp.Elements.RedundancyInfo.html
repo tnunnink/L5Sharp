@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Elements_RedundancyInfo" data-uid="L5Sharp.Elements.RedundancyInfo" class="text-break">
     Class RedundancyInfo
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -123,13 +123,19 @@ related to the controller redundancy.</p>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone">LogixElement.Clone()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -202,19 +208,6 @@ related to the controller redundancy.</p>
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -228,7 +221,7 @@ related to the controller redundancy.</p>
 
   <h3 id="L5Sharp_Elements_RedundancyInfo__ctor" data-uid="L5Sharp.Elements.RedundancyInfo.#ctor">
   RedundancyInfo()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.RedundancyInfo.html">RedundancyInfo</a> with default values.</p>
@@ -255,10 +248,10 @@ related to the controller redundancy.</p>
 
   <h3 id="L5Sharp_Elements_RedundancyInfo__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Elements.RedundancyInfo.#ctor(System.Xml.Linq.XElement)">
   RedundancyInfo(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.WatchTag.html">WatchTag</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.RedundancyInfo.html">RedundancyInfo</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -298,7 +291,7 @@ related to the controller redundancy.</p>
 
   <h3 id="L5Sharp_Elements_RedundancyInfo_DataTablePadPercentage" data-uid="L5Sharp.Elements.RedundancyInfo.DataTablePadPercentage">
   DataTablePadPercentage
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the percentage (0...100) of the data table to reserve.</p>
@@ -335,7 +328,7 @@ If redundancy is enabled, type 50.</p>
 
   <h3 id="L5Sharp_Elements_RedundancyInfo_Enabled" data-uid="L5Sharp.Elements.RedundancyInfo.Enabled">
   Enabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify whether redundancy is used.</p>
@@ -368,7 +361,7 @@ If redundancy is enabled, type 50.</p>
 
   <h3 id="L5Sharp_Elements_RedundancyInfo_IOMemoryPadPercentage" data-uid="L5Sharp.Elements.RedundancyInfo.IOMemoryPadPercentage">
   IOMemoryPadPercentage
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the percentage (0...100) of I/O memory that is available to the system after the download
@@ -402,7 +395,7 @@ when configured for redundancy.</p>
 
   <h3 id="L5Sharp_Elements_RedundancyInfo_KeepTestEditsOnSwitchOver" data-uid="L5Sharp.Elements.RedundancyInfo.KeepTestEditsOnSwitchOver">
   KeepTestEditsOnSwitchOver
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L44"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify whether to keep test edits on when a switchover occurs in a redundant system.</p>
@@ -435,7 +428,7 @@ when configured for redundancy.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/RedundancyInfo.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/RedundancyInfo.cs/#L11" class="edit-link">Edit this page</a>
         </div>
 
         

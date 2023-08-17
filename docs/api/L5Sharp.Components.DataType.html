@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_DataType" data-uid="L5Sharp.Components.DataType" class="text-break">
     Class DataType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataType.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataType.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -144,13 +144,22 @@
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;DataType&gt;.Replace(DataType)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;DataType&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -218,24 +227,8 @@
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -267,7 +260,7 @@ user-defined datatype appears before the first one in the import/export file.<br
 
   <h3 id="L5Sharp_Components_DataType__ctor" data-uid="L5Sharp.Components.DataType.#ctor">
   DataType()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataType.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataType.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.DataType.html">DataType</a> with default values.</p>
@@ -294,7 +287,7 @@ user-defined datatype appears before the first one in the import/export file.<br
 
   <h3 id="L5Sharp_Components_DataType__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.DataType.#ctor(System.Xml.Linq.XElement)">
   DataType(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataType.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataType.cs/#L49"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.DataType.html">DataType</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
@@ -337,7 +330,7 @@ user-defined datatype appears before the first one in the import/export file.<br
 
   <h3 id="L5Sharp_Components_DataType_Class" data-uid="L5Sharp.Components.DataType.Class">
   Class
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataType.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataType.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The class of the <code>DataType</code> component.</p>
@@ -371,7 +364,7 @@ L5X files will only ever contain <a class="xref" href="L5Sharp.Enums.DataTypeCla
 
   <h3 id="L5Sharp_Components_DataType_Family" data-uid="L5Sharp.Components.DataType.Family">
   Family
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataType.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataType.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The family of the <code>DataType</code> component.</p>
@@ -405,7 +398,7 @@ This is just string for string types and none for all others.</p>
 
   <h3 id="L5Sharp_Components_DataType_Members" data-uid="L5Sharp.Components.DataType.Members">
   Members
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataType.cs/#L82"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataType.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The collection of <a class="xref" href="L5Sharp.Components.DataTypeMember.html">DataTypeMember</a> that make up the structure of the <code>DataType</code> component.</p>
@@ -437,7 +430,7 @@ This is just string for string types and none for all others.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataType.cs/#L32" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataType.cs/#L32" class="edit-link">Edit this page</a>
         </div>
 
         

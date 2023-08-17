@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Types_ComplexType" data-uid="L5Sharp.Types.ComplexType" class="text-break">
     Class ComplexType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -169,6 +169,9 @@ logix type after instantiation of the object.</p>
       <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_ReplaceMember_System_Int32_L5Sharp_LogixMember_">StructureType.ReplaceMember(int, LogixMember)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.Types.StructureType.html#L5Sharp_Types_StructureType_OnMemberDataChanged_System_Object_System_EventArgs_">StructureType.OnMemberDataChanged(object, EventArgs)</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixType.html#L5Sharp_LogixType_DataChanged">LogixType.DataChanged</a>
     </div>
     <div>
@@ -206,16 +209,6 @@ logix type after instantiation of the object.</p>
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_BuildUserTypes_L5Sharp_Types_ComplexType_">LogixExtensions.BuildUserTypes(ComplexType)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -235,7 +228,7 @@ Predefined types will inherit structure type as they should not be mutated.</p>
 
   <h3 id="L5Sharp_Types_ComplexType__ctor" data-uid="L5Sharp.Types.ComplexType.#ctor">
   ComplexType()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new empty <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a> with the name 'ComplexType' indicating this represents some generic
@@ -263,7 +256,7 @@ or non-descriptive type with members configured by the user.</p>
 
   <h3 id="L5Sharp_Types_ComplexType__ctor_System_String_" data-uid="L5Sharp.Types.ComplexType.#ctor(System.String)">
   ComplexType(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a> with the provided name.</p>
@@ -302,7 +295,7 @@ or non-descriptive type with members configured by the user.</p>
 
   <h3 id="L5Sharp_Types_ComplexType__ctor_System_String_System_Collections_Generic_IEnumerable_L5Sharp_LogixMember__" data-uid="L5Sharp.Types.ComplexType.#ctor(System.String,System.Collections.Generic.IEnumerable{L5Sharp.LogixMember})">
   ComplexType(string, IEnumerable&lt;LogixMember&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.ComplexType.html">ComplexType</a> with the provided name and member collection.</p>
@@ -346,7 +339,7 @@ or non-descriptive type with members configured by the user.</p>
 
   <h3 id="L5Sharp_Types_ComplexType__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Types.ComplexType.#ctor(System.Xml.Linq.XElement)">
   ComplexType(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
@@ -377,8 +370,8 @@ or non-descriptive type with members configured by the user.</p>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
     <dd><p><code>element</code> is null.</p>
 </dd>
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
-    <dd><p><code>element</code> does not have required attributes.</p>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p><code>element</code> does not have required attributes or child elements.</p>
 </dd>
   </dl>
 
@@ -392,7 +385,7 @@ or non-descriptive type with members configured by the user.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Add_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Add(L5Sharp.LogixMember)">
   Add(LogixMember)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds the provided member to the end of the type member collection.</p>
@@ -431,7 +424,7 @@ or non-descriptive type with members configured by the user.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_AddRange_System_Collections_Generic_ICollection_L5Sharp_LogixMember__" data-uid="L5Sharp.Types.ComplexType.AddRange(System.Collections.Generic.ICollection{L5Sharp.LogixMember})">
   AddRange(ICollection&lt;LogixMember&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds the provided member collection to the end of the type member collection.</p>
@@ -470,7 +463,7 @@ or non-descriptive type with members configured by the user.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Clear" data-uid="L5Sharp.Types.ComplexType.Clear">
   Clear()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes all members from the current type.</p>
@@ -497,7 +490,7 @@ or non-descriptive type with members configured by the user.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Insert_System_Int32_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Insert(System.Int32,L5Sharp.LogixMember)">
   Insert(int, LogixMember)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L79"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Inserts the provided member at the specified index of the type member collection.</p>
@@ -543,7 +536,7 @@ the member collection.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Remove_System_Int32_" data-uid="L5Sharp.Types.ComplexType.Remove(System.Int32)">
   Remove(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a member at the specified index from the type member collection.</p>
@@ -576,7 +569,7 @@ the member collection.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Remove_System_String_" data-uid="L5Sharp.Types.ComplexType.Remove(System.String)">
   Remove(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a member with the specified name from the type member collection.</p>
@@ -609,7 +602,7 @@ the member collection.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Replace_System_Int32_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Replace(System.Int32,L5Sharp.LogixMember)">
   Replace(int, LogixMember)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Replaces a member at the specified index with the provided member instance.</p>
@@ -651,7 +644,7 @@ the member collection.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Replace_System_String_L5Sharp_LogixMember_" data-uid="L5Sharp.Types.ComplexType.Replace(System.String,L5Sharp.LogixMember)">
   Replace(string, LogixMember)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Replaces a member having the specified name with the provided member instance.</p>
@@ -696,7 +689,7 @@ the member collection.</p>
 
   <h3 id="L5Sharp_Types_ComplexType_Replace_System_String_L5Sharp_LogixType_" data-uid="L5Sharp.Types.ComplexType.Replace(System.String,L5Sharp.LogixType)">
   Replace(string, LogixType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L110"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Replaces a member having the specified name with a new member instance of the same name and
@@ -742,7 +735,7 @@ provided <a class="xref" href="L5Sharp.LogixType.html">LogixType</a>.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Types/ComplexType.cs/#L17" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Types/ComplexType.cs/#L17" class="edit-link">Edit this page</a>
         </div>
 
         

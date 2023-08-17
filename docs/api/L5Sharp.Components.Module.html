@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_Module" data-uid="L5Sharp.Components.Module" class="text-break">
     Class Module
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -141,13 +141,22 @@
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;Module&gt;.Replace(Module)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;Module&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -215,39 +224,8 @@
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_IP_L5Sharp_Components_Module_">LogixExtensions.IP(Module)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Modules_L5Sharp_Components_Module_">LogixExtensions.Modules(Module)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Parent_L5Sharp_Components_Module_">LogixExtensions.Parent(Module)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Slot_L5Sharp_Components_Module_">LogixExtensions.Slot(Module)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Tags_L5Sharp_Components_Module_">LogixExtensions.Tags(Module)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -261,7 +239,7 @@
 
   <h3 id="L5Sharp_Components_Module__ctor" data-uid="L5Sharp.Components.Module.#ctor">
   Module()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new default <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> initialized with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> having the
@@ -289,7 +267,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Module__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.Module.#ctor(System.Xml.Linq.XElement)">
   Module(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></p>
@@ -332,10 +310,11 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Module_CatalogNumber" data-uid="L5Sharp.Components.Module.CatalogNumber">
   CatalogNumber
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The catalog number uniquely identifies the module. This is a rockwell defined convention.</p>
+  <div class="markdown level1 summary"><p>Specify the catalog number that uniquely identifies the module. This is a rockwell defined convention,
+and represents the identity of the module type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -361,19 +340,18 @@ L5XType name of the element.</p>
 
 
 
-  <a id="L5Sharp_Components_Module_Config_" data-uid="L5Sharp.Components.Module.Config*"></a>
+  <a id="L5Sharp_Components_Module_Communications_" data-uid="L5Sharp.Components.Module.Communications*"></a>
 
-  <h3 id="L5Sharp_Components_Module_Config" data-uid="L5Sharp.Components.Module.Config">
-  Config
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L213"><i class="bi bi-code-slash"></i></a>
+  <h3 id="L5Sharp_Components_Module_Communications" data-uid="L5Sharp.Components.Module.Communications">
+  Communications
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L214"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>A <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> containing the configuration data for the module.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Tag? Config { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Communications? Communications { get; set; }</code></pre>
   </div>
 
 
@@ -382,39 +360,7 @@ L5XType name of the element.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Components.Tag.html">Tag</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="L5Sharp_Components_Module_Connections_" data-uid="L5Sharp.Components.Module.Connections*"></a>
-
-  <h3 id="L5Sharp_Components_Module_Connections" data-uid="L5Sharp.Components.Module.Connections">
-  Connections
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L225"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>A collection of <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a> defining the input and output connection specific to the module.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LogixContainer&lt;Connection&gt; Connections { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.LogixContainer-1.html">LogixContainer</a>&lt;<a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>&gt;</dt>
+    <dt><a class="xref" href="L5Sharp.Elements.Communications.html">Communications</a></dt>
     <dd></dd>
   </dl>
 
@@ -429,7 +375,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Module_Inhibited" data-uid="L5Sharp.Components.Module.Inhibited">
   Inhibited
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L147"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An indication of whether the module is inhibited or disabled.</p>
@@ -461,7 +407,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Module_Keying" data-uid="L5Sharp.Components.Module.Keying">
   Keying
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L180"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L175"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The electronic keying mode of the module.</p>
@@ -494,7 +440,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Module_MajorFault" data-uid="L5Sharp.Components.Module.MajorFault">
   MajorFault
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L161"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An indication of whether the module the module will cause a major fault when faulted.</p>
@@ -526,7 +472,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Module_Name" data-uid="L5Sharp.Components.Module.Name">
   Name
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The unique name of the component.</p>
@@ -544,7 +490,7 @@ L5XType name of the element.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the component name if it exists; otherwise, and empty string.</p>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the component name.</p>
 </dd>
   </dl>
 
@@ -561,11 +507,45 @@ Validation is not performed by this library, so importing components with invali
 
 
 
+  <a id="L5Sharp_Components_Module_ParentModPortId_" data-uid="L5Sharp.Components.Module.ParentModPortId*"></a>
+
+  <h3 id="L5Sharp_Components_Module_ParentModPortId" data-uid="L5Sharp.Components.Module.ParentModPortId">
+  ParentModPortId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The port id of the parent module that the current module is connected to.
+This specified how the module is connected within the module tree.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int ParentModPortId { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> representing the id of the parent port. Default is zero.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="L5Sharp_Components_Module_ParentModule_" data-uid="L5Sharp.Components.Module.ParentModule*"></a>
 
   <h3 id="L5Sharp_Components_Module_ParentModule" data-uid="L5Sharp.Components.Module.ParentModule">
   ParentModule
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The name of the parent module, or module that the current module is connected to upstream.
@@ -595,48 +575,14 @@ This specifies how the module is connected within the module tree.</p>
 
 
 
-  <a id="L5Sharp_Components_Module_ParentPortId_" data-uid="L5Sharp.Components.Module.ParentPortId*"></a>
-
-  <h3 id="L5Sharp_Components_Module_ParentPortId" data-uid="L5Sharp.Components.Module.ParentPortId">
-  ParentPortId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L143"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The port id of the parent module that the current module is connected to.
-This specified how the module is connected within the module tree.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int ParentPortId { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> representing the id of the parent port. Default is zero.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Components_Module_Ports_" data-uid="L5Sharp.Components.Module.Ports*"></a>
 
   <h3 id="L5Sharp_Components_Module_Ports" data-uid="L5Sharp.Components.Module.Ports">
   Ports
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L204"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L205"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>A collection of <a class="xref" href="L5Sharp.Elements.Port.html">Port</a> that define the module's connection within the module tree.</p>
+  <div class="markdown level1 summary"><p>A collection of <a class="xref" href="L5Sharp.Elements.Port.html">Port</a> elements that define the module's connection within the module tree.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -651,12 +597,18 @@ This specified how the module is connected within the module tree.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="L5Sharp.LogixContainer-1.html">LogixContainer</a>&lt;<a class="xref" href="L5Sharp.Elements.Port.html">Port</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="L5Sharp.LogixContainer-1.html">LogixContainer&lt;TElement&gt;</a> of <a class="xref" href="L5Sharp.Elements.Port.html">Port</a> objects.</p>
+</dd>
   </dl>
 
 
 
 
+  <h4 class="section" id="L5Sharp_Components_Module_Ports_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Ports define how a module's peripherals are connected to other module's, forming the network or tree of
+devices used to communicated with a controller and field equipment. Ports must have a unique id, a type,
+and address.</p>
+</div>
 
 
 
@@ -665,7 +617,7 @@ This specified how the module is connected within the module tree.</p>
 
   <h3 id="L5Sharp_Components_Module_ProductCode" data-uid="L5Sharp.Components.Module.ProductCode">
   ProductCode
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The unique product code value of the module.</p>
@@ -690,9 +642,7 @@ This specified how the module is connected within the module tree.</p>
 
 
   <h4 class="section" id="L5Sharp_Components_Module_ProductCode_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This is a unique value that identifies the module and is assigned by Logix.
-This value can be retrieved as part of the <a class="xref" href="L5Sharp.Catalog.CatalogEntry.html">CatalogEntry</a> object obtained using a
-<a class="xref" href="L5Sharp.Catalog.ModuleCatalog.html">ModuleCatalog</a> for catalog lookup, or when deserializing from an L5X file.</p>
+  <div class="markdown level1 remarks"><p>This is a unique value that identifies the module and is assigned by Logix.</p>
 </div>
 
 
@@ -702,7 +652,7 @@ This value can be retrieved as part of the <a class="xref" href="L5Sharp.Catalog
 
   <h3 id="L5Sharp_Components_Module_ProductType" data-uid="L5Sharp.Components.Module.ProductType">
   ProductType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The product type of the module, representing a category of the module.</p>
@@ -719,7 +669,7 @@ This value can be retrieved as part of the <a class="xref" href="L5Sharp.Catalog
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.ProductType.html">ProductType</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.ProductType.html">ProductType</a></dt>
     <dd></dd>
   </dl>
 
@@ -727,10 +677,7 @@ This value can be retrieved as part of the <a class="xref" href="L5Sharp.Catalog
 
 
   <h4 class="section" id="L5Sharp_Components_Module_ProductType_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>All modules have a product type representing the product category of the module.
-This value can be retrieved as part of the <a class="xref" href="L5Sharp.Catalog.CatalogEntry.html">CatalogEntry</a> object obtained using a
-<a class="xref" href="L5Sharp.Catalog.ModuleCatalog.html">ModuleCatalog</a> for catalog lookup.
-This value will be validated by Logix upon import of the L5X.</p>
+  <div class="markdown level1 remarks"><p>All modules have a product type representing the product category of the module.</p>
 </div>
 
 
@@ -740,7 +687,7 @@ This value will be validated by Logix upon import of the L5X.</p>
 
   <h3 id="L5Sharp_Components_Module_Revision" data-uid="L5Sharp.Components.Module.Revision">
   Revision
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The revision number or hardware version of the module.</p>
@@ -757,8 +704,8 @@ This value will be validated by Logix upon import of the L5X.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.Revision.html">Revision</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Core.Revision.html">Revision</a> object representing the major and minor version.</p>
+    <dt><a class="xref" href="L5Sharp.Common.Revision.html">Revision</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Common.Revision.html">Revision</a> object representing the major and minor version.</p>
 </dd>
   </dl>
 
@@ -776,7 +723,7 @@ This value will be validated by Logix upon import of the L5X.</p>
 
   <h3 id="L5Sharp_Components_Module_SafetyEnabled" data-uid="L5Sharp.Components.Module.SafetyEnabled">
   SafetyEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L170"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L165"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An indication of whether whether the module has safety features enabled.</p>
@@ -808,7 +755,7 @@ This value will be validated by Logix upon import of the L5X.</p>
 
   <h3 id="L5Sharp_Components_Module_Vendor" data-uid="L5Sharp.Components.Module.Vendor">
   Vendor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The vendor or manufacturer of the module.</p>
@@ -825,8 +772,8 @@ This value will be validated by Logix upon import of the L5X.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> entity that contains the id and name of the vendor.</p>
+    <dt><a class="xref" href="L5Sharp.Common.Vendor.html">Vendor</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Common.Vendor.html">Vendor</a> entity that contains the id and name of the vendor.</p>
 </dd>
   </dl>
 
@@ -834,10 +781,7 @@ This value will be validated by Logix upon import of the L5X.</p>
 
 
   <h4 class="section" id="L5Sharp_Components_Module_Vendor_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>All modules have a vendor representing the manufacturer of the module.
-This value can be retrieved as part of the <a class="xref" href="L5Sharp.Catalog.CatalogEntry.html">CatalogEntry</a> object obtained using a
-<a class="xref" href="L5Sharp.Catalog.ModuleCatalog.html">ModuleCatalog</a> for catalog lookup. When deserializing from L5X file, typically only the vendor
-id is available on the module element.</p>
+  <div class="markdown level1 remarks"><p>All modules have a vendor representing the manufacturer of the module.</p>
 </div>
 
 
@@ -847,7 +791,7 @@ id is available on the module element.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Module.cs/#L18" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Module.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
         

@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Elements_Connection" data-uid="L5Sharp.Elements.Connection" class="text-break">
     Class Connection
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -119,13 +119,19 @@
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone">LogixElement.Clone()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
@@ -147,19 +153,6 @@
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -173,7 +166,7 @@
 
   <h3 id="L5Sharp_Elements_Connection__ctor" data-uid="L5Sharp.Elements.Connection.#ctor">
   Connection()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a> with default values.</p>
@@ -200,7 +193,7 @@
 
   <h3 id="L5Sharp_Elements_Connection__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Elements.Connection.#ctor(System.Xml.Linq.XElement)">
   Connection(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
@@ -243,7 +236,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_EventId" data-uid="L5Sharp.Elements.Connection.EventId">
   EventId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L146"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L145"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value of the Event ID used in conjunction with an event task for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -271,43 +264,11 @@
 
 
 
-  <a id="L5Sharp_Elements_Connection_Input_" data-uid="L5Sharp.Elements.Connection.Input*"></a>
-
-  <h3 id="L5Sharp_Elements_Connection_Input" data-uid="L5Sharp.Elements.Connection.Input">
-  Input
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L173"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the Tag that represents the input channel data for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Tag? Input { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Components.Tag.html">Tag</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Elements_Connection_InputConnectionType_" data-uid="L5Sharp.Elements.Connection.InputConnectionType*"></a>
 
   <h3 id="L5Sharp_Elements_Connection_InputConnectionType" data-uid="L5Sharp.Elements.Connection.InputConnectionType">
   InputConnectionType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L109"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Enums.TransmissionType.html">TransmissionType</a> value for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -339,7 +300,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_InputCxnPoint" data-uid="L5Sharp.Elements.Connection.InputCxnPoint">
   InputCxnPoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the input connection point for the primary <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -371,7 +332,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_InputProductionTrigger" data-uid="L5Sharp.Elements.Connection.InputProductionTrigger">
   InputProductionTrigger
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Enums.ProductionTrigger.html">ProductionTrigger</a> value for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -403,7 +364,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_InputSize" data-uid="L5Sharp.Elements.Connection.InputSize">
   InputSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the input size for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -431,14 +392,47 @@
 
 
 
+  <a id="L5Sharp_Elements_Connection_InputTag_" data-uid="L5Sharp.Elements.Connection.InputTag*"></a>
+
+  <h3 id="L5Sharp_Elements_Connection_InputTag" data-uid="L5Sharp.Elements.Connection.InputTag">
+  InputTag
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L183"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the Tag that represents the input channel data for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a> element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tag? InputTag { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Components.Tag.html">Tag</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> component containing the module defined data structure for the input connection data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="L5Sharp_Elements_Connection_InputTagSuffix_" data-uid="L5Sharp.Elements.Connection.InputTagSuffix*"></a>
 
   <h3 id="L5Sharp_Elements_Connection_InputTagSuffix" data-uid="L5Sharp.Elements.Connection.InputTagSuffix">
   InputTagSuffix
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the suffix for <a class="xref" href="L5Sharp.Elements.Connection.html#L5Sharp_Elements_Connection_Input">Input</a> tag.</p>
+  <div class="markdown level1 summary"><p>The character used to define the tag name for the <a class="xref" href="L5Sharp.Elements.Connection.html#L5Sharp_Elements_Connection_InputTag">InputTag</a> element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -453,12 +447,17 @@
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> containing the suffix character if it exists; Otherwise, will default as 'I'.</p>
+</dd>
   </dl>
 
 
 
 
+  <h4 class="section" id="L5Sharp_Elements_Connection_InputTagSuffix_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This value is used in determining the module tag name. Not all modules serialize this property,
+but still use 'I' as the suffix character for input tags. Therefore, we will default to 'I' if not found.</p>
+</div>
 
 
 
@@ -467,7 +466,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_Name" data-uid="L5Sharp.Elements.Connection.Name">
   Name
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the name of the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a> component.</p>
@@ -495,43 +494,11 @@
 
 
 
-  <a id="L5Sharp_Elements_Connection_Output_" data-uid="L5Sharp.Elements.Connection.Output*"></a>
-
-  <h3 id="L5Sharp_Elements_Connection_Output" data-uid="L5Sharp.Elements.Connection.Output">
-  Output
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L185"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the Tag that represents the output channel data for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Tag? Output { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Components.Tag.html">Tag</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="L5Sharp_Elements_Connection_OutputCxnPoint_" data-uid="L5Sharp.Elements.Connection.OutputCxnPoint*"></a>
 
   <h3 id="L5Sharp_Elements_Connection_OutputCxnPoint" data-uid="L5Sharp.Elements.Connection.OutputCxnPoint">
   OutputCxnPoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the output connection point for the primary <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -563,7 +530,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_OutputRedundantOwner" data-uid="L5Sharp.Elements.Connection.OutputRedundantOwner">
   OutputRedundantOwner
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a value indicating whether the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a> output is a redundant owner.</p>
@@ -595,7 +562,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_OutputSize" data-uid="L5Sharp.Elements.Connection.OutputSize">
   OutputSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the output size for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -623,14 +590,47 @@
 
 
 
+  <a id="L5Sharp_Elements_Connection_OutputTag_" data-uid="L5Sharp.Elements.Connection.OutputTag*"></a>
+
+  <h3 id="L5Sharp_Elements_Connection_OutputTag" data-uid="L5Sharp.Elements.Connection.OutputTag">
+  OutputTag
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L193"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the Tag that represents the output channel data for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a> element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tag? OutputTag { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Components.Tag.html">Tag</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Components.Tag.html">Tag</a> component containing the module defined data structure for the output connection data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="L5Sharp_Elements_Connection_OutputTagSuffix_" data-uid="L5Sharp.Elements.Connection.OutputTagSuffix*"></a>
 
   <h3 id="L5Sharp_Elements_Connection_OutputTagSuffix" data-uid="L5Sharp.Elements.Connection.OutputTagSuffix">
   OutputTagSuffix
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L173"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the suffix for <a class="xref" href="L5Sharp.Elements.Connection.html#L5Sharp_Elements_Connection_Output">Output</a> tag.</p>
+  <div class="markdown level1 summary"><p>The character used to define the tag name for the <a class="xref" href="L5Sharp.Elements.Connection.html#L5Sharp_Elements_Connection_OutputTag">OutputTag</a> element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -645,12 +645,17 @@
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> containing the suffix character if it exists; Otherwise, will default as 'O'.</p>
+</dd>
   </dl>
 
 
 
 
+  <h4 class="section" id="L5Sharp_Elements_Connection_OutputTagSuffix_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This value is used in determining the module tag name. Not all modules serialize this property,
+but still use 'O' as the suffix character for output tags. Therefore, we will default to 'O' if not found.</p>
+</div>
 
 
 
@@ -659,7 +664,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_Priority" data-uid="L5Sharp.Elements.Connection.Priority">
   Priority
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Enums.ConnectionPriority.html">ConnectionPriority</a> value for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -691,7 +696,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_RPI" data-uid="L5Sharp.Elements.Connection.RPI">
   RPI
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value of the Request Packet Interval for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -723,7 +728,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_Type" data-uid="L5Sharp.Elements.Connection.Type">
   Type
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Enums.ConnectionType.html">ConnectionType</a> value for the <a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a>.</p>
@@ -755,7 +760,7 @@
 
   <h3 id="L5Sharp_Elements_Connection_Unicast" data-uid="L5Sharp.Elements.Connection.Unicast">
   Unicast
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L136"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value indicating whether the EtherNet/IP connection is unicast.</p>
@@ -787,7 +792,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/Connection.cs/#L12" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/Connection.cs/#L11" class="edit-link">Edit this page</a>
         </div>
 
         

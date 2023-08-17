@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Enums_Scope" data-uid="L5Sharp.Enums.Scope" class="text-break">
     Class Scope
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L9"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Enums/Scope.cs/#L9"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -92,7 +92,7 @@
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class Scope : LogixEnum&lt;Scope, string&gt;, IEquatable&lt;LogixEnum&lt;Scope, string&gt;&gt;, IComparable&lt;LogixEnum&lt;Scope, string&gt;&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Scope : LogixEnum&lt;Scope, string&gt;, IEquatable&lt;LogixEnum&lt;Scope, string&gt;&gt;, IComparable&lt;LogixEnum&lt;Scope, string&gt;&gt;</code></pre>
   </div>
 
 
@@ -196,7 +196,7 @@
 
   <h3 id="L5Sharp_Enums_Scope_Controller" data-uid="L5Sharp.Enums.Scope.Controller">
   Controller
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Enums/Scope.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Represents a Controller <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> value.</p>
@@ -225,43 +225,9 @@
 
 
 
-  <h3 id="L5Sharp_Enums_Scope_Instruction" data-uid="L5Sharp.Enums.Scope.Instruction">
-  Instruction
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L65"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Represents a Routine <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> value.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly Scope Instruction</code></pre>
-  </div>
-
-
-
-
-  <h4 class="section">Field Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-  <h4 class="section" id="L5Sharp_Enums_Scope_Instruction_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This type is not found in the L5X but one created internally to represent AOIs.</p>
-</div>
-
-
-
-
-
   <h3 id="L5Sharp_Enums_Scope_Null" data-uid="L5Sharp.Enums.Scope.Null">
   Null
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Enums/Scope.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Represents a Null <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> value.</p>
@@ -285,6 +251,9 @@
 
 
 
+  <h4 class="section" id="L5Sharp_Enums_Scope_Null_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>A <code>Null</code> scope will occur on elements objects that have not been added to a container.</p>
+</div>
 
 
 
@@ -292,7 +261,7 @@
 
   <h3 id="L5Sharp_Enums_Scope_Program" data-uid="L5Sharp.Enums.Scope.Program">
   Program
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Enums/Scope.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Represents a Program <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> value.</p>
@@ -320,73 +289,6 @@
 
 
 
-
-  <h3 id="L5Sharp_Enums_Scope_Routine" data-uid="L5Sharp.Enums.Scope.Routine">
-  Routine
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L59"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Represents a Routine <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> value.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly Scope Routine</code></pre>
-  </div>
-
-
-
-
-  <h4 class="section">Field Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
-
-
-  <a id="L5Sharp_Enums_Scope_XName_" data-uid="L5Sharp.Enums.Scope.XName*"></a>
-
-  <h3 id="L5Sharp_Enums_Scope_XName" data-uid="L5Sharp.Enums.Scope.XName">
-  XName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L18"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets the corresponding L5XName for the current <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract XName XName { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xname">XName</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -395,10 +297,10 @@
 
   <h3 id="L5Sharp_Enums_Scope_FromElement_System_Xml_Linq_XElement_" data-uid="L5Sharp.Enums.Scope.FromElement(System.Xml.Linq.XElement)">
   FromElement(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Enums/Scope.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> option for the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
+  <div class="markdown level1 summary"><p>Determines the <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> of the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> by looking up the ancestral chain.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -409,14 +311,15 @@
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>element</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></dt>
-    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> for which to determine the scope of.</p>
+    <dd><p>The element for which to determine the scope of.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Enums.Scope.html">Scope</a> representing the first found container of the provided element.</p>
+    <dd><p><a class="xref" href="L5Sharp.Enums.Scope.html#L5Sharp_Enums_Scope_Program">Program</a> if the element has a <code>Program</code> element ancestor,
+<a class="xref" href="L5Sharp.Enums.Scope.html#L5Sharp_Enums_Scope_Controller">Controller</a> if the element has a <code>Controller</code> element ancestor, <a class="xref" href="L5Sharp.Enums.Scope.html#L5Sharp_Enums_Scope_Null">Null</a> otherwise.</p>
 </dd>
   </dl>
 
@@ -434,7 +337,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Enums/Scope.cs/#L9" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Enums/Scope.cs/#L9" class="edit-link">Edit this page</a>
         </div>
 
         

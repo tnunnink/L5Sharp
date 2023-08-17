@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_LogixMember" data-uid="L5Sharp.LogixMember" class="text-break">
     Class LogixMember
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -140,13 +140,6 @@
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -179,7 +172,7 @@ type/member hierarchy. This allows the root member to notify of a change so subs
 
   <h3 id="L5Sharp_LogixMember__ctor_System_String_L5Sharp_LogixType_" data-uid="L5Sharp.LogixMember.#ctor(System.String,L5Sharp.LogixType)">
   LogixMember(string?, LogixType?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> object with the provided name and logix type.</p>
@@ -216,7 +209,7 @@ will default to <a class="xref" href="L5Sharp.Types.NullType.html">NullType</a>.
 
   <h3 id="L5Sharp_LogixMember__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.LogixMember.#ctor(System.Xml.Linq.XElement)">
   LogixMember(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L59"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a> initialized from the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> data.</p>
@@ -247,8 +240,8 @@ will default to <a class="xref" href="L5Sharp.Types.NullType.html">NullType</a>.
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
     <dd><p><code>element</code> is null.</p>
 </dd>
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
-    <dd><p><code>element</code> does not have required attributes or elements.</p>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p><code>element</code> does not have required attributes or child elements.</p>
 </dd>
   </dl>
 
@@ -262,7 +255,7 @@ will default to <a class="xref" href="L5Sharp.Types.NullType.html">NullType</a>.
 
   <h3 id="L5Sharp_LogixMember_DataType" data-uid="L5Sharp.LogixMember.DataType">
   DataType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The logix type of the <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>.</p>
@@ -305,7 +298,7 @@ This type can be atomic, structure, string, or array.</p>
 
   <h3 id="L5Sharp_LogixMember_Name" data-uid="L5Sharp.LogixMember.Name">
   Name
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The name of the <a class="xref" href="L5Sharp.LogixMember.html">LogixMember</a>.</p>
@@ -345,7 +338,7 @@ This type can be atomic, structure, string, or array.</p>
 
   <h3 id="L5Sharp_LogixMember_Serialize" data-uid="L5Sharp.LogixMember.Serialize">
   Serialize()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> representing the serialized L5X data for a given object.</p>
@@ -381,7 +374,7 @@ This type can be atomic, structure, string, or array.</p>
 
   <h3 id="L5Sharp_LogixMember_DataChanged" data-uid="L5Sharp.LogixMember.DataChanged">
   DataChanged
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An event that triggers when the <a class="xref" href="L5Sharp.LogixMember.html#L5Sharp_LogixMember_DataType">DataType</a> property changes or is set.</p>
@@ -418,7 +411,7 @@ by the in-memory data structure.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixMember.cs/#L36" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixMember.cs/#L36" class="edit-link">Edit this page</a>
         </div>
 
         

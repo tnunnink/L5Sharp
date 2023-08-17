@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_DataTypeMember" data-uid="L5Sharp.Components.DataTypeMember" class="text-break">
     Class DataTypeMember
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -144,13 +144,22 @@
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;DataTypeMember&gt;.Replace(DataTypeMember)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;DataTypeMember&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -218,24 +227,8 @@
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -249,7 +242,7 @@
 
   <h3 id="L5Sharp_Components_DataTypeMember__ctor" data-uid="L5Sharp.Components.DataTypeMember.#ctor">
   DataTypeMember()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.DataTypeMember.html">DataTypeMember</a> with default values.</p>
@@ -276,7 +269,7 @@
 
   <h3 id="L5Sharp_Components_DataTypeMember__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.DataTypeMember.#ctor(System.Xml.Linq.XElement)">
   DataTypeMember(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.DataTypeMember.html">DataTypeMember</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
@@ -319,7 +312,7 @@
 
   <h3 id="L5Sharp_Components_DataTypeMember_BitNumber" data-uid="L5Sharp.Components.DataTypeMember.BitNumber">
   BitNumber
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The bit number of the hidden member that this boolean member maps to or is backed by.</p>
@@ -353,7 +346,7 @@
 
   <h3 id="L5Sharp_Components_DataTypeMember_DataType" data-uid="L5Sharp.Components.DataTypeMember.DataType">
   DataType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The name of the data type of the member.</p>
@@ -388,7 +381,7 @@ Valid value is required for valid import.</p>
 
   <h3 id="L5Sharp_Components_DataTypeMember_Dimension" data-uid="L5Sharp.Components.DataTypeMember.Dimension">
   Dimension
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The array dimension of the member.</p>
@@ -405,10 +398,8 @@ Valid value is required for valid import.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.Dimensions.html">Dimensions</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Core.Dimensions.html">Dimensions</a> representing the array dimensions of the member.
-Default is <a class="xref" href="L5Sharp.Core.Dimensions.html#L5Sharp_Core_Dimensions_Empty">Empty</a>.
-Members should not have multidimensional arrays.</p>
+    <dt><a class="xref" href="L5Sharp.Common.Dimensions.html">Dimensions</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Common.Dimensions.html">Dimensions</a> representing the array dimensions of the member.</p>
 </dd>
   </dl>
 
@@ -423,7 +414,7 @@ Members should not have multidimensional arrays.</p>
 
   <h3 id="L5Sharp_Components_DataTypeMember_ExternalAccess" data-uid="L5Sharp.Components.DataTypeMember.ExternalAccess">
   ExternalAccess
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The external access of the member.</p>
@@ -441,8 +432,7 @@ Members should not have multidimensional arrays.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="L5Sharp.Enums.ExternalAccess.html">ExternalAccess</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Enums.ExternalAccess.html">ExternalAccess</a> representing read/write access of the member.
-Default is <a class="xref" href="L5Sharp.Enums.ExternalAccess.html#L5Sharp_Enums_ExternalAccess_ReadWrite">ReadWrite</a>.</p>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.ExternalAccess.html">ExternalAccess</a> representing read/write access of the member.</p>
 </dd>
   </dl>
 
@@ -457,7 +447,7 @@ Default is <a class="xref" href="L5Sharp.Enums.ExternalAccess.html#L5Sharp_Enums
 
   <h3 id="L5Sharp_Components_DataTypeMember_Hidden" data-uid="L5Sharp.Components.DataTypeMember.Hidden">
   Hidden
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An flag indicating whether the member is a hidden backing member for another boolean member of the data type.</p>
@@ -491,7 +481,7 @@ does not exist for the underlying element.</p>
 
   <h3 id="L5Sharp_Components_DataTypeMember_Radix" data-uid="L5Sharp.Components.DataTypeMember.Radix">
   Radix
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The radix value format of the member.</p>
@@ -509,9 +499,7 @@ does not exist for the underlying element.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a> representing the value type format of the member.
-Default is <a class="xref" href="L5Sharp.Enums.Radix.html#L5Sharp_Enums_Radix_Null">Null</a>.
-Should be <a class="xref" href="L5Sharp.Enums.Radix.html#L5Sharp_Enums_Radix_Null">Null</a> for all non atomic types.</p>
+    <dd><p>A <a class="xref" href="L5Sharp.Enums.Radix.html">Radix</a> representing the value type format of the member.</p>
 </dd>
   </dl>
 
@@ -526,7 +514,7 @@ Should be <a class="xref" href="L5Sharp.Enums.Radix.html#L5Sharp_Enums_Radix_Nul
 
   <h3 id="L5Sharp_Components_DataTypeMember_Target" data-uid="L5Sharp.Components.DataTypeMember.Target">
   Target
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The name of the hidden member that is the backing member for this data type member.</p>
@@ -561,7 +549,7 @@ members.
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/DataTypeMember.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/DataTypeMember.cs/#L16" class="edit-link">Edit this page</a>
         </div>
 
         

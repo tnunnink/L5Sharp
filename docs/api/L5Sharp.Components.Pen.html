@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_Pen" data-uid="L5Sharp.Components.Pen" class="text-break">
     Class Pen
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -144,13 +144,22 @@
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;Pen&gt;.Replace(Pen)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;Pen&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -218,24 +227,8 @@
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -253,7 +246,7 @@
 
   <h3 id="L5Sharp_Components_Pen__ctor" data-uid="L5Sharp.Components.Pen.#ctor">
   Pen()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Pen.html">Pen</a> with default values.</p>
@@ -280,7 +273,7 @@
 
   <h3 id="L5Sharp_Components_Pen__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.Pen.#ctor(System.Xml.Linq.XElement)">
   Pen(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L40"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Pen.html">Pen</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
@@ -323,7 +316,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Color" data-uid="L5Sharp.Components.Pen.Color">
   Color
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the color of the line in RGB format. Type the hex number for the color (16#0000_0000 – 16#00FF_FFFF).</p>
@@ -355,7 +348,7 @@
 
   <h3 id="L5Sharp_Components_Pen_EngUnits" data-uid="L5Sharp.Components.Pen.EngUnits">
   EngUnits
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify engineering units. For example, rpm, gallon, fps, and degrees.</p>
@@ -387,7 +380,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Marker" data-uid="L5Sharp.Components.Pen.Marker">
   Marker
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the line marker (0...83)</p>
@@ -419,7 +412,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Max" data-uid="L5Sharp.Components.Pen.Max">
   Max
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the maximum value for the pen. The maximum cannot be less than or equal to the minimum.</p>
@@ -451,7 +444,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Min" data-uid="L5Sharp.Components.Pen.Min">
   Min
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L110"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the minimum value for the pen. The minimum cannot be greater than or equal to the maximum.</p>
@@ -483,7 +476,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Style" data-uid="L5Sharp.Components.Pen.Style">
   Style
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L92"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the style of line.</p>
@@ -521,7 +514,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Type" data-uid="L5Sharp.Components.Pen.Type">
   Type
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L75"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the line type (Analog, Digital, or Full-Width).</p>
@@ -553,7 +546,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Visible" data-uid="L5Sharp.Components.Pen.Visible">
   Visible
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify whether or not the line should be visible</p>
@@ -586,7 +579,7 @@
 
   <h3 id="L5Sharp_Components_Pen_Width" data-uid="L5Sharp.Components.Pen.Width">
   Width
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L66"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the width of the line in pixels (1...10).</p>
@@ -618,7 +611,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Pen.cs/#L18" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Pen.cs/#L18" class="edit-link">Edit this page</a>
         </div>
 
         

@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_Task" data-uid="L5Sharp.Components.Task" class="text-break">
     Class Task
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -144,13 +144,22 @@
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;Task&gt;.Replace(Task)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;Task&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -218,24 +227,8 @@
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -257,7 +250,7 @@
 
   <h3 id="L5Sharp_Components_Task__ctor" data-uid="L5Sharp.Components.Task.#ctor">
   Task()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Task.html">Task</a> with default values.</p>
@@ -288,7 +281,7 @@ and 500ms <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_
 
   <h3 id="L5Sharp_Components_Task__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.Task.#ctor(System.Xml.Linq.XElement)">
   Task(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Task.html">Task</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
@@ -331,7 +324,7 @@ and 500ms <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_
 
   <h3 id="L5Sharp_Components_Task_DisableUpdateOutputs" data-uid="L5Sharp.Components.Task.DisableUpdateOutputs">
   DisableUpdateOutputs
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The value indicating whether the task is set to disable updating output values.</p>
@@ -364,7 +357,7 @@ and 500ms <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_
 
   <h3 id="L5Sharp_Components_Task_EnableTimeout" data-uid="L5Sharp.Components.Task.EnableTimeout">
   EnableTimeout
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L141"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The value indicating whether timeouts are enabled for the event task. Only used for event tasks.</p>
@@ -398,7 +391,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_EventTag" data-uid="L5Sharp.Components.Task.EventTag">
   EventTag
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The tag name that the event task consumes. Only used for event tasks.</p>
@@ -415,8 +408,8 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
-    <dd><p>A <a class="xref" href="L5Sharp.Core.TagName.html">TagName</a> value indicating what tag to consume. Returns <code>null</code> for non-event tasks.</p>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Common.TagName.html">TagName</a> value indicating what tag to consume. Returns <code>null</code> for non-event tasks.</p>
 </dd>
   </dl>
 
@@ -434,7 +427,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_EventTrigger" data-uid="L5Sharp.Components.Task.EventTrigger">
   EventTrigger
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L115"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The trigger for the event task. Only used for event tasks.</p>
@@ -467,7 +460,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_InhibitTask" data-uid="L5Sharp.Components.Task.InhibitTask">
   InhibitTask
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The value indicating whether the task is inhibited.</p>
@@ -500,7 +493,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_Priority" data-uid="L5Sharp.Components.Task.Priority">
   Priority
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L63"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The scan priority of the task component. Default of 10.</p>
@@ -517,9 +510,9 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TaskPriority.html">TaskPriority</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a></dt>
     <dd><blockquote>
-<p>A <a class="xref" href="L5Sharp.Core.TaskPriority.html">TaskPriority</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> priority of the task.</p>
+<p>A <a class="xref" href="L5Sharp.Common.TaskPriority.html">TaskPriority</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> priority of the task.</p>
 </blockquote>
 </dd>
   </dl>
@@ -535,7 +528,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_Rate" data-uid="L5Sharp.Components.Task.Rate">
   Rate
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The scan rate (ms) of the task component. Default of 10.</p>
@@ -552,9 +545,9 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.ScanRate.html">ScanRate</a>?</dt>
+    <dt><a class="xref" href="L5Sharp.Common.ScanRate.html">ScanRate</a>?</dt>
     <dd><blockquote>
-<p>A <a class="xref" href="L5Sharp.Core.ScanRate.html">ScanRate</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> rate of the task.</p>
+<p>A <a class="xref" href="L5Sharp.Common.ScanRate.html">ScanRate</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> rate of the task.</p>
 </blockquote>
 </dd>
   </dl>
@@ -570,7 +563,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_ScheduledPrograms" data-uid="L5Sharp.Components.Task.ScheduledPrograms">
   ScheduledPrograms
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The collection of program names that are scheduled to the task.</p>
@@ -606,7 +599,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_Type" data-uid="L5Sharp.Components.Task.Type">
   Type
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the type of the task component (Continuous, Periodic, Event).</p>
@@ -639,7 +632,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_Watchdog" data-uid="L5Sharp.Components.Task.Watchdog">
   Watchdog
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The watchdog rate (ms) of the task component. Default of 500.</p>
@@ -656,7 +649,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.Watchdog.html">Watchdog</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.Watchdog.html">Watchdog</a></dt>
     <dd><blockquote>
 <p>A <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_Watchdog">Watchdog</a> value type representing the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> watchdog of the task.</p>
 </blockquote>
@@ -678,7 +671,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_Cancel_System_String_" data-uid="L5Sharp.Components.Task.Cancel(System.String)">
   Cancel(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L173"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes the specified program name from the underlying list of <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_ScheduledPrograms">ScheduledPrograms</a></p>
@@ -711,7 +704,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 
   <h3 id="L5Sharp_Components_Task_Schedule_System_String_" data-uid="L5Sharp.Components.Task.Schedule(System.String)">
   Schedule(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds the provided program name to the underlying list of <a class="xref" href="L5Sharp.Components.Task.html#L5Sharp_Components_Task_ScheduledPrograms">ScheduledPrograms</a>.</p>
@@ -744,7 +737,7 @@ they are disabled. Returns <code>null</code> for non-event tasks.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Task.cs/#L25" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Task.cs/#L25" class="edit-link">Edit this page</a>
         </div>
 
         

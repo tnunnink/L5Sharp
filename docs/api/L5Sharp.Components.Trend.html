@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_Trend" data-uid="L5Sharp.Components.Trend" class="text-break">
     Class Trend
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -144,13 +144,22 @@
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;Trend&gt;.Replace(Trend)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;Trend&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -218,27 +227,15 @@
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
-  </dd></dl>
-
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
   </dd></dl>
 
 
 
+
+  <h2 id="L5Sharp_Components_Trend_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Observe these guidelines when defining a trend:<br>
+• A trend can support as many as eight pen declarations.<br></p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors
@@ -249,7 +246,7 @@
 
   <h3 id="L5Sharp_Components_Trend__ctor" data-uid="L5Sharp.Components.Trend.#ctor">
   Trend()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new default <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> initialized with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> having the
@@ -277,7 +274,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Trend__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.Trend.#ctor(System.Xml.Linq.XElement)">
   Trend(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></p>
@@ -320,7 +317,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_Components_Trend_CaptureSize" data-uid="L5Sharp.Components.Trend.CaptureSize">
   CaptureSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the number of samples for each capture.</p>
@@ -358,7 +355,7 @@ whichever is greater. If the CaptureSizeType is TimePeriod, the range is SampleP
 
   <h3 id="L5Sharp_Components_Trend_CaptureSizeType" data-uid="L5Sharp.Components.Trend.CaptureSizeType">
   CaptureSizeType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Define how the capture size is specified.</p>
@@ -366,7 +363,7 @@ whichever is greater. If the CaptureSizeType is TimePeriod, the range is SampleP
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CaptureSizeType CaptureSizeType { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public CaptureSizeType? CaptureSizeType { get; set; }</code></pre>
   </div>
 
 
@@ -391,7 +388,7 @@ whichever is greater. If the CaptureSizeType is TimePeriod, the range is SampleP
 
   <h3 id="L5Sharp_Components_Trend_NumberOfCaptures" data-uid="L5Sharp.Components.Trend.NumberOfCaptures">
   NumberOfCaptures
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specifies the maximum number of captures allowed (1...100).</p>
@@ -423,7 +420,7 @@ whichever is greater. If the CaptureSizeType is TimePeriod, the range is SampleP
 
   <h3 id="L5Sharp_Components_Trend_Pens" data-uid="L5Sharp.Components.Trend.Pens">
   Pens
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L329"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L379"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The collection of <a class="xref" href="L5Sharp.Components.Pen.html">Pen</a> components the <code>Trend</code> is configured with.</p>
@@ -454,15 +451,80 @@ whichever is greater. If the CaptureSizeType is TimePeriod, the range is SampleP
 
 
 
+  <a id="L5Sharp_Components_Trend_PostSamples_" data-uid="L5Sharp.Components.Trend.PostSamples*"></a>
+
+  <h3 id="L5Sharp_Components_Trend_PostSamples" data-uid="L5Sharp.Components.Trend.PostSamples">
+  PostSamples
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L360"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the number of post-samples (0...1000) if the PostSampleType is Samples. Specify a time period
+(0...(SamplePeriod ∗ 1000)) that covers post-samples if the PostSampleType is TimePeriod.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? PostSamples { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Components_Trend_PostSamplesType_" data-uid="L5Sharp.Components.Trend.PostSamplesType*"></a>
+
+  <h3 id="L5Sharp_Components_Trend_PostSamplesType" data-uid="L5Sharp.Components.Trend.PostSamplesType">
+  PostSamplesType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L350"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Define how post-samples are specified. Type Samples or TimePeriod.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SamplesType? PostSamplesType { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.SamplesType.html">SamplesType</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="L5Sharp_Components_Trend_PreSamples_" data-uid="L5Sharp.Components.Trend.PreSamples*"></a>
 
   <h3 id="L5Sharp_Components_Trend_PreSamples" data-uid="L5Sharp.Components.Trend.PreSamples">
   PreSamples
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L193"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L215"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the number of pre-samples (0...1000) if the PreSampleType is Samples. Specify a time period
-(0...(SamplePeriod ∗ 1000)) that covers pre-samples if the PreSampleType is TimePeriod</p>
+(0...(SamplePeriod ∗ 1000)) that covers pre-samples if the PreSampleType is TimePeriod.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -487,11 +549,43 @@ whichever is greater. If the CaptureSizeType is TimePeriod, the range is SampleP
 
 
 
+  <a id="L5Sharp_Components_Trend_PreSamplesType_" data-uid="L5Sharp.Components.Trend.PreSamplesType*"></a>
+
+  <h3 id="L5Sharp_Components_Trend_PreSamplesType" data-uid="L5Sharp.Components.Trend.PreSamplesType">
+  PreSamplesType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L205"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Define how pre-samples are specified. Type Samples or TimePeriod.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SamplesType? PreSamplesType { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Enums.SamplesType.html">SamplesType</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="L5Sharp_Components_Trend_SamplePeriod_" data-uid="L5Sharp.Components.Trend.SamplePeriod*"></a>
 
   <h3 id="L5Sharp_Components_Trend_SamplePeriod" data-uid="L5Sharp.Components.Trend.SamplePeriod">
   SamplePeriod
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify how often trending tags are collected in milliseconds (1 msec...30 minutes).</p>
@@ -523,7 +617,7 @@ whichever is greater. If the CaptureSizeType is TimePeriod, the range is SampleP
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerLogicalOperation" data-uid="L5Sharp.Components.Trend.StartTriggerLogicalOperation">
   StartTriggerLogicalOperation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L131"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a logical operation (AND or OR) that is performed on StartTriggerXXX1 and StartTriggerXXX2.</p>
@@ -560,7 +654,7 @@ StartTriggerOperation2, StartTriggerTargetType2, and StartTriggerTargetValue2 or
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerOperation1" data-uid="L5Sharp.Components.Trend.StartTriggerOperation1">
   StartTriggerOperation1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L86"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the operation that is applied on <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StartTriggerTag1">StartTriggerTag1</a>,
@@ -593,7 +687,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerOperation2" data-uid="L5Sharp.Components.Trend.StartTriggerOperation2">
   StartTriggerOperation2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L150"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L163"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the operation that is applied on <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StartTriggerTag2">StartTriggerTag2</a>,
@@ -626,7 +720,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTag1" data-uid="L5Sharp.Components.Trend.StartTriggerTag1">
   StartTriggerTag1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the tag name of the first start trigger. The name must be one of the pen names.</p>
@@ -643,7 +737,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -658,7 +752,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTag2" data-uid="L5Sharp.Components.Trend.StartTriggerTag2">
   StartTriggerTag2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the tag name of the second start trigger. The name must be one of the pen names.</p>
@@ -675,7 +769,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -690,7 +784,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTargetTag1" data-uid="L5Sharp.Components.Trend.StartTriggerTargetTag1">
   StartTriggerTargetTag1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target tag if the StartTriggerTargetType is <code>TargetTag</code>.</p>
@@ -707,7 +801,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -725,7 +819,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTargetTag2" data-uid="L5Sharp.Components.Trend.StartTriggerTargetTag2">
   StartTriggerTargetTag2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L183"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L196"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target tag if the StartTriggerTargetType is <code>TargetTag</code>.</p>
@@ -742,7 +836,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -760,7 +854,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTargetType1" data-uid="L5Sharp.Components.Trend.StartTriggerTargetType1">
   StartTriggerTargetType1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the type of the first start trigger target.</p>
@@ -796,7 +890,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTargetType2" data-uid="L5Sharp.Components.Trend.StartTriggerTargetType2">
   StartTriggerTargetType2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the type of the first start trigger target.</p>
@@ -832,7 +926,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTargetValue1" data-uid="L5Sharp.Components.Trend.StartTriggerTargetValue1">
   StartTriggerTargetValue1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target value if the <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StartTriggerTargetType1">StartTriggerTargetType1</a> is <code>TargetValue</code>.</p>
@@ -867,7 +961,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerTargetValue2" data-uid="L5Sharp.Components.Trend.StartTriggerTargetValue2">
   StartTriggerTargetValue2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L186"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target value if the <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StartTriggerTargetType2">StartTriggerTargetType2</a> is <code>TargetValue</code>.</p>
@@ -902,7 +996,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StartTriggerType" data-uid="L5Sharp.Components.Trend.StartTriggerType">
   StartTriggerType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L67"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the type of the start trigger</p>
@@ -934,7 +1028,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerLogicalOperation" data-uid="L5Sharp.Components.Trend.StopTriggerLogicalOperation">
   StopTriggerLogicalOperation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L267"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L289"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a logical operation (AND or OR) that is performed on StopTriggerXXX1 and StopTriggerXXX2.</p>
@@ -971,7 +1065,7 @@ StopTriggerOperation2, StopTriggerTargetType2, and StopTriggerTargetValue2 or St
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerOperation1" data-uid="L5Sharp.Components.Trend.StopTriggerOperation1">
   StopTriggerOperation1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L222"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L244"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the operation that is applied on <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StopTriggerTag1">StopTriggerTag1</a>,
@@ -1004,7 +1098,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerOperation2" data-uid="L5Sharp.Components.Trend.StopTriggerOperation2">
   StopTriggerOperation2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L286"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L308"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the operation that is applied on <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StopTriggerTag2">StopTriggerTag2</a>,
@@ -1037,7 +1131,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTag1" data-uid="L5Sharp.Components.Trend.StopTriggerTag1">
   StopTriggerTag1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L212"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L234"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the tag name of the first start trigger. The name must be one of the pen names.</p>
@@ -1054,7 +1148,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -1069,7 +1163,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTag2" data-uid="L5Sharp.Components.Trend.StopTriggerTag2">
   StopTriggerTag2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L298"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the tag name of the second start trigger. The name must be one of the pen names.</p>
@@ -1086,7 +1180,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -1101,7 +1195,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTargetTag1" data-uid="L5Sharp.Components.Trend.StopTriggerTargetTag1">
   StopTriggerTargetTag1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L255"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L277"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target tag if the StopTriggerTargetType is <code>TargetTag</code>.</p>
@@ -1118,7 +1212,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -1136,7 +1230,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTargetTag2" data-uid="L5Sharp.Components.Trend.StopTriggerTargetTag2">
   StopTriggerTargetTag2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L319"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L341"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target tag if the StopTriggerTargetType is <code>TargetTag</code>.</p>
@@ -1153,7 +1247,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.Core.TagName.html">TagName</a></dt>
+    <dt><a class="xref" href="L5Sharp.Common.TagName.html">TagName</a></dt>
     <dd></dd>
   </dl>
 
@@ -1171,7 +1265,7 @@ and <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTargetType1" data-uid="L5Sharp.Components.Trend.StopTriggerTargetType1">
   StopTriggerTargetType1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L235"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L257"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the type of the first start trigger target.</p>
@@ -1207,7 +1301,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTargetType2" data-uid="L5Sharp.Components.Trend.StopTriggerTargetType2">
   StopTriggerTargetType2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L299"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L321"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the type of the first start trigger target.</p>
@@ -1243,7 +1337,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTargetValue1" data-uid="L5Sharp.Components.Trend.StopTriggerTargetValue1">
   StopTriggerTargetValue1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L245"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L267"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target value if the <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StopTriggerTargetType1">StopTriggerTargetType1</a> is <code>TargetValue</code>.</p>
@@ -1278,7 +1372,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerTargetValue2" data-uid="L5Sharp.Components.Trend.StopTriggerTargetValue2">
   StopTriggerTargetValue2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L309"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L331"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify a target value if the <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Components_Trend_StopTriggerTargetType2">StopTriggerTargetType2</a> is <code>TargetValue</code>.</p>
@@ -1313,7 +1407,7 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
   <h3 id="L5Sharp_Components_Trend_StopTriggerType" data-uid="L5Sharp.Components.Trend.StopTriggerType">
   StopTriggerType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L203"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L225"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify the type of the stop trigger</p>
@@ -1342,11 +1436,43 @@ Otherwise, <a class="xref" href="L5Sharp.Components.Trend.html#L5Sharp_Component
 
 
 
+  <a id="L5Sharp_Components_Trend_TrendxVersion_" data-uid="L5Sharp.Components.Trend.TrendxVersion*"></a>
+
+  <h3 id="L5Sharp_Components_Trend_TrendxVersion" data-uid="L5Sharp.Components.Trend.TrendxVersion">
+  TrendxVersion
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L369"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specify the version of the Trend feature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? TrendxVersion { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Trend.cs/#L15" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Trend.cs/#L19" class="edit-link">Edit this page</a>
         </div>
 
         

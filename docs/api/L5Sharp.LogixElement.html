@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_LogixElement" data-uid="L5Sharp.LogixElement" class="text-break">
     Class LogixElement
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -119,6 +119,7 @@ methods for easily getting and setting data.</p>
   <dl class="typelist derived">
     <dt>Derived</dt>
     <dd>
+      <div><a class="xref" href="L5Sharp.Elements.Communications.html">Communications</a></div>
       <div><a class="xref" href="L5Sharp.Elements.Connection.html">Connection</a></div>
       <div><a class="xref" href="L5Sharp.Elements.Line.html">Line</a></div>
       <div><a class="xref" href="L5Sharp.Elements.ParameterConnection.html">ParameterConnection</a></div>
@@ -126,6 +127,7 @@ methods for easily getting and setting data.</p>
       <div><a class="xref" href="L5Sharp.Elements.RedundancyInfo.html">RedundancyInfo</a></div>
       <div><a class="xref" href="L5Sharp.Elements.Rung.html">Rung</a></div>
       <div><a class="xref" href="L5Sharp.Elements.SafetyInfo.html">SafetyInfo</a></div>
+      <div><a class="xref" href="L5Sharp.Elements.Security.html">Security</a></div>
       <div><a class="xref" href="L5Sharp.Elements.WatchTag.html">WatchTag</a></div>
       <div><a class="xref" href="L5Sharp.LogixComponent-1.html">LogixComponent&lt;TComponent&gt;</a></div>
     </dd>
@@ -157,19 +159,6 @@ methods for easily getting and setting data.</p>
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -183,7 +172,7 @@ methods for easily getting and setting data.</p>
 
   <h3 id="L5Sharp_LogixElement__ctor" data-uid="L5Sharp.LogixElement.#ctor">
   LogixElement()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new default <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> initialized with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> having the
@@ -211,7 +200,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_LogixElement__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.LogixElement.#ctor(System.Xml.Linq.XElement)">
   LogixElement(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a></p>
@@ -253,7 +242,7 @@ L5XType name of the element.</p>
 
   <h3 id="L5Sharp_LogixElement_Element" data-uid="L5Sharp.LogixElement.Element">
   Element
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> representing the backing data for the entity. Use this object to store
@@ -283,6 +272,47 @@ L5X data.</p>
 
 
 
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="L5Sharp_LogixElement_IsAttached_" data-uid="L5Sharp.LogixElement.IsAttached*"></a>
+
+  <h3 id="L5Sharp_LogixElement_IsAttached" data-uid="L5Sharp.LogixElement.IsAttached">
+  IsAttached
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>An indication as to whether this element is attached to a L5X document.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsAttached { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if this is an attached element; Otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixElement_IsAttached_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
+If so we will assume this element is attached to an overall L5X document.</p>
+</div>
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -291,7 +321,7 @@ L5X data.</p>
 
   <h3 id="L5Sharp_LogixElement_Clone" data-uid="L5Sharp.LogixElement.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a new deep cloned instance of the current type.</p>
@@ -334,7 +364,7 @@ single <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.l
 
   <h3 id="L5Sharp_LogixElement_Clone__1" data-uid="L5Sharp.LogixElement.Clone``1">
   Clone&lt;TElement&gt;()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a new deep cloned instance as the specified <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> type.</p>
@@ -386,11 +416,11 @@ single <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.l
 
   <h3 id="L5Sharp_LogixElement_GetComplex__1_System_String_" data-uid="L5Sharp.LogixElement.GetComplex``1(System.String)">
   GetComplex&lt;T&gt;(string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L190"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L218"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a child <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> deserialized as the specified type if it exists.
-If the element does not exist, returns <code>default</code> value of the generic type parameter.</p>
+  <div class="markdown level1 summary"><p>Gets a immediate child element of the specified member name if it exists and deserializes it as the
+specific generic type parameter. If the element does not exist, returns <code>default</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -426,7 +456,7 @@ If not found, returns <code>default</code>.</p>
 
 
   <h4 class="section" id="L5Sharp_LogixElement_GetComplex__1_System_String__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This method makes getting/setting data on <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">Element</a> as concise as possible from derived classes.
+  <div class="markdown level1 remarks"><p>This method makes getting/setting data on <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">Element</a> as concise as possible for derived classes.
 This method uses the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.compilerservices.callermembernameattribute">CallerMemberNameAttribute</a> so the deriving classes don't have to specify
 the property name (assuming its the name matches the underlying element property).</p>
 </div>
@@ -438,7 +468,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_GetContainer__1_System_String_" data-uid="L5Sharp.LogixElement.GetContainer``1(System.String)">
   GetContainer&lt;TChild&gt;(string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L209"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L237"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a child <a class="xref" href="L5Sharp.LogixContainer-1.html">LogixContainer&lt;TElement&gt;</a> with the specified element name, representing the root of a
@@ -484,7 +514,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
     <dd><p>A child element with <code>name</code> does not exist.</p>
 </dd>
   </dl>
@@ -495,7 +525,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_GetDateTime_System_String_System_String_" data-uid="L5Sharp.LogixElement.GetDateTime(System.String,System.String)">
   GetDateTime(string?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L229"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L257"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the date/time value of the specified attribute name from the current element if it exists.
@@ -543,7 +573,7 @@ properties, we need to allow that to be specified.</p>
 
   <h3 id="L5Sharp_LogixElement_GetProperty__1_System_String_" data-uid="L5Sharp.LogixElement.GetProperty``1(System.String)">
   GetProperty&lt;T&gt;(string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L169"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L197"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value of the specified child element parsed as the specified generic type parameter if it exists.
@@ -595,11 +625,11 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_GetRequiredValue__1_System_String_" data-uid="L5Sharp.LogixElement.GetRequiredValue``1(System.String)">
   GetRequiredValue&lt;T&gt;(string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value of the specified attribute name from the element parsed as the specified generic type parameter.
-If the attribute does not exist, throw a <a class="xref" href="L5Sharp.L5XException.html">L5XException</a>.</p>
+If the attribute does not exist, throw a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -641,7 +671,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
     <dd><p>No attribute with the provided name was found on <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">Element</a>.</p>
 </dd>
   </dl>
@@ -652,7 +682,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_GetValue__1_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_" data-uid="L5Sharp.LogixElement.GetValue``1(System.Func{System.Xml.Linq.XElement,System.Xml.Linq.XElement},System.String)">
   GetValue&lt;T&gt;(Func&lt;XElement, XElement?&gt;, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value of the selected attribute parsed as the specified generic type parameter if it exists.
@@ -708,7 +738,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_GetValue__1_System_String_" data-uid="L5Sharp.LogixElement.GetValue``1(System.String)">
   GetValue&lt;T&gt;(string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
@@ -760,7 +790,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_GetValue__1_System_Xml_Linq_XName_System_String_" data-uid="L5Sharp.LogixElement.GetValue``1(System.Xml.Linq.XName,System.String)">
   GetValue&lt;T&gt;(XName, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L157"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value of a child element attribute parsed as the specified generic type parameter if it exists.
@@ -811,11 +841,49 @@ the property name (assuming its the name matches the underlying element property
 
 
 
+  <a id="L5Sharp_LogixElement_L5X_" data-uid="L5Sharp.LogixElement.L5X*"></a>
+
+  <h3 id="L5Sharp_LogixElement_L5X" data-uid="L5Sharp.LogixElement.L5X">
+  L5X()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a> instance  wrapping the current element's root L5X element if it exists.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LogixContent? L5X()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a></dt>
+    <dd><p>If the current element is attached to a L5X document (i.e. has a root content element),
+then a new <a class="xref" href="L5Sharp.LogixContent.html">LogixContent</a> instance wrapping the root; Otherwise, <code>null</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="L5Sharp_LogixElement_L5X_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This allows attached logix elements to reach up to the content file in order to traverse or retrieve
+other elements in the L5X. This is helpful for other extensions that need rely on the L5X to perform functions.</p>
+</div>
+
+
+
+
   <a id="L5Sharp_LogixElement_Serialize_" data-uid="L5Sharp.LogixElement.Serialize*"></a>
 
   <h3 id="L5Sharp_LogixElement_Serialize" data-uid="L5Sharp.LogixElement.Serialize">
   Serialize()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> for the <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a>.</p>
@@ -848,7 +916,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_SetComplex__1___0_System_String_" data-uid="L5Sharp.LogixElement.SetComplex``1(``0,System.String)">
   SetComplex&lt;T&gt;(T?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L379"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L407"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the complex type object of a child element, adds a child element, or removes a child element.</p>
@@ -897,7 +965,7 @@ classes don't have to specify the property name (assuming its the name matches t
 
   <h3 id="L5Sharp_LogixElement_SetContainer__1_L5Sharp_LogixContainer___0__System_String_" data-uid="L5Sharp.LogixElement.SetContainer``1(L5Sharp.LogixContainer{``0},System.String)">
   SetContainer&lt;TChild&gt;(LogixContainer&lt;TChild&gt;?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L410"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L438"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the value of a child container, adds a child container, or removes a child container.</p>
@@ -945,7 +1013,7 @@ classes don't have to specify the property name (assuming its the name matches t
 
   <h3 id="L5Sharp_LogixElement_SetDateTime_System_Nullable_System_DateTime__System_String_System_String_" data-uid="L5Sharp.LogixElement.SetDateTime(System.Nullable{System.DateTime},System.String,System.String)">
   SetDateTime(DateTime?, string?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L440"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L468"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the date/time value of a attribute, adds a attribute, or removes a attribute if null.</p>
@@ -989,7 +1057,7 @@ properties, we should allow that to be specified.</p>
 
   <h3 id="L5Sharp_LogixElement_SetProperty__1___0_System_String_" data-uid="L5Sharp.LogixElement.SetProperty``1(``0,System.String)">
   SetProperty&lt;T&gt;(T, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L348"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L376"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the value of a child element, adds a child element, or removes a child element.</p>
@@ -1038,7 +1106,7 @@ classes don't have to specify the property name (assuming its the name matches t
 
   <h3 id="L5Sharp_LogixElement_SetRequiredValue__1___0_System_String_" data-uid="L5Sharp.LogixElement.SetRequiredValue``1(``0,System.String)">
   SetRequiredValue&lt;T&gt;(T, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L355"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets or adds the value of an attribute on the underlying element.</p>
@@ -1092,7 +1160,7 @@ This method will throw an exception if the <code>value</code> is null.</p>
 
   <h3 id="L5Sharp_LogixElement_SetValue__1___0_System_Func_System_Xml_Linq_XElement_System_Xml_Linq_XElement__System_String_" data-uid="L5Sharp.LogixElement.SetValue``1(``0,System.Func{System.Xml.Linq.XElement,System.Xml.Linq.XElement},System.String)">
   SetValue&lt;T&gt;(T?, Func&lt;XElement, XElement?&gt;, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L274"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L302"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the value of an attribute, adds an attribute, or removes an attribute for a element obtained using the
@@ -1145,7 +1213,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_SetValue__1___0_System_String_" data-uid="L5Sharp.LogixElement.SetValue``1(``0,System.String)">
   SetValue&lt;T&gt;(T?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L252"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L280"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the value of an attribute, adds an attribute, or removes an attribute.</p>
@@ -1193,7 +1261,7 @@ the property name (assuming its the name matches the underlying element property
 
   <h3 id="L5Sharp_LogixElement_SetValue__1___0_System_Xml_Linq_XName_System_String_" data-uid="L5Sharp.LogixElement.SetValue``1(``0,System.Xml.Linq.XName,System.String)">
   SetValue&lt;T&gt;(T?, XName, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L296"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L324"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the value of an attribute, adds an attribute, or removes an attribute for a nested element
@@ -1246,7 +1314,7 @@ the property name (assuming its the name matches the underlying element property
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixElement.cs/#L14" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixElement.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
         

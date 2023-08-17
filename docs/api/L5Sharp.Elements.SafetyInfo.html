@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Elements_SafetyInfo" data-uid="L5Sharp.Elements.SafetyInfo" class="text-break">
     Class SafetyInfo
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -123,13 +123,19 @@ related to the controller safety.</p>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone">LogixElement.Clone()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -202,19 +208,6 @@ related to the controller safety.</p>
     </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -228,7 +221,7 @@ related to the controller safety.</p>
 
   <h3 id="L5Sharp_Elements_SafetyInfo__ctor" data-uid="L5Sharp.Elements.SafetyInfo.#ctor">
   SafetyInfo()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.SafetyInfo.html">SafetyInfo</a> with default values.</p>
@@ -255,10 +248,10 @@ related to the controller safety.</p>
 
   <h3 id="L5Sharp_Elements_SafetyInfo__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Elements.SafetyInfo.#ctor(System.Xml.Linq.XElement)">
   SafetyInfo(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.WatchTag.html">WatchTag</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Elements.SafetyInfo.html">SafetyInfo</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -298,7 +291,7 @@ related to the controller safety.</p>
 
   <h3 id="L5Sharp_Elements_SafetyInfo_ConfigureSafetyIOAlways" data-uid="L5Sharp.Elements.SafetyInfo.ConfigureSafetyIOAlways">
   ConfigureSafetyIOAlways
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L75"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specify whether to configure safety I/O when replacing safety I/O.</p>
@@ -331,7 +324,7 @@ related to the controller safety.</p>
 
   <h3 id="L5Sharp_Elements_SafetyInfo_SafetyLockPassword" data-uid="L5Sharp.Elements.SafetyInfo.SafetyLockPassword">
   SafetyLockPassword
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specifies the lock password in the controller. This value is encrypted on export.</p>
@@ -364,7 +357,7 @@ related to the controller safety.</p>
 
   <h3 id="L5Sharp_Elements_SafetyInfo_SafetyLocked" data-uid="L5Sharp.Elements.SafetyInfo.SafetyLocked">
   SafetyLocked
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Displays whether the safety controller is locked or not.</p>
@@ -396,11 +389,47 @@ related to the controller safety.</p>
 
 
 
+  <a id="L5Sharp_Elements_SafetyInfo_SafetySignature_" data-uid="L5Sharp.Elements.SafetyInfo.SafetySignature*"></a>
+
+  <h3 id="L5Sharp_Elements_SafetyInfo_SafetySignature" data-uid="L5Sharp.Elements.SafetyInfo.SafetySignature">
+  SafetySignature
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Specifies the safety signature control as defined in the controller properties</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? SafetySignature { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> representing the safety signature.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="L5Sharp_Elements_SafetyInfo_SafetySignature_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This value is exported only; it is ignored on import.</p>
+</div>
+
+
+
+
   <a id="L5Sharp_Elements_SafetyInfo_SafetyUnlockPassword_" data-uid="L5Sharp.Elements.SafetyInfo.SafetyUnlockPassword*"></a>
 
   <h3 id="L5Sharp_Elements_SafetyInfo_SafetyUnlockPassword" data-uid="L5Sharp.Elements.SafetyInfo.SafetyUnlockPassword">
   SafetyUnlockPassword
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specifies the unlock password in the controller. This value is encrypted on export.</p>
@@ -433,7 +462,7 @@ related to the controller safety.</p>
 
   <h3 id="L5Sharp_Elements_SafetyInfo_SignatureRunModeProtect" data-uid="L5Sharp.Elements.SafetyInfo.SignatureRunModeProtect">
   SignatureRunModeProtect
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether you can modify the safety signature when in Run mode.</p>
@@ -466,7 +495,7 @@ related to the controller safety.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Elements/SafetyInfo.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Elements/SafetyInfo.cs/#L11" class="edit-link">Edit this page</a>
         </div>
 
         

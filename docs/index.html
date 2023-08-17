@@ -151,8 +151,8 @@ specific <code>Program</code> component.</p>
 </ul>
 <pre><code class="lang-c#">var tag = content.Tags.Get(&quot;MyTag&quot;);
 </code></pre>
-<div class="CAUTION">
-<h5>Caution</h5>
+<div class="WARNING">
+<h5>Warning</h5>
 <p><code>Get()</code> will throw an exception if the component name was not found or more than one component with
 the specified name exists in the container. This is synonymous with <code>Single()</code> from LINQ.</p>
 </div>
@@ -175,8 +175,8 @@ configure their properties, and add them to the container.</p>
 <pre><code class="lang-c#">var tag = new Tag { Name = &quot;MyTag&quot;, Value = 100 };
 content.Tags.Add(tag);
 </code></pre>
-<div class="CAUTION">
-<h5>Caution</h5>
+<div class="WARNING">
+<h5>Warning</h5>
 <p>Components are not validated as they are created or added to a L5X container. Therefore, adding
 duplicate component names or components with invalid property values may results in import failures.</p>
 </div>

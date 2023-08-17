@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_LogixData" data-uid="L5Sharp.LogixData" class="text-break">
     Class LogixData
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixData.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -137,6 +137,11 @@
 
 
 
+  <h2 id="L5Sharp_LogixData_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This class is built to specifically find and create concrete instances of atomic, predefined, and custom
+user defined logix types at runtime. This allows the user to cast a given logix type down to the most specific
+type as it is deserialized from the L5X tag data structure.</p>
+</div>
 
 
   <h2 class="section" id="properties">Properties
@@ -147,7 +152,7 @@
 
   <h3 id="L5Sharp_LogixData_Null" data-uid="L5Sharp.LogixData.Null">
   Null
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixData.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the singleton null <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> object.</p>
@@ -175,45 +180,6 @@
 
 
 
-  <a id="L5Sharp_LogixData_ScanMode_" data-uid="L5Sharp.LogixData.ScanMode*"></a>
-
-  <h3 id="L5Sharp_LogixData_ScanMode" data-uid="L5Sharp.LogixData.ScanMode">
-  ScanMode
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L47"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The <a class="xref" href="L5Sharp.LogixData.html#L5Sharp_LogixData_ScanMode">ScanMode</a> specifying how <a class="xref" href="L5Sharp.LogixData.html">LogixData</a> should perform reflection scanning
-for types to pre-register for deserialization.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static ScanMode ScanMode { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.ScanMode.html">ScanMode</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-  <h4 class="section" id="L5Sharp_LogixData_ScanMode_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This class will perform reflection based scanning for types matching the all the following criteria:
-Public non-abstract classes that derive from <a class="xref" href="L5Sharp.LogixElement.html">LogixElement</a> or <a class="xref" href="L5Sharp.LogixType.html">LogixType</a> and have public
-constructors accepting a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> object. Types match this criteria will be cached and constructed
-at runtime.</p>
-</div>
-
-
-
-
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -222,7 +188,7 @@ at runtime.</p>
 
   <h3 id="L5Sharp_LogixData_Deserialize_System_Xml_Linq_XElement_" data-uid="L5Sharp.LogixData.Deserialize(System.Xml.Linq.XElement)">
   Deserialize(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixData.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Deserializes an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> into a <a class="xref" href="L5Sharp.LogixType.html">LogixType</a>.</p>
@@ -270,7 +236,7 @@ at runtime.</p>
 
   <h3 id="L5Sharp_LogixData_IsRegistered_System_String_" data-uid="L5Sharp.LogixData.IsRegistered(System.String)">
   IsRegistered(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixData.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines if a type with the specified type name is registered for deserialization.</p>
@@ -278,13 +244,13 @@ at runtime.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsRegistered(string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool IsRegistered(string dataType)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The type name to check.</p>
+    <dt><code>dataType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The data type name to check.</p>
 </dd>
   </dl>
 
@@ -309,7 +275,7 @@ at runtime.</p>
 
   <h3 id="L5Sharp_LogixData_Register__1" data-uid="L5Sharp.LogixData.Register``1">
   Register&lt;TStructure&gt;()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixData.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Register a custom <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a> so that it may be instantiated during deserialization of a L5X.
@@ -353,7 +319,7 @@ accepting a single <a class="xref" href="https://learn.microsoft.com/dotnet/api/
 
   <h3 id="L5Sharp_LogixData_Scan_System_Reflection_Assembly_" data-uid="L5Sharp.LogixData.Scan(System.Reflection.Assembly)">
   Scan(Assembly)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L134"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixData.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Scans the provided assembly using reflection for public non-abstract types inheriting <a class="xref" href="L5Sharp.Types.StructureType.html">StructureType</a>
@@ -381,10 +347,7 @@ deserialization of a L5X.</p>
 
 
   <h4 class="section" id="L5Sharp_LogixData_Scan_System_Reflection_Assembly__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This is to assist with easily registering types within a specific assembly. Note that if <a class="xref" href="L5Sharp.LogixData.html#L5Sharp_LogixData_ScanMode">ScanMode</a>
-is set to <a class="xref" href="L5Sharp.ScanMode.html#L5Sharp_ScanMode_All">All</a>, all assemblies in the app domain will automatically be scanned.
-Therefore, only use this method if <a class="xref" href="L5Sharp.LogixData.html#L5Sharp_LogixData_ScanMode">ScanMode</a> is set to <a class="xref" href="L5Sharp.ScanMode.html#L5Sharp_ScanMode_Internal">Internal</a> or
-<a class="xref" href="L5Sharp.ScanMode.html#L5Sharp_ScanMode_None">None</a>.</p>
+  <div class="markdown level1 remarks"><p>This is to assist with easily registering types within a specific assembly.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -400,7 +363,7 @@ Therefore, only use this method if <a class="xref" href="L5Sharp.LogixData.html#
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/LogixData.cs/#L15" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/LogixData.cs/#L20" class="edit-link">Edit this page</a>
         </div>
 
         

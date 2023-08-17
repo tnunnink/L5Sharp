@@ -45,6 +45,126 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.Address.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.Address.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.Dimensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.Dimensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.NeutralText.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.NeutralText.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.ProductType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.ProductType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.Revision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.Revision.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.ScanRate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.ScanRate.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.TagName.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.TagName.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.TagNameComparer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.TagNameComparer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.TaskPriority.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.TaskPriority.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.Vendor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.Vendor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.Watchdog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.Watchdog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Common.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Common.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/L5Sharp.Components.AddOnInstruction.yml",
       "output": {
         ".html": {
@@ -315,6 +435,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.Communications.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.Communications.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/L5Sharp.Elements.Connection.yml",
       "output": {
         ".html": {
@@ -379,6 +509,16 @@
       "output": {
         ".html": {
           "relative_path": "api/L5Sharp.Elements.SafetyInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Elements.Security.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Elements.Security.html"
         }
       },
       "version": ""
@@ -635,6 +775,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Enums.SamplesType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Enums.SamplesType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/L5Sharp.Enums.Scope.yml",
       "output": {
         ".html": {
@@ -759,6 +909,136 @@
       "output": {
         ".html": {
           "relative_path": "api/L5Sharp.Enums.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.Catalog.CatalogEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.Catalog.CatalogEntry.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.Catalog.ModuleCatalog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.Catalog.ModuleCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.Catalog.PortInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.Catalog.PortInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.Catalog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.Catalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.DataTypeExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.DataTypeExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.InstructionExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.InstructionExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.LogixTypeExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.LogixTypeExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.ModuleExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.ModuleExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.NeutralTextExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.NeutralTextExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.RungExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.RungExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.TagDictionary.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.TagDictionary.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.TagExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.TagExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/L5Sharp.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/L5Sharp.Extensions.html"
         }
       },
       "version": ""

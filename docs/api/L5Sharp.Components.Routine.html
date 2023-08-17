@@ -79,7 +79,7 @@
 
   <h1 id="L5Sharp_Components_Routine" data-uid="L5Sharp.Components.Routine" class="text-break">
     Class Routine
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -145,13 +145,22 @@ include content property. More specific routine types are derived from this base
       <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_Replace__0_">LogixComponent&lt;Routine&gt;.Replace(Routine)</a>
     </div>
     <div>
+      <a class="xref" href="L5Sharp.LogixComponent-1.html#L5Sharp_LogixComponent_1_ToString">LogixComponent&lt;Routine&gt;.ToString()</a>
+    </div>
+    <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Element">LogixElement.Element</a>
     </div>
     <div>
-      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_IsAttached">LogixElement.IsAttached</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Clone__1">LogixElement.Clone&lt;TElement&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_L5X">LogixElement.L5X()</a>
+    </div>
+    <div>
+      <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_Serialize">LogixElement.Serialize()</a>
     </div>
     <div>
       <a class="xref" href="L5Sharp.LogixElement.html#L5Sharp_LogixElement_GetValue__1_System_String_">LogixElement.GetValue&lt;T&gt;(string)</a>
@@ -219,24 +228,8 @@ include content property. More specific routine types are derived from this base
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
-  <dl class="typelist extensionMethods">
-    <dt>Extension Methods</dt>
-    <dd>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Content_L5Sharp_ILogixSerializable_">LogixExtensions.Content(ILogixSerializable)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_Scope_L5Sharp_LogixElement_">LogixExtensions.Scope(LogixElement)</a>
-  </div>
-  <div>
-      <a class="xref" href="L5Sharp.LogixExtensions.html#L5Sharp_LogixExtensions_ScopeName_L5Sharp_LogixElement_">LogixExtensions.ScopeName(LogixElement)</a>
-  </div>
-  </dd></dl>
 
 
 
@@ -250,7 +243,7 @@ include content property. More specific routine types are derived from this base
 
   <h3 id="L5Sharp_Components_Routine__ctor" data-uid="L5Sharp.Components.Routine.#ctor">
   Routine()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Routine.html">Routine</a> with default values.</p>
@@ -281,7 +274,7 @@ To specify a different type, use the <a class="xref" href="L5Sharp.Enums.Routine
 
   <h3 id="L5Sharp_Components_Routine__ctor_L5Sharp_Enums_RoutineType_" data-uid="L5Sharp.Components.Routine.#ctor(L5Sharp.Enums.RoutineType)">
   Routine(RoutineType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Routine.html">Routine</a> of the specified <a class="xref" href="L5Sharp.Enums.RoutineType.html">RoutineType</a>.</p>
@@ -320,7 +313,7 @@ To specify a different type, use the <a class="xref" href="L5Sharp.Enums.Routine
 
   <h3 id="L5Sharp_Components_Routine__ctor_System_Xml_Linq_XElement_" data-uid="L5Sharp.Components.Routine.#ctor(System.Xml.Linq.XElement)">
   Routine(XElement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Components.Routine.html">Routine</a> initialized with the provided <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
@@ -363,7 +356,7 @@ To specify a different type, use the <a class="xref" href="L5Sharp.Enums.Routine
 
   <h3 id="L5Sharp_Components_Routine_OnlineEditType" data-uid="L5Sharp.Components.Routine.OnlineEditType">
   OnlineEditType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The online edit type for the <code>ST</code>/<code>FBD</code>/<code>SFC</code> <a class="xref" href="L5Sharp.Components.Routine.html">Routine</a> type.</p>
@@ -397,7 +390,7 @@ Otherwise, <code>null</code> for <code>RLL</code> routines.</p>
 
   <h3 id="L5Sharp_Components_Routine_SheetOrientation" data-uid="L5Sharp.Components.Routine.SheetOrientation">
   SheetOrientation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The sheet orientation for the <code>FBD</code> or <code>SFC</code> <a class="xref" href="L5Sharp.Components.Routine.html">Routine</a> type.</p>
@@ -431,7 +424,7 @@ Otherwise, <code>null</code> for <code>RLL</code> or <code>ST</code> routines.</
 
   <h3 id="L5Sharp_Components_Routine_SheetSize" data-uid="L5Sharp.Components.Routine.SheetSize">
   SheetSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The sheet size for the <code>FBD</code> or <code>SFC</code> <a class="xref" href="L5Sharp.Components.Routine.html">Routine</a> type.</p>
@@ -465,7 +458,7 @@ Otherwise, <code>null</code> for <code>RLL</code> or <code>ST</code> routines.</
 
   <h3 id="L5Sharp_Components_Routine_Type" data-uid="L5Sharp.Components.Routine.Type">
   Type
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The type of the <a class="xref" href="L5Sharp.Components.Routine.html">Routine</a> component.</p>
@@ -502,7 +495,7 @@ Otherwise, <code>null</code> for <code>RLL</code> or <code>ST</code> routines.</
 
   <h3 id="L5Sharp_Components_Routine_Content__1" data-uid="L5Sharp.Components.Routine.Content``1">
   Content&lt;TElement&gt;()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the routine content as a <a class="xref" href="L5Sharp.LogixContainer-1.html">LogixContainer&lt;TElement&gt;</a> containing elements of the specified type.</p>
@@ -540,7 +533,7 @@ content does not match the <a class="xref" href="L5Sharp.Components.Routine.html
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="L5Sharp.L5XException.html">L5XException</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
     <dd><p>No content element corresponding to the specified <a class="xref" href="L5Sharp.Components.Routine.html#L5Sharp_Components_Routine_Type">Type</a> exists for the
 underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>. This can happen if the provided element is not valid.</p>
 </dd>
@@ -552,7 +545,7 @@ underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.x
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Components/Routine.cs/#L15" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/L5Sharp.Core/Components/Routine.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
         
