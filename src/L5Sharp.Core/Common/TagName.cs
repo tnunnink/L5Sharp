@@ -17,20 +17,9 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
 {
     private readonly string _tagName;
 
-    private const char ArraySeparator = '[';
     private const char MemberSeparator = '.';
-
-    /// <summary>
-    /// A regex pattern for getting the base tag of the tag name string.
-    /// Use this pattern to capture the root or base of a tag name value.
-    /// </summary>
-    private const string RootPattern = "^.[^.[]*";
-    
-    /// <summary>
-    /// A regex patter for getting the number of array or member separator character in the tag name string.
-    /// This is used to determine depth.
-    /// </summary>
-    private const string SeparatorPattern = @"(?<=[\w\]])[.\[]";
+    private const char ArrayOpenSeparator = '[';
+    private const char ArrayCloseSeparator = ']';
 
     /// <summary>
     /// A regex pattern for a Logix tag name with starting and ending anchors.
@@ -38,19 +27,6 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     private const string TagNamePattern =
         @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
-
-    /// <summary>
-    /// A regex pattern for matching each individual possible member portion of a full tag name.
-    /// Used to split incoming string into member parts. 
-    /// </summary>
-    private const string MembersPattern =
-        @"[A-Za-z_][\w:]{1,39}|(?<=\.)[A-Za-z_][\w]{0,39}|\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\]|[0-9][0-9]?$";
-    
-    /// <summary>
-    /// A regex patter for matching the last tag name member of the full tag name value.
-    /// This is used to quickly get <c>Member</c> without iterating each character or <c>Members</c>.
-    /// </summary>
-    private const string MemberPattern = @"(?:(?<=\.)|\[)?[^.\[]+$";
 
     /// <summary>
     /// Creates a new <see cref="TagName"/> object with the provided string tag name.
@@ -63,7 +39,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     }
 
     /// <summary>
-    /// Gets the tag or root portion of the <see cref="TagName"/> string.
+    /// Gets the root portion of the <see cref="TagName"/> string.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -77,7 +53,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </remarks>
     /// <seealso cref="Operand"/>
     /// <seealso cref="Path"/>
-    public string Root => Regex.Match(_tagName, RootPattern).Value;
+    public string Root => GetRoot(_tagName);
 
     /// <summary>
     /// Gets the operand portion of the <see cref="TagName"/> value.
@@ -107,7 +83,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// The <c>Member</c> of a tag name represents the last member name of the string. This is the string after the final
     /// member separator character.
     /// </remarks>
-    public string Member => Regex.Match(_tagName, MemberPattern).Value;
+    public string Member => GetMember(_tagName);
 
     /// <summary>
     /// Returns a collection of string names representing each individual member of the full tag name value.
@@ -116,7 +92,8 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// Each member of a tag name can be represented by a string, array bracket, or bit index value.
     /// For example, MyTag[1].MemberName.5 has 4 members.
     /// </remarks>
-    public IEnumerable<string> Members => Regex.Matches(_tagName, MembersPattern).Select(m => m.Value);
+    //public IEnumerable<string> Members => Regex.Matches(_tagName, MembersPattern).Select(m => m.Value);
+    public IEnumerable<string> Members => GetMembers(_tagName);
 
     /// <summary>
     /// A zero-based number representing the depth of the tag name value. In other words, the number of members
@@ -128,7 +105,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
     /// are descendent member names of the root tag 'MyTag' member.
     /// </remarks>
-    public int Depth => Regex.Matches(_tagName, SeparatorPattern).Count;
+    public int Depth => GetDepth(_tagName);
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="TagName"/> value is empty.
@@ -160,10 +137,10 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     public static TagName Concat(string left, string right)
     {
         if (string.IsNullOrEmpty(right)) return left;
-        
-        if (right[0] == ArraySeparator || right[0] == MemberSeparator)
+
+        if (right[0] == ArrayOpenSeparator || right[0] == MemberSeparator)
             return new TagName($"{left}{right}");
-        
+
         return new TagName($"{left}{MemberSeparator}{right}");
     }
 
@@ -283,6 +260,88 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     public static bool operator !=(TagName? left, TagName? right) => !Equals(left, right);
 
     /// <summary>
+    /// Gets the first member of the tag name, or the portion of the string up to the first/next member separator.
+    /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
+    /// of tag names this can get called on.
+    /// </summary>
+    private static string GetRoot(string tagName)
+    {
+        if (tagName.IsEmpty() || tagName.StartsWith(MemberSeparator)) return string.Empty;
+        if (tagName.StartsWith(ArrayOpenSeparator))
+        {
+            return tagName[..tagName.IndexOf(ArrayCloseSeparator)];
+        }
+
+        var index = tagName.IndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
+        return index > 0 ? tagName[..index] : tagName;
+    }
+    
+    /// <summary>
+    /// Gets the last member of the tag name, or the portion of the string from the end to the last member separator.
+    /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
+    /// of tag names this can get called on.
+    /// </summary>
+    private static string GetMember(string tagName)
+    {
+        var index = tagName.LastIndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
+        var length = tagName.Length - index;
+        return index >= 0 ? tagName.Substring(index, length).TrimStart(MemberSeparator) : tagName;
+    }
+    
+    /// <summary>
+    /// Gets each member by iterating the tag name string.
+    /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
+    /// of tag names this can get called on.
+    /// </summary>
+    private static IEnumerable<string> GetMembers(string tagName)
+    {
+        var list = new List<string>();
+        var span = new List<char>();
+        var open = false;
+
+        foreach (var character in tagName)
+        {
+            switch (character)
+            {
+                case MemberSeparator:
+                    if (span.Count == 0) continue;
+                    list.Add(new string(span.ToArray()));
+                    span.Clear();
+                    continue;
+                case ArrayOpenSeparator when !open:
+                    open = true;
+                    if (span.Count == 0) break;
+                    list.Add(new string(span.ToArray()));
+                    span.Clear();
+                    break;
+                case ArrayCloseSeparator when open:
+                    open = false;
+                    span.Add(character);
+                    list.Add(new string(span.ToArray()));
+                    span.Clear();
+                    continue;
+            }
+
+            span.Add(character);
+        }
+
+        if (span.Count > 0)
+            list.Add(new string(span.ToArray()));
+
+        return list;
+    }
+
+    /// <summary>
+    /// Gets the zero-based depth or number of members between this member and the root.
+    /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
+    /// of tag names this can get called on.
+    /// </summary>
+    private static int GetDepth(string tagName)
+    {
+        return tagName.Count(c => c is MemberSeparator or ArrayOpenSeparator);
+    }
+
+    /// <summary>
     /// Handles combining an enumerable containing string member names into a single <see cref="TagName"/> value.
     /// </summary>
     private static string ConcatenateMembers(IEnumerable<string> members)
@@ -291,7 +350,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
 
         foreach (var member in members)
         {
-            if (!(member.StartsWith(ArraySeparator) || member.StartsWith(MemberSeparator)) && builder.Length > 1)
+            if (!(member.StartsWith(ArrayOpenSeparator) || member.StartsWith(MemberSeparator)) && builder.Length > 1)
                 builder.Append(MemberSeparator);
 
             builder.Append(member);

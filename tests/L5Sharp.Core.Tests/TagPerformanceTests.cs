@@ -31,18 +31,22 @@ public class TagPerformanceTests
     public void GetTagsToLookup_FromGenerated_MeasurePerformance()
     {
         var elements = CreateElements(100000);
-
         var stopwatch = new Stopwatch();
+        
         stopwatch.Start();
-
-        var tags = elements.Select(LogixSerializer.Deserialize<Tag>)
-            .SelectMany(t => t.Members())
-            .ToLookup(t => t.TagName);
-
+        var tags = elements.Select(LogixSerializer.Deserialize<Tag>).SelectMany(t => t.Members()).ToList();
         stopwatch.Stop();
         Console.WriteLine(stopwatch.Elapsed);
-        Console.WriteLine(tags.Count);
         tags.Should().NotBeEmpty();
+        
+        stopwatch.Reset();
+        stopwatch.Start();
+        var lookup = tags.ToLookup(t => t.TagName);
+        stopwatch.Stop();
+        Console.WriteLine(stopwatch.Elapsed);
+        
+        Console.WriteLine(lookup.Count);
+        lookup.Should().NotBeEmpty();
     }
     
     private static IEnumerable<XElement> CreateElements(int amount)
