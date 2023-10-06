@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,7 +27,7 @@ public static class L5XExtensions
     /// the code more concise.
     /// </remarks>
     public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-    
+
     /// <summary>
     /// Determines if the current string is a value <see cref="TagName"/> string.
     /// </summary>
@@ -71,8 +72,38 @@ public static class L5XExtensions
     /// </remarks>
     public static string L5XType(this Type type)
     {
-        var attribute = type.GetCustomAttribute<XmlTypeAttribute>();
+        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault(a => a.IsPrimaryType);
         return attribute is not null ? attribute.TypeName : type.Name;
+    }
+
+    /// <summary>
+    /// Gets the L5X element name for the specified type. 
+    /// </summary>
+    /// <param name="type">The type to get the L5X element name for.</param>
+    /// <returns>A <see cref="string"/> representing the name of the element that corresponds to the type.</returns>
+    /// <remarks>
+    /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
+    /// configured name, and if not found, returns the type name as the default element name.
+    /// </remarks>
+    public static IEnumerable<string> L5XTypes(this Type type)
+    {
+        var attributes = type.GetCustomAttributes<L5XTypeAttribute>().ToList();
+        return attributes.Any() ? attributes.Select(attribute => attribute.TypeName) : new[] {type.Name};
+    }
+    
+    /// <summary>
+    /// Gets the L5X element name for the specified type. 
+    /// </summary>
+    /// <param name="type">The type to get the L5X element name for.</param>
+    /// <returns>A <see cref="string"/> representing the name of the element that corresponds to the type.</returns>
+    /// <remarks>
+    /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
+    /// configured name, and if not found, returns the type name as the default element name.
+    /// </remarks>
+    public static string L5XContainerType(this Type type)
+    {
+        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault(a => a.IsPrimaryType);
+        return attribute is not null ? attribute.ContainerName : $"{type.Name}s";
     }
 
     /// <summary>

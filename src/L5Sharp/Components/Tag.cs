@@ -17,6 +17,11 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[L5XType(L5XName.Tag)]
+[L5XType(L5XName.LocalTag, false)]
+[L5XType(L5XName.ConfigTag, false)]
+[L5XType(L5XName.InputTag, false)]
+[L5XType(L5XName.OutputTag, false)]
 public class Tag : LogixComponent<Tag>
 {
     private readonly LogixMember _member;

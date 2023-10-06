@@ -42,7 +42,7 @@ public abstract class LogixElement : ILogixSerializable
     protected readonly XElement Element;
 
     /// <summary>
-    /// An indication as to whether this element is attached to a L5X document.
+    /// Indicates whether this element is attached to a L5X document.
     /// </summary>
     /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
     /// <remarks>
@@ -52,15 +52,15 @@ public abstract class LogixElement : ILogixSerializable
     public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
     
     /// <summary>
-    /// Returns a <see cref="LogixContent"/> instance  wrapping the current element's root L5X element if it exists. 
+    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
     /// </summary>
     /// <returns>
-    /// If the current element is attached to a L5X document (i.e. has a root content element),
-    /// then a new <see cref="LogixContent"/> instance wrapping the root; Otherwise, <c>null</c>.
+    /// If the current element is attached to a L5X document (i.e. has the root content element),
+    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
     /// </returns>
     /// <remarks>
-    /// This allows attached logix elements to reach up to the content file in order to traverse or retrieve
-    /// other elements in the L5X. This is helpful for other extensions that need rely on the L5X to perform functions.
+    /// This allows attached logix elements to reach up to the L5X file in order to traverse or retrieve
+    /// other elements in the L5X. This is helpful/used for other extensions and cross referencing functions.
     /// </remarks>
     public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 

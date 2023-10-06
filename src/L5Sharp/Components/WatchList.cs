@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Elements;
 using L5Sharp.Utilities;
 
@@ -14,7 +13,7 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.QuickWatchList)]
+[L5XType(L5XName.QuickWatchList)]
 public class WatchList : LogixComponent<WatchList>
 {
     /// <inheritdoc />

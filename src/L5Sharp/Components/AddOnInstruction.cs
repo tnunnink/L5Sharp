@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Common;
 using L5Sharp.Elements;
 using L5Sharp.Utilities;
@@ -18,7 +17,7 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.AddOnInstructionDefinition)]
+[L5XType(L5XName.AddOnInstructionDefinition)]
 public class AddOnInstruction : LogixComponent<AddOnInstruction>
 {
     /// <summary>
@@ -36,7 +35,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         EditedBy = Environment.UserName;
         IsEncrypted = false;
         Parameters = new LogixContainer<Parameter>();
-        LocalTags = new LogixContainer<LocalTag>();
+        LocalTags = new LogixContainer<Tag>(L5XName.LocalTags, L5XName.LocalTag);
         Routines = new LogixContainer<Routine>();
     }
 
@@ -207,9 +206,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <summary>
     /// The collection of local <see cref="Tag"/> objects used within the AOI logic.
     /// </summary>
-    public LogixContainer<LocalTag> LocalTags
+    public LogixContainer<Tag> LocalTags
     {
-        get => GetContainer<LocalTag>();
+        get => GetContainer<Tag>();
         set => SetContainer(value);
     }
 
