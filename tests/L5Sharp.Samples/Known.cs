@@ -9,6 +9,7 @@ namespace L5Sharp.Samples
 
         public static readonly string Test = Path.Combine(Directory, "Test.xml");
         public static readonly string Empty = Path.Combine(Directory, "Empty.xml");
+        public static readonly string LotOfTags = Path.Combine(Directory, "LotOfTags.xml");
         public const string Template = @"C:\Users\tnunnink\Local\Transfer\Template.L5X";
 
         public const string DataType = "SimpleType";
