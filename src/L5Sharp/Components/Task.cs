@@ -23,7 +23,7 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Task : LogixComponent<Task>
+public class Task : LogixComponent
 {
     /// <summary>
     /// Creates a new <see cref="Task"/> with default values.

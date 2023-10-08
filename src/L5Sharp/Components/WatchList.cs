@@ -14,7 +14,7 @@ namespace L5Sharp.Components;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.QuickWatchList)]
-public class WatchList : LogixComponent<WatchList>
+public class WatchList : LogixComponent
 {
     /// <inheritdoc />
     public WatchList() : base(new XElement(L5XName.QuickWatchList))

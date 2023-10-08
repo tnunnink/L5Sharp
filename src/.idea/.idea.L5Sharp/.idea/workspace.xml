@@ -7,38 +7,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Common/CodeElement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Common/ComponentKey.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/ILogixExportable.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Utilities/L5XTypeAttribute.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/L5XExtensionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Further refinements and updates to new core L5X class. Continued to clean up and reorg code and documentation. Working on adding cross referencing and dependency functionality to component classes. Added some tests, fixed bugs. Moves some properties from component up into element and from tag up to component. Make ComponentKey.cs a new standard for identifying components globally. Preparing to rip off generic type from LogixComponent.cs to help with pattern matching for other methods like export and global mutation methods">
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/AddOnInstruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Controller.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Routine.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Trend.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Trend.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/WatchList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/WatchList.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5XInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5XInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5XTypeAttribute.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/L5XExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Utilities/L5XExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XExportTests.Export_DataType_ShouldBeValid.verified.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XExportTests.Export_ValidComponent_ShouldHaveVerifiedL5X.verified.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XExportTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/TagDictionaryTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixContainer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -374,7 +356,7 @@
       <workItem from="1692213662519" duration="30729000" />
       <workItem from="1693231547412" duration="3665000" />
       <workItem from="1695256063268" duration="92590000" />
-      <workItem from="1696620242847" duration="29027000" />
+      <workItem from="1696620242847" duration="29452000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -719,7 +701,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="301" />
+    <option name="localTasksCounter" value="302" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -755,7 +737,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="fixing tests" />
     <MESSAGE value="updated readme and made L5Sharp.Extensions.csproj depend on L5Sharp via nuget instead of direct reference" />
     <MESSAGE value="README.md updates" />
     <MESSAGE value="updated readme path in project references" />
@@ -780,7 +761,8 @@
     <MESSAGE value="Update TagName.cs to make Depth and Member use regex patterns instead of member iteration to be more efficient. Removed Regex.Compiled as is slows down construction of objects for minimal performance gain." />
     <MESSAGE value="Remove Extensions project and migrated back into primary project. Reorganized classes and code. Remoed LogixContent.cs and moved code into new primary entry point class L5X.cs. Updated LogixComponent.cs with new reference methods and L5X property to retrieve root from child elements. Updated and fixed some tests. Updated namespaces. Start of 0.16.0 with new features and organization." />
     <MESSAGE value="Created new L5XTypeAttribute.cs to replace the XmlTypeAttribute. This class allows multiple XML types to be defined so that components or elements can support multiple different XElements from the L5X (tag specifically) allowing us to remove LocalTag.cs. LogixContainer.cs also was updated to account for adding elements with different name and extensions were added and updated to get correct L5X type names." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created new L5XTypeAttribute.cs to replace the XmlTypeAttribute. This class allows multiple XML types to be defined so that components or elements can support multiple different XElements from the L5X (tag specifically) allowing us to remove LocalTag.cs. LogixContainer.cs also was updated to account for adding elements with different name and extensions were added and updated to get correct L5X type names." />
+    <MESSAGE value="Further refinements and updates to new core L5X class. Continued to clean up and reorg code and documentation. Working on adding cross referencing and dependency functionality to component classes. Added some tests, fixed bugs. Moves some properties from component up into element and from tag up to component. Make ComponentKey.cs a new standard for identifying components globally. Preparing to rip off generic type from LogixComponent.cs to help with pattern matching for other methods like export and global mutation methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="Further refinements and updates to new core L5X class. Continued to clean up and reorg code and documentation. Working on adding cross referencing and dependency functionality to component classes. Added some tests, fixed bugs. Moves some properties from component up into element and from tag up to component. Make ComponentKey.cs a new standard for identifying components globally. Preparing to rip off generic type from LogixComponent.cs to help with pattern matching for other methods like export and global mutation methods" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

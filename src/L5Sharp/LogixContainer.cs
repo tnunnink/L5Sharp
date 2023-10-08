@@ -321,7 +321,7 @@ public static class ContainerExtensions
     /// <param name="name">The name of the component to find.</param>
     /// <returns><c>true</c> if a component with the specified name exists; otherwise, <c>false</c>.</returns>
     public static bool Contains<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent<TComponent>
+        where TComponent : LogixComponent
     {
         return container.Serialize().Elements().Any(e => e.LogixName() == name);
     }
@@ -332,9 +332,9 @@ public static class ContainerExtensions
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to find.</param>
     /// <typeparam name="TComponent">The component type to return.</typeparam>
-    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type if found; Otherwise, <c>null</c>.</returns>
+    /// <returns>A <see cref="LogixComponent"/> of the specified type if found; Otherwise, <c>null</c>.</returns>
     public static TComponent? Find<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent<TComponent>
+        where TComponent : LogixComponent
     {
         var element = container.Serialize();
         var component = element.Elements().FirstOrDefault(e => e.LogixName() == name);
@@ -347,10 +347,10 @@ public static class ContainerExtensions
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to find.</param>
     /// <typeparam name="TComponent">The component type to return.</typeparam>
-    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type.</returns>
+    /// <returns>A <see cref="LogixComponent"/> of the specified type.</returns>
     /// <exception cref="InvalidOperationException">No component having <c>name</c> exists in the container.</exception>
     public static TComponent Get<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent<TComponent>
+        where TComponent : LogixComponent
     {
         var element = container.Serialize();
         var component = element.Elements().SingleOrDefault(e => e.LogixName() == name);
@@ -365,7 +365,7 @@ public static class ContainerExtensions
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to remove.</param>
     public static void Remove<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent<TComponent>
+        where TComponent : LogixComponent
     {
         container.Serialize().Elements().SingleOrDefault(c => string.Equals(c.LogixName(), name))?.Remove();
     }

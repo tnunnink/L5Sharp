@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
@@ -25,7 +24,7 @@ namespace L5Sharp;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent<TComponent> : LogixElement where TComponent : LogixComponent<TComponent>
+public abstract class LogixComponent : LogixElement
 {
     /// <inheritdoc />
     protected LogixComponent()
@@ -188,7 +187,7 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
         
         return obj switch
         {
-            TComponent other => Equals(Key, other.Key),
+            LogixComponent other => Equals(Key, other.Key),
             _ => false
         };
     }

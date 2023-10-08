@@ -18,7 +18,7 @@ namespace L5Sharp.Components;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.AddOnInstructionDefinition)]
-public class AddOnInstruction : LogixComponent<AddOnInstruction>
+public class AddOnInstruction : LogixComponent
 {
     /// <summary>
     /// Creates a new <see cref="AddOnInstruction"/> with default values.

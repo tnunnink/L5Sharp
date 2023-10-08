@@ -22,7 +22,7 @@ namespace L5Sharp.Components;
 [L5XType(L5XName.ConfigTag, false)]
 [L5XType(L5XName.InputTag, false)]
 [L5XType(L5XName.OutputTag, false)]
-public class Tag : LogixComponent<Tag>
+public class Tag : LogixComponent
 {
     private readonly LogixMember _member;
 

@@ -115,9 +115,8 @@ public class L5X : ILogixSerializable
     /// <param name="revision"></param>
     /// <typeparam name="TComponent"></typeparam>
     /// <returns></returns>
-    public static L5X New<TComponent>(LogixComponent<TComponent> component, Revision? revision = null)
-        where TComponent : LogixComponent<TComponent> =>
-        new(NewContent(component.Name, typeof(TComponent).L5XType(), revision));
+    public static L5X New<TComponent>(TComponent component, Revision? revision = null)
+        where TComponent : LogixComponent => new(NewContent(component.Name, typeof(TComponent).L5XType(), revision));
 
     /// <summary>
     /// Creates a new <see cref="L5X"/> with the provided L5X string content.
@@ -208,7 +207,7 @@ public class L5X : ILogixSerializable
     /// <param name="component">The component to add to the L5X.</param>
     /// <typeparam name="TComponent">The type of component to add to the L5X.</typeparam>
     /// <exception cref="InvalidOperationException">No container was found in the L5X tree for the specified type.</exception>
-    public void Add<TComponent>(LogixComponent<TComponent> component) where TComponent : LogixComponent<TComponent>
+    public void Add<TComponent>(TComponent component) where TComponent : LogixComponent
     {
         var containerType = typeof(TComponent).L5XContainerType();
         var container = _content.Descendants(containerType).FirstOrDefault();
@@ -251,15 +250,14 @@ public class L5X : ILogixSerializable
     /// <param name="container">The optional name of the container in which to search for the component.
     /// This really only applies to tags and routines since they are scoped components.</param>
     /// <typeparam name="TComponent">The type of component to find.</typeparam>
-    /// <returns>A single <see cref="LogixComponent{TComponent}"/> with the specified component name.</returns>
+    /// <returns>A single <see cref="LogixComponent"/> with the specified component name.</returns>
     /// <remarks>
     /// Since components have unique names, we can find and index them for fast lookup when needed. This might
     /// be helpful for certain functions that need to repeatedly find references to other components to perform
     /// certain tasks. Note that for tags this only find the root tag component. If you want to further find nested
     /// tag components, look at using <see cref="FindTag"/> or <see cref="FindTags"/>.
     /// </remarks>
-    public TComponent? Find<TComponent>(string name, string? container = null)
-        where TComponent : LogixComponent<TComponent>
+    public TComponent? Find<TComponent>(string name, string? container = null) where TComponent : LogixComponent
     {
         var type = typeof(TComponent).L5XType();
         container ??= GetControllerName();
@@ -352,15 +350,14 @@ public class L5X : ILogixSerializable
     /// <param name="container">The optional name of the container in which to search for the component.
     /// This really only applies to tags and routines since they are scoped components.</param>
     /// <typeparam name="TComponent">The type of component to find.</typeparam>
-    /// <returns>A single <see cref="LogixComponent{TComponent}"/> with the specified component name.</returns>
+    /// <returns>A single <see cref="LogixComponent"/> with the specified component name.</returns>
     /// <exception cref="KeyNotFoundException">A component with <c>name</c> was not found in the L5X.</exception>
     /// <remarks>
     /// Since components have unique names, we can find and index them for fast lookup when needed. This might
     /// be helpful for certain functions that need to repeatedly find references to other components to perform
     /// certain tasks. 
     /// </remarks>
-    public TComponent Get<TComponent>(string name, string? container = null)
-        where TComponent : LogixComponent<TComponent>
+    public TComponent Get<TComponent>(string name, string? container = null) where TComponent : LogixComponent
     {
         var type = typeof(TComponent).L5XType();
         container ??= GetControllerName();
@@ -562,7 +559,7 @@ public class L5X : ILogixSerializable
     private void MergeContent(L5X l5X, bool overwrite)
     {
         if (l5X is null) throw new ArgumentNullException(nameof(l5X));
-        
+
         var containerPairs = GetContainers()
             .Join(l5X.GetContainers(), e => e.Name, e => e.Name, (a, b) => new {a, b})
             .ToList();

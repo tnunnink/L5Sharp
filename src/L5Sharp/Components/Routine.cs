@@ -13,7 +13,7 @@ namespace L5Sharp.Components;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Routine : LogixComponent<Routine>
+public class Routine : LogixComponent
 {
     /// <summary>
     /// Creates a new <see cref="Routine"/> with default values.
