@@ -14,7 +14,7 @@ namespace L5Sharp.Elements;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[XmlType(L5XName.Member)]
+[L5XType(L5XName.Member)]
 public class DataTypeMember : LogixElement
 {
     /// <summary>

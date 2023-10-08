@@ -42,7 +42,7 @@ public class DataType : LogixComponent<DataType>
     {
         Family = DataTypeFamily.None;
         Class = DataTypeClass.User;
-        Members = new LogixContainer<DataTypeMember>(L5XName.Members);
+        Members = new LogixContainer<DataTypeMember>();
     }
 
     /// <summary>
@@ -52,6 +52,17 @@ public class DataType : LogixComponent<DataType>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public DataType(XElement element) : base(element)
     {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="DataType"/> initialized with the provided name.
+    /// </summary>
+    /// <param name="name">The name of the data type component.</param>
+    /// <exception cref="ArgumentNullException"><c>name</c> is null.</exception>
+    public DataType(string name) : this()
+    {
+        if (name is null) throw new ArgumentNullException(nameof(name));
+        Element.SetAttributeValue(L5XName.Name, name);
     }
 
     /// <summary>
@@ -89,6 +100,24 @@ public class DataType : LogixComponent<DataType>
         set => SetContainer(value);
     }
 
+    /// <inheritdoc />
+    public override IEnumerable<LogixElement> Dependencies()
+    {
+        if (L5X is null) return Enumerable.Empty<LogixElement>();
+        
+        var dependencies = new List<LogixElement>();
+
+        foreach (var member in Members)
+        {
+            var dataType = L5X.Find<DataType>(member.DataType);
+            if (dataType is null) continue;
+            dependencies.Add(dataType);
+            dependencies.AddRange(dataType.Dependencies());
+        }
+        
+        return dependencies.Distinct();
+    }
+
     /// <summary>
     /// Returns a collection of all <see cref="LogixElement"/> objects that reference this component by name.
     /// </summary>
@@ -98,39 +127,35 @@ public class DataType : LogixComponent<DataType>
     /// </returns>
     public override IEnumerable<LogixElement> References()
     {
-        var content = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
-        if (content is null)
-            return Enumerable.Empty<LogixElement>();
+        if (L5X is null) return Enumerable.Empty<LogixElement>();
 
-        var references = new List<LogixElement>();
+        var references = new Dictionary<string, LogixElement>();
+        
+        var targets = L5X.Serialize().Descendants()
+            .Where(d => d.Attribute(L5XName.DataType) is not null
+                        && StringComparer.OrdinalIgnoreCase.Equals(d.Attribute(L5XName.DataType)!.Value, Name));
 
-        foreach (var descendant in content.Descendants())
+        // ReSharper disable once LoopCanBeConvertedToQuery Prefer for debugging
+        foreach (var target in targets)
         {
-            if (!descendant.Value.Contains(ToString()) &&
-                !descendant.Attributes().Any(a => a.Value.Contains(ToString()))) continue;
-            
-            var element = LogixSerializer.Deserialize(descendant);
-            
-            //For DataTypes we want to add the actual tag members that reference the data type and not just the root tag.
-            //This is why we are overriding this method here.
-            //DataTypes are one of the few component that are referenced by tags.
-            if (element is Tag tag)
-            {
-                var tags = tag.Members(t => t.DataType == Name).ToList();
-                foreach (var child in tags)
-                {
-                    if (references.Any(r => r is Tag t && t.TagName == child.TagName)) continue;
-                    references.Add(child);
-                }
-                continue;
-            }
+            var reference = LogixSerializer.Deserialize(target);
 
-            if (element is not null)
+            switch (reference)
             {
-                references.Add(element);
+                case Tag tag:
+                    references.TryAdd(tag.Name, tag);
+                    break;
+                case DataTypeMember dataType:
+                    references.TryAdd(dataType.Name, dataType);
+                    break;
+                case Parameter parameter:
+                    references.TryAdd(parameter.Name, parameter);
+                    break;
+                default:
+                    throw new ArgumentException("Are you kidding me?");
             }
         }
-        
-        return references;
+
+        return references.Select(r => r.Value);
     }
 }

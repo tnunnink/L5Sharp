@@ -63,6 +63,53 @@ public abstract class LogixElement : ILogixSerializable
     /// other elements in the L5X. This is helpful/used for other extensions and cross referencing functions.
     /// </remarks>
     public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
+    
+    /// <summary>
+    /// Adds a new component of the same type directly after this component in the L5X document.
+    /// </summary>
+    /// <param name="element">The logix element to add.</param>
+    /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
+    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
+    /// This could happen if the component was created in memory and not yet added to the L5X.
+    /// </exception>
+    /// <remarks>
+    /// This method requires the component be attached to the <see cref="L5X"/>, as it will
+    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
+    /// </remarks>
+    public void AddAfter(LogixElement element)
+    {
+        if (element is null) throw new ArgumentNullException(nameof(element));
+
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
+
+        Element.AddAfterSelf(element.Serialize());
+    }
+
+    /// <summary>
+    /// Adds a new component of the same type directly before this component in the L5X document.
+    /// </summary>
+    /// <param name="element">The logix element to add.</param>
+    /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
+    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
+    /// This could happen if the component was created in memory and not yet added to the L5X.
+    /// </exception>
+    /// <remarks>
+    /// This method requires the component be attached to the <see cref="L5X"/>, as it will
+    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
+    /// </remarks>
+    public void AddBefore(LogixElement element)
+    {
+        if (element is null)
+            throw new ArgumentNullException(nameof(element));
+
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
+
+        Element.AddBeforeSelf(element.Serialize());
+    }
 
     /// <summary>
     /// Returns a new deep cloned instance of the current type.
@@ -84,6 +131,53 @@ public abstract class LogixElement : ILogixSerializable
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public TElement Clone<TElement>() where TElement : LogixElement =>
         (TElement)LogixSerializer.Deserialize(GetType(), new XElement(Element));
+    
+    /// <summary>
+    /// Removes the element from it's parent container.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
+    /// This could happen if the component was created in memory and not yet added to the L5X.
+    /// </exception>
+    /// <remarks>
+    /// This method requires the element be attached to the <see cref="L5X"/>, or at least have a parent
+    /// containing element as it will access the parent of the underlying <see cref="XElement"/> to perform the function.
+    /// </remarks>
+    public void Remove()
+    {
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
+
+        Element.Remove();
+    }
+
+    /// <summary>
+    /// Replaces the component instance with a new instance of the same type.
+    /// </summary>
+    /// <param name="element">The new logix element to replace this element with.</param>
+    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>element</c> is a different type than this logic element type.</exception>
+    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
+    /// This could happen if the element was created in memory and not yet added to the L5X.
+    /// </exception>
+    /// <remarks>
+    /// This method requires the element be attached to the <see cref="L5X"/>, or at least have a parent
+    /// containing element as it will access the parent of the underlying <see cref="XElement"/> to perform the function.
+    /// </remarks>
+    public void Replace(LogixElement element)
+    {
+        if (element is null) throw new ArgumentNullException(nameof(element));
+        if (element.GetType().L5XType() != Element.L5XType())
+        {
+            //todo does this matter to us?
+        }
+
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
+
+        Element.ReplaceWith(element.Serialize());
+    }
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.

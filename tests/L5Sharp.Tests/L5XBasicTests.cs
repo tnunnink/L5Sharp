@@ -43,6 +43,29 @@ public class L5XBasicTests
     }
 
     [Test]
+    public void Add_ValidComponent_ShouldHaveExpectedCount()
+    {
+        var content = L5X.Load(Known.Test);
+        var count = content.DataTypes.Count();
+        var dataType = new DataType {Name = "TestAdd"};
+        
+        content.Add(dataType);
+        
+        content.DataTypes.Count().Should().Be(count + 1);
+    }
+    
+    [Test]
+    public Task Add_ValidComponent_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Test);
+        var dataType = new DataType {Name = "TestAdd"};
+        
+        content.Add(dataType);
+        
+        return Verify(content.DataTypes.Serialize().ToString());
+    }
+
+    [Test]
     public void Find_ContainsElement_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test);
@@ -80,5 +103,25 @@ public class L5XBasicTests
         var result = content.Serialize().ToString();
 
         return Verify(result);
+    }
+
+    [Test]
+    public void Find_ValidComponent_ShouldNotBeNull()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var component = content.Find<DataType>(Known.DataType);
+
+        component.Should().NotBeNull();
+    }
+
+    [Test]
+    public void FindTag_ValidComponent_ShouldNotBeNull()
+    {
+        var content = L5X.Load(Known.Test);
+        
+        var tag = content.FindTag(Known.Tag);
+
+        tag.Should().NotBeNull();
     }
 }

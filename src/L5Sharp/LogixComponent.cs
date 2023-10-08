@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
-using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -79,126 +78,84 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
         get => GetProperty<string>();
         set => SetDescription(value);
     }
-
-    /// <summary>
-    /// Adds a new component of the same type directly after this component in the L5X document.
-    /// </summary>
-    /// <param name="component">The component to add.</param>
-    /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
-    /// This could happen if the component was created in memory and not yet added to the L5X.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
-    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// </remarks>
-    public void AddAfter(TComponent component)
-    {
-        if (component is null) throw new ArgumentNullException(nameof(component));
-
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
-
-        Element.AddAfterSelf(component.Serialize());
-    }
-
-    /// <summary>
-    /// Adds a new component of the same type directly before this component in the L5X document.
-    /// </summary>
-    /// <param name="component">The component to add.</param>
-    /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
-    /// This could happen if the component was created in memory and not yet added to the L5X.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
-    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// </remarks>
-    public void AddBefore(TComponent component)
-    {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
-
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
-
-        Element.AddBeforeSelf(component.Serialize());
-    }
-
-    /// <summary>
-    /// Returns a new deep cloned instance of the current <see cref="LogixComponent{TComponent}"/>.
-    /// </summary>
-    /// <returns>A new instance of the specified component with the same property values.</returns>
-    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
-    /// single <see cref="XElement"/> argument.</exception>
-    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public new TComponent Clone() => (TComponent) LogixSerializer.Deserialize(GetType(), new XElement(Element));
     
     /// <summary>
-    /// Creates a new <see cref="LogixContent"/> with the provided logix component as the target type.
+    /// The global unique identifier <see cref="ComponentKey"/> of the component. 
+    /// </summary>
+    /// <value>
+    /// A <see cref="ComponentKey"/> value representing composite set of properties that identify this component
+    /// within an L5X tree.
+    /// </value>
+    public ComponentKey Key => new(Element.Name.LocalName, ScopeName, Name);
+    
+    /// <summary>
+    /// The scope name of the logix component, indicating the program or controller for which it is contained.
+    /// </summary>
+    /// <value> A <see cref="string"/> representing the name of the program or controller in which this component
+    /// is contained. If the component has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
+    /// </value>
+    /// <remarks>
+    /// <para>
+    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
+    /// component is not attached to a L5X tree, then this returns an empty string.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the underlying XML of a component (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify components within the L5X file, especially scoped components with same name.
+    /// </para>
+    /// </remarks>
+    public string ScopeName => Scope.Container(Element);
+    
+    /// <summary>
+    /// The scope of the logix component, indicating whether it is a globally scoped controller component,
+    /// a locally scoped program component, or neither (not attached to L5X tree).
+    /// </summary>
+    /// <value>A <see cref="Enums.Scope"/> option indicating the scope type for the component.</value>
+    /// <remarks>
+    /// <para>
+    /// The scope of a component is determined from the ancestors of the underlying element. If the ancestor is
+    /// program element first, it is <c>Program</c> scoped. If the ancestor is a controller element first, it is
+    /// <c>Controller</c> scoped. If no ancestor is found, we assume the component has <c>Null</c> scope,
+    /// meaning it is not attached to a L5X tree.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the underlying XML of a component (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify components within the L5X file, especially scoped components with same name.
+    /// </para>
+    /// </remarks>
+    public Scope ScopeType => Scope.FromElement(Element);
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public virtual IEnumerable<LogixElement> Dependencies() => Enumerable.Empty<LogixElement>();
+
+    /// <summary>
+    /// Creates a new <see cref="L5X"/> with the provided logix component as the target type.
     /// </summary>
     /// <param name="softwareRevision">The optional software revision, or version of Studio to export the component as.</param>
-    /// <returns>A <see cref="LogixContent"/> containing the component as the target of the L5X.</returns>
-    public L5X Export(Revision? softwareRevision = null)
+    /// <returns>A <see cref="L5X"/> containing the component as the target of the L5X.</returns>
+    public virtual L5X Export(Revision? softwareRevision = null)
     {
-        var content = new XElement(L5XName.RSLogix5000Content);
-        content.Add(new XAttribute(L5XName.SchemaRevision, new Revision()));
-        if (softwareRevision is not null) content.Add(new XAttribute(L5XName.SoftwareRevision, softwareRevision));
-        content.Add(new XAttribute(L5XName.TargetName, Name));
-        content.Add(new XAttribute(L5XName.TargetType, GetType().L5XType()));
-        content.Add(new XAttribute(L5XName.ContainsContext, GetType() != typeof(Controller)));
-        content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
-        content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(L5X.DateTimeFormat)));
-
         Use = Use.Target;
-        content.Add(Serialize());
+        
+        //todo what params like software revision should be passed in?
+        var content = L5X.New(this);
+        content.Add(this);
+        
+        var dependencies = Dependencies().ToList();
+        foreach (var dependency in dependencies)
+        {
+            //shit this won't work...
+            /*if (dependency is LogixComponent<>)
+            {
 
-        return new L5X(content);
-    }
+            }
+            content.Add(dependency);*/
+        }
 
-    /// <summary>
-    /// Removes the component from it's parent container.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
-    /// This could happen if the component was created in memory and not yet added to the L5X.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
-    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// </remarks>
-    public void Remove()
-    {
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
-
-        Element.Remove();
-    }
-
-    /// <summary>
-    /// Replaces the component instance with a new instance of the same type.
-    /// </summary>
-    /// <param name="component">The new component to replace this component with.</param>
-    /// <exception cref="ArgumentNullException"><c>component</c> is null.</exception>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
-    /// This could happen if the component was created in memory and not yet added to the L5X.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the component be attached to the L5X or <see cref="LogixContent"/>, as it will
-    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// </remarks>
-    public void Replace(TComponent component)
-    {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
-
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
-
-        Element.ReplaceWith(component.Serialize());
+        return content;
     }
 
     /// <summary>
@@ -208,27 +165,7 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
     /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
     /// at least one property value referencing this component's name.
     /// </returns>
-    public virtual IEnumerable<LogixElement> References()
-    {
-        var content = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
-        if (content is null)
-            return Enumerable.Empty<LogixElement>();
-
-        var references = new List<LogixElement>();
-        
-        // ReSharper disable once LoopCanBeConvertedToQuery prefer for loop because it's easier to debug
-        foreach (var descendant in content.Descendants())
-        {
-            if (!descendant.ShallowValue().Contains(ToString()) &&
-                !descendant.Attributes().Any(a => a.Value.Contains(ToString()))) continue;
-            
-            var element = LogixSerializer.Deserialize(descendant);
-            if (element is not null)
-                references.Add(element);
-        }
-
-        return references;
-    }
+    public virtual IEnumerable<LogixElement> References() => Enumerable.Empty<LogixElement>();
 
     /// <summary>
     /// Returns a collection of <see cref="LogixElement"/> of the specified element type that reference this component by name.
@@ -237,24 +174,25 @@ public abstract class LogixComponent<TComponent> : LogixElement where TComponent
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects of the specified type
     /// that have at least one property value referencing this component's name.
     /// </returns>
-    public virtual IEnumerable<TElement> References<TElement>() where TElement : LogixElement
-    {
-        var content = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault();
-        if (content is null)
-            return Enumerable.Empty<TElement>();
-
-        var l5XType = typeof(TElement).L5XType();
-
-        return from descendant in content.Descendants()
-            where descendant.Value.Contains(ToString()) ||
-                  descendant.Attributes().Any(a => a.Value.Contains(ToString()))
-            select LogixSerializer.Deserialize(descendant)
-            into element
-            where element is not null && element.GetType().L5XType() == l5XType
-            select (TElement) element;
-    }
+    public IEnumerable<TElement> References<TElement>() where TElement : LogixElement =>
+        References().Where(r => r is TElement).Cast<TElement>();
 
     /// <inheritdoc />
     /// <remarks>This override returns the component name of the type.</remarks>
     public override string ToString() => Name;
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj)) return true;
+        
+        return obj switch
+        {
+            TComponent other => Equals(Key, other.Key),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => Key.GetHashCode();
 }

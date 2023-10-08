@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Common;
 
 namespace L5Sharp.Utilities;
@@ -62,13 +61,21 @@ public static class L5XExtensions
         element.Attribute(name)?.Value ?? throw element.L5XError(name);
 
     /// <summary>
+    /// Gets the L5X element local name for the current element, which represents the L5X type. 
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to get the type of.</param>
+    /// <returns>A <see cref="string"/> representing the type name for the element.</returns>
+    public static string L5XType(this XElement element) => element.Name.LocalName;
+
+    /// <summary>
     /// Gets the L5X element name for the specified type. 
     /// </summary>
     /// <param name="type">The type to get the L5X element name for.</param>
     /// <returns>A <see cref="string"/> representing the name of the element that corresponds to the type.</returns>
     /// <remarks>
-    /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
-    /// configured name, and if not found, returns the type name as the default element name.
+    /// All this does is first look for a class <see cref="L5XTypeAttribute"/> with the <c>IsPrimaryAttribute</c> configured
+    /// to use as the explicitly configured name, and if not found, returns the <see cref="Type"/> name as the
+    /// default element name, as most types are the name of the element.
     /// </remarks>
     public static string L5XType(this Type type)
     {
@@ -82,23 +89,28 @@ public static class L5XExtensions
     /// <param name="type">The type to get the L5X element name for.</param>
     /// <returns>A <see cref="string"/> representing the name of the element that corresponds to the type.</returns>
     /// <remarks>
-    /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
-    /// configured name, and if not found, returns the type name as the default element name.
+    /// This attempts to find all configured class <see cref="L5XTypeAttribute"/> to use as the explicitly
+    /// configured name(s) for the type, and if not found, returns the <see cref="Type"/> name as the
+    /// default element name, as most types are the name of the element.
     /// </remarks>
     public static IEnumerable<string> L5XTypes(this Type type)
     {
         var attributes = type.GetCustomAttributes<L5XTypeAttribute>().ToList();
         return attributes.Any() ? attributes.Select(attribute => attribute.TypeName) : new[] {type.Name};
     }
-    
+
     /// <summary>
-    /// Gets the L5X element name for the specified type. 
+    /// Gets the L5X element name of the type's containing element. 
     /// </summary>
     /// <param name="type">The type to get the L5X element name for.</param>
-    /// <returns>A <see cref="string"/> representing the name of the element that corresponds to the type.</returns>
+    /// <returns>
+    /// A <see cref="string"/> representing the name of the parent element that corresponds to the type's container.
+    /// </returns>
     /// <remarks>
-    /// All this does is first look for the class attribute <see cref="XmlTypeAttribute"/> to use as the explicitly
-    /// configured name, and if not found, returns the type name as the default element name.
+    /// All this does is first look for a class <see cref="L5XTypeAttribute"/> with the <c>IsPrimaryAttribute</c> configured
+    /// to use as the explicitly configured container name, and if not found, returns the <see cref="Type"/> name
+    /// with an 's' appended as the default element container name, as most type's element container is the type
+    /// plural type name. This is unsophisticated pluralization, but it works for all cases in the L5X.
     /// </remarks>
     public static string L5XContainerType(this Type type)
     {
@@ -107,7 +119,7 @@ public static class L5XExtensions
     }
 
     /// <summary>
-    /// Creates and configures a <see cref="InvalidOperationException"/> to be thrown for required properties or complex
+    /// Creates and configures a <see cref="InvalidOperationException"/> to be thrown for required properties of complex
     /// types that do not exist for the current element object.
     /// </summary>
     /// <param name="element">The element for which the exception is occuring.</param>
@@ -138,7 +150,7 @@ public static class L5XExtensions
     /// <remarks>
     /// This extension is the basis for how we build the deserialization functions using reflection and
     /// expression trees. Using compiled expression trees is much more efficient that calling the invoke method for a type's
-    /// constructor info obtained via reflection. This method makes all the necessary check on the current type, ensuring the
+    /// constructor info obtained via reflection. This method makes all the necessary checks on the current type, ensuring the
     /// returned deserializer delegate will execute without exception.
     /// </remarks>
     public static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)
@@ -167,10 +179,55 @@ public static class L5XExtensions
     /// Returns just the immediate element's CDATA value as a string if found, otherwise returns an empty string.
     /// </summary>
     /// <param name="element">The element for which to retrieve the value of.</param>
-    /// <returns>A <see cref="string"/> containing the text value of the element, and not any descendant element's value.</returns>
+    /// <returns>
+    /// A <see cref="string"/> containing the text value of the element, and not any descendant element's value.
+    /// </returns>
+    /// <remarks>This is necessary since the <c>Value</c> of an <see cref="XElement"/> actually also returns all child
+    /// element values for some reason.</remarks>
     public static string ShallowValue(this XElement element)
     {
         return element.Nodes().OfType<XCData>()
             .Aggregate(new StringBuilder(), (s, c) => s.Append(c), s => s.ToString());
+    }
+
+    /// <summary>
+    /// Determines the tag name for a given <see cref="XElement"/> representing a module IO tag.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> representing the module defined IO tag
+    /// (InputTag, OutputTag, or ConfigTag).</param>
+    /// <returns>A <see cref="TagName"/> representing the name of the module IO tag.</returns>
+    /// <remarks>
+    /// This is a helper extension since the logic is somewhat complex and used in more than one class.
+    /// We look up the L5X tree for module name and parent name, as well as back down to find the potential slot of the module.
+    /// All this info, along with the corresponding tag suffix, make up the tag name for a module tag,
+    /// which is not inherent in the L5X element itself, but one that is important to us as it allows us to
+    /// find or reference these tags by name (just as you would find in Studio 5k).
+    /// </remarks>
+    public static TagName ModuleTagName(this XElement element)
+    {
+        var suffix = DetermineModuleSuffix(element);
+        var module = element.Ancestors(L5XName.Module).FirstOrDefault();
+        var moduleName = module?.Attribute(L5XName.Name)?.Value;
+        var parentName = module?.Attribute(L5XName.ParentModule)?.Value;
+
+        var slot = module?.Descendants(L5XName.Port)
+            .Where(p => bool.TryParse(p.Attribute(L5XName.Upstream)?.Value, out var upstream) && upstream
+                && p.Attribute(L5XName.Type)?.Value != "Ethernet"
+                && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
+            .Select(p => p.Attribute(L5XName.Address)?.Value)
+            .FirstOrDefault();
+
+        return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";
+
+        string DetermineModuleSuffix(XElement el)
+        {
+            if (el.Name == L5XName.InputTag)
+                return el.Parent?.Attribute(L5XName.InputTagSuffix)?.Value ?? "I";
+
+            if (el.Name == L5XName.OutputTag)
+                return el.Parent?.Attribute(L5XName.OutputTagSuffix)?.Value ?? "O";
+
+            return "C";
+        }
     }
 }

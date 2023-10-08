@@ -288,6 +288,17 @@ public class L5XDataTypeTests
 
         return Verify(content.DataTypes.Serialize().ToString());
     }
+
+    [Test]
+    public void Dependencies_AttachedHasDependencies_ShouldNotBeEmpty()
+    {
+        var file = L5X.Load(Known.Test);
+        var dataType = file.Find<DataType>("ComplexType")!;
+
+        var dependencies = dataType.Dependencies().ToList();
+
+        dependencies.Should().NotBeEmpty();
+    }
     
     [Test]
     public void References_WhenCalled_ShouldReturnElementsWithExpectedDataType()
@@ -301,7 +312,17 @@ public class L5XDataTypeTests
     }
 
     [Test]
-    public void references_GenericTypeConstraint_ShouldReturnElementsOfExpectedType()
+    public void References_AllDataTypes_DoesThatWork()
+    {
+        var content = L5X.Load(Known.Test);
+        
+        var references = content.DataTypes.Select(d => new {d.Name, References = d.References().ToList()}).ToList();
+
+        references.Should().NotBeNull();
+    }
+
+    [Test]
+    public void References_GenericTypeConstraint_ShouldReturnElementsOfExpectedType()
     {
         var content = L5X.Load(Known.Test);
         var dataType = content.DataTypes.Get(Known.DataType);

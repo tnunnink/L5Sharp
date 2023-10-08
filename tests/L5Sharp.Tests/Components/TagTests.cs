@@ -45,7 +45,7 @@ public class TagTests
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
         tag.TagName.Should().Be(TagName.Empty);
-        tag.Scope.Should().Be(Scope.Null);
+        tag.ScopeType.Should().Be(Scope.Null);
         tag.IsAttached.Should().BeFalse();
     }
 

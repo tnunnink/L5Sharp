@@ -19,6 +19,15 @@ public static class LogixSerializer
         Introspect(typeof(LogixSerializer).Assembly).ToDictionary(k => k.Key, v => v.Value));
 
     /// <summary>
+    /// Serializes the <see cref="LogixElement"/> object into an <see cref="XElement"/> object.
+    /// </summary>
+    /// <param name="element">The <see cref="LogixElement"/> object to serialize.</param>
+    /// <returns>A <see cref="XElement"/> representing the serialized logic element object.</returns>
+    // ReSharper disable once UnusedMember.Global
+    // I know this is probably going unused, but I feel like I want it here just for completeness.
+    public static XElement Serialize(LogixElement element) => element.Serialize();
+    
+    /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to deserialize.</param>
@@ -42,6 +51,19 @@ public static class LogixSerializer
     /// </remarks>
     public static LogixElement Deserialize(Type type, XElement element) => Deserializer(type).Invoke(element);
 
+    /// <summary>
+    /// Deserializes a <see cref="XElement"/> into the first matching <see cref="LogixElement"/> type found in the
+    /// element hierarchy.
+    /// </summary>
+    /// <param name="element">The XML element to deserialize.</param>
+    /// <returns>If the element is or has a parent of a known deserializable type, then a new <see cref="LogixElement"/>
+    /// of the first found type in the XML tree; Otherwise, <c>null</c>.</returns>
+    /// <remarks>
+    /// This method will traverse the XMl tree until it reaches a <c>XElement</c> with a name matching
+    /// a known deserializable logic element type. Once it finds that type/element pair, it will deserialize it as that
+    /// type and return the result. This is useful when we cross reference and find child elements that we need to
+    /// deserialize by finding it's parent.
+    /// </remarks>
     public static LogixElement? Deserialize(XElement element)
     {
         var result = FindElementType(element);
@@ -94,9 +116,16 @@ public static class LogixSerializer
                    null) is not null;
     }
 
+    /// <summary>
+    /// Traverses the XML tree until it finds an element with a name matching a known deserializable logic element type,
+    /// and returns the type and element pair.
+    /// </summary>
+    /// <param name="element">The element to find the logic element type for.</param>
+    /// <returns>A <see cref="Tuple"/> representing the deserializable type and matching element for which to deserialize
+    /// the type with.</returns>
     private static Tuple<Type, XElement>? FindElementType(XElement element)
     {
-        var type = Deserializers.Value.Keys.FirstOrDefault(t => t.L5XType() == element.Name);
+        var type = Deserializers.Value.Keys.FirstOrDefault(t => t.L5XTypes().Any(n => n == element.Name));
 
         if (type is not null) return new Tuple<Type, XElement>(type, element);
         

@@ -269,24 +269,6 @@ public class Tag : LogixComponent<Tag>
     public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
 
     /// <summary>
-    /// The scope type of the tag component, indicating whether the tag is a global controller tag, a local program tag.
-    /// or neither.
-    /// </summary>
-    /// <value>A <see cref="Enums.Scope"/> option indicating the container type for the tag.</value>
-    /// <remarks>
-    /// <para>
-    /// The scope of a tag component is determined from the ancestors of the underlying element. If the first parent is
-    /// program element, the tag is program scoped. If the first element is a controller element, the tag is controller
-    /// scoped. If ancestors of these types are not found, we assume the tag has no/null scope.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the L5X of the tag component, but one that adds a lot of value as it
-    /// helps identify tags within the L5X file. This is why it is part of the core component model.
-    /// </para>
-    /// </remarks>
-    public Scope Scope => Scope.FromElement(Element);
-
-    /// <summary>
     /// Gets the tag member having the provided tag name value. The tag name can represent either an immediate member
     /// or a nested member in the tag hierarchy.
     /// </summary>
@@ -458,18 +440,6 @@ public class Tag : LogixComponent<Tag>
     #region Extensions
 
     /// <summary>
-    /// Gets the name of the scoped container for the current logix element.
-    /// </summary>
-    /// <value> A <see cref="string"/> containing the name of the containing program or controller for which this tag
-    /// belongs. If this tag has not container (i.e. <c>Null</c> scope), then returns <c>null</c>.</value>
-    /// <remarks>
-    /// This value is retrieved from the ancestors of the underlying element. If not ancestors exists, meaning this
-    /// tag has no scope, then this property will be <c>null</c>.
-    /// </remarks>
-    /// <seealso cref="ScopeName"/>
-    public string? ContainerName => Element.Ancestors(Scope.Name).FirstOrDefault()?.LogixName();
-
-    /// <summary>
     /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
     /// this <c>Tag</c>. 
     /// </summary>
@@ -477,22 +447,6 @@ public class Tag : LogixComponent<Tag>
     /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the this tag name and all child tag names.
     /// </returns>
     public IEnumerable<TagName> TagNames() => Members().Select(t => t.TagName);
-
-    /// <summary>
-    /// Returns the <c>TagName</c> and the tag's program name prepended with the format <i>Program:{ProgramName}.{TagName}</i>
-    /// if the tag is a program tag. If the tag is a controller tag, then returns the tag's <c>TagName</c>. This forms a
-    /// globally unique tag identifier for the given tag object.
-    /// </summary>
-    /// <value>
-    /// If this tag is a controller tag, then <see cref="TagName"/>. If this tag is a program tag,
-    /// then <see cref="ContainerName"/> and <see cref="Common.TagName"/> in the format <i>Program:{ProgramName}.{TagName}</i>.
-    /// </value>
-    /// <remarks>
-    /// This value is determined based on the <see cref="Scope"/> of the tag. This name provides a consistent
-    /// global unique identified for a given tag object.
-    /// </remarks>
-    /// <seealso cref="ContainerName"/>
-    public TagName ScopeName => Scope == Scope.Program ? $"Program:{ContainerName}.{TagName}" : TagName;
     
     /// <summary>
     /// Adds a new member to the tag's complex data structure.

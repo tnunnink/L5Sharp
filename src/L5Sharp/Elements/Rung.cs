@@ -130,7 +130,7 @@ public class Rung : LogixElement
         }
     }
 
-    /*/// <summary>
+    /// <summary>
     /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AOI logic in the
     /// collection of <see cref="Rung"/> objects.
     /// </summary>
@@ -145,13 +145,12 @@ public class Rung : LogixElement
     /// </remarks>
     public IEnumerable<NeutralText> Flatten()
     {
-        var content = L5X();
-        if (content is null)
+        if (L5X is null)
             throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
 
         var code = new List<NeutralText>();
 
-        var references = content.Instructions
+        var references = L5X.Instructions
             .Select(i => new {Instruction = i, Instances = Text.SplitByKey(i.Name)})
             .ToList();
 
@@ -162,17 +161,16 @@ public class Rung : LogixElement
         }
 
         return code;
-    }*/
+    }
     
-    /*/// <summary>
+    /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
     public Dictionary<TagName, Tag> References()
     {
-        var document = L5X;
-        if (document is null)
+        if (L5X is null)
             throw new InvalidOperationException(
                 "Can not get references for rungs that are not attached to a L5X content file.");
         
@@ -180,13 +178,13 @@ public class Rung : LogixElement
 
         foreach (var tagName in Text.Tags())
         {
-            var tag = document.Tags().FindFirst(tagName, ContainerName);
+            var tag = L5X.FindTag(tagName, ContainerName);
             if (tag is null) continue;
             references.Add(tagName, tag);
         }
         
         return references;
-    }*/
+    }
 
     #endregion
 }

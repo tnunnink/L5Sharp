@@ -7,7 +7,39 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Remove Extensions project and migrated back into primary project. Reorganized classes and code. Remoed LogixContent.cs and moved code into new primary entry point class L5X.cs. Updated LogixComponent.cs with new reference methods and L5X property to retrieve root from child elements. Updated and fixed some tests. Updated namespaces. Start of 0.16.0 with new features and organization." />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/L5Sharp/Common/CodeElement.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/L5Sharp/Common/ComponentKey.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/L5Sharp/ILogixExportable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/L5Sharp/Utilities/L5XTypeAttribute.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/L5XExtensionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/DataTypeMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5X.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/L5XInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5XInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/L5XTypeAttribute.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/L5XExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Utilities/L5XExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XExportTests.Export_DataType_ShouldBeValid.verified.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XExportTests.Export_ValidComponent_ShouldHaveVerifiedL5X.verified.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XExportTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/TagDictionaryTests.cs" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,7 +81,7 @@
     <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/L5Sharp.Core/Utilities/TagDictionary.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Projects/L5Sharp/src/L5Sharp/Elements/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="FORCE_HIGHLIGHTING" />
@@ -77,36 +109,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Notification.DisplayName-DoNotAsk-Plugin Error&quot;: &quot;Plugins failed to load&quot;,
-    &quot;Notification.DoNotAsk-Plugin Error&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;RiderCSharpLiveTemplatesSettingsId&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Notification.DisplayName-DoNotAsk-Plugin Error": "Plugins failed to load",
+    "Notification.DoNotAsk-Plugin Error": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "TODO_SCOPE": "All Places",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Language Defaults",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;C#&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "C#"
     ],
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\admin\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\admin\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\admin\\AppData\\Local\\Symbols\\src&quot;
+    "rider.external.source.directories": [
+      "C:\\Users\\admin\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
+      "C:\\Users\\admin\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
+      "C:\\Users\\admin\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration>C:\Users\tnunnink\AppData\Roaming\Subversion</configuration>
@@ -341,7 +373,8 @@
       <workItem from="1692107016442" duration="19313000" />
       <workItem from="1692213662519" duration="30729000" />
       <workItem from="1693231547412" duration="3665000" />
-      <workItem from="1695256063268" duration="78174000" />
+      <workItem from="1695256063268" duration="92590000" />
+      <workItem from="1696620242847" duration="29027000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -686,7 +719,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="300" />
+    <option name="localTasksCounter" value="301" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -722,7 +755,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="removed todos" />
     <MESSAGE value="fixing tests" />
     <MESSAGE value="updated readme and made L5Sharp.Extensions.csproj depend on L5Sharp via nuget instead of direct reference" />
     <MESSAGE value="README.md updates" />
@@ -747,7 +779,8 @@
     <MESSAGE value="fixed bug with FindAll" />
     <MESSAGE value="Update TagName.cs to make Depth and Member use regex patterns instead of member iteration to be more efficient. Removed Regex.Compiled as is slows down construction of objects for minimal performance gain." />
     <MESSAGE value="Remove Extensions project and migrated back into primary project. Reorganized classes and code. Remoed LogixContent.cs and moved code into new primary entry point class L5X.cs. Updated LogixComponent.cs with new reference methods and L5X property to retrieve root from child elements. Updated and fixed some tests. Updated namespaces. Start of 0.16.0 with new features and organization." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Extensions project and migrated back into primary project. Reorganized classes and code. Remoed LogixContent.cs and moved code into new primary entry point class L5X.cs. Updated LogixComponent.cs with new reference methods and L5X property to retrieve root from child elements. Updated and fixed some tests. Updated namespaces. Start of 0.16.0 with new features and organization." />
+    <MESSAGE value="Created new L5XTypeAttribute.cs to replace the XmlTypeAttribute. This class allows multiple XML types to be defined so that components or elements can support multiple different XElements from the L5X (tag specifically) allowing us to remove LocalTag.cs. LogixContainer.cs also was updated to account for adding elements with different name and extensions were added and updated to get correct L5X type names." />
+    <option name="LAST_COMMIT_MESSAGE" value="Created new L5XTypeAttribute.cs to replace the XmlTypeAttribute. This class allows multiple XML types to be defined so that components or elements can support multiple different XElements from the L5X (tag specifically) allowing us to remove LocalTag.cs. LogixContainer.cs also was updated to account for adding elements with different name and extensions were added and updated to get correct L5X type names." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -761,28 +794,21 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Extensions.Tests/TagExtensionsTests.cs</url>
           <line>86</line>
-          <properties documentPath="C:\Projects\L5Sharp\tests\L5Sharp.Extensions.Tests\TagExtensionsTests.cs" initialLine="86" containingFunctionPresentation="Method 'References_HasValidReferencesForAttachedTag_ShouldReturnRungsWithTagName'">
-            <startOffsets>
-              <option value="2222" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2254" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Projects\L5Sharp\tests\L5Sharp.Extensions.Tests\TagExtensionsTests.cs" initialLine="86" containingFunctionPresentation="Method 'References_HasValidReferencesForAttachedTag_ShouldReturnRungsWithTagName'" />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.cs</url>
-          <line>107</line>
-          <properties documentPath="C:\Projects\L5Sharp\tests\L5Sharp.Tests\Components\DataTypeTests.cs" initialLine="107" containingFunctionPresentation="Method 'L5X_AttachedElement_ShouldNotBeNull'">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs</url>
+          <line>31</line>
+          <properties documentPath="C:\Projects\L5Sharp\tests\L5Sharp.Tests\ProofTesting.cs" initialLine="31" containingFunctionPresentation="Method 'Scratch'">
             <startOffsets>
-              <option value="3530" />
+              <option value="645" />
             </startOffsets>
             <endOffsets>
-              <option value="3555" />
+              <option value="670" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="30" />
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -790,9 +816,11 @@
       <pinned-members>
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Member" memberName="Target" />
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Instruction" memberName="Operands" />
+        <PinnedItemInfo parentTag="Frame#L5Sharp.Components.DataType.References" memberName="reference" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.LogixContentTests.Query_TagsInMovInstructions_ShouldReturnsLotsOfTagNames" memberName="references" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.LogixContentAgainstTemplateTests.Instructions_WhenCalled_ShouldNotBeEmpty" memberName="components" />
         <PinnedItemInfo parentTag="Type#L5Sharp.Types.Member" memberName="DataType" />
+        <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.L5XDataTypeTests.References_WhenCalled_ShouldReturnElementsWithExpectedDataType" memberName="this" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.ProofTests.FindReferencedModuleTags" memberName="references" />
         <PinnedItemInfo parentTag="Type#L5Sharp.LogixContext" memberName="Types" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.LogixContentAgainstTemplateTests.FindReferencesToAnalogTag" memberName="this" />
@@ -812,6 +840,7 @@
         <watch expression="new System.Collections.Generic.ICollectionDebugView&lt;L5Sharp.LogixMember&gt;(type.Members).Items[0]" />
         <watch expression="new System.Linq.SystemLinq_GroupingDebugView&lt;L5Sharp.Common.TagName, L5Sharp.Components.Tag&gt;(new System.Linq.SystemLinq_LookupDebugView&lt;L5Sharp.Common.TagName, L5Sharp.Components.Tag&gt;(tags).Groupings[771800]).Values[0].TagName" />
         <watch expression="new System.Collections.Generic.ICollectionDebugView&lt;L5Sharp.LogixElement&gt;(references).Items[28]" />
+        <watch expression="new System.Collections.Generic.ICollectionDebugView&lt;L5Sharp.LogixElement&gt;(references).Items[3]" />
       </configuration>
     </watches-manager>
   </component>
