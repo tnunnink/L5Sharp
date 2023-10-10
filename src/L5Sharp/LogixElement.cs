@@ -84,7 +84,8 @@ public abstract class LogixElement : ILogixSerializable
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
 
-        Element.AddAfterSelf(element.Serialize());
+        var xml = element.Serialize().ToL5XType(GetType(), Element.Name.LocalName);
+        Element.AddAfterSelf(xml);
     }
 
     /// <summary>
@@ -108,7 +109,8 @@ public abstract class LogixElement : ILogixSerializable
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
 
-        Element.AddBeforeSelf(element.Serialize());
+        var xml = element.Serialize().ToL5XType(GetType(), Element.Name.LocalName);
+        Element.AddBeforeSelf(xml);
     }
 
     /// <summary>
@@ -167,22 +169,30 @@ public abstract class LogixElement : ILogixSerializable
     public void Replace(LogixElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
-        if (element.GetType().L5XType() != Element.L5XType())
-        {
-            //todo does this matter to us?
-        }
-
+        
         if (Element.Parent is null)
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
 
-        Element.ReplaceWith(element.Serialize());
+        var xml = element.Serialize().ToL5XType(GetType(), Element.Name.LocalName);
+        Element.ReplaceWith(xml);
     }
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
     /// </summary>
-    /// <returns>A <see cref="XElement"/> representing the serialized entity.</returns>
+    /// <returns>A <see cref="XElement"/> representing the serialized logix element.</returns>
+    /// <remarks>
+    /// <para>
+    /// All logix elements are backed by an underlying <see cref="XElement"/> through which derived classes
+    /// get and set properties. This means all classes in this library can be viewed as wrapper around an
+    /// <see cref="XElement"/> or segment of XMl, and use deferred execution for retrieving and setting data.
+    /// </para>
+    /// <para>
+    /// This method exposes the underlying element for extension and serialization purposes.
+    /// Take care not to mutate the underlying element in a way that makes the schema invalid and non-importable.
+    /// </para>
+    /// </remarks>
     public virtual XElement Serialize() => Element;
 
     /// <summary>
@@ -253,7 +263,6 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter.
-    /// If the attribute does not exist, throw a <see cref="InvalidOperationException"/>.
     /// </summary>
     /// <param name="name">The name of the attribute.</param>
     /// <typeparam name="T">The return type of the value.</typeparam>

@@ -1,0 +1,4 @@
+﻿<Sheet Number="0">
+  <ORef ID="0" X="100" Y="100" Operand="First" HideDesc="true" />
+  <ORef ID="1" X="150" Y="150" Operand="Second" />
+</Sheet>

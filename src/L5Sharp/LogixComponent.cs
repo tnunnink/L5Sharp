@@ -16,8 +16,13 @@ namespace L5Sharp;
 /// is typically subject to the some naming constraints defined by a Rockwell. Logix internally may create
 /// components that do not adhere to the naming constraints, which is why the property is a simple string.
 /// Names should be unique any attempt to create duplicated names should fail.
-/// All components also contain a simple string description and &lt;see cref="Enums.Use"/&gt; to identify the
+/// All components also contain a simple string description and <see cref="Enums.Use"/> to identify the
 /// purpose of the component.
+/// </para>
+/// <para>
+/// All components also contain some common functionality, such as the ability to find dependencies and references, and
+/// to be exported individually as a new L5X component file. The default equality implementation is also overridden
+/// to determine equality by the component type, name, and scope within the L5X tree.
 /// </para>
 /// </remarks>
 /// <footer>
@@ -103,7 +108,7 @@ public abstract class LogixComponent : LogixElement
     /// value as it helps uniquely identify components within the L5X file, especially scoped components with same name.
     /// </para>
     /// </remarks>
-    public string ScopeName => Scope.Container(Element);
+    public string ScopeName => Scope.DetermineName(Element);
     
     /// <summary>
     /// The scope of the logix component, indicating whether it is a globally scoped controller component,
@@ -119,39 +124,42 @@ public abstract class LogixComponent : LogixElement
     /// </para>
     /// <para>
     /// This property is not inherent in the underlying XML of a component (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify components within the L5X file, especially scoped components with same name.
+    /// value as it helps uniquely identify components within the L5X file, especially
+    /// <c>Tag</c> and <c>Routine</c> components.
     /// </para>
     /// </remarks>
-    public Scope ScopeType => Scope.FromElement(Element);
+    public Scope ScopeType => Scope.DetermineType(Element);
     
     /// <summary>
-    /// 
+    /// Returns a collection of <see cref="LogixComponent"/> that this component depends on to be valid within a given
+    /// L5X file.
     /// </summary>
-    /// <returns></returns>
-    public virtual IEnumerable<LogixElement> Dependencies() => Enumerable.Empty<LogixElement>();
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all distinct <see cref="LogixComponent"/> objects this
+    /// component depends on.</returns>
+    /// <remarks>
+    /// This is primarily useful for exporting individual components to a new L5X file. It allows them to also
+    /// bring along all the other components they would need to be successfully importing into a logix project file.
+    /// Each derived component implements this method since the dependencies are different for each type.
+    /// </remarks>
+    public virtual IEnumerable<LogixComponent> Dependencies() => Enumerable.Empty<LogixComponent>();
 
     /// <summary>
     /// Creates a new <see cref="L5X"/> with the provided logix component as the target type.
     /// </summary>
     /// <param name="softwareRevision">The optional software revision, or version of Studio to export the component as.</param>
     /// <returns>A <see cref="L5X"/> containing the component as the target of the L5X.</returns>
-    public virtual L5X Export(Revision? softwareRevision = null)
+    public L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;
         
-        //todo what params like software revision should be passed in?
-        var content = L5X.New(this);
+        var content = L5X.New(this, softwareRevision);
         content.Add(this);
         
         var dependencies = Dependencies().ToList();
         foreach (var dependency in dependencies)
         {
-            //shit this won't work...
-            /*if (dependency is LogixComponent<>)
-            {
-
-            }
-            content.Add(dependency);*/
+            dependency.Use = Use.Context;
+            content.Add(dependency);
         }
 
         return content;

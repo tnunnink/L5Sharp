@@ -3,42 +3,35 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Enums;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
-/// <summary>
-/// A Logix <c>Line</c> element containing the properties for a L5X Line component.
-/// </summary>
-public class Line : LogixCode
+[L5XType(L5XName.SFCContent)]
+public class Chart : LogixCode
 {
     /// <summary>
-    /// Creates a new <see cref="Line"/> with default values.
+    /// Creates a new <see cref="Chart"/> with default values.
     /// </summary>
-    public Line()
+    public Chart()
     {
-        Text = NeutralText.Empty;
     }
 
     /// <summary>
-    /// Creates a new <see cref="Line"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="Chart"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public Line(XElement element) : base(element)
+    public Chart(XElement element) : base(element)
     {
-    }
-
-    /// <summary>
-    /// The logic of the <see cref="Line"/> as a <see cref="NeutralText"/> value.
-    /// </summary>
-    public NeutralText Text
-    {
-        get => Element.Value;
-        set => Element.SetValue(new XCData(value.ToString()));
     }
 
     /// <inheritdoc />
-    public override string ToString() => Text;
+    public override int Number
+    {
+        get => 0;
+        set => throw new NotSupportedException("Setting the number of a SFC is not supported.");
+    }
 
     /// <inheritdoc />
     public override IEnumerable<TagName> TagNames()

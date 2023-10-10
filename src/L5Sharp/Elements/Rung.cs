@@ -12,14 +12,13 @@ namespace L5Sharp.Elements;
 /// <summary>
 /// A Logix <c>Rung</c> element containing the properties for a L5X Rung component.
 /// </summary>
-public class Rung : LogixElement
+public class Rung : LogixCode
 {
     /// <summary>
     /// Creates a new <see cref="Rung"/> with default values.
     /// </summary>
     public Rung()
     {
-        Number = 0;
         Type = RungType.Normal;
         Text = NeutralText.Empty;
     }
@@ -38,25 +37,15 @@ public class Rung : LogixElement
     /// </summary>
     /// <param name="text">The <see cref="NeutralText"/> representing the rung logic.</param>
     /// <param name="comment">The optional string comment of the rung. Default is <c>null</c> (no comment).</param>
-    /// <remarks>This will initialize <see cref="Number"/> to '0' and <see cref="Type"/> to 'Normal'.
+    /// <remarks>This will initialize ...
     /// When importing, Logix ignores the rung number and imports Rung's in order of the container sequence,
     /// meaning, its really only necessary to specify valid text, which is why this constructor is available,
     /// allowing concise construction of a <c>Rung</c> object.</remarks>
     public Rung(NeutralText text, string? comment = null)
     {
-        Number = 0;
         Type = RungType.Normal;
         Text = text;
         Comment = comment;
-    }
-
-    /// <summary>
-    /// The zero based number indicating the position of the <see cref="Rung"/> within the containing routine.
-    /// </summary>
-    public int Number
-    {
-        get => GetValue<int>();
-        set => SetValue(value);
     }
 
     /// <summary>
@@ -71,6 +60,7 @@ public class Rung : LogixElement
     /// <summary>
     /// The logic of the <see cref="Rung"/> as a <see cref="NeutralText"/> value.
     /// </summary>
+    /// <value>A <see cref="NeutralText"/> instance containing the textual format of the run logic.</value>
     public NeutralText Text
     {
         get => GetProperty<NeutralText>() ?? NeutralText.Empty;
@@ -80,7 +70,7 @@ public class Rung : LogixElement
     /// <summary>
     /// The text comment of the <see cref="Rung"/>.
     /// </summary>
-    /// <value>A <see cref="string"/> containing the text comment of the Rung.</value>
+    /// <value>A <see cref="string"/> containing the text comment of the rung if it exists; Otherwise, <c>null</c>.</value>
     public string? Comment
     {
         get => GetProperty<string>();
@@ -88,46 +78,38 @@ public class Rung : LogixElement
     }
 
     /// <inheritdoc />
+    public override IEnumerable<TagName> TagNames() => Text.Tags();
+
+    /// <inheritdoc />
+    public override IEnumerable<Instruction> Instructions() => Text.Instructions();
+
+    /// <inheritdoc />
     public override string ToString() => Text;
+    
+    /// <summary>
+    /// Implicitly converts the <see cref="Rung"/> object to a <see cref="NeutralText"/>.
+    /// </summary>
+    /// <param name="rung">The <c>Rung</c> to convert.</param>
+    /// <returns>A <see cref="NeutralText"/> instance representing the contents of the <c>Rung</c>.</returns>
+    public static implicit operator NeutralText(Rung rung) => new(rung.Text);
+    
+    /// <summary>
+    /// Implicitly converts the <see cref="NeutralText"/> object to a <see cref="Rung"/>.
+    /// </summary>
+    /// <param name="text">The <c>NeutralText</c> to convert.</param>
+    /// <returns>A <see cref="Rung"/> instance representing the contents of the <c>NeutralText</c>.</returns>
+    public static implicit operator Rung(NeutralText text) => new(text);
 
     #region Extensions
-
-    /// <summary>
-    /// Gets the container name for the curre
-    /// </summary>
-    public string ContainerName
-    {
-        get
-        {
-            var container = Element.Ancestors().FirstOrDefault(a =>
-                a.Name == L5XName.Program || a.Name == L5XName.AddOnInstructionDefinition);
-            return container is not null ? container.LogixName() : string.Empty;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public string RoutineName
-    {
-        get
-        {
-            var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
-            return routine is not null ? routine.LogixName() : string.Empty;
-        }
-    }
 
     /// <summary>
     /// Gets the parent <see cref="Routine"/> of this <see cref="Rung"/> instance if it is attached.
     /// </summary>
     /// <returns>A <see cref="Routine"/> instance representing the containing routine of the rung if found; Otherwise, <c>null</c>.</returns>
-    public Routine? Routine
+    public Routine? GetRoutine()
     {
-        get
-        {
-            var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
-            return routine is not null ? new Routine(routine) : default;
-        }
+        var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
+        return routine is not null ? new Routine(routine) : default;
     }
 
     /// <summary>
@@ -162,7 +144,7 @@ public class Rung : LogixElement
 
         return code;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -173,16 +155,16 @@ public class Rung : LogixElement
         if (L5X is null)
             throw new InvalidOperationException(
                 "Can not get references for rungs that are not attached to a L5X content file.");
-        
+
         var references = new Dictionary<TagName, Tag>();
 
         foreach (var tagName in Text.Tags())
         {
-            var tag = L5X.FindTag(tagName, ContainerName);
+            var tag = L5X.FindTag(tagName, Program);
             if (tag is null) continue;
             references.Add(tagName, tag);
         }
-        
+
         return references;
     }
 

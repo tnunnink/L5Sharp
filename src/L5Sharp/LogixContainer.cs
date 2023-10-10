@@ -47,16 +47,18 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         _element = new XElement(typeof(TElement).L5XContainerType());
         _type = typeof(TElement).L5XType();
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided <see cref="XElement"/>. 
     /// </summary>
     /// <param name="container">The <see cref="XElement"/> containing a collection of elements.</param>
+    /// <param name="type">Optionally the type name of the child elements of the container. Will default to the
+    /// configured L5XType name if not provided.</param>
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
-    public LogixContainer(XElement container)
+    public LogixContainer(XElement container, XName? type = null)
     {
         _element = container ?? throw new ArgumentNullException(nameof(container));
-        _type = typeof(TElement).L5XType();
+        _type = type ?? typeof(TElement).L5XType();
     }
 
     /// <summary>
@@ -85,16 +87,16 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            var xml = SyncType(component.Serialize());
+            var xml = component.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
             
             _element.Add(xml);
         }
     }
     
     /// <summary>
-    /// Indicates whether this element is attached to a L5X document.
+    /// Indicates whether this container is attached to a L5X document.
     /// </summary>
-    /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
+    /// <value><c>true</c> if this is an attached container; Otherwise, <c>false</c>.</value>
     /// <remarks>
     /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
     /// If so we will assume this element is attached to an overall L5X document.
@@ -131,7 +133,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
                 throw new ArgumentNullException(nameof(value),
                     $"Can not set container element of type {typeof(TElement)} null instance.");
             
-            var xml = SyncType(value.Serialize());
+            var xml = value.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
             
             _element.Elements(_type).ElementAt(index).ReplaceWith(xml);
         }
@@ -147,7 +149,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         if (element is null)
             throw new ArgumentNullException(nameof(element));
         
-        var xml = SyncType(element.Serialize());
+        var xml = element.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
 
         var last = _element.Elements(_type).LastOrDefault();
 
@@ -175,7 +177,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
             if (element is null)
                 throw new ArgumentNullException(nameof(element));
             
-            var xml = SyncType(element.Serialize());
+            var xml = element.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
 
             var last = _element.Elements(_type).LastOrDefault();
 
@@ -208,7 +210,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var xml = SyncType(element.Serialize());
+        var xml = element.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
 
         _element.Elements(_type).ElementAt(index).AddBeforeSelf(xml);
     }
@@ -284,29 +286,6 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         _element.Elements(_type).Select(LogixSerializer.Deserialize<TElement>).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    /// <summary>
-    /// Handles updating the incoming <see cref="XElement"/> with the correct XName for the current container elements.
-    /// Note that this only replaces the name if it does not match the current type name and is a supported L5XType
-    /// name configured in the library using the <see cref="L5XTypeAttribute"/>. If the name is not supported, then
-    /// we will throw an <see cref="ArgumentException"/>
-    /// </summary>
-    private XElement SyncType(XElement element)
-    {
-        var name = element.Name.LocalName;
-
-        if (name == _type) 
-            return element;
-
-        var supported = typeof(TElement).L5XTypes().FirstOrDefault(t => t == name);
-        if (supported is null)
-        {
-            throw new ArgumentException($"Can not add element type '{name}' to container of type {_type}.");
-        }
-
-        element.Name = supported;
-        return element;
-    }
 }
 
 /// <summary>

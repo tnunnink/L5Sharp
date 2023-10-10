@@ -221,6 +221,26 @@ public class AddOnInstruction : LogixComponent
         set => SetContainer(value);
     }
 
+    /// <inheritdoc />
+    public override IEnumerable<LogixElement> References()
+    {
+        if (L5X is null) return Enumerable.Empty<LogixElement>();
+
+        var references = new List<LogixElement>();
+
+        var targets = L5X.Serialize().Descendants().Where(e => e.ReferencesType(Name) || e.HasCodeReference(Name));
+
+        // ReSharper disable once LoopCanBeConvertedToQuery Prefer for debugging
+        foreach (var target in targets)
+        {
+            var reference = LogixSerializer.Deserialize(target);
+            if (reference is null) continue;
+            references.Add(reference);
+        }
+
+        return references;
+    }
+
     #region Extensions
 
     /// <summary>
@@ -255,7 +275,7 @@ public class AddOnInstruction : LogixComponent
         var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToList();
 
         //Deserialize a mapping of the provided text operand arguments to instruction parameter names.
-        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
+        var mapping = arguments.Zip(parameters, (a, p) => new {Argument = a, Parameter = p}).ToList();
 
         //Replace all parameter names with argument names in the instruction logic text, and return the results.
         return rungs.Select(r => r.Text)

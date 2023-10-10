@@ -32,6 +32,8 @@ public class L5X : ILogixSerializable
     /// An index of all logix components in the L5X file for fast lookups.
     /// </summary>
     private readonly Dictionary<ComponentKey, XElement> _componentIndex = new();
+    
+    private readonly Dictionary<string, XElement> _referenceIndex = new();
 
     /// <summary>
     /// The list of top level component containers for a L5X content or controller element in order of which
@@ -207,6 +209,11 @@ public class L5X : ILogixSerializable
     /// <param name="component">The component to add to the L5X.</param>
     /// <typeparam name="TComponent">The type of component to add to the L5X.</typeparam>
     /// <exception cref="InvalidOperationException">No container was found in the L5X tree for the specified type.</exception>
+    /// <remarks>
+    /// This provides a more dynamic way to add content to an L5X file. Note that this only adds to the first
+    /// container found of the specific type. If you are adding scoped components such as <c>Tag</c> or <c>Routine</c>
+    /// you should be doing so in the context of a <c>Program</c> component.
+    /// </remarks>
     public void Add<TComponent>(TComponent component) where TComponent : LogixComponent
     {
         var containerType = typeof(TComponent).L5XContainerType();
@@ -244,24 +251,27 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets a component with the specified name and option container name using the internal component index.
+    /// Finds a component with the specified name and optional container name using the internal component index.
     /// </summary>
-    /// <param name="name">The name of the component to get.</param>
-    /// <param name="container">The optional name of the container in which to search for the component.
-    /// This really only applies to tags and routines since they are scoped components.</param>
+    /// <param name="name">The name of the component to find.</param>
+    /// <param name="program">The optional name of the program in which to search for the component.
+    /// This really only applies to tags and routines since they are program scoped components. This will by default
+    /// look for controller scoped components only.</param>
     /// <typeparam name="TComponent">The type of component to find.</typeparam>
-    /// <returns>A single <see cref="LogixComponent"/> with the specified component name.</returns>
+    /// <returns>
+    /// A single <see cref="LogixComponent"/> with the specified component name if found; Otherwise, <c>null</c>.
+    /// </returns>
     /// <remarks>
     /// Since components have unique names, we can find and index them for fast lookup when needed. This might
     /// be helpful for certain functions that need to repeatedly find references to other components to perform
-    /// certain tasks. Note that for tags this only find the root tag component. If you want to further find nested
+    /// certain tasks. Note that for tags this only find the root tag component. If you want to find nested
     /// tag components, look at using <see cref="FindTag"/> or <see cref="FindTags"/>.
     /// </remarks>
-    public TComponent? Find<TComponent>(string name, string? container = null) where TComponent : LogixComponent
+    public TComponent? Find<TComponent>(string name, string? program = null) where TComponent : LogixComponent
     {
         var type = typeof(TComponent).L5XType();
-        container ??= GetControllerName();
-        var key = new ComponentKey(type, container, name);
+        program ??= GetControllerName();
+        var key = new ComponentKey(type, program, name);
 
         return _componentIndex.TryGetValue(key, out var element)
             ? LogixSerializer.Deserialize<TComponent>(element)
@@ -355,7 +365,9 @@ public class L5X : ILogixSerializable
     /// <remarks>
     /// Since components have unique names, we can find and index them for fast lookup when needed. This might
     /// be helpful for certain functions that need to repeatedly find references to other components to perform
-    /// certain tasks. 
+    /// certain tasks. Note that the only difference between this method and <see cref="Find{TComponent}(string)"/>
+    /// is that this method will throw an exception if the component is not found. Therefore, it also returns a
+    /// non-nullable reference type so that the caller can be sure that the component was found.
     /// </remarks>
     public TComponent Get<TComponent>(string name, string? container = null) where TComponent : LogixComponent
     {
@@ -423,7 +435,6 @@ public class L5X : ILogixSerializable
                 //todo process removal of element and if its a component element we need to remove from index.
                 break;
             case XObjectChange.Name:
-                //Not really sure we need to handle this change
                 break;
             case XObjectChange.Value:
                 //todo if a value changed it could potentially change references to a component.

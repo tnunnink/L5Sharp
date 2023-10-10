@@ -82,6 +82,15 @@ public class L5XDataTypeTests
     }
 
     [Test]
+    public void AddAfter_InvalidComponentType_ShouldThrowArgumentException()
+    {
+        var content = L5X.Load(Known.Test);
+        var dataType = content.DataTypes.Get(Known.DataType);
+        
+        FluentActions.Invoking(() => dataType.AddAfter(new Tag())).Should().Throw<ArgumentException>();
+    }
+    
+    [Test]
     public void AddAfter_ValidComponent_ShouldHaveExpectedCount()
     {
         var content = L5X.Load(Known.Test);

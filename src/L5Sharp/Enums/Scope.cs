@@ -21,7 +21,7 @@ public class Scope : LogixEnum<Scope, string>
     /// <returns><see cref="Program"/> if the element has a <c>Program</c> element ancestor,
     /// <see cref="Controller"/> if the element has a <c>Controller</c> element ancestor, <see cref="Null"/> otherwise.
     /// </returns>
-    public static Scope FromElement(XElement element)
+    public static Scope DetermineType(XElement element)
     {
         var ancestor = element.Ancestors().FirstOrDefault(IsScopeElement)?.Name.ToString();
         return ancestor is not null ? FromName(ancestor) : Null;
@@ -33,8 +33,8 @@ public class Scope : LogixEnum<Scope, string>
     /// </summary>
     /// <param name="element">The element for which to find the container name of.</param>
     /// <returns>A <see cref="string"/> representing the name of the containing program or controller.</returns>
-    public static string Container(XElement element) =>
-        element.Ancestors(FromElement(element).Name).FirstOrDefault()?.LogixName() ?? string.Empty;
+    public static string DetermineName(XElement element) =>
+        element.Ancestors(DetermineType(element).Name).FirstOrDefault()?.LogixName() ?? string.Empty;
 
     /// <summary>
     /// Generates a <see cref="ComponentKey"/> value for the provided <see cref="XElement"/> using its element type (name)
@@ -45,7 +45,7 @@ public class Scope : LogixEnum<Scope, string>
     public static ComponentKey DetermineKey(XElement element)
     {
         var type = element.Name.LocalName;
-        var container = Container(element);
+        var container = DetermineName(element);
         var name = element.LogixName();
         return new ComponentKey(type, container, name);
     }

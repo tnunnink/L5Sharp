@@ -222,6 +222,24 @@
       <None Update="L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.txt">
         <DependentUpon>L5XBasicTests.cs</DependentUpon>
       </None>
+      <None Update="Elements\SheetTests.InputReferences_AddValidReference_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SheetTests.OutputReferences_AddValidReference_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SheetTests.InputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SheetTests.OutputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SheetTests.InputConnectors_AddValidConnector_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SheetTests.InputConnectors_AddAfterConnector_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

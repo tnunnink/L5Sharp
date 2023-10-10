@@ -101,11 +101,11 @@ public class DataType : LogixComponent
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixElement> Dependencies()
+    public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (L5X is null) return Enumerable.Empty<LogixElement>();
+        if (L5X is null) return Enumerable.Empty<LogixComponent>();
         
-        var dependencies = new List<LogixElement>();
+        var dependencies = new List<LogixComponent>();
 
         foreach (var member in Members)
         {
@@ -129,33 +129,18 @@ public class DataType : LogixComponent
     {
         if (L5X is null) return Enumerable.Empty<LogixElement>();
 
-        var references = new Dictionary<string, LogixElement>();
-        
-        var targets = L5X.Serialize().Descendants()
-            .Where(d => d.Attribute(L5XName.DataType) is not null
-                        && StringComparer.OrdinalIgnoreCase.Equals(d.Attribute(L5XName.DataType)!.Value, Name));
+        var references = new List<LogixElement>();
+
+        var targets = L5X.Serialize().Descendants().Where(e => e.ReferencesType(Name));
 
         // ReSharper disable once LoopCanBeConvertedToQuery Prefer for debugging
         foreach (var target in targets)
         {
             var reference = LogixSerializer.Deserialize(target);
-
-            switch (reference)
-            {
-                case Tag tag:
-                    references.TryAdd(tag.Name, tag);
-                    break;
-                case DataTypeMember dataType:
-                    references.TryAdd(dataType.Name, dataType);
-                    break;
-                case Parameter parameter:
-                    references.TryAdd(parameter.Name, parameter);
-                    break;
-                default:
-                    throw new ArgumentException("Are you kidding me?");
-            }
+            if (reference is null) continue;
+            references.Add(reference);
         }
 
-        return references.Select(r => r.Value);
+        return references;
     }
 }

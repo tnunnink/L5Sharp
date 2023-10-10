@@ -25,7 +25,7 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <param name="destructive">Optional bit indicating that the instruction is destructive. Default is <c>false</c>.</param>
     public Instruction(string key, bool destructive = true) : base(key, key)
     {
-        Signature = @$"{Name}{SignaturePattern}";
+        Signature = $"{Name}{SignaturePattern}";
         Destructive = destructive;
     }
 
@@ -40,9 +40,8 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <summary>
     /// Indicates whether the instruction is destructive, meaning the instruction assigns value to it's operands.
     /// </summary>
-    /// <value><c>true</c> if the instruction is destructive; otherwise, <c>false</c>.</value>
+    /// <value><c>true</c> if the instruction is destructive; Otherwise, <c>false</c>.</value>
     public bool Destructive { get; }
-
 
     /// <summary>
     /// Gets the <c>ABL</c> instruction definition instance.
@@ -1053,4 +1052,6 @@ public sealed class Instruction : LogixEnum<Instruction, string>
 
         return new NeutralText(text);
     }
+    
+    
 }

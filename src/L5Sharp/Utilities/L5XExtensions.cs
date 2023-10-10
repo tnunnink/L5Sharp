@@ -79,7 +79,7 @@ public static class L5XExtensions
     /// </remarks>
     public static string L5XType(this Type type)
     {
-        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault(a => a.IsPrimaryType);
+        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault();
         return attribute is not null ? attribute.TypeName : type.Name;
     }
 
@@ -114,8 +114,42 @@ public static class L5XExtensions
     /// </remarks>
     public static string L5XContainerType(this Type type)
     {
-        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault(a => a.IsPrimaryType);
+        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault();
         return attribute is not null ? attribute.ContainerName : $"{type.Name}s";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="typeName"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <remarks>
+    /// Handles updating the incoming <see cref="XElement"/> with the correct XName for the current element type.
+    /// Note that this only replaces the name if it does not match the current type name and is a supported L5XType
+    /// name configured in the library using the <see cref="L5XTypeAttribute"/>. If the name is not supported, then
+    /// we will throw an <see cref="ArgumentException"/>. The reason for doing this is to handle adding elements of
+    /// the same class type to a container with a different element type. For example, adding a <c>Tag</c> to a collection
+    /// of <c>LocalTags</c> in an AOI.
+    /// </remarks>
+    public static XElement ToL5XType(this XElement element, Type type, string? typeName = null)
+    {
+        if (element is null) throw new ArgumentNullException(nameof(element));
+        if (type is null) throw new ArgumentNullException(nameof(type));
+
+        typeName ??= type.L5XType();
+        var elementType = element.L5XType();
+
+        if (elementType == typeName) return element;
+
+        if (type.L5XTypes().All(t => t != elementType))
+            throw new ArgumentException(
+                $"Element type '{elementType}' is not convertable to type '{typeName}'.");
+
+        element.Name = typeName;
+        return element;
     }
 
     /// <summary>
@@ -229,5 +263,28 @@ public static class L5XExtensions
 
             return "C";
         }
+    }
+
+    /// <summary>
+    /// Determines if a given <see cref="XElement"/> represents a specific data type name, meaning it has a data type
+    /// property with the specified value.
+    /// </summary>
+    /// <param name="element">The element to check.</param>
+    /// <param name="dataType">The name of the data type to find.</param>
+    /// <returns><c>true</c> if the element has a data type attribute referencing the provided name;
+    /// Otherwise, <c>false</c>.</returns>
+    /// <remarks>This is used internally for finding references to components such as <c>DataType</c>
+    /// and <c>AddOnInstruction</c>.</remarks>
+    internal static bool ReferencesType(this XElement element, string dataType)
+    {
+        return element.Attribute(L5XName.DataType) is not null
+               && StringComparer.OrdinalIgnoreCase.Equals(element.Get(L5XName.DataType), dataType);
+    }
+
+    internal static bool HasCodeReference(this XElement element, string componentName)
+    {
+        if (element.L5XType() is L5XName.Rung or L5XName.Line or L5XName.Sheet) return false;
+        if (LogixSerializer.Deserialize(element) is not LogixCode code) return false;
+        return code.TagNames().Any(t => t == componentName) || code.Instructions().Any(i => i.Name == componentName);
     }
 }

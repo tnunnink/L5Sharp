@@ -14,13 +14,11 @@ public class L5XTypeAttribute : Attribute
     /// Creates a new <see cref="L5XTypeAttribute"/> instance with provided configuration parameters.
     /// </summary>
     /// <param name="typeName">The L5X type name for the class.</param>
-    /// <param name="isPrimaryType">Whether this is the primary type for the class. Default is <c>true</c>.</param>
     /// <exception cref="ArgumentNullException"><c>typeName</c> is null.</exception>
-    public L5XTypeAttribute(string typeName, bool isPrimaryType = true)
+    public L5XTypeAttribute(string typeName)
     {
         TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
         ContainerName = $"{TypeName}s";
-        IsPrimaryType = isPrimaryType;
     }
 
     /// <summary>
@@ -28,13 +26,11 @@ public class L5XTypeAttribute : Attribute
     /// </summary>
     /// <param name="typeName">The L5X type name for the class.</param>
     /// <param name="containerName">The L5X container name for the class.</param>
-    /// <param name="isPrimaryType">Whether this is the primary type for the class. Default is <c>true</c>.</param>
     /// <exception cref="ArgumentNullException"><c>typeName</c> or <c>containerName</c> is null.</exception>
-    public L5XTypeAttribute(string typeName, string containerName, bool isPrimaryType = true)
+    public L5XTypeAttribute(string typeName, string containerName)
     {
         TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
         ContainerName = containerName ?? throw new ArgumentNullException(nameof(containerName));
-        IsPrimaryType = isPrimaryType;
     }
 
     /// <summary>
@@ -53,9 +49,4 @@ public class L5XTypeAttribute : Attribute
     /// the constructor.
     /// </remarks>
     public string ContainerName { get; }
-
-    /// <summary>
-    /// Whether this type is the primary type for the class. This is used to determine the default element name.
-    /// </summary>
-    public bool IsPrimaryType { get; }
 }
