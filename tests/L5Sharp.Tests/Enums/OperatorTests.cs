@@ -1,11 +1,10 @@
 ﻿using FluentAssertions;
 using L5Sharp.Enums;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Enums
 {
     [TestFixture]
-    public class OperationTests
+    public class OperatorTests
     {
         [Test]
         public void Assignment_WhenCalled_ShouldNotBeNull()
@@ -82,31 +81,31 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Modulo_WhenCalled_ShouldNotBeNull()
         {
-            Operator.MOD.Should().NotBeNull();
+            Operator.Mod.Should().NotBeNull();
         }
         
         [Test]
         public void And_WhenCalled_ShouldNotBeNull()
         {
-            Operator.AND.Should().NotBeNull();
+            Operator.And.Should().NotBeNull();
         }
         
         [Test]
         public void Or_WhenCalled_ShouldNotBeNull()
         {
-            Operator.OR.Should().NotBeNull();
+            Operator.Or.Should().NotBeNull();
         }
         
         [Test]
         public void Xor_WhenCalled_ShouldNotBeNull()
         {
-            Operator.XOR.Should().NotBeNull();
+            Operator.Xor.Should().NotBeNull();
         }
         
         [Test]
         public void Not_WhenCalled_ShouldNotBeNull()
         {
-            Operator.NOT.Should().NotBeNull();
+            Operator.Not.Should().NotBeNull();
         }
     }
 }

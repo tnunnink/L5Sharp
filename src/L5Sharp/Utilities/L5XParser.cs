@@ -36,7 +36,7 @@ public static class L5XParser
         { typeof(DataTypeFamily), DataTypeFamily.FromValue },
         { typeof(ElectronicKeying), ElectronicKeying.FromValue },
         { typeof(ExternalAccess), ExternalAccess.FromValue },
-        { typeof(Function), Function.FromValue },
+        { typeof(Keyword), Keyword.FromValue },
         { typeof(OnlineEditType), OnlineEditType.FromValue },
         { typeof(Operator), Operator.FromValue },
         { typeof(PassThroughOption), PassThroughOption.FromValue },

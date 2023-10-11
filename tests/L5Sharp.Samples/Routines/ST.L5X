@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="ST" TargetType="Routine" TargetSubType="ST" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Mon Jan 23 13:28:44 2023" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="ST" TargetType="Routine" TargetSubType="ST" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Tue Oct 10 13:10:23 2023" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
 <Controller Use="Context" Name="TestController">
 <DataTypes Use="Context">
 <DataType Name="ComplexType" Family="NoFamily" Class="User">
@@ -78,7 +78,7 @@
 <Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
 <Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Hex" Hidden="false" Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
 <Description>
-<![CDATA[Test Boolean update]]>
+<![CDATA[Test Bool]]>
 </Description>
 </Member>
 <Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
@@ -93,7 +93,7 @@
 </Member>
 <Member Name="DintMember" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="None">
 <Description>
-<![CDATA[Test Dint comment]]>
+<![CDATA[Test Dint]]>
 </Description>
 </Member>
 <Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
@@ -101,16 +101,16 @@
 <![CDATA[Test Lint]]>
 </Description>
 </Member>
-<Member Name="NewMember" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Member Name="RealMember" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write">
 <Description>
-<![CDATA[This is a test member]]>
+<![CDATA[Test Real]]>
 </Description>
 </Member>
 </Members>
 </DataType>
 </DataTypes>
 <AddOnInstructionDefinitions Use="Context">
-<AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2022-04-01T13:28:07.447Z" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
+<AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2021-10-22T15:27:48.120Z" CreatedBy="ENE\tnunnink" EditedDate="2023-03-03T18:43:05.932Z" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
 <SignatureHistory>
 <HistoryEntry User="ENE\tnunnink" Timestamp="2022-03-01T03:10:25.642Z" SignatureID="16#cae1_ac8c">
 <Description>
@@ -195,7 +195,7 @@
 <![CDATA[Description Test]]>
 </Description>
 <DefaultData Format="L5K">
-<![CDATA[[0,0,0,0,0,0]]]>
+<![CDATA[[0,0,0,0,0,0.00000000e+000]]]>
 </DefaultData>
 <DefaultData Format="Decorated">
 <Structure DataType="SimpleType">
@@ -204,7 +204,7 @@
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </DefaultData>
 </LocalTag>
@@ -220,6 +220,14 @@
 <Element Index="[3]" Value="0"/>
 <Element Index="[4]" Value="0"/>
 </Array>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="LocalString" DataType="STRING" ExternalAccess="None">
+<DefaultData Format="L5K">
+<![CDATA[[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00']]]>
+</DefaultData>
+<DefaultData Format="String" Length="0">
+<![CDATA['']]>
 </DefaultData>
 </LocalTag>
 </LocalTags>
@@ -264,16 +272,48 @@
 <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
 </Data>
 </Tag>
+<Tag Name="SimpleDint" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="None">
+<Data Format="L5K">
+<![CDATA[123392]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="123392"/>
+</Data>
+</Tag>
+<Tag Name="SimpleInt" TagType="Base" DataType="INT" Radix="Decimal" Constant="false" ExternalAccess="None">
+<Description>
+<![CDATA[This is a simple integer tag]]>
+</Description>
+<Data Format="L5K">
+<![CDATA[4321]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="INT" Radix="Decimal" Value="4321"/>
+</Data>
+</Tag>
 <Tag Name="TestComplexTag" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="None">
 <Description>
 <![CDATA[Base]]>
 </Description>
+<Comments>
+<Comment Operand=".SIMPLEMEMBER.SINTMEMBER">
+<![CDATA[Override]]>
+</Comment>
+<Comment Operand=".COUNTERMEMBER">
+<![CDATA[Parent]]>
+</Comment>
+<Comment Operand=".COUNTERMEMBER.PRE">
+<![CDATA[PRE]]>
+</Comment>
+</Comments>
 <Data Format="L5K">
-<![CDATA[[[0,0,0,0,0,0],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038,-3.40282347e+038
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000,0,5.60519386e-045
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0,0,0,0,0],[0,0,0,0,0]],[[0,0,0,0,0,0
-		],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+<![CDATA[[[0,0,0,0,0,0.00000000e+000],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038
+		,-3.40282347e+038,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000
+		,0,5.60519386e-045,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0
+		,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]],[[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0
+		,0,0,0,0,0.00000000e+000]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
 		]]]]>
 </Data>
@@ -285,7 +325,7 @@
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </StructureMember>
 <StructureMember Name="CounterMember" DataType="COUNTER">
 <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
@@ -347,7 +387,7 @@
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[1]">
@@ -357,7 +397,7 @@
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[2]">
@@ -367,7 +407,7 @@
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[3]">
@@ -377,7 +417,7 @@
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 <Element Index="[4]">
@@ -387,7 +427,7 @@
 <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
 <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
 <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="NewMember" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
 </Structure>
 </Element>
 </ArrayMember>
@@ -420,6 +460,42 @@
 <![CDATA[]]>
 </Line>
 <Line Number="2">
+<![CDATA[if SimpleDint >= 1000 then]]>
+</Line>
+<Line Number="3">
+<![CDATA[	SimpleBool := 0;]]>
+</Line>
+<Line Number="4">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="5">
+<![CDATA[]]>
+</Line>
+<Line Number="6">
+<![CDATA[if SimpleBool then]]>
+</Line>
+<Line Number="7">
+<![CDATA[	SimpleDint := 1000;]]>
+</Line>
+<Line Number="8">
+<![CDATA[elsif not SimpleBool and SimpleInt >= 100 then]]>
+</Line>
+<Line Number="9">
+<![CDATA[	SimpleDint := 2000;]]>
+</Line>
+<Line Number="10">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="11">
+<![CDATA[]]>
+</Line>
+<Line Number="12">
+<![CDATA[]]>
+</Line>
+<Line Number="13">
+<![CDATA[	]]>
+</Line>
+<Line Number="14">
 <![CDATA[]]>
 </Line>
 </STContent>

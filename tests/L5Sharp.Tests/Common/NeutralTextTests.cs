@@ -423,5 +423,26 @@ namespace L5Sharp.Tests.Common
 
             operands.Should().HaveCount(2);
         }
+        
+        [Test]
+        public void StructuredText_New_ShouldNotBeNull()
+        {
+            var text = new NeutralText("SimpleBool := TestComplexTag.SimpleMember.BoolMember;");
+
+            text.Should().NotBeNull();
+        }
+        
+        [Test]
+        public void StructuredText_ShouldHaveExpected()
+        {
+            var text = new NeutralText("SimpleBool := TestComplexTag.SimpleMember.BoolMember;");
+
+            text.IsEmpty.Should().BeFalse();
+            text.IsSingle.Should().BeFalse();
+            text.IsBalanced.Should().BeTrue();
+            text.Instructions().Should().BeEmpty();
+            text.Keys().Should().BeEmpty();
+            text.Tags().Should().HaveCount(2);
+        }
     }
 }

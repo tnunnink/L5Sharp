@@ -16,7 +16,7 @@ public class Line : LogixCode
     /// </summary>
     public Line()
     {
-        Text = NeutralText.Empty;
+        Element.ReplaceNodes(new XCData(NeutralText.Empty));
     }
 
     /// <summary>
@@ -27,28 +27,40 @@ public class Line : LogixCode
     public Line(XElement element) : base(element)
     {
     }
-
+    
     /// <summary>
-    /// The logic of the <see cref="Line"/> as a <see cref="NeutralText"/> value.
+    /// Creates a new <see cref="Line"/> initialized with the provided <see cref="NeutralText"/>.
     /// </summary>
-    public NeutralText Text
+    /// <param name="text">The <see cref="NeutralText"/> representing the line of structured text logic.</param>
+    /// <remarks>This will initialize ...
+    /// When importing, Logix ignores the rung number and imports Rung's in order of the container sequence,
+    /// meaning, its really only necessary to specify valid text, which is why this constructor is available,
+    /// allowing concise construction of a <c>Rung</c> object.</remarks>
+    public Line(NeutralText text)
     {
-        get => Element.Value;
-        set => Element.SetValue(new XCData(value.ToString()));
+        Element.ReplaceNodes(new XCData(text));
     }
+    
+    /// <inheritdoc />
+    public override IEnumerable<Instruction> Instructions() => ((NeutralText)this).Instructions();
+    
+    /// <inheritdoc />
+    public override IEnumerable<TagName> TagNames() => ((NeutralText)this).Tags();
 
     /// <inheritdoc />
-    public override string ToString() => Text;
-
-    /// <inheritdoc />
-    public override IEnumerable<TagName> TagNames()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<Instruction> Instructions()
-    {
-        throw new NotImplementedException();
-    }
+    public override string ToString() => Element.Value;
+    
+    /// <summary>
+    /// Implicitly converts the <see cref="Rung"/> object to a <see cref="NeutralText"/>.
+    /// </summary>
+    /// <param name="rung">The <c>Rung</c> to convert.</param>
+    /// <returns>A <see cref="NeutralText"/> instance representing the contents of the <c>Rung</c>.</returns>
+    public static implicit operator NeutralText(Line rung) => new(rung.ToString());
+    
+    /// <summary>
+    /// Implicitly converts the <see cref="NeutralText"/> object to a <see cref="Rung"/>.
+    /// </summary>
+    /// <param name="text">The <c>NeutralText</c> to convert.</param>
+    /// <returns>A <see cref="Rung"/> instance representing the contents of the <c>NeutralText</c>.</returns>
+    public static implicit operator Line(NeutralText text) => new(text);
 }

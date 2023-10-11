@@ -267,6 +267,26 @@ public class Tag : LogixComponent
     /// </para>
     /// </remarks>
     public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
+    
+    /// <inheritdoc />
+    public override IEnumerable<LogixElement> References()
+    {
+        if (L5X is null) return Enumerable.Empty<LogixElement>();
+
+        var references = new List<LogixElement>();
+
+        var targets = L5X.Serialize().Descendants().Where(e => e.IsAliasFor(TagName) || e.HasCodeReference(TagName));
+
+        // ReSharper disable once LoopCanBeConvertedToQuery Prefer for debugging
+        foreach (var target in targets)
+        {
+            var reference = LogixSerializer.Deserialize(target);
+            if (reference is null) continue;
+            references.Add(reference);
+        }
+
+        return references;
+    }
 
     /// <summary>
     /// Gets the tag member having the provided tag name value. The tag name can represent either an immediate member

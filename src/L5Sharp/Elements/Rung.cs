@@ -76,12 +76,12 @@ public class Rung : LogixCode
         get => GetProperty<string>();
         set => SetProperty(value);
     }
+    
+    /// <inheritdoc />
+    public override IEnumerable<Instruction> Instructions() => Text.Instructions();
 
     /// <inheritdoc />
     public override IEnumerable<TagName> TagNames() => Text.Tags();
-
-    /// <inheritdoc />
-    public override IEnumerable<Instruction> Instructions() => Text.Instructions();
 
     /// <inheritdoc />
     public override string ToString() => Text;

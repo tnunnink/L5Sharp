@@ -283,8 +283,24 @@ public static class L5XExtensions
 
     internal static bool HasCodeReference(this XElement element, string componentName)
     {
-        if (element.L5XType() is L5XName.Rung or L5XName.Line or L5XName.Sheet) return false;
-        if (LogixSerializer.Deserialize(element) is not LogixCode code) return false;
-        return code.TagNames().Any(t => t == componentName) || code.Instructions().Any(i => i.Name == componentName);
+        return element.L5XType() is L5XName.Rung or L5XName.Line or L5XName.Sheet &&
+               element.Value.Contains(componentName);
+
+        /*if (LogixSerializer.Deserialize(element) is not LogixCode code) return false;
+        return code.TagNames().Any(t => t == componentName) || code.Instructions().Any(i => i.Name == componentName);*/
+    }
+
+    /// <summary>
+    /// Determines if this element is a tag alias for the specified component name.
+    /// </summary>
+    /// <param name="element">The element to examine.</param>
+    /// <param name="componentName">the tag component name to test.</param>
+    /// <returns><c>true</c> if the element is a tag element with an alias for to the specified name;
+    /// Otherwise, <c>false</c>.</returns>
+    internal static bool IsAliasFor(this XElement element, string componentName)
+    {
+        if (element.L5XType() is not L5XName.Tag) return false;
+        if (element.Attribute(L5XName.AliasFor) is null) return false;
+        return element.Attribute(L5XName.AliasFor)?.Value == componentName;
     }
 }

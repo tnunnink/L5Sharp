@@ -7,45 +7,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Removed generic parameter from LogixComponent.cs. to simplify patter matching and type constraints. It was really only needed for methods that are now moved to LogixElement.">
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/Chart.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramAttachment.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramBlock.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramConnector.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramElement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramFunction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramInstruction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramReference.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramRoutine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramWire.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/Sheet.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/LogixCode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Routines/FBD.L5X" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/SheetTests.InputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/SheetTests.InputReferences_AddValidReference_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/SheetTests.OutputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/SheetTests.OutputReferences_AddValidReference_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/SheetTests.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added elements for the FBD routine type and the new LogixCode.cs to group things like Rung, Line, Sheet into a single category of content that can be identified and analyzed for tag names and instructions. This is on a path towards making cross referencing of components work.">
+      <change afterPath="$PROJECT_DIR$/L5Sharp/Enums/Keyword.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/LineTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/KeywordTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Common/CodeElement.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/AddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Routine.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Chart.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Line.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Line.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Enums/Instruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/ILogixExportable.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixContainer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Function.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Operator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Enums/Operator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixCode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixCode.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/L5XExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Utilities/L5XExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/L5XTypeAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Utilities/L5XTypeAttribute.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Utilities/L5XParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Utilities/L5XParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Routines/FBD.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Routines/FBD.L5X" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Routines/ST.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Routines/ST.L5X" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/NeutralTextTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/NeutralTextTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/FunctionTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/OperationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/OperatorTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +71,8 @@
     <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Projects/L5Sharp/src/L5Sharp/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Projects/L5Sharp/src/L5Sharp/Components/DataType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Projects/L5Sharp/src/L5Sharp/Elements/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Projects/L5Sharp/src/L5Sharp/Enums/Scope.cs" root0="SKIP_HIGHLIGHTING" />
@@ -388,7 +373,7 @@
       <workItem from="1692213662519" duration="30729000" />
       <workItem from="1693231547412" duration="3665000" />
       <workItem from="1695256063268" duration="92590000" />
-      <workItem from="1696620242847" duration="67614000" />
+      <workItem from="1696620242847" duration="83972000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -733,7 +718,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="303" />
+    <option name="localTasksCounter" value="304" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -769,7 +754,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="README.md updates" />
     <MESSAGE value="updated readme path in project references" />
     <MESSAGE value="left align table" />
     <MESSAGE value="README.md update" />
@@ -794,7 +778,8 @@
     <MESSAGE value="Created new L5XTypeAttribute.cs to replace the XmlTypeAttribute. This class allows multiple XML types to be defined so that components or elements can support multiple different XElements from the L5X (tag specifically) allowing us to remove LocalTag.cs. LogixContainer.cs also was updated to account for adding elements with different name and extensions were added and updated to get correct L5X type names." />
     <MESSAGE value="Further refinements and updates to new core L5X class. Continued to clean up and reorg code and documentation. Working on adding cross referencing and dependency functionality to component classes. Added some tests, fixed bugs. Moves some properties from component up into element and from tag up to component. Make ComponentKey.cs a new standard for identifying components globally. Preparing to rip off generic type from LogixComponent.cs to help with pattern matching for other methods like export and global mutation methods" />
     <MESSAGE value="Removed generic parameter from LogixComponent.cs. to simplify patter matching and type constraints. It was really only needed for methods that are now moved to LogixElement." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed generic parameter from LogixComponent.cs. to simplify patter matching and type constraints. It was really only needed for methods that are now moved to LogixElement." />
+    <MESSAGE value="Added elements for the FBD routine type and the new LogixCode.cs to group things like Rung, Line, Sheet into a single category of content that can be identified and analyzed for tag names and instructions. This is on a path towards making cross referencing of components work." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added elements for the FBD routine type and the new LogixCode.cs to group things like Rung, Line, Sheet into a single category of content that can be identified and analyzed for tag names and instructions. This is on a path towards making cross referencing of components work." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -823,6 +808,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XTagTests.cs</url>
+          <line>48</line>
+          <properties documentPath="C:\Projects\L5Sharp\tests\L5Sharp.Tests\L5XTagTests.cs" initialLine="48" containingFunctionPresentation="Method 'References_AgainstKnownTest_ShouldNotBeEmpty'">
+            <startOffsets>
+              <option value="1062" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1095" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -26,6 +26,23 @@ public class Routine : LogixComponent
     {
         Element.Add(new XAttribute(L5XName.Type, RoutineType.RLL));
         Element.Add(new XElement(ContentName(RoutineType.RLL)));
+        
+        RegisterContentChangedEvent();
+    }
+
+    private void RegisterContentChangedEvent()
+    {
+        var content = Element.Element(ContentName(Type));
+        if (content is null) return;
+        content.Changed += (s, a) =>
+        {
+            if (a.ObjectChange is not XObjectChange.Add and not XObjectChange.Remove) return;
+            if (s is not XElement element || element.Parent is null || element.Name == L5XName.SFCContent) return;
+            
+            var number = 0;
+            foreach (var child in element.Parent.Elements())
+                child.SetAttributeValue(L5XName.Number, number++);
+        };
     }
 
     /// <summary>
@@ -115,6 +132,25 @@ public class Routine : LogixComponent
 
         return content is not null
             ? new LogixContainer<TCode>(content)
+            : throw Element.L5XError(ContentName(Type));
+    }
+    
+    /// <summary>
+    /// Gets the routine content as a <see cref="LogixContainer{TElement}"/> containing elements of the specified type.
+    /// </summary>
+    /// <returns>A <see cref="LogixContainer{TElement}"/> with access to the root content and specified element types.</returns>
+    /// <exception cref="InvalidOperationException">No content element corresponding to the specified <see cref="Type"/> exists for the
+    /// underlying <see cref="XElement"/>. This can happen if the provided element is not valid.</exception>
+    /// <remarks>
+    /// This method offers a dynamic interface for accessing content of any routine type. If the underlying routine
+    /// content does not match the <see cref="Type"/> specified, a L5XException will be thrown.
+    /// </remarks>
+    public LogixContainer<LogixCode> Content()
+    {
+        var content = Element.Element(ContentName(Type));
+
+        return content is not null
+            ? new LogixContainer<LogixCode>(content)
             : throw Element.L5XError(ContentName(Type));
     }
 

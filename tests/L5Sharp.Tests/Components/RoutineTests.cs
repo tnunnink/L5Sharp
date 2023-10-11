@@ -28,7 +28,7 @@ public class RoutineTests
     }
 
     [Test]
-    public void New_RoutineType_ShouldHaveExpectedValues()
+    public void New_StructuredText_ShouldHaveExpectedValues()
     {
         var routine = new Routine(RoutineType.ST);
 
@@ -36,6 +36,19 @@ public class RoutineTests
         routine.Description.Should().BeNull();
         routine.Type.Should().Be(RoutineType.ST);
         routine.Content<Line>().Should().NotBeNull();
+        routine.Content<Line>().Should().BeEmpty();
+    }
+    
+    [Test]
+    public void New_FunctionBlockDiagram_ShouldHaveExpectedValues()
+    {
+        var routine = new Routine(RoutineType.FBD);
+
+        routine.Name.Should().BeEmpty();
+        routine.Description.Should().BeNull();
+        routine.Type.Should().Be(RoutineType.FBD);
+        routine.Content<Sheet>().Should().NotBeNull();
+        routine.Content<Sheet>().Should().BeEmpty();
     }
 
     [Test]
@@ -47,11 +60,13 @@ public class RoutineTests
         {
             new("XIC(SomeTag)OTE(SomeOtherTag);"),
             new("XIC(SomeTag)OTE(SomeOtherTag);"),
-            new("XIC(SomeTag)OTE(SomeOtherTag);"),
+            new("XIC(SomeTag)OTE(SomeOtherTag);")
         };
         
         routine.Content<Rung>().AddRange(rungs);
 
         routine.Content<Rung>().Count().Should().Be(3);
     }
+    
+    
 }

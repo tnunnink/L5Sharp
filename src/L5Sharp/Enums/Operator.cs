@@ -1,7 +1,7 @@
 ﻿namespace L5Sharp.Enums;
 
 /// <summary>
-/// An enumeration of known Logix operators.
+/// An enumeration of known Logix operators found within the Logix programming languages.
 /// </summary>
 public class Operator : LogixEnum<Operator, string>
 {
@@ -72,26 +72,25 @@ public class Operator : LogixEnum<Operator, string>
     /// <summary>
     /// Represents the Modulo Logix <see cref="Operator"/>.
     /// </summary>
-    public static readonly Operator MOD = new(nameof(MOD), "MOD");
+    public static readonly Operator Mod = new(nameof(Mod), "MOD");
         
     /// <summary>
     /// Represents the AND Logix <see cref="Operator"/>.
     /// </summary>
-    public static readonly Operator AND = new(nameof(AND), "AND");
+    public static readonly Operator And = new(nameof(And), "AND");
         
     /// <summary>
     /// Represents the OR Logix <see cref="Operator"/>.
     /// </summary>
-    public static readonly Operator OR = new(nameof(OR), "OR");
+    public static readonly Operator Or = new(nameof(Or), "OR");
         
     /// <summary>
     /// Represents the XOR Logix <see cref="Operator"/>.
     /// </summary>
-    public static readonly Operator XOR = new(nameof(XOR), "XOR");
+    public static readonly Operator Xor = new(nameof(Xor), "XOR");
         
     /// <summary>
     /// Represents the NOT Logix <see cref="Operator"/>.
     /// </summary>
-    public static readonly Operator NOT = new(nameof(NOT), "NOT");
-        
+    public static readonly Operator Not = new(nameof(Not), "NOT");
 }

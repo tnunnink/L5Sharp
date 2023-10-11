@@ -66,6 +66,18 @@ public abstract class LogixCode : LogixElement
     /// </summary>
     /// <value>A <see cref="string"/> containing the name of the <c>Routine</c> if found; Otherwise, and empty string.</value>
     public string Routine => Element.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
+    
+    /// <summary>
+    /// Returns a collection of <see cref="Instruction"/> objects found within this code element.
+    /// </summary>
+    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="Instruction"/> values referenced by this code.</returns>
+    public abstract IEnumerable<Instruction> Instructions();
+    
+    /// <summary>
+    /// Returns a collection of <see cref="TagName"/> objects found within this code element.
+    /// </summary>
+    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values referenced by this code.</returns>
+    public virtual IEnumerable<string> Routines() => Enumerable.Empty<string>();
 
     /// <summary>
     /// Returns a collection of <see cref="TagName"/> objects found within this code element.
@@ -73,16 +85,10 @@ public abstract class LogixCode : LogixElement
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values referenced by this code.</returns>
     public abstract IEnumerable<TagName> TagNames();
 
-    /// <summary>
-    /// Returns a collection of <see cref="Instruction"/> objects found within this code element.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="Instruction"/> values referenced by this code.</returns>
-    public abstract IEnumerable<Instruction> Instructions();
-
     private static bool IsContainerType(XElement element) =>
         element.L5XType() is L5XName.Program or L5XName.AddOnInstructionDefinition;
 
-    /// <inheritdoc />
+    /*/// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj)) return true;
@@ -102,5 +108,5 @@ public abstract class LogixCode : LogixElement
         return StringComparer.OrdinalIgnoreCase.GetHashCode(Program) ^
                StringComparer.OrdinalIgnoreCase.GetHashCode(Routine) ^
                Number;
-    }
+    }*/
 }
