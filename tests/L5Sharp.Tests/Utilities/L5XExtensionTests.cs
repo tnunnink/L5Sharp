@@ -80,7 +80,7 @@ public class L5XExtensionTests
     [Test]
     public void L5XContainerType_Tag_ShouldHaveExpectedValue()
     {
-        var type = typeof(Tag).L5XContainerType();
+        var type = typeof(Tag).L5XContainer();
 
         type.Should().Be("Tags");
     }

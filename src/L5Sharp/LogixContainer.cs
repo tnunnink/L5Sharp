@@ -44,7 +44,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// </summary>
     public LogixContainer()
     {
-        _element = new XElement(typeof(TElement).L5XContainerType());
+        _element = new XElement(typeof(TElement).L5XContainer());
         _type = typeof(TElement).L5XType();
     }
 
@@ -87,7 +87,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
             if (component is null)
                 throw new ArgumentNullException(nameof(component));
 
-            var xml = component.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
+            var xml = component.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
             
             _element.Add(xml);
         }
@@ -133,7 +133,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
                 throw new ArgumentNullException(nameof(value),
                     $"Can not set container element of type {typeof(TElement)} null instance.");
             
-            var xml = value.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
+            var xml = value.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
             
             _element.Elements(_type).ElementAt(index).ReplaceWith(xml);
         }
@@ -149,7 +149,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         if (element is null)
             throw new ArgumentNullException(nameof(element));
         
-        var xml = element.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
+        var xml = element.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
 
         var last = _element.Elements(_type).LastOrDefault();
 
@@ -177,7 +177,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
             if (element is null)
                 throw new ArgumentNullException(nameof(element));
             
-            var xml = element.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
+            var xml = element.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
 
             var last = _element.Elements(_type).LastOrDefault();
 
@@ -210,7 +210,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var xml = element.Serialize().ToL5XType(typeof(TElement), _type.LocalName);
+        var xml = element.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
 
         _element.Elements(_type).ElementAt(index).AddBeforeSelf(xml);
     }

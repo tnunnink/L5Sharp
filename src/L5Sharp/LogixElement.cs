@@ -84,7 +84,7 @@ public abstract class LogixElement : ILogixSerializable
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
 
-        var xml = element.Serialize().ToL5XType(GetType(), Element.Name.LocalName);
+        var xml = element.Serialize().L5XConvert(GetType(), Element.Name.LocalName);
         Element.AddAfterSelf(xml);
     }
 
@@ -109,7 +109,7 @@ public abstract class LogixElement : ILogixSerializable
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
 
-        var xml = element.Serialize().ToL5XType(GetType(), Element.Name.LocalName);
+        var xml = element.Serialize().L5XConvert(GetType(), Element.Name.LocalName);
         Element.AddBeforeSelf(xml);
     }
 
@@ -174,7 +174,7 @@ public abstract class LogixElement : ILogixSerializable
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
 
-        var xml = element.Serialize().ToL5XType(GetType(), Element.Name.LocalName);
+        var xml = element.Serialize().L5XConvert(GetType(), Element.Name.LocalName);
         Element.ReplaceWith(xml);
     }
 

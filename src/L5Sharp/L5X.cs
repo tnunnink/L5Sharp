@@ -224,7 +224,7 @@ public class L5X : ILogixSerializable
     /// </remarks>
     public void Add<TComponent>(TComponent component) where TComponent : LogixComponent
     {
-        var containerType = typeof(TComponent).L5XContainerType();
+        var containerType = typeof(TComponent).L5XContainer();
         var container = GetContainer(containerType);
         container.Add(component.Serialize());
     }
@@ -542,7 +542,8 @@ public class L5X : ILogixSerializable
     
     /// <summary>
     /// Handles adding a component to the index. This requires the element to be attached to the L5X tree
-    /// for it to determine the scope of the element. 
+    /// for it to determine the scope of the element. This will also throw a <see cref="ArgumentException"/>
+    /// if the component already exists in the index.
     /// </summary>
     private void AddComponent(XElement element)
     {
@@ -554,12 +555,19 @@ public class L5X : ILogixSerializable
             throw new ArgumentException($"The provided component '{key}' already exists in {scope}.");
     }
     
+    /// <summary>
+    /// Handles adding the provided reference to the index. If no reference exists for the provided key, a new
+    /// entry is created, otherwise the reference is added to the existing collection.
+    /// </summary>
     private void AddReference(LogixReference reference)
     {
         if (!_referenceIndex.TryAdd(reference.Key, new List<LogixReference> {reference}))
             _referenceIndex[reference.Key].Add(reference);
     }
     
+    /// <summary>
+    /// Adds the provided collection of references. This is a convenience method to add multiple references.
+    /// </summary>
     private void AddReferences(IEnumerable<LogixReference> references)
     {
         foreach (var reference in references)
@@ -568,6 +576,11 @@ public class L5X : ILogixSerializable
         }
     }
 
+    /// <summary>
+    /// Handles adding all references to the index that are associated with the provided element.
+    /// This is a convenience method since we need to parse the element as an <see cref="ILogixReferencable"/> to
+    /// obtain the references to add.
+    /// </summary>
     private void AddReferences(XElement element)
     {
         if (LogixSerializer.Deserialize(element) is not ILogixReferencable referencable) return;
@@ -611,12 +624,17 @@ public class L5X : ILogixSerializable
         IndexModuleDefinedTagComponents();
     }
 
+    /// <summary>
+    /// Finds all controller scoped top level components to index. This includes all components except for program tags,
+    /// routines, and module defined IO tags, which are handles separately.
+    /// </summary>
     private void IndexControllerScopedComponents()
     {
-        //The container for all controller scoped components will be the name of the controller.
+        //The scope for all controller scoped components will be the name of the controller.
         var scope = GetControllerName();
 
-        //Only consider component elements with a valid name attribute.
+        //Only consider component elements with a valid name attribute. Some components don't have and name and we
+        //can't possibly index them.
         var components = GetContainers().SelectMany(c =>
             c.Elements().Where(e => e.Attribute(L5XName.Name) is not null));
 
@@ -625,11 +643,13 @@ public class L5X : ILogixSerializable
             var key = new ComponentKey(component.Name.LocalName, component.LogixName());
             if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> {{scope, component}}))
                 _componentIndex[key].TryAdd(scope, component);
+            //todo what about collisions?
         }
     }
 
     /// <summary>
-    /// Handles iterating each program component element in the L5X and index each tag and routine with the correct scoped keys.
+    /// Handles iterating each program component element in the L5X and indexed each tag and routine
+    /// with the correct scope.
     /// </summary>
     private void IndexProgramScopedComponents()
     {
@@ -645,6 +665,7 @@ public class L5X : ILogixSerializable
                 var key = new ComponentKey(component.Name.LocalName, component.LogixName());
                 if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> {{scope, component}}))
                     _componentIndex[key].TryAdd(scope, component);
+                //todo what about collisions?
             }
         }
     }
@@ -662,16 +683,23 @@ public class L5X : ILogixSerializable
             var key = new ComponentKey(L5XName.Tag, component.ModuleTagName());
             if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> {{scope, component}}))
                 _componentIndex[key].TryAdd(scope, component);
+            //todo what about collisions?
         }
     }
 
+    /// <summary>
+    /// Finds all logix reference elements and indexes them into a local dictionary for fast lookups.
+    /// </summary>
     private void IndexReferences()
     {
         IndexDataTypeReferences();
         IndexCodeReferences();
-        //todo are there any other possible references?
     }
 
+    /// <summary>
+    /// Finds all elements with a data type attribute and indexes them into a local reference index for fast lookup.
+    /// This will include technically any type, predefined, atomic, user defined, or add on instruction.
+    /// </summary>
     private void IndexDataTypeReferences()
     {
         var targets = _content.Descendants().Where(d => d.Attribute(L5XName.DataType) is not null);
@@ -684,6 +712,10 @@ public class L5X : ILogixSerializable
         }
     }
 
+    /// <summary>
+    /// Finds all routine content elements, iterates each "code" element, and delegates the retrieval or references to the
+    /// materialized logix element object. Then adds each set of references to the reference index for fast lookup.
+    /// </summary>
     private void IndexCodeReferences()
     {
         var contentTypes = RoutineType.All().Select(r => r.ContentName).ToList();
@@ -713,6 +745,9 @@ public class L5X : ILogixSerializable
         }
     }
     
+    /// <summary>
+    /// Determines if the provided object is a component element, for which we need to reindex the component.
+    /// </summary>
     private static bool IsComponentElement(object sender)
     {
         if (sender is not XElement element) return false;
@@ -720,7 +755,11 @@ public class L5X : ILogixSerializable
         return componentTypes.Contains(element.Name.LocalName);
     }
 
-    private static bool IsComponentName(object sender)
+    /// <summary>
+    /// Determines if the provided object is a attribute or property is a component name, for which we need to
+    /// reindex the component.
+    /// </summary>
+    private static bool IsNameProperty(object sender)
     {
         if (sender is not XAttribute attribute) return false;
         if (attribute.Name.LocalName is not L5XName.Name) return false;
@@ -729,7 +768,11 @@ public class L5X : ILogixSerializable
         return componentTypes.Contains(attribute.Parent.Name.LocalName);
     }
 
-    private static bool IsComponentDataType(object sender)
+    /// <summary>
+    /// Determines if the provided object is a attribute or property is a data type reference, for which we need to
+    /// reindex references.
+    /// </summary>
+    private static bool IsDataTypeProperty(object sender)
     {
         if (sender is not XAttribute attribute) return false;
         if (attribute.Name.LocalName is not L5XName.DataType) return false;
@@ -738,11 +781,26 @@ public class L5X : ILogixSerializable
         return componentTypes.Contains(attribute.Parent.Name.LocalName);
     }
 
+    /// <summary>
+    /// Determines if the provided object is a a logix code element, for which we need to reindex references.
+    /// </summary>
     private static bool IsCodeElement(object sender)
     {
         if (sender is not XElement element) return false;
         var contentTypes = RoutineType.All().Select(r => r.ContentName).ToList();
         return element.Ancestors().Any(a => contentTypes.Contains(a.Name.LocalName));
+    }
+    
+    /// <summary>
+    /// Determines if the provided object is a attribute or property of a logix code element, for which we need to
+    /// reindex references.
+    /// </summary>
+    private static bool IsCodeProperty(object sender)
+    {
+        if (sender is not XAttribute attribute) return false;
+        if (attribute.Name.LocalName is not 
+            (L5XName.Operand or L5XName.Argument or L5XName.Routine or L5XName.Type or L5XName.Name)) return false;
+        return attribute.Parent is not null && IsCodeElement(attribute.Parent);
     }
 
     /// <summary>
@@ -782,14 +840,10 @@ public class L5X : ILogixSerializable
                 match.ReplaceWith(element);
         }
     }
-
+    
     /// <summary>
-    /// 
+    /// Creates a new default content element for a new instance of an L5X file given the provided target name and type.
     /// </summary>
-    /// <param name="targetName"></param>
-    /// <param name="targetType"></param>
-    /// <param name="softwareRevision"></param>
-    /// <returns></returns>
     private static XElement NewContent(string targetName, string targetType, Revision? softwareRevision)
     {
         var content = new XElement(L5XName.RSLogix5000Content);
@@ -830,8 +884,11 @@ public class L5X : ILogixSerializable
     }
     
     /// <summary>
-    /// Stores the L5X object that is about to change so we know after the change what the previous value was.
-    /// We need this to determine if an indexed item should also be removed from the index.
+    /// Triggered when any content of the L5X is about to change. We need to know if the object changing is an element
+    /// we are maintaining state for in the component or reference index. If so, we need to perform the necessary actions.
+    /// Prior to the object changing and if the change action is a remove or value change, we need to remove the applicable
+    /// components or references from the index. This is because after the object has changed we no longer have access
+    /// to the previous state.
     /// </summary>
     private void OnContentChanging(object sender, XObjectChangeEventArgs e)
     {
@@ -841,19 +898,25 @@ public class L5X : ILogixSerializable
             if (IsCodeElement(sender)) RemoveReferences((XElement) sender);
         }
 
-        if (e.ObjectChange is XObjectChange.Value)
+        if (e.ObjectChange is not XObjectChange.Value) return;
+        
+        if (IsNameProperty(sender)) RemoveComponent(((XAttribute) sender).Parent!);
+        if (IsDataTypeProperty(sender))
         {
-            if (IsComponentName(sender)) RemoveComponent(((XAttribute) sender).Parent!);
-            if (IsComponentDataType(sender))
-            {
-                var attribute = (XAttribute) sender;
-                var reference = new LogixReference(attribute.Parent!, attribute.Value, L5XName.DataType);
-                RemoveReference(reference);
-            }
-            //todo handle property of code element... again probably requires removing references
+            var attribute = (XAttribute) sender;
+            var reference = new LogixReference(attribute.Parent!, attribute.Value, L5XName.DataType);
+            RemoveReference(reference);
         }
+        if ( IsCodeProperty(sender)) RemoveReferences(((XAttribute) sender).Parent!);
     }
 
+    /// <summary>
+    /// Triggered when any content of the L5X has changed.  We need to know if the object that changed is an element
+    /// we are maintaining state for in the component or reference index. If so, we need to perform the necessary actions.
+    /// Once the object has changed, the sender will hold the new state. If the change action is an add or value change,
+    /// and the element or property value is one that would refer to an indexed object, we will update the state of the index
+    /// to ensure consistency.
+    /// </summary>
     private void OnContentChanged(object sender, XObjectChangeEventArgs e)
     {
         if (e.ObjectChange is XObjectChange.Add)
@@ -862,17 +925,16 @@ public class L5X : ILogixSerializable
             if (IsCodeElement(sender)) AddReferences((XElement) sender);
         }
 
-        if (e.ObjectChange is XObjectChange.Value)
+        if (e.ObjectChange is not XObjectChange.Value) return;
+        
+        if (IsNameProperty(sender)) AddComponent(((XAttribute) sender).Parent!);
+        if (IsDataTypeProperty(sender))
         {
-            if (IsComponentName(sender)) AddComponent(((XAttribute) sender).Parent!);
-            if (IsComponentDataType(sender))
-            {
-                var attribute = (XAttribute) sender;
-                var reference = new LogixReference(attribute.Parent!, attribute.Value, L5XName.DataType);
-                AddReference(reference);
-            }
-            //todo handle property of code element... again probably requires removing references
+            var attribute = (XAttribute) sender;
+            var reference = new LogixReference(attribute.Parent!, attribute.Value, L5XName.DataType);
+            AddReference(reference);
         }
+        if ( IsCodeProperty(sender)) AddReferences(((XAttribute) sender).Parent!);
     }
     
     /// <summary>
@@ -895,6 +957,11 @@ public class L5X : ILogixSerializable
         components.Remove(scope);
     }
     
+    /// <summary>
+    /// Handles removing the provided reference from the index. If only a single reference exists for the provided key,
+    /// the entire reference is removed, otherwise we iterate the references and remove all that match the provided
+    /// reference's location and type.
+    /// </summary>
     private void RemoveReference(LogixReference reference)
     {
         if (!_referenceIndex.TryGetValue(reference.Key, out var results)) return;
@@ -907,6 +974,9 @@ public class L5X : ILogixSerializable
         results.RemoveAll(r => r.IsSame(reference));
     }
 
+    /// <summary>
+    /// Removes the provided collection of references. This is a convenience method to remove multiple references.
+    /// </summary>
     private void RemoveReferences(IEnumerable<LogixReference> references)
     {
         foreach (var reference in references)
@@ -915,6 +985,11 @@ public class L5X : ILogixSerializable
         }
     }
 
+    /// <summary>
+    /// Handles removing all references from the index that are associated with the provided element.
+    /// This is a convenience method since we need to parse the element as an <see cref="ILogixReferencable"/> to
+    /// obtain the references to remove.
+    /// </summary>
     private void RemoveReferences(XElement element)
     {
         if (LogixSerializer.Deserialize(element) is not ILogixReferencable referencable) return;
