@@ -51,4 +51,10 @@ public class DiagramText : DiagramElement
         get => GetProperty<string>() ?? string.Empty;
         set => SetProperty(value);
     }
+    
+    /// <summary>
+    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
+    /// </summary>
+    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
+    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
 }

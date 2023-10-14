@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Utilities;
 
@@ -31,6 +32,9 @@ public class DiagramFunction : DiagramElement
     {
     }
 
+    /// <inheritdoc />
+    public override string Location => Sheet is not null ? $"Sheet {Sheet.Number} {Cell}" : $"{Cell}";
+
     /// <summary>
     /// The mnemonic name specifying the type of <c>DiagramFunction</c>.
     /// </summary>
@@ -39,5 +43,18 @@ public class DiagramFunction : DiagramElement
     {
         get => GetValue<string>();
         set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
+    /// </summary>
+    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
+    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
+    
+    /// <inheritdoc />
+    public override IEnumerable<LogixReference> References()
+    {
+        if (Type is not null)
+            yield return new LogixReference(Element, Type, L5XName.AddOnInstructionDefinition);
     }
 }

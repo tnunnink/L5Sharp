@@ -88,4 +88,24 @@ public class DiagramInstruction : DiagramElement
                         new XAttribute(L5XName.Name, p.Key),
                         new XAttribute(L5XName.Argument, p.Value))));
     }
+    
+    /// <summary>
+    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
+    /// </summary>
+    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
+    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
+    
+    /// <inheritdoc />
+    public override IEnumerable<LogixReference> References()
+    {
+        if (Operand is not null && Operand.IsTagName())
+            yield return new LogixReference(Element, Operand, L5XName.Tag);
+        
+        if (Name is not null)
+            yield return new LogixReference(Element, Name, L5XName.AddOnInstructionDefinition);
+        
+        foreach (var parameter in Parameters)
+            if (parameter.Value.IsTagName())
+                yield return new LogixReference(Element, parameter.Value, L5XName.Tag);
+    }
 }

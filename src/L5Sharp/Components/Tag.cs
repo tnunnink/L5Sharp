@@ -267,26 +267,6 @@ public class Tag : LogixComponent
     /// </para>
     /// </remarks>
     public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
-    
-    /// <inheritdoc />
-    public override IEnumerable<LogixElement> References()
-    {
-        if (L5X is null) return Enumerable.Empty<LogixElement>();
-
-        var references = new List<LogixElement>();
-
-        var targets = L5X.Serialize().Descendants().Where(e => e.IsAliasFor(TagName) || e.HasCodeReference(TagName));
-
-        // ReSharper disable once LoopCanBeConvertedToQuery Prefer for debugging
-        foreach (var target in targets)
-        {
-            var reference = LogixSerializer.Deserialize(target);
-            if (reference is null) continue;
-            references.Add(reference);
-        }
-
-        return references;
-    }
 
     /// <summary>
     /// Gets the tag member having the provided tag name value. The tag name can represent either an immediate member
@@ -320,6 +300,25 @@ public class Tag : LogixComponent
             return remaining.IsEmpty ? tag : tag[remaining];
         }
     }
+    
+    /// <summary>
+    /// Adds a new member to the tag's complex data structure.
+    /// </summary>
+    /// <param name="name">The name of the member to add to the tag's data structure.</param>
+    /// <param name="value">The <see cref="LogixType"/> of the member to add to the tag's data structure.</param>
+    /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
+    /// <remarks>
+    /// This will operate relative to the current tag member object, and is simply a call to the underlying
+    /// <see cref="ComplexType"/> <c>Add</c> method. Therefore this is simply a helper to make mutating tag structures
+    /// more concise.
+    /// </remarks>
+    public void Add(string name, LogixType value)
+    {
+        var member = new LogixMember(name, value);
+        if (Value is not ComplexType complexType)
+            throw new InvalidOperationException("Can only mutate ComplexType tags.");
+        complexType.Add(member);
+    }
 
     /// <summary>
     /// Gets a descendent tag member relative to the current tag member.
@@ -337,7 +336,7 @@ public class Tag : LogixComponent
     public Tag? Member(TagName tagName)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
-        if (tagName.IsEmpty) throw new ArgumentException("Can not retrieve member from empty tag name.");
+        if (tagName.IsEmpty) return this;
 
         var member = Value.Member(tagName.Root);
         if (member is null) return default;
@@ -435,7 +434,7 @@ public class Tag : LogixComponent
     public IEnumerable<Tag> MembersOf(TagName tagName)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
-        if (tagName.IsEmpty) throw new ArgumentException("Can not retrieve members from empty tag name.");
+        if (tagName.IsEmpty) return Members();
 
         var member = Value.Member(tagName.Root);
         if (member is null) return Enumerable.Empty<Tag>();
@@ -453,40 +452,7 @@ public class Tag : LogixComponent
     /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
     public static Tag New<TLogixType>(string name) where TLogixType : LogixType, new() =>
         new() {Name = name, Value = new TLogixType()};
-
-    /// <inheritdoc />
-    public override string ToString() => TagName;
-
-    #region Extensions
-
-    /// <summary>
-    /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
-    /// this <c>Tag</c>. 
-    /// </summary>
-    /// <returns>
-    /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the this tag name and all child tag names.
-    /// </returns>
-    public IEnumerable<TagName> TagNames() => Members().Select(t => t.TagName);
     
-    /// <summary>
-    /// Adds a new member to the tag's complex data structure.
-    /// </summary>
-    /// <param name="name">The name of the member to add to the tag's data structure.</param>
-    /// <param name="value">The <see cref="LogixType"/> of the member to add to the tag's data structure.</param>
-    /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
-    /// <remarks>
-    /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexType"/> <c>Add</c> method. Therefore this is simply a helper to make mutating tag structures
-    /// more concise.
-    /// </remarks>
-    public void Add(string name, LogixType value)
-    {
-        var member = new LogixMember(name, value);
-        if (Value is not ComplexType complexType)
-            throw new InvalidOperationException("Can only mutate ComplexType tags.");
-        complexType.Add(member);
-    }
-
     /// <summary>
     /// Removes a member with the specified name from the tag's complex data structure.
     /// </summary>
@@ -504,6 +470,18 @@ public class Tag : LogixComponent
         complexType.Remove(name);
     }
     
+    /// <summary>
+    /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
+    /// this <c>Tag</c>. 
+    /// </summary>
+    /// <returns>
+    /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the this tag name and all child tag names.
+    /// </returns>
+    public IEnumerable<TagName> TagNames() => Members().Select(t => t.TagName);
+
+    /// <inheritdoc />
+    public override string ToString() => TagName;
+
     /// <summary>
     /// Returns as new <see cref="Tag"/> with the updated data type value provided. 
     /// </summary>
@@ -542,8 +520,6 @@ public class Tag : LogixComponent
         complexType.Replace(TagName.Member, value);
         return Root[TagName.Path];
     }
-
-    #endregion
 
     #region Internal
 

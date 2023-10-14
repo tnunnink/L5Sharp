@@ -30,7 +30,7 @@ public class SheetTests
 
         sheet.Number.Should().Be(0);
         sheet.Description.Should().BeNull();
-        sheet.Program.Should().BeEmpty();
+        sheet.ScopeName.Should().BeEmpty();
         sheet.Routine.Should().BeEmpty();
         sheet.InputReferences.Should().BeEmpty();
         sheet.OutputReferences.Should().BeEmpty();

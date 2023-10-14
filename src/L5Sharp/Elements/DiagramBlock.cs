@@ -81,4 +81,20 @@ public class DiagramBlock : DiagramElement
         get => GetValue<bool>();
         set => SetValue(value);
     }
+    
+    /// <summary>
+    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
+    /// </summary>
+    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
+    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
+    
+    /// <inheritdoc />
+    public override IEnumerable<LogixReference> References()
+    {
+        if (Operand is not null && Operand.IsTagName())
+            yield return new LogixReference(Element, Operand, L5XName.Tag);
+        
+        if (Type is not null)
+            yield return new LogixReference(Element, Type, L5XName.AddOnInstructionDefinition);
+    }
 }

@@ -10,9 +10,29 @@ namespace L5Sharp.Tests;
 public class L5XBasicTests
 {
     [Test]
-    public void New_ValidElement_ShouldNotBeNull()
+    public void New_KnownTest_ShouldNotBeNull()
     {
         var element = XElement.Load(Known.Test);
+        
+        var l5X = new L5X(element);
+
+        l5X.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void New_LotsOfTags_ShouldNotBeNull()
+    {
+        var element = XElement.Load(Known.LotOfTags);
+        
+        var l5X = new L5X(element);
+
+        l5X.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void New_Template_ShouldNotBeNull()
+    {
+        var element = XElement.Load(Known.Template);
         
         var l5X = new L5X(element);
 
@@ -86,26 +106,6 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void Serialize_WhenCalled_ShouldNotBeNull()
-    {
-        var content = L5X.Load(Known.Empty);
-        
-        var result = content.Serialize();
-
-        result.Should().NotBeNull();
-    }
-    
-    [Test]
-    public Task Serialize_WhenCalled_ShouldBeValid()
-    {
-        var content = L5X.Load(Known.Empty);
-        
-        var result = content.Serialize().ToString();
-
-        return Verify(result);
-    }
-
-    [Test]
     public void Find_ValidComponent_ShouldNotBeNull()
     {
         var content = L5X.Load(Known.Test);
@@ -123,5 +123,36 @@ public class L5XBasicTests
         var tag = content.FindTag(Known.Tag);
 
         tag.Should().NotBeNull();
+    }
+
+    [Test]
+    public void FindReferences_ValidComponent_ShouldHaveExpectedCount()
+    {
+        var content = L5X.Load(Known.Test);
+        var tag = content.FindTag(Known.Tag);
+
+        var references = content.FindReferences(tag).ToList(); 
+
+        references.Should().NotBeEmpty();
+    }
+    
+    [Test]
+    public void Serialize_WhenCalled_ShouldNotBeNull()
+    {
+        var content = L5X.Load(Known.Empty);
+        
+        var result = content.Serialize();
+
+        result.Should().NotBeNull();
+    }
+    
+    [Test]
+    public Task Serialize_WhenCalled_ShouldBeValid()
+    {
+        var content = L5X.Load(Known.Empty);
+        
+        var result = content.Serialize().ToString();
+
+        return Verify(result);
     }
 }

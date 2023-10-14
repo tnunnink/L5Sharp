@@ -221,26 +221,6 @@ public class AddOnInstruction : LogixComponent
         set => SetContainer(value);
     }
 
-    /// <inheritdoc />
-    public override IEnumerable<LogixElement> References()
-    {
-        if (L5X is null) return Enumerable.Empty<LogixElement>();
-
-        var references = new List<LogixElement>();
-
-        var targets = L5X.Serialize().Descendants().Where(e => e.ReferencesType(Name) || e.HasCodeReference(Name));
-
-        // ReSharper disable once LoopCanBeConvertedToQuery Prefer for debugging
-        foreach (var target in targets)
-        {
-            var reference = LogixSerializer.Deserialize(target);
-            if (reference is null) continue;
-            references.Add(reference);
-        }
-
-        return references;
-    }
-
     #region Extensions
 
     /// <summary>

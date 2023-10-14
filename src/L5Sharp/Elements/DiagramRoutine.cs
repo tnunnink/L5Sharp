@@ -70,4 +70,19 @@ public class DiagramRoutine : DiagramElement
                Enumerable.Empty<string>();
         set => SetValue(string.Join(' ', value));
     }
+    
+    /// <inheritdoc />
+    public override IEnumerable<LogixReference> References()
+    {
+        if (Routine is not null)
+            yield return new LogixReference(Element, Routine, L5XName.Routine);
+        
+        foreach (var parameter in In)
+            if (parameter.IsTagName())
+                yield return new LogixReference(Element, parameter, L5XName.Tag);
+        
+        foreach (var parameter in Ret)
+            if (parameter.IsTagName())
+                yield return new LogixReference(Element, parameter, L5XName.Tag);
+    }
 }

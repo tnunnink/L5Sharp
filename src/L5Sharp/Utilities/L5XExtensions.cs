@@ -43,6 +43,17 @@ public static class L5XExtensions
     public static bool IsEmpty(this string value) => value.Equals(string.Empty);
 
     /// <summary>
+    /// Determines if this string is the same as, meaning equal to regardless of case, another string.
+    /// </summary>
+    /// <param name="value">The string value to compare.</param>
+    /// <param name="other">The other string to compare.</param>
+    /// <returns><c>true</c> if the strings are equal using the <see cref="StringComparer.OrdinalIgnoreCase"/>
+    /// equality comparer,. Otherwise <c>false</c>.</returns>
+    /// <remarks>This is a simplified way of calling the string comparer equals method since it is a little verbose.
+    /// This could be used a lot since Logix naming is not case agnostic.</remarks>
+    public static bool IsSame(this string value, string other) => StringComparer.OrdinalIgnoreCase.Equals(value, other);
+
+    /// <summary>
     /// Returns the string value as a <see cref="XName"/> value object.
     /// </summary>
     /// <param name="value">The string value.</param>
@@ -224,6 +235,17 @@ public static class L5XExtensions
             .Aggregate(new StringBuilder(), (s, c) => s.Append(c), s => s.ToString());
     }
 
+
+    /// <summary>
+    /// Determines if the current element is a container element.
+    /// </summary>
+    /// <param name="element">The element to check</param>
+    /// <returns><c>true</c> if it is; Otherwise, <c>false</c>.</returns>
+    public static bool IsContainer(this XElement element)
+    {
+        return element.Name.LocalName is L5XName.Program or L5XName.AddOnInstructionDefinition;
+    }
+
     /// <summary>
     /// Determines the tag name for a given <see cref="XElement"/> representing a module IO tag.
     /// </summary>
@@ -263,44 +285,5 @@ public static class L5XExtensions
 
             return "C";
         }
-    }
-
-    /// <summary>
-    /// Determines if a given <see cref="XElement"/> represents a specific data type name, meaning it has a data type
-    /// property with the specified value.
-    /// </summary>
-    /// <param name="element">The element to check.</param>
-    /// <param name="dataType">The name of the data type to find.</param>
-    /// <returns><c>true</c> if the element has a data type attribute referencing the provided name;
-    /// Otherwise, <c>false</c>.</returns>
-    /// <remarks>This is used internally for finding references to components such as <c>DataType</c>
-    /// and <c>AddOnInstruction</c>.</remarks>
-    internal static bool ReferencesType(this XElement element, string dataType)
-    {
-        return element.Attribute(L5XName.DataType) is not null
-               && StringComparer.OrdinalIgnoreCase.Equals(element.Get(L5XName.DataType), dataType);
-    }
-
-    internal static bool HasCodeReference(this XElement element, string componentName)
-    {
-        return element.L5XType() is L5XName.Rung or L5XName.Line or L5XName.Sheet &&
-               element.Value.Contains(componentName);
-
-        /*if (LogixSerializer.Deserialize(element) is not LogixCode code) return false;
-        return code.TagNames().Any(t => t == componentName) || code.Instructions().Any(i => i.Name == componentName);*/
-    }
-
-    /// <summary>
-    /// Determines if this element is a tag alias for the specified component name.
-    /// </summary>
-    /// <param name="element">The element to examine.</param>
-    /// <param name="componentName">the tag component name to test.</param>
-    /// <returns><c>true</c> if the element is a tag element with an alias for to the specified name;
-    /// Otherwise, <c>false</c>.</returns>
-    internal static bool IsAliasFor(this XElement element, string componentName)
-    {
-        if (element.L5XType() is not L5XName.Tag) return false;
-        if (element.Attribute(L5XName.AliasFor) is null) return false;
-        return element.Attribute(L5XName.AliasFor)?.Value == componentName;
     }
 }

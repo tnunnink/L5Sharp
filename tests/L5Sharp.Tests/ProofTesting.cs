@@ -23,12 +23,15 @@ public class ProofTesting
     }
 
     [Test]
-    public void Scratch()
+    [TestCase(0)]
+    [TestCase(150)]
+    [TestCase(200)]
+    [TestCase(250)]
+    [TestCase(399)]
+    [TestCase(400)]
+    public void Scratch(int input)
     {
-        var content = L5X.Load(Known.Test);
-
-        var tag = content.FindTag("aoiTestInstance");
-
-        tag.Should().NotBeNull();
+        var character = (char)(input / 200 + 'A');
+        Console.WriteLine(character);
     }
 }

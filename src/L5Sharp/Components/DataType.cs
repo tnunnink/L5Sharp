@@ -104,7 +104,7 @@ public class DataType : LogixComponent
     public override IEnumerable<LogixComponent> Dependencies()
     {
         if (L5X is null) return Enumerable.Empty<LogixComponent>();
-        
+
         var dependencies = new List<LogixComponent>();
 
         foreach (var member in Members)
@@ -114,33 +114,7 @@ public class DataType : LogixComponent
             dependencies.Add(dataType);
             dependencies.AddRange(dataType.Dependencies());
         }
-        
+
         return dependencies.Distinct();
-    }
-
-    /// <summary>
-    /// Returns a collection of all <see cref="LogixElement"/> objects that reference this component by name.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
-    /// at least one property value referencing this component's name.
-    /// </returns>
-    public override IEnumerable<LogixElement> References()
-    {
-        if (L5X is null) return Enumerable.Empty<LogixElement>();
-
-        var references = new List<LogixElement>();
-
-        var targets = L5X.Serialize().Descendants().Where(e => e.ReferencesType(Name));
-
-        // ReSharper disable once LoopCanBeConvertedToQuery Prefer for debugging
-        foreach (var target in targets)
-        {
-            var reference = LogixSerializer.Deserialize(target);
-            if (reference is null) continue;
-            references.Add(reference);
-        }
-
-        return references;
     }
 }

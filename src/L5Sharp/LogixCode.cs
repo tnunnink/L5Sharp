@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -23,14 +23,13 @@ namespace L5Sharp;
 /// same number.
 /// </para>
 /// </remarks>
-public abstract class LogixCode : LogixElement
+public abstract class LogixCode : LogixElement, ILogixReferencable
 {
     /// <summary>
     /// Creates a new <see cref="LogixCode"/> instance with default values.
     /// </summary>
     protected LogixCode()
     {
-        Element.SetAttributeValue(L5XName.Number, 0);
     }
 
     /// <summary>
@@ -41,7 +40,7 @@ public abstract class LogixCode : LogixElement
     protected LogixCode(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// The zero based number indicating the position of the code within the containing <c>Routine</c>.
     /// </summary>
@@ -49,64 +48,77 @@ public abstract class LogixCode : LogixElement
     /// <remarks>Logix ignores the these number identifiers upon importing, and only considers the order within the
     /// containing <c>Routine</c>. This makes the property somewhat useless, but is here all the same as it is
     /// inherent to the underlying XMl.</remarks>
-    public virtual int Number 
+    public virtual int Number
     {
         get => GetValue<int>();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// The name of the <c>Program</c> or <c>AddOnInstruction</c> that contains this code element.
+    /// The location of the code within the L5X tree. This could be different for each code type, but generally
+    /// will be the <c>Rung</c>, <c>Line</c>, or <c>Sheet</c> number within the containing routine.
     /// </summary>
-    /// <value>A <see cref="string"/> containing the name of the <c>Program</c> if found; Otherwise, and empty string.</value>
-    public string Program => Element.Ancestors().FirstOrDefault(IsContainerType)?.LogixName() ?? string.Empty;
+    public virtual string Location => $"{Element.Name.LocalName} {Number}";
+    
+    /// <summary>
+    /// The scope name of the logix code, indicating the program or instruction for which it is contained.
+    /// </summary>
+    /// <value> A <see cref="string"/> representing the name of the program or instruction in which this code
+    /// is contained. If the code has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
+    /// </value>
+    /// <remarks>
+    /// <para>
+    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
+    /// code is not attached to a L5X tree, then this returns an empty string.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the underlying XML of a code element (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify code within the L5X file.
+    /// </para>
+    /// </remarks>
+    public string ScopeName => Scope.ScopeName(Element);
+    
+    /// <summary>
+    /// The scope of the <c>LogixCode</c>, indicating whether it is a program scoped or instruction scoped
+    /// code element, or neither (not attached to L5X tree).
+    /// </summary>
+    /// <value>A <see cref="Enums.Scope"/> option indicating the scope type for the element.</value>
+    /// <remarks>
+    /// <para>
+    /// The scope of this element is determined from the ancestors of the underlying element. If the ancestor is
+    /// program element first, it is <c>Program</c> scoped. If the ancestor is a instruction element first, it is
+    /// <c>Instruction</c> scoped. If no ancestor is found, we assume the element has <c>Null</c> scope,
+    /// meaning it is not attached to a L5X tree.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the underlying XML of a component (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify components within the L5X file.
+    /// </para>
+    /// </remarks>
+    public Scope ScopeType => Scope.ScopeType(Element);
 
     /// <summary>
     /// The name of the <c>Routine</c> that contains this code element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the name of the <c>Routine</c> if found; Otherwise, and empty string.</value>
     public string Routine => Element.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
+
+    /// <summary>
+    /// Returns a collection of <see cref="LogixReference"/> objects found within this code element.
+    /// </summary>
+    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="LogixReference"/> values contained by this code.</returns>
+    public abstract IEnumerable<LogixReference> References();
     
     /// <summary>
-    /// Returns a collection of <see cref="Instruction"/> objects found within this code element.
+    /// Gets the parent <see cref="Routine"/> of this <see cref="LogixCode"/> instance if it is attached.
     /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="Instruction"/> values referenced by this code.</returns>
-    public abstract IEnumerable<Instruction> Instructions();
-    
-    /// <summary>
-    /// Returns a collection of <see cref="TagName"/> objects found within this code element.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values referenced by this code.</returns>
-    public virtual IEnumerable<string> Routines() => Enumerable.Empty<string>();
-
-    /// <summary>
-    /// Returns a collection of <see cref="TagName"/> objects found within this code element.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values referenced by this code.</returns>
-    public abstract IEnumerable<TagName> TagNames();
-
-    private static bool IsContainerType(XElement element) =>
-        element.L5XType() is L5XName.Program or L5XName.AddOnInstructionDefinition;
-
-    /*/// <inheritdoc />
-    public override bool Equals(object? obj)
+    /// <returns>
+    /// A <see cref="Routine"/> instance representing the containing routine of the code if found;
+    /// Otherwise, <c>null</c>.
+    /// </returns>
+    public Routine? GetRoutine()
     {
-        if (ReferenceEquals(this, obj)) return true;
-
-        return obj switch
-        {
-            LogixCode other => StringComparer.OrdinalIgnoreCase.Equals(Program, other.Program) &&
-                               StringComparer.OrdinalIgnoreCase.Equals(Routine, other.Routine) &&
-                               Number == other.Number,
-            _ => false
-        };
+        var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
+        return routine is not null ? new Routine(routine) : default;
     }
-
-    /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        return StringComparer.OrdinalIgnoreCase.GetHashCode(Program) ^
-               StringComparer.OrdinalIgnoreCase.GetHashCode(Routine) ^
-               Number;
-    }*/
 }

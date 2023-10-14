@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Enums;
@@ -19,12 +18,21 @@ public class Scope : LogixEnum<Scope, string>
     /// </summary>
     /// <param name="element">The element for which to determine the scope of.</param>
     /// <returns><see cref="Program"/> if the element has a <c>Program</c> element ancestor,
-    /// <see cref="Controller"/> if the element has a <c>Controller</c> element ancestor, <see cref="Null"/> otherwise.
+    /// <see cref="Controller"/> if the element has a <c>Controller</c> element ancestor,
+    /// <see cref="Instruction"/> if the element has a <c>AddOnInstructionDefinition</c> element ancestor,
+    /// <see cref="Null"/> otherwise.
     /// </returns>
-    public static Scope DetermineType(XElement element)
+    public static Scope ScopeType(XElement element)
     {
-        var ancestor = element.Ancestors().FirstOrDefault(IsScopeElement)?.Name.ToString();
-        return ancestor is not null ? FromName(ancestor) : Null;
+        var ancestor = FindContainer(element)?.Name.LocalName;
+
+        return ancestor switch
+        {
+            L5XName.Controller => Controller,
+            L5XName.Program => Program,
+            L5XName.AddOnInstructionDefinition => Instruction,
+            _ => Null
+        };
     }
 
     /// <summary>
@@ -32,23 +40,9 @@ public class Scope : LogixEnum<Scope, string>
     /// the name of the program container or the name of the controller, depending on the scope of the element. 
     /// </summary>
     /// <param name="element">The element for which to find the container name of.</param>
-    /// <returns>A <see cref="string"/> representing the name of the containing program or controller.</returns>
-    public static string DetermineName(XElement element) =>
-        element.Ancestors(DetermineType(element).Name).FirstOrDefault()?.LogixName() ?? string.Empty;
-
-    /// <summary>
-    /// Generates a <see cref="ComponentKey"/> value for the provided <see cref="XElement"/> using its element type (name)
-    /// logic name attribute, and place in the L5X hierarchy.
-    /// </summary>
-    /// <param name="element">The <see cref="XElement"/> for which to determine the component key.</param>
-    /// <returns>A <see cref="ComponentKey"/> which uniquely identifies the component across the L5X file.</returns>
-    public static ComponentKey DetermineKey(XElement element)
-    {
-        var type = element.Name.LocalName;
-        var container = DetermineName(element);
-        var name = element.LogixName();
-        return new ComponentKey(type, container, name);
-    }
+    /// <returns>A <see cref="string"/> representing the name of the containing program, instruction, or controller
+    /// if found; Otherwise, an empty string.</returns>
+    public static string ScopeName(XElement element) => FindContainer(element)?.LogixName() ?? string.Empty;
 
     /// <summary>
     /// Represents a Null <see cref="Scope"/> value.
@@ -66,6 +60,18 @@ public class Scope : LogixEnum<Scope, string>
     /// </summary>
     public static readonly Scope Program = new(nameof(Program), "ProgramScope");
 
-    private static bool IsScopeElement(XElement element) =>
-        element.Name == Program.Name || element.Name == Controller.Name;
+    /// <summary>
+    /// Represents a Program <see cref="Scope"/> value.
+    /// </summary>
+    public static readonly Scope Instruction = new(nameof(Instruction), "InstructionScope");
+    
+    /// <summary>
+    /// Finds the first ancestor element that is either a <c>Program</c>, <c>Controller</c>, or
+    /// <c>AddOnInstructionDefinition</c> element.
+    /// </summary>
+    /// <param name="node">The <see cref="XNode"/> to examine.</param>
+    /// <returns>The first matching ancestor <see cref="XElement"/> if found or <c>null</c>.</returns>
+    private static XElement? FindContainer(XNode node) =>
+        node.Ancestors().FirstOrDefault(e => e.Name.LocalName
+            is L5XName.Program or L5XName.Controller or L5XName.AddOnInstructionDefinition);
 }

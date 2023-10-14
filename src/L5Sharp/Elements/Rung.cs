@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
-using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -76,23 +75,34 @@ public class Rung : LogixCode
         get => GetProperty<string>();
         set => SetProperty(value);
     }
-    
-    /// <inheritdoc />
-    public override IEnumerable<Instruction> Instructions() => Text.Instructions();
 
     /// <inheritdoc />
-    public override IEnumerable<TagName> TagNames() => Text.Tags();
+    public override IEnumerable<LogixReference> References()
+    {
+        var references = new List<LogixReference>();
+
+        references.AddRange(Text.Tags()
+            .Select(name => new LogixReference(Element, name, L5XName.Tag)));
+
+        references.AddRange(Text.Instructions()
+            .Select(name => new LogixReference(Element, name, L5XName.AddOnInstructionDefinition)));
+
+        //todo routines? Have to look for JSR and SBR, RET
+        //todo modules? Have to look for tag names with ':'
+        
+        return references;
+    }
 
     /// <inheritdoc />
     public override string ToString() => Text;
-    
+
     /// <summary>
     /// Implicitly converts the <see cref="Rung"/> object to a <see cref="NeutralText"/>.
     /// </summary>
     /// <param name="rung">The <c>Rung</c> to convert.</param>
     /// <returns>A <see cref="NeutralText"/> instance representing the contents of the <c>Rung</c>.</returns>
     public static implicit operator NeutralText(Rung rung) => new(rung.Text);
-    
+
     /// <summary>
     /// Implicitly converts the <see cref="NeutralText"/> object to a <see cref="Rung"/>.
     /// </summary>
@@ -101,16 +111,6 @@ public class Rung : LogixCode
     public static implicit operator Rung(NeutralText text) => new(text);
 
     #region Extensions
-
-    /// <summary>
-    /// Gets the parent <see cref="Routine"/> of this <see cref="Rung"/> instance if it is attached.
-    /// </summary>
-    /// <returns>A <see cref="Routine"/> instance representing the containing routine of the rung if found; Otherwise, <c>null</c>.</returns>
-    public Routine? GetRoutine()
-    {
-        var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
-        return routine is not null ? new Routine(routine) : default;
-    }
 
     /// <summary>
     /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AOI logic in the
@@ -143,29 +143,6 @@ public class Rung : LogixCode
         }
 
         return code;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    public Dictionary<TagName, Tag> References()
-    {
-        if (L5X is null)
-            throw new InvalidOperationException(
-                "Can not get references for rungs that are not attached to a L5X content file.");
-
-        var references = new Dictionary<TagName, Tag>();
-
-        foreach (var tagName in Text.Tags())
-        {
-            var tag = L5X.FindTag(tagName, Program);
-            if (tag is null) continue;
-            references.Add(tagName, tag);
-        }
-
-        return references;
     }
 
     #endregion

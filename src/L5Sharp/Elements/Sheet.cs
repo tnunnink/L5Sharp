@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
-using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
@@ -90,32 +88,32 @@ public class Sheet : LogixCode
     public LogixContainer<DiagramFunction> Functions => new(Element, L5XName.Function);
 
     /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
+    /// The collection of <c>DiagramInstruction</c> elements within the <see cref="Sheet"/>.
     /// </summary>
     public LogixContainer<DiagramInstruction> AddOnInstructions => new(Element, L5XName.AddOnInstruction);
 
     /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
+    /// The collection of <c>DiagramRoutine</c> elements within the <see cref="Sheet"/>.
     /// </summary>
     public LogixContainer<DiagramRoutine> JumpRoutines => new(Element, L5XName.JSR);
 
     /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
+    /// The collection of <c>DiagramRoutine</c> elements within the <see cref="Sheet"/>.
     /// </summary>
     public LogixContainer<DiagramRoutine> SubRoutines => new(Element, L5XName.SBR);
 
     /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
+    /// The collection of <c>DiagramRoutine</c> elements within the <see cref="Sheet"/>.
     /// </summary>
     public LogixContainer<DiagramRoutine> Returns => new(Element, L5XName.RET);
 
     /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
+    /// The collection of <c>DiagramWire</c> elements within the <see cref="Sheet"/>.
     /// </summary>
     public LogixContainer<DiagramWire> Wires => new(Element, L5XName.Wire);
 
     /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
+    /// The collection of <c>DiagramText</c> elements within the <see cref="Sheet"/>.
     /// </summary>
     public LogixContainer<DiagramText> TextBoxes => new(Element, L5XName.TextBox);
 
@@ -125,44 +123,19 @@ public class Sheet : LogixCode
     public LogixContainer<DiagramAttachment> Attachments => new(Element, L5XName.Attachment);
 
     /// <inheritdoc />
-    public override IEnumerable<TagName> TagNames()
+    public override IEnumerable<LogixReference> References()
     {
-        var list = new List<TagName>();
-
-        list.AddRange(from reference in InputReferences
-            where reference.Operand is not null && reference.Operand.IsTagName()
-            select new TagName(reference.Operand));
-
-        list.AddRange(from reference in OutputReferences
-            where reference.Operand is not null && reference.Operand.IsTagName()
-            select new TagName(reference.Operand));
-
-        list.AddRange(from block in Blocks where block.Operand is not null select new TagName(block.Operand));
-
-        foreach (var instruction in AddOnInstructions)
-        {
-            if (instruction.Operand is not null)
-                list.Add(new TagName(instruction.Operand));
-
-            list.AddRange(from parameter in instruction.Parameters
-                where parameter.Value is not null && parameter.Value.IsTagName()
-                select new TagName(parameter.Value));
-        }
-
-        return list;
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<Instruction> Instructions()
-    {
-        var list = new List<Instruction>();
-
-        list.AddRange(from block in Blocks where block.Type is not null select new Instruction(block.Type));
-        list.AddRange(from function in Functions where function.Type is not null select new Instruction(function.Type));
-        list.AddRange(from instruction in AddOnInstructions
-            where instruction.Name is not null
-            select new Instruction(instruction.Name));
+        var references = new List<LogixReference>();
         
-        return list;
+        references.AddRange(InputReferences.SelectMany(r => r.References()));
+        references.AddRange(OutputReferences.SelectMany(r => r.References()));
+        references.AddRange(Blocks.SelectMany(r => r.References()));
+        references.AddRange(Functions.SelectMany(r => r.References()));
+        references.AddRange(AddOnInstructions.SelectMany(r => r.References()));
+        references.AddRange(JumpRoutines.SelectMany(r => r.References()));
+        references.AddRange(SubRoutines.SelectMany(r => r.References()));
+        references.AddRange(Returns.SelectMany(r => r.References()));
+        
+        return references;
     }
 }

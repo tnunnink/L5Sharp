@@ -25,24 +25,7 @@ public class Routine : LogixComponent
     public Routine()
     {
         Element.Add(new XAttribute(L5XName.Type, RoutineType.RLL));
-        Element.Add(new XElement(ContentName(RoutineType.RLL)));
-        
-        RegisterContentChangedEvent();
-    }
-
-    private void RegisterContentChangedEvent()
-    {
-        var content = Element.Element(ContentName(Type));
-        if (content is null) return;
-        content.Changed += (s, a) =>
-        {
-            if (a.ObjectChange is not XObjectChange.Add and not XObjectChange.Remove) return;
-            if (s is not XElement element || element.Parent is null || element.Name == L5XName.SFCContent) return;
-            
-            var number = 0;
-            foreach (var child in element.Parent.Elements())
-                child.SetAttributeValue(L5XName.Number, number++);
-        };
+        Element.Add(new XElement(L5XName.RLLContent));
     }
 
     /// <summary>
@@ -54,7 +37,7 @@ public class Routine : LogixComponent
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
         Element.Add(new XAttribute(L5XName.Type, type));
-        Element.Add(new XElement(ContentName(type)));
+        Element.Add(new XElement(type.ContentName));
     }
 
     /// <summary>
@@ -85,8 +68,8 @@ public class Routine : LogixComponent
     /// </value>
     public OnlineEditType? OnlineEditType
     {
-        get => GetValue<OnlineEditType>(e => e.Element(ContentName(Type)));
-        set => SetValue(value, e => e.Element(ContentName(Type)));
+        get => GetValue<OnlineEditType>(e => e.Element(Type.ContentName));
+        set => SetValue(value, e => e.Element(Type.ContentName));
     }
 
     /// <summary>
@@ -98,8 +81,8 @@ public class Routine : LogixComponent
     /// </value>
     public SheetSize? SheetSize
     {
-        get => GetValue<SheetSize>(e => e.Element(ContentName(Type)));
-        set => SetValue(value, e => e.Element(ContentName(Type)));
+        get => GetValue<SheetSize>(e => e.Element(Type.ContentName));
+        set => SetValue(value, e => e.Element(Type.ContentName));
     }
 
     /// <summary>
@@ -111,8 +94,8 @@ public class Routine : LogixComponent
     /// </value>
     public SheetOrientation? SheetOrientation
     {
-        get => GetValue<SheetOrientation>(e => e.Element(ContentName(Type)));
-        set => SetValue(value, e => e.Element(ContentName(Type)));
+        get => GetValue<SheetOrientation>(e => e.Element(Type.ContentName));
+        set => SetValue(value, e => e.Element(Type.ContentName));
     }
 
     /// <summary>
@@ -128,37 +111,10 @@ public class Routine : LogixComponent
     /// </remarks>
     public LogixContainer<TCode> Content<TCode>() where TCode : LogixCode
     {
-        var content = Element.Element(ContentName(Type));
+        var content = Element.Element(Type.ContentName);
 
         return content is not null
             ? new LogixContainer<TCode>(content)
-            : throw Element.L5XError(ContentName(Type));
+            : throw Element.L5XError(Type.ContentName);
     }
-    
-    /// <summary>
-    /// Gets the routine content as a <see cref="LogixContainer{TElement}"/> containing elements of the specified type.
-    /// </summary>
-    /// <returns>A <see cref="LogixContainer{TElement}"/> with access to the root content and specified element types.</returns>
-    /// <exception cref="InvalidOperationException">No content element corresponding to the specified <see cref="Type"/> exists for the
-    /// underlying <see cref="XElement"/>. This can happen if the provided element is not valid.</exception>
-    /// <remarks>
-    /// This method offers a dynamic interface for accessing content of any routine type. If the underlying routine
-    /// content does not match the <see cref="Type"/> specified, a L5XException will be thrown.
-    /// </remarks>
-    public LogixContainer<LogixCode> Content()
-    {
-        var content = Element.Element(ContentName(Type));
-
-        return content is not null
-            ? new LogixContainer<LogixCode>(content)
-            : throw Element.L5XError(ContentName(Type));
-    }
-
-    /// <summary>
-    /// Generates the L5XName representing the child content element for the routine based on the specified
-    /// <see cref="RoutineType"/>. 
-    /// </summary>
-    /// <param name="type">The routine type for which to generate the L5XName.</param>
-    /// <returns>A <see cref="string"/> representing the L5XName of the routine content element.</returns>
-    private static string ContentName(RoutineType type) => $"{type.Value}Content";
 }

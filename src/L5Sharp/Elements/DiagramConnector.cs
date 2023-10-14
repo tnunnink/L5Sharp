@@ -37,6 +37,9 @@ public class DiagramConnector : DiagramElement
     {
     }
     
+    /// <inheritdoc />
+    public override string Location => Sheet is not null ? $"Sheet {Sheet.Number} {Cell}" : $"{Cell}";
+    
     /// <summary>
     /// The name identifying the connector element.
     /// </summary>
@@ -45,4 +48,10 @@ public class DiagramConnector : DiagramElement
         get => GetValue<string>();
         set => SetValue(value); 
     }
+    
+    /// <summary>
+    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
+    /// </summary>
+    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
+    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
 }

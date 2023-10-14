@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
-using L5Sharp.Enums;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
@@ -11,6 +12,8 @@ namespace L5Sharp.Elements;
 /// </summary>
 public class Line : LogixCode
 {
+    private NeutralText Text => new(Element.Value);
+    
     /// <summary>
     /// Creates a new <see cref="Line"/> with default values.
     /// </summary>
@@ -40,23 +43,34 @@ public class Line : LogixCode
     {
         Element.ReplaceNodes(new XCData(text));
     }
-    
-    /// <inheritdoc />
-    public override IEnumerable<Instruction> Instructions() => ((NeutralText)this).Instructions();
-    
-    /// <inheritdoc />
-    public override IEnumerable<TagName> TagNames() => ((NeutralText)this).Tags();
 
     /// <inheritdoc />
-    public override string ToString() => Element.Value;
-    
+    public override IEnumerable<LogixReference> References()
+    {
+        var references = new List<LogixReference>();
+
+        references.AddRange(Text.Tags()
+            .Select(name => new LogixReference(Element, name, L5XName.Tag)));
+
+        references.AddRange(Text.Instructions()
+            .Select(name => new LogixReference(Element, name, L5XName.AddOnInstructionDefinition)));
+
+        //todo routines? Have to look for JSR and SBR, RET
+        //todo modules? Have to look for tag names with ':'
+        
+        return references;
+    }
+
+    /// <inheritdoc />
+    public override string ToString() => Text;
+
     /// <summary>
     /// Implicitly converts the <see cref="Rung"/> object to a <see cref="NeutralText"/>.
     /// </summary>
     /// <param name="rung">The <c>Rung</c> to convert.</param>
     /// <returns>A <see cref="NeutralText"/> instance representing the contents of the <c>Rung</c>.</returns>
-    public static implicit operator NeutralText(Line rung) => new(rung.ToString());
-    
+    public static implicit operator NeutralText(Line rung) => new(rung.Text);
+
     /// <summary>
     /// Implicitly converts the <see cref="NeutralText"/> object to a <see cref="Rung"/>.
     /// </summary>

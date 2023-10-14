@@ -43,7 +43,7 @@ public class LineTests
         var line = new Line(element);
         
         line.Number.Should().Be(1);
-        line.Program.Should().BeEmpty();
+        line.ScopeName.Should().BeEmpty();
         line.Routine.Should().BeEmpty();
         line.ToString().Should().Be("Test");
     }
@@ -54,7 +54,7 @@ public class LineTests
         var line = new Line("Test");
         
         line.Number.Should().Be(0);
-        line.Program.Should().BeEmpty();
+        line.ScopeName.Should().BeEmpty();
         line.Routine.Should().BeEmpty();
         line.ToString().Should().Be("Test");
     }

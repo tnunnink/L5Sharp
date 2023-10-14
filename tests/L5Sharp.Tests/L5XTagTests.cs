@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Components;
 using L5Sharp.Samples;
 using L5Sharp.Types.Atomics;
 
@@ -16,7 +17,7 @@ public class L5XTagTests
 
         result.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void AllTagsToList_WhenCalled_ShouldNotBeEmpty()
     {
@@ -26,7 +27,7 @@ public class L5XTagTests
 
         result.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void Test()
     {
@@ -45,6 +46,17 @@ public class L5XTagTests
         var tag = content.Tags.Get(Known.Tag);
 
         var references = tag.References().ToList();
+
+        references.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void References_AgainstAllTags_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Template);
+        var tags = content.Find<Tag>().SelectMany(t => t.Members()).ToList();
+
+        var references = tags.Select(t => new {t.TagName, Refernces = t.References()}).ToList();
 
         references.Should().NotBeEmpty();
     }

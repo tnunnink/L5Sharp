@@ -29,7 +29,7 @@ namespace L5Sharp;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent : LogixElement
+public abstract class LogixComponent : LogixElement, ILogixReferencable
 {
     /// <inheritdoc />
     protected LogixComponent()
@@ -82,7 +82,7 @@ public abstract class LogixComponent : LogixElement
         get => GetProperty<string>();
         set => SetDescription(value);
     }
-    
+
     /// <summary>
     /// The global unique identifier <see cref="ComponentKey"/> of the component. 
     /// </summary>
@@ -90,8 +90,8 @@ public abstract class LogixComponent : LogixElement
     /// A <see cref="ComponentKey"/> value representing composite set of properties that identify this component
     /// within an L5X tree.
     /// </value>
-    public ComponentKey Key => new(Element.Name.LocalName, ScopeName, Name);
-    
+    public ComponentKey Key => new(Element.Name.LocalName, Name);
+
     /// <summary>
     /// The scope name of the logix component, indicating the program or controller for which it is contained.
     /// </summary>
@@ -108,8 +108,8 @@ public abstract class LogixComponent : LogixElement
     /// value as it helps uniquely identify components within the L5X file, especially scoped components with same name.
     /// </para>
     /// </remarks>
-    public string ScopeName => Scope.DetermineName(Element);
-    
+    public string ScopeName => Scope.ScopeName(Element);
+
     /// <summary>
     /// The scope of the logix component, indicating whether it is a globally scoped controller component,
     /// a locally scoped program component, or neither (not attached to L5X tree).
@@ -128,8 +128,8 @@ public abstract class LogixComponent : LogixElement
     /// <c>Tag</c> and <c>Routine</c> components.
     /// </para>
     /// </remarks>
-    public Scope ScopeType => Scope.DetermineType(Element);
-    
+    public Scope ScopeType => Scope.ScopeType(Element);
+
     /// <summary>
     /// Returns a collection of <see cref="LogixComponent"/> that this component depends on to be valid within a given
     /// L5X file.
@@ -151,10 +151,10 @@ public abstract class LogixComponent : LogixElement
     public L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;
-        
+
         var content = L5X.New(this, softwareRevision);
         content.Add(this);
-        
+
         var dependencies = Dependencies().ToList();
         foreach (var dependency in dependencies)
         {
@@ -172,17 +172,8 @@ public abstract class LogixComponent : LogixElement
     /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
     /// at least one property value referencing this component's name.
     /// </returns>
-    public virtual IEnumerable<LogixElement> References() => Enumerable.Empty<LogixElement>();
-
-    /// <summary>
-    /// Returns a collection of <see cref="LogixElement"/> of the specified element type that reference this component by name.
-    /// </summary>
-    /// <typeparam name="TElement">The element type for which to filter the returned references.</typeparam>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects of the specified type
-    /// that have at least one property value referencing this component's name.
-    /// </returns>
-    public IEnumerable<TElement> References<TElement>() where TElement : LogixElement =>
-        References().Where(r => r is TElement).Cast<TElement>();
+    public IEnumerable<LogixReference> References() =>
+        L5X is not null ? L5X.FindReferences(this) : Enumerable.Empty<LogixReference>();
 
     /// <inheritdoc />
     /// <remarks>This override returns the component name of the type.</remarks>
@@ -192,7 +183,7 @@ public abstract class LogixComponent : LogixElement
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj)) return true;
-        
+
         return obj switch
         {
             LogixComponent other => Equals(Key, other.Key),

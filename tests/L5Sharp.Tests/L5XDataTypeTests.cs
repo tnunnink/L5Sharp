@@ -45,7 +45,7 @@ public class L5XDataTypeTests
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -65,7 +65,7 @@ public class L5XDataTypeTests
         var content = L5X.Load(Known.Test);
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -97,7 +97,7 @@ public class L5XDataTypeTests
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -117,7 +117,7 @@ public class L5XDataTypeTests
         var content = L5X.Load(Known.Test);
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -140,7 +140,7 @@ public class L5XDataTypeTests
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -160,7 +160,7 @@ public class L5XDataTypeTests
         var content = L5X.Load(Known.Test);
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -214,7 +214,7 @@ public class L5XDataTypeTests
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -234,7 +234,7 @@ public class L5XDataTypeTests
         var content = L5X.Load(Known.Test);
         var component = new DataType
         {
-            Name = "TestType", Description = "This is a test",
+            Name = "NewType", Description = "This is a test",
             Members = new LogixContainer<DataTypeMember>
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
@@ -299,10 +299,22 @@ public class L5XDataTypeTests
     }
 
     [Test]
+    public void SetName_ValidName_ShouldUpdateIndex()
+    {
+        var content = L5X.Load(Known.Test);
+        var component = content.DataTypes[0];
+
+        component.Name = "NewType";
+
+        var result = content.Get<DataType>("NewType");
+        result.Should().NotBeNull();
+    }
+
+    [Test]
     public void Dependencies_AttachedHasDependencies_ShouldNotBeEmpty()
     {
         var file = L5X.Load(Known.Test);
-        var dataType = file.Find<DataType>("ComplexType")!;
+        var dataType = file.Get<DataType>("ComplexType")!;
 
         var dependencies = dataType.Dependencies().ToList();
 
@@ -336,10 +348,8 @@ public class L5XDataTypeTests
         var content = L5X.Load(Known.Test);
         var dataType = content.DataTypes.Get(Known.DataType);
 
-        var references = dataType.References<Tag>().ToList();
+        var references = dataType.References().ToList();
         
         references.Should().NotBeEmpty();
-        references.Should().AllBeOfType<Tag>();
-        references.Should().OnlyContain(t => t.DataType == dataType.Name);
     }
 }
