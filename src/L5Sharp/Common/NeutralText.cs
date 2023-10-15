@@ -106,21 +106,20 @@ public sealed class NeutralText
     /// <param name="text">the <c>string</c> instance to convert.</param>
     /// <returns>A <c>NeutralText</c> that represents the value of the <c>string</c>.</returns>
     public static implicit operator NeutralText(string text) => new(text);
+    
+    /// <summary>
+    /// Returns a value indicating whether a specified instruction key occurs within this neutral text.
+    /// </summary>
+    /// <param name="value">The instruction name to seek.</param>
+    /// <returns><c>true</c> if this text contains the instruction key; otherwise, false..</returns>
+    public bool Contains(string value) => _text.Contains(value);
 
     /// <summary>
     /// Returns a value indicating whether a specified instruction signature occurs within this neutral text.
     /// </summary>
     /// <param name="instruction">The instruction for which to seek.</param>
     /// <returns><c>true</c> if this text contains the signature pattern defined by <c>instruction</c>.</returns>
-    public bool ContainsSignature(Instruction instruction) => Regex.IsMatch(_text, instruction.Signature);
-
-    /// <summary>
-    /// Returns a value indicating whether a specified instruction key occurs within this neutral text.
-    /// </summary>
-    /// <param name="instructionKey">The instruction name to seek.</param>
-    /// <returns><c>true</c> if this text contains the instruction key; otherwise, false..</returns>
-    public bool ContainsKey(string instructionKey) => Regex.Matches(_text, InstructionKeysPattern).Any(m =>
-        string.Equals(m.Value, instructionKey, StringComparison.OrdinalIgnoreCase));
+    public bool Contains(Instruction instruction) => Regex.IsMatch(_text, instruction.Signature);
 
     /// <summary>
     /// Returns a value indication whether a specified tag name occurs within this neutral text.
@@ -129,19 +128,11 @@ public sealed class NeutralText
     /// <param name="comparer">The optional equality comparer to user for evaluating tag equivalence.</param>
     /// <returns><c>true</c> if <c>tagName</c> is contained withing the text and passes the equality check
     /// specified by <c>comparer</c>.</returns>
-    public bool ContainsTag(TagName tagName, IEqualityComparer<TagName>? comparer = null)
+    public bool Contains(TagName tagName, IEqualityComparer<TagName>? comparer = null)
     {
         comparer ??= TagNameComparer.Qualified;
         return Tags().Any(t => comparer.Equals(t, tagName));
     }
-
-    /// <summary>
-    /// Returns a value indicating whether a specified subtext occurs within this neutral text.
-    /// </summary>
-    /// <param name="text">The neutral text to seek.</param>
-    /// <returns><c>true</c> if <c>text</c> occurs within this text, or if text is an empty string ("");
-    /// otherwise, <c>false</c>.</returns>
-    public bool ContainsText(NeutralText text) => _text.Contains(text);
 
     /// <summary>
     /// Runs the provided regex pattern against the neutral text and indicates whether the patterns is matched.
@@ -290,15 +281,7 @@ public sealed class NeutralText
     /// each individual instruction text.</returns>
     public IEnumerable<NeutralText> SplitByKey(string key) =>
         Regex.Matches(_text, $"{key}{SignaturePattern}").Select(m => new NeutralText(m.Value));
-
-    /// <summary>
-    /// Splits the current neutral text into a collection of sub-texts having a set of instruction keys.
-    /// </summary>
-    /// <param name="keys">A collection of instruction keys to match against.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> containing the <see cref="NeutralText"/> objects that represent
-    /// each individual instruction text.</returns>
-    public IEnumerable<NeutralText> SplitByKeys(IEnumerable<string> keys) =>
-        keys.SelectMany(k => Regex.Matches(_text, $"{k}{SignaturePattern}").Select(m => new NeutralText(m.Value)));
+    
 
     /// <summary>
     /// Gets a collection of tag names found in the current neutral text.
@@ -347,6 +330,8 @@ public sealed class NeutralText
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
+        if (ReferenceEquals(this, obj)) return true;
+        
         return obj switch
         {
             NeutralText other => string.Equals(_text, other._text, StringComparison.OrdinalIgnoreCase),
@@ -356,7 +341,7 @@ public sealed class NeutralText
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_text.GetHashCode());
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_text);
 
     /// <summary>
     /// Determines if the provided objects are equal.

@@ -45,7 +45,7 @@ public class KeywordTests
     [Test]
     public void Dot_WhenCalled_ShouldNotBeNull()
     {
-        Keyword.Dot.Should().NotBeNull();
+        Keyword.Period.Should().NotBeNull();
     }
 
     [Test]

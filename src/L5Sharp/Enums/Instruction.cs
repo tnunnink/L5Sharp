@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Common;
 
 // ReSharper disable IdentifierTypo
@@ -17,17 +18,41 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// are balanced (number of opening equals number of closing).
     /// </summary>
     private const string SignaturePattern = @"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
-        
+
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided string key and regex signature pattern.
     /// </summary>
     /// <param name="key">The key identifier of the instruction.</param>
-    /// <param name="destructive">Optional bit indicating that the instruction is destructive. Default is <c>false</c>.</param>
+    /// <param name="destructive">Optional bit indicating that the instruction is destructive. Default is <c>true</c>
+    /// as most instructions are destructive (update state).</param>
     public Instruction(string key, bool destructive = true) : base(key, key)
     {
         Signature = $"{Name}{SignaturePattern}";
         Destructive = destructive;
+        Arguments = Enumerable.Empty<Argument>();
     }
+
+    private Instruction(string key, bool destructive, params Argument[] arguments) : base(key, key)
+    {
+        Signature = $"{Name}{SignaturePattern}";
+        Destructive = destructive;
+        Arguments = arguments;
+    }
+
+    /// <summary>
+    /// The collection of <see cref="Argument"/> values for the instruction instance.
+    /// </summary>
+    public IEnumerable<Argument> Arguments { get; }
+
+    /// <summary>
+    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Routine</c> component by name.
+    /// </summary>
+    public bool CallsRoutine => this == JSR || this == JXR || this == SFR || this == SFP || this == FOR;
+
+    /// <summary>
+    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Task</c> component by name.
+    /// </summary>
+    public bool CallsTask => this == EVENT;
 
     /// <summary>
     /// The signature or valid regex pattern of the instruction neutral text.
@@ -92,7 +117,7 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// Gets the <c>ALMD</c> instruction definition instance.
     /// </summary>
     public static readonly Instruction ALMD = new(nameof(ALMD));
-        
+
     /// <summary>
     /// Gets the <c>AND</c> instruction definition instance.
     /// </summary>
@@ -1039,19 +1064,20 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     public static readonly Instruction XPY = new(nameof(XPY));
 
     /// <summary>
-    /// Creates a the <see cref="NeutralText"/> that represents the current instruction with the provided
-    /// operand arguments.
+    /// Creates a <see cref="Instruction"/> that represents the current instruction with the provided
+    /// argument values.
     /// </summary>
-    /// <param name="operands">The collection of operands that are provided to the instruction signature.</param>
-    /// <returns>A <see cref="NeutralText"/> instance that represents the instruction logic with provided operand arguments.</returns>
-    public NeutralText Of(params object[] operands)
+    /// <param name="arguments">The collection of arguments that are provided to the instruction signature.</param>
+    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
+    public Instruction Of(params Argument[] arguments) => new(Name, Destructive, arguments);
+
+    /// <summary>
+    /// Returns the current <c>Instruction</c> as a <see cref="NeutralText"/> value using the current key and arguments.
+    /// </summary>
+    /// <returns>A <see cref="NeutralText"/> value for the current instruction instance.</returns>
+    public NeutralText ToText()
     {
-        var arguments = string.Join(',', operands.AsEnumerable());
-
-        var text = $"{Name}({arguments})";
-
-        return new NeutralText(text);
+        var signamture = string.Join(',', Arguments.AsEnumerable());
+        return new NeutralText($"{Name}({signamture})");
     }
-    
-    
 }

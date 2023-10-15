@@ -35,7 +35,7 @@ public class Keyword : LogixEnum<Keyword, string>
     /// <summary>
     /// Represents the Dot Logix <see cref="Keyword"/>.
     /// </summary>
-    public static readonly Keyword Dot = new(nameof(Dot), ".");
+    public static readonly Keyword Period = new(nameof(Period), ".");
     
     /// <summary>
     /// Represents the Else Logix <see cref="Keyword"/>.

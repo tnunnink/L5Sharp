@@ -189,7 +189,7 @@ public abstract class LogixEnum<TEnum, TValue> :
     public override string ToString() => Value.ToString();
 
     /// <inheritdoc />
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is not LogixEnum<TEnum, TValue> logixEnum) return false;
         return GetType() == obj.GetType() && Equals(Value, logixEnum.Value);

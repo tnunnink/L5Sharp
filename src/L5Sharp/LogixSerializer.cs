@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Xml.Linq;
 using L5Sharp.Utilities;
 
@@ -16,7 +17,8 @@ public static class LogixSerializer
     /// The global cache for all <see cref="LogixElement"/> object deserializer delegate functions.
     /// </summary>
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixElement>>> Deserializers = new(() =>
-        Introspect(typeof(LogixSerializer).Assembly).ToDictionary(k => k.Key, v => v.Value));
+            Introspect(typeof(LogixSerializer).Assembly).ToDictionary(k => k.Key, v => v.Value),
+        LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
     /// Serializes the <see cref="LogixElement"/> object into an <see cref="XElement"/> object.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Common;
@@ -267,10 +268,10 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     private static string GetRoot(string tagName)
     {
-        if (tagName.IsEmpty() || tagName.StartsWith(MemberSeparator)) return string.Empty;
-        if (tagName.StartsWith(ArrayOpenSeparator))
+        if (tagName.IsEmpty() || tagName.StartsWith(Keyword.Period)) return string.Empty;
+        if (tagName.StartsWith(Keyword.LeftBracket))
         {
-            return tagName[..tagName.IndexOf(ArrayCloseSeparator)];
+            return tagName[..tagName.IndexOf(Keyword.RightBracket)];
         }
 
         var index = tagName.IndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Xml.Linq;
 using L5Sharp.Enums;
 using L5Sharp.Types;
@@ -34,7 +35,8 @@ public static class LogixData
     /// delegate functions. This is what we are using to create strongly typed logix type objects at runtime.
     /// </summary>
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixType>>> Deserializers = new(() =>
-        AppDomain.CurrentDomain.GetAssemblies().Distinct().SelectMany(Introspect).ToDictionary(k => k.Key, k => k.Value));
+            AppDomain.CurrentDomain.GetAssemblies().Distinct().SelectMany(Introspect)
+                .ToDictionary(k => k.Key, k => k.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
     /// Returns the singleton null <see cref="LogixType"/> object.
@@ -255,8 +257,8 @@ public static class LogixData
         var types = assembly.GetTypes().Where(t =>
             (typeof(StructureType).IsAssignableFrom(t) || typeof(StringType).IsAssignableFrom(t))
             && t != typeof(ComplexType) && t != typeof(StringType)
-            && t is { IsAbstract: false, IsPublic: true }
-            && t.GetConstructor(new[] { typeof(XElement) }) is not null);
+            && t is {IsAbstract: false, IsPublic: true}
+            && t.GetConstructor(new[] {typeof(XElement)}) is not null);
 
         foreach (var type in types)
         {
@@ -273,7 +275,7 @@ public static class LogixData
     {
         return assembly.GetTypes().Where(t =>
             typeof(LogixType).IsAssignableFrom(t)
-            && t is { IsAbstract: false, IsPublic: true }
+            && t is {IsAbstract: false, IsPublic: true}
             && t != typeof(ComplexType) && t != typeof(StringType)
             && t != typeof(ArrayType) && t != typeof(ArrayType<>)
             && t != typeof(NullType));

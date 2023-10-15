@@ -189,7 +189,7 @@ public static class RungExtensions
             }
 
             foreach (var logic in from reference in references
-                     let key = reference.Keys().FirstOrDefault()
+                     let key = reference.Instructions().FirstOrDefault()
                      let instruction = aoiLookup[key]
                      select instruction.Logic(reference))
             {

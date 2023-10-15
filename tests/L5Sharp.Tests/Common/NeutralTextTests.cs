@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Common
     public class NeutralTextTests
     {
         private const string TestText =
-            "[MOV(10,Flow_Comparison_PctError_Constant),MOV(0.3,Flow_Comparison_PctError_Exponent),GRT(Calculated_Avg_Flow,0)CPT(Flow_Comparison_PctError_SP,( Flow_Comparison_PctError_Constant * Calculated_Avg_Flow ** Flow_Comparison_PctError_Exponent) / Calculated_Avg_Flow * 100),LEQ(Calculated_Avg_Flow,0)MOV(0,Flow_Comparison_PctError_SP)];";
+            "[MOV(10,Constant),MOV(0.3,Exponent),GRT(Calculated,0)CPT(Error_SP,( Constant * Calculated ** Exponent) / Calculated * 100),LEQ(Calculated,0)MOV(0,Error_SP)];";
 
         [Test]
         public void New_NullText_ShouldThrowArgumentNullException()
@@ -88,7 +88,7 @@ namespace L5Sharp.Tests.Common
         {
             var text = NeutralText.Empty;
 
-            var result = text.ContainsKey("XIC");
+            var result = text.Contains("XIC");
 
             result.Should().BeFalse();
         }
@@ -99,7 +99,7 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.ContainsKey("XIC");
+            var result = text.Contains("XIC");
 
             result.Should().BeTrue();
         }
@@ -110,7 +110,7 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
 
-            var result = text.ContainsKey("aoiTIMER");
+            var result = text.Contains("aoiTIMER");
 
             result.Should().BeTrue();
         }
@@ -120,7 +120,7 @@ namespace L5Sharp.Tests.Common
         {
             var text = NeutralText.Empty;
 
-            var result = text.ContainsSignature(Instruction.XIC);
+            var result = text.Contains(Instruction.XIC);
 
             result.Should().BeFalse();
         }
@@ -131,7 +131,7 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.ContainsSignature(Instruction.XIC);
+            var result = text.Contains(Instruction.XIC);
 
             result.Should().BeTrue();
         }
@@ -141,7 +141,7 @@ namespace L5Sharp.Tests.Common
         {
             var text = NeutralText.Empty;
 
-            var result = text.ContainsText("XIC(Tag.Status.Enabled)");
+            var result = text.Contains((NeutralText) "XIC(Tag.Status.Enabled)");
 
             result.Should().BeFalse();
         }
@@ -152,7 +152,7 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.ContainsText("XIC(Tag.Status.Enabled)");
+            var result = text.Contains((NeutralText) "XIC(Tag.Status.Enabled)");
 
             result.Should().BeTrue();
         }
@@ -162,7 +162,7 @@ namespace L5Sharp.Tests.Common
         {
             var text = NeutralText.Empty;
 
-            var result = text.ContainsTag("Tag.Status.Enabled");
+            var result = text.Contains(new TagName("Tag.Status.Enabled"));
 
             result.Should().BeFalse();
         }
@@ -173,7 +173,7 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.ContainsTag("Tag.Status.Enabled");
+            var result = text.Contains(new TagName("Tag.Status.Enabled"));
 
             result.Should().BeTrue();
         }
