@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Common;
@@ -23,12 +22,12 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     private const char ArrayOpenSeparator = '[';
     private const char ArrayCloseSeparator = ']';
 
-    /// <summary>
+    /*/// <summary>
     /// A regex pattern for a Logix tag name with starting and ending anchors.
     /// Use this pattern to match a string and ensure it is only a tag name an nothing else.
     /// </summary>
     private const string TagNamePattern =
-        @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
+        @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";*/
 
     /// <summary>
     /// Creates a new <see cref="TagName"/> object with the provided string tag name.
@@ -117,7 +116,14 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// <summary>
     /// Gets a value indicating whether the current <see cref="TagName"/> is a valid representation of a tag name.
     /// </summary>
-    public bool IsQualified => Regex.IsMatch(_tagName, TagNamePattern);
+    public bool IsQualified => IsQualifiedTagName(_tagName);
+
+    /// <summary>
+    /// Determines if the provided string value is a valid tag name.
+    /// </summary>
+    /// <param name="value">The <see cref="string"/> to test.</param>
+    /// <returns><c>true</c> if the value is a valid qualified tag name; Otherwise, <c>false</c>.</returns>
+    public static bool IsTag(string value) => IsQualifiedTagName(value);
 
     /// <summary>
     /// Gets the static empty <see cref="TagName"/> value.
@@ -268,16 +274,16 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     private static string GetRoot(string tagName)
     {
-        if (tagName.IsEmpty() || tagName.StartsWith(Keyword.Period)) return string.Empty;
-        if (tagName.StartsWith(Keyword.LeftBracket))
+        if (tagName.IsEmpty() || tagName.StartsWith(MemberSeparator)) return string.Empty;
+        if (tagName.StartsWith(ArrayOpenSeparator))
         {
-            return tagName[..tagName.IndexOf(Keyword.RightBracket)];
+            return tagName[..tagName.IndexOf(ArrayCloseSeparator)];
         }
 
-        var index = tagName.IndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
+        var index = tagName.IndexOfAny(new[] {MemberSeparator, ArrayOpenSeparator});
         return index > 0 ? tagName[..index] : tagName;
     }
-    
+
     /// <summary>
     /// Gets the last member of the tag name, or the portion of the string from the end to the last member separator.
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
@@ -285,63 +291,25 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     private static string GetMember(string tagName)
     {
-        var index = tagName.LastIndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
+        var index = tagName.LastIndexOfAny(new[] {MemberSeparator, ArrayOpenSeparator});
         var length = tagName.Length - index;
         return index >= 0 ? tagName.Substring(index, length).TrimStart(MemberSeparator) : tagName;
     }
-    
+
     /// <summary>
     /// Gets each member by iterating the tag name string.
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
     /// of tag names this can get called on.
     /// </summary>
-    private static IEnumerable<string> GetMembers(string tagName)
-    {
-        var list = new List<string>();
-        var span = new List<char>();
-        var open = false;
-
-        foreach (var character in tagName)
-        {
-            switch (character)
-            {
-                case MemberSeparator:
-                    if (span.Count == 0) continue;
-                    list.Add(new string(span.ToArray()));
-                    span.Clear();
-                    continue;
-                case ArrayOpenSeparator when !open:
-                    open = true;
-                    if (span.Count == 0) break;
-                    list.Add(new string(span.ToArray()));
-                    span.Clear();
-                    break;
-                case ArrayCloseSeparator when open:
-                    open = false;
-                    span.Add(character);
-                    list.Add(new string(span.ToArray()));
-                    span.Clear();
-                    continue;
-            }
-
-            span.Add(character);
-        }
-
-        if (span.Count > 0)
-            list.Add(new string(span.ToArray()));
-
-        return list;
-    }
+    private static IEnumerable<string> GetMembers(string tagName) => 
+        NormalizeDelimiter(tagName).Split(MemberSeparator, StringSplitOptions.RemoveEmptyEntries);
 
     /// <summary>
     /// Gets the zero-based depth or number of members between this member and the root.
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
     /// of tag names this can get called on.
     /// </summary>
-    private static int GetDepth(string tagName)
-    {
-        return tagName.Count(c => c is MemberSeparator or ArrayOpenSeparator);
-    }
+    private static int GetDepth(string tagName) => tagName.Count(c => c is MemberSeparator or ArrayOpenSeparator);
 
     /// <summary>
     /// Handles combining an enumerable containing string member names into a single <see cref="TagName"/> value.
@@ -356,6 +324,52 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
                 builder.Append(MemberSeparator);
 
             builder.Append(member);
+        }
+
+        return builder.ToString();
+    }
+
+    private static bool IsQualifiedTagName(string value)
+    {
+        if (value.IsEmpty()) return false;
+
+        var normalized = NormalizeDelimiter(value);
+        var members = normalized.Split(MemberSeparator).ToList();
+
+        for (var i = 0; i < members.Count; i++)
+        {
+            switch (i)
+            {
+                case 0 when !IsValidRoot(members[i]):
+                case > 0 when members[i].StartsWith(ArrayOpenSeparator) && !IsValidIndex(members[i]):
+                case > 0 when char.IsLetter(members[i][0]) && !IsValidMember(members[i]):
+                    return false;
+            }
+
+            if (i == members.Count - 1 && char.IsDigit(members[i][0]) && !IsValidBit(members[i])) return false;
+        }
+
+        return true;
+
+        bool IsValidRoot(string member) => Regex.IsMatch(member, @"^[A-Za-a_][\w:]{0,39}$");
+
+        bool IsValidMember(string member) => Regex.IsMatch(member, @"^[A-Za-a_][\w]{0,39}$");
+
+        bool IsValidIndex(string member) => Regex.IsMatch(member, @"^\[[0-9]+(?:\,[0-9]+)?(?:\,[0-9]+)?\]$");
+
+        bool IsValidBit(string member) =>
+            member.All(char.IsDigit) && int.TryParse(member, out var bit) && bit is >= 0 and <= 63;
+    }
+
+    private static string NormalizeDelimiter(string value)
+    {
+        var builder = new StringBuilder();
+
+        foreach (var character in value)
+        {
+            if (character == ArrayOpenSeparator)
+                builder.Append(MemberSeparator);
+            builder.Append(character);
         }
 
         return builder.ToString();

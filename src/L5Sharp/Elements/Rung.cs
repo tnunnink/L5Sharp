@@ -85,7 +85,7 @@ public class Rung : LogixCode
             .Select(name => new LogixReference(Element, name, L5XName.Tag)));
 
         references.AddRange(Text.Instructions()
-            .Select(name => new LogixReference(Element, name, L5XName.AddOnInstructionDefinition)));
+            .Select(name => new LogixReference(Element, name.Key, L5XName.AddOnInstructionDefinition)));
 
         //todo routines? Have to look for JSR and SBR, RET
         //todo modules? Have to look for tag names with ':'
@@ -133,7 +133,7 @@ public class Rung : LogixCode
         var code = new List<NeutralText>();
 
         var references = L5X.Instructions
-            .Select(i => new {Instruction = i, Instances = Text.SplitByKey(i.Name)})
+            .Select(i => new {Instruction = i, Instances = Text.Instructions(i.Name)})
             .ToList();
 
         foreach (var reference in references.Where(r => r.Instances.Any()))
@@ -175,23 +175,22 @@ public static class RungExtensions
         if (content is null)
             throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
 
-        var aoiLookup = content.Instructions.ToDictionary(k => k.Name, v => v);
+        var lookup = content.Instructions.ToDictionary(k => k.Name, v => v);
         var text = collection.Select(r => r.Text);
 
         foreach (var line in text)
         {
-            var references = aoiLookup.SelectMany(l => line.SplitByKey(l.Key)).ToList();
+            var instructions = lookup.SelectMany(l => line.Instructions(l.Key)).ToList();
 
-            if (references.Count == 0)
+            if (instructions.Count == 0)
             {
                 code.Add(line);
                 continue;
             }
 
-            foreach (var logic in from reference in references
-                     let key = reference.Instructions().FirstOrDefault()
-                     let instruction = aoiLookup[key]
-                     select instruction.Logic(reference))
+            foreach (var logic in from instruction in instructions
+                     let definition = lookup[instruction.Key]
+                     select definition.Logic(instruction))
             {
                 code.AddRange(logic);
             }

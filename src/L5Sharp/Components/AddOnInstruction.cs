@@ -224,10 +224,10 @@ public class AddOnInstruction : LogixComponent
     #region Extensions
 
     /// <summary>
-    /// Returns the AOI instruction logic with the parameters tag names replaced with the operand tag names of the
-    /// provided neutral text signature.
+    /// Returns the AOI instruction logic with the parameters tag names replaced with the argument tag names of the
+    /// provided instruction instance.
     /// </summary>
-    /// <param name="text">The text signature of the instruction arguments.</param>
+    /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
     /// <returns>
     /// A <see cref="IEnumerable{T}"/> containing <see cref="NeutralText"/> representing all the instruction's
     /// logic, with each instruction parameter tag name replaced with the arguments from the provided text.
@@ -237,10 +237,10 @@ public class AddOnInstruction : LogixComponent
     /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
     /// content or code type.
     /// </remarks>
-    public IEnumerable<NeutralText> Logic(NeutralText text)
+    public IEnumerable<NeutralText> Logic(Instruction instruction)
     {
-        if (text is null)
-            throw new ArgumentNullException(nameof(text));
+        if (instruction is null)
+            throw new ArgumentNullException(nameof(instruction));
 
         // All instructions primary logic is contained in the routine named 'Logic'
         var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
@@ -249,19 +249,19 @@ public class AddOnInstruction : LogixComponent
         if (rungs is null) return Enumerable.Empty<NeutralText>();
 
         //Skip first operand as it is always the AOI tag, which does not have corresponding parameter within the logic.
-        var arguments = text.Operands().Select(o => o.ToString()).Skip(1).ToList();
+        var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToList();
 
         //Only required parameters are part of the instruction signature
         var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToList();
 
-        //Deserialize a mapping of the provided text operand arguments to instruction parameter names.
+        //Generate a mapping of the provided instructions arguments to instruction parameters.
         var mapping = arguments.Zip(parameters, (a, p) => new {Argument = a, Parameter = p}).ToList();
 
         //Replace all parameter names with argument names in the instruction logic text, and return the results.
         return rungs.Select(r => r.Text)
             .Select(t => mapping.Aggregate(t, (current, pair) =>
             {
-                if (!pair.Argument.IsTagName()) return current;
+                if (!pair.Argument.IsTag()) return current;
                 var replace = $@"(?<=[^.]){pair.Parameter}\b";
                 return Regex.Replace(current, replace, pair.Argument.ToString());
             }))

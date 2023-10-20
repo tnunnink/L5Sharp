@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using L5Sharp.Common;
@@ -66,8 +65,7 @@ public static class L5XExtensions
     /// </summary>
     /// <param name="input">The string input to analyze.</param>
     /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
-    public static bool IsTagName(this string input) => Regex.IsMatch(input,
-        @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$");
+    public static bool IsTag(this string input) => TagName.IsTag(input);
 
     /// <summary>
     /// Determines if the current string is equal to string.Empty.
@@ -85,7 +83,7 @@ public static class L5XExtensions
     /// equality comparer,. Otherwise <c>false</c>.</returns>
     /// <remarks>This is a simplified way of calling the string comparer equals method since it is a little verbose.
     /// This could be used a lot since Logix naming is not case agnostic.</remarks>
-    public static bool IsSame(this string value, string other) => StringComparer.OrdinalIgnoreCase.Equals(value, other);
+    public static bool IsEquivalent(this string value, string other) => StringComparer.OrdinalIgnoreCase.Equals(value, other);
 
     /// <summary>
     /// Gets the L5X element name of the type's containing element. 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using L5Sharp.Enums;
 using L5Sharp.Types.Atomics;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Types;
 
@@ -34,8 +35,8 @@ public static class Atomic
     /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
     public static AtomicType Parse(string value)
     {
-        return string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ? new BOOL(true)
-            : string.Equals(value, "false", StringComparison.OrdinalIgnoreCase) ? new BOOL()
+        return value.IsEquivalent("true") ? new BOOL(true)
+            : value.IsEquivalent("false") ? new BOOL()
             : Radix.Infer(value).Parse(value);
     }
 
@@ -47,8 +48,8 @@ public static class Atomic
     /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as an atomic type.</exception>
     public static TAtomic Parse<TAtomic>(string value) where TAtomic : AtomicType
     {
-        var atomic = string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ? new BOOL(true)
-            : string.Equals(value, "false", StringComparison.OrdinalIgnoreCase) ? new BOOL()
+        var atomic = value.IsEquivalent("true") ? new BOOL(true)
+            : value.IsEquivalent("false") ? new BOOL()
             : Radix.Infer(value).Parse(value);
         return (TAtomic)Convert.ChangeType(atomic, typeof(TAtomic));
     }
@@ -67,6 +68,31 @@ public static class Atomic
             throw new ArgumentException($"The type name '{name}' is not a valid {typeof(AtomicType)}");
 
         return Atomics[name].Invoke(value);
+    }
+
+    /// <summary>
+    /// Attempts to parse the provided string input as an atomic type value with the inferred radix format.
+    /// </summary>
+    /// <param name="value">A string representing an atomic value to parse.</param>
+    /// <param name="atomicType">If the parsed successfully, then the resulting <see cref="AtomicType"/> value;
+    /// Otherwise, <c>null</c>.</param>
+    /// <returns><c>true</c> if the string input was parsed as an atomic type; Otherwise, <c>false</c>.</returns>
+    public static bool TryParse(string value, out AtomicType? atomicType)
+    {
+        if (value.IsEquivalent("true") || value.IsEquivalent("false"))
+        {
+            atomicType = new BOOL(bool.Parse(value));
+            return true;
+        }
+
+        if (Radix.TryInfer(value, out var radix) && radix is not null)
+        {
+            atomicType = radix.Parse(value);
+            return true;
+        }
+        
+        atomicType = default;
+        return false;
     }
 
     /// <summary>

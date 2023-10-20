@@ -53,7 +53,7 @@ public class Line : LogixCode
             .Select(name => new LogixReference(Element, name, L5XName.Tag)));
 
         references.AddRange(Text.Instructions()
-            .Select(name => new LogixReference(Element, name, L5XName.AddOnInstructionDefinition)));
+            .Select(instruction => new LogixReference(Element, instruction.Key, L5XName.AddOnInstructionDefinition)));
 
         //todo routines? Have to look for JSR and SBR, RET
         //todo modules? Have to look for tag names with ':'

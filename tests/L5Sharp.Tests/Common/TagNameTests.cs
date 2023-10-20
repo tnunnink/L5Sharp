@@ -81,6 +81,26 @@ namespace L5Sharp.Tests.Common
             tagName.IsEmpty.Should().BeFalse();
             tagName.IsQualified.Should().BeTrue();
         }
+        
+        [Test]
+        public void IsQualified_QualifiedTagNameWithAllPossibleMemberTypes_ShouldBeTrue()
+        {
+            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+
+            var result = tagName.IsQualified;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsQualified_ArraySegmentOnly_ShouldBeFalse()
+        {
+            var tagName = new TagName("[1]");
+            
+            var result = tagName.IsQualified;
+            
+            result.Should().BeFalse();
+        }
 
         [Test]
         public void Root_WhenCalledManyTimes_ShouldBeEfficient()

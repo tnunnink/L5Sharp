@@ -11,7 +11,7 @@ public class L5XTemplateTests
     [Test]
     public void DataTypes_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Template);
+        var content = L5X.Load(Known.Example);
 
         var components = content.DataTypes.ToList();
 
@@ -21,7 +21,7 @@ public class L5XTemplateTests
     [Test]
     public void Modules_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Template);
+        var content = L5X.Load(Known.Example);
 
         var components = content.Modules.ToList();
 
@@ -31,7 +31,7 @@ public class L5XTemplateTests
     [Test]
     public void Instructions_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Template);
+        var content = L5X.Load(Known.Example);
 
         var components = content.Instructions.ToList();
 
@@ -41,7 +41,7 @@ public class L5XTemplateTests
     [Test]
     public void Tags_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Template);
+        var content = L5X.Load(Known.Example);
 
         var components = content.Tags.ToList();
 
@@ -51,7 +51,7 @@ public class L5XTemplateTests
     [Test]
     public void TagsAll_WhenEnumerated_ShouldWork()
     {
-        var content = L5X.Load(Known.Template);
+        var content = L5X.Load(Known.Example);
 
         var stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -65,7 +65,7 @@ public class L5XTemplateTests
     [Test]
     public void Programs_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Template);
+        var content = L5X.Load(Known.Example);
 
         var components = content.Programs.ToList();
 
@@ -75,7 +75,7 @@ public class L5XTemplateTests
     [Test]
     public void Tasks_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Template);
+        var content = L5X.Load(Known.Example);
 
         var components = content.Tasks.ToList();
 

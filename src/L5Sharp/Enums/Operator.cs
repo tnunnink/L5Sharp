@@ -8,12 +8,12 @@ public class Operator : LogixEnum<Operator, string>
     private Operator(string name, string value) : base(name, value)
     {
     }
-
+    
     /// <summary>
     /// Represents the Assignment Logix <see cref="Operator"/>.
     /// </summary>
     public static readonly Operator Assignment = new(nameof(Assignment), ":=");
-        
+    
     /// <summary>
     /// Represents the Equal Logix <see cref="Operator"/>.
     /// </summary>

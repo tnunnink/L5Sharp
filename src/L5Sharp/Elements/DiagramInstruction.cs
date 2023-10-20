@@ -98,14 +98,14 @@ public class DiagramInstruction : DiagramElement
     /// <inheritdoc />
     public override IEnumerable<LogixReference> References()
     {
-        if (Operand is not null && Operand.IsTagName())
+        if (Operand is not null && Operand.IsTag())
             yield return new LogixReference(Element, Operand, L5XName.Tag);
         
         if (Name is not null)
             yield return new LogixReference(Element, Name, L5XName.AddOnInstructionDefinition);
         
         foreach (var parameter in Parameters)
-            if (parameter.Value.IsTagName())
+            if (parameter.Value.IsTag())
                 yield return new LogixReference(Element, parameter.Value, L5XName.Tag);
     }
 }

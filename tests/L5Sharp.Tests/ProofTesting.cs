@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using FluentAssertions;
+using L5Sharp.Elements;
 using L5Sharp.Samples;
 
 namespace L5Sharp.Tests;
@@ -33,5 +34,15 @@ public class ProofTesting
     {
         var character = (char)(input / 200 + 'A');
         Console.WriteLine(character);
+    }
+
+    [Test]
+    public void Query()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var rungs = content.Find<Rung>().ToList();
+
+        rungs.Should().NotBeEmpty();
     }
 }

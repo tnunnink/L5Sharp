@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -108,17 +107,4 @@ public abstract class LogixCode : LogixElement, ILogixReferencable
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="LogixReference"/> values contained by this code.</returns>
     public abstract IEnumerable<LogixReference> References();
-    
-    /// <summary>
-    /// Gets the parent <see cref="Routine"/> of this <see cref="LogixCode"/> instance if it is attached.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="Routine"/> instance representing the containing routine of the code if found;
-    /// Otherwise, <c>null</c>.
-    /// </returns>
-    public Routine? GetRoutine()
-    {
-        var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
-        return routine is not null ? new Routine(routine) : default;
-    }
 }

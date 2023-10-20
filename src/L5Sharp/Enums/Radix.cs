@@ -134,6 +134,20 @@ public abstract class Radix : LogixEnum<Radix, string>
     }
 
     /// <summary>
+    /// Tries to infer the radix format from a string representing a formatted atomic value.
+    /// </summary>
+    /// <param name="input">The string input for which to infer the radix format.</param>
+    /// <param name="radix">If parsed successfully, then the <see cref="Radix"/> representing the format of the input;
+    /// Otherwise, <c>null</c>.</param>
+    /// <returns><c>true</c> if a <c>Radix</c> format was inferred from the string input; Otherwise, <c>false</c>.</returns>
+    public static bool TryInfer(string input, out Radix? radix)
+    {
+        var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
+        radix = name is not null ? FromName(name) : null;
+        return radix is not null;
+    }
+
+    /// <summary>
     /// The specifier prefix of the Radix string format.
     /// </summary>
     /// <value>A <see cref="string"/> representing the text that identifies the format of the Radix.</value>

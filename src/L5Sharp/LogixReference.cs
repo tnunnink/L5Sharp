@@ -96,10 +96,10 @@ public class LogixReference
     public bool IsSame(LogixReference other)
     {
         return ScopeType == other.ScopeType &&
-               ScopeName.IsSame(other.ScopeName) &&
-               RoutineName.IsSame(other.RoutineName) &&
-               ReferenceId.IsSame(other.ReferenceId) &&
-               ReferenceType.IsSame(other.ReferenceType);
+               ScopeName.IsEquivalent(other.ScopeName) &&
+               RoutineName.IsEquivalent(other.RoutineName) &&
+               ReferenceId.IsEquivalent(other.ReferenceId) &&
+               ReferenceType.IsEquivalent(other.ReferenceType);
     }
 
     /// <summary>

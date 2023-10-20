@@ -32,7 +32,7 @@ public class L5XBasicTests
     [Test]
     public void New_Template_ShouldNotBeNull()
     {
-        var element = XElement.Load(Known.Template);
+        var element = XElement.Load(Known.Example);
         
         var l5X = new L5X(element);
 

@@ -1,41 +1,61 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using L5Sharp.Common;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading;
+using JetBrains.Annotations;
+using L5Sharp.Utilities;
 
 // ReSharper disable IdentifierTypo
 // ReSharper disable InconsistentNaming
 // ReSharper disable CommentTypo
 
-namespace L5Sharp.Enums;
+namespace L5Sharp.Common;
 
 /// <summary>
 /// A class representing a instruction definition and ...
 /// </summary>
-public sealed class Instruction : LogixEnum<Instruction, string>
+[PublicAPI]
+public sealed class Instruction
 {
+    /// <summary>
+    /// Pattern for identifying any instruction and the contents of it's signature. This expression should
+    /// capture everything enclosed or between the instruction parentheses. This includes nested parenthesis.
+    /// This works on the assumption that the text has balanced opening/closing parentheses.
+    /// </summary>
+    public const string Pattern = @"[A-Za-z_]\w{1,39}\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
+
+    /// <summary>
+    /// Pattern finds all text prior to opening parentheses, which is the instruction name or key that identifies
+    /// the instruction.
+    /// </summary>
+    private const string KeyPattern = @"[A-Za-z_]\w{1,39}(?=\()";
+    
     /// <summary>
     /// Captures all content within parentheses, including outer parentheses and nested parentheses, assuming they
     /// are balanced (number of opening equals number of closing).
     /// </summary>
     private const string SignaturePattern = @"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
+    
+    /// <summary>
+    /// The regex pattern for Logix tag names without starting and ending anchors.
+    /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e. instruction keys)
+    /// Use this pattern for tag names within text, such as longer
+    /// </summary>
+    private const string TagNamePattern =
+        @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?";
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided string key and regex signature pattern.
     /// </summary>
     /// <param name="key">The key identifier of the instruction.</param>
-    /// <param name="destructive">Optional bit indicating that the instruction is destructive. Default is <c>true</c>
-    /// as most instructions are destructive (update state).</param>
-    public Instruction(string key, bool destructive = true) : base(key, key)
+    /// <param name="arguments"></param>
+    public Instruction(string key, params Argument[] arguments)
     {
-        Signature = $"{Name}{SignaturePattern}";
-        Destructive = destructive;
-        Arguments = Enumerable.Empty<Argument>();
-    }
-
-    private Instruction(string key, bool destructive, params Argument[] arguments) : base(key, key)
-    {
-        Signature = $"{Name}{SignaturePattern}";
-        Destructive = destructive;
+        if (string.IsNullOrEmpty(key))
+            throw new ArgumentException("Instruction key cannot be null or empty.", nameof(key));
+        Key = key;
         Arguments = arguments;
     }
 
@@ -55,18 +75,138 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     public bool CallsTask => this == EVENT;
 
     /// <summary>
+    /// Indicates whether the instruction is conditional or evaluates a certain condition to be true or false, in which
+    /// it directs the flow of the program to a different location.
+    /// </summary>
+    /// <value><c>true</c> if the instruction is conditional; Otherwise, <c>false</c>.</value>
+    /// <remarks>An example of a condition instruction is an <see cref="XIC"/>.</remarks>
+    public bool IsConditional => ConditionalKeys().Contains(Key);
+
+    /// <summary>
+    /// The unique identifier of the instruction instance.
+    /// </summary>
+    /// <value>
+    /// A <see cref="string"/> containing the short hand instruction key identifier (e.g. XIC/OTe).
+    /// For AOI this is the name of the component.
+    /// </value>
+    public string Key { get; }
+
+    /// <summary>
     /// The signature or valid regex pattern of the instruction neutral text.
     /// </summary>
     /// <remarks>
     /// This format string represent a regex capture pattern to help parse <see cref="NeutralText"/> for the instruction.
     /// </remarks>
-    public string Signature { get; }
+    public string Signature => $"({string.Join(',', Arguments.AsEnumerable())})";
 
     /// <summary>
-    /// Indicates whether the instruction is destructive, meaning the instruction assigns value to it's operands.
+    /// The <see cref="NeutralText"/> representation of the instruction.
     /// </summary>
-    /// <value><c>true</c> if the instruction is destructive; Otherwise, <c>false</c>.</value>
-    public bool Destructive { get; }
+    /// <value>A <see cref="NeutralText"/> instance that represents the instruction in Logix neutral text format.</value>
+    public NeutralText Text => new($"{Key}{Signature}");
+    
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj)) return true;
+
+        return obj switch
+        {
+            Instruction other => Key.IsEquivalent(other.Key),
+            string key => Key.IsEquivalent(key),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => Key.GetHashCode();
+    
+    /// <summary>
+    /// Determines the the provided <see cref="Instruction"/> has the same.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool IsEquivalent(Instruction? other) => other is not null && Text.Equals(other.Text);
+
+    /// <summary>
+    /// Creates a <see cref="Instruction"/> that represents the current instruction with the provided
+    /// argument values.
+    /// </summary>
+    /// <param name="arguments">The collection of arguments that are provided to the instruction signature.</param>
+    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
+    public Instruction Of(params Argument[] arguments) => new(Key, arguments);
+
+    /// <summary>
+    /// Parses the provided string neutral text into a <see cref="Instruction"/> instance.
+    /// </summary>
+    /// <param name="text">The neutral text to parse.</param>
+    /// <returns>A <see cref="Instruction"/> object representing the parsed text.</returns>
+    /// <exception cref="ArgumentException"><c>text</c> is null or empty.</exception>
+    public static Instruction Parse(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            throw new ArgumentException("Instruction text cannot be null or empty.", nameof(text));
+
+        if (!Regex.IsMatch(text, Pattern))
+            throw new FormatException("Instruction text must be in the format of 'KEY(ARGUMENTS)'.");
+
+        var key = text[..text.IndexOf('(')];
+        var signature = Regex.Match(text, SignaturePattern).Value[1..^1];
+        var arguments = Regex.Split(signature, ",(?![^[]*])").Select(Argument.Parse).ToArray();
+        
+        return new Instruction(key, arguments);
+    }
+
+    /// <inheritdoc />
+    public override string ToString() => Key;
+
+    /// <summary>
+    /// Returns a collection of all known or defined <see cref="Instruction"/> instances.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="IEnumerable{T}"/> containing all known <see cref="Instruction"/> instances with no arguments.
+    /// </returns>
+    public static IEnumerable<string> Keys() => _known.Value.Keys.AsEnumerable();
+
+    /// <summary>
+    /// Returns a collection of all known or defined <see cref="Instruction"/> instances.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="IEnumerable{T}"/> containing all known <see cref="Instruction"/> instances with no arguments.
+    /// </returns>
+    public static IEnumerable<Instruction> Known() => _known.Value.Values.AsEnumerable();
+
+    /// <summary>
+    /// Implicitly converts the <see cref="Instruction"/> instance to a <see cref="string"/> value.
+    /// </summary>
+    /// <param name="instruction">The instruction to convert.</param>
+    /// <returns>A <see cref="string"/> representing the instrcution key.</returns>
+    public static implicit operator string(Instruction instruction) => instruction.Key;
+
+    /// <summary>
+    /// Explicitly converts the <see cref="string"/> value to an <see cref="Instruction"/> instance.
+    /// </summary>
+    /// <param name="key">The string key of the instrution.</param>
+    /// <returns></returns>
+    public static implicit operator Instruction(string key) => new(key);
+
+    /// <summary>
+    /// Determines the equality of two <see cref="Instruction"/> instances.
+    /// </summary>
+    /// <param name="left">The left <see cref="Instruction"/> to compare.</param>
+    /// <param name="right">The right <see cref="Instruction"/> to compare.</param>
+    /// <returns><c>true</c> if the values are equal; Otherwise, <c>false</c>.</returns>
+    public static bool operator ==(Instruction? left, Instruction? right) => Equals(left, right);
+
+    /// <summary>
+    /// Determines the equality of two <see cref="Instruction"/> instances.
+    /// </summary>
+    /// <param name="left">The left <see cref="Instruction"/> to compare.</param>
+    /// <param name="right">The right <see cref="Instruction"/> to compare.</param>
+    /// <returns><c>true</c> if the values are not equal; Otherwise, <c>false</c>.</returns>
+    public static bool operator !=(Instruction? left, Instruction? right) => !Equals(left, right);
+
+    #region Instructions
 
     /// <summary>
     /// Gets the <c>ABL</c> instruction definition instance.
@@ -411,12 +551,12 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <summary>
     /// Gets the <c>GEQ</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction GEQ = new(nameof(GEQ), false);
+    public static readonly Instruction GEQ = new(nameof(GEQ));
 
     /// <summary>
     /// Gets the <c>GRT</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction GRT = new(nameof(GRT), false);
+    public static readonly Instruction GRT = new(nameof(GRT));
 
     /// <summary>
     /// Gets the <c>GSV</c> instruction definition instance.
@@ -461,12 +601,12 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <summary>
     /// Gets the <c>LEQ</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction LEQ = new(nameof(LEQ), false);
+    public static readonly Instruction LEQ = new(nameof(LEQ));
 
     /// <summary>
     /// Gets the <c>LES</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction LES = new(nameof(LES), false);
+    public static readonly Instruction LES = new(nameof(LES));
 
     /// <summary>
     /// Gets the <c>LFL</c> instruction definition instance.
@@ -481,7 +621,7 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <summary>
     /// Gets the <c>LIM</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction LIM = new(nameof(LIM), false);
+    public static readonly Instruction LIM = new(nameof(LIM));
 
     /// <summary>
     /// Gets the <c>LN</c> instruction definition instance.
@@ -661,7 +801,7 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <summary>
     /// Gets the <c>MEQ</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction MEQ = new(nameof(MEQ), false);
+    public static readonly Instruction MEQ = new(nameof(MEQ));
 
     /// <summary>
     /// Gets the <c>MGS</c> instruction definition instance.
@@ -756,7 +896,7 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <summary>
     /// Gets the <c>NEQ</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction NEQ = new(nameof(NEQ), false);
+    public static readonly Instruction NEQ = new(nameof(NEQ));
 
     /// <summary>
     /// Gets the <c>NOP</c> instruction definition instance.
@@ -1046,12 +1186,12 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// <summary>
     /// Gets the <c>XIC</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction XIC = new(nameof(XIC), false);
+    public static readonly Instruction XIC = new(nameof(XIC));
 
     /// <summary>
     /// Gets the <c>XIO</c> instruction definition instance.
     /// </summary>
-    public static readonly Instruction XIO = new(nameof(XIO), false);
+    public static readonly Instruction XIO = new(nameof(XIO));
 
     /// <summary>
     /// Gets the <c>XOR</c> instruction definition instance.
@@ -1063,21 +1203,34 @@ public sealed class Instruction : LogixEnum<Instruction, string>
     /// </summary>
     public static readonly Instruction XPY = new(nameof(XPY));
 
+    #endregion
+    
     /// <summary>
-    /// Creates a <see cref="Instruction"/> that represents the current instruction with the provided
-    /// argument values.
+    /// List of known instrcution keys to used to determine if a given instruction is destructive.
     /// </summary>
-    /// <param name="arguments">The collection of arguments that are provided to the instruction signature.</param>
-    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
-    public Instruction Of(params Argument[] arguments) => new(Name, Destructive, arguments);
+    private static List<string> ConditionalKeys() => new()
+    {
+        nameof(CMP), nameof(EQU), nameof(GEQ), nameof(GRT),nameof(LEQ), nameof(LES),
+        nameof(LIM), nameof(MEQ), nameof(NEQ), nameof(XIC),nameof(XIO)
+    };
 
     /// <summary>
-    /// Returns the current <c>Instruction</c> as a <see cref="NeutralText"/> value using the current key and arguments.
+    /// Lazy list of all known instructions.
     /// </summary>
-    /// <returns>A <see cref="NeutralText"/> value for the current instruction instance.</returns>
-    public NeutralText ToText()
+    private static Lazy<Dictionary<string, Instruction>> _known =>
+        new(() => GetInstructionFields().ToDictionary(i => i.Key, StringComparer.OrdinalIgnoreCase),
+            LazyThreadSafetyMode.ExecutionAndPublication);
+
+    /// <summary>
+    /// Returns all defined instructions members for the provided type.
+    /// </summary>
+    private static IEnumerable<Instruction> GetInstructionFields()
     {
-        var signamture = string.Join(',', Arguments.AsEnumerable());
-        return new NeutralText($"{Name}({signamture})");
+        var type = typeof(Instruction);
+
+        return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            .Where(f => type.IsAssignableFrom(f.FieldType))
+            .Select(f => (Instruction) f.GetValue(null))
+            .ToList();
     }
 }

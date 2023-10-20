@@ -23,19 +23,9 @@ public class Keyword : LogixEnum<Keyword, string>
     public static readonly Keyword Case = new(nameof(Case), "case");
     
     /// <summary>
-    /// Represents the Comma Logix <see cref="Keyword"/>.
-    /// </summary>
-    public static readonly Keyword Comma = new(nameof(Comma), ",");
-    
-    /// <summary>
     /// Represents the Do Logix <see cref="Keyword"/>.
     /// </summary>
     public static readonly Keyword Do = new(nameof(Do), "do");
-    
-    /// <summary>
-    /// Represents the Dot Logix <see cref="Keyword"/>.
-    /// </summary>
-    public static readonly Keyword Period = new(nameof(Period), ".");
     
     /// <summary>
     /// Represents the Else Logix <see cref="Keyword"/>.
@@ -93,16 +83,6 @@ public class Keyword : LogixEnum<Keyword, string>
     public static readonly Keyword If = new(nameof(If), "if");
     
     /// <summary>
-    /// Represents the LeftBracket Logix <see cref="Keyword"/>.
-    /// </summary>
-    public static readonly Keyword LeftBracket = new(nameof(LeftBracket), "[");
-    
-    /// <summary>
-    /// Represents the LeftParenthesis Logix <see cref="Keyword"/>.
-    /// </summary>
-    public static readonly Keyword LeftParenthesis = new(nameof(LeftParenthesis), ")");
-    
-    /// <summary>
     /// Represents the Of Logix <see cref="Keyword"/>.
     /// </summary>
     public static readonly Keyword Of = new(nameof(Of), "of");
@@ -116,16 +96,6 @@ public class Keyword : LogixEnum<Keyword, string>
     /// Represents the Return Logix <see cref="Keyword"/>.
     /// </summary>
     public static readonly Keyword Return = new(nameof(Return), "return");
-    
-    /// <summary>
-    /// Represents the RightBracket Logix <see cref="Keyword"/>.
-    /// </summary>
-    public static readonly Keyword RightBracket = new(nameof(RightBracket), "]");
-    
-    /// <summary>
-    /// Represents the RightParenthesis Logix <see cref="Keyword"/>.
-    /// </summary>
-    public static readonly Keyword RightParenthesis = new(nameof(RightParenthesis), ")");
     
     /// <summary>
     /// Represents the Then Logix <see cref="Keyword"/>.

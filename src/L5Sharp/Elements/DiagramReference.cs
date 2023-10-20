@@ -66,7 +66,7 @@ public class DiagramReference : DiagramElement
     /// <inheritdoc />
     public override IEnumerable<LogixReference> References()
     {
-        if (Operand is not null && Operand.IsTagName())
+        if (Operand is not null && Operand.IsTag())
         {
             yield return new LogixReference(Element, Operand, L5XName.Tag);
         }

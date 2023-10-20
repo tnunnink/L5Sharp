@@ -1,16 +1,26 @@
-﻿using AutoFixture;
+﻿using System.Text;
+using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Common;
-using L5Sharp.Enums;
 
 namespace L5Sharp.Tests.Common
 {
     [TestFixture]
     public class NeutralTextTests
     {
-        private const string TestText =
+        private const string Test01 =
             "[MOV(10,Constant),MOV(0.3,Exponent),GRT(Calculated,0)CPT(Error_SP,( Constant * Calculated ** Exponent) / Calculated * 100),LEQ(Calculated,0)MOV(0,Error_SP)];";
 
+        private const string Test02 =
+            "GRT(SimpleInt,400)XIO(MultiDimensionalArray[1,3].3)CMP(ATN(_Test) > 1.0)[TON(TimerArray[0],?,?),OTU(TestComplexTag.SimpleMember.BoolMember)];";
+        
+
+        [Test]
+        public void Method_Scenario_ExpectedBehavior()
+        {
+           
+        }
+        
         [Test]
         public void New_NullText_ShouldThrowArgumentNullException()
         {
@@ -18,11 +28,11 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void New_EmptyString_ShouldBeEqualToEmpty()
+        public void New_EmptyString_ShouldBeSemiColon()
         {
             var text = new NeutralText(string.Empty);
 
-            text.Should().BeEquivalentTo(NeutralText.Empty);
+            text.ToString().Should().Be(";");
         }
 
         [Test]
@@ -42,7 +52,15 @@ namespace L5Sharp.Tests.Common
 
             text.Should().NotBeNull();
         }
-
+        
+        [Test]
+        public void IsBalanced_ValidText_ShouldBeTrue()
+        {
+            var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
+            
+            text.IsBalanced.Should().BeTrue();
+        }
+        
         [Test]
         public void IsBalanced_Unbalanced_ShouldBeFalse()
         {
@@ -50,29 +68,13 @@ namespace L5Sharp.Tests.Common
 
             text.IsBalanced.Should().BeFalse();
         }
-
+        
         [Test]
         public void IsBalanced_TestText_ShouldBeTrue()
         {
-            var text = new NeutralText(TestText);
+            var text = new NeutralText(Test01);
 
             text.IsBalanced.Should().BeTrue();
-        }
-
-        [Test]
-        public void IsInstruction_TestText_ShouldBeFalse()
-        {
-            var text = new NeutralText(TestText);
-
-            text.IsSingle.Should().BeFalse();
-        }
-
-        [Test]
-        public void IsInstruction_SingleInstruction_ShouldBeTrue()
-        {
-            var text = new NeutralText("XIC(SomeTag)");
-
-            text.IsSingle.Should().BeTrue();
         }
 
         [Test]
@@ -84,128 +86,129 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void ContainsKey_Empty_ShouldBeFalse()
+        public void Contains_HasEmptyText_ShouldBeFalse()
         {
             var text = NeutralText.Empty;
 
-            var result = text.Contains("XIC");
+            var result = text.Contains("XIC(Tag.Status.Enabled)");
 
             result.Should().BeFalse();
         }
 
         [Test]
-        public void ContainsKey_ValidInstruction_ShouldBeTrue()
+        public void Contains_HasInstructionText_ShouldBeTrue()
         {
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.Contains("XIC");
+            var result = text.Contains("XIC(Tag.Status.Enabled)");
 
             result.Should().BeTrue();
         }
 
         [Test]
-        public void ContainsKey_CustomInstruction_ShouldBeTrue()
+        public void Contains_HasTagName_ShouldBeTrue()
         {
             var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.Contains("aoiTIMER");
+            var result = text.Contains("Tag.Status.Enabled");
 
             result.Should().BeTrue();
         }
-
+        
         [Test]
-        public void ContainsSignature_Empty_ShouldBeFalse()
+        public void Instructions_Empty_ShouldBeEmpty()
         {
             var text = NeutralText.Empty;
 
-            var result = text.Contains(Instruction.XIC);
+            var result = text.Instructions();
 
-            result.Should().BeFalse();
+            result.Should().BeEmpty();
         }
-
+        
         [Test]
-        public void ContainsSignature_ValidInstruction_ShouldBeTrue()
-        {
-            var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
-
-            var result = text.Contains(Instruction.XIC);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ContainsText_Empty_ShouldBeFalse()
-        {
-            var text = NeutralText.Empty;
-
-            var result = text.Contains((NeutralText) "XIC(Tag.Status.Enabled)");
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ContainsText_ValidTagName_ShouldBeTrue()
-        {
-            var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
-
-            var result = text.Contains((NeutralText) "XIC(Tag.Status.Enabled)");
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ContainsTag_Empty_ShouldBeFalse()
-        {
-            var text = NeutralText.Empty;
-
-            var result = text.Contains(new TagName("Tag.Status.Enabled"));
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ContainsTag_ValidTagName_ShouldBeTrue()
-        {
-            var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
-
-            var result = text.Contains(new TagName("Tag.Status.Enabled"));
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void Split_SimpleTextWithMultipleInstruction_ShouldHaveExpectedCount()
+        public void Instructions_SimpleTextWithMultipleInstruction_ShouldHaveExpectedCount()
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
 
-            var instructions = text.Split();
+            var instructions = text.Instructions();
 
             instructions.Should().HaveCount(3);
         }
 
         [Test]
-        public void Split_SingleInstruction_ShouldHaveExpectedCount()
+        public void Instructions_SingleInstruction_ShouldHaveExpectedCount()
         {
             var text = new NeutralText("XIC(SomeBit)");
 
-            var instructions = text.Split();
+            var instructions = text.Instructions();
 
             instructions.Should().HaveCount(1);
         }
 
         [Test]
-        public void Split_SingleInstruction_ShouldEqualOriginal()
+        public void Instructions_CustomInstructions_ReturnsExpected()
+        {
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+
+            var instructions = text.Instructions();
+
+            instructions.Should().HaveCount(4);
+        }
+
+        [Test]
+        public void Instructions_SingleInstruction_ShouldEqualOriginal()
         {
             var text = new NeutralText("XIC(SomeBit)");
 
-            var result = text.Split();
+            var result = text.Instructions();
 
             result.First().Should().BeEquivalentTo(text);
+        }
+        
+        [Test]
+        public void InstructionsBy_WithExistingInstructionPresent_ShouldContainExpectedText()
+        {
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.Instructions(Instruction.XIC).ToList();
+
+            result.Should().Contain("XIC(Tag.Status.Active)");
+            result.Should().Contain("XIC(Tag.Status.Enabled)");
+        }
+
+        [Test]
+        public void InstructionsBy_WithExistingInstructionPresent_ShouldHaveExpectedCount()
+        {
+            var text = new NeutralText(
+                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+
+            var result = text.Instructions(Instruction.XIC);
+
+            result.Should().HaveCount(2);
+        }
+        
+        [Test]
+        public void Keywords_TextWithKeywords_ShouldHaveExpectedCount()
+        {
+            var text = new NeutralText("if Tag >= 10 then");
+            
+            var keywords = text.Keywords().ToList();
+            
+            keywords.Should().HaveCount(2);
+        }
+
+        [Test]
+        public void Keywords_TextWithNoKeywords_ShouldBeEmpty()
+        {
+            var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
+            
+            var keywords = text.Keywords().ToList();
+            
+            keywords.Should().BeEmpty();
         }
 
         [Test]
@@ -227,170 +230,7 @@ namespace L5Sharp.Tests.Common
 
             tagNames.Should().HaveCount(1);
         }
-
-        [Test]
-        public void Split_WithExistingInstructionPresent_ShouldContainExpectedText()
-        {
-            var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
-
-            var result = text.SplitBy(Instruction.XIC).ToList();
-
-            result.Should().Contain("XIC(Tag.Status.Active)");
-            result.Should().Contain("XIC(Tag.Status.Enabled)");
-        }
-
-        [Test]
-        public void Split_WithExistingInstructionPresent_ShouldHaveExpectedCount()
-        {
-            var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
-
-            var result = text.SplitBy(Instruction.XIC);
-
-            result.Should().HaveCount(2);
-        }
-
-        [Test]
-        public void Operands_Empty_ShouldBeEmpty()
-        {
-            var text = NeutralText.Empty;
-
-            var result = text.Operands();
-
-            result.Should().BeEmpty();
-        }
-
-        [Test]
-        public void Operands_WhenCalled_ReturnsExpectedCount()
-        {
-            var text = new NeutralText(TestText);
-
-            var operands = text.Operands();
-
-            operands.Should().HaveCount(12);
-        }
-
-        [Test]
-        public void OperandsByKey_Default_ReturnsExpectedCount()
-        {
-            var text = new NeutralText(TestText);
-
-            var results = text.OperandsByKey().ToList();
-
-            results.Should().HaveCount(6);
-
-            foreach (var pair in results)
-            {
-                pair.Key.Should().NotBeEmpty();
-                pair.Value.Should().NotBeEmpty();
-            }
-        }
-
-        [Test]
-        public void OperandsByKey_MOV_ReturnsExpectedCount()
-        {
-            var text = new NeutralText(TestText);
-
-            var results = text.OperandsByKey(Instruction.MOV).ToList();
-
-            results.Should().HaveCount(3);
-
-            foreach (var pair in results)
-            {
-                pair.Key.Should().Be(Instruction.MOV);
-                pair.Value.Should().HaveCount(2);
-            }
-        }
-
-        [Test]
-        public void OperandsByKey_stringMOV_ReturnsExpectedCount()
-        {
-            var text = new NeutralText(TestText);
-
-            var results = text.OperandsByKey("MOV").ToList();
-
-            results.Should().HaveCount(3);
-
-            foreach (var pair in results)
-            {
-                pair.Key.Should().Be(Instruction.MOV);
-                pair.Value.Should().HaveCount(2);
-            }
-        }
-
-        [Test]
-        public void Instructions_WhenCalled_ReturnsExpected()
-        {
-            var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
-
-            var instructions = text.Instructions();
-
-            instructions.Should().HaveCount(4);
-        }
-
-        [Test]
-        public void Instructions_Empty_ShouldBeEmpty()
-        {
-            var text = NeutralText.Empty;
-
-            var result = text.Instructions();
-
-            result.Should().BeEmpty();
-        }
-
-        [Test]
-        public void Instructions_CustomInstructions_ReturnsExpected()
-        {
-            var text = new NeutralText(
-                "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
-
-            var instructions = text.Instructions();
-
-            instructions.Should().HaveCount(4);
-        }
-
-        [Test]
-        public void Keys_Empty_ShouldBeEmpty()
-        {
-            var text = NeutralText.Empty;
-
-            var result = text.Keys();
-
-            result.Should().BeEmpty();
-        }
-
-        [Test]
-        public void Keys_ValidInstructions_ShouldReturnExpectedCount()
-        {
-            var text = new NeutralText(TestText);
-
-            var result = text.Keys();
-
-            result.Should().HaveCount(6);
-        }
-
-        [Test]
-        public void References()
-        {
-            var text = new NeutralText(TestText);
-
-            var references = text.References().ToList();
-
-            references.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void ReferencesArrayTest()
-        {
-            var text = new NeutralText("MOV(Archive_Previous_Daily_Mtr09.CLOSE_TIME,Daily_CloseTime_LS[8])");
-
-            var references = text.References().ToList();
-
-            references.Should().NotBeEmpty();
-        }
-
+        
         [Test]
         public void HasPattern_ConcatenatedXICOTE_ShouldBeTrue()
         {
@@ -400,28 +240,6 @@ namespace L5Sharp.Tests.Common
             var result = text.HasPattern(string.Concat(Instruction.XIC.Signature, Instruction.OTE.Signature));
 
             result.Should().BeTrue();
-        }
-
-        [Test]
-        public void SplitBy_ValidPattern_ShouldWork()
-        {
-            var text = new NeutralText(
-                "[XIC(Input_Data.Pt00.Data)OTE(Ch0.ChData),XIC(Input_Data.Pt00.Fault)OTE(Ch0.ChFault)];");
-
-            var result = text.SplitBy(string.Concat(Instruction.XIC.Signature, Instruction.OTE.Signature)).ToList();
-
-            result.Should().HaveCount(2);
-        }
-
-        [Test]
-        public void Operands_CptInstruction_ShouldHaveCountTwo()
-        {
-            var text = new NeutralText(
-                "CPT(UDT.alg_Value,((ai_Signal - UDT.sp_RawMin) / (UDT.sp_RawMax - UDT.sp_RawMin)) * (UDT.sp_EUMax - UDT.sp_EUMin) + UDT.sp_EUMin);");
-
-            var operands = text.Operands().ToList();
-
-            operands.Should().HaveCount(2);
         }
         
         [Test]
@@ -438,10 +256,8 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText("SimpleBool := TestComplexTag.SimpleMember.BoolMember;");
 
             text.IsEmpty.Should().BeFalse();
-            text.IsSingle.Should().BeFalse();
             text.IsBalanced.Should().BeTrue();
             text.Instructions().Should().BeEmpty();
-            text.Keys().Should().BeEmpty();
             text.Tags().Should().HaveCount(2);
         }
     }

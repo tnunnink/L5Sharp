@@ -7,18 +7,6 @@ namespace L5Sharp.Tests.Enums;
 public class KeywordTests
 {
     [Test]
-    public void RightBracket_WhenCalled_ShouldNotBeNull()
-    {
-        Keyword.RightBracket.Should().NotBeNull();
-    }
-
-    [Test]
-    public void BracketOpen_WhenCalled_ShouldNotBeNull()
-    {
-        Keyword.LeftBracket.Should().NotBeNull();
-    }
-
-    [Test]
     public void By_WhenCalled_ShouldNotBeNull()
     {
         Keyword.By.Should().NotBeNull();
@@ -31,21 +19,9 @@ public class KeywordTests
     }
 
     [Test]
-    public void Comma_WhenCalled_ShouldNotBeNull()
-    {
-        Keyword.Comma.Should().NotBeNull();
-    }
-
-    [Test]
     public void Do_WhenCalled_ShouldNotBeNull()
     {
         Keyword.Do.Should().NotBeNull();
-    }
-
-    [Test]
-    public void Dot_WhenCalled_ShouldNotBeNull()
-    {
-        Keyword.Period.Should().NotBeNull();
     }
 
     [Test]
@@ -107,61 +83,55 @@ public class KeywordTests
     {
         Keyword.Goto.Should().NotBeNull();
     }
-    
+
     [Test]
     public void If_WhenCalled_ShouldNotBeNull()
     {
         Keyword.If.Should().NotBeNull();
     }
-    
+
     [Test]
     public void Of_WhenCalled_ShouldNotBeNull()
     {
         Keyword.Of.Should().NotBeNull();
     }
-    
-    [Test]
-    public void Parenthesis_WhenCalled_ShouldNotBeNull()
-    {
-        Keyword.LeftParenthesis.Should().NotBeNull();
-    }
-    
+
     [Test]
     public void Repeat_WhenCalled_ShouldNotBeNull()
     {
         Keyword.Repeat.Should().NotBeNull();
     }
-    
+
     [Test]
     public void Return_WhenCalled_ShouldNotBeNull()
     {
         Keyword.Return.Should().NotBeNull();
     }
-    
+
     [Test]
     public void Then_WhenCalled_ShouldNotBeNull()
     {
         Keyword.Then.Should().NotBeNull();
     }
-    
+
     [Test]
     public void This_WhenCalled_ShouldNotBeNull()
     {
         Keyword.This.Should().NotBeNull();
     }
-    
+
     [Test]
     public void To_WhenCalled_ShouldNotBeNull()
     {
         Keyword.To.Should().NotBeNull();
     }
-    
+
     [Test]
     public void Until_WhenCalled_ShouldNotBeNull()
     {
         Keyword.Until.Should().NotBeNull();
     }
-    
+
     [Test]
     public void While_WhenCalled_ShouldNotBeNull()
     {

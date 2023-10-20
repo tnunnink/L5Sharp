@@ -78,11 +78,11 @@ public class DiagramRoutine : DiagramElement
             yield return new LogixReference(Element, Routine, L5XName.Routine);
         
         foreach (var parameter in In)
-            if (parameter.IsTagName())
+            if (parameter.IsTag())
                 yield return new LogixReference(Element, parameter, L5XName.Tag);
         
         foreach (var parameter in Ret)
-            if (parameter.IsTagName())
+            if (parameter.IsTag())
                 yield return new LogixReference(Element, parameter, L5XName.Tag);
     }
 }
