@@ -81,4 +81,18 @@ public class L5XTemplateTests
 
         components.Should().NotBeEmpty();
     }
+
+    [Test]
+    public void Find_Tags_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        var components = content.Find(typeof(Tag)).Cast<Tag>().SelectMany(t => t.Members()).ToList();
+        stopwatch.Stop();
+
+        Console.WriteLine(stopwatch.Elapsed);
+        components.Should().NotBeEmpty();
+    }
 }

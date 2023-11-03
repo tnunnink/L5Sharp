@@ -306,7 +306,7 @@ public class L5XDataTypeTests
 
         component.Name = "NewType";
 
-        var result = content.Get<DataType>("NewType");
+        var result = content.GetComponent<DataType>("NewType");
         result.Should().NotBeNull();
     }
 
@@ -314,7 +314,7 @@ public class L5XDataTypeTests
     public void Dependencies_AttachedHasDependencies_ShouldNotBeEmpty()
     {
         var file = L5X.Load(Known.Test);
-        var dataType = file.Get<DataType>("ComplexType")!;
+        var dataType = file.GetComponent<DataType>("ComplexType")!;
 
         var dependencies = dataType.Dependencies().ToList();
 

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -52,59 +54,28 @@ public abstract class LogixCode : LogixElement, ILogixReferencable
         get => GetValue<int>();
         set => SetValue(value);
     }
-
-    /// <summary>
-    /// The location of the code within the L5X tree. This could be different for each code type, but generally
-    /// will be the <c>Rung</c>, <c>Line</c>, or <c>Sheet</c> number within the containing routine.
-    /// </summary>
-    public virtual string Location => $"{Element.Name.LocalName} {Number}";
     
     /// <summary>
-    /// The scope name of the logix code, indicating the program or instruction for which it is contained.
+    /// 
     /// </summary>
-    /// <value> A <see cref="string"/> representing the name of the program or instruction in which this code
-    /// is contained. If the code has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
-    /// code is not attached to a L5X tree, then this returns an empty string.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML of a code element (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify code within the L5X file.
-    /// </para>
-    /// </remarks>
-    public string ScopeName => Scope.ScopeName(Element);
-    
-    /// <summary>
-    /// The scope of the <c>LogixCode</c>, indicating whether it is a program scoped or instruction scoped
-    /// code element, or neither (not attached to L5X tree).
-    /// </summary>
-    /// <value>A <see cref="Enums.Scope"/> option indicating the scope type for the element.</value>
-    /// <remarks>
-    /// <para>
-    /// The scope of this element is determined from the ancestors of the underlying element. If the ancestor is
-    /// program element first, it is <c>Program</c> scoped. If the ancestor is a instruction element first, it is
-    /// <c>Instruction</c> scoped. If no ancestor is found, we assume the element has <c>Null</c> scope,
-    /// meaning it is not attached to a L5X tree.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML of a component (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify components within the L5X file.
-    /// </para>
-    /// </remarks>
-    public Scope ScopeType => Scope.ScopeType(Element);
+    public virtual string Identifier => $"{L5XType} {Number}".Trim();
 
     /// <summary>
-    /// The name of the <c>Routine</c> that contains this code element.
+    /// The the parent <see cref="Components.Routine"/> component for the current <c>LogixCode</c> element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the name of the <c>Routine</c> if found; Otherwise, and empty string.</value>
-    public string Routine => Element.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
+    public Routine? Routine
+    {
+        get
+        {
+            var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
+            return routine is not null ? new Routine(routine) : default;
+        }
+    }
 
     /// <summary>
-    /// Returns a collection of <see cref="LogixReference"/> objects found within this code element.
+    /// Returns a collection of <see cref="CrossReference"/> objects found within this code element.
     /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="LogixReference"/> values contained by this code.</returns>
-    public abstract IEnumerable<LogixReference> References();
+    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CrossReference"/> values contained by this code.</returns>
+    public abstract IEnumerable<CrossReference> References();
 }

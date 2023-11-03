@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A Logix <c>Sheet</c> element containing the properties for a L5X Sheet element.
+/// A Logix <c>Sheet</c> block containing the properties for a L5X Sheet block.
 /// </summary>
 /// <remarks>
 /// A <c>Sheet</c> implements <see cref="LogixCode"/> and is the type of content that FBD routines contain.
@@ -29,7 +30,8 @@ namespace L5Sharp.Elements;
 ///         have a unique ID number within that sheet.<br/>
 /// </para>
 /// </remarks>
-public class Sheet : LogixCode
+[L5XType(L5XName.Sheet, L5XName.FBDContent)]
+public class Sheet : Diagram<FunctionBlock>
 {
     /// <summary>
     /// Creates a new <see cref="Sheet"/> with default values.
@@ -42,13 +44,13 @@ public class Sheet : LogixCode
     /// Creates a new <see cref="Sheet"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    /// <exception cref="ArgumentNullException"><c>block</c> is null.</exception>
     public Sheet(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// The description of the <see cref="Sheet"/> element.
+    /// The description of the <see cref="Sheet"/> block.
     /// </summary>
     /// <value>A <see cref="string"/> containing the description if it exists; Otherwise, <c>null</c></value>
     public string? Description
@@ -57,85 +59,41 @@ public class Sheet : LogixCode
         set => SetDescription(value);
     }
 
-    /// <summary>
-    /// The collection of <c>IRef</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramReference> InputReferences => new(Element, L5XName.IRef);
+    /// <inheritdoc />
+    public override IEnumerable<CrossReference> References()
+    {
+        var references = new List<CrossReference>();
+        references.AddRange(Blocks<ReferenceBlock>().SelectMany(r => r.References()));
+        references.AddRange(Blocks<Block>().SelectMany(r => r.References()));
+        references.AddRange(Blocks<AddOnInstructionBlock>().SelectMany(r => r.References()));
+        references.AddRange(Blocks<JsrBlock>().SelectMany(r => r.References()));
+        return references;
+    }
 
-    /// <summary>
-    /// The collection of <c>ORef</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramReference> OutputReferences => new(Element, L5XName.ORef);
-
-    /// <summary>
-    /// The collection of <c>ICon</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramConnector> InputConnectors => new(Element, L5XName.ICon);
-
-    /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramConnector> OutputConnectors => new(Element, L5XName.OCon);
-
-    /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramBlock> Blocks => new(Element, L5XName.Block);
-
-    /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramFunction> Functions => new(Element, L5XName.Function);
-
-    /// <summary>
-    /// The collection of <c>DiagramInstruction</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramInstruction> AddOnInstructions => new(Element, L5XName.AddOnInstruction);
-
-    /// <summary>
-    /// The collection of <c>DiagramRoutine</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramRoutine> JumpRoutines => new(Element, L5XName.JSR);
-
-    /// <summary>
-    /// The collection of <c>DiagramRoutine</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramRoutine> SubRoutines => new(Element, L5XName.SBR);
-
-    /// <summary>
-    /// The collection of <c>DiagramRoutine</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramRoutine> Returns => new(Element, L5XName.RET);
-
-    /// <summary>
-    /// The collection of <c>DiagramWire</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramWire> Wires => new(Element, L5XName.Wire);
-
-    /// <summary>
-    /// The collection of <c>DiagramText</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramText> TextBoxes => new(Element, L5XName.TextBox);
-
-    /// <summary>
-    /// The collection of <c>OCon</c> elements within the <see cref="Sheet"/>.
-    /// </summary>
-    public LogixContainer<DiagramAttachment> Attachments => new(Element, L5XName.Attachment);
+    public override void Connect(uint fromId, uint toId)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixReference> References()
+    protected override IEnumerable<string> Ordering()
     {
-        var references = new List<LogixReference>();
-        
-        references.AddRange(InputReferences.SelectMany(r => r.References()));
-        references.AddRange(OutputReferences.SelectMany(r => r.References()));
-        references.AddRange(Blocks.SelectMany(r => r.References()));
-        references.AddRange(Functions.SelectMany(r => r.References()));
-        references.AddRange(AddOnInstructions.SelectMany(r => r.References()));
-        references.AddRange(JumpRoutines.SelectMany(r => r.References()));
-        references.AddRange(SubRoutines.SelectMany(r => r.References()));
-        references.AddRange(Returns.SelectMany(r => r.References()));
-        
-        return references;
+        return new List<string>
+        {
+            L5XName.IRef,
+            L5XName.ORef,
+            L5XName.ICon,
+            L5XName.OCon,
+            L5XName.Block,
+            L5XName.Function,
+            L5XName.AddOnInstruction,
+            L5XName.JSR,
+            L5XName.SBR,
+            L5XName.Ret,
+            L5XName.Wire,
+            L5XName.FeedbackWire,
+            L5XName.TextBox,
+            L5XName.Attachment
+        };
     }
 }

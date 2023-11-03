@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using L5Sharp.Common;
+using L5Sharp.Components;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -14,7 +16,7 @@ namespace L5Sharp.Elements;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.Member)]
+[L5XType(L5XName.Member, L5XName.Members)]
 public class DataTypeMember : LogixElement
 {
     /// <summary>
@@ -156,4 +158,17 @@ public class DataTypeMember : LogixElement
         get => GetValue<int>();
         set => SetValue(value);
     }
+
+    //Extensions represent properties or methods of a logix element that are not inherent in the underlying XML,
+    //but ones that add value for ease of navigation or retrieval of information.
+    #region Extensions
+
+    /// <summary>
+    /// Gets the parent <see cref="Components.DataType"/> component that this <c>Member</c> is contained by. If this
+    /// <c>Member</c> is not contained or attached to a <c>L5X</c> document, this returns <c>null</c>.
+    /// </summary>
+    /// <value>A <see cref="Components.DataType"/> representing the parent type for this <c>Member</c>.</value>
+    public DataType? Parent => GetParent<DataType>();
+
+    #endregion
 }

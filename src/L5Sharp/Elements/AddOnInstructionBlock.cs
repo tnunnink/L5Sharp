@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A <c>DiagramElement</c> type that defines the properties for instances of an Add-On Instruction within a
+/// A <c>DiagramBlock</c> type that defines the properties for instances of an Add-On Instruction within a
 /// Function Block Diagram (FBD).
 /// </summary>
 /// <remarks>
@@ -17,26 +18,26 @@ namespace L5Sharp.Elements;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.AddOnInstruction, L5XName.Sheet)]
-public class DiagramInstruction : DiagramElement
+public class AddOnInstructionBlock : FunctionBlock
 {
     /// <summary>
-    /// Creates a new <see cref="DiagramInstruction"/> with default values.
+    /// Creates a new <see cref="AddOnInstructionBlock"/> with default values.
     /// </summary>
-    public DiagramInstruction()
+    public AddOnInstructionBlock()
     {
     }
 
     /// <summary>
-    /// Creates a new <see cref="DiagramInstruction"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="AddOnInstructionBlock"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public DiagramInstruction(XElement element) : base(element)
+    public AddOnInstructionBlock(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// The name of the Add-On Instruction this <c>DiagramInstruction</c> represents.
+    /// The name of the Add-On Instruction this <c>AoiBlock</c> represents.
     /// </summary>
     /// <value>A <see cref="string"/> containing the name if it exists; Otherwise, <c>null</c>.</value>
     public string? Name
@@ -46,7 +47,7 @@ public class DiagramInstruction : DiagramElement
     }
 
     /// <summary>
-    /// The backing tag name for the <c>DiagramInstruction</c> instance.
+    /// The backing tag name for the <c>AoiBlock</c> instance.
     /// </summary>
     /// <value>A <see cref="string"/> containing the tag name if it exists; Otherwise, <c>null</c>.</value>
     public string? Operand
@@ -56,20 +57,15 @@ public class DiagramInstruction : DiagramElement
     }
 
     /// <summary>
-    /// A collection of pin names that are visible for the <c>DiagramInstruction</c>.
+    /// A collection of pin names that are visible for the <c>AoiBlock</c>.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing the names of the pins if found. If not found then an
     /// empty collection.</value>
     /// <remarks>To update the property, you must assign a new collection of pin names.</remarks>
-    public IEnumerable<string> VisiblePins
-    {
-        get => GetValue<string>()?.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList() ??
-               Enumerable.Empty<string>();
-        set => SetValue(string.Join(' ', value));
-    }
+    public IEnumerable<TagName> VisiblePins => throw new NotImplementedException();
 
     /// <summary>
-    /// The collection of input/output parameters for the <c>DiagramInstruction</c> instance.
+    /// The collection of input/output parameters for the <c>AoiBlock</c> instance.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="KeyValuePair"/> objects where the key
     /// is the name of the parameter and the value is the argument for the parameter. The argument refers to a tag name
@@ -89,23 +85,17 @@ public class DiagramInstruction : DiagramElement
                         new XAttribute(L5XName.Argument, p.Value))));
     }
     
-    /// <summary>
-    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
-    /// </summary>
-    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
-    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
-    
     /// <inheritdoc />
-    public override IEnumerable<LogixReference> References()
+    public override IEnumerable<CrossReference> References()
     {
         if (Operand is not null && Operand.IsTag())
-            yield return new LogixReference(Element, Operand, L5XName.Tag);
+            yield return new CrossReference(Element, Operand, L5XName.Tag);
         
         if (Name is not null)
-            yield return new LogixReference(Element, Name, L5XName.AddOnInstructionDefinition);
+            yield return new CrossReference(Element, Name, L5XName.AddOnInstructionDefinition);
         
         foreach (var parameter in Parameters)
             if (parameter.Value.IsTag())
-                yield return new LogixReference(Element, parameter.Value, L5XName.Tag);
+                yield return new CrossReference(Element, parameter.Value, L5XName.Tag);
     }
 }

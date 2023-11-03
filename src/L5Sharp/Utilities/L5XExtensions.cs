@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using L5Sharp.Common;
@@ -39,7 +38,7 @@ public static class L5XExtensions
             throw new ArgumentException(
                 $"The type {type.Name} is not assignable (inherited) from '{typeof(TReturn).Name}'.");
 
-        var constructor = type.GetConstructor(new[] {typeof(XElement)});
+        var constructor = type.GetConstructor(new[] { typeof(XElement) });
 
         if (constructor is null || !constructor.IsPublic)
             throw new ArgumentException(
@@ -49,7 +48,7 @@ public static class L5XExtensions
         var expression = Expression.New(constructor, parameter);
         return Expression.Lambda<Func<XElement, TReturn>>(expression, parameter).Compile();
     }
-    
+
     /// <summary>
     /// A concise method for getting a required attribute value from a XElement object.
     /// </summary>
@@ -59,7 +58,7 @@ public static class L5XExtensions
     /// <exception cref="InvalidOperationException">No attribute with <c>name</c> exists for the current element.</exception>
     public static string Get(this XElement element, XName name) =>
         element.Attribute(name)?.Value ?? throw element.L5XError(name);
-    
+
     /// <summary>
     /// Determines if the current string is a value <see cref="TagName"/> string.
     /// </summary>
@@ -82,8 +81,9 @@ public static class L5XExtensions
     /// <returns><c>true</c> if the strings are equal using the <see cref="StringComparer.OrdinalIgnoreCase"/>
     /// equality comparer,. Otherwise <c>false</c>.</returns>
     /// <remarks>This is a simplified way of calling the string comparer equals method since it is a little verbose.
-    /// This could be used a lot since Logix naming is not case agnostic.</remarks>
-    public static bool IsEquivalent(this string value, string other) => StringComparer.OrdinalIgnoreCase.Equals(value, other);
+    /// This could be used a lot since Logix naming is case agnostic.</remarks>
+    public static bool IsEquivalent(this string value, string other) =>
+        StringComparer.OrdinalIgnoreCase.Equals(value, other);
 
     /// <summary>
     /// Gets the L5X element name of the type's containing element. 
@@ -105,48 +105,6 @@ public static class L5XExtensions
     }
 
     /// <summary>
-    /// Converts the current <see cref="XElement"/> type to the specified type name. Essentially, this just changes
-    /// the current element name to the <see cref="L5XType(System.Type)"/> name of the provided type.
-    /// You can also optionally override the default type name by providing a <c>typeName</c> value. This is because
-    /// some types have more than one supported L5X element "type" or name. For example, a <c>Tag</c> can be a Tag element
-    /// or a LocalTag element or perhaps a ConfigTag element.
-    /// </summary>
-    /// <param name="element">The element to convert.</param>
-    /// <param name="typeName">The type to convert the element to.</param>
-    /// <param name="type">The optional type name to convert the type to. If not provided, will use the first
-    /// configured name from the <c>L5XTypeAttribute</c> for the provided <see cref="Type"/>.</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"><c>element</c> or <c>type</c> are <c>null</c>.</exception>
-    /// <exception cref="InvalidOperationException">The <c>element</c> name is not ont of the supported or configured types
-    /// defined for <c>type</c>. using the <see cref="L5XTypeAttribute"/>.</exception>
-    /// <remarks>
-    /// Note that this only replaces the name if it does not match the current type name and is a supported L5XType
-    /// name configured in the library using the <see cref="L5XTypeAttribute"/>. If the name is not supported, then
-    /// we will throw an <see cref="InvalidOperationException"/>.
-    /// The reason for doing this is to handle adding elements of the same class type to a container with a
-    /// different element type. For example, adding a <c>Tag</c> to a collection
-    /// of <c>LocalTags</c> in an AOI, we need a way to change the default element name (Tag in this case) to the
-    /// appropriate element name (LocalTag in this case) for the container.
-    /// </remarks>
-    public static XElement L5XConvert(this XElement element, Type type, string? typeName = null)
-    {
-        if (element is null) throw new ArgumentNullException(nameof(element));
-        if (type is null) throw new ArgumentNullException(nameof(type));
-
-        typeName ??= type.L5XType();
-        var elementType = element.L5XType();
-
-        if (elementType == typeName) return element;
-
-        if (type.L5XTypes().All(t => t != elementType))
-            throw new InvalidOperationException(
-                $"Element type '{elementType}' is not convertable to type '{typeName}'.");
-
-        element.Name = typeName;
-        return element;
-    }
-
-    /// <summary>
     /// Creates and configures a <see cref="InvalidOperationException"/> to be thrown for required properties of complex
     /// types that do not exist for the current element object.
     /// </summary>
@@ -160,21 +118,21 @@ public static class L5XExtensions
     public static InvalidOperationException L5XError(this XElement element, XName name)
     {
         var message = $"The required attribute or child element '{name}' does not exist for {element.Name}.";
-        var line = ((IXmlLineInfo) element).HasLineInfo() ? ((IXmlLineInfo) element).LineNumber : -1;
+        var line = ((IXmlLineInfo)element).HasLineInfo() ? ((IXmlLineInfo)element).LineNumber : -1;
         var exception = new InvalidOperationException(message);
         exception.Data.Add("target", name);
         exception.Data.Add("line", line);
         exception.Data.Add("element", element);
         return exception;
     }
-    
+
     /// <summary>
-    /// Gets the L5X element local name for the current element, which represents the L5X type. 
+    /// Gets the L5X element local name for the current element, which represents the "L5XType". 
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to get the type of.</param>
     /// <returns>A <see cref="string"/> representing the type name for the element.</returns>
     /// <remarks>
-    /// The "L5XType" is simply the name of the element. Since elements map the classes, we can know which
+    /// The "L5XType" is simply the name of the element. Since elements map to classes, we can know which
     /// type to deserialize or instantiate given the name of the element.
     /// </remarks>
     public static string L5XType(this XElement element) => element.Name.LocalName;
@@ -214,9 +172,9 @@ public static class L5XExtensions
     public static IEnumerable<string> L5XTypes(this Type type)
     {
         var attributes = type.GetCustomAttributes<L5XTypeAttribute>().ToList();
-        return attributes.Any() ? attributes.Select(attribute => attribute.TypeName) : new[] {type.Name};
+        return attributes.Any() ? attributes.Select(attribute => attribute.TypeName) : new[] { type.Name };
     }
-    
+
     /// <summary>
     /// Gets the <c>Name</c> attribute value for the current <see cref="XElement"/>.
     /// </summary>
@@ -227,21 +185,6 @@ public static class L5XExtensions
     /// the code more concise.
     /// </remarks>
     public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-    
-    /// <summary>
-    /// Returns just the immediate element's CDATA value as a string if found, otherwise returns an empty string.
-    /// </summary>
-    /// <param name="element">The element for which to retrieve the value of.</param>
-    /// <returns>
-    /// A <see cref="string"/> containing the text value of the element, and not any descendant element's value.
-    /// </returns>
-    /// <remarks>This is necessary since the <c>Value</c> of an <see cref="XElement"/> actually also returns all child
-    /// element values for some reason.</remarks>
-    public static string ShallowValue(this XElement element)
-    {
-        return element.Nodes().OfType<XCData>()
-            .Aggregate(new StringBuilder(), (s, c) => s.Append(c), s => s.ToString());
-    }
 
     /// <summary>
     /// Determines the tag name for a given <see cref="XElement"/> representing a module IO tag.
@@ -252,7 +195,7 @@ public static class L5XExtensions
     /// <remarks>
     /// This is a helper extension since the logic is somewhat complex and used in more than one class.
     /// We look up the L5X tree for module name and parent name, as well as back down to find the potential slot of the module.
-    /// All this info, along with the corresponding tag suffix, make up the tag name for a module tag,
+    /// All this info along with the corresponding tag suffix make up the tag name for a module tag,
     /// which is not inherent in the L5X element itself, but one that is important to us as it allows us to
     /// find or reference these tags by name (just as you would find in Studio 5k).
     /// </remarks>
@@ -283,7 +226,7 @@ public static class L5XExtensions
             return "C";
         }
     }
-    
+
     /// <summary>
     /// Returns the string value as a <see cref="XName"/> value object.
     /// </summary>

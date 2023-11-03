@@ -24,7 +24,7 @@ namespace L5Sharp.Common;
 public sealed class NeutralText
 {
     private readonly string _text;
-    
+
     /// <summary>
     /// Creates a new <see cref="NeutralText"/> object with the provided text input.
     /// </summary>
@@ -93,8 +93,7 @@ public sealed class NeutralText
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values that were in from the current text.</returns>
     /// <seealso cref="TagsIn(Instruction)"/>
-    public IEnumerable<TagName> Tags() =>
-        Instructions().SelectMany(i => i.Arguments).Where(a => a.IsTag).Select(a => (TagName) a);
+    public IEnumerable<TagName> Tags() => Regex.Matches(_text, TagName.SearchPattern).Select(t => new TagName(t.Value));
 
     /// <summary>
     /// Gets a collection of tag names found in the current neutral text that are operands or arguments to a specific instruction.
@@ -102,7 +101,7 @@ public sealed class NeutralText
     /// <param name="instruction">The instruction for which to find tags as arguments to.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing tag names found in the specified instruction.</returns>
     public IEnumerable<TagName> TagsIn(Instruction instruction) =>
-        Instructions(instruction).SelectMany(i => i.Arguments).Where(a => a.IsTag).Select(a => (TagName) a);
+        Instructions(instruction).SelectMany(i => i.Text.Tags());
 
     /// <inheritdoc />
     public override string ToString() => _text;

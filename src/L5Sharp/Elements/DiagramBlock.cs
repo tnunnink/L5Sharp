@@ -2,32 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
+using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A <c>DiagramElement</c> type that defines the properties for nested function block elements in a
-/// Function Block Diagram (FBD).
+/// A base class for all FBD/SFC routine elements within a containing <c>Diagram</c>. This base class simply
+/// contains some of the common properties and functions that all FBD/SFC elements share,
+/// such as X and Y coordinates, and ID. We have also added a <see cref="ParameterType"/> and <see cref="Cell"/>
+/// property for determining the type and location (e.g. A1) of a given block.
 /// </summary>
-/// <remarks>
-/// A <c>DiagramBlock</c> or Block represents a function block within the FBD. These are blocks that represent
-/// specific logix built-in instructions as opposed to AOIs. A <c>DiagramBlock</c> differs from a <c>DiagramFunction</c>
-/// in that it requires a backing tag to operate over, whereas a <c>DiagramFunction</c> represents a simple logic gate or
-/// operation that takes inputs and produces an output without the need for a backing tag.
-/// </remarks>
-/// <footer>
-/// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
-/// `Logix 5000 Controllers Import/Export`</a> for more information.
-/// </footer>
-[L5XType(L5XName.Block, L5XName.Sheet)]
-public class DiagramBlock : DiagramElement
+public abstract class DiagramBlock : LogixElement, ILogixReferencable
 {
     /// <summary>
     /// Creates a new <see cref="DiagramBlock"/> with default values.
     /// </summary>
-    public DiagramBlock()
+    protected DiagramBlock()
     {
+        Element.SetAttributeValue(L5XName.ID, 0);
+        Element.SetAttributeValue(L5XName.X, 0);
+        Element.SetAttributeValue(L5XName.Y, 0);
     }
 
     /// <summary>
@@ -35,66 +31,61 @@ public class DiagramBlock : DiagramElement
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public DiagramBlock(XElement element) : base(element)
+    protected DiagramBlock(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// The mnemonic name specifying the type of function for the <c>DiagramBlock</c> instance.
+    /// The unique identifier of the <see cref="DiagramBlock"/> within the containing <c>Diagram</c>.
     /// </summary>
-    /// <value>A <see cref="string"/> containing the type of the function if it exists; Otherwise, <c>null</c>.</value>
-    public string? Type
+    public uint ID
     {
-        get => GetValue<string>();
+        get => GetValue<uint>();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// The backing tag name for the <c>DiagramBlock</c> instance.
+    /// The X coordinate of the <see cref="DiagramBlock"/> within the containing <c>Diagram</c>.
     /// </summary>
-    /// <value>A <see cref="string"/> containing the tag name if it exists; Otherwise, <c>null</c>.</value>
-    public string? Operand
+    /// <remarks>
+    /// The <c>X</c> and <c>Y</c> grid locations are a relative position from the upper-left corner of the sheet.
+    /// X is the horizontal position; Y is the vertical position.
+    /// </remarks>
+    public uint X
     {
-        get => GetValue<string>();
+        get => GetValue<uint>();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// A collection of pin names that are visible for the <c>DiagramBlock</c>.
+    /// The Y coordinate of the <see cref="DiagramBlock"/> within the containing <c>Diagram</c>.
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> containing the names of the pins if found. If not found then an
-    /// empty collection.</value>
-    /// <remarks>To update the property, you must assign a new collection of pin names.</remarks>
-    public IEnumerable<string> VisiblePins
+    /// <remarks>
+    /// The <c>X</c> and <c>Y</c> grid locations are a relative position from the upper-left corner of the sheet.
+    /// X is the horizontal position; Y is the vertical position.
+    /// </remarks>
+    public uint Y
     {
-        get => GetValue<string>()?.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList() ??
-               Enumerable.Empty<string>();
-        set => SetValue(string.Join(' ', value));
+        get => GetValue<uint>();
+        set => SetValue(value);
     }
 
     /// <summary>
-    /// Whether or not to hide the description for the <c>DiagramBlock</c>.
+    /// Gets the cell of the diagram where the <see cref="DiagramBlock"/> is located. 
     /// </summary>
-    /// <value><c>true</c> if the description is hidden; Otherwise; <c>false</c>.</value>
-    public bool HideDesc
-    {
-        get => GetValue<bool>();
-        set => SetValue(value);
-    }
-    
+    /// <value>A <see cref="string"/> containing the cell coordinates (e.g. A1, B2, etc.)</value>
+    /// <remarks>This is determines from the <c>X</c> and <c>Y</c> coordinates of the element.</remarks>
+    public string Cell => $"{(char)(X / 200 + 'A')}{Y / 200 + 1}";
+
     /// <summary>
-    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
+    /// The absolute location of the <see cref="DiagramBlock"/> within the containing <see cref="Diagram{TBlock}"/>. 
     /// </summary>
-    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
-    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
-    
+    /// <value>A <see cref="string"/> indicating the cell and optional sheet or chart number where the block is located.</value>
+    /// <remarks>
+    /// This is an internally defined value so that we can identify instructions when referencing components.
+    /// </remarks>
+    public virtual string Location => Cell;
+
     /// <inheritdoc />
-    public override IEnumerable<LogixReference> References()
-    {
-        if (Operand is not null && Operand.IsTag())
-            yield return new LogixReference(Element, Operand, L5XName.Tag);
-        
-        if (Type is not null)
-            yield return new LogixReference(Element, Type, L5XName.AddOnInstructionDefinition);
-    }
+    public virtual IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
 }

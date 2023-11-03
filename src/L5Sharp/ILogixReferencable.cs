@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using L5Sharp.Common;
 
 namespace L5Sharp;
 
@@ -8,12 +9,12 @@ namespace L5Sharp;
 public interface ILogixReferencable
 {
     /// <summary>
-    /// Returns a collection of <see cref="LogixReference"/> objects that indicate either references
+    /// Returns a collection of <see cref="CrossReference"/> objects that indicate either references
     /// in or to the implementing object.
     /// </summary>
     /// <returns>
-    /// A <see cref="IEnumerable{T}"/> of <see cref="LogixReference"/> objects with the relevant reference information.
+    /// A <see cref="IEnumerable{T}"/> of <see cref="CrossReference"/> objects with the relevant reference information.
     /// </returns>
     /// <remarks></remarks>
-    IEnumerable<LogixReference> References();
+    IEnumerable<CrossReference> References();
 }

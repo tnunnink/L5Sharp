@@ -84,6 +84,26 @@ public class L5XBasicTests
         
         return Verify(content.DataTypes.Serialize().ToString());
     }
+    
+    [Test]
+    public void Find_TypeNameOverload_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var tags = content.Find(nameof(Tag)).ToList();
+
+        tags.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void Find_TypeOverload_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var tags = content.Find(typeof(Tag)).ToList();
+
+        tags.Should().NotBeEmpty();
+    }
 
     [Test]
     public void Find_ContainsElement_ShouldNotBeEmpty()
@@ -110,7 +130,7 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Test);
 
-        var component = content.Find<DataType>(Known.DataType);
+        var component = content.FindComponent<DataType>(Known.DataType);
 
         component.Should().NotBeNull();
     }

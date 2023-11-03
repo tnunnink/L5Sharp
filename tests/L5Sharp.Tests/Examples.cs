@@ -47,7 +47,7 @@ namespace L5Sharp.Tests
         {
             var content = L5X.Load(Known.Test);
 
-            var results = content.Find<Tag>().Where(t => t.ScopeType == Scope.Program && t.DataType == "DINT");
+            var results = content.Find<Tag>().Where(t => t.Scope == Scope.Program && t.DataType == "DINT");
 
             results.Should().NotBeEmpty();
         }

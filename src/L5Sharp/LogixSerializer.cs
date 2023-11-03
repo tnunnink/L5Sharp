@@ -21,15 +21,6 @@ public static class LogixSerializer
         LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
-    /// Serializes the <see cref="LogixElement"/> object into an <see cref="XElement"/> object.
-    /// </summary>
-    /// <param name="element">The <see cref="LogixElement"/> object to serialize.</param>
-    /// <returns>A <see cref="XElement"/> representing the serialized logic element object.</returns>
-    // ReSharper disable once UnusedMember.Global
-    // I know this is probably going unused, but I feel like I want it here just for completeness.
-    public static XElement Serialize(LogixElement element) => element.Serialize();
-
-    /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to deserialize.</param>
@@ -39,21 +30,9 @@ public static class LogixSerializer
     /// The return object must specify a public constructor accepting a <see cref="XElement"/> parameter for
     /// deserialization to work.
     /// </remarks>
-    public static TElement Deserialize<TElement>(XElement element)
-        where TElement : LogixElement => (TElement) Deserializer(typeof(TElement)).Invoke(element);
-
-    /// <summary>
-    /// Deserializes a <see cref="XElement"/> into the specified object type.
-    /// </summary>
-    /// <param name="type">The type to deserialize.</param>
-    /// <param name="element">The XML element to deserialize.</param>
-    /// <returns>A new object of the specified type representing the deserialized object.</returns>
-    /// <remarks>
-    /// The return object must specify a constructor accepting a single <see cref="XElement"/> for deserialization to work.
-    /// </remarks>
-    public static LogixElement Deserialize(Type type, XElement element) =>
-        Deserializer(type).Invoke(element);
-
+    public static TElement Deserialize<TElement>(this XElement element) where TElement : LogixElement =>
+        (TElement)Deserialize(element);
+    
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the first matching <see cref="LogixElement"/> type found in the
     /// element hierarchy.
@@ -62,12 +41,13 @@ public static class LogixSerializer
     /// <returns>If the element is or has a parent of a known deserializable type, then a new <see cref="LogixElement"/>
     /// of the first found type in the XML tree; Otherwise, <c>null</c>.</returns>
     /// <remarks>
-    /// This method will traverse the XMl tree until it reaches a <c>XElement</c> with a name matching
+    /// This method will traverse the XML tree until it reaches a <c>XElement</c> with a name matching
     /// a known deserializable logic element type. Once it finds that type/element pair, it will deserialize it as that
-    /// type and return the result. This is useful when we cross reference and find child elements that we need to
-    /// deserialize by finding it's parent.
+    /// type and return the result. This is important for any feature that would require deserialization of
+    /// logix elements when the type is not known at compile type or perhaps returns a collection of different element
+    /// types. It is up to the caller to infer or cast the resulting element type appropriately. 
     /// </remarks>
-    public static LogixElement Deserialize(XElement element)
+    public static LogixElement Deserialize(this XElement element)
     {
         if (element is null) throw new ArgumentNullException(nameof(element));
 
@@ -80,28 +60,7 @@ public static class LogixSerializer
                           $"Could not find deserializable type for element {element.Name}.");
         }
     }
-
-    /// <summary>
-    /// Handles getting the deserializer delegate for the specified type. If the type is not cached, this method will check
-    /// if the type inherits <see cref="LogixElement"/> and has a valid constructor. If so, it will add to the
-    /// global deserializer cache and return the deserializer delegate function.
-    /// </summary>
-    private static Func<XElement, LogixElement> Deserializer(Type type)
-    {
-        //We use the configured L5XType for the cache since a single type may have multiple supported element types.
-        var typeName = type.L5XType();
-
-        //If in cache then return.
-        if (Deserializers.Value.TryGetValue(typeName, out var cached)) return cached;
-
-        //If not then get the deserializer and cache it for all L5XTypes the given type supports.
-        var deserializer = type.Deserializer<LogixElement>();
-        foreach (var supportedType in type.L5XTypes())
-            Deserializers.Value.TryAdd(supportedType, deserializer);
-
-        return deserializer;
-    }
-
+    
     /// <summary>
     /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
     /// inheriting from <see cref="LogixElement"/> that have the supported deserialization constructor,
@@ -133,8 +92,8 @@ public static class LogixSerializer
     private static bool IsDeserializableType(Type type)
     {
         return typeof(LogixElement).IsAssignableFrom(type) &&
-               type is {IsAbstract: false, IsPublic: true} &&
-               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] {typeof(XElement)},
+               type is { IsAbstract: false, IsPublic: true } &&
+               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(XElement) },
                    null) is not null;
     }
 }

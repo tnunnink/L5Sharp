@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using L5Sharp.Common;
+using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A <c>DiagramElement</c> type that defines the properties for a input or output reference within a
+/// A <c>DiagramBlock</c> type that defines the properties for a input or output reference within a
 /// Function Block Diagram (FBD).
 /// </summary>
 /// <remarks>
-/// A <c>DiagramReference</c> can be a tag name or immediate value, which is contained in the <see cref="Operand"/>
+/// A <c>ReferenceBlock</c> can be a tag name or immediate value, which is contained in the <see cref="Operand"/>
 /// property of the type. A <see cref="Sheet"/> will contain both input and output references.
 /// </remarks>
 /// <footer>
@@ -19,26 +21,33 @@ namespace L5Sharp.Elements;
 /// </footer>
 [L5XType(L5XName.IRef, L5XName.Sheet)]
 [L5XType(L5XName.ORef, L5XName.Sheet)]
-public class DiagramReference : DiagramElement
+public class ReferenceBlock : FunctionBlock
 {
     /// <summary>
-    /// Creates a new <see cref="DiagramReference"/> with default values.
+    /// Creates a new <see cref="ReferenceBlock"/> with default values.
     /// </summary>
-    public DiagramReference()
+    public ReferenceBlock()
     {
     }
 
     /// <summary>
-    /// Creates a new <see cref="DiagramReference"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="ConnectorBlock"/> as the specified input or output block type.
+    /// </summary>
+    public ReferenceBlock(ParameterType parameterType) : base(GenerateElement(parameterType))
+    {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ReferenceBlock"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public DiagramReference(XElement element) : base(element)
+    public ReferenceBlock(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
-    /// The tag name or immediate value for the <c>DiagramReference</c> element.
+    /// The tag name or immediate value for the <c>ReferenceBlock</c> element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the reference name if it exists; Otherwise, <c>null</c>.</value>
     public string? Operand
@@ -48,7 +57,7 @@ public class DiagramReference : DiagramElement
     }
 
     /// <summary>
-    /// Whether or not to hide the description for the <c>DiagramReference</c> element.
+    /// Whether or not to hide the description for the <c>ReferenceBlock</c> element.
     /// </summary>
     /// <value><c>true</c> if the description is hidden; Otherwise; <c>false</c>.</value>
     public bool HideDesc
@@ -56,19 +65,20 @@ public class DiagramReference : DiagramElement
         get => GetValue<bool>();
         set => SetValue(value);
     }
-    
-    /// <summary>
-    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
-    /// </summary>
-    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
-    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
 
     /// <inheritdoc />
-    public override IEnumerable<LogixReference> References()
+    public override IEnumerable<CrossReference> References()
     {
         if (Operand is not null && Operand.IsTag())
         {
-            yield return new LogixReference(Element, Operand, L5XName.Tag);
+            yield return new CrossReference(Element, Operand, L5XName.Tag);
         }
+    }
+
+    private static XElement GenerateElement(ParameterType parameterType)
+    {
+        if (parameterType is null) throw new ArgumentNullException(nameof(parameterType));
+        var name = parameterType == ParameterType.Input ? L5XName.IRef : L5XName.ORef;
+        return new XElement(name);
     }
 }

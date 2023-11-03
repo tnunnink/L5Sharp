@@ -240,6 +240,12 @@
       <None Update="Elements\SheetTests.InputConnectors_AddAfterConnector_ShouldBeVerified.verified.txt">
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
+      <None Update="Elements\SheetTests.Add_BlocksOutOfOrder_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ReferenceBlockTests.New_IRefOverloaded_ShouldBeVerified.verified.txt">
+        <DependentUpon>ReferenceBlockTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

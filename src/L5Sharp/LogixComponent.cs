@@ -46,7 +46,7 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     /// The <see cref="Use"/> of the component within the L5X file.
     /// </summary>
     /// <remarks>
-    /// Typically used when exporting individual components (DataType, AOI, Module) to indicate whether the component
+    /// Typically used when exporting individual components (DataType, AoiBlock, Module) to indicate whether the component
     /// is the target of the L5X content, or exists solely as a context or dependency of the target component. When
     /// saving a project as an L5X, the top level controller component is the target, and all other components will
     /// not have this property. 
@@ -93,44 +93,6 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     public ComponentKey Key => new(Element.Name.LocalName, Name);
 
     /// <summary>
-    /// The scope name of the logix component, indicating the program or controller for which it is contained.
-    /// </summary>
-    /// <value> A <see cref="string"/> representing the name of the program or controller in which this component
-    /// is contained. If the component has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
-    /// component is not attached to a L5X tree, then this returns an empty string.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML of a component (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify components within the L5X file, especially scoped components with same name.
-    /// </para>
-    /// </remarks>
-    public string ScopeName => Scope.ScopeName(Element);
-
-    /// <summary>
-    /// The scope of the logix component, indicating whether it is a globally scoped controller component,
-    /// a locally scoped program component, or neither (not attached to L5X tree).
-    /// </summary>
-    /// <value>A <see cref="Enums.Scope"/> option indicating the scope type for the component.</value>
-    /// <remarks>
-    /// <para>
-    /// The scope of a component is determined from the ancestors of the underlying element. If the ancestor is
-    /// program element first, it is <c>Program</c> scoped. If the ancestor is a controller element first, it is
-    /// <c>Controller</c> scoped. If no ancestor is found, we assume the component has <c>Null</c> scope,
-    /// meaning it is not attached to a L5X tree.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML of a component (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify components within the L5X file, especially
-    /// <c>Tag</c> and <c>Routine</c> components.
-    /// </para>
-    /// </remarks>
-    public Scope ScopeType => Scope.ScopeType(Element);
-
-    /// <summary>
     /// Returns a collection of <see cref="LogixComponent"/> that this component depends on to be valid within a given
     /// L5X file.
     /// </summary>
@@ -151,6 +113,7 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     public L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;
+        softwareRevision ??= L5X?.Info.SoftwareRevision;
 
         var content = L5X.New(this, softwareRevision);
         content.Add(this);
@@ -172,8 +135,8 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
     /// at least one property value referencing this component's name.
     /// </returns>
-    public IEnumerable<LogixReference> References() =>
-        L5X is not null ? L5X.FindReferences(this) : Enumerable.Empty<LogixReference>();
+    public IEnumerable<CrossReference> References() =>
+        L5X is not null ? L5X.FindReferences(this) : Enumerable.Empty<CrossReference>();
 
     /// <inheritdoc />
     /// <remarks>This override returns the component name of the type.</remarks>

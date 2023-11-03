@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Xml.Linq;
+using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A <c>DiagramElement</c> type that defines the properties a section of text within a
+/// A <c>DiagramBlock</c> type that defines the properties a section of text within a
 /// Function Block Diagram (FBD).
 /// </summary>
 /// <footer>
@@ -13,21 +14,21 @@ namespace L5Sharp.Elements;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.TextBox)]
-public class DiagramText : DiagramElement
+public class TextBox : DiagramBlock
 {
     /// <summary>
-    /// Creates a new <see cref="DiagramReference"/> with default values.
+    /// Creates a new <see cref="TextBox"/> with default values.
     /// </summary>
-    public DiagramText()
+    public TextBox()
     {
     }
 
     /// <summary>
-    /// Creates a new <see cref="DiagramReference"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="TextBox"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public DiagramText(XElement element) : base(element)
+    public TextBox(XElement element) : base(element)
     {
     }
 
@@ -43,7 +44,7 @@ public class DiagramText : DiagramElement
     }
     
     /// <summary>
-    /// The text information contained in the <c>DiagramText</c> element.
+    /// The text information contained in the <c>TextBox</c> element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the text contents.</value>
     public string Text
@@ -51,10 +52,4 @@ public class DiagramText : DiagramElement
         get => GetProperty<string>() ?? string.Empty;
         set => SetProperty(value);
     }
-    
-    /// <summary>
-    /// The <see cref="Sheet"/> this <c>DiagramFunction</c> belongs to.
-    /// </summary>
-    /// <value>A <see cref="Sheet"/> representing the containing code FBD sheet.</value>
-    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
 }

@@ -8,7 +8,8 @@ using L5Sharp.Utilities;
 namespace L5Sharp;
 
 /// <summary>
-/// A generic collection that provides operations over an underlying <see cref="XElement"/> container of <see cref="LogixElement"/> objects.
+/// A generic collection that provides operations over an underlying <see cref="XElement"/> container
+/// of <see cref="LogixElement"/> objects.
 /// </summary>
 /// <typeparam name="TElement">The type inheriting <see cref="LogixElement"/>.</typeparam>
 /// <remarks>
@@ -21,7 +22,7 @@ namespace L5Sharp;
 /// <para>
 /// The class is designed to only offer very basic operations, allowing it to be applicable to all container type elements,
 /// However, the user can extended the API for any container type using extension methods and <see cref="Serialize"/>
-/// to get the underlying <see cref="XElement"/> container object. See <see cref="L5XExtensions"/> for examples.
+/// to get the underlying <see cref="XElement"/> container object. See <see cref="ContainerExtensions"/> for examples.
 /// </para>
 /// </remarks>
 public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializable where TElement : LogixElement
@@ -76,23 +77,25 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// <summary>
     /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided collection.
     /// </summary>
-    /// <param name="components">The collection of elements to initialize.</param>
-    public LogixContainer(IEnumerable<TElement> components) : this()
+    /// <param name="elements">The collection of elements to initialize.</param>
+    public LogixContainer(IEnumerable<TElement> elements) : this()
     {
-        if (components is null)
-            throw new ArgumentNullException(nameof(components));
+        if (elements is null)
+            throw new ArgumentNullException(nameof(elements));
 
-        foreach (var component in components)
+        foreach (var element in elements)
         {
-            if (component is null)
-                throw new ArgumentNullException(nameof(component));
+            if (element is null)
+                throw new ArgumentNullException(nameof(element));
 
-            var xml = component.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
-            
+            var xml = element.L5XType == _type
+                ? element.Serialize()
+                : element.Convert<TElement>(_type.LocalName).Serialize();
+
             _element.Add(xml);
         }
     }
-    
+
     /// <summary>
     /// Indicates whether this container is attached to a L5X document.
     /// </summary>
@@ -102,7 +105,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// If so we will assume this element is attached to an overall L5X document.
     /// </remarks>
     public bool IsAttached => _element.Ancestors(L5XName.RSLogix5000Content).Any();
-    
+
     /// <summary>
     /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
     /// </summary>
@@ -126,15 +129,17 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     /// <exception cref="ArgumentNullException"><c>value</c> is null when setting index.</exception>
     public TElement this[int index]
     {
-        get => LogixSerializer.Deserialize<TElement>(_element.Elements(_type).ElementAt(index));
+        get => _element.Elements(_type).ElementAt(index).Deserialize<TElement>();
         set
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value),
                     $"Can not set container element of type {typeof(TElement)} null instance.");
-            
-            var xml = value.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
-            
+
+            var xml = value.L5XType == _type
+                ? value.Serialize()
+                : value.Convert<TElement>(_type.LocalName).Serialize();
+
             _element.Elements(_type).ElementAt(index).ReplaceWith(xml);
         }
     }
@@ -148,8 +153,10 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     {
         if (element is null)
             throw new ArgumentNullException(nameof(element));
-        
-        var xml = element.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
+
+        var xml = element.L5XType == _type
+            ? element.Serialize()
+            : element.Convert<TElement>(_type.LocalName).Serialize();
 
         var last = _element.Elements(_type).LastOrDefault();
 
@@ -176,8 +183,10 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         {
             if (element is null)
                 throw new ArgumentNullException(nameof(element));
-            
-            var xml = element.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
+
+            var xml = element.L5XType == _type
+                ? element.Serialize()
+                : element.Convert<TElement>(_type.LocalName).Serialize();
 
             var last = _element.Elements(_type).LastOrDefault();
 
@@ -210,7 +219,9 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var xml = element.Serialize().L5XConvert(typeof(TElement), _type.LocalName);
+        var xml = element.L5XType == _type
+            ? element.Serialize()
+            : element.Convert<TElement>(_type.LocalName).Serialize();
 
         _element.Elements(_type).ElementAt(index).AddBeforeSelf(xml);
     }
@@ -228,7 +239,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
     public void RemoveAll(Func<TElement, bool> condition)
     {
         if (condition is null) throw new ArgumentNullException(nameof(condition));
-        _element.Elements(_type).Where(e => condition.Invoke(LogixSerializer.Deserialize<TElement>(e))).Remove();
+        _element.Elements(_type).Where(e => condition.Invoke(e.Deserialize<TElement>())).Remove();
     }
 
     /// <summary>
@@ -253,7 +264,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
 
         foreach (var child in _element.Elements(_type))
         {
-            var element = LogixSerializer.Deserialize<TElement>(child);
+            var element = child.Deserialize<TElement>();
             update.Invoke(element);
         }
     }
@@ -272,7 +283,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
 
         foreach (var child in _element.Elements(_type))
         {
-            var element = LogixSerializer.Deserialize<TElement>(child);
+            var element = child.Deserialize<TElement>();
             if (condition.Invoke(element))
                 update.Invoke(element);
         }
@@ -283,7 +294,7 @@ public class LogixContainer<TElement> : IEnumerable<TElement>, ILogixSerializabl
 
     /// <inheritdoc />
     public IEnumerator<TElement> GetEnumerator() =>
-        _element.Elements(_type).Select(LogixSerializer.Deserialize<TElement>).GetEnumerator();
+        _element.Elements(_type).Select(e => e.Deserialize<TElement>()).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
@@ -304,7 +315,7 @@ public static class ContainerExtensions
     {
         return container.Serialize().Elements().Any(e => e.LogixName() == name);
     }
-    
+
     /// <summary>
     /// Returns a component with the specified name if it exists in the container, otherwise returns <c>null</c>.
     /// </summary>
@@ -315,9 +326,7 @@ public static class ContainerExtensions
     public static TComponent? Find<TComponent>(this LogixContainer<TComponent> container, string name)
         where TComponent : LogixComponent
     {
-        var element = container.Serialize();
-        var component = element.Elements().FirstOrDefault(e => e.LogixName() == name);
-        return component is not null ? LogixSerializer.Deserialize<TComponent>(component) : default;
+        return container.Serialize().Elements().FirstOrDefault(e => e.LogixName() == name)?.Deserialize<TComponent>();
     }
 
     /// <summary>
@@ -334,7 +343,7 @@ public static class ContainerExtensions
         var element = container.Serialize();
         var component = element.Elements().SingleOrDefault(e => e.LogixName() == name);
         return component is not null
-            ? LogixSerializer.Deserialize<TComponent>(component)
+            ? component.Deserialize<TComponent>()
             : throw new InvalidOperationException($"No component with name {name} was found in container.");
     }
 

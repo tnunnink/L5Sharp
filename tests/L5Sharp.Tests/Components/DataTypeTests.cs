@@ -30,7 +30,7 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
-        public void DataType_ShouldHaveDefaultValues()
+        public void New_Default_ShouldHaveDefaultValues()
         {
             var dataType = new DataType();
 
@@ -40,6 +40,12 @@ namespace L5Sharp.Tests.Components
             dataType.Class.Should().Be(DataTypeClass.User);
             dataType.Members.Should().NotBeNull();
             dataType.Members.Should().BeEmpty();
+            dataType.Key.Should().BeEquivalentTo(new ComponentKey("DataType", ""));
+            dataType.IsAttached.Should().BeFalse();
+            dataType.L5X.Should().BeNull();
+            dataType.Use.Should().BeNull();
+            dataType.Container.Should().BeEmpty();
+            dataType.Scope.Should().Be(Scope.Null);
         }
 
         [Test]

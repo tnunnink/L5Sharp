@@ -62,7 +62,7 @@ public class DataType : LogixComponent
     public DataType(string name) : this()
     {
         if (name is null) throw new ArgumentNullException(nameof(name));
-        Element.SetAttributeValue(L5XName.Name, name);
+        SetValue(L5XName.Name, name);
     }
 
     /// <summary>
@@ -99,7 +99,7 @@ public class DataType : LogixComponent
         get => GetContainer<DataTypeMember>();
         set => SetContainer(value);
     }
-
+    
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
@@ -109,7 +109,7 @@ public class DataType : LogixComponent
 
         foreach (var member in Members)
         {
-            var dataType = L5X.Find<DataType>(member.DataType);
+            var dataType = L5X.FindComponent<DataType>(member.DataType);
             if (dataType is null) continue;
             dependencies.Add(dataType);
             dependencies.AddRange(dataType.Dependencies());

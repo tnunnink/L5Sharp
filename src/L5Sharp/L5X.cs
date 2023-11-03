@@ -37,7 +37,7 @@ public class L5X : ILogixSerializable
     /// <summary>
     /// An index of all references to a logix component in the L5X file for fast lookups.
     /// </summary>
-    private readonly Dictionary<ComponentKey, List<LogixReference>> _referenceIndex = new();
+    private readonly Dictionary<ComponentKey, List<CrossReference>> _referenceIndex = new();
 
     /// <summary>
     /// The list of top level component containers for a L5X content or controller element in order of which
@@ -238,7 +238,67 @@ public class L5X : ILogixSerializable
         _content.Descendants(typeof(TElement).L5XType()).Count();
 
     /// <summary>
-    /// Finds elements of the specified type across the entire L5X and returns as a flat <see cref="IEnumerable{T}"/> of objects.
+    /// Finds element across the entire L5X with the provided type as a flat collection of object. 
+    /// </summary>
+    /// <param name="typeName">The type name or element name to retrieve.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all found object with the provided type name.</returns>
+    /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
+    /// <remarks>
+    /// <para>
+    /// This methods provides a flexible and simple way to query the entire L5X for a specific type. This method is allows
+    /// specifying the type at runtime as opposed the generic type but sacrifices the strong type querying of the
+    /// generic counterpart. This method does not make use of any optimized searching, so if you want to find items quickly,
+    /// see &lt;c&gt;FindComponent&lt;/c&gt; or &lt;c&gt;FindTag&lt;/c&gt; method.
+    /// </para>
+    /// <para>
+    /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
+    /// element name for the provided type. This means the query will return all elements that the type supports.
+    /// If you want specific components look at the container properties.
+    /// For example <see cref="Tags"/> for controller scoped tag components only.
+    /// </para>
+    /// </remarks>
+    public IEnumerable<LogixElement> Find(string typeName)
+    {
+        if (string.IsNullOrEmpty(typeName))
+            throw new ArgumentNullException(nameof(typeName), "Type is required to retrieve elements from the L5X");
+
+        return _content.Descendants(typeName).Select(e => e.Deserialize());
+    }
+
+    /// <summary>
+    /// Finds element across the entire L5X with the provided type as a flat collection of object. 
+    /// </summary>
+    /// <param name="type">The type of the element type to retrieve.</param>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all found object with the provided type name.</returns>
+    /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
+    /// <remarks>
+    /// <para>
+    /// This methods provides a flexible and simple way to query the entire L5X for a specific type. This method is allows
+    /// specifying the type at runtime as opposed the generic type but sacrifices the strong type querying of the
+    /// generic counterpart. This method does not make use of any optimized searching, so if you want to find items quickly,
+    /// see &lt;c&gt;FindComponent&lt;/c&gt; or &lt;c&gt;FindTag&lt;/c&gt; method.
+    /// </para>
+    /// <para>
+    /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
+    /// element name for the provided type. This means the query will return all elements that the type supports.
+    /// If you want specific components look at the container properties.
+    /// For example <see cref="Tags"/> for controller scoped tag components only.
+    /// </para>
+    /// </remarks>
+    public IEnumerable<LogixElement> Find(Type type)
+    {
+        if (type is null)
+            throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
+
+        var typeNames = type.L5XTypes().ToList();
+
+        return _content.Descendants()
+            .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
+            .Select(e => e.Deserialize());
+    }
+
+    /// <summary>
+    /// Finds elements of the specified type across the entire L5X as a flat collection of objects.
     /// </summary>
     /// <typeparam name="TElement">The element type to find.</typeparam>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects of the specified type.</returns>
@@ -246,19 +306,21 @@ public class L5X : ILogixSerializable
     /// This methods provides a flexible and simple way to query the entire L5X for a specific type. Since
     /// it returns an <see cref="IEnumerable{T}"/>, you can make use of LINQ and the strongly typed objects to build
     /// more complex queries. This method does not make use of any optimized searching, so if you want to find items quickly,
-    /// see <see cref="FindIn{TComponent}"/> or <see cref="FindTag"/> and <see cref="FindTags"/>.
+    /// see <see cref="FindComponent{TComponent}(string,string)"/> or <see cref="FindTag"/> and <see cref="FindTags"/>.
     /// </remarks>
     public IEnumerable<TElement> Find<TElement>() where TElement : LogixElement
     {
-        //var typeNames = typeof(TElement).L5XTypes().ToList();
-        return _content.Descendants(typeof(TElement).L5XType()).Select(LogixSerializer.Deserialize<TElement>);
+        var typeNames = typeof(TElement).L5XTypes().ToList();
+
+        return _content.Descendants()
+            .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
+            .Select(e => e.Deserialize<TElement>());
     }
 
     /// <summary>
     /// Finds the first component with the specified name using the internal component index.
     /// </summary>
-    /// <param name="name">The name of the component to find.</param>
-    /// <typeparam name="TComponent">The type of component to find.</typeparam>
+    /// <param name="name"></param>
     /// <returns>
     /// The first found <see cref="LogixComponent"/> with the specified component name; If none exist, then <c>null</c>.
     /// </returns>
@@ -266,57 +328,69 @@ public class L5X : ILogixSerializable
     /// <remarks>
     /// <para>
     /// Since components have unique names, we can find and index them for fast lookup when needed. There may be more
-    /// than one component with the same name inf the L5X file (Tags, Routines). This method just returns the first one
+    /// than one component with the same name in the L5X file (Tags, Routines). This method just returns the first one
     /// found.
     /// </para>
-    /// <para>
-    /// To find all components with a specific name, see <see cref="FindAll{TComponent}"/>.
-    /// To find a specific scoped component by name, see <see cref="FindIn{TComponent}"/>.
-    /// </para>
     /// </remarks>
-    public TComponent? Find<TComponent>(string name) where TComponent : LogixComponent
+    public LogixComponent? FindComponent(string name)
     {
-        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
-        var key = new ComponentKey(typeof(TComponent).L5XType(), name);
+        var components = ComponentType.All().Select(c => c.Name).ToList();
 
-        if (!_componentIndex.TryGetValue(key, out var components))
-            return default;
-
-        var component = components.Values.FirstOrDefault();
-        return component is not null ? LogixSerializer.Deserialize<TComponent>(component) : default;
+        return _content.Descendants()
+            .FirstOrDefault(e => components.Any(n => n == e.L5XType() && e.LogixName() == name))
+            ?.Deserialize<LogixComponent>();
     }
 
     /// <summary>
-    /// Finds all component with the specified name using the internal component index.
+    /// Finds the first component with the <see cref="ComponentKey"/> using the internal component index.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>
+    /// The first found <see cref="LogixComponent"/> with the specified component key; If none exist, then <c>null</c>.
+    /// </returns>
+    /// <remarks>
+    /// <para>
+    /// Since components have unique names, we can find and index them for fast lookup when needed. There may be more
+    /// than one component with the same name in the L5X file (Tags, Routines). This method just returns the first one
+    /// found.
+    /// </para>
+    /// </remarks>
+    public LogixComponent? FindComponent(ComponentKey key)
+    {
+        return _componentIndex.TryGetValue(key, out var components)
+            ? components.Values.FirstOrDefault()?.Deserialize<LogixComponent>()
+            : default;
+    }
+
+    /// <summary>
+    /// Finds the first component with the specified name and generic type parameter using the internal component index.
     /// </summary>
     /// <param name="name">The name of the component to find.</param>
     /// <typeparam name="TComponent">The type of component to find.</typeparam>
     /// <returns>
-    /// A collection of <see cref="LogixComponent"/> with the specified component name if any are found.
-    /// If none are found, an empty collection.
+    /// The first found <see cref="LogixComponent"/> with the specified component name and type; If none exist, then <c>null</c>.
     /// </returns>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
     /// <remarks>
     /// <para>
     /// Since components have unique names, we can find and index them for fast lookup when needed. There may be more
-    /// than one component with the same name inf the L5X file (Tags, Routines). This method
-    /// returns all components of the specified type and name found in the L5X file.
-    /// </para>
-    /// <para>
-    /// To find just the first found component by name, see <see cref="Find{TComponent}(string)"/>.
-    /// To find a specific scoped component by name, see <see cref="FindIn{TComponent}"/>.
+    /// than one component with the same name in the L5X file (Tags, Routines). This method just returns the first one
+    /// found.
     /// </para>
     /// </remarks>
-    public IEnumerable<TComponent> FindAll<TComponent>(string name) where TComponent : LogixComponent
+    /// <seealso cref="FindComponent{TComponent}(string)"/>
+    public TComponent? FindComponent<TComponent>(string name) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
 
         return _componentIndex.TryGetValue(key, out var components)
-            ? components.Values.Select(LogixSerializer.Deserialize<TComponent>)
-            : Enumerable.Empty<TComponent>();
+            ? (TComponent?)components.Values.FirstOrDefault()?.Deserialize<LogixComponent>()
+            : default;
     }
 
     /// <summary>
@@ -335,7 +409,7 @@ public class L5X : ILogixSerializable
     /// than one component with the same name inf the L5X file (Tags, Routines). This method
     /// returns the single component within the specified scope.
     /// </remarks>
-    public TComponent? FindIn<TComponent>(string name, string scope) where TComponent : LogixComponent
+    public TComponent? FindComponent<TComponent>(string name, string scope) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
         if (string.IsNullOrEmpty(scope)) throw new ArgumentException("Scope can not be null or empty.", nameof(scope));
@@ -343,9 +417,37 @@ public class L5X : ILogixSerializable
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
 
         if (_componentIndex.TryGetValue(key, out var components) && components.TryGetValue(scope, out var element))
-            LogixSerializer.Deserialize<TComponent>(element);
+            element.Deserialize<TComponent>();
 
         return default;
+    }
+
+    /// <summary>
+    /// Finds all component with the specified name using the internal component index.
+    /// </summary>
+    /// <param name="name">The name of the component to find.</param>
+    /// <typeparam name="TComponent">The type of component to find.</typeparam>
+    /// <returns>
+    /// A collection of <see cref="LogixComponent"/> with the specified component name if any are found.
+    /// If none are found, an empty collection.
+    /// </returns>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    /// <remarks>
+    /// <para>
+    /// Since components have unique names, we can find and index them for fast lookup when needed. There may be more
+    /// than one component with the same name inf the L5X file (Tags, Routines). This method
+    /// returns all components of the specified type and name found in the L5X file.
+    /// </para>
+    /// </remarks>
+    public IEnumerable<TComponent> FindComponents<TComponent>(string name) where TComponent : LogixComponent
+    {
+        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
+
+        var key = new ComponentKey(typeof(TComponent).L5XType(), name);
+
+        return _componentIndex.TryGetValue(key, out var components)
+            ? components.Values.Select(e => e.Deserialize<TComponent>())
+            : Enumerable.Empty<TComponent>();
     }
 
     /// <summary>
@@ -375,8 +477,7 @@ public class L5X : ILogixSerializable
         if (scope is not null)
             return components.TryGetValue(scope, out var element) ? new Tag(element).Member(tagName.Path) : default;
 
-        var component = components.Values.FirstOrDefault();
-        return component is not null ? new Tag(component).Member(tagName.Path) : default;
+        return components.Values.FirstOrDefault()?.Deserialize<Tag>().Member(tagName.Path);
     }
 
     /// <summary>
@@ -404,20 +505,20 @@ public class L5X : ILogixSerializable
     /// Returns all known references to the provided <see cref="LogixComponent"/> instance.
     /// </summary>
     /// <param name="component">The component to find references to.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="LogixReference"/> objects with the data
+    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="CrossReference"/> objects with the data
     /// pertaining to the element referencing the provided logix component.</returns>
     /// <exception cref="ArgumentNullException"><c>component</c> is <c>null</c>.</exception>
     /// <remarks>
     /// This method calls the internal reference index which is generated upon creation of the L5X.
     /// This allows references to be located quickly without having to iterate all elements in the L5X.
     /// </remarks>
-    public IEnumerable<LogixReference> FindReferences(LogixComponent component)
+    public IEnumerable<CrossReference> FindReferences(LogixComponent component)
     {
         if (component is null) throw new ArgumentNullException(nameof(component));
 
         return _referenceIndex.TryGetValue(component.Key, out var references)
             ? references
-            : Enumerable.Empty<LogixReference>();
+            : Enumerable.Empty<CrossReference>();
     }
 
     /// <summary>
@@ -425,19 +526,19 @@ public class L5X : ILogixSerializable
     /// </summary>
     /// <param name="name">The component name to find references to.</param>
     /// <typeparam name="TComponent">The component type to find references for.</typeparam>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="LogixReference"/> objects with the data
+    /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="CrossReference"/> objects with the data
     /// pertaining to the element referencing the provided logix component.</returns>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
     /// <remarks>
     /// This method calls the internal reference index which is generated upon creation of the L5X.
     /// This allows references to be located quickly without having to iterate all elements in the L5X.
     /// </remarks>
-    public IEnumerable<LogixReference> FindReferences<TComponent>(string name)
+    public IEnumerable<CrossReference> FindReferences<TComponent>(string name)
         where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
-        return _referenceIndex.TryGetValue(key, out var references) ? references : Enumerable.Empty<LogixReference>();
+        return _referenceIndex.TryGetValue(key, out var references) ? references : Enumerable.Empty<CrossReference>();
     }
 
     /// <summary>
@@ -451,23 +552,24 @@ public class L5X : ILogixSerializable
     /// <remarks>
     /// Since components have unique names, we can find and index them for fast lookup when needed. This might
     /// be helpful for certain functions that need to repeatedly find references to other components to perform
-    /// certain tasks. Note that the only difference between this method and <see cref="Find{TComponent}(string)"/>
+    /// certain tasks. Note that the only difference between this method and <see cref="FindComponent{TComponent}(string)"/>
     /// is that this method will throw an exception if the component is not found. Therefore, it also returns a
     /// non-nullable reference type so that the caller can be sure that the component was found.
     /// </remarks>
-    public TComponent Get<TComponent>(string name) where TComponent : LogixComponent
+    public TComponent GetComponent<TComponent>(string name) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
 
         if (!_componentIndex.TryGetValue(key, out var components))
-            throw new KeyNotFoundException($"Component not found in L5X: {key}");
+            throw new KeyNotFoundException($"FindComponent not found in L5X: {key}");
 
         var component = components.Values.SingleOrDefault();
+        
         return component is not null
-            ? LogixSerializer.Deserialize<TComponent>(component)
-            : throw new KeyNotFoundException($"Component not found in L5X: {key}");
+            ? component.Deserialize<TComponent>()
+            : throw new KeyNotFoundException($"FindComponent not found in L5X: {key}");
     }
 
     /// <summary>
@@ -483,11 +585,11 @@ public class L5X : ILogixSerializable
     /// <remarks>
     /// Since components have unique names, we can find and index them for fast lookup when needed. This might
     /// be helpful for certain functions that need to repeatedly find references to other components to perform
-    /// certain tasks. Note that the only difference between this method and <see cref="FindIn{TComponent}"/>
+    /// certain tasks. Note that the only difference between this method and <see cref="FindComponent{TComponent}(string,string)"/>
     /// is that this method will throw an exception if the component is not found. Therefore, it also returns a
     /// non-nullable reference type so that the caller can be sure that the component was found.
     /// </remarks>
-    public TComponent GetIn<TComponent>(string name, string scope) where TComponent : LogixComponent
+    public TComponent GetComponent<TComponent>(string name, string scope) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
         if (string.IsNullOrEmpty(scope)) throw new ArgumentException("Scope can not be null or empty.", nameof(scope));
@@ -497,7 +599,7 @@ public class L5X : ILogixSerializable
         if (_componentIndex.TryGetValue(key, out var components) && components.TryGetValue(scope, out var element))
             LogixSerializer.Deserialize<TComponent>(element);
 
-        throw new KeyNotFoundException($"Component not found in L5X: {key}");
+        throw new KeyNotFoundException($"FindComponent not found in L5X: {key}");
     }
 
     /// <summary>
@@ -539,7 +641,7 @@ public class L5X : ILogixSerializable
     public override string ToString() => _content.ToString();
 
     #region Internal
-    
+
     /// <summary>
     /// Handles adding a component to the index. This requires the element to be attached to the L5X tree
     /// for it to determine the scope of the element. This will also throw a <see cref="ArgumentException"/>
@@ -550,25 +652,25 @@ public class L5X : ILogixSerializable
         var key = new ComponentKey(element.Name.LocalName, element.LogixName());
         var scope = Scope.ScopeName(element);
 
-        if (_componentIndex.TryAdd(key, new Dictionary<string, XElement> {{scope, element}})) return;
+        if (_componentIndex.TryAdd(key, new Dictionary<string, XElement> { { scope, element } })) return;
         if (!_componentIndex[key].TryAdd(scope, element))
             throw new ArgumentException($"The provided component '{key}' already exists in {scope}.");
     }
-    
+
     /// <summary>
     /// Handles adding the provided reference to the index. If no reference exists for the provided key, a new
     /// entry is created, otherwise the reference is added to the existing collection.
     /// </summary>
-    private void AddReference(LogixReference reference)
+    private void AddReference(CrossReference reference)
     {
-        if (!_referenceIndex.TryAdd(reference.Key, new List<LogixReference> {reference}))
-            _referenceIndex[reference.Key].Add(reference);
+        if (!_referenceIndex.TryAdd(reference.ComponentKey, new List<CrossReference> { reference }))
+            _referenceIndex[reference.ComponentKey].Add(reference);
     }
-    
+
     /// <summary>
     /// Adds the provided collection of references. This is a convenience method to add multiple references.
     /// </summary>
-    private void AddReferences(IEnumerable<LogixReference> references)
+    private void AddReferences(IEnumerable<CrossReference> references)
     {
         foreach (var reference in references)
         {
@@ -583,7 +685,7 @@ public class L5X : ILogixSerializable
     /// </summary>
     private void AddReferences(XElement element)
     {
-        if (LogixSerializer.Deserialize(element) is not ILogixReferencable referencable) return;
+        if (element.Deserialize() is not ILogixReferencable referencable) return;
         var references = referencable.References().ToList();
         AddReferences(references);
     }
@@ -641,7 +743,7 @@ public class L5X : ILogixSerializable
         foreach (var component in components)
         {
             var key = new ComponentKey(component.Name.LocalName, component.LogixName());
-            if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> {{scope, component}}))
+            if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> { { scope, component } }))
                 _componentIndex[key].TryAdd(scope, component);
             //todo what about collisions?
         }
@@ -663,7 +765,7 @@ public class L5X : ILogixSerializable
                          .Where(d => d.Name.LocalName is L5XName.Tag or L5XName.Routine))
             {
                 var key = new ComponentKey(component.Name.LocalName, component.LogixName());
-                if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> {{scope, component}}))
+                if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> { { scope, component } }))
                     _componentIndex[key].TryAdd(scope, component);
                 //todo what about collisions?
             }
@@ -681,7 +783,7 @@ public class L5X : ILogixSerializable
                      e.L5XType() is L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag))
         {
             var key = new ComponentKey(L5XName.Tag, component.ModuleTagName());
-            if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> {{scope, component}}))
+            if (!_componentIndex.TryAdd(key, new Dictionary<string, XElement> { { scope, component } }))
                 _componentIndex[key].TryAdd(scope, component);
             //todo what about collisions?
         }
@@ -706,9 +808,9 @@ public class L5X : ILogixSerializable
         foreach (var target in targets)
         {
             var componentName = target.Attribute(L5XName.DataType)!.Value;
-            var reference = new LogixReference(target, componentName, L5XName.DataType);
-            if (!_referenceIndex.TryAdd(reference.Key, new List<LogixReference> {reference}))
-                _referenceIndex[reference.Key].Add(reference);
+            var reference = new CrossReference(target, componentName, L5XName.DataType);
+            if (!_referenceIndex.TryAdd(reference.ComponentKey, new List<CrossReference> { reference }))
+                _referenceIndex[reference.ComponentKey].Add(reference);
         }
     }
 
@@ -732,19 +834,19 @@ public class L5X : ILogixSerializable
                     break;
                 case L5XName.STContent:
                     AddReferences(target.Descendants(L5XName.Line)
-                        .SelectMany(x => new Sheet(x).References()));
+                        .SelectMany(x => new Line(x).References()));
                     break;
                 case L5XName.FBDContent:
                     AddReferences(target.Descendants(L5XName.Sheet)
                         .SelectMany(x => new Sheet(x).References()));
                     break;
                 case L5XName.SFCContent:
-                    //todo
+                    AddReferences(new Chart(target).References());
                     break;
             }
         }
     }
-    
+
     /// <summary>
     /// Determines if the provided object is a component element, for which we need to reindex the component.
     /// </summary>
@@ -790,7 +892,7 @@ public class L5X : ILogixSerializable
         var contentTypes = RoutineType.All().Select(r => r.ContentName).ToList();
         return element.Ancestors().Any(a => contentTypes.Contains(a.Name.LocalName));
     }
-    
+
     /// <summary>
     /// Determines if the provided object is a attribute or property of a logix code element, for which we need to
     /// reindex references.
@@ -798,7 +900,7 @@ public class L5X : ILogixSerializable
     private static bool IsCodeProperty(object sender)
     {
         if (sender is not XAttribute attribute) return false;
-        if (attribute.Name.LocalName is not 
+        if (attribute.Name.LocalName is not
             (L5XName.Operand or L5XName.Argument or L5XName.Routine or L5XName.Type or L5XName.Name)) return false;
         return attribute.Parent is not null && IsCodeElement(attribute.Parent);
     }
@@ -814,7 +916,7 @@ public class L5X : ILogixSerializable
         if (l5X is null) throw new ArgumentNullException(nameof(l5X));
 
         var containerPairs = GetContainers()
-            .Join(l5X.GetContainers(), e => e.Name, e => e.Name, (a, b) => new {a, b})
+            .Join(l5X.GetContainers(), e => e.Name, e => e.Name, (a, b) => new { a, b })
             .ToList();
 
         foreach (var pair in containerPairs)
@@ -840,7 +942,7 @@ public class L5X : ILogixSerializable
                 match.ReplaceWith(element);
         }
     }
-    
+
     /// <summary>
     /// Creates a new default content element for a new instance of an L5X file given the provided target name and type.
     /// </summary>
@@ -857,7 +959,7 @@ public class L5X : ILogixSerializable
 
         return content;
     }
-    
+
     /// <summary>
     /// If no root controller element exists, adds new context controller and moves all root elements into that controller
     /// element. Then adds missing top level containers to ensure consistent structure of the root L5X.
@@ -882,7 +984,7 @@ public class L5X : ILogixSerializable
             controller.Add(new XElement(container));
         }
     }
-    
+
     /// <summary>
     /// Triggered when any content of the L5X is about to change. We need to know if the object changing is an element
     /// we are maintaining state for in the component or reference index. If so, we need to perform the necessary actions.
@@ -894,20 +996,21 @@ public class L5X : ILogixSerializable
     {
         if (e.ObjectChange is XObjectChange.Remove)
         {
-            if (IsComponentElement(sender)) RemoveComponent((XElement) sender);
-            if (IsCodeElement(sender)) RemoveReferences((XElement) sender);
+            if (IsComponentElement(sender)) RemoveComponent((XElement)sender);
+            if (IsCodeElement(sender)) RemoveReferences((XElement)sender);
         }
 
         if (e.ObjectChange is not XObjectChange.Value) return;
-        
-        if (IsNameProperty(sender)) RemoveComponent(((XAttribute) sender).Parent!);
+
+        if (IsNameProperty(sender)) RemoveComponent(((XAttribute)sender).Parent!);
         if (IsDataTypeProperty(sender))
         {
-            var attribute = (XAttribute) sender;
-            var reference = new LogixReference(attribute.Parent!, attribute.Value, L5XName.DataType);
+            var attribute = (XAttribute)sender;
+            var reference = new CrossReference(attribute.Parent!, L5XName.DataType, attribute.Value);
             RemoveReference(reference);
         }
-        if ( IsCodeProperty(sender)) RemoveReferences(((XAttribute) sender).Parent!);
+
+        if (IsCodeProperty(sender)) RemoveReferences(((XAttribute)sender).Parent!);
     }
 
     /// <summary>
@@ -921,22 +1024,23 @@ public class L5X : ILogixSerializable
     {
         if (e.ObjectChange is XObjectChange.Add)
         {
-            if (IsComponentElement(sender)) AddComponent((XElement) sender);
-            if (IsCodeElement(sender)) AddReferences((XElement) sender);
+            if (IsComponentElement(sender)) AddComponent((XElement)sender);
+            if (IsCodeElement(sender)) AddReferences((XElement)sender);
         }
 
         if (e.ObjectChange is not XObjectChange.Value) return;
-        
-        if (IsNameProperty(sender)) AddComponent(((XAttribute) sender).Parent!);
+
+        if (IsNameProperty(sender)) AddComponent(((XAttribute)sender).Parent!);
         if (IsDataTypeProperty(sender))
         {
-            var attribute = (XAttribute) sender;
-            var reference = new LogixReference(attribute.Parent!, attribute.Value, L5XName.DataType);
+            var attribute = (XAttribute)sender;
+            var reference = new CrossReference(attribute.Parent!, attribute.Value, L5XName.DataType);
             AddReference(reference);
         }
-        if ( IsCodeProperty(sender)) AddReferences(((XAttribute) sender).Parent!);
+
+        if (IsCodeProperty(sender)) AddReferences(((XAttribute)sender).Parent!);
     }
-    
+
     /// <summary>
     /// Handles removing a component matching the current attached element from the index. This requires the element
     /// to be attached to the L5X tree for it to determine the scope of the element. 
@@ -956,18 +1060,18 @@ public class L5X : ILogixSerializable
 
         components.Remove(scope);
     }
-    
+
     /// <summary>
     /// Handles removing the provided reference from the index. If only a single reference exists for the provided key,
     /// the entire reference is removed, otherwise we iterate the references and remove all that match the provided
     /// reference's location and type.
     /// </summary>
-    private void RemoveReference(LogixReference reference)
+    private void RemoveReference(CrossReference reference)
     {
-        if (!_referenceIndex.TryGetValue(reference.Key, out var results)) return;
+        if (!_referenceIndex.TryGetValue(reference.ComponentKey, out var results)) return;
         if (results.Count == 1)
         {
-            _referenceIndex.Remove(reference.Key);
+            _referenceIndex.Remove(reference.ComponentKey);
             return;
         }
 
@@ -977,7 +1081,7 @@ public class L5X : ILogixSerializable
     /// <summary>
     /// Removes the provided collection of references. This is a convenience method to remove multiple references.
     /// </summary>
-    private void RemoveReferences(IEnumerable<LogixReference> references)
+    private void RemoveReferences(IEnumerable<CrossReference> references)
     {
         foreach (var reference in references)
         {

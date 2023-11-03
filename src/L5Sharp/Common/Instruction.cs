@@ -14,7 +14,7 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Common;
 
 /// <summary>
-/// A class representing a instruction definition and ...
+/// A class containing the 
 /// </summary>
 [PublicAPI]
 public sealed class Instruction
@@ -26,11 +26,11 @@ public sealed class Instruction
     /// </summary>
     public const string Pattern = @"[A-Za-z_]\w{1,39}\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
 
-    /// <summary>
+    /*/// <summary>
     /// Pattern finds all text prior to opening parentheses, which is the instruction name or key that identifies
     /// the instruction.
     /// </summary>
-    private const string KeyPattern = @"[A-Za-z_]\w{1,39}(?=\()";
+    private const string KeyPattern = @"[A-Za-z_]\w{1,39}(?=\()";*/
     
     /// <summary>
     /// Captures all content within parentheses, including outer parentheses and nested parentheses, assuming they
@@ -45,6 +45,12 @@ public sealed class Instruction
     /// </summary>
     private const string TagNamePattern =
         @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?";
+
+    /// <summary>
+    /// A regex pattern that finds all commas not contained in array brackets so that we can split the arguments
+    /// of an instruction signature into separate parsable values.
+    /// </summary>
+    private const string ArgumentSplitPattern = ",(?![^[]*])";
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided string key and regex signature pattern.
@@ -62,6 +68,8 @@ public sealed class Instruction
     /// <summary>
     /// The collection of <see cref="Argument"/> values for the instruction instance.
     /// </summary>
+    /// <value>A of <see cref="Argument"/> value objects. These could represent literal values, tag names, or expressions.</value>
+    /// <remarks></remarks>
     public IEnumerable<Argument> Arguments { get; }
 
     /// <summary>
@@ -75,32 +83,34 @@ public sealed class Instruction
     public bool CallsTask => this == EVENT;
 
     /// <summary>
-    /// Indicates whether the instruction is conditional or evaluates a certain condition to be true or false, in which
-    /// it directs the flow of the program to a different location.
+    /// Indicates whether the instruction is conditional or evaluates a certain condition to be true or false, from which
+    /// it directs the control flow of a program.
     /// </summary>
     /// <value><c>true</c> if the instruction is conditional; Otherwise, <c>false</c>.</value>
     /// <remarks>An example of a condition instruction is an <see cref="XIC"/>.</remarks>
     public bool IsConditional => ConditionalKeys().Contains(Key);
 
     /// <summary>
-    /// The unique identifier of the instruction instance.
+    /// The unique identifier of the instruction type.
     /// </summary>
     /// <value>
-    /// A <see cref="string"/> containing the short hand instruction key identifier (e.g. XIC/OTe).
-    /// For AOI this is the name of the component.
+    /// A <see cref="string"/> containing the short hand instruction key identifier (e.g. XIC/OTE).
+    /// For an <c>AddOnInstruction</c> this is the name of the component.
     /// </value>
     public string Key { get; }
 
     /// <summary>
-    /// The signature or valid regex pattern of the instruction neutral text.
+    /// The signature portion of the instruction instance. This represents the argument (parenthesis included) that are
+    /// supplied to the instruction block instance.
     /// </summary>
-    /// <remarks>
-    /// This format string represent a regex capture pattern to help parse <see cref="NeutralText"/> for the instruction.
-    /// </remarks>
+    /// <value>
+    /// A <see cref="string"/> containing the signature of the <c>Instruction</c>.
+    /// This simply joins the <see cref="Arguments"/> and ecloses them in parenthesis.
+    /// </value>
     public string Signature => $"({string.Join(',', Arguments.AsEnumerable())})";
 
     /// <summary>
-    /// The <see cref="NeutralText"/> representation of the instruction.
+    /// The <see cref="NeutralText"/> representation of the instruction instance.
     /// </summary>
     /// <value>A <see cref="NeutralText"/> instance that represents the instruction in Logix neutral text format.</value>
     public NeutralText Text => new($"{Key}{Signature}");
@@ -129,10 +139,9 @@ public sealed class Instruction
     public bool IsEquivalent(Instruction? other) => other is not null && Text.Equals(other.Text);
 
     /// <summary>
-    /// Creates a <see cref="Instruction"/> that represents the current instruction with the provided
-    /// argument values.
+    /// Creates a <see cref="Instruction"/> of the same type with the updated argument values.
     /// </summary>
-    /// <param name="arguments">The collection of arguments that are provided to the instruction signature.</param>
+    /// <param name="arguments">The collection of arguments make up the instruction signature.</param>
     /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
     public Instruction Of(params Argument[] arguments) => new(Key, arguments);
 
@@ -152,7 +161,7 @@ public sealed class Instruction
 
         var key = text[..text.IndexOf('(')];
         var signature = Regex.Match(text, SignaturePattern).Value[1..^1];
-        var arguments = Regex.Split(signature, ",(?![^[]*])").Select(Argument.Parse).ToArray();
+        var arguments = Regex.Split(signature, ArgumentSplitPattern).Select(Argument.Parse).ToArray();
         
         return new Instruction(key, arguments);
     }

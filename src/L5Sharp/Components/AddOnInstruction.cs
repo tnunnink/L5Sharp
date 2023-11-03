@@ -204,7 +204,7 @@ public class AddOnInstruction : LogixComponent
     }
 
     /// <summary>
-    /// The collection of local <see cref="Tag"/> objects used within the AOI logic.
+    /// The collection of local <see cref="Tag"/> objects used within the AoiBlock logic.
     /// </summary>
     public LogixContainer<Tag> LocalTags
     {
@@ -224,7 +224,7 @@ public class AddOnInstruction : LogixComponent
     #region Extensions
 
     /// <summary>
-    /// Returns the AOI instruction logic with the parameters tag names replaced with the argument tag names of the
+    /// Returns the AoiBlock instruction logic with the parameters tag names replaced with the argument tag names of the
     /// provided instruction instance.
     /// </summary>
     /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
@@ -237,7 +237,7 @@ public class AddOnInstruction : LogixComponent
     /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
     /// content or code type.
     /// </remarks>
-    public IEnumerable<NeutralText> Logic(Instruction instruction)
+    public IEnumerable<NeutralText> LogicFor(Instruction instruction)
     {
         if (instruction is null)
             throw new ArgumentNullException(nameof(instruction));
@@ -248,7 +248,7 @@ public class AddOnInstruction : LogixComponent
         var rungs = logic?.Content<Rung>();
         if (rungs is null) return Enumerable.Empty<NeutralText>();
 
-        //Skip first operand as it is always the AOI tag, which does not have corresponding parameter within the logic.
+        //Skip first operand as it is always the AoiBlock tag, which does not have corresponding parameter within the logic.
         var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToList();
 
         //Only required parameters are part of the instruction signature

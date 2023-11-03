@@ -25,7 +25,7 @@ public class L5XReferenceTests
         var initialReferences = content.FindReferences<Tag>("TestSimpleTag").ToList();
         initialReferences.Should().NotBeEmpty();
         var rung = initialReferences.First(r =>
-                r.ScopeName == "MainProgram" && r.RoutineName == "Main" && r.ReferenceId == "Rung 2")
+                r.Container == "MainProgram" && r.RoutineName == "Main" && r.ReferenceId == "Rung 2")
             .Reference as Rung;
         rung.Should().NotBeNull();
 

@@ -77,19 +77,32 @@ public class Rung : LogixCode
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixReference> References()
+    public override IEnumerable<CrossReference> References()
     {
-        var references = new List<LogixReference>();
+        var references = new List<CrossReference>();
 
-        references.AddRange(Text.Tags()
-            .Select(name => new LogixReference(Element, name, L5XName.Tag)));
+        foreach (var instruction in Text.Instructions())
+        {
+            if (instruction.CallsRoutine)
+            {
+                var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
+                references.Add(new CrossReference(Element, L5XName.Routine, routine, instruction));
+                var parameters = instruction.Arguments.Skip(1).Where(a => a.IsTag).Select(t => t.ToString());
+                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p, instruction)));
+                continue;
+            }
 
-        references.AddRange(Text.Instructions()
-            .Select(name => new LogixReference(Element, name.Key, L5XName.AddOnInstructionDefinition)));
+            if (instruction.CallsTask)
+            {
+                var task = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
+                references.Add(new CrossReference(Element, L5XName.Task, task));
+                continue;
+            }
 
-        //todo routines? Have to look for JSR and SBR, RET
-        //todo modules? Have to look for tag names with ':'
-        
+            references.AddRange(instruction.Text.Tags()
+                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString(), instruction)));
+        }
+
         return references;
     }
 
@@ -113,7 +126,7 @@ public class Rung : LogixCode
     #region Extensions
 
     /// <summary>
-    /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AOI logic in the
+    /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AoiBlock logic in the
     /// collection of <see cref="Rung"/> objects.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all the <see cref="NeutralText"/>, including nested instruction
@@ -121,7 +134,7 @@ public class Rung : LogixCode
     /// </returns>
     /// <remarks>
     /// This extension was specifically created to assist in getting a flat list of logic, including
-    /// nested AOI logic, for specialized querying purposes, such as finding tag references within nested logic.
+    /// nested AoiBlock logic, for specialized querying purposes, such as finding tag references within nested logic.
     /// This method will replace the instruction logic parameters with the neutral text operands of the instruction signature,
     /// so to get the effective flattened list of executing <see cref="NeutralText"/> code.
     /// </remarks>
@@ -133,12 +146,12 @@ public class Rung : LogixCode
         var code = new List<NeutralText>();
 
         var references = L5X.Instructions
-            .Select(i => new {Instruction = i, Instances = Text.Instructions(i.Name)})
+            .Select(i => new { Instruction = i, Instances = Text.Instructions(i.Name) })
             .ToList();
 
         foreach (var reference in references.Where(r => r.Instances.Any()))
         {
-            var logic = reference.Instances.SelectMany(i => reference.Instruction.Logic(i));
+            var logic = reference.Instances.SelectMany(i => reference.Instruction.LogicFor(i));
             code.AddRange(logic);
         }
 
@@ -154,7 +167,7 @@ public class Rung : LogixCode
 public static class RungExtensions
 {
     /// <summary>
-    /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AOI logic in the
+    /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AoiBlock logic in the
     /// collection of <see cref="Rung"/> objects.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all the <see cref="NeutralText"/>, including nested instruction
@@ -162,7 +175,7 @@ public static class RungExtensions
     /// </returns>
     /// <remarks>
     /// This extension was specifically created to assist in getting a flat list of logic, including
-    /// nested AOI logic, for specialized querying purposes, such as finding tag references within nested logic.
+    /// nested AoiBlock logic, for specialized querying purposes, such as finding tag references within nested logic.
     /// This method will replace the instruction logic parameters with the neutral text operands of the instruction signature,
     /// so to get the effective flattened list of executing <see cref="NeutralText"/> code.
     /// </remarks>
@@ -190,7 +203,7 @@ public static class RungExtensions
 
             foreach (var logic in from instruction in instructions
                      let definition = lookup[instruction.Key]
-                     select definition.Logic(instruction))
+                     select definition.LogicFor(instruction))
             {
                 code.AddRange(logic);
             }

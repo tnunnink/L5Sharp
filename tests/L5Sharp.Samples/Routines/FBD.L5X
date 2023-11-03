@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="FBD" TargetType="Routine" TargetSubType="FBD" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Tue Oct 10 11:15:33 2023" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="FBD" TargetType="Routine" TargetSubType="FBD" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Sun Oct 29 14:22:16 2023" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
 <Controller Use="Context" Name="TestController">
 <DataTypes Use="Context">
 <DataType Name="ComplexType" Family="NoFamily" Class="User">
@@ -264,6 +264,14 @@
 </AddOnInstructionDefinition>
 </AddOnInstructionDefinitions>
 <Tags Use="Context">
+<Tag Name="_Test" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
 <Tag Name="RealArray" TagType="Base" DataType="REAL" Dimensions="5" Radix="Float" Constant="false" ExternalAccess="Read/Write">
 <Data Format="L5K">
 <![CDATA[[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000]]]>
@@ -442,25 +450,18 @@
 </Structure>
 </Data>
 </Tag>
-<Tag Name="TestSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read Only">
-<Data Format="L5K">
-<![CDATA[[0,0,14,1,0,0.00000000e+000]]]>
-</Data>
-<Data Format="Decorated">
-<Structure DataType="SimpleType">
-<DataValueMember Name="BoolMember" DataType="BOOL" Value="0"/>
-<DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00"/>
-<DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_016"/>
-<DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$01'"/>
-<DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
-</Structure>
-</Data>
-</Tag>
 </Tags>
 <Programs Use="Context">
 <Program Use="Context" Name="MainProgram">
 <Tags Use="Context">
+<Tag Name="AlarmActive" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="None">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
 <Tag Name="aoi_Test_001" TagType="Base" DataType="aoi_Test" Constant="false" ExternalAccess="None">
 <Data Format="L5K">
 <![CDATA[[1,0,0,0,[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
@@ -536,10 +537,46 @@
 </Structure>
 </Data>
 </Tag>
+<Tag Name="TestSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="None">
+<Data Format="L5K">
+<![CDATA[[0,0,0,0,0,0.00000000e+000]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="SimpleType">
+<DataValueMember Name="BoolMember" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00"/>
+<DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000"/>
+<DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'"/>
+<DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="TOFR_01" TagType="Base" DataType="FBD_TIMER" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[1,0,0,0,0,0,0,0,0,4,0,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="FBD_TIMER">
+<DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="TimerEnable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
+<DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PresetInv" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
 </Tags>
 <Routines Use="Context">
 <Routine Use="Target" Name="FBD" Type="FBD">
-<FBDContent SheetSize="B - 11 x 17 in" SheetOrientation="Landscape">
+<FBDContent SheetSize="A0 - 841 x 1189 mm" SheetOrientation="Landscape">
 <Sheet Number="1">
 <IRef ID="0" X="180" Y="420" Operand="100" HideDesc="false"/>
 <IRef ID="1" X="600" Y="280" Operand="OutputParameter" HideDesc="false"/>
@@ -551,37 +588,39 @@
 <Array Name="StorageArray" Operand="RealArray"/>
 </Block>
 <Block Type="SEL" ID="7" X="680" Y="40" Operand="SEL_01" VisiblePins="In1 In2 SelectorIn Out" HideDesc="false"/>
-<Function Type="BNOT__F" ID="8" X="140" Y="260"/>
-<Function Type="BAND__F" ID="9" X="260" Y="200"/>
-<AddOnInstruction Name="aoi_Test" ID="10" X="840" Y="160" Operand="aoi_Test_001" VisiblePins="InputTest OutputTest InOutTest Config InOutArray New">
+<Block Type="TOFR" ID="8" X="680" Y="500" Operand="TOFR_01" VisiblePins="TimerEnable PRE Reset ACC DN" HideDesc="false"/>
+<Function Type="BNOT__F" ID="9" X="140" Y="260"/>
+<Function Type="BAND__F" ID="10" X="260" Y="200"/>
+<AddOnInstruction Name="aoi_Test" ID="11" X="840" Y="160" Operand="aoi_Test_001" VisiblePins="InputTest OutputTest InOutTest Config InOutArray New">
 <InOutParameter Name="InOutArray" Argument="RealArray"/>
 <InOutParameter Name="InOutTest" Argument="TestSimpleTag"/>
 </AddOnInstruction>
-<JSR ID="11" X="580" Y="380" Routine="ST"/>
-<JSR ID="12" X="700" Y="380" Routine="ST"/>
-<Wire FromID="0" ToID="6" ToParam="In"/>
-<Wire FromID="1" ToID="10" ToParam="Config"/>
-<Wire FromID="1" ToID="10" ToParam="New"/>
-<Wire FromID="2" ToID="8" ToParam="In"/>
-<Wire FromID="2" ToID="9" ToParam="In1"/>
-<Wire FromID="2" ToID="10" ToParam="InputTest"/>
-<Wire FromID="4" ToID="10" ToParam="OutputTest"/>
+<JSR ID="12" X="540" Y="380" Routine="ST" In="AlarmActive" Ret="_Test"/>
+<JSR ID="13" X="780" Y="400" Routine="ST"/>
+<Wire FromID="1" ToID="11" ToParam="Config"/>
+<Wire FromID="1" ToID="11" ToParam="New"/>
+<Wire FromID="2" ToID="9" ToParam="In"/>
+<Wire FromID="2" ToID="10" ToParam="In1"/>
+<Wire FromID="2" ToID="11" ToParam="InputTest"/>
+<Wire FromID="4" ToID="11" ToParam="OutputTest"/>
 <Wire FromID="7" FromParam="Out" ToID="5"/>
 <Wire FromID="7" FromParam="Out" ToID="7" ToParam="In1"/>
 <Wire FromID="7" FromParam="Out" ToID="7" ToParam="In2"/>
-<Wire FromID="8" FromParam="Out" ToID="9" ToParam="In2"/>
-<Wire FromID="9" FromParam="Out" ToID="3"/>
-<Wire FromID="9" FromParam="Out" ToID="7" ToParam="SelectorIn"/>
-<TextBox ID="13" X="60" Y="80" Width="0">
+<Wire FromID="9" FromParam="Out" ToID="10" ToParam="In2"/>
+<Wire FromID="9" FromParam="Out" ToID="12" ToParam="AlarmActive"/>
+<Wire FromID="10" FromParam="Out" ToID="7" ToParam="SelectorIn"/>
+<TextBox ID="14" X="60" Y="80" Width="0">
 <Text>
 <![CDATA[Test]]>
 </Text>
 </TextBox>
-<TextBox ID="14" X="340" Y="40" Width="0">
+<TextBox ID="15" X="340" Y="40" Width="0">
 <Text>
-<![CDATA[Hello]]>
+<![CDATA[Helloasdfasdfasdfasdfasdfasdf]]>
 </Text>
 </TextBox>
+<TextBox ID="16" X="4540" Y="120" Width="0"/>
+<Attachment FromID="14" ToID="2"/>
 </Sheet>
 </FBDContent>
 </Routine>

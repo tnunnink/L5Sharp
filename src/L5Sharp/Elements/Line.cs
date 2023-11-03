@@ -10,7 +10,7 @@ namespace L5Sharp.Elements;
 /// <summary>
 /// A Logix <c>Line</c> element containing the properties for a L5X Line component.
 /// </summary>
-public class Line : LogixCode
+public sealed class Line : LogixCode
 {
     private NeutralText Text => new(Element.Value);
     
@@ -45,15 +45,15 @@ public class Line : LogixCode
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixReference> References()
+    public override IEnumerable<CrossReference> References()
     {
-        var references = new List<LogixReference>();
+        var references = new List<CrossReference>();
 
         references.AddRange(Text.Tags()
-            .Select(name => new LogixReference(Element, name, L5XName.Tag)));
+            .Select(name => new CrossReference(Element, name, L5XName.Tag)));
 
         references.AddRange(Text.Instructions()
-            .Select(instruction => new LogixReference(Element, instruction.Key, L5XName.AddOnInstructionDefinition)));
+            .Select(instruction => new CrossReference(Element, instruction.Key, L5XName.AddOnInstructionDefinition)));
 
         //todo routines? Have to look for JSR and SBR, RET
         //todo modules? Have to look for tag names with ':'

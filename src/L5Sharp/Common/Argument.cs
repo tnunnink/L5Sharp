@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 
@@ -20,7 +22,7 @@ public class Argument
     {
         _value = value ?? throw new ArgumentNullException(nameof(value));
     }
-    
+
     /// <summary>
     /// Indicates whether the argument is an immediate atomic value.
     /// </summary>
@@ -46,7 +48,7 @@ public class Argument
     /// </summary>
     /// <value><c>true</c> if the underlying value is a <see cref="TagName"/> object; Otherwise, <c>false</c>.</value>
     public bool IsTag => _value is TagName;
-    
+
     /// <summary>
     /// Indicates whether the argument is a literal string value with the single quote identifiers.
     /// </summary>
@@ -54,12 +56,28 @@ public class Argument
     public bool IsString => _value is string;
 
     /// <summary>
+    /// The collection of <see cref="TagName"/> values found in the argument.
+    /// </summary>
+    /// <value>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values.</value>
+    /// <remarks>
+    /// Since an argument could represent a complex expression, it may contain more than one tag name value.
+    /// We need a way to get all tag names from a single argument whether it's a single tag name or expression or
+    /// multiple tag names.
+    /// </remarks>
+    public IEnumerable<TagName> Tags => _value switch
+    {
+        TagName tagName => new[] { tagName },
+        NeutralText text => text.Tags(),
+        _ => Enumerable.Empty<TagName>()
+    };
+
+    /// <summary>
     /// Represents an unknown argument that can be found in certain instruction text.
     /// </summary>
     /// <value>A <see cref="Argument"/> representing an unknown parameter.</value>
     /// <remarks>This is literally the '?' character, as often seen in the TIMER instruction arguments.</remarks>
     public static Argument Unknown => new("?");
-    
+
     /// <summary>
     /// Represents an empty argument.
     /// </summary>
@@ -84,7 +102,7 @@ public class Argument
     {
         //Empty value - lets not crash on empty or invalid arguments.
         if (string.IsNullOrEmpty(value)) return Empty;
-        
+
         //Unknown value - Can be found in TON instructions.
         if (value == "?") return Unknown;
 
@@ -194,21 +212,21 @@ public class Argument
     /// </summary>
     /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
     /// <returns>A <see cref="TagName"/> object representing the value of the argument.</returns>
-    public static explicit operator TagName(Argument argument) => (TagName) argument._value;
+    public static explicit operator TagName(Argument argument) => (TagName)argument._value;
 
     /// <summary>
     /// Explicitly converts the provided <see cref="Argument"/> to an <see cref="AtomicType"/>.
     /// </summary>
     /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
     /// <returns>A <see cref="AtomicType"/> object representing the value of the argument.</returns>
-    public static explicit operator AtomicType(Argument argument) => (AtomicType) argument._value;
-    
+    public static explicit operator AtomicType(Argument argument) => (AtomicType)argument._value;
+
     /// <summary>
     /// Explicitly converts the provided <see cref="Argument"/> to an <see cref="NeutralText"/>.
     /// </summary>
     /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
     /// <returns>A <see cref="NeutralText"/> object representing the value of the argument.</returns>
-    public static explicit operator NeutralText(Argument argument) => (NeutralText) argument._value;
+    public static explicit operator NeutralText(Argument argument) => (NeutralText)argument._value;
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => _value.Equals(obj);

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Elements;
+using L5Sharp.Enums;
 
 namespace L5Sharp.Tests.Elements;
 
@@ -30,125 +31,54 @@ public class SheetTests
 
         sheet.Number.Should().Be(0);
         sheet.Description.Should().BeNull();
-        sheet.ScopeName.Should().BeEmpty();
-        sheet.Routine.Should().BeEmpty();
-        sheet.InputReferences.Should().BeEmpty();
-        sheet.OutputReferences.Should().BeEmpty();
-        sheet.InputConnectors.Should().BeEmpty();
-        sheet.OutputConnectors.Should().BeEmpty();
-        sheet.Blocks.Should().BeEmpty();
-        sheet.Functions.Should().BeEmpty();
-        sheet.AddOnInstructions.Should().BeEmpty();
-        sheet.JumpRoutines.Should().BeEmpty();
-        sheet.SubRoutines.Should().BeEmpty();
-        sheet.Returns.Should().BeEmpty();
-        sheet.Wires.Should().BeEmpty();
-        sheet.TextBoxes.Should().BeEmpty();
-        sheet.Attachments.Should().BeEmpty();
+        sheet.Container.Should().BeEmpty();
+        sheet.Blocks().Should().BeEmpty();
     }
 
     [Test]
-    public void InputReferences_AddValidReference_ShouldHaveExpectedCount()
+    public void Add_IRefBlock_ShouldHaveSingleBlock()
     {
         var sheet = new Sheet();
-        var reference = new DiagramReference {ID = 0, X = 100, Y = 100, Operand = "Test", HideDesc = true};
-        
-        sheet.InputReferences.Add(reference);
 
-        sheet.InputReferences.Should().HaveCount(1);
+        sheet.Add(new ReferenceBlock { Operand = "MyTagName", X = 100, Y = 300 });
+
+        sheet.Blocks().Should().HaveCount(1);
     }
     
     [Test]
-    public Task InputReferences_AddValidReference_ShouldBeVerified()
+    public void Add_MultipleBlocks_ShouldGetExpectedIds()
     {
         var sheet = new Sheet();
-        var reference = new DiagramReference {ID = 0, X = 100, Y = 100, Operand = "Test", HideDesc = true};
-        
-        sheet.InputReferences.Add(reference);
+
+        var zero = sheet.Add(new ReferenceBlock { Operand = "MyTagName", X = 100, Y = 300 });
+        var one = sheet.Add(new ReferenceBlock { Operand = "MyTagName", X = 100, Y = 300 });
+        var two = sheet.Add(new ReferenceBlock { Operand = "MyTagName", X = 100, Y = 300 });
+
+        zero.Should().Be(0);
+        one.Should().Be(1);
+        two.Should().Be(2);
+    }
+
+    [Test]
+    public Task Add_BlocksOutOfOrder_ShouldBeVerified()
+    {
+        var sheet = new Sheet();
+
+        sheet.Add(new ReferenceBlock { Operand = "InputReference", X = 100, Y = 300 });
+        sheet.Add(new Block { Operand = "MyBlockTag", X = 100, Y = 300 });
+        sheet.Add(new ReferenceBlock(ParameterType.Output) { Operand = "OutputReference", X = 100, Y = 300 });
 
         return Verify(sheet.Serialize().ToString());
     }
-    
+
     [Test]
-    public Task InputReferences_AddAfterFirstElement_ShouldBeVerified()
+    public void Add_BlockAndText_ShouldHaveExpectedCount()
     {
         var sheet = new Sheet();
-        var first = new DiagramReference {ID = 0, X = 100, Y = 100, Operand = "First", HideDesc = true};
-        var second = new DiagramReference {ID = 1, X = 150, Y = 150, Operand = "Second"};
-        sheet.InputReferences.Add(first);
-        
-        first.AddAfter(second);
 
-        return Verify(sheet.Serialize().ToString());
-    }
-    
-    [Test]
-    public void OutputReferences_AddValidReference_ShouldHaveExpectedCount()
-    {
-        var sheet = new Sheet();
-        var reference = new DiagramReference {ID = 0, X = 100, Y = 100, Operand = "Test", HideDesc = true};
-        
-        sheet.OutputReferences.Add(reference);
+        sheet.Add(new ReferenceBlock { Operand = "InputReference", X = 100, Y = 300 });
+        sheet.Add(new Block { Operand = "MyBlockTag", X = 100, Y = 300 });
 
-        sheet.OutputReferences.Should().HaveCount(1);
-    }
-    
-    [Test]
-    public Task OutputReferences_AddValidReference_ShouldBeVerified()
-    {
-        var sheet = new Sheet();
-        var reference = new DiagramReference {ID = 0, X = 100, Y = 100, Operand = "Test", HideDesc = true};
-        
-        sheet.OutputReferences.Add(reference);
-
-        return Verify(sheet.Serialize().ToString());
-    }
-    
-    [Test]
-    public Task OutputReferences_AddAfterFirstElement_ShouldBeVerified()
-    {
-        var sheet = new Sheet();
-        var first = new DiagramReference {ID = 0, X = 100, Y = 100, Operand = "First", HideDesc = true};
-        var second = new DiagramReference {ID = 1, X = 150, Y = 150, Operand = "Second"};
-        sheet.OutputReferences.Add(first);
-        
-        first.AddAfter(second);
-
-        return Verify(sheet.Serialize().ToString());
-    }
-    
-    [Test]
-    public void InputConnectors_AddValidConnector_ShouldHaveExpectedCount()
-    {
-        var sheet = new Sheet();
-        var reference = new DiagramConnector {ID = 0, X = 100, Y = 100, Name = "Test"};
-        
-        sheet.InputConnectors.Add(reference);
-
-        sheet.InputConnectors.Should().HaveCount(1);
-    }
-    
-    [Test]
-    public Task InputConnectors_AddValidConnector_ShouldBeVerified()
-    {
-        var sheet = new Sheet();
-        var reference = new DiagramConnector {ID = 0, X = 100, Y = 100, Name = "Test"};
-        
-        sheet.InputConnectors.Add(reference);
-
-        return Verify(sheet.Serialize().ToString());
-    }
-    
-    [Test]
-    public Task InputConnectors_AddAfterConnector_ShouldBeVerified()
-    {
-        var sheet = new Sheet();
-        var first = new DiagramConnector {ID = 0, X = 100, Y = 100, Name = "First"};
-        var second = new DiagramConnector {ID = 1, X = 150, Y = 150, Name = "Second"};
-        sheet.InputConnectors.Add(first);
-        
-        first.AddAfter(second);
-
-        return Verify(sheet.Serialize().ToString());
+        sheet.Blocks().Should().HaveCount(2);
     }
 }

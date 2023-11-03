@@ -136,7 +136,7 @@ public class Parameter : LogixElement
     /// </summary>
     /// <value>
     /// A <see cref="Enums.TagUsage"/> option representing the <c>Parameter</c> scope.
-    /// Default for AOI is <see cref="Enums.TagUsage.Input"/>. Only valid options for AOI are Input, Output,
+    /// Default for AoiBlock is <see cref="Enums.TagUsage.Input"/>. Only valid options for AoiBlock are Input, Output,
     /// and InOut.
     /// </value>
     public TagUsage Usage
