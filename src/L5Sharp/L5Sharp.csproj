@@ -25,15 +25,10 @@
 
     <ItemGroup>
         <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-        <None Remove="Serialization\**" />
     </ItemGroup>
 
     <ItemGroup>
         <None Remove="L5Sharp.sln.DotSettings" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Utilities\TagDictionary.cs" />
     </ItemGroup>
 
     <ItemGroup>

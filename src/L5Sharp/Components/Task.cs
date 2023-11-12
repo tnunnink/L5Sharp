@@ -150,11 +150,11 @@ public class Task : LogixComponent
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
     /// <remarks>This member just returns the read only list of scheduled programs. To modify the list, use </remarks>
-    public IEnumerable<string> ScheduledPrograms =>
+    public IEnumerable<string> Scheduled =>
         Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
 
     /// <summary>
-    /// Adds the provided program name to the underlying list of <see cref="ScheduledPrograms"/>.
+    /// Adds the provided program name to the underlying list of <see cref="Scheduled"/>.
     /// </summary>
     /// <param name="program">The name of the program to schedule.</param>
     public void Schedule(string program)
@@ -168,7 +168,7 @@ public class Task : LogixComponent
     }
 
     /// <summary>
-    /// Removes the specified program name from the underlying list of <see cref="ScheduledPrograms"/>
+    /// Removes the specified program name from the underlying list of <see cref="Scheduled"/>
     /// </summary>
     /// <param name="program">The name of the program to cancel.</param>
     public void Cancel(string program)

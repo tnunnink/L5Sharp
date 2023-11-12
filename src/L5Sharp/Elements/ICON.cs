@@ -20,29 +20,30 @@ namespace L5Sharp.Elements;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.ICon, L5XName.Sheet)]
-[L5XType(L5XName.OCon, L5XName.Sheet)]
-public class ConnectorBlock : FunctionBlock
+public class ICON : FunctionBlock
 {
     /// <summary>
-    /// Creates a new <see cref="ConnectorBlock"/> with default values.
+    /// Creates a new <see cref="ICON"/> with default values.
     /// </summary>
-    public ConnectorBlock()
+    public ICON()
     {
+        Name = string.Empty;
+    }
+    
+    /// <summary>
+    /// Creates a new <see cref="IREF"/> with the provided <c>operand</c> value.
+    /// </summary>
+    public ICON(string name)
+    {
+        Name = name;
     }
 
     /// <summary>
-    /// Creates a new <see cref="ConnectorBlock"/> as the specified input or output block type.
-    /// </summary>
-    public ConnectorBlock(ParameterType parameterType) : base(GenerateElement(parameterType))
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ConnectorBlock"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="ICON"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public ConnectorBlock(XElement element) : base(element)
+    public ICON(XElement element) : base(element)
     {
     }
 
@@ -53,12 +54,5 @@ public class ConnectorBlock : FunctionBlock
     {
         get => GetValue<string>();
         set => SetValue(value);
-    }
-    
-    private static XElement GenerateElement(ParameterType parameterType)
-    {
-        if (parameterType is null) throw new ArgumentNullException(nameof(parameterType));
-        var name = parameterType == ParameterType.Input ? L5XName.ICon : L5XName.OCon;
-        return new XElement(name);
     }
 }

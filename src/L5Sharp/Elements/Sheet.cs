@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
-using L5Sharp.Common;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
@@ -31,7 +29,7 @@ namespace L5Sharp.Elements;
 /// </para>
 /// </remarks>
 [L5XType(L5XName.Sheet, L5XName.FBDContent)]
-public class Sheet : Diagram<FunctionBlock>
+public class Sheet : Diagram<FunctionBlock, Wire>
 {
     /// <summary>
     /// Creates a new <see cref="Sheet"/> with default values.
@@ -57,22 +55,6 @@ public class Sheet : Diagram<FunctionBlock>
     {
         get => GetProperty<string>();
         set => SetDescription(value);
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<CrossReference> References()
-    {
-        var references = new List<CrossReference>();
-        references.AddRange(Blocks<ReferenceBlock>().SelectMany(r => r.References()));
-        references.AddRange(Blocks<Block>().SelectMany(r => r.References()));
-        references.AddRange(Blocks<AddOnInstructionBlock>().SelectMany(r => r.References()));
-        references.AddRange(Blocks<JsrBlock>().SelectMany(r => r.References()));
-        return references;
-    }
-
-    public override void Connect(uint fromId, uint toId)
-    {
-        throw new NotImplementedException();
     }
 
     /// <inheritdoc />

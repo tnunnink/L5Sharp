@@ -29,7 +29,7 @@ namespace L5Sharp.Tests.Components
             task.Watchdog.Should().Be(new Watchdog(500));
             task.InhibitTask.Should().BeFalse();
             task.DisableUpdateOutputs.Should().BeFalse();
-            task.ScheduledPrograms.Should().BeEmpty();
+            task.Scheduled.Should().BeEmpty();
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace L5Sharp.Tests.Components
             task.Watchdog.Should().Be(new Watchdog(501));
             task.InhibitTask.Should().BeTrue();
             task.DisableUpdateOutputs.Should().BeTrue();
-            task.ScheduledPrograms.Should().BeEmpty();
+            task.Scheduled.Should().BeEmpty();
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace L5Sharp.Tests.Components
 
             task.Schedule("Test");
 
-            task.ScheduledPrograms.Should().HaveCount(1);
+            task.Scheduled.Should().HaveCount(1);
         }
 
         [Test]
@@ -92,10 +92,10 @@ namespace L5Sharp.Tests.Components
             var task = new Task();
 
             task.Schedule("Test");
-            task.ScheduledPrograms.Should().HaveCount(1);
+            task.Scheduled.Should().HaveCount(1);
 
             task.Cancel("Test");
-            task.ScheduledPrograms.Should().BeEmpty();
+            task.Scheduled.Should().BeEmpty();
         }
 
         [Test]

@@ -13,7 +13,7 @@
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-        <PackageReference Include="Verify.NUnit" Version="21.3.0" />
+        <PackageReference Include="Verify.NUnit" Version="22.1.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -244,7 +244,16 @@
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
       <None Update="Elements\ReferenceBlockTests.New_IRefOverloaded_ShouldBeVerified.verified.txt">
-        <DependentUpon>ReferenceBlockTests.cs</DependentUpon>
+        <DependentUpon>InRefTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\BlockTests.New_Overriden_ShouldBeVerified.verified.txt">
+        <DependentUpon>BlockTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\FunctionTests.Serialize_Overloaded_ShouldBeVerified.verified.txt">
+        <DependentUpon>FunctionTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ReferenceBlockTests.New_ORefOverloaded_ShouldBeVerified.verified.txt">
+        <DependentUpon>InRefTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

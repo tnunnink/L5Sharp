@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Elements;
@@ -6,7 +8,7 @@ namespace L5Sharp.Elements;
 /// <summary>
 /// A abstract derivative of a <c>DiagramBlock</c> type that represent blocks contained within a Function Block Diagram (FBD).
 /// This type is primarily to constrain the type of blocks that the caller can add to a <c>Sheet</c> diagram type.
-/// It also add some common properties that we want all <c>FunctionBlock</c> derivatives to contain.
+/// It also adds some common properties that we want all <c>FunctionBlock</c> derivatives to contain.
 /// </summary>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -38,4 +40,12 @@ public abstract class FunctionBlock : DiagramBlock
     /// The parent <see cref="Elements.Sheet"/> element that this <c>FunctionBlock</c> is contained within.
     /// </summary>
     public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
+
+    /// <summary>
+    /// Finds all other <see cref="FunctionBlock"/> elements that have connections to this block element.
+    /// </summary>
+    /// <returns>An <see cref="IEnumerable{T}"/> containing connected <see cref="FunctionBlock"/> element objects.</returns>
+    /// <remarks>This relies on the parent <see cref="Sheet"/> diagram element to find other connecting blocks.
+    /// If this block element is not attached to a <c>Sheet</c> then it will return and empty collection.</remarks>
+    public IEnumerable<FunctionBlock> Connections() => Sheet?.Connections(this) ?? Enumerable.Empty<FunctionBlock>();
 }

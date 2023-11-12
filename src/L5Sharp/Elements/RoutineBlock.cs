@@ -24,7 +24,7 @@ public abstract class RoutineBlock : FunctionBlock
     }
 
     /// <summary>
-    /// Creates a new <see cref="JsrBlock"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="JSR"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>

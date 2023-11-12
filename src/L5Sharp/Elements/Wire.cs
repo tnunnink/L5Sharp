@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Utilities;
 
@@ -19,7 +17,7 @@ namespace L5Sharp.Elements;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.Wire, L5XName.Sheet)]
-public class Wire : LogixElement
+public class Wire : DiagramConnector
 {
     /// <summary>
     /// Creates a new <see cref="Wire"/> with default values.
@@ -38,29 +36,11 @@ public class Wire : LogixElement
     }
 
     /// <summary>
-    /// The ID of the source <c>DiagramBlock</c> this wire is connected to.
-    /// </summary>
-    public uint FromID
-    {
-        get => GetValue<uint>();
-        set => SetValue(value);
-    }
-
-    /// <summary>
     /// The parameter name of source <c>DiagramBlock</c> pin this wire is connected to.
     /// </summary>
     public string? FromParam
     {
         get => GetValue<string>();
-        set => SetValue(value);
-    }
-
-    /// <summary>
-    /// The ID of the destination <c>DiagramBlock</c> this wire is connected to.
-    /// </summary>
-    public uint ToID
-    {
-        get => GetValue<uint>();
         set => SetValue(value);
     }
 
@@ -76,21 +56,13 @@ public class Wire : LogixElement
     /// <summary>
     /// Determines if this connector connects either to or from the provided <c>DiagramBlock</c>.
     /// </summary>
-    /// <param name="block">The block to determine the connection to/from.</param>
+    /// <param name="id">The id of the source block to find the connection to.</param>
+    /// <param name="param">The parameter name of the source block to find the connection to.</param>
     /// <returns><c>true</c> if this wire has a ToId or FromId connecting the provided block; Otherwise, <c>false</c>.</returns>
-    public bool Connects(DiagramBlock block) => ToID == block.ID || FromID == block.ID;
-    
-    /// <summary>
-    /// Determines if this wire connects to the provided <c>DiagramBlock</c>.
-    /// </summary>
-    /// <param name="block">The block to determine the connection to.</param>
-    /// <returns><c>ture</c> if this wire has a ToID connecting the provided block; Otherwise, <c>false</c>.</returns>
-    public bool ConnectsTo(DiagramBlock block) => ToID == block.ID;
-
-    /// <summary>
-    /// Determines if this wire has a connection from the provided <c>DiagramBlock</c>.
-    /// </summary>
-    /// <param name="block">The block to determine the connection to.</param>
-    /// <returns><c>ture</c> if this wire has a ToID connecting the provided block; Otherwise, <c>false</c>.</returns>
-    public bool ConnectsFrom(DiagramBlock block) => FromID == block.ID;
+    public Tuple<uint, string?>? Connection(uint id, string param)
+    {
+        return ToID == id && ToParam?.IsEquivalent(param) == true ? new Tuple<uint, string?>(FromID, FromParam)
+            : FromID == id && FromParam?.IsEquivalent(param) == true ? new Tuple<uint, string?>(ToID, ToParam)
+            : default;
+    }
 }

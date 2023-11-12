@@ -103,14 +103,14 @@ public class Argument
         //Empty value - lets not crash on empty or invalid arguments.
         if (string.IsNullOrEmpty(value)) return Empty;
 
-        //Unknown value - Can be found in TON instructions.
+        //Unknown value - Can be found in TON instructions and probably others.
         if (value == "?") return Unknown;
 
-        //Literal string value - We need to intercept this before the Atomic.TryParse method to prevent overflow.
+        //Literal string value - We need to intercept this before the Atomic.TryParse method to prevent exceptions.
         if (value.StartsWith('\'') && value.EndsWith('\'')) return new Argument(value);
 
         //Immediate atomic value
-        if (Atomic.TryParse(value, out var atomicType) && atomicType is not null) return new Argument(atomicType);
+        if (Atomic.TryParse(value, out var atomic) && atomic is not null) return new Argument(atomic);
 
         //TagName or Expression otherwise
         return TagName.IsTag(value) ? new Argument(new TagName(value)) : new Argument(new NeutralText(value));

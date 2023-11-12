@@ -34,24 +34,6 @@ public class CrossReference
     }
 
     /// <summary>
-    /// Creates a new <see cref="CrossReference"/> with a referencing element, component name and type.
-    /// </summary>
-    /// <param name="element">The referencing <see cref="XElement"/> object.</param>
-    /// <param name="name"></param>
-    /// <param name="type"></param>
-    /// <param name="instruction"></param>
-    /// <exception cref="ArgumentNullException">Any provided parameter is <c>null</c>.</exception>
-    public CrossReference(XElement element, string type, string name, Instruction instruction)
-    {
-        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name cannot be null or empty.", nameof(name));
-        if (string.IsNullOrEmpty(type)) throw new ArgumentException("Type cannot be null or empty.", nameof(type));
-        ComponentType = type;
-        ComponentName = name;
-        Instruction = instruction;
-        _element = element ?? throw new ArgumentNullException(nameof(element));
-    }
-
-    /// <summary>
     /// The corresponding <see cref="Common.ComponentKey"/> of the reference, indicating both the component type and name
     /// this element is in reference to.
     /// </summary>
@@ -68,12 +50,6 @@ public class CrossReference
     /// </summary>
     /// <value>A <see cref="string"/> indicating the name of the component.</value>
     public string ComponentName { get; }
-
-    /// <summary>
-    /// The specific instruction value the element is in reference to. 
-    /// </summary>
-    /// <value>An <see cref="Common.Instruction"/> object if found; Otherwise, <c>null</c>.</value>
-    private Instruction? Instruction { get; }
 
     /// <summary>
     /// The referencing <see cref="XElement"/> object

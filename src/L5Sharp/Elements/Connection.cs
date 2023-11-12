@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using L5Sharp.Components;
 using L5Sharp.Enums;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
@@ -16,6 +17,7 @@ public class Connection : LogixElement
     public Connection()
     {
         Name = string.Empty;
+        RPI = 0;
         Type = ConnectionType.Unknown;
         Priority = ConnectionPriority.Scheduled;
         InputConnectionType = TransmissionType.Multicast;
@@ -183,7 +185,7 @@ public class Connection : LogixElement
     public Tag? InputTag
     {
         get => GetComplex<Tag>();
-        set => SetComplex(value);
+        set => SetComplex(value?.Convert(L5XName.InputTag));
     }
 
     /// <summary>
@@ -193,6 +195,6 @@ public class Connection : LogixElement
     public Tag? OutputTag
     {
         get => GetComplex<Tag>();
-        set => SetComplex(value);
+        set => SetComplex(value?.Convert(L5XName.OutputTag));
     }
 }

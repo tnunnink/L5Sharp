@@ -35,7 +35,7 @@ public abstract class SequenceBlock : DiagramBlock
     protected SequenceBlock(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// The parent <see cref="Elements.Sheet"/> element that this <c>FunctionBlock</c> is contained within.
     /// </summary>

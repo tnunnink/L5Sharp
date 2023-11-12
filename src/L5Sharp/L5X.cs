@@ -171,6 +171,7 @@ public class L5X : ILogixSerializable
     /// Gets the collection of <see cref="Module"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Module"/> components.</value>
+    [PublicAPI]
     public LogixContainer<Module> Modules => new(GetContainer(L5XName.Modules));
 
     /// <summary>
@@ -454,8 +455,8 @@ public class L5X : ILogixSerializable
     /// Finds all tags with the specified name in the L5X using internal component index.
     /// </summary>
     /// <param name="tagName">The <see cref="TagName"/> of the tag to find in the L5X file.</param>
-    /// <param name="scope">The optional scope of the tag to find. If not provided, this will return the first found
-    /// object with the provided tag name.</param>
+    /// <param name="container">The optional scoped container of the tag to find. If not provided, this will return
+    /// the first found object with the provided tag name.</param>
     /// <returns>A <see cref="Tag"/> with the specified tag name and scope if found; Otherwise, <c>null</c>.</returns>
     /// <exception cref="ArgumentNullException"><c>tagName</c> is <c>null</c>.</exception>
     /// <remarks>
@@ -465,7 +466,7 @@ public class L5X : ILogixSerializable
     /// By default this will return the first found tag with the specified name. You can also specify a scope
     /// name to find a tag within a specific program.
     /// </remarks>
-    public Tag? FindTag(TagName tagName, string? scope = null)
+    public Tag? FindTag(TagName tagName, string? container = null)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
 
@@ -474,8 +475,8 @@ public class L5X : ILogixSerializable
         if (!_componentIndex.TryGetValue(key, out var components))
             return default;
 
-        if (scope is not null)
-            return components.TryGetValue(scope, out var element) ? new Tag(element).Member(tagName.Path) : default;
+        if (container is not null)
+            return components.TryGetValue(container, out var element) ? new Tag(element).Member(tagName.Path) : default;
 
         return components.Values.FirstOrDefault()?.Deserialize<Tag>().Member(tagName.Path);
     }
@@ -566,7 +567,7 @@ public class L5X : ILogixSerializable
             throw new KeyNotFoundException($"FindComponent not found in L5X: {key}");
 
         var component = components.Values.SingleOrDefault();
-        
+
         return component is not null
             ? component.Deserialize<TComponent>()
             : throw new KeyNotFoundException($"FindComponent not found in L5X: {key}");
@@ -597,7 +598,7 @@ public class L5X : ILogixSerializable
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
 
         if (_componentIndex.TryGetValue(key, out var components) && components.TryGetValue(scope, out var element))
-            LogixSerializer.Deserialize<TComponent>(element);
+            element.Deserialize<TComponent>();
 
         throw new KeyNotFoundException($"FindComponent not found in L5X: {key}");
     }

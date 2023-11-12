@@ -8,12 +8,12 @@ using L5Sharp.Utilities;
 namespace L5Sharp.Tests.Elements;
 
 [TestFixture]
-public class ReferenceBlockTests
+public class IREFTests
 {
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
-        var element = new ReferenceBlock();
+        var element = new IREF();
 
         element.Should().NotBeNull();
     }
@@ -21,7 +21,7 @@ public class ReferenceBlockTests
     [Test]
     public void New_Default_ShouldHaveExpectedDefaults()
     {
-        var element = new ReferenceBlock();
+        var element = new IREF();
 
         element.ID.Should().Be(0);
         element.X.Should().Be(0);
@@ -39,24 +39,9 @@ public class ReferenceBlockTests
     }
 
     [Test]
-    public Task New_IRefOverloaded_ShouldBeVerified()
+    public Task New_Overloaded_ShouldBeVerified()
     {
-        var element = new ReferenceBlock(ParameterType.Input)
-        {
-            ID = 1,
-            X = 100,
-            Y = 100,
-            Operand = "TestTag",
-            HideDesc = true
-        };
-        
-        return Verify(element.Serialize().ToString());
-    }
-    
-    [Test]
-    public Task New_ORefOverloaded_ShouldBeVerified()
-    {
-        var element = new ReferenceBlock(ParameterType.Output)
+        var element = new IREF
         {
             ID = 1,
             X = 100,
@@ -73,7 +58,7 @@ public class ReferenceBlockTests
     {
         var element = new XElement(L5XName.IRef);
 
-        var reference = new ReferenceBlock(element);
+        var reference = new IREF(element);
 
         reference.Should().NotBeNull();
     }
@@ -83,7 +68,7 @@ public class ReferenceBlockTests
     {
         var element = new XElement(L5XName.ORef);
 
-        var reference = new ReferenceBlock(element);
+        var reference = new IREF(element);
 
         reference.Should().NotBeNull();
     }
@@ -98,7 +83,7 @@ public class ReferenceBlockTests
         element.SetAttributeValue(L5XName.Operand, "TestTag");
         element.SetAttributeValue(L5XName.HideDesc, true);
 
-        var reference = new ReferenceBlock(element);
+        var reference = new IREF(element);
         
         reference.ID.Should().Be(1);
         reference.X.Should().Be(100);
@@ -116,21 +101,11 @@ public class ReferenceBlockTests
 
         reference.Should().NotBeNull();
     }
-    
-    [Test]
-    public void Deserialize_ORefElement_ShouldNotBeNull()
-    {
-        var element = new XElement(L5XName.ORef);
-
-        var reference = element.Deserialize();
-
-        reference.Should().NotBeNull();
-    }
 
     [Test]
     public void Clone_WhenCalled_ShouldNotBeSame()
     {
-        var element = new ReferenceBlock();
+        var element = new IREF();
 
         var clone = element.Clone();
 
@@ -140,7 +115,7 @@ public class ReferenceBlockTests
     [Test]
     public void References_WhenCalled_ShouldReturnExpected()
     {
-        var element = new ReferenceBlock(ParameterType.Output)
+        var element = new IREF
         {
             ID = 1,
             X = 100,

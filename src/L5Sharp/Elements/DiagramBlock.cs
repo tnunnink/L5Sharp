@@ -38,6 +38,7 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     /// <summary>
     /// The unique identifier of the <see cref="DiagramBlock"/> within the containing <c>Diagram</c>.
     /// </summary>
+    /// <value>A zero based <see cref="uint"/> representing the block id.</value>
     public uint ID
     {
         get => GetValue<uint>();
@@ -74,11 +75,12 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     /// Gets the cell of the diagram where the <see cref="DiagramBlock"/> is located. 
     /// </summary>
     /// <value>A <see cref="string"/> containing the cell coordinates (e.g. A1, B2, etc.)</value>
-    /// <remarks>This is determines from the <c>X</c> and <c>Y</c> coordinates of the element.</remarks>
+    /// <remarks>This is determines from the <c>X</c> and <c>Y</c> coordinates of the element. Each cell is 200x200
+    /// pixels which can be used to calculate the cell location.</remarks>
     public string Cell => $"{(char)(X / 200 + 'A')}{Y / 200 + 1}";
 
     /// <summary>
-    /// The absolute location of the <see cref="DiagramBlock"/> within the containing <see cref="Diagram{TBlock}"/>. 
+    /// The descriptive indication of the location of this <see cref="DiagramBlock"/> within the containing <c>Diagram</c>. 
     /// </summary>
     /// <value>A <see cref="string"/> indicating the cell and optional sheet or chart number where the block is located.</value>
     /// <remarks>

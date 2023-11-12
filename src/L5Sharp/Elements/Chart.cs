@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using L5Sharp.Common;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
-public class Chart : Diagram<SequenceBlock>
+/// <summary>
+/// Represents the containing element for Sequential Function Chart (SFC) block elements. This class inherits
+/// the common <see cref="Diagram{TBlock,TConnector}"/> logic and allows easier manipulation for SFC elements
+/// within a SFC type routine.
+/// </summary>
+public class Chart : Diagram<SequenceBlock, DirectedLink>
 {
     /// <summary>
     /// Creates a new <see cref="Chart"/> with default values.
@@ -27,18 +32,19 @@ public class Chart : Diagram<SequenceBlock>
     public override int Number => 0;
 
     /// <inheritdoc />
-    public override IEnumerable<CrossReference> References()
-    {
-        throw new NotImplementedException();
-    }
-
     protected override IEnumerable<string> Ordering()
     {
-        throw new NotImplementedException();
-    }
-
-    public override void Connect(uint fromId, uint toId)
-    {
-        throw new NotImplementedException();
+        return new List<string>
+        {
+            L5XName.Step,
+            L5XName.Transition,
+            L5XName.Condition,
+            L5XName.SbrRet,
+            L5XName.Stop,
+            L5XName.Branch,
+            L5XName.DirectedLink,
+            L5XName.TextBox,
+            L5XName.Attachment
+        };
     }
 }

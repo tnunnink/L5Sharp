@@ -14,21 +14,21 @@ namespace L5Sharp.Elements;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.SBR, L5XName.Sheet)]
-public class SbrBlock : DiagramBlock
+public class SBR : DiagramBlock
 {
     /// <summary>
-    /// Creates a new <see cref="SbrBlock"/> with default values.
+    /// Creates a new <see cref="SBR"/> with default values.
     /// </summary>
-    public SbrBlock()
+    public SBR()
     {
     }
 
     /// <summary>
-    /// Creates a new <see cref="SbrBlock"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="SBR"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public SbrBlock(XElement element) : base(element)
+    public SBR(XElement element) : base(element)
     {
     }
 

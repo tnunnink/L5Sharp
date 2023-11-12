@@ -1,5 +1,5 @@
 ﻿<Sheet>
   <IRef ID="0" X="100" Y="300" Operand="InputReference" />
-  <ORef Operand="OutputReference" X="100" Y="300" ID="2" />
+  <IRef ID="2" X="100" Y="300" Operand="OutputReference" />
   <Block ID="1" X="100" Y="300" Operand="MyBlockTag" />
 </Sheet>

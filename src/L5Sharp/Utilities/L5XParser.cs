@@ -68,6 +68,7 @@ public static class L5XParser
         {typeof(TriggerType), TriggerType.FromValue},
         {typeof(Use), s => Use.FromName(s)},
         //Common
+        {typeof(Argument), Argument.Parse},
         {typeof(Address), s => new Address(s)},
         {typeof(Dimensions), Dimensions.Parse},
         {typeof(NeutralText), s => new NeutralText(s)},

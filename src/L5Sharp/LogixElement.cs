@@ -30,6 +30,8 @@ public abstract class LogixElement : ILogixSerializable
     /// </summary>
     /// <param name="element">The L5X <see cref="XElement"/> to initialize the entity with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    /// <exception cref="ArgumentException"><c>element</c> name does not match any configured L5XType for this class
+    /// type. These are defined via the <see cref="L5XTypeAttribute"/> on the derived classes.</exception>
     protected LogixElement(XElement element)
     {
         Element = element ?? throw new ArgumentNullException(nameof(element));
@@ -147,7 +149,7 @@ public abstract class LogixElement : ILogixSerializable
         {
             element = element.Convert(L5XType);
         }
-        
+
         Element.AddAfterSelf(element.Serialize());
     }
 
@@ -180,7 +182,7 @@ public abstract class LogixElement : ILogixSerializable
         {
             element = element.Convert(L5XType);
         }
-        
+
         Element.AddBeforeSelf(element.Serialize());
     }
 
@@ -203,7 +205,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <exception cref="InvalidCastException">The deserialized type can not be cast to the specified generic type parameter.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public TElement Clone<TElement>() where TElement : LogixElement => new XElement(Element).Deserialize<TElement>();
-    
+
     /// <summary>
     /// Converts this element to the specified element type name. 
     /// </summary>
@@ -231,7 +233,7 @@ public abstract class LogixElement : ILogixSerializable
         Element.Name = typeName;
         return Element.Deserialize();
     }
-    
+
     /// <summary>
     /// Converts this element to the specified element type name. 
     /// </summary>
@@ -306,7 +308,7 @@ public abstract class LogixElement : ILogixSerializable
         {
             element = element.Convert(L5XType);
         }
-        
+
         Element.AddAfterSelf(element.Serialize());
     }
 

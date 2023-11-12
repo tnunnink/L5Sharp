@@ -50,9 +50,9 @@ public class Step : SequenceBlock
     /// Whether or not to hide the description for the <c>Step</c>.
     /// </summary>
     /// <value><c>true</c> if the description is hidden; Otherwise; <c>false</c>.</value>
-    public bool HideDesc
+    public bool? HideDesc
     {
-        get => GetValue<bool>();
+        get => GetValue<bool?>();
         set => SetValue(value);
     }
 

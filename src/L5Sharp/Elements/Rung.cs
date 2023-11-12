@@ -86,9 +86,9 @@ public class Rung : LogixCode
             if (instruction.CallsRoutine)
             {
                 var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
-                references.Add(new CrossReference(Element, L5XName.Routine, routine, instruction));
+                references.Add(new CrossReference(Element, L5XName.Routine, routine));
                 var parameters = instruction.Arguments.Skip(1).Where(a => a.IsTag).Select(t => t.ToString());
-                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p, instruction)));
+                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p)));
                 continue;
             }
 
@@ -100,7 +100,7 @@ public class Rung : LogixCode
             }
 
             references.AddRange(instruction.Text.Tags()
-                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString(), instruction)));
+                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString())));
         }
 
         return references;

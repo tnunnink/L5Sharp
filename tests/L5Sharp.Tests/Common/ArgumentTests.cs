@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Common;
+using NUnit.Framework.Internal;
 
 namespace L5Sharp.Tests.Common;
 
@@ -13,7 +14,7 @@ public class ArgumentTests
 
         argument.Should().Be(string.Empty);
     }
-
+    
     [Test]
     public void Unknown_WhenCalled_ShouldHaveExpectedValue()
     {
