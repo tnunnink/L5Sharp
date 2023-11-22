@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
@@ -50,5 +53,22 @@ public class OCON : FunctionBlock
     {
         get => GetValue<string>();
         set => SetValue(value);
+    }
+    
+    /// <summary>
+    /// The <see cref="ICON"/> pair block that represents the other end of this <see cref="OCON"/> connection.
+    /// </summary>
+    /// <value>A <see cref="ICON"/> block element with the same connector name.</value>
+    public ICON? Pair => Sheet?.Blocks<ICON>().FirstOrDefault(b => b.Name == Name);
+    
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    {
+        if (endpoint.Key != ID || Pair is null)
+        {
+            return Enumerable.Empty<Argument>();
+        }
+        
+        return Pair.Arguments();
     }
 }

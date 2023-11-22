@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
@@ -20,17 +22,26 @@ namespace L5Sharp.Elements;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.Function, L5XName.Sheet)]
-public class Function : FunctionBlock
+public sealed class Function : FunctionBlock
 {
     /// <summary>
-    /// Creates a new <see cref="FunctionBlock"/> with default values.
+    /// Creates a new <see cref="Function"/> with default values.
     /// </summary>
     public Function()
     {
     }
 
     /// <summary>
-    /// Creates a new <see cref="FunctionBlock"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="Function"/> with the provided type name.
+    /// </summary>
+    /// <param name="type"></param>
+    public Function(string type)
+    {
+        Type = type;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Function"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
@@ -46,5 +57,16 @@ public class Function : FunctionBlock
     {
         get => GetValue<string>();
         set => SetValue(value);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static Function BAND => new($"{nameof(BAND)}_F");
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    {
+        yield return Argument.Unknown;
     }
 }

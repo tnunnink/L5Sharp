@@ -55,7 +55,7 @@ public class L5XTemplateTests
 
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        var components = content.Find<Tag>().SelectMany(t => t.Members()).ToList();
+        var components = content.Query<Tag>().SelectMany(t => t.Members()).ToList();
         stopwatch.Stop();
 
         Console.WriteLine(stopwatch.Elapsed);
@@ -89,7 +89,7 @@ public class L5XTemplateTests
 
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        var components = content.Find(typeof(Tag)).Cast<Tag>().SelectMany(t => t.Members()).ToList();
+        var components = content.Query(typeof(Tag)).Cast<Tag>().SelectMany(t => t.Members()).ToList();
         stopwatch.Stop();
 
         Console.WriteLine(stopwatch.Elapsed);

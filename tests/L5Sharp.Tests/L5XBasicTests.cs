@@ -40,14 +40,6 @@ public class L5XBasicTests
     }
     
     [Test]
-    public void LoadL5XFileUsingTheL5XLoadMethod()
-    {
-        var content = L5X.Load(Known.Test);
-
-        content.Should().NotBeNull();
-    }
-    
-    [Test]
     public void Info_ValidContent_ShouldHaveExpectedValues()
     {
         var content = L5X.Load(Known.Test);
@@ -61,7 +53,78 @@ public class L5XBasicTests
         content.Info.Owner.Should().Be("tnunnink, EN Engineering");
         content.Info.ExportDate.Should().NotBeNull();
     }
+    
+    [Test]
+    public void Query_TypeNameOverload_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test);
 
+        var tags = content.Query(nameof(Tag)).ToList();
+
+        tags.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void Query_TypeOverload_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var tags = content.Query(typeof(Tag)).ToList();
+
+        tags.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void Query_ContainsElement_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var results = content.Query<Tag>().ToList();
+
+        results.Should().NotBeEmpty();
+    }
+    
+    [Test]
+    public void Query_NoElement_ShouldBeEmpty()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        var results = content.Query<Tag>().ToList();
+
+        results.Should().BeEmpty();
+    }
+
+    [Test]
+    public void Find_ValidComponent_ShouldNotBeNull()
+    {
+        var content = Logix.Load(Known.Test);
+
+        var component = content.Find<DataType>(Known.DataType);
+
+        component.Should().NotBeNull();
+    }
+
+    [Test]
+    public void Find_ValidTagName_ShouldNotBeNull()
+    {
+        var content = L5X.Load(Known.Test);
+        
+        var tag = content.Find(Known.Tag);
+
+        tag.Should().NotBeNull();
+    }
+
+    [Test]
+    public void ReferencesTo_ValidComponent_ShouldHaveExpectedCount()
+    {
+        var content = L5X.Load(Known.Test);
+        var tag = content.Get(Known.Tag);
+
+        var references = content.ReferencesTo(tag).ToList(); 
+
+        references.Should().NotBeEmpty();
+    }
+    
     [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
@@ -83,77 +146,6 @@ public class L5XBasicTests
         content.Add(dataType);
         
         return Verify(content.DataTypes.Serialize().ToString());
-    }
-    
-    [Test]
-    public void Find_TypeNameOverload_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var tags = content.Find(nameof(Tag)).ToList();
-
-        tags.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void Find_TypeOverload_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var tags = content.Find(typeof(Tag)).ToList();
-
-        tags.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void Find_ContainsElement_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var results = content.Find<Tag>().ToList();
-
-        results.Should().NotBeEmpty();
-    }
-    
-    [Test]
-    public void Find_NoElement_ShouldBeEmpty()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        var results = content.Find<Tag>().ToList();
-
-        results.Should().BeEmpty();
-    }
-
-    [Test]
-    public void Find_ValidComponent_ShouldNotBeNull()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var component = content.FindComponent<DataType>(Known.DataType);
-
-        component.Should().NotBeNull();
-    }
-
-    [Test]
-    public void FindTag_ValidComponent_ShouldNotBeNull()
-    {
-        var content = L5X.Load(Known.Test);
-        
-        var tag = content.FindTag(Known.Tag);
-
-        tag.Should().NotBeNull();
-    }
-
-    [Test]
-    public void FindReferences_ValidComponent_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test);
-        var tag = content.FindTag(Known.Tag);
-
-        var references = content.FindReferences(tag).ToList(); 
-
-        references.Should().NotBeEmpty();
     }
     
     [Test]

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
-using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
@@ -11,8 +10,7 @@ namespace L5Sharp.Elements;
 /// <summary>
 /// A base class for all FBD/SFC routine elements within a containing <c>Diagram</c>. This base class simply
 /// contains some of the common properties and functions that all FBD/SFC elements share,
-/// such as X and Y coordinates, and ID. We have also added a <see cref="ParameterType"/> and <see cref="Cell"/>
-/// property for determining the type and location (e.g. A1) of a given block.
+/// such as X and Y coordinates, and ID.
 /// </summary>
 public abstract class DiagramBlock : LogixElement, ILogixReferencable
 {
@@ -41,8 +39,8 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     /// <value>A zero based <see cref="uint"/> representing the block id.</value>
     public uint ID
     {
-        get => GetValue<uint>();
-        set => SetValue(value);
+        get => GetRequiredValue<uint>();
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -54,8 +52,8 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     /// </remarks>
     public uint X
     {
-        get => GetValue<uint>();
-        set => SetValue(value);
+        get => GetRequiredValue<uint>();
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -67,8 +65,8 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     /// </remarks>
     public uint Y
     {
-        get => GetValue<uint>();
-        set => SetValue(value);
+        get => GetRequiredValue<uint>();
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -88,6 +86,47 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     /// </remarks>
     public virtual string Location => Cell;
 
+    /// <summary>
+    /// Updates the X and Y coordinates of the <see cref="DiagramBlock"/> to the specified cell location.
+    /// </summary>
+    /// <param name="cell">The alpha-numeric cell location to move the block to.</param>
+    /// <exception cref="ArgumentException"><c>cell</c> is null, empty, not two characters, does not start with a letter,
+    /// or does not end with a digit.</exception>
+    public void MoveTo(string cell)
+    {
+        if (string.IsNullOrEmpty(cell))
+            throw new ArgumentException("Can not perform function with null or empty cell location.");
+        
+        if (cell.Length != 2)
+            throw new ArgumentException(
+                $"Cell {cell} is not a valid length argument. Must be 2 character cell location.");
+
+        if (!char.IsLetter(cell[0]))
+            throw new ArgumentException($"Cell {cell} must start with a valid letter character");
+        
+        if (!char.IsDigit(cell[1]))
+            throw new ArgumentException($"Cell {cell} must end with a valid number character");
+        
+        X = (uint)(cell.ToUpper()[0] - 'A') * 200;
+        Y = (uint)cell[1] * 200;
+    }
+
     /// <inheritdoc />
     public virtual IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj)) return true;
+
+        return obj switch
+        {
+            ValueType value => Equals(ID, value),
+            DiagramBlock block => Equals(ID, block.ID),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => ID.GetHashCode();
 }

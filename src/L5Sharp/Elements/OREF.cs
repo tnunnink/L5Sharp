@@ -72,7 +72,13 @@ public class OREF : FunctionBlock
     {
         if (Operand is not null && Operand.IsTag)
         {
-            yield return new CrossReference(Element, L5XName.Tag, Operand.ToString());
+            yield return new CrossReference(Element, L5XName.Tag, Operand.ToString(), new Instruction(nameof(IREF), Operand));
         }
+    }
+    
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    {
+        yield return Operand ?? Argument.Unknown;
     }
 }

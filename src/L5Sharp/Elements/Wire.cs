@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using L5Sharp.Utilities;
 
@@ -54,15 +55,20 @@ public class Wire : DiagramConnector
     }
 
     /// <summary>
-    /// Determines if this connector connects either to or from the provided <c>DiagramBlock</c>.
+    /// The parent <see cref="Elements.Sheet"/> element that this <c>FunctionBlock</c> is contained within.
     /// </summary>
-    /// <param name="id">The id of the source block to find the connection to.</param>
-    /// <param name="param">The parameter name of the source block to find the connection to.</param>
-    /// <returns><c>true</c> if this wire has a ToId or FromId connecting the provided block; Otherwise, <c>false</c>.</returns>
-    public Tuple<uint, string?>? Connection(uint id, string param)
+    public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// This makes it easier to find which block id and parameter the connector is attached to. This class is overriding
+    /// the default implementation to return the local <see cref="FromParam"/> or <see cref="ToParam"/> depending on the
+    /// associated to/from ID of the endpoint.
+    /// </remarks>
+    public override KeyValuePair<uint, string?> Endpoint(uint id)
     {
-        return ToID == id && ToParam?.IsEquivalent(param) == true ? new Tuple<uint, string?>(FromID, FromParam)
-            : FromID == id && FromParam?.IsEquivalent(param) == true ? new Tuple<uint, string?>(ToID, ToParam)
-            : default;
+        return FromID == id ? new KeyValuePair<uint, string?>(ToID, ToParam) 
+            : ToID == id ? new KeyValuePair<uint, string?>(FromID, FromParam) 
+            : throw new ArgumentException($"The connector does not have a to/from id matching the id '{id}'");
     }
 }

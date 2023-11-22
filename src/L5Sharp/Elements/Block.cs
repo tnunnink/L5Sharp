@@ -69,7 +69,12 @@ public class Block : FunctionBlock
         get => GetValue<bool?>();
         set => SetValue(value);
     }
-    
+
+    /// <summary>
+    /// The collection of input parameters to the routine being called by the <see cref="JSR"/> <c>FunctionBlock</c> element.
+    /// </summary>
+    /// <value>A <see cref="Params"/> object wrapping the underlying attribute containing the <c>In</c> parameters
+    /// if exists; Otherwise, <c>null</c>.</value>
     /// <summary>
     /// A collection of pin names that are visible for the <c>Block</c> element.
     /// </summary>
@@ -82,11 +87,12 @@ public class Block : FunctionBlock
     /// diagram types <c>Block</c> and <c>AddOnInstruction</c>. Invalid configuration of the element may result in a
     /// failure to import.
     /// </remarks>
-    public IEnumerable<TagName> VisiblePins
+    public Params? VisiblePins
     {
-        get => Element.Attribute(L5XName.VisiblePins)?.Value.Split(" ").Select(a => new TagName(a)) ??
-               Enumerable.Empty<TagName>();
-        set => Element.SetAttributeValue(L5XName.VisiblePins, string.Join(" ", value));
+        get => Element.Attribute(L5XName.VisiblePins) is not null
+            ? new Params(Element.Attribute(L5XName.VisiblePins)!)
+            : default;
+        set => SetValue(value is not null ? string.Join(" ", value) : null);
     }
 
     /// <summary>
@@ -95,65 +101,31 @@ public class Block : FunctionBlock
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="TagName"/> values.</value>
     /// <remarks>This is a helper to get the <see cref="VisiblePins"/> tag names concatenated with the root
     /// <see cref="Operand"/> tag name of the <c>Block</c>.</remarks>
-    public IEnumerable<TagName> TagNames => VisiblePins.Select(p => TagName.Concat(Operand ?? TagName.Empty, p));
-
-    /// <summary>
-    /// Adds the provided pin tag name to the collection of <see cref="VisiblePins"/>.
-    /// </summary>
-    /// <param name="tagName">The <see cref="TagName"/> of the pin to add.</param>
-    /// <remarks>This method assists with updating the collection of pins for the underlying <c>Block</c> element
-    /// without having to manually reassign the entire collection property.</remarks>
-    public void AddPin(TagName tagName)
-    {
-        var pins = VisiblePins.ToList();
-        pins.Add(tagName);
-        VisiblePins = pins;
-    }
-
-    /// <summary>
-    /// Adds the provided pin tag name collection to the collection of <see cref="VisiblePins"/>.
-    /// </summary>
-    /// <param name="tagNames">The collection <see cref="TagName"/> pins to add.</param>
-    /// <remarks>This method assists with updating the collection of pins for the underlying <c>Block</c> element
-    /// without having to manually reassign the entire collection property.</remarks>
-    public void AddPins(IEnumerable<TagName> tagNames)
-    {
-        var pins = VisiblePins.ToList();
-        pins.AddRange(tagNames);
-        VisiblePins = pins;
-    }
-
-    /// <summary>
-    /// Clears the collection of <see cref="VisiblePins"/> for the <see cref="Block"/> element.
-    /// </summary>
-    /// <remarks>This method assists with updating the collection of pins for the underlying <c>Block</c> element
-    /// without having to manually reassign the entire collection property.</remarks>
-    public void ClearPins()
-    {
-        Element.SetAttributeValue(L5XName.VisiblePins, string.Empty);
-    }
-
-    /// <summary>
-    /// Removes the specified pin tag name from the collection of <see cref="VisiblePins"/>.
-    /// </summary>
-    /// <param name="tagName">The <see cref="TagName"/> of the pin to remove.</param>
-    /// <remarks>This method assists with updating the collection of pins for the underlying <c>Block</c> element
-    /// without having to manually reassign the entire collection property.</remarks>
-    public void RemovePin(TagName tagName)
-    {
-        var pins = VisiblePins.ToList();
-        pins.Remove(tagName);
-        VisiblePins = pins;
-    }
+    public IEnumerable<TagName> TagNames =>
+        VisiblePins?.Select(p => TagName.Concat(Operand ?? TagName.Empty, p)) ?? Enumerable.Empty<TagName>();
 
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References()
     {
         if (Operand is null) return base.References();
 
-        var references = new List<CrossReference> { new(Element, Operand, L5XName.Tag) };
-        references.AddRange(TagNames.Select(t => new CrossReference(Element, t, L5XName.Tag)));
-        
+
+        foreach (var pin in VisiblePins)
+        {
+        }
+
+        var references = new List<CrossReference> { new(Element, L5XName.Tag, Operand) };
+        references.AddRange(TagNames.Select(t => new CrossReference(Element, L5XName.Tag, t)));
+
         return references;
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    {
+        //todo we need to think about how could this be an invalid call (i.e. why check pins)
+        yield return Operand is not null && endpoint.Value is not null && VisiblePins?.Contains(endpoint.Value) == true
+            ? TagName.Concat(Operand, endpoint.Value)
+            : Argument.Empty;
     }
 }

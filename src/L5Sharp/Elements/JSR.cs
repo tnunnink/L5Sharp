@@ -81,4 +81,10 @@ public class JSR : FunctionBlock
         foreach (var parameter in Ret)
             yield return new CrossReference(Element, L5XName.Tag, parameter);
     }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    {
+        yield return endpoint.Value is not null ? new TagName(endpoint.Value) : Argument.Empty;
+    }
 }

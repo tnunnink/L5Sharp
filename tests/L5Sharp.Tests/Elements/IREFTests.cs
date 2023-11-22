@@ -127,6 +127,6 @@ public class IREFTests
         var references = element.References().ToList();
 
         references.Should().HaveCount(1);
-        references[0].ComponentKey.Should().Be(new ComponentKey("Tag", "TestTag"));
+        references[0].Key.Should().Be(new ComponentKey("Tag", "TestTag"));
     }
 }

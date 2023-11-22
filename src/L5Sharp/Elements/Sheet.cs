@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using L5Sharp.Common;
 using L5Sharp.Utilities;
 
 namespace L5Sharp.Elements;
 
 /// <summary>
-/// A Logix <c>Sheet</c> block containing the properties for a L5X Sheet block.
+/// A Logix <c>Sheet</c> block containing the properties for a L5X Sheet or Function Block Diagram (FBD).
 /// </summary>
 /// <remarks>
 /// A <c>Sheet</c> implements <see cref="LogixCode"/> and is the type of content that FBD routines contain.
 /// <para>
-/// Observe these guidelines when defining a controller:<br/>
+/// Observe these guidelines when defining a sheet:<br/>
 ///     • The sheets in the routine appear in order in the export file.
 ///         Each sheet section contains all the drawing elements and wires for that sheet. <br/>
 ///     • On import, sheet numbers are assigned based on order in the file, not on the number attribute on the sheet.<br/>

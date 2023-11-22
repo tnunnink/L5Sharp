@@ -4,7 +4,8 @@ using L5Sharp.Common;
 namespace L5Sharp;
 
 /// <summary>
-/// Provides a common interface for Logix elements that can be referenced by other elements.
+/// Provides a common interface for Logix elements that can be referenced by or refer to other elements. Implementing
+/// this interface is signing the class up to determine it's references. 
 /// </summary>
 public interface ILogixReferencable
 {

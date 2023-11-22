@@ -257,6 +257,11 @@ public class Tag : LogixComponent
     public Tag Root { get; }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public Tag? Alias => AliasFor is not null ? L5X?.Find(AliasFor) : default;
+
+    /// <summary>
     /// The full tag name path of the <see cref="Tag"/>.
     /// </summary>
     /// <value>A <see cref="Common.TagName"/> containing the full dot-down path of the tag member name.</value>
@@ -288,7 +293,7 @@ public class Tag : LogixComponent
         get
         {
             if (tagName is null) throw new ArgumentNullException(nameof(tagName));
-            if (tagName.IsEmpty) throw new ArgumentException("Can not retrieve member from empty tag name.");
+            if (tagName.IsEmpty) return this;
 
             var member = Value.Member(tagName.Root);
             if (member is null)

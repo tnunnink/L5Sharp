@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Enums;
@@ -159,16 +157,10 @@ public class DataTypeMember : LogixElement
         set => SetValue(value);
     }
 
-    //Extensions represent properties or methods of a logix element that are not inherent in the underlying XML,
-    //but ones that add value for ease of navigation or retrieval of information.
-    #region Extensions
-
     /// <summary>
     /// Gets the parent <see cref="Components.DataType"/> component that this <c>Member</c> is contained by. If this
     /// <c>Member</c> is not contained or attached to a <c>L5X</c> document, this returns <c>null</c>.
     /// </summary>
     /// <value>A <see cref="Components.DataType"/> representing the parent type for this <c>Member</c>.</value>
-    public DataType? Parent => GetParent<DataType>();
-
-    #endregion
+    public DataType? Parent => GetAncestor<DataType>();
 }

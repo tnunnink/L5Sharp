@@ -22,7 +22,7 @@ public class Scope : LogixEnum<Scope, string>
     /// <see cref="Instruction"/> if the element has a <c>AddOnInstructionDefinition</c> element ancestor,
     /// <see cref="Null"/> otherwise.
     /// </returns>
-    public static Scope ScopeType(XElement element)
+    public static Scope Type(XElement element)
     {
         var ancestor = FindContainer(element)?.Name.LocalName;
 
@@ -42,7 +42,16 @@ public class Scope : LogixEnum<Scope, string>
     /// <param name="element">The element for which to find the container name of.</param>
     /// <returns>A <see cref="string"/> representing the name of the containing program, instruction, or controller
     /// if found; Otherwise, an empty string.</returns>
-    public static string ScopeName(XElement element) => FindContainer(element)?.LogixName() ?? string.Empty;
+    public static string Container(XElement element) => FindContainer(element)?.LogixName() ?? string.Empty;
+
+    /// <summary>
+    /// Finds the container element in the ancestral chain and returns the logix name of the element. This will be either
+    /// the name of the program container or the name of the controller, depending on the scope of the element. 
+    /// </summary>
+    /// <param name="element">The element for which to find the container name of.</param>
+    /// <returns>A <see cref="string"/> representing the name of the containing program, instruction, or controller
+    /// if found; Otherwise, an empty string.</returns>
+    public static string Task(XElement element) => FindTask(element)?.LogixName() ?? string.Empty;
 
     /// <summary>
     /// Represents a Null <see cref="Scope"/> value.
@@ -64,14 +73,29 @@ public class Scope : LogixEnum<Scope, string>
     /// Represents a Program <see cref="Scope"/> value.
     /// </summary>
     public static readonly Scope Instruction = new(nameof(Instruction), "InstructionScope");
-    
+
     /// <summary>
     /// Finds the first ancestor element that is either a <c>Program</c>, <c>Controller</c>, or
     /// <c>AddOnInstructionDefinition</c> element.
     /// </summary>
     /// <param name="node">The <see cref="XNode"/> to examine.</param>
     /// <returns>The first matching ancestor <see cref="XElement"/> if found or <c>null</c>.</returns>
-    private static XElement? FindContainer(XNode node) =>
-        node.Ancestors().FirstOrDefault(e => e.Name.LocalName
+    private static XElement? FindContainer(XNode node)
+    {
+        return node.Ancestors().FirstOrDefault(e => e.Name.LocalName
             is L5XName.Program or L5XName.Controller or L5XName.AddOnInstructionDefinition);
+    }
+
+    /// <summary>
+    /// Finds the first <c>Task</c> element in the L5X document with the provided node's container name.
+    /// </summary>
+    /// <param name="node">The <see cref="XNode"/> to examine.</param>
+    /// <returns>The first matching ancestor <see cref="XElement"/> if found or <c>null</c>.</returns>
+    private static XElement? FindTask(XNode node)
+    {
+        var container = FindContainer(node)?.LogixName() ?? string.Empty;
+
+        return node.Ancestors(L5XName.RSLogix5000Content).Descendants(L5XName.Task)
+            .FirstOrDefault(e => e.Descendants(L5XName.ScheduledProgram).Any(p => p.LogixName() == container));
+    }
 }

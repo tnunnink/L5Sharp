@@ -109,7 +109,7 @@ public class DataType : LogixComponent
 
         foreach (var member in Members)
         {
-            var dataType = L5X.FindComponent<DataType>(member.DataType);
+            var dataType = L5X.Find<DataType>(member.DataType);
             if (dataType is null) continue;
             dependencies.Add(dataType);
             dependencies.AddRange(dataType.Dependencies());

@@ -53,7 +53,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// <remarks>
     /// <para>
     /// The root portion of a given tag name is simply the beginning part of the tag name up to the first
-    /// member separator character ('.' or '['). For Module defined tags, this includes the colon separator.
+    /// member separator character '.' or '['. For Module defined tags, this includes the colon separator.
     /// </para>
     /// <para>
     /// This value can be swapped out easily using <see cref="Rename"/> to return a new <see cref="TagName"/> with the
@@ -222,7 +222,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// <param name="second">A tag name object to compare.</param>
     /// <param name="comparer">The equality comparer to use for comparison.</param>
     /// <returns><c>true</c> if the tag name are equal according too the provided comparer; otherwise, false.</returns>
-    /// <remarks>Use the prebuilt <see cref="TagNameComparer"/> class for several predefined comparers.</remarks>
+    /// <remarks>Use the prebuilt <see cref="TagNameComparer"/> class for several predefined comparer objects.</remarks>
     public static bool Equals(TagName first, TagName second, IEqualityComparer<TagName> comparer) =>
         comparer.Equals(first, second);
 

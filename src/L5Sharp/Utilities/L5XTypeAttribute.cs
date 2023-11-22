@@ -3,7 +3,7 @@
 namespace L5Sharp.Utilities;
 
 /// <summary>
-/// A custom attribute that defines the L5X type name and container name for a logic type class in order to match XMl
+/// A custom attribute that defines the L5X type name and container name for a logic type class in order to match XML
 /// elements to a given class. This attribute is mostly needed for class types whose names do not match the L5X element type
 /// found in the L5X, or for classes that support multiple L5X element types.
 /// </summary>

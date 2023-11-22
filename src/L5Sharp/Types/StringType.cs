@@ -276,12 +276,19 @@ public class StringType : StructureType, IEnumerable<char>
     }
 
     /// <summary>
-    /// Converts the provided string value to a SINT array. Handles empty or null string. SINT array can not be empty.
+    /// Converts the provided string value to a SINT array. Handles empty or null string. SINT array can not be empty
+    /// to invalid initialization of the <c>ArrayType</c> object.
     /// </summary>
     private static SINT[] ToArray(string value)
     {
-        if (string.IsNullOrEmpty(value)) return new SINT[] { new(Radix.Ascii) };
+        //If we get a null or empty string then we need to return a single element array to avoid exceptions from array type.
+        if (string.IsNullOrEmpty(value) || value.All(c => c == '\'')) 
+            return new SINT[] { new(Radix.Ascii) };
+        
+        //Logix encloses strings in single quotes so we need toe remove those if the are present.
         value = value.TrimStart('\'').TrimEnd('\'');
+        
+        //Breaks apart the string into single ASCII characters to be parsed.
         var matches = Regex.Matches(value, LogixAsciiPattern);
         return matches.Select(m =>
         {

@@ -16,9 +16,9 @@ namespace L5Sharp.Tests
         [Test]
         public void SampleQuery001()
         {
-            var content = L5X.Load(Known.Test);
+            var content = Logix.Load(Known.Test);
 
-            var results = content.Find<Tag>()
+            var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
                 .Where(t => t.DataType == "TIMER")
                 .Select(t => new {t.TagName, t.Description, Preset = t.Value.As<TIMER>().PRE})
@@ -33,7 +33,7 @@ namespace L5Sharp.Tests
         {
             var content = L5X.Load(Known.Test);
 
-            var results = content.Find<Tag>()
+            var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
                 .Where(t => t.DataType == "SimpleType")
                 .OrderBy(v => v.TagName)
@@ -47,7 +47,7 @@ namespace L5Sharp.Tests
         {
             var content = L5X.Load(Known.Test);
 
-            var results = content.Find<Tag>().Where(t => t.Scope == Scope.Program && t.DataType == "DINT");
+            var results = content.Query<Tag>().Where(t => t.Scope == Scope.Program && t.DataType == "DINT");
 
             results.Should().NotBeEmpty();
         }
@@ -119,7 +119,7 @@ namespace L5Sharp.Tests
         {
             var content = L5X.Load(Known.Test);
 
-            var results = content.Find<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
+            var results = content.Query<Rung>().SelectMany(t => t.Text.Tags()).Distinct().ToList();
 
             results.Should().NotBeEmpty();
         }
@@ -129,7 +129,7 @@ namespace L5Sharp.Tests
         {
             var content = L5X.Load(Known.Test);
 
-            var results = content.Find<Rung>()
+            var results = content.Query<Rung>()
                 .SelectMany(r => r.Text.TagsIn("MOV"))
                 .ToList();
 

@@ -24,16 +24,15 @@ public class ProofTesting
     }
 
     [Test]
-    [TestCase(0)]
-    [TestCase(150)]
-    [TestCase(200)]
-    [TestCase(250)]
-    [TestCase(399)]
-    [TestCase(400)]
-    public void Scratch(int input)
+    public void Scratch()
     {
-        var character = (char)(input / 200 + 'A');
-        Console.WriteLine(character);
+        var content = Logix.Load(Known.Test);
+        var sheet = content.Query<Sheet>().First();
+        var block = sheet[9];
+
+        var arguments = block.Arguments();
+
+        arguments.Should().NotBeEmpty();
     }
 
     [Test]
@@ -41,8 +40,10 @@ public class ProofTesting
     {
         var content = L5X.Load(Known.Example);
 
-        var rungs = content.Find<Rung>().ToList();
+        var test = content.Query<DataTypeMember>().ToList().First();
+        
+        var parent = test.Parent;
 
-        rungs.Should().NotBeEmpty();
+        parent.Should().NotBeNull();
     }
 }

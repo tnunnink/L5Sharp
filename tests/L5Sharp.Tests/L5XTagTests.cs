@@ -54,7 +54,7 @@ public class L5XTagTests
     public void References_AgainstAllTags_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Example);
-        var tags = content.Find<Tag>().SelectMany(t => t.Members()).ToList();
+        var tags = content.Query<Tag>().SelectMany(t => t.Members()).ToList();
 
         var references = tags.Select(t => new {t.TagName, Refernces = t.References()}).ToList();
 

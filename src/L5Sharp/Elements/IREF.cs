@@ -48,7 +48,7 @@ public class IREF : FunctionBlock
     }
     
     /// <summary>
-    /// The tag name or immediate operand value for the reference element.
+    /// The tag name or immediate value for the reference element.
     /// </summary>
     /// <value>A <see cref="Argument"/> containing the reference if it exists; Otherwise, <c>null</c>.</value>
     public Argument? Operand
@@ -74,5 +74,11 @@ public class IREF : FunctionBlock
         {
             yield return new CrossReference(Element, L5XName.Tag, Operand.ToString());
         }
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    {
+        yield return Operand ?? Argument.Unknown;
     }
 }

@@ -50,10 +50,10 @@ public sealed class Line : LogixCode
         var references = new List<CrossReference>();
 
         references.AddRange(Text.Tags()
-            .Select(name => new CrossReference(Element, name, L5XName.Tag)));
+            .Select(name => new CrossReference(Element, L5XName.Tag, name)));
 
         references.AddRange(Text.Instructions()
-            .Select(instruction => new CrossReference(Element, instruction.Key, L5XName.AddOnInstructionDefinition)));
+            .Select(instruction => new CrossReference(Element, L5XName.AddOnInstructionDefinition, instruction.Key)));
 
         //todo routines? Have to look for JSR and SBR, RET
         //todo modules? Have to look for tag names with ':'

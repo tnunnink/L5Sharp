@@ -43,17 +43,23 @@ public abstract class Diagram<TBlock, TConnector> : LogixCode
     }
 
     /// <summary>
-    /// Gets a <see cref="DiagramBlock"/> with the specified block id.
+    /// Gets or sets a single <see cref="DiagramBlock"/> with the specified block id.
     /// </summary>
     /// <param name="id">The Id of the block to get or set.</param>
-    /// 
-    /// <remarks>This will </remarks>
+    /// <exception cref="InvalidOperationException">No element has the specified <c>id</c>.
+    /// -or- More than one element has the specified <c>id</c>.
+    /// -or- The source sequence is empty.</exception>
+    /// <remarks>This will find the block in the <c>Diagram</c> with the specified ID attribute value. Internally this is
+    /// calling <c>Single</c> so if the element does not exists or there are more than one of the same ID then this will
+    /// throw an exception.</remarks>
     public TBlock this[uint id]
     {
         get => Element.Elements()
             .Single(e => e.Attribute(L5XName.ID)?.Value.Parse<uint>() == id)
             .Deserialize<TBlock>();
-        set => Element.Elements().Single(e => e.Get(L5XName.ID).Parse<uint>() == id).ReplaceWith(value);
+        set => Element.Elements()
+            .Single(e => e.Attribute(L5XName.ID)?.Value.Parse<uint>() == id)
+            .ReplaceWith(value);
     }
 
     /// <summary>
@@ -64,7 +70,7 @@ public abstract class Diagram<TBlock, TConnector> : LogixCode
     /// <remarks>
     /// This will update the block ID to the next available ID if the ID is already used.
     /// This will preserve the uniqueness of the ID's and prevent import errors. This will also perform a sort of the
-    /// current underlying diagram elements to ensure the order of the element is maintained. This also is required to
+    /// current underlying diagram elements to ensure the order of the element is maintained, which is also required to
     /// prevent import errors.
     /// </remarks>
     public uint Add(TBlock block)
@@ -218,6 +224,20 @@ public abstract class Diagram<TBlock, TConnector> : LogixCode
     }
 
     /// <summary>
+    /// Gets all <see cref="DiagramConnector"/> elements in the <see cref="Diagram{TBlock,TConnector}"/>. 
+    /// </summary>
+    /// <returns>
+    /// An <see cref="IEnumerable{T}"/> of the diagram specific <see cref="TConnector"/> type objects if any.
+    /// If none, an empty collection.
+    /// </returns>
+    public IEnumerable<TConnector> Connectors(TBlock block)
+    {
+        var inputs = Connectors().Where(c => c.IsConnectedTo(block));
+        var outputs = Connectors().Where(c => c.IsConnectedFrom(block));
+        return inputs.Concat(outputs);
+    }
+
+    /// <summary>
     /// Finds all other <see cref="DiagramBlock"/> elements that are connected via a <see cref="DiagramConnector"/> to
     /// the provided <c>block</c>.
     /// </summary>
@@ -231,8 +251,65 @@ public abstract class Diagram<TBlock, TConnector> : LogixCode
     /// </remarks>
     public IEnumerable<TBlock> Connections(TBlock block)
     {
-        var connections = Connectors().Select(c => c.Connected(block)).Where(id => id.HasValue).ToHashSet();
-        return Blocks().Where(b => connections.Contains(b.ID));
+        var endpoints = Connectors(block).Select(c => c.Endpoint(block).Key).ToHashSet();
+        return Blocks().Where(b => endpoints.Contains(b.ID));
+    }
+
+    /// <summary>
+    /// Completely removes the block and all associated connectors from the <c>Diagram</c>.
+    /// </summary>
+    /// <param name="block">The <see cref="DiagramBlock"/> to delete.</param>
+    /// <remarks>This is effectively a combination of <see cref="Disconnect(TBlock)"/> and <see cref="Remove(TBlock)"/>
+    /// for a more concise way of scrubbing a block from the diagram.</remarks>
+    public void Delete(TBlock block)
+    {
+        Element.Elements()
+            .Where(e => e.Attribute(L5XName.ID)?.Value.Parse<uint>() == block.ID ||
+                        e.Attribute(L5XName.FromID)?.Value.Parse<uint>() == block.ID ||
+                        e.Attribute(L5XName.ToID)?.Value.Parse<uint>() == block.ID)
+            .Remove();
+    }
+
+    /// <summary>
+    /// Removes all <see cref="DiagramConnector"/> elements from the diagram with connections to the specified block ID.
+    /// </summary>
+    /// <param name="block">The block to disconnect from the diagram.</param>
+    public void Disconnect(TBlock block)
+    {
+        Element.Elements()
+            .Where(e => e.Attribute(L5XName.FromID)?.Value.Parse<uint>() == block.ID ||
+                        e.Attribute(L5XName.ToID)?.Value.Parse<uint>() == block.ID)
+            .Remove();
+    }
+
+    /// <summary>
+    /// Removes all <see cref="DiagramConnector"/> elements from the diagram with connections to the specified block ID.
+    /// </summary>
+    /// <param name="id"></param>
+    public void Disconnect(uint id)
+    {
+        Element.Elements()
+            .Where(e => e.Attribute(L5XName.FromID)?.Value.Parse<uint>() == id ||
+                        e.Attribute(L5XName.ToID)?.Value.Parse<uint>() == id)
+            .Remove();
+    }
+
+    /// <summary>
+    /// Removes all <see cref="DiagramConnector"/> elements from the diagram with the from/to ID pair.
+    /// </summary>
+    /// <param name="from">The ID of the source block for the connector.</param>
+    /// <param name="to">The ID of the destination block for the connector.</param>
+    /// <remarks>
+    /// This will remove any connector with the from/to ID pair, which could be multiple connectors. This is
+    /// because there is no ID to uniquely identify a generic <see cref="DiagramConnector"/>. If no connectors are
+    /// found with provided ID pair, then will return.
+    /// </remarks>
+    public void Disconnect(uint from, uint to)
+    {
+        Element.Elements(typeof(TConnector).L5XType())
+            .Where(e => e.Attribute(L5XName.FromID)?.Value.Parse<uint>() == from ||
+                        e.Attribute(L5XName.FromID)?.Value.Parse<uint>() == to)
+            .Remove();
     }
 
     /// <summary>
@@ -257,6 +334,37 @@ public abstract class Diagram<TBlock, TConnector> : LogixCode
     {
         return Blocks().Where(b => b is ILogixReferencable).Cast<ILogixReferencable>().SelectMany(r => r.References());
     }
+
+    /// <summary>
+    /// Removes the provided <see cref="DiagramBlock"/> from the the <c>Diagram</c> collection.
+    /// </summary>
+    /// <param name="block">The <see cref="DiagramBlock"/> to remove.</param>
+    /// <remarks>
+    /// This will remove single block with the Id of the provided block if it is found.
+    /// If not found, the will return without removing anything.
+    /// </remarks>
+    public void Remove(TBlock block)
+    {
+        Element.Elements().SingleOrDefault(e => e.Attribute(L5XName.ID)?.Value.Parse<uint>() == block.ID)?.Remove();
+    }
+
+    /// <summary>
+    /// Removes the provided <see cref="DiagramBlock"/> from the the <c>Diagram</c> collection.
+    /// </summary>
+    /// <param name="connector">The <see cref="DiagramConnector"/> to remove.</param>
+    /// <remarks>
+    /// This will remove any connector having the same from/to ID pair as the provided connector IDs if found.
+    /// If not found, the will return without removing anything.
+    /// </remarks>
+    public void Remove(TConnector connector)
+    {
+        Element.Elements(typeof(TConnector).L5XType()).SingleOrDefault(e =>
+                e.Attribute(L5XName.FromID)?.Value.Parse<uint>() == connector.FromID &&
+                e.Attribute(L5XName.ToID)?.Value.Parse<uint>() == connector.ToID)
+            ?.Remove();
+    }
+
+    #region Internal
 
     /// <summary>
     /// Joins the defined ordered set of element names with the child elements of the diagram, and replaces all current
@@ -295,4 +403,6 @@ public abstract class Diagram<TBlock, TConnector> : LogixCode
     {
         return Element.Elements().Any(e => e.Attribute(L5XName.ID)?.Value.Parse<uint>() == id);
     }
+
+    #endregion
 }

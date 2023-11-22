@@ -233,8 +233,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             > 2 and <= 4 => new DINT(Convert.ToInt32(value, baseNumber)),
             > 4 and <= 8 => new LINT(Convert.ToInt64(value, baseNumber)),
             _ => throw new ArgumentOutOfRangeException(nameof(byteLength),
-                $"The provided value byte length '{byteLength}' is out of range for atomic conversion. " +
-                "Must be between 0 and 8 bytes.")
+                $"The provided value '{value}' is out of range for atomic conversion. Must be between 0 and 8 bytes.")
         };
     }
 

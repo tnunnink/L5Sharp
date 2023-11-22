@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="FBD" TargetType="Routine" TargetSubType="FBD" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Sun Oct 29 14:22:16 2023" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="FBD" TargetType="Routine" TargetSubType="FBD" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Tue Nov 14 06:39:39 2023" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
 <Controller Use="Context" Name="TestController">
 <DataTypes Use="Context">
 <DataType Name="ComplexType" Family="NoFamily" Class="User">
@@ -294,6 +294,14 @@
 <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
 </Data>
 </Tag>
+<Tag Name="SimpleDint" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="None">
+<Data Format="L5K">
+<![CDATA[123392]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="123392"/>
+</Data>
+</Tag>
 <Tag Name="TestComplexTag" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="None">
 <Description>
 <![CDATA[Base]]>
@@ -580,47 +588,54 @@
 <Sheet Number="1">
 <IRef ID="0" X="180" Y="420" Operand="100" HideDesc="false"/>
 <IRef ID="1" X="600" Y="280" Operand="OutputParameter" HideDesc="false"/>
-<IRef ID="2" X="140" Y="180" Operand="SimpleBool" HideDesc="false"/>
+<IRef ID="2" X="140" Y="160" Operand="SimpleBool" HideDesc="false"/>
 <ORef ID="3" X="500" Y="200" Operand="TestComplexTag.SimpleMember.BoolMember" HideDesc="false"/>
 <ICon ID="4" X="680" Y="240" Name="Connector"/>
-<OCon ID="5" X="1000" Y="120" Name="Connector"/>
-<Block Type="DEDT" ID="6" X="320" Y="380" Operand="DEDT_01" VisiblePins="In Out" HideDesc="false">
+<ICon ID="5" X="580" Y="520" Name="Test"/>
+<OCon ID="6" X="1000" Y="120" Name="Connector"/>
+<OCon ID="7" X="860" Y="560" Name="Test"/>
+<Block Type="DEDT" ID="8" X="320" Y="380" Operand="DEDT_01" VisiblePins="In Out" HideDesc="false">
 <Array Name="StorageArray" Operand="RealArray"/>
 </Block>
-<Block Type="SEL" ID="7" X="680" Y="40" Operand="SEL_01" VisiblePins="In1 In2 SelectorIn Out" HideDesc="false"/>
-<Block Type="TOFR" ID="8" X="680" Y="500" Operand="TOFR_01" VisiblePins="TimerEnable PRE Reset ACC DN" HideDesc="false"/>
-<Function Type="BNOT__F" ID="9" X="140" Y="260"/>
-<Function Type="BAND__F" ID="10" X="260" Y="200"/>
-<AddOnInstruction Name="aoi_Test" ID="11" X="840" Y="160" Operand="aoi_Test_001" VisiblePins="InputTest OutputTest InOutTest Config InOutArray New">
+<Block Type="SEL" ID="9" X="680" Y="40" Operand="SEL_01" VisiblePins="In1 In2 SelectorIn Out" HideDesc="false"/>
+<Block Type="TOFR" ID="10" X="680" Y="500" Operand="TOFR_01" VisiblePins="TimerEnable PRE Reset ACC DN" HideDesc="false"/>
+<Function Type="BNOT__F" ID="11" X="160" Y="280"/>
+<Function Type="BAND__F" ID="12" X="260" Y="200"/>
+<AddOnInstruction Name="aoi_Test" ID="13" X="840" Y="160" Operand="aoi_Test_001" VisiblePins="InputTest OutputTest InOutTest Config InOutArray New">
 <InOutParameter Name="InOutArray" Argument="RealArray"/>
 <InOutParameter Name="InOutTest" Argument="TestSimpleTag"/>
 </AddOnInstruction>
-<JSR ID="12" X="540" Y="380" Routine="ST" In="AlarmActive" Ret="_Test"/>
-<JSR ID="13" X="780" Y="400" Routine="ST"/>
-<Wire FromID="1" ToID="11" ToParam="Config"/>
-<Wire FromID="1" ToID="11" ToParam="New"/>
-<Wire FromID="2" ToID="9" ToParam="In"/>
-<Wire FromID="2" ToID="10" ToParam="In1"/>
-<Wire FromID="2" ToID="11" ToParam="InputTest"/>
-<Wire FromID="4" ToID="11" ToParam="OutputTest"/>
-<Wire FromID="7" FromParam="Out" ToID="5"/>
-<Wire FromID="7" FromParam="Out" ToID="7" ToParam="In1"/>
-<Wire FromID="7" FromParam="Out" ToID="7" ToParam="In2"/>
-<Wire FromID="9" FromParam="Out" ToID="10" ToParam="In2"/>
-<Wire FromID="9" FromParam="Out" ToID="12" ToParam="AlarmActive"/>
-<Wire FromID="10" FromParam="Out" ToID="7" ToParam="SelectorIn"/>
-<TextBox ID="14" X="60" Y="80" Width="0">
+<JSR ID="14" X="540" Y="380" Routine="ST" In="AlarmActive" Ret="_Test"/>
+<JSR ID="15" X="880" Y="400" Routine="ST" In="SimpleDint SimpleBool"/>
+<Wire FromID="0" ToID="8" ToParam="In"/>
+<Wire FromID="1" ToID="13" ToParam="Config"/>
+<Wire FromID="1" ToID="13" ToParam="New"/>
+<Wire FromID="2" ToID="9" ToParam="SelectorIn"/>
+<Wire FromID="2" ToID="11" ToParam="In"/>
+<Wire FromID="2" ToID="12" ToParam="In1"/>
+<Wire FromID="2" ToID="13" ToParam="InputTest"/>
+<Wire FromID="4" ToID="13" ToParam="OutputTest"/>
+<Wire FromID="5" ToID="15" ToParam="SimpleDint"/>
+<Wire FromID="9" FromParam="Out" ToID="6"/>
+<Wire FromID="9" FromParam="Out" ToID="9" ToParam="In1"/>
+<Wire FromID="9" FromParam="Out" ToID="9" ToParam="In2"/>
+<Wire FromID="10" FromParam="ACC" ToID="7"/>
+<Wire FromID="11" FromParam="Out" ToID="12" ToParam="In2"/>
+<Wire FromID="11" FromParam="Out" ToID="14" ToParam="AlarmActive"/>
+<Wire FromID="12" FromParam="Out" ToID="3"/>
+<Wire FromID="12" FromParam="Out" ToID="15" ToParam="SimpleBool"/>
+<TextBox ID="16" X="60" Y="60" Width="0">
 <Text>
 <![CDATA[Test]]>
 </Text>
 </TextBox>
-<TextBox ID="15" X="340" Y="40" Width="0">
+<TextBox ID="17" X="340" Y="40" Width="0">
 <Text>
 <![CDATA[Helloasdfasdfasdfasdfasdfasdf]]>
 </Text>
 </TextBox>
-<TextBox ID="16" X="4540" Y="120" Width="0"/>
-<Attachment FromID="14" ToID="2"/>
+<TextBox ID="18" X="4540" Y="120" Width="0"/>
+<Attachment FromID="16" ToID="2"/>
 </Sheet>
 </FBDContent>
 </Routine>

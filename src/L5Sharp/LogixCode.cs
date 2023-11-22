@@ -15,7 +15,8 @@ namespace L5Sharp;
 /// <para>
 /// This class is meant to specify a common set of properties and functions that all code elements, regardless
 /// of programming language type (RLL, ST, FBD, SFC) should provide so that we can retrieve information about the contents
-/// and location of the code within the L5X file.
+/// and location of the code within the L5X file. It is also here to help constrain the type of element that the caller
+/// can query from the content of a given routine type.
 /// </para>
 /// <para>
 /// This class overrides the default equality implementation to determine code equality by it's location within the L5X tree.
@@ -47,7 +48,7 @@ public abstract class LogixCode : LogixElement, ILogixReferencable
     /// <value>A <see cref="int"/> representing the zero-based order.</value>
     /// <remarks>Logix ignores the these number identifiers upon importing, and only considers the order within the
     /// containing <c>Routine</c>. This makes the property somewhat useless, but is here all the same as it is
-    /// inherent to the underlying XMl.</remarks>
+    /// inherent to the underlying XMl, and can help identify code elements from deserialized L5X documents.</remarks>
     public virtual int Number
     {
         get => GetValue<int>();
@@ -57,7 +58,7 @@ public abstract class LogixCode : LogixElement, ILogixReferencable
     /// <summary>
     /// 
     /// </summary>
-    public virtual string Identifier => $"{L5XType} {Number}".Trim();
+    public string Location => $"{L5XType} {Number}".Trim();
 
     /// <summary>
     /// The the parent <see cref="Components.Routine"/> component for the current <c>LogixCode</c> element.

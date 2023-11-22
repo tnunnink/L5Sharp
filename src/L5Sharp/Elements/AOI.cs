@@ -47,12 +47,12 @@ public class AOI : FunctionBlock
     }
 
     /// <summary>
-    /// The backing tag name for the <c>AoiBlock</c> instance.
+    /// The backing tag name for the AOI block element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the tag name if it exists; Otherwise, <c>null</c>.</value>
-    public string? Operand
+    public TagName? Operand
     {
-        get => GetValue<string>();
+        get => GetValue<TagName>();
         set => SetValue(value);
     }
 
@@ -62,7 +62,13 @@ public class AOI : FunctionBlock
     /// <value>A <see cref="IEnumerable{T}"/> containing the names of the pins if found. If not found then an
     /// empty collection.</value>
     /// <remarks>To update the property, you must assign a new collection of pin names.</remarks>
-    public IEnumerable<TagName> VisiblePins => throw new NotImplementedException();
+    public Params? VisiblePins
+    {
+        get => Element.Attribute(L5XName.VisiblePins) is not null
+            ? new Params(Element.Attribute(L5XName.VisiblePins)!)
+            : default;
+        set => SetValue(value is not null ? string.Join(" ", value) : null);
+    }
 
     /// <summary>
     /// The collection of input/output parameters for the <c>AoiBlock</c> instance.
@@ -88,7 +94,7 @@ public class AOI : FunctionBlock
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References()
     {
-        if (Operand is not null && Operand.IsTag())
+        if (Operand is not null)
             yield return new CrossReference(Element, Operand, L5XName.Tag);
         
         if (Name is not null)
@@ -97,5 +103,14 @@ public class AOI : FunctionBlock
         foreach (var parameter in Parameters)
             if (parameter.Value.IsTag())
                 yield return new CrossReference(Element, parameter.Value, L5XName.Tag);
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    {
+        //todo we need to think about how could this be an invalid call (i.e. why check pins)
+        yield return Operand is not null && endpoint.Value is not null && VisiblePins?.Contains(endpoint.Value) == true
+            ? TagName.Concat(Operand, endpoint.Value)
+            : Argument.Empty;
     }
 }

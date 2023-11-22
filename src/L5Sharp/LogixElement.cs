@@ -81,26 +81,6 @@ public abstract class LogixElement : ILogixSerializable
     public string L5XType => Element.Name.LocalName;
 
     /// <summary>
-    /// The name of the ancestral <c>LogixElement</c>, indicating the program, instruction, or controller for which
-    /// it is contained.
-    /// </summary>
-    /// <value>
-    /// A <see cref="string"/> representing the name of the program, instruction, or controller in which this component
-    /// is contained. If the component has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
-    /// element is not attached to a L5X tree, then this returns an empty string.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify elements within the L5X file, especially scoped components with same name.
-    /// </para>
-    /// </remarks>
-    public string Container => Scope.ScopeName(Element);
-
-    /// <summary>
     /// The scope of the <c>LogixElement</c>, indicating whether it is a globally scoped controller element,
     /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
     /// </summary>
@@ -119,7 +99,27 @@ public abstract class LogixElement : ILogixSerializable
     /// <c>Tag</c> and <c>Routine</c> components.
     /// </para>
     /// </remarks>
-    public Scope Scope => Scope.ScopeType(Element);
+    public Scope Scope => Scope.Type(Element);
+
+    /// <summary>
+    /// The name of the ancestral <c>LogixElement</c>, indicating the program, instruction, or controller for which
+    /// it is contained.
+    /// </summary>
+    /// <value>
+    /// A <see cref="string"/> representing the name of the program, instruction, or controller in which this component
+    /// is contained. If the component has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
+    /// </value>
+    /// <remarks>
+    /// <para>
+    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
+    /// element is not attached to a L5X tree, then this returns an empty string.
+    /// </para>
+    /// <para>
+    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify elements within the L5X file, especially scoped components with same name.
+    /// </para>
+    /// </remarks>
+    public string Container => Scope.Container(Element);
 
     /// <summary>
     /// Adds a new element of the same type directly after this element in the L5X document.
@@ -479,7 +479,7 @@ public abstract class LogixElement : ILogixSerializable
     /// Gets the first parent element of the current underlying element object with the specified name, and returns the
     /// a new deserialized instance of the parent type if found. If not found, returns <c>null</c>.
     /// </summary>
-    /// <param name="parent">The name of the parent element to return. If not provided will use the default configured
+    /// <param name="ancestor">The name of the parent element to return. If not provided will use the default configured
     /// L5XType for the specified element type.</param>
     /// <typeparam name="TElement">The element type of the parent to return.</typeparam>
     /// <returns>A <see cref="LogixElement"/> representing the specified parent element if found;
@@ -489,10 +489,10 @@ public abstract class LogixElement : ILogixSerializable
     /// to a <c>L5X</c> document then this will return null. Note that we only get parent but don't set it. A parent is
     /// defined by adding a given logix element to the corresponding parent logix container.
     /// </remarks>
-    protected TElement? GetParent<TElement>(string? parent = null) where TElement : LogixElement
+    protected TElement? GetAncestor<TElement>(string? ancestor = null) where TElement : LogixElement
     {
-        parent ??= typeof(TElement).L5XType();
-        return Element.Ancestors(parent).FirstOrDefault()?.Deserialize<TElement>();
+        ancestor ??= typeof(TElement).L5XType();
+        return Element.Ancestors(ancestor).FirstOrDefault()?.Deserialize<TElement>();
     }
 
     /// <summary>

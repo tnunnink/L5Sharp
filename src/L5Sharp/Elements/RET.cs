@@ -13,27 +13,27 @@ namespace L5Sharp.Elements;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.SBR, L5XName.Sheet)]
-public class SBR : FunctionBlock
+[L5XType(L5XName.RET, L5XName.Sheet)]
+public class RET : FunctionBlock
 {
     /// <summary>
-    /// Creates a new <see cref="SBR"/> with default values.
+    /// Creates a new <see cref="RET"/> with default values.
     /// </summary>
-    public SBR()
+    public RET()
     {
     }
 
     /// <summary>
-    /// Creates a new <see cref="SBR"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="RET"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public SBR(XElement element) : base(element)
+    public RET(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// The name of the routine to call for the <c>JSR</c> element.
+    /// The name of the routine to call for the <see cref="RET"/> element.
     /// </summary>
     /// <value>A <see cref="string"/> containing the name of the routine if found; Otherwise, <c>null</c>.</value>
     public string? Routine
@@ -43,11 +43,11 @@ public class SBR : FunctionBlock
     }
 
     /// <summary>
-    /// The collection of input parameters to the routine being called by the <see cref="SBR"/> <c>FunctionBlock</c> element.
+    /// The collection of input parameters to the routine being called by the <see cref="RET"/> <c>FunctionBlock</c> element.
     /// </summary>
     /// <value>A <see cref="Params"/> object wrapping the underlying attribute containing the <c>In</c> parameters
     /// if exists; Otherwise, <c>null</c>.</value>
-    public Params? In
+    public Params? Ret
     {
         get => Element.Attribute(L5XName.In) is not null ? new Params(Element.Attribute(L5XName.In)!) : default;
         set => SetValue(value is not null ? string.Join(" ", value) : null);
@@ -59,9 +59,9 @@ public class SBR : FunctionBlock
         if (Routine is not null)
             yield return new CrossReference(Element, L5XName.Routine, Routine);
 
-        if (In is null) yield break;
-        
-        foreach (var parameter in In)
+        if (Ret is null) yield break;
+
+        foreach (var parameter in Ret)
             yield return new CrossReference(Element, L5XName.Tag, parameter);
     }
     

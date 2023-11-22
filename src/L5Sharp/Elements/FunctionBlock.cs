@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Common;
 
 namespace L5Sharp.Elements;
 
@@ -40,12 +41,33 @@ public abstract class FunctionBlock : DiagramBlock
     /// The parent <see cref="Elements.Sheet"/> element that this <c>FunctionBlock</c> is contained within.
     /// </summary>
     public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<Argument> Arguments()
+    {
+        var arguments = new List<Argument>();
+
+        var wires = Sheet?.Connectors(this) ?? Enumerable.Empty<Wire>();
+
+        foreach (var wire in wires)
+        {
+            var endpoint = wire.Endpoint(this);
+            var block = Sheet?.Block(endpoint.Key);
+            var args = block?.GetArguments(endpoint);
+            if (args is null) continue;
+            arguments.AddRange(args);
+        }
+
+        return arguments;
+    }
 
     /// <summary>
-    /// Finds all other <see cref="FunctionBlock"/> elements that have connections to this block element.
+    /// 
     /// </summary>
-    /// <returns>An <see cref="IEnumerable{T}"/> containing connected <see cref="FunctionBlock"/> element objects.</returns>
-    /// <remarks>This relies on the parent <see cref="Sheet"/> diagram element to find other connecting blocks.
-    /// If this block element is not attached to a <c>Sheet</c> then it will return and empty collection.</remarks>
-    public IEnumerable<FunctionBlock> Connections() => Sheet?.Connections(this) ?? Enumerable.Empty<FunctionBlock>();
+    /// <param name="endpoint"></param>
+    /// <returns></returns>
+    protected abstract IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint);
 }

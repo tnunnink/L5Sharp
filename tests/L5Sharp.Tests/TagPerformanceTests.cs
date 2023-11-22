@@ -18,7 +18,7 @@ public class TagPerformanceTests
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        var tags = content.Find<Tag>().SelectMany(t => t.Members()).Select(t => t.TagName.ToString()).ToList();
+        var tags = content.Query<Tag>().SelectMany(t => t.Members()).Select(t => t.TagName.ToString()).ToList();
         
         stopwatch.Stop();
         Console.WriteLine(stopwatch.Elapsed);

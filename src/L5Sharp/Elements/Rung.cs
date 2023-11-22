@@ -75,56 +75,7 @@ public class Rung : LogixCode
         get => GetProperty<string>();
         set => SetProperty(value);
     }
-
-    /// <inheritdoc />
-    public override IEnumerable<CrossReference> References()
-    {
-        var references = new List<CrossReference>();
-
-        foreach (var instruction in Text.Instructions())
-        {
-            if (instruction.CallsRoutine)
-            {
-                var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
-                references.Add(new CrossReference(Element, L5XName.Routine, routine));
-                var parameters = instruction.Arguments.Skip(1).Where(a => a.IsTag).Select(t => t.ToString());
-                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p)));
-                continue;
-            }
-
-            if (instruction.CallsTask)
-            {
-                var task = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
-                references.Add(new CrossReference(Element, L5XName.Task, task));
-                continue;
-            }
-
-            references.AddRange(instruction.Text.Tags()
-                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString())));
-        }
-
-        return references;
-    }
-
-    /// <inheritdoc />
-    public override string ToString() => Text;
-
-    /// <summary>
-    /// Implicitly converts the <see cref="Rung"/> object to a <see cref="NeutralText"/>.
-    /// </summary>
-    /// <param name="rung">The <c>Rung</c> to convert.</param>
-    /// <returns>A <see cref="NeutralText"/> instance representing the contents of the <c>Rung</c>.</returns>
-    public static implicit operator NeutralText(Rung rung) => new(rung.Text);
-
-    /// <summary>
-    /// Implicitly converts the <see cref="NeutralText"/> object to a <see cref="Rung"/>.
-    /// </summary>
-    /// <param name="text">The <c>NeutralText</c> to convert.</param>
-    /// <returns>A <see cref="Rung"/> instance representing the contents of the <c>NeutralText</c>.</returns>
-    public static implicit operator Rung(NeutralText text) => new(text);
-
-    #region Extensions
-
+    
     /// <summary>
     /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AoiBlock logic in the
     /// collection of <see cref="Rung"/> objects.
@@ -158,7 +109,55 @@ public class Rung : LogixCode
         return code;
     }
 
-    #endregion
+    /// <inheritdoc />
+    public override IEnumerable<CrossReference> References()
+    {
+        var references = new List<CrossReference>();
+
+        foreach (var instruction in Text.Instructions())
+        {
+            if (instruction.CallsRoutine)
+            {
+                var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
+                references.Add(new CrossReference(Element, L5XName.Routine, routine, instruction));
+                
+                var parameters = instruction.Arguments.Skip(1).Where(a => a.IsTag).Select(t => t.ToString());
+                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p, instruction)));
+                continue;
+            }
+
+            if (instruction.CallsTask)
+            {
+                var task = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
+                references.Add(new CrossReference(Element, L5XName.Task, task, instruction));
+                continue;
+            }
+            
+            //todo other instructions like GSV SSV
+
+            references.AddRange(instruction.Text.Tags()
+                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString(), instruction)));
+        }
+
+        return references;
+    }
+
+    /// <inheritdoc />
+    public override string ToString() => Text;
+
+    /// <summary>
+    /// Implicitly converts the <see cref="Rung"/> object to a <see cref="NeutralText"/>.
+    /// </summary>
+    /// <param name="rung">The <c>Rung</c> to convert.</param>
+    /// <returns>A <see cref="NeutralText"/> instance representing the contents of the <c>Rung</c>.</returns>
+    public static implicit operator NeutralText(Rung rung) => new(rung.Text);
+
+    /// <summary>
+    /// Implicitly converts the <see cref="NeutralText"/> object to a <see cref="Rung"/>.
+    /// </summary>
+    /// <param name="text">The <c>NeutralText</c> to convert.</param>
+    /// <returns>A <see cref="Rung"/> instance representing the contents of the <c>NeutralText</c>.</returns>
+    public static implicit operator Rung(NeutralText text) => new(text);
 }
 
 /// <summary>
