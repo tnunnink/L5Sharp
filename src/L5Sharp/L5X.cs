@@ -37,7 +37,8 @@ public class L5X : ILogixSerializable
     private readonly XElement _content;
 
     /// <summary>
-    /// An index of all logix components in the L5X file for fast lookups.
+    /// An index of all logix components in the L5X file for fast lookups. This field is not loaded or constructed until
+    /// requested by an associated method call.
     /// </summary>
     private LogixIndex? _index;
 
@@ -71,10 +72,11 @@ public class L5X : ILogixSerializable
     /// <exception cref="ArgumentNullException"><c>content</c> is null.</exception>
     /// <exception cref="ArgumentException"><c>content</c> name is not expected <c>RSLogix5000Content</c>.</exception>
     /// <remarks>
-    /// Although you create the L5X instance by providing a valid XML element, it is typically easier or more
-    /// typical to use the static factory methods <see cref="Load"/> to load a file from disc or <see cref="New"/>
-    /// to generate a new default instance. Also note that each individual component can be exported to generate a new
-    /// L5X content file.
+    /// Although you create the L5X instance by providing a valid XML element, it is or more typical to use the
+    /// static factory methods <see cref="Load"/> to load a file from disc, <see cref="Parse"/> to parse the XML from a string,
+    /// or <see cref="New(string,string,L5Sharp.Common.Revision?)"/> to generate a new default instance initialized with
+    /// the root RSLogix5000Content element and attributes. Also note that each individual component can be exported to
+    /// generate a new L5X content file.
     /// </remarks>
     public L5X(XElement content)
     {
@@ -92,8 +94,8 @@ public class L5X : ILogixSerializable
         NormalizeContent();
 
         //This stores L5X object as in-memory object for the root XElement,
-        //allowing child elements to retrieve the object locally without creating a new instance (and reindexing of content).
-        //This allows them to reference to root L5X for cross referencing or other operations.
+        //allowing child elements to retrieve the object locally without creating a new instance and potentially
+        //reindexing of the XML content.This allows them to reference to root L5X for cross referencing or other operations.
         _content.AddAnnotation(this);
     }
 
@@ -115,6 +117,7 @@ public class L5X : ILogixSerializable
     /// The container collection of <see cref="DataType"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="DataType"/> components.</value>
+    /// <remarks></remarks>
     public LogixContainer<DataType> DataTypes => new(GetContainer(L5XName.DataTypes));
 
     /// <summary>
@@ -202,18 +205,18 @@ public class L5X : ILogixSerializable
     /// <param name="processor">The processor catalog number.</param>
     /// <param name="revision">The optional software revision of the processor.</param>
     /// <returns>A new default <see cref="L5X"/> with the specified controller properties.</returns>
-    public static L5X New(string name, string processor, Revision? revision) =>
+    public static L5X New(string name, string processor, Revision? revision = null) =>
         new(NewContent(name, nameof(Controller), revision));
 
     /// <summary>
-    /// 
+    /// Creates a new <see cref="L5X"/> file with the provided <see cref="LogixComponent"/> object instance as the export
+    /// target of the file.
     /// </summary>
-    /// <param name="component"></param>
-    /// <param name="revision"></param>
-    /// <typeparam name="TComponent"></typeparam>
-    /// <returns></returns>
-    public static L5X New<TComponent>(TComponent component, Revision? revision = null)
-        where TComponent : LogixComponent => new(NewContent(component.Name, typeof(TComponent).L5XType(), revision));
+    /// <param name="component">The component that will serve as the target for the new L5X.</param>
+    /// <param name="revision">The software revision of the L5X file.</param>
+    /// <returns>A new <see cref="L5X"/> with the default root and target component as the content of the file.</returns>
+    public static L5X New(LogixComponent component, Revision? revision = null) 
+        => new(NewContent(component.Name, component.L5XType, revision));
 
     /// <summary>
     /// Creates a new <see cref="L5X"/> with the provided L5X string content.
@@ -325,18 +328,19 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// Adds the given logix component to the first found container within the L5X tree. 
+    /// Adds a component to the specified container within the L5X file. 
     /// </summary>
     /// <param name="component">The component to add to the L5X.</param>
-    /// <param name="container"></param>
+    /// <param name="container">The container name (controller, program, or instruction) in which to add the component.</param>
     /// <typeparam name="TComponent">The type of component to add to the L5X.</typeparam>
-    /// <exception cref="InvalidOperationException">No container was found in the L5X tree for the specified type.</exception>
+    /// <exception cref="InvalidOperationException">No container was found in the L5X for the specified type and container name.</exception>
     /// <remarks>
-    /// This provides a more dynamic way to add content to an L5X file. Note that this only adds to the first
-    /// container found of the specific type. If you are adding scoped components such as <c>Tag</c> or <c>Routine</c>
-    /// you should be doing so in the context of a <c>Program</c> component.
+    /// This provides a more dynamic way to add content to an L5X file. This method will look for a container element
+    /// within the specified container/scope name. Therefore it is important to be sure you specify the correct type and
+    /// container name. For example, if you try to add a Module to a Program, this will fail even if a program with the
+    /// container name exists, because there is no Modules container in a Program component.
     /// </remarks>
-    public void AddTo<TComponent>(TComponent component, string container) where TComponent : LogixComponent
+    public void Add<TComponent>(TComponent component, string container) where TComponent : LogixComponent
     {
         var type = typeof(TComponent).L5XContainer();
         var target = _content.Descendants(type).FirstOrDefault(e => Scope.Container(e) == container);
@@ -349,20 +353,21 @@ public class L5X : ILogixSerializable
     /// Retrieves all components with the specified key.
     /// </summary>
     /// <param name="key">The <see cref="ComponentKey"/> to search for.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="LogixComponent"/> having the specified type/name
-    /// composite key.</returns>
+    /// <returns>A collection of <see cref="LogixComponent"/> having the specified type/name composite key.</returns>
     /// <remarks>
     /// <para>
     /// Note that this method returns all components with the type/name pair. This is typically a single component,
     /// but types like Tag can have same name across different scopes, so it may be multiple different objects.
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
     /// </para>
     /// </remarks>
+    /// <seealso cref="Find(L5Sharp.Common.ComponentKey)"/>
+    /// <seealso cref="Get(L5Sharp.Common.ComponentKey)"/>
     public IEnumerable<LogixComponent> All(ComponentKey key)
     {
         return Index.Components.TryGetValue(key, out var components)
@@ -371,26 +376,27 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// Retrieves all components of type <see cref="TComponent"/> with the specified name.
+    /// Retrieves all components with the specified name nad type.
     /// </summary>
     /// <param name="name">The name of the components to retrieve.</param>
     /// <typeparam name="TComponent">The type of components to retrieve.</typeparam>
-    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="LogixComponent"/> having the specified type/name
-    /// composite key.</returns>
-    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    /// <returns>A collection of <see cref="LogixComponent"/> having the specified type/name composite key.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is null or empty.</exception>
     /// <remarks>
     /// <para>
     /// Note that this method returns all components with the type/name pair. This is typically a single component,
-    /// but types like Tag or Routine can have same name across different scopes, so it may be multiple different objects.
+    /// but types like <c>Tag</c> or <c>Routine</c> can have same name across different scopes,
+    /// so it may be multiple different objects.
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
     /// </para>
     /// </remarks>
     /// <seealso cref="Find{TComponent}(string)"/>
+    /// <seealso cref="Get{TComponent}(string)"/>
     public IEnumerable<TComponent> All<TComponent>(string name) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name))
@@ -418,7 +424,7 @@ public class L5X : ILogixSerializable
     /// multiple tags if the specified tag name exists in different scopes.
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -443,7 +449,7 @@ public class L5X : ILogixSerializable
     /// <returns><c>true</c> if the component key exists in the L5X; otherwise, <c>false</c>.</returns>
     /// <remarks>This </remarks>
     /// <remarks>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -457,7 +463,7 @@ public class L5X : ILogixSerializable
     /// <typeparam name="TComponent">The type of component to check for existence.</typeparam>
     /// <returns><c>true</c> if the component key exists in the L5X; otherwise, <c>false</c>.</returns>
     /// <remarks>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -485,7 +491,7 @@ public class L5X : ILogixSerializable
     /// For non-scoped components, there should be only one component anyway. 
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -506,7 +512,7 @@ public class L5X : ILogixSerializable
     /// <param name="container">The name of the container (controller, program, instruction) in which the
     /// component should be found.</param>
     /// <returns>The found <see cref="LogixComponent"/> if it exists, otherwise returns null.</returns>
-    /// <exception cref="ArgumentException"><c>container</c> is null or empty.</exception>
+    /// <exception cref="ArgumentException"><paramref name="container"/> is null or empty.</exception>
     /// <remarks>
     /// <para>
     /// This method allows the caller to further specify which scoped component they would like to retrieve, instead of
@@ -515,7 +521,7 @@ public class L5X : ILogixSerializable
     /// this method returns null.
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -539,7 +545,7 @@ public class L5X : ILogixSerializable
     /// <param name="name">The name of the component to find.</param>
     /// <typeparam name="TComponent">The type of component to find.</typeparam>
     /// <returns>The found <see cref="LogixComponent"/> if it exists, otherwise returns null.</returns>
-    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is null or empty.</exception>
     /// <remarks>
     /// <para>
     /// If there are multiple different scoped components with the same type and name, this method will return the first
@@ -547,7 +553,7 @@ public class L5X : ILogixSerializable
     /// For non-scoped components, there should be only one component anyway. 
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -573,7 +579,7 @@ public class L5X : ILogixSerializable
     /// component should be found.</param>
     /// <typeparam name="TComponent">The type of component to find.</typeparam>
     /// <returns>The found <see cref="LogixComponent"/> if it exists, otherwise returns null.</returns>
-    /// <exception cref="ArgumentException"><c>name</c> or <c>container</c> is null or empty.</exception>
+    /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="container"/> is null or empty.</exception>
     /// <remarks>
     /// <para>
     /// This method allows the caller to further specify which scoped component they would like to retrieve, instead of
@@ -582,7 +588,7 @@ public class L5X : ILogixSerializable
     /// this method returns null.
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -608,17 +614,16 @@ public class L5X : ILogixSerializable
     /// Finds the first <see cref="Tag"/> in the L5X file having the specified tag name.
     /// </summary>
     /// <param name="tagName">The <see cref="TagName"/> of the tag to find.</param>
-    /// <returns>The found <see cref="Tag"/> if it exists, otherwise returns null.</returns>
+    /// <returns>The first found <see cref="Tag"/> if it exists, otherwise returns null.</returns>
     /// <exception cref="ArgumentException"><c>tagName</c> is null.</exception>
     /// <remarks>
     /// <para>
-    /// This method is similar to the other <c>Find</c> methods with the slight difference that is will also return the
-    /// nested tag member based on the provided <c>tagName</c> parameter. The tag name can represent a nested or dot-down
-    /// member path to a child tag of a given base tag. So ultimately this is a slightly more concise call for a <c>Tag</c>
-    /// type component specifically. Note that his will return the first found tag.
+    /// This method only differs from the more generic Find methods in that it also returns a nested tag member if
+    /// specified by the <paramref name="tagName"/> path. This means the caller can directly and efficiently get either
+    /// a root tag component, or one of it's nested child members. 
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -626,6 +631,7 @@ public class L5X : ILogixSerializable
     /// </remarks>
     /// <seealso cref="Find(L5Sharp.Common.TagName,string)"/>
     /// <seealso cref="All(L5Sharp.Common.TagName)"/>
+    /// <seealso cref="Get(L5Sharp.Common.TagName)"/>
     public Tag? Find(TagName tagName)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
@@ -644,13 +650,12 @@ public class L5X : ILogixSerializable
     /// <param name="container">The name of the container (controller, program, instruction) in which the tag
     /// should be found.</param>
     /// <returns>The found <see cref="Tag"/> if it exists, otherwise returns null.</returns>
-    /// <exception cref="ArgumentException"><c>tagName</c> is null -or- <c>container</c> is null or empty.</exception>
+    /// <exception cref="ArgumentException"><c>tagName</c> is null -or- <paramref name="container"/> is null or empty.</exception>
     /// <remarks>
     /// <para>
-    /// This method is similar to the other <c>Find</c> methods with the slight difference that is will also return the
-    /// nested tag member based on the provided <c>tagName</c> parameter. The tag name can represent a nested or dot-down
-    /// member path to a child tag of a given base tag. So ultimately this is a slightly more concise call for a <c>Tag</c>
-    /// type component specifically.
+    /// This method only differs from the more generic Find methods in that it also returns a nested tag member if
+    /// specified by the <paramref name="tagName"/> path. This means the caller can directly and efficiently get either
+    /// a root tag component, or one of it's nested child members. 
     /// </para>
     /// <para>
     /// This method allows the caller to further specify which scoped component they would like to retrieve, instead of
@@ -659,7 +664,7 @@ public class L5X : ILogixSerializable
     /// this method returns null.
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -667,6 +672,7 @@ public class L5X : ILogixSerializable
     /// </remarks>
     /// <seealso cref="Find(L5Sharp.Common.TagName)"/>
     /// <seealso cref="All(L5Sharp.Common.TagName)"/>
+    /// <seealso cref="Get(L5Sharp.Common.TagName)"/>
     public Tag? Find(TagName tagName, string container)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
@@ -685,7 +691,8 @@ public class L5X : ILogixSerializable
     /// Gets the first component in the L5X file having the provided composite type/name key.
     /// </summary>
     /// <param name="key">The <see cref="ComponentKey"/> to search for.</param>
-    /// <returns>The <see cref="LogixComponent"/> with the specified key.</returns>
+    /// <returns>The <see cref="LogixComponent"/> with the specified key. If no component is found, then an exception
+    /// is thrown.</returns>
     /// <exception cref="KeyNotFoundException">No component is found with the provided composite key.</exception>
     /// <remarks>
     /// <para>
@@ -694,7 +701,7 @@ public class L5X : ILogixSerializable
     /// For non-scoped components, there should be only one component anyway. 
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -714,8 +721,9 @@ public class L5X : ILogixSerializable
     /// <param name="key">The <see cref="ComponentKey"/> to search for.</param>
     /// <param name="container">The name of the container (controller, program, instruction) in which the
     /// component should be found.</param>
-    /// <returns>The <see cref="LogixComponent"/> with the specified key.</returns>
-    /// <exception cref="ArgumentException"><c>container</c> is null or empty.</exception>
+    /// <returns>The <see cref="LogixComponent"/> with the specified key. If no component is found, then an exception
+    /// is thrown.</returns>
+    /// <exception cref="ArgumentException"><paramref name="container"/> is null or empty.</exception>
     /// <exception cref="KeyNotFoundException">No component is found with the provided composite key.</exception>
     /// <remarks>
     /// <para>
@@ -725,7 +733,7 @@ public class L5X : ILogixSerializable
     /// this method returns null.
     /// </para>
     /// <para>
-    /// This method makes use of the internal component index to find a components efficiently.
+    /// This method makes use of the internal component index to find a component efficiently.
     /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
     /// This is needed for operations that might be more computationally complex, such as iterating many components
     /// and finding references or dependents.
@@ -742,13 +750,27 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// 
+    /// Gets the first component in the L5X file having the provided type and name.
     /// </summary>
-    /// <param name="name"></param>
-    /// <typeparam name="TComponent"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="KeyNotFoundException"></exception>
+    /// <param name="name">The name of the component to find.</param>
+    /// <typeparam name="TComponent">The type of component to find.</typeparam>
+    /// <returns>The <see cref="LogixComponent"/> with the specified key. If no component is found, then an exception
+    /// is thrown.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is null or empty.</exception>
+    /// <exception cref="KeyNotFoundException">No component is found with the provided composite key.</exception>
+    /// <remarks>
+    /// <para>
+    /// If there are multiple different scoped components with the same type and name, this method will return the first
+    /// found object. For types like <c>Tag</c>, there may be multiple components with the same name across difference scopes.
+    /// For non-scoped components, there should be only one "controller scoped" component. 
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
     public TComponent Get<TComponent>(string name) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name))
@@ -762,15 +784,29 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets the component of type TComponent from the specified container in the L
-    /// 5X index.
+    /// Gets the first component in the L5X file having the provided type and name.
     /// </summary>
-    /// <typeparam name="TComponent">The type of the component to retrieve.</typeparam>
-    /// <param name="name">The name of the component.</param>
-    /// <param name="container">The container of the component.</param>
-    /// <returns>The component of type TComponent.</returns>
-    /// <exception cref="ArgumentException">Thrown when the name or container is null or empty.</exception>
-    /// <exception cref="KeyNotFoundException">Thrown when the component is not found in the L5X index.</exception>
+    /// <param name="name">The name of the component to find.</param>
+    /// <param name="container">The name of the container (controller, program, instruction) in which the
+    /// component should be found.</param>
+    /// <typeparam name="TComponent">The type of component to find.</typeparam>
+    /// <returns>The <see cref="LogixComponent"/> with the specified key. If no component is found, then an exception
+    /// is thrown.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="container"/> is null or empty.</exception>
+    /// <exception cref="KeyNotFoundException">No component is found with the provided composite key.</exception>
+    /// <remarks>
+    /// <para>
+    /// If there are multiple different scoped components with the same type and name, this method will return the first
+    /// found object. For types like <c>Tag</c>, there may be multiple components with the same name across difference scopes.
+    /// For non-scoped components, there should be only one "controller scoped" component. 
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
     public TComponent Get<TComponent>(string name, string container) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name))
@@ -785,6 +821,30 @@ public class L5X : ILogixSerializable
             : throw new KeyNotFoundException($"Component not found in L5X: {key}");
     }
 
+    /// <summary>
+    /// Gets the first <see cref="Tag"/> in the L5X file having the specified tag name.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> of the tag to get.</param>
+    /// <returns>The <see cref="Tag"/> with the specified key. If a multiple scoped tags with the same name exist, this
+    /// will return the first tag instance found. If not tag is found, then an exception is thrown.</returns>
+    /// <exception cref="ArgumentException"><c>tagName</c> is null.</exception>
+    /// <exception cref="KeyNotFoundException">No tag with the provided tag name was found.</exception>
+    /// <remarks>
+    /// <para>
+    /// This method only differs from the more generic Get methods in that it also returns a nested tag member if
+    /// specified by the <paramref name="tagName"/> path. This means the caller can directly and efficiently get either
+    /// a root tag component, or one of it's nested child members. 
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
+    /// <seealso cref="Get(L5Sharp.Common.TagName,string)"/>
+    /// <seealso cref="All(L5Sharp.Common.TagName)"/>
+    /// <seealso cref="Find(L5Sharp.Common.TagName)"/>
     public Tag Get(TagName tagName)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
@@ -796,6 +856,32 @@ public class L5X : ILogixSerializable
             : throw new KeyNotFoundException($"Tag not found in L5X: {tagName}");
     }
 
+    /// <summary>
+    /// Gets the first <see cref="Tag"/> in the L5X file having the specified tag name.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> of the tag to get.</param>
+    /// <param name="container">The name of the container (controller, program, instruction) in which the
+    /// tag should be found.</param>
+    /// <returns>The <see cref="Tag"/> with the specified key. If a multiple scoped tags with the same name exist, this
+    /// will return the first tag instance found. If no tag is found, then an exception is thrown.</returns>
+    /// <exception cref="ArgumentException"><c>tagName</c> is null.</exception>
+    /// <exception cref="KeyNotFoundException">No tag with the provided tag name was found.</exception>
+    /// <remarks>
+    /// <para>
+    /// This method only differs from the more generic Get methods in that it also returns a nested tag member if
+    /// specified by the <paramref name="tagName"/> path. This means the caller can directly and efficiently get either
+    /// a root tag component, or one of it's nested child members. 
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
+    /// <seealso cref="Get(L5Sharp.Common.TagName)"/>
+    /// <seealso cref="All(L5Sharp.Common.TagName)"/>
+    /// <seealso cref="Find(L5Sharp.Common.TagName)"/>
     public Tag Get(TagName tagName, string container)
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
@@ -810,6 +896,22 @@ public class L5X : ILogixSerializable
             : throw new KeyNotFoundException($"Tag not found in L5X: {tagName}");
     }
 
+    /// <summary>
+    /// Removes the component(s) with the specified composite type/name key from the L5X file.
+    /// </summary>
+    /// <param name="key">The <see cref="ComponentKey"/> of the component to remove.</param>
+    /// <remarks>
+    /// <para>
+    /// Note that this will remove all components with the type/name pair. For scoped components types such as
+    /// <c>Tag</c> and <c>Routine</c> this may be more than a single component.
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
     public void Remove(ComponentKey key)
     {
         if (!Index.Components.TryGetValue(key, out var components)) return;
@@ -817,30 +919,115 @@ public class L5X : ILogixSerializable
             component.Value.Remove();
     }
 
+    /// <summary>
+    /// Removes a single component with the specified composite type/name key and container from the L5X file.
+    /// </summary>
+    /// <param name="key">The <see cref="ComponentKey"/> of the component to remove.</param>
+    /// <param name="container">The container name of the component to remove.</param>
+    /// <remarks>
+    /// <para>
+    /// This method should only remove a single component as it allows the caller to further define the container
+    /// or scope the component should be found in.
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
     public void Remove(ComponentKey key, string container)
     {
         if (string.IsNullOrEmpty(container))
             throw new ArgumentException("Container can not be null or empty.", nameof(container));
-        
+
         if (Index.Components.TryGetValue(key, out var components) &&
             components.TryGetValue(container, out var element))
         {
-            element.Remove();   
+            element.Remove();
         }
     }
 
+    /// <summary>
+    /// Removes the component(s) with the specified type/name from the L5X file.
+    /// </summary>
+    /// <param name="name">The name of the component to remove.</param>
+    /// <typeparam name="TComponent">The type of the component to remove.</typeparam>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is null or empty.</exception>
+    /// <remarks>
+    /// <para>
+    /// Note that this will remove all components with the type/name pair. For scoped components types such as
+    /// <c>Tag</c> and <c>Routine</c> this may be more than a single component.
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
     public void Remove<TComponent>(string name) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
-        
+
         if (!Index.Components.TryGetValue(key, out var components)) return;
         foreach (var component in components)
             component.Value.Remove();
     }
 
+    /// <summary>
+    /// Removes a single component with the specified type/name pair and container from the L5X file.
+    /// </summary>
+    /// <param name="name">The name of the component to remove.</param>
+    /// <param name="container">The container of the component to remove.</param>
+    /// <typeparam name="TComponent">The type of the component to remove.</typeparam>
+    /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="container"/> is null or empty.</exception>
+    /// <remarks>
+    /// <para>
+    /// This method should only remove a single component as it allows the caller to further define the container
+    /// or scope the component should be found in.
+    /// </para>
+    /// <para>
+    /// This method makes use of the internal component index to find a component efficiently.
+    /// Since components have (mostly) unique type/name pairs, we can index them and find them quickly.
+    /// This is needed for operations that might be more computationally complex, such as iterating many components
+    /// and finding references or dependents.
+    /// </para>
+    /// </remarks>
+    public void Remove<TComponent>(string name, string container) where TComponent : LogixComponent
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.", nameof(name));
+        if (string.IsNullOrEmpty(container))
+            throw new ArgumentException("Container can not be null or empty.", nameof(container));
+
+        var key = new ComponentKey(typeof(TComponent).L5XType(), name);
+
+        if (Index.Components.TryGetValue(key, out var components) &&
+            components.TryGetValue(container, out var element))
+        {
+            element.Remove();
+        }
+    }
+
+    /// <summary>
+    /// Retrieves a collection of <see cref="CrossReference"/> objects that reference the specified <paramref
+    /// name="component"/>.
+    /// </summary>
+    /// <param name="component">The <see cref="LogixComponent"/> to retrieve references for.</param>
+    /// <returns>A collection of <see cref="CrossReference"/> objects that reference the specified <paramref name="component"/>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="component"/> is null.</exception>
+    /// <remarks>
+    /// <para>
+    /// A cross reference object contains information about the element and location of the object that has a reference
+    /// to a given component. This library has a built in mechanism for parsing and indexing both tag and logic references
+    /// to various components for efficient lookup. This can allow the caller to find references for many objects at a time
+    /// without having to iterate the L5X multiple times.
+    /// </para>
+    /// </remarks>
     public IEnumerable<CrossReference> ReferencesTo(LogixComponent component)
     {
         if (component is null) throw new ArgumentNullException(nameof(component));
@@ -850,10 +1037,29 @@ public class L5X : ILogixSerializable
             : Enumerable.Empty<CrossReference>();
     }
 
+    /// <summary>
+    /// /// Retrieves a collection of <see cref="CrossReference"/> objects that reference the specified component
+    /// type and name.
+    /// </summary>
+    /// <param name="name">The name of the component to retrieve references for.</param>
+    /// <typeparam name="TComponent">The type of component to retrieve references for.</typeparam>
+    /// <returns>A collection of <see cref="CrossReference"/> objects that reference the specified <paramref name="name"/>.</returns>
+    /// <exception cref="ArgumentException">Throw if <paramref name="name"/> is null or empty.</exception>
+    /// <remarks>
+    /// <para>
+    /// A cross reference object contains information about the element and location of the object that has a reference
+    /// to a given component. This library has a built in mechanism for parsing and indexing both tag and logic references
+    /// to various components for efficient lookup. This can allow the caller to find references for many objects at a time
+    /// without having to iterate the L5X multiple times.
+    /// </para>
+    /// </remarks>
     public IEnumerable<CrossReference> ReferencesTo<TComponent>(string name) where TComponent : LogixComponent
     {
-        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.", nameof(name));
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.", nameof(name));
+
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
+
         return Index.References.TryGetValue(key, out var references) ? references : Enumerable.Empty<CrossReference>();
     }
 

@@ -8,57 +8,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Elements/RET.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/Logix.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp/LogixIndex.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/WireTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.sln.DotSettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Common/CrossReference.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Common/CrossReference.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/AOI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/AOI.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Block.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Block.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Diagram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Diagram.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/DiagramBlock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramBlock.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/DiagramConnector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramConnector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Function.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Function.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/FunctionBlock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/FunctionBlock.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/ICON.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/ICON.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/IREF.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/IREF.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/JSR.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/JSR.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Line.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Line.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/OCON.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/OCON.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/OREF.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/OREF.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/SBR.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/SBR.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Sheet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Sheet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Wire.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Wire.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Enums/Radix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Enums/Scope.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/ILogixReferencable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/ILogixReferencable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixCode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixCode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Types/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Types/StringType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/L5Sharp.Samples.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/L5Sharp.Samples.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Routines/FBD.L5X" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Routines/FBD.L5X" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Test.L5X" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/BlockTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/BlockTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/IREFTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/IREFTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XTagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XTagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XTemplateTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XTemplateTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/TagPerformanceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/TagPerformanceTests.cs" afterDir="false" />
-    </list>
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="FBD refinement. L5X API refinement. Documentations. Bug fixes. Other development" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -100,7 +50,7 @@
     <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp/Elements/Block.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp/Elements/AOI.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/L5Sharp/Elements/Sheet.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -402,7 +352,7 @@
       <workItem from="1699819052782" duration="46189000" />
       <workItem from="1700256081994" duration="43200000" />
       <workItem from="1700597905351" duration="198000" />
-      <workItem from="1700598188944" duration="11738000" />
+      <workItem from="1700598188944" duration="12986000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -747,7 +697,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="308" />
+    <option name="localTasksCounter" value="309" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -783,7 +733,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Continued to revise the StringType.cs to account for ASCII formatted string values. Fixed tests that were broken from changes. Reorg." />
     <MESSAGE value="update version" />
     <MESSAGE value="fixed README.md" />
     <MESSAGE value="upgraded L5Sharp" />
@@ -808,7 +757,8 @@
     <MESSAGE value="Lots of addition to LogixCode.cs elements and referencing. Initial proof on concept is working well. Need to finish all internal indexing support and testing. Need to revisit NeutralText. Need to finish remaining routine content elements." />
     <MESSAGE value="Reorg and documentation of some classes. Finishing primary tasks for new referencing feature. Starting to revisit NeutralText." />
     <MESSAGE value="Starting updates for Instruction.cs. Added Argument.cs. Attempting to make instruction not a enum type but a common value type with arguments." />
-    <option name="LAST_COMMIT_MESSAGE" value="Starting updates for Instruction.cs. Added Argument.cs. Attempting to make instruction not a enum type but a common value type with arguments." />
+    <MESSAGE value="FBD refinement. L5X API refinement. Documentations. Bug fixes. Other development" />
+    <option name="LAST_COMMIT_MESSAGE" value="FBD refinement. L5X API refinement. Documentations. Bug fixes. Other development" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -837,19 +787,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="125" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp/LogixIndex.cs</url>
-          <line>32</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp\LogixIndex.cs" initialLine="32" containingFunctionPresentation="Constructor 'LogixIndex'">
-            <startOffsets>
-              <option value="1056" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1057" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="129" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/L5Sharp/L5X.cs</url>
