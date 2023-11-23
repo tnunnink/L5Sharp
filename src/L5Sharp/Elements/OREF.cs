@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Utilities;
@@ -70,14 +71,32 @@ public class OREF : FunctionBlock
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References()
     {
+        var references = new List<CrossReference>();
+        
         if (Operand is not null && Operand.IsTag)
         {
-            yield return new CrossReference(Element, L5XName.Tag, Operand.ToString(), new Instruction(nameof(IREF), Operand));
+            references.Add(new CrossReference(Element, L5XName.Tag, Operand.ToString()));
         }
+
+        var instruction = ToInstruction();
+        var endpoints = Endpoints().ToArray().Where(a => a.IsTag);
+        foreach (var endpoint in endpoints)
+        {
+            var reference = new CrossReference(Element, L5XName.Tag, endpoint.ToString(), instruction);
+            references.Add(reference);
+        }
+
+        return references;
     }
     
     /// <inheritdoc />
-    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    public override Instruction ToInstruction()
+    {
+        return new Instruction(nameof(OREF), Operand ?? Argument.Empty);
+    }
+    
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(string? param = null)
     {
         yield return Operand ?? Argument.Unknown;
     }

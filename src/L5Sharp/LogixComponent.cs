@@ -110,7 +110,7 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     /// </summary>
     /// <param name="softwareRevision">The optional software revision, or version of Studio to export the component as.</param>
     /// <returns>A <see cref="L5X"/> containing the component as the target of the L5X.</returns>
-    public L5X Export(Revision? softwareRevision = null)
+    public virtual L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;
         softwareRevision ??= L5X?.Info.SoftwareRevision;

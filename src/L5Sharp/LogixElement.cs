@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
 
@@ -14,6 +15,7 @@ namespace L5Sharp;
 /// of and underlying element object. Deriving classes will have access to the underlying element and
 /// methods for easily getting and setting data.
 /// </summary>
+[PublicAPI]
 public abstract class LogixElement : ILogixSerializable
 {
     /// <summary>

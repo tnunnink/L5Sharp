@@ -16,8 +16,6 @@ public class ProofTesting
         
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-
-        
         
         stopwatch.Stop();
         Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds}");
@@ -30,9 +28,9 @@ public class ProofTesting
         var sheet = content.Query<Sheet>().First();
         var block = sheet[9];
 
-        var arguments = block.Arguments();
+        var references = block.References().ToList();
 
-        arguments.Should().NotBeEmpty();
+        references.Should().NotBeEmpty();
     }
 
     [Test]

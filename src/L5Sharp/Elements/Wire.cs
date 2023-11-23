@@ -65,10 +65,26 @@ public class Wire : DiagramConnector
     /// the default implementation to return the local <see cref="FromParam"/> or <see cref="ToParam"/> depending on the
     /// associated to/from ID of the endpoint.
     /// </remarks>
-    public override KeyValuePair<uint, string?> Endpoint(uint id)
+    public override KeyValuePair<uint, string?> Endpoint(uint id, string? param = null)
     {
-        return FromID == id ? new KeyValuePair<uint, string?>(ToID, ToParam) 
-            : ToID == id ? new KeyValuePair<uint, string?>(FromID, FromParam) 
+        return FromID == id && FromParam == param ? new KeyValuePair<uint, string?>(ToID, ToParam) 
+            : ToID == id && ToParam == param ? new KeyValuePair<uint, string?>(FromID, FromParam) 
             : throw new ArgumentException($"The connector does not have a to/from id matching the id '{id}'");
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="param"></param>
+    /// <returns></returns>
+    public bool IsTo(uint id, string? param = null) => ToID == id && ToParam == param;
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="param"></param>
+    /// <returns></returns>
+    public bool IsFrom(uint id, string? param = null) => FromID == id && FromParam == param;
 }

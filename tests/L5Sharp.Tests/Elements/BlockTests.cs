@@ -13,7 +13,7 @@ public class BlockTests
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
-        var block = new Block();
+        var block = new Block("Test");
 
         block.Should().NotBeNull();
     }
@@ -21,15 +21,15 @@ public class BlockTests
     [Test]
     public void New_Default_ShouldHaveDefaultValues()
     {
-        var block = new Block();
+        var block = new Block("SCL");
 
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
-        block.Operand.Should().BeNull();
-        block.Type.Should().BeNull();
+        block.Type.Should().Be("SCL");
+        block.Operand.Should().Be("SCL_01");
         block.VisiblePins.Should().BeEmpty();
-        block.HideDesc.Should().BeNull();
+        block.HideDesc.Should().BeFalse();
         block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.Block);
@@ -49,9 +49,10 @@ public class BlockTests
     [Test]
     public void New_Overriden_ShouldBeExpected()
     {
-        var block = new Block
+        var block = new Block("Test")
         {
-            ID = 1, X = 100, Y = 100, Operand = "TestBlock", Type = "SCL",
+            ID = 1, X = 100, Y = 100, 
+            Operand = "TestBlock",
             VisiblePins = new Params
             {
                 "Source", "Destination"
@@ -61,6 +62,8 @@ public class BlockTests
         block.ID.Should().Be(1);
         block.X.Should().Be(100);
         block.Y.Should().Be(100);
+        block.Type.Should().Be("SCL");
+        block.Operand.Should().Be("TestBlock");
         block.VisiblePins.Should().HaveCount(2);
     }
 
@@ -68,9 +71,10 @@ public class BlockTests
     [Test]
     public Task New_Overriden_ShouldBeVerified()
     {
-        var block = new Block
+        var block = new Block("SCL")
         {
-            ID = 1, X = 100, Y = 100, Operand = "TestBlock", Type = "SCL",
+            ID = 1, X = 100, Y = 100, 
+            Operand = "TestBlock",
             VisiblePins = new Params
             {
                 "Source", "Destination"
@@ -81,38 +85,29 @@ public class BlockTests
     }
 
     [Test]
+    public void FactoryMethod_WhenCalled_ShouldHaveExpectedValues()
+    {
+        var block = Block.ADD;
+
+        block.Type.Should().Be("ADD");
+        block.Operand.Should().Be("ADD_01");
+        block.VisiblePins.Should().HaveCount(3);
+    }
+
+    [Test]
     public void AddPin_ValidTagName_ShouldHaveExpectedCount()
     {
-        var block = new Block();
+        var block = Block.ABS;
 
         block.VisiblePins?.Add("MyPinName");
 
         block.VisiblePins.Should().HaveCount(1);
     }
 
-    /*[Test]
-    public void AddPins_ValidCollection_ShouldHaveExpectedCount()
-    {
-        var block = new Block();
-        var pins = new List<TagName>()
-        {
-            "Pin1", "Pin2", "Pin3"
-        };
-
-        block.VisiblePins?.AddRange(pins);
-
-        block.VisiblePins.Should().HaveCount(3);
-    }*/
-
     [Test]
     public void References_WhenCalled_ShouldHaveExpectedCount()
     {
-        var block = new Block
-        {
-            ID = 1, X = 100, Y = 100,
-            Operand = "MyTagName", Type = "SCL",
-            VisiblePins = new Params { "Source", "Destination" }
-        };
+        var block = Block.ABS;
 
         var references = block.References().ToList();
 

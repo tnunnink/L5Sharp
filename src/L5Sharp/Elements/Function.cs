@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Utilities;
@@ -53,10 +54,10 @@ public sealed class Function : FunctionBlock
     /// The mnemonic name specifying the type of function for the <c>DiagramBlock</c> instance.
     /// </summary>
     /// <value>A <see cref="string"/> containing the type of the function if it exists; Otherwise, <c>null</c>.</value>
-    public string? Type
+    public string Type
     {
-        get => GetValue<string>();
-        set => SetValue(value);
+        get => GetRequiredValue<string>();
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -65,7 +66,21 @@ public sealed class Function : FunctionBlock
     public static Function BAND => new($"{nameof(BAND)}_F");
 
     /// <inheritdoc />
-    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    public override Instruction ToInstruction()
+    {
+        var instruction = new Instruction(Type);
+        
+        var endpoints = Endpoints().ToArray();
+        if (endpoints.Any())
+        {
+            instruction = instruction.Of(endpoints);    
+        }
+
+        return instruction;
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(string? param = null)
     {
         yield return Argument.Unknown;
     }

@@ -64,10 +64,16 @@ public class SBR : FunctionBlock
         foreach (var parameter in In)
             yield return new CrossReference(Element, L5XName.Tag, parameter);
     }
-    
+
     /// <inheritdoc />
-    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    public override Instruction ToInstruction()
     {
-        yield return endpoint.Value is not null ? new TagName(endpoint.Value) : Argument.Empty;
+        return Instruction.JSR.Of(); //todo get args from params
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(string? param = null)
+    {
+        yield return param is not null ? new TagName(param) : Argument.Empty;
     }
 }

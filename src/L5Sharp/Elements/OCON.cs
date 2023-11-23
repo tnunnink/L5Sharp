@@ -23,15 +23,10 @@ namespace L5Sharp.Elements;
 public class OCON : FunctionBlock
 {
     /// <summary>
-    /// Creates a new <see cref="OCON"/> with default values.
+    /// Creates a new <see cref="OCON"/> with the required connector name value.
     /// </summary>
-    public OCON()
-    {
-    }
-    
-    /// <summary>
-    /// Creates a new <see cref="OCON"/> with the provided <c>operand</c> value.
-    /// </summary>
+    /// <param name="name">The name of the connector.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
     public OCON(string name)
     {
         Name = name;
@@ -49,10 +44,10 @@ public class OCON : FunctionBlock
     /// <summary>
     /// The name identifying the connector element.
     /// </summary>
-    public string? Name
+    public string Name
     {
-        get => GetValue<string>();
-        set => SetValue(value);
+        get => GetRequiredValue<string>();
+        set => SetRequiredValue(value);
     }
     
     /// <summary>
@@ -60,15 +55,16 @@ public class OCON : FunctionBlock
     /// </summary>
     /// <value>A <see cref="ICON"/> block element with the same connector name.</value>
     public ICON? Pair => Sheet?.Blocks<ICON>().FirstOrDefault(b => b.Name == Name);
-    
+
     /// <inheritdoc />
-    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    public override Instruction ToInstruction()
     {
-        if (endpoint.Key != ID || Pair is null)
-        {
-            return Enumerable.Empty<Argument>();
-        }
-        
-        return Pair.Arguments();
+        return new Instruction(nameof(OCON), Name);
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(string? param = null)
+    {
+        return Pair is null ? Enumerable.Empty<Argument>() : Pair.Endpoints(param);
     }
 }

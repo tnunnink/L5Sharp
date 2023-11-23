@@ -41,6 +41,7 @@ public class TagTests
         tag.TagType.Should().Be(TagType.Base);
         tag.Usage.Should().BeNull();
         tag.AliasFor.Should().BeNull();
+        tag.Alias.Should().BeNull();
         tag.Unit.Should().BeNull();
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Utilities;
 
 namespace L5Sharp.Common;
 
@@ -44,6 +45,13 @@ public class Params : IList<string>
     {
         _attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    public static Params Pins(string parameters) => new Params(new XAttribute(L5XName.VisiblePins, parameters));
 
     /// <summary>
     /// 

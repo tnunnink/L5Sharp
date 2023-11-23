@@ -153,6 +153,12 @@ public class Task : LogixComponent
     public IEnumerable<string> Scheduled =>
         Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
 
+    /// <inheritdoc />
+    public override L5X Export(Revision? softwareRevision = null)
+    {
+        throw new NotSupportedException("Task components do not support export function.");
+    }
+
     /// <summary>
     /// Adds the provided program name to the underlying list of <see cref="Scheduled"/>.
     /// </summary>

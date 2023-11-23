@@ -63,12 +63,13 @@ public abstract class DiagramConnector : LogixElement
     /// associated param name.
     /// </remarks>
     public KeyValuePair<uint, string?> Endpoint(DiagramBlock block) => Endpoint(block.ID);
-    
+
     /// <summary>
     /// Returns the connecting endpoint of this <c>Connector</c> element, which is a <see cref="KeyValuePair{TKey,TValue}"/>
     /// where the key/value is the ID/Param of the block element opposite the provided block element.
     /// </summary>
     /// <param name="id">The ID of the block element for which to find the connected endpoint.</param>
+    /// <param name="param">THe optional param of the endpoint ...</param>
     /// <returns>
     /// A <see cref="KeyValuePair{TKey,TValue}"/> containing the opposite block's ID and Param the connector
     /// is connected to.
@@ -79,31 +80,38 @@ public abstract class DiagramConnector : LogixElement
     /// define a To/From parameter. The <c>Wire</c> connector will override this implementation to return it's
     /// associated param name.
     /// </remarks>
-    public virtual KeyValuePair<uint, string?> Endpoint(uint id)
+    public virtual KeyValuePair<uint, string?> Endpoint(uint id, string? param = null)
     {
         return FromID == id ? new KeyValuePair<uint, string?>(ToID, default) 
             : ToID == id ? new KeyValuePair<uint, string?>(FromID, default) 
             : throw new ArgumentException($"The connector does not have a to/from id matching the id '{id}'");
     }
-
-    /// <summary>
-    /// Determines if this <c>Connector</c> has a connection or endpoint to the provided <c>Block</c>.
-    /// </summary>
-    /// <param name="block"></param>
-    /// <returns></returns>
-    public bool IsConnected(DiagramBlock block) => block.ID == FromID || block.ID == ToID;
     
     /// <summary>
     /// Determines if this <c>Connector</c> has a connection or endpoint to the provided <c>Block</c>.
     /// </summary>
     /// <param name="block"></param>
     /// <returns></returns>
-    public bool IsConnectedTo(DiagramBlock block) => block.ID == ToID;
+    public bool IsTo(DiagramBlock block) => ToID == block.ID;
+    
+    /// <summary>
+    /// Determines if this <c>Connector</c> has a connection or endpoint to the provided <c>Block</c>.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public bool IsTo(uint id) => ToID == id;
     
     /// <summary>
     /// 
     /// </summary>
     /// <param name="block"></param>
     /// <returns></returns>
-    public bool IsConnectedFrom(DiagramBlock block) => block.ID == FromID;
+    public bool IsFrom(DiagramBlock block) => block.ID == FromID;
+    
+    /// <summary>
+    /// Determines if this <c>Connector</c> has a connection or endpoint to the provided <c>Block</c>.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public bool IsFrom(uint id) => FromID == id;
 }

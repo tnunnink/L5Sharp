@@ -40,10 +40,10 @@ public class AOI : FunctionBlock
     /// The name of the Add-On Instruction this <c>AoiBlock</c> represents.
     /// </summary>
     /// <value>A <see cref="string"/> containing the name if it exists; Otherwise, <c>null</c>.</value>
-    public string? Name
+    public string Name
     {
-        get => GetValue<string>();
-        set => SetValue(value);
+        get => GetRequiredValue<string>();
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -94,23 +94,44 @@ public class AOI : FunctionBlock
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References()
     {
-        if (Operand is not null)
-            yield return new CrossReference(Element, Operand, L5XName.Tag);
-        
-        if (Name is not null)
-            yield return new CrossReference(Element, Name, L5XName.AddOnInstructionDefinition);
-        
-        foreach (var parameter in Parameters)
-            if (parameter.Value.IsTag())
-                yield return new CrossReference(Element, parameter.Value, L5XName.Tag);
+        var references = new List<CrossReference> { new(Element, L5XName.Instruction, Name) };
+
+        var instruction = ToInstruction();
+        var tags = instruction.Arguments.Where(a => a.IsTag);
+        foreach (var tag in tags)
+        {
+            references.Add(new CrossReference(Element, L5XName.Tag, tag.ToString(), instruction));
+        }
+
+        return references;
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    public override Instruction ToInstruction()
     {
-        //todo we need to think about how could this be an invalid call (i.e. why check pins)
-        yield return Operand is not null && endpoint.Value is not null && VisiblePins?.Contains(endpoint.Value) == true
-            ? TagName.Concat(Operand, endpoint.Value)
+        var instruction = new Instruction(Name);
+        
+        if (Operand is null) return instruction;
+        if (VisiblePins is null) return instruction.Of(Operand);
+
+        foreach (var pin in VisiblePins)
+        {
+            //todo for parameters we need to add the direct argument here
+            var endpoints = Endpoints(pin).ToArray();
+            if (endpoints.Any())
+            {
+                instruction = instruction.Of(endpoints);    
+            }
+        }
+
+        return instruction;
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(string? param = null)
+    {
+        yield return Operand is not null && param is not null && VisiblePins?.Contains(param) == true
+            ? TagName.Concat(Operand, param)
             : Argument.Empty;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Utilities;
@@ -67,6 +68,7 @@ public class JSR : FunctionBlock
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References()
     {
+        //todo get instruction
         if (Routine is not null)
             yield return new CrossReference(Element, L5XName.Routine, Routine);
 
@@ -83,8 +85,14 @@ public class JSR : FunctionBlock
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    public override Instruction ToInstruction()
     {
-        yield return endpoint.Value is not null ? new TagName(endpoint.Value) : Argument.Empty;
+        return Instruction.JSR.Of(); //todo get args from params
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(string? param = null)
+    {
+        yield return param is not null ? new TagName(param) : Argument.Empty;
     }
 }

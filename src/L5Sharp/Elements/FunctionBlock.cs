@@ -45,29 +45,45 @@ public abstract class FunctionBlock : DiagramBlock
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="param"></param>
     /// <returns></returns>
-    public IEnumerable<Argument> Arguments()
+    public IEnumerable<Argument> Endpoints(string? param = null)
     {
+        if (Sheet is null) return Enumerable.Empty<Argument>();
+
         var arguments = new List<Argument>();
-
-        var wires = Sheet?.Connectors(this) ?? Enumerable.Empty<Wire>();
-
-        foreach (var wire in wires)
+        
+        var inputs = Sheet.Connectors().Where(c => c.IsTo(ID, param));
+        
+        foreach (var connector in inputs)
         {
-            var endpoint = wire.Endpoint(this);
-            var block = Sheet?.Block(endpoint.Key);
-            var args = block?.GetArguments(endpoint);
-            if (args is null) continue;
+            var block = Sheet.Block(connector.FromID);
+            var args = block?.GetArguments(connector.FromParam) ?? Enumerable.Empty<Argument>();
+            arguments.AddRange(args);
+        }
+
+        var outputs = Sheet.Connectors().Where(c => c.IsFrom(ID, param));
+        
+        foreach (var connector in outputs)
+        {
+            var block = Sheet.Block(connector.ToID);
+            var args = block?.GetArguments(connector.ToParam) ?? Enumerable.Empty<Argument>();
             arguments.AddRange(args);
         }
 
         return arguments;
     }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public abstract Instruction ToInstruction();
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="endpoint"></param>
+    /// <param name="param"></param>
     /// <returns></returns>
-    protected abstract IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint);
+    protected abstract IEnumerable<Argument> GetArguments(string? param = null);
 }

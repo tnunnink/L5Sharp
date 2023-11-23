@@ -61,7 +61,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        var id = sheet.Add(new Block { Type = "SCL", Operand = "MyTag" });
+        var id = sheet.Add(Block.SCL);
 
         id.Should().Be(0);
         sheet.Blocks().Should().HaveCount(1);
@@ -87,7 +87,7 @@ public class SheetTests
         var sheet = new Sheet();
 
         sheet.Add(new IREF { Operand = "InputReference", X = 100, Y = 300 });
-        sheet.Add(new Block { Operand = "MyBlockTag", X = 100, Y = 300 });
+        sheet.Add(Block.SCL);
         sheet.Add(new IREF { Operand = "OutputReference", X = 100, Y = 300 });
 
         return Verify(sheet.Serialize().ToString());
@@ -109,7 +109,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
         sheet.Add(new IREF { Operand = "InputReference", X = 100, Y = 300 });
-        sheet.Add(new Block { Operand = "MyBlockTag", X = 100, Y = 300 });
+        sheet.Add(Block.ADD);
         sheet.Add(new OREF { Operand = "OutputReference", X = 100, Y = 300 });
 
         var block = sheet.Block(2);
@@ -123,7 +123,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
         sheet.Add(new IREF { Operand = "InputReference", X = 100, Y = 300 });
-        sheet.Add(new Block { Operand = "MyBlockTag", X = 100, Y = 300 });
+        sheet.Add(Block.ADD);
         sheet.Add(new OREF { Operand = "OutputReference", X = 100, Y = 300 });
 
         var block = sheet.Block(4);
@@ -136,7 +136,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
         sheet.Add(new IREF { Operand = "InputReference", X = 100, Y = 300 });
-        sheet.Add(new Block { Operand = "MyBlockTag", X = 100, Y = 300 });
+        sheet.Add(Block.ADD);
         sheet.Add(new OREF { Operand = "OutputReference", X = 100, Y = 300 });
 
         var block = sheet.Block<OREF>(2);
@@ -158,9 +158,9 @@ public class SheetTests
     public void Blocks_HasCollection_ShouldHaveExpectedCount()
     {
         var sheet = new Sheet();
-        sheet.Add(new IREF() { Operand = "InputReference", X = 100, Y = 300 });
-        sheet.Add(new Block { Operand = "MyBlockTag", X = 100, Y = 300 });
-        sheet.Add(new OREF() { Operand = "OutputReference", X = 100, Y = 300 });
+        sheet.Add(new IREF { Operand = "InputReference", X = 100, Y = 300 });
+        sheet.Add(Block.ADD);
+        sheet.Add(new OREF { Operand = "OutputReference", X = 100, Y = 300 });
 
         var blocks = sheet.Blocks();
 
@@ -205,7 +205,7 @@ public class SheetTests
     [Test]
     public void Connections_BlockWithConnections_ShouldHaveExpectedCount()
     {
-        var block = new Block { Operand = "ScaleTag", Type = "SCL" };
+        var block = Block.SCL;
         var sheet = new Sheet();
         sheet.Add(new IREF("MyTag"));
         sheet.Add(block);

@@ -143,6 +143,13 @@ public sealed class Instruction
     /// </summary>
     /// <param name="arguments">The collection of arguments make up the instruction signature.</param>
     /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
+    public Instruction Append(params Argument[] arguments) => new(Key, Arguments.Concat(arguments).ToArray());
+
+    /// <summary>
+    /// Creates a <see cref="Instruction"/> of the same type with the updated argument values.
+    /// </summary>
+    /// <param name="arguments">The collection of arguments make up the instruction signature.</param>
+    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
     public Instruction Of(params Argument[] arguments) => new(Key, arguments);
 
     /// <summary>

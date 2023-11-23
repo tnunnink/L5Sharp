@@ -212,28 +212,36 @@ public abstract class Diagram<TBlock, TConnector> : LogixCode
     }
 
     /// <summary>
-    /// Gets all <see cref="DiagramConnector"/> elements in the <see cref="Diagram{TBlock,TConnector}"/>. 
+    /// Retrieves all connector elements in the diagram. 
     /// </summary>
-    /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of the diagram specific <see cref="TConnector"/> type objects if any.
-    /// If none, an empty collection.
-    /// </returns>
+    /// <returns>A collection of all connectors of type <see cref="TConnector"/> found in the diagram.</returns>
     public IEnumerable<TConnector> Connectors()
     {
         return Elements().Where(e => e is TConnector).Cast<TConnector>();
+    }
+    
+    /// <summary>
+    /// Retrieves all connector elements in the diagram that have a connection to the specified block id.
+    /// </summary>
+    /// <param name="id">The <see cref="uint"/> id of the block to find connectors for.</param>
+    /// <returns>A collection of connectors of type <see cref="TConnector"/> with an to/from id equal to the
+    /// specified block id.</returns>
+    public IEnumerable<TConnector> Connectors(uint id)
+    {
+        var inputs = Connectors().Where(c => c.IsTo(id));
+        var outputs = Connectors().Where(c => c.IsTo(id));
+        return inputs.Concat(outputs);
     }
 
     /// <summary>
     /// Gets all <see cref="DiagramConnector"/> elements in the <see cref="Diagram{TBlock,TConnector}"/>. 
     /// </summary>
-    /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of the diagram specific <see cref="TConnector"/> type objects if any.
-    /// If none, an empty collection.
-    /// </returns>
+    /// <returns>A collection of connectors of type <see cref="TConnector"/> with that are connected to and from the
+    /// specified block id.</returns>
     public IEnumerable<TConnector> Connectors(TBlock block)
     {
-        var inputs = Connectors().Where(c => c.IsConnectedTo(block));
-        var outputs = Connectors().Where(c => c.IsConnectedFrom(block));
+        var inputs = Connectors().Where(c => c.IsTo(block));
+        var outputs = Connectors().Where(c => c.IsFrom(block));
         return inputs.Concat(outputs);
     }
 

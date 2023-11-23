@@ -26,26 +26,20 @@ namespace L5Sharp.Elements;
 public class ICON : FunctionBlock
 {
     /// <summary>
-    /// Creates a new <see cref="ICON"/> with default values.
+    /// Creates a new <see cref="IREF"/> with the required connector name value.
     /// </summary>
-    public ICON()
-    {
-        Name = string.Empty;
-    }
-    
-    /// <summary>
-    /// Creates a new <see cref="IREF"/> with the provided <c>operand</c> value.
-    /// </summary>
+    /// <param name="name">The name of the connector.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
     public ICON(string name)
     {
-        Name = name;
+        Name = name ?? throw new ArgumentNullException(nameof(name));
     }
 
     /// <summary>
     /// Creates a new <see cref="ICON"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="element"/> is null.</exception>
     public ICON(XElement element) : base(element)
     {
     }
@@ -53,10 +47,11 @@ public class ICON : FunctionBlock
     /// <summary>
     /// The name identifying the connector element.
     /// </summary>
-    public string? Name
+    /// <value>A <see cref="string"/> containing the name of the connector.</value>
+    public string Name
     {
-        get => GetValue<string>();
-        set => SetValue(value);
+        get => GetRequiredValue<string>();
+        set => SetRequiredValue(value);
     }
    
     /// <summary>
@@ -66,13 +61,14 @@ public class ICON : FunctionBlock
     public OCON? Pair => Sheet?.Blocks<OCON>().FirstOrDefault(b => b.Name == Name);
 
     /// <inheritdoc />
-    protected override IEnumerable<Argument> GetArguments(KeyValuePair<uint, string?> endpoint)
+    public override Instruction ToInstruction()
     {
-        if (endpoint.Key != ID || Pair is null)
-        {
-            return Enumerable.Empty<Argument>();
-        }
-        
-        return Pair.Arguments();
+        return new Instruction(nameof(ICON), Name);
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<Argument> GetArguments(string? param = null)
+    {
+        return Pair is null ? Enumerable.Empty<Argument>() : Pair.Endpoints(param);
     }
 }
