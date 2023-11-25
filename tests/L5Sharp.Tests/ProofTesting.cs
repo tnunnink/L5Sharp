@@ -26,9 +26,8 @@ public class ProofTesting
     {
         var content = Logix.Load(Known.Test);
         var sheet = content.Query<Sheet>().First();
-        var block = sheet[9];
 
-        var references = block.References().ToList();
+        var references = sheet.References().ToList();
 
         references.Should().NotBeEmpty();
     }

@@ -249,11 +249,11 @@
       <None Update="Elements\BlockTests.New_Overriden_ShouldBeVerified.verified.txt">
         <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
-      <None Update="Elements\FunctionTests.Serialize_Overloaded_ShouldBeVerified.verified.txt">
-        <DependentUpon>FunctionTests.cs</DependentUpon>
-      </None>
       <None Update="Elements\ReferenceBlockTests.New_ORefOverloaded_ShouldBeVerified.verified.txt">
         <DependentUpon>InRefTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SheetTests.Wire_ValidOperands_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

@@ -12,12 +12,13 @@ namespace L5Sharp.Elements;
 /// contains some of the common properties and functions that all FBD/SFC elements share,
 /// such as X and Y coordinates, and ID.
 /// </summary>
-public abstract class DiagramBlock : LogixElement, ILogixReferencable
+public abstract class DiagramElement : LogixElement, ILogixReferencable
 {
     /// <summary>
-    /// Creates a new <see cref="DiagramBlock"/> with default values.
+    /// Creates a new <see cref="DiagramElement"/> with default values and initializes the required \
+    /// diagram element properties ID, X, and Y to 0.
     /// </summary>
-    protected DiagramBlock()
+    protected DiagramElement()
     {
         Element.SetAttributeValue(L5XName.ID, 0);
         Element.SetAttributeValue(L5XName.X, 0);
@@ -25,18 +26,22 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     }
 
     /// <summary>
-    /// Creates a new <see cref="DiagramBlock"/> initialized with the provided <see cref="XElement"/>.
+    /// Creates a new <see cref="DiagramElement"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> to initialize the type with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    protected DiagramBlock(XElement element) : base(element)
+    protected DiagramElement(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// The unique identifier of the <see cref="DiagramBlock"/> within the containing <c>Diagram</c>.
+    /// The unique identifier of the <see cref="DiagramElement"/> within it's containing diagram.
     /// </summary>
     /// <value>A zero based <see cref="uint"/> representing the block id.</value>
+    /// <remarks>
+    /// This doesn't need to be set explicitly by the use as it will be assigned when adding an element to
+    /// a <see cref="Diagram"/>.
+    /// </remarks>
     public uint ID
     {
         get => GetRequiredValue<uint>();
@@ -44,7 +49,7 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     }
 
     /// <summary>
-    /// The X coordinate of the <see cref="DiagramBlock"/> within the containing <c>Diagram</c>.
+    /// The X coordinate of the <see cref="DiagramElement"/> within it's containing diagram.
     /// </summary>
     /// <remarks>
     /// The <c>X</c> and <c>Y</c> grid locations are a relative position from the upper-left corner of the sheet.
@@ -57,7 +62,7 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     }
 
     /// <summary>
-    /// The Y coordinate of the <see cref="DiagramBlock"/> within the containing <c>Diagram</c>.
+    /// The Y coordinate of the <see cref="DiagramElement"/> within it's containing diagram.
     /// </summary>
     /// <remarks>
     /// The <c>X</c> and <c>Y</c> grid locations are a relative position from the upper-left corner of the sheet.
@@ -70,7 +75,7 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     }
 
     /// <summary>
-    /// Gets the cell of the diagram where the <see cref="DiagramBlock"/> is located. 
+    /// Gets the cell of the diagram where the <see cref="DiagramElement"/> is located. 
     /// </summary>
     /// <value>A <see cref="string"/> containing the cell coordinates (e.g. A1, B2, etc.)</value>
     /// <remarks>This is determines from the <c>X</c> and <c>Y</c> coordinates of the element. Each cell is 200x200
@@ -78,39 +83,54 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
     public string Cell => $"{(char)(X / 200 + 'A')}{Y / 200 + 1}";
 
     /// <summary>
-    /// The descriptive indication of the location of this <see cref="DiagramBlock"/> within the containing <c>Diagram</c>. 
+    /// The descriptive indication of the location of this diagram element within the containing <see cref="Diagram"/>. 
     /// </summary>
     /// <value>A <see cref="string"/> indicating the cell and optional sheet or chart number where the block is located.</value>
     /// <remarks>
     /// This is an internally defined value so that we can identify instructions when referencing components.
     /// </remarks>
     public virtual string Location => Cell;
+    
+    /// <summary>
+    /// Moves this diagram element to the specified X and Y coordinates.
+    /// </summary>
+    /// <param name="x">The X coordinate to move this block to.</param>
+    /// <param name="y">The Y coordinate to move this block to.</param>
+    /// <returns>This</returns>
+    public void Move(uint x, uint y)
+    {
+        Element.SetAttributeValue(L5XName.X, x);
+        Element.SetAttributeValue(L5XName.Y, y);
+    }
 
     /// <summary>
-    /// Updates the X and Y coordinates of the <see cref="DiagramBlock"/> to the specified cell location.
+    /// Moves this diagram element to the specified alpha-numeric cell location.
     /// </summary>
-    /// <param name="cell">The alpha-numeric cell location to move the block to.</param>
-    /// <exception cref="ArgumentException"><c>cell</c> is null, empty, not two characters, does not start with a letter,
-    /// or does not end with a digit.</exception>
-    public void MoveTo(string cell)
+    /// <param name="cell">The alpha-numeric cell location to move this block to.</param>
+    /// <exception cref="ArgumentException"><paramref name="cell"/> is null, empty, not two characters,
+    /// does not start with a letter, or does not end with a digit.</exception>
+    public void Move(string cell)
     {
         if (string.IsNullOrEmpty(cell))
             throw new ArgumentException("Can not perform function with null or empty cell location.");
-        
+
         if (cell.Length != 2)
             throw new ArgumentException(
                 $"Cell {cell} is not a valid length argument. Must be 2 character cell location.");
 
         if (!char.IsLetter(cell[0]))
             throw new ArgumentException($"Cell {cell} must start with a valid letter character");
-        
+
         if (!char.IsDigit(cell[1]))
             throw new ArgumentException($"Cell {cell} must end with a valid number character");
-        
-        X = (uint)(cell.ToUpper()[0] - 'A') * 200;
-        Y = (uint)cell[1] * 200;
-    }
 
+        var x = (uint)(cell.ToUpper()[0] - 'A') * 200;
+        var y = (uint)cell[1] * 200;
+
+        Element.SetAttributeValue(L5XName.X, x);
+        Element.SetAttributeValue(L5XName.Y, y);
+    }
+    
     /// <inheritdoc />
     public virtual IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
 
@@ -122,7 +142,7 @@ public abstract class DiagramBlock : LogixElement, ILogixReferencable
         return obj switch
         {
             ValueType value => Equals(ID, value),
-            DiagramBlock block => Equals(ID, block.ID),
+            DiagramElement block => Equals(ID, block.ID),
             _ => false
         };
     }

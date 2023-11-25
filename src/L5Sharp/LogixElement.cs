@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -520,6 +521,30 @@ public abstract class LogixElement : ILogixSerializable
             : default;
     }
 
+    /// <summary>
+    /// Gets the value of the specified child element parsed as the specified generic type parameter if it exists.
+    /// If the element does not exist, returns <c>default</c> value of the generic type parameter.
+    /// </summary>
+    /// <param name="name">The name of the child element.</param>
+    /// <param name="separator"></param>
+    /// <typeparam name="T">The return type of the value.</typeparam>
+    /// <returns>
+    /// If found, the value of child element parsed as the generic type parameter.
+    /// If not found, returns <c>default</c>.
+    /// </returns>
+    /// <remarks>
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
+    protected IEnumerable<T> GetValues<T>(string name, char separator = ' ')
+    {
+        var value = Element.Attribute(name)?.Value;
+        
+        return value is not null
+            ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
+            : Enumerable.Empty<T>();
+    }
 
     /// <summary>
     /// Sets the value of an attribute, adds an attribute, or removes an attribute.

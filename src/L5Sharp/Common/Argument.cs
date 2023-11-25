@@ -236,4 +236,20 @@ public class Argument
 
     /// <inheritdoc />
     public override string ToString() => _value.ToString();
+
+    /// <summary>
+    /// Determines whether two Argument objects are equal.
+    /// </summary>
+    /// <param name="left">The left Argument object.</param>
+    /// <param name="right">The right Argument object.</param>
+    /// <returns>Returns true if the two objects are equal, otherwise false.</returns>
+    public static bool operator ==(Argument left, Argument right) => Equals(left, right);
+
+    /// <summary>
+    /// Defines the inequality operator for the Argument class.
+    /// </summary>
+    /// <param name="left">The left Argument object.</param>
+    /// <param name="right">The right Argument object.</param>
+    /// <returns>true if the left Argument is not equal to the right Argument; otherwise, false.</returns>
+    public static bool operator !=(Argument left, Argument right) => Equals(left, right);
 }

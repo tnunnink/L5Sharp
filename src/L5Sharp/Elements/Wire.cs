@@ -10,7 +10,7 @@ namespace L5Sharp.Elements;
 /// Function Block Diagram (FBD).
 /// </summary>
 /// <remarks>
-/// A <c>Connector</c> is not a <see cref="DiagramBlock"/> itself since is does not have the location and ID properties.
+/// A <c>Connector</c> is not a <see cref="DiagramElement"/> itself since is does not have the location and ID properties.
 /// It simply maps the connections of pins within a diagram.
 /// </remarks>
 /// <footer>
@@ -18,13 +18,15 @@ namespace L5Sharp.Elements;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.Wire, L5XName.Sheet)]
-public class Wire : DiagramConnector
+public class Wire : LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="Wire"/> with default values.
     /// </summary>
     public Wire()
     {
+        Element.SetAttributeValue(L5XName.FromID, 0);
+        Element.SetAttributeValue(L5XName.ToID, 0);
     }
 
     /// <summary>
@@ -35,10 +37,25 @@ public class Wire : DiagramConnector
     public Wire(XElement element) : base(element)
     {
     }
+    
+    /// <summary>
+    /// The ID of the source block the wire connection is from. 
+    /// </summary>
+    /// <value>A <see cref="uint"/> indicating the source block ID.</value>
+    public uint FromID
+    {
+        get => GetRequiredValue<uint>();
+        set => SetRequiredValue(value);
+    }
 
     /// <summary>
-    /// The parameter name of source <c>DiagramBlock</c> pin this wire is connected to.
+    /// The parameter name of source block's pin this wire connection is from.
     /// </summary>
+    /// <value>A <see cref="string"/> parameter name if found on the wire element. Otherwise, null.</value>
+    /// <remarks>
+    /// Some wires connect from blocks that don't have pins. For example, an IREF block contain a single
+    /// reference and no pin parameter, and therefore will have a null FromParam for the wire element connected to it.
+    /// </remarks>
     public string? FromParam
     {
         get => GetValue<string>();
@@ -46,8 +63,23 @@ public class Wire : DiagramConnector
     }
 
     /// <summary>
-    /// The parameter name of destination <c>DiagramBlock</c> pin this wire is connected to.
+    /// The ID of the destination block the wire connection is to. 
     /// </summary>
+    /// <value>A <see cref="uint"/> indicating the destination block ID.</value>
+    public uint ToID
+    {
+        get => GetRequiredValue<uint>();
+        set => SetRequiredValue(value);
+    }
+
+    /// <summary>
+    /// The parameter name of destination block's pin this wire connection is to.
+    /// </summary>
+    /// <value>A <see cref="string"/> parameter name if found on the wire element; Otherwise, null.</value>
+    /// <remarks>
+    /// Some wires connect to blocks that don't have pins. For example, OREF blocks contain a single
+    /// reference and no pin parameter, and therefore will have a null ToParam for the wire element connected to it.
+    /// </remarks>
     public string? ToParam
     {
         get => GetValue<string>();
@@ -59,32 +91,27 @@ public class Wire : DiagramConnector
     /// </summary>
     public Sheet? Sheet => Element.Parent is not null ? new Sheet(Element.Parent) : default;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Determines if this wire element is connected from the provided block ID and optional param name.
+    /// </summary>
+    /// <param name="id">The ID of the block to check connection from.</param>
+    /// <param name="param">The parameter/pin of the block to check connection from.</param>
+    /// <returns><c>true</c> if this wire is connected from the specified block ID and param name; Otherwise, <c>false</c>.</returns>
     /// <remarks>
-    /// This makes it easier to find which block id and parameter the connector is attached to. This class is overriding
-    /// the default implementation to return the local <see cref="FromParam"/> or <see cref="ToParam"/> depending on the
-    /// associated to/from ID of the endpoint.
+    /// Note that param is optional. If not provided then the null comparison will be checked, and return true
+    /// only if this wire has the specified FromID and a null FromParam value.
     /// </remarks>
-    public override KeyValuePair<uint, string?> Endpoint(uint id, string? param = null)
-    {
-        return FromID == id && FromParam == param ? new KeyValuePair<uint, string?>(ToID, ToParam) 
-            : ToID == id && ToParam == param ? new KeyValuePair<uint, string?>(FromID, FromParam) 
-            : throw new ArgumentException($"The connector does not have a to/from id matching the id '{id}'");
-    }
+    public bool IsFrom(uint id, string? param = null) => FromID == id && FromParam == param;
 
     /// <summary>
-    /// 
+    /// Determines if this wire element is connected to the provided block ID and optional param name.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="param"></param>
-    /// <returns></returns>
+    /// <param name="id">The ID of the block to check connection to.</param>
+    /// <param name="param">The parameter/pin of the block to check connection to.</param>
+    /// <returns><c>true</c> if this wire is connected to the specified block ID and param name; Otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// Note that param is optional. If not provided then the null comparison will be checked, and return true
+    /// only if this wire has the specified ToID and a null ToParam value.
+    /// </remarks>
     public bool IsTo(uint id, string? param = null) => ToID == id && ToParam == param;
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="param"></param>
-    /// <returns></returns>
-    public bool IsFrom(uint id, string? param = null) => FromID == id && FromParam == param;
 }

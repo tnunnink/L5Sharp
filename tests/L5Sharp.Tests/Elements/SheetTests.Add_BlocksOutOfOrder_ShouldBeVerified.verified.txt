@@ -1,5 +1,5 @@
 ﻿<Sheet>
-  <IRef ID="0" X="100" Y="300" Operand="InputReference" />
-  <IRef ID="2" X="100" Y="300" Operand="OutputReference" />
-  <Block ID="1" X="100" Y="300" Operand="MyBlockTag" />
+  <IRef ID="0" X="0" Y="0" Operand="InputReference" />
+  <IRef ID="2" X="0" Y="0" Operand="OutputReference" />
+  <Block Type="SCL" ID="1" X="0" Y="0" Operand="SCL_01" VisiblePins="In Out" />
 </Sheet>

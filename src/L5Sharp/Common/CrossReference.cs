@@ -63,7 +63,7 @@ public class CrossReference
     /// The <see cref="LogixElement"/> that is contains the reference to the component.
     /// </summary>
     /// <value>The <see cref="LogixElement"/> object that contains the component reference. This may be another
-    /// <c>Component</c>, a <c>Code</c> instance, or even a single <c>DiagramBlock</c> object.</value>
+    /// <c>Component</c>, a <c>Code</c> instance, or even a single <c>DiagramElement</c> object.</value>
     public LogixElement Element => _element.Deserialize();
 
     /// <summary>

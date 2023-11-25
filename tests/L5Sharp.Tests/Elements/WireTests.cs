@@ -58,28 +58,4 @@ public class WireTests
         wire.FromParam.Should().Be("In");
         wire.ToParam.Should().Be("Out");
     }
-
-    [Test]
-    public void Endpoints_FirstWire_ShouldNotBeEmpty()
-    {
-        var content = Logix.Load(Known.Test);
-        var sheet = content.Query<Sheet>().First();
-        var wire = sheet.Connectors().First();
-
-        var endpoint = wire.Endpoint(0);
-
-        endpoint.Should().NotBeNull();
-    }
-    
-    [Test]
-    public void Endpoints_WireToConnector_ShouldNotBeEmpty()
-    {
-        var content = Logix.Load(Known.Test);
-        var sheet = content.Query<Sheet>().First();
-        var wire = sheet.Connectors().First(w => w.ToID == 6);
-
-        var endpoint = wire.Endpoint(9);
-
-        endpoint.Should().NotBeNull();
-    }
 }

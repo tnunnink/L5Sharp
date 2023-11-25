@@ -1,0 +1,5 @@
+﻿<Sheet>
+  <IRef ID="0" X="0" Y="0" Operand="MyTag" />
+  <Block Type="SCL" ID="1" X="0" Y="0" Operand="SCL_01" VisiblePins="In Out" />
+  <Wire FromID="0" ToID="1" ToParam="In" />
+</Sheet>

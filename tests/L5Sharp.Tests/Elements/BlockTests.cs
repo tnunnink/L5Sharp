@@ -1,6 +1,5 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Common;
 using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Utilities;
@@ -11,28 +10,183 @@ namespace L5Sharp.Tests.Elements;
 public class BlockTests
 {
     [Test]
-    public void New_Default_ShouldNotBeNull()
+    public void New_IRef_ShouldNotBeNull()
     {
-        var block = new Block("Test");
+        var block = Block.IREF("MyTag");
 
         block.Should().NotBeNull();
     }
+    
+    [Test]
+    public void New_IRef_ShouldHaveExpectedValues()
+    {
+        var block = Block.IREF("MyTag");
+
+        block.ID.Should().Be(0);
+        block.X.Should().Be(0);
+        block.Y.Should().Be(0);
+        block.Type.Should().Be("IRef");
+        block.Operand.Should().Be("MyTag");
+        block.HideDesc.Should().BeNull();
+        block.Pins.Should().BeEmpty();
+        block.Sheet.Should().BeNull();
+        block.IsAttached.Should().BeFalse();
+        block.L5X.Should().BeNull();
+        block.L5XType.Should().Be(L5XName.IRef);
+        block.Cell.Should().Be("A1");
+        block.Location.Should().NotBeNull();
+        block.Container.Should().BeEmpty();
+        block.Scope.Should().Be(Scope.Null);
+    }
+    
+    [Test]
+    public void New_ORef_ShouldNotBeNull()
+    {
+        var block = Block.OREF("MyTag");
+
+        block.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void New_ORef_ShouldHaveExpectedValues()
+    {
+        var block = Block.OREF("MyTag");
+
+        block.ID.Should().Be(0);
+        block.X.Should().Be(0);
+        block.Y.Should().Be(0);
+        block.Type.Should().Be("ORef");
+        block.Operand.Should().Be("MyTag");
+        block.HideDesc.Should().BeNull();
+        block.Pins.Should().BeEmpty();
+        block.Sheet.Should().BeNull();
+        block.IsAttached.Should().BeFalse();
+        block.L5X.Should().BeNull();
+        block.L5XType.Should().Be(L5XName.ORef);
+        block.Cell.Should().Be("A1");
+        block.Location.Should().NotBeNull();
+        block.Container.Should().BeEmpty();
+        block.Scope.Should().Be(Scope.Null);
+    }
+    
+    [Test]
+    public void New_ICon_ShouldNotBeNull()
+    {
+        var block = Block.ICON("Connector");
+
+        block.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void New_ICon_ShouldHaveExpectedValues()
+    {
+        var block = Block.ICON("Connector");
+
+        block.ID.Should().Be(0);
+        block.X.Should().Be(0);
+        block.Y.Should().Be(0);
+        block.Type.Should().Be("ICon");
+        block.Operand.Should().Be("Connector");
+        block.HideDesc.Should().BeNull();
+        block.Pins.Should().BeEmpty();
+        block.Sheet.Should().BeNull();
+        block.IsAttached.Should().BeFalse();
+        block.L5X.Should().BeNull();
+        block.L5XType.Should().Be(L5XName.ICon);
+        block.Cell.Should().Be("A1");
+        block.Location.Should().NotBeNull();
+        block.Container.Should().BeEmpty();
+        block.Scope.Should().Be(Scope.Null);
+    }
+    
+    [Test]
+    public void New_OCon_ShouldNotBeNull()
+    {
+        var block = Block.OCON("Connector");
+
+        block.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void New_OCon_ShouldHaveExpectedValues()
+    {
+        var block = Block.OCON("Connector");
+
+        block.ID.Should().Be(0);
+        block.X.Should().Be(0);
+        block.Y.Should().Be(0);
+        block.Type.Should().Be("OCon");
+        block.Operand.Should().Be("Connector");
+        block.HideDesc.Should().BeNull();
+        block.Pins.Should().BeEmpty();
+        block.Sheet.Should().BeNull();
+        block.IsAttached.Should().BeFalse();
+        block.L5X.Should().BeNull();
+        block.L5XType.Should().Be(L5XName.OCon);
+        block.Cell.Should().Be("A1");
+        block.Location.Should().NotBeNull();
+        block.Container.Should().BeEmpty();
+        block.Scope.Should().Be(Scope.Null);
+    }
 
     [Test]
-    public void New_Default_ShouldHaveDefaultValues()
+    public void New_Block_ShouldHaveDefaultValues()
     {
-        var block = new Block("SCL");
+        var block = Block.SCL();
 
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
         block.Type.Should().Be("SCL");
         block.Operand.Should().Be("SCL_01");
-        block.VisiblePins.Should().BeEmpty();
-        block.HideDesc.Should().BeFalse();
+        block.HideDesc.Should().BeNull();
+        block.Pins.Should().HaveCount(2);
+        block.Sheet.Should().BeNull();
         block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.Block);
+        block.Cell.Should().Be("A1");
+        block.Container.Should().BeEmpty();
+        block.Scope.Should().Be(Scope.Null);
+    }
+    
+    [Test]
+    public void New_Function_ShouldHaveDefaultValues()
+    {
+        var block = Block.ADD__F();
+
+        block.ID.Should().Be(0);
+        block.X.Should().Be(0);
+        block.Y.Should().Be(0);
+        block.Type.Should().Be("ADD__F");
+        block.Operand.Should().BeNull();
+        block.HideDesc.Should().BeNull();
+        block.Pins.Should().BeEmpty();
+        block.Sheet.Should().BeNull();
+        block.IsAttached.Should().BeFalse();
+        block.L5X.Should().BeNull();
+        block.L5XType.Should().Be(L5XName.Function);
+        block.Cell.Should().Be("A1");
+        block.Container.Should().BeEmpty();
+        block.Scope.Should().Be(Scope.Null);
+    }
+
+    [Test]
+    public void New_AOI_ShouldHaveExpectedValues()
+    {
+        var block = Block.AOI("aoiTest", "MyAoiTag", "Pin1", "Pin2", "Pin3");
+        
+        block.ID.Should().Be(0);
+        block.X.Should().Be(0);
+        block.Y.Should().Be(0);
+        block.Type.Should().Be("aoiTest");
+        block.Operand.Should().Be("MyAoiTag");
+        block.HideDesc.Should().BeNull();
+        block.Pins.Should().HaveCount(3);
+        block.Sheet.Should().BeNull();
+        block.IsAttached.Should().BeFalse();
+        block.L5X.Should().BeNull();
+        block.L5XType.Should().Be(L5XName.AddOnInstruction);
         block.Cell.Should().Be("A1");
         block.Container.Should().BeEmpty();
         block.Scope.Should().Be(Scope.Null);
@@ -47,70 +201,36 @@ public class BlockTests
     }
 
     [Test]
-    public void New_Overriden_ShouldBeExpected()
+    public void Operand_SetToTagNameValue_ShouldBeExpected()
     {
-        var block = new Block("Test")
-        {
-            ID = 1, X = 100, Y = 100, 
-            Operand = "TestBlock",
-            VisiblePins = new Params
-            {
-                "Source", "Destination"
-            }
-        };
+        var block = Block.IREF();
 
-        block.ID.Should().Be(1);
-        block.X.Should().Be(100);
-        block.Y.Should().Be(100);
-        block.Type.Should().Be("SCL");
-        block.Operand.Should().Be("TestBlock");
-        block.VisiblePins.Should().HaveCount(2);
+        block.Operand = "MyTag";
+
+        block.Operand.Should().NotBeNull();
+        block.Operand.Should().Be("MyTag");
+        block.Operand?.IsTag.Should().BeTrue();
     }
-
-
+    
     [Test]
-    public Task New_Overriden_ShouldBeVerified()
+    public void Operand_SetToAtomicValue_ShouldBeExpected()
     {
-        var block = new Block("SCL")
-        {
-            ID = 1, X = 100, Y = 100, 
-            Operand = "TestBlock",
-            VisiblePins = new Params
-            {
-                "Source", "Destination"
-            }
-        };
+        var block = Block.IREF();
 
-        return Verify(block.Serialize().ToString());
+        block.Operand = 100;
+
+        block.Operand.Should().NotBeNull();
+        block.Operand.Should().Be(100);
+        block.Operand?.IsAtomic.Should().BeTrue();
     }
-
-    [Test]
-    public void FactoryMethod_WhenCalled_ShouldHaveExpectedValues()
-    {
-        var block = Block.ADD;
-
-        block.Type.Should().Be("ADD");
-        block.Operand.Should().Be("ADD_01");
-        block.VisiblePins.Should().HaveCount(3);
-    }
-
-    [Test]
-    public void AddPin_ValidTagName_ShouldHaveExpectedCount()
-    {
-        var block = Block.ABS;
-
-        block.VisiblePins?.Add("MyPinName");
-
-        block.VisiblePins.Should().HaveCount(1);
-    }
-
+    
     [Test]
     public void References_WhenCalled_ShouldHaveExpectedCount()
     {
-        var block = Block.ABS;
+        var block = Block.ABS();
 
         var references = block.References().ToList();
 
-        references.Should().HaveCount(3);
+        references.Should().HaveCount(2);
     }
 }
