@@ -49,15 +49,33 @@ public sealed class Line : LogixCode
     {
         var references = new List<CrossReference>();
 
-        references.AddRange(Text.Tags()
-            .Select(name => new CrossReference(Element, L5XName.Tag, name)));
+        foreach (var instruction in Text.Instructions())
+        {
+            references.Add(new CrossReference(Element, L5XName.Instruction, instruction.Key, instruction));
+            
+            if (instruction.IsRoutineCall)
+            {
+                var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
+                references.Add(new CrossReference(Element, L5XName.Routine, routine, instruction));
+                
+                var parameters = instruction.Arguments.Skip(1).Where(a => a.IsTag).Select(t => t.ToString());
+                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p, instruction)));
+                continue;
+            }
 
-        references.AddRange(Text.Instructions()
-            .Select(instruction => new CrossReference(Element, L5XName.AddOnInstructionDefinition, instruction.Key)));
+            if (instruction.IsTaskCall)
+            {
+                var task = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
+                references.Add(new CrossReference(Element, L5XName.Task, task, instruction));
+                continue;
+            }
+            
+            //todo other instructions like GSV SSV
 
-        //todo routines? Have to look for JSR and SBR, RET
-        //todo modules? Have to look for tag names with ':'
-        
+            references.AddRange(instruction.Text.Tags()
+                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString(), instruction)));
+        }
+
         return references;
     }
 

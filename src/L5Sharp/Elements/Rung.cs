@@ -116,7 +116,9 @@ public class Rung : LogixCode
 
         foreach (var instruction in Text.Instructions())
         {
-            if (instruction.CallsRoutine)
+            references.Add(new CrossReference(Element, L5XName.Instruction, instruction.Key, instruction));
+            
+            if (instruction.IsRoutineCall)
             {
                 var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
                 references.Add(new CrossReference(Element, L5XName.Routine, routine, instruction));
@@ -126,7 +128,7 @@ public class Rung : LogixCode
                 continue;
             }
 
-            if (instruction.CallsTask)
+            if (instruction.IsTaskCall)
             {
                 var task = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
                 references.Add(new CrossReference(Element, L5XName.Task, task, instruction));

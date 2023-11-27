@@ -74,6 +74,14 @@ public sealed class NeutralText
     /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="Instruction"/> objects found in the text.</returns>
     public IEnumerable<Instruction> Instructions() =>
         Regex.Matches(_text, Instruction.Pattern).Select(m => Instruction.Parse(m.Value));
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public IEnumerable<Instruction> Instructions(string key) =>
+        Regex.Matches(_text, Instruction.Pattern).Select(m => Instruction.Parse(m.Value)).Where(i => i.Key == key);
 
     /// <summary>
     /// Returns a collection of <see cref="Instruction"/> objects that were found in the current neutral text value.

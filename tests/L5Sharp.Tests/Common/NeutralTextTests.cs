@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using L5Sharp.Common;
 
@@ -174,7 +173,7 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.Instructions(Instruction.XIC).ToList();
+            var result = text.Instructions("XIC").ToList();
 
             result.Should().Contain("XIC(Tag.Status.Active)");
             result.Should().Contain("XIC(Tag.Status.Enabled)");
@@ -186,9 +185,9 @@ namespace L5Sharp.Tests.Common
             var text = new NeutralText(
                 "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
 
-            var result = text.Instructions(Instruction.XIC);
+            var result = text.Instructions(Instruction.XIC("Tag.Status.Active"));
 
-            result.Should().HaveCount(2);
+            result.Should().HaveCount(1);
         }
         
         [Test]
@@ -226,20 +225,9 @@ namespace L5Sharp.Tests.Common
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
 
-            var tagNames = text.TagsIn(Instruction.OTE);
+            var tagNames = text.TagsIn("OTE");
 
             tagNames.Should().HaveCount(1);
-        }
-        
-        [Test]
-        public void HasPattern_ConcatenatedXICOTE_ShouldBeTrue()
-        {
-            var text = new NeutralText(
-                "[XIC(Input_Data.Pt00.Data)OTE(Ch0.ChData),XIC(Input_Data.Pt00.Fault)OTE(Ch0.ChFault)];");
-
-            var result = text.HasPattern(string.Concat(Instruction.XIC.Signature, Instruction.OTE.Signature));
-
-            result.Should().BeTrue();
         }
         
         [Test]

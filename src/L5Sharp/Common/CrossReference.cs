@@ -26,8 +26,10 @@ public class CrossReference
     /// <param name="reference">The name of the component that is being referenced.</param>
     /// <param name="instruction">The optional instruction name/key for the reference.
     /// This is intended for code references as opposed to component references. Will be null if not applicable.</param>
+    /// <param name="operand"></param>
     /// <exception cref="ArgumentNullException"><c>element</c>, <c>type</c>, or <c>name</c> is <c>null</c>.</exception>
-    public CrossReference(XElement element, string type, string reference, Instruction? instruction = null)
+    public CrossReference(XElement element, string type, string reference, string? instruction = null,
+        string? operand = null)
     {
         _element = element ?? throw new ArgumentNullException(nameof(element));
 
@@ -39,6 +41,7 @@ public class CrossReference
         Type = type;
         Reference = reference;
         Instruction = instruction;
+        Operand = operand;
     }
 
     /// <summary>
@@ -82,9 +85,9 @@ public class CrossReference
     /// the number of the referencing rung or line of logic (for RLL and ST code), or the ID of the referencing
     /// diagram block (for FBD/SFC code). This helps further identify the reference element relative to other references.
     /// </remarks>
-    public string ElementId => _element.Attribute(L5XName.Name) is not null ? _element.Attribute(L5XName.Name)!.Value
+    public string ElementId => _element.Attribute(L5XName.ID) is not null ? _element.Attribute(L5XName.ID)!.Value
         : _element.Attribute(L5XName.Number) is not null ? _element.Attribute(L5XName.Number)!.Value
-        : _element.Attribute(L5XName.ID) is not null ? _element.Attribute(L5XName.ID)!.Value
+        : _element.Attribute(L5XName.Name) is not null ? _element.Attribute(L5XName.Name)!.Value
         : string.Empty;
 
     /// <summary>
@@ -102,7 +105,7 @@ public class CrossReference
     /// </summary>
     /// <value>A <see cref="Enums.Scope"/> indicating scope of the reference.</value>
     public Scope Scope => Scope.Type(_element);
-    
+
     /// <summary>
     /// The name of the scoped program, instruction, or controller that the reference is contained within.
     /// </summary>
@@ -111,7 +114,7 @@ public class CrossReference
     /// is contained within.
     /// </value>
     public string Container => Scope.Container(_element);
-    
+
     /// <summary>
     /// The name of the <c>Routine</c> that the reference is contained within, it is a <see cref="LogixCode"/>
     /// type element.
@@ -129,7 +132,12 @@ public class CrossReference
     /// instruction can help for searching or filtering references and finding other references sharing the common
     /// instruction.
     /// </remarks>
-    public Instruction? Instruction { get; }
+    public string? Instruction { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public string? Operand { get; }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

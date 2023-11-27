@@ -189,23 +189,13 @@ public class Block : DiagramElement
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References()
     {
-        var instruction = GetInstruction();
+        var references = new List<CrossReference> { new(Element, L5XName.Instruction, Type) };
 
-        var references = new List<CrossReference> { new(Element, L5XName.Instruction, Type, instruction) };
-
-        if (Operand is not null && Operand.IsTag)
-        {
-            references.Add(new CrossReference(Element, L5XName.Tag, Operand.ToString(), instruction));
-        }
-
-        foreach (var pin in Pins)
-        {
-            var endpoints = Endpoints(pin);
-            var refs = endpoints.Where(e => e.IsTag)
-                .Select(e => new CrossReference(Element, L5XName.Tag, e.ToString(), instruction));
-            references.AddRange(refs);
-        }
-
+        if (Operand is null || !Operand.IsTag) 
+            return references;
+        
+        references.Add(new CrossReference(Element, L5XName.Tag, Operand.ToString(), Type));
+        references.AddRange(Tags.Select(t => new CrossReference(Element, L5XName.Tag, t, Type)));
         return references;
     }
 
@@ -977,11 +967,11 @@ public class Block : DiagramElement
         return new Block(element);
     }
 
-    private IEnumerable<Argument> Endpoints(string? param = null)
+    private IEnumerable<KeyValuePair<Argument, string>> Endpoints(string? param = null)
     {
-        if (Sheet is null) return Enumerable.Empty<Argument>();
+        if (Sheet is null) return Enumerable.Empty<KeyValuePair<Argument, string>>();
 
-        var arguments = new List<Argument>();
+        var arguments = new List<KeyValuePair<Argument, string>>();
 
         arguments.AddRange(GetInputs(Sheet, param));
         arguments.AddRange(GetOutputs(Sheet, param));
@@ -989,9 +979,9 @@ public class Block : DiagramElement
         return arguments;
     }
 
-    private IEnumerable<Argument> GetInputs(Sheet sheet, string? param)
+    private IEnumerable<KeyValuePair<Argument, string>> GetInputs(Sheet sheet, string? param)
     {
-        var arguments = new List<Argument>();
+        var arguments = new List<KeyValuePair<Argument, string>>();
 
         var inputs = sheet.Wires().Where(w => w.IsTo(ID, param));
 
@@ -999,16 +989,23 @@ public class Block : DiagramElement
         {
             var block = sheet.Block(wire.FromID);
             if (block is null) continue;
-            var args = block.GetArguments(wire.FromParam);
-            arguments.AddRange(args);
+            
+            if (block.Type == L5XName.OCon)
+            {
+                arguments.AddRange(GetPair()?.Endpoints() ?? Enumerable.Empty<KeyValuePair<Argument, string>>());
+                continue;
+            }
+            
+            var arg = block.GetArguments(wire.FromParam);
+            arguments.Add(new KeyValuePair<Argument, string>(arg, block.Type));
         }
 
         return arguments;
     }
 
-    private IEnumerable<Argument> GetOutputs(Sheet sheet, string? param)
+    private IEnumerable<KeyValuePair<Argument, string>> GetOutputs(Sheet sheet, string? param)
     {
-        var arguments = new List<Argument>();
+        var arguments = new List<KeyValuePair<Argument, string>>();
 
         var wires = sheet.Wires().Where(w => w.IsFrom(ID, param));
 
@@ -1016,26 +1013,32 @@ public class Block : DiagramElement
         {
             var block = sheet.Block(wire.ToID);
             if (block is null) continue;
-            var args = block.GetArguments(wire.ToParam);
-            arguments.AddRange(args);
+
+            if (block.Type == L5XName.ICon)
+            {
+                arguments.AddRange(GetPair()?.Endpoints() ?? Enumerable.Empty<KeyValuePair<Argument, string>>());
+                continue;
+            }
+            
+            var arg = block.GetArguments(wire.ToParam);
+            arguments.Add(new KeyValuePair<Argument, string>(arg, block.Type));
         }
 
         return arguments;
     }
 
-    private IEnumerable<Argument> GetArguments(string? param = null)
+    private TagName GetArguments(string? param = null)
     {
-        return L5XType switch
+        var operand = Operand is not null && Operand.IsTag ? new TagName(Operand.ToString()) : TagName.Empty;
+        var parameter = param is not null ? new TagName(param) : TagName.Empty;
+        return TagName.Concat(operand, parameter);
+        
+        /*return L5XType switch
         {
-            L5XName.IRef => new[] { Operand ?? Argument.Empty },
-            L5XName.ORef => new[] { Operand ?? Argument.Empty },
-            L5XName.ICon => GetPair()?.Endpoints() ?? Enumerable.Empty<Argument>(),
-            L5XName.OCon => GetPair()?.Endpoints() ?? Enumerable.Empty<Argument>(),
-            L5XName.Block => new[]
-            {
-                Operand is not null && param is not null ? TagName.Concat(Operand.ToString(), param) : Argument.Empty
-            },
-            L5XName.Function => new[] { Argument.Unknown },
+            L5XName.IRef => Operand is not null && Operand.IsTag ? (TagName)Operand : TagName.Empty,
+            L5XName.ORef => Operand is not null && Operand.IsTag ? (TagName)Operand : TagName.Empty,
+            L5XName.Block => Operand is not null && param is not null ? TagName.Concat(Operand.ToString(), param) : TagName.Empty,
+            L5XName.Function => param is not null ? new TagName(param) : Argument.Empty,
             L5XName.AddOnInstruction => new[]
             {
                 Operand is not null && param is not null ? TagName.Concat(Operand.ToString(), param) : Argument.Empty
@@ -1044,30 +1047,13 @@ public class Block : DiagramElement
             L5XName.SBR => new[] { param is not null ? new TagName(param) : Argument.Empty },
             L5XName.RET => new[] { param is not null ? new TagName(param) : Argument.Empty },
             _ => new[] { Argument.Empty }
-        };
+        };*/
     }
 
     /// <summary>
     /// Gets the connector block (ICON/OCON) that is the pair/compliment to this connector block. 
     /// </summary>
     private Block? GetPair() => Sheet?.Blocks().FirstOrDefault(b => b.ID != ID && Equals(b.Operand, Operand));
-
-    /// <summary>
-    /// Converts the current Block into an Instruction instance to be used for referencing.
-    /// </summary>
-    private Instruction GetInstruction()
-    {
-        var instruction = new Instruction(Type, Operand ?? Argument.Empty);
-
-        if (Operand is null) return instruction;
-
-        foreach (var pin in Pins)
-        {
-            instruction = instruction.Append(TagName.Concat(Operand.ToString(), pin));
-        }
-
-        return instruction;
-    }
 
     #endregion
 }
