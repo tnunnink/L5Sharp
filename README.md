@@ -15,48 +15,38 @@ The following are some high level goals this project aimed to accomplish.
 4. Support strongly typed mutable tag data, so we can reference complex structures statically at compile time.
 
 ## Packages
-There are two separate packages as described below.
-
-| Project            | Description                                                        |
-|:-------------------|:-------------------------------------------------------------------|
-| L5Sharp            | Contains core components, elements, base classes, and logix types. |
-| L5Sharp.Extensions | Contains useful methods for core classes extending the base API.   |
-
-The core `L5Sharp` project attempts to simply model the L5X schema without adding too
-much ancillary functionality. This way the project hopefully won't change very often. 
-Changes should (ideally) only be precipitated by bug fixes or further understanding of the L5X schema. 
-
-Any custom or additional helper functionality will be added to the `L5Sharp.Extensions` project. This allows you to opt in
-only if you like or need to use these additional features. If you wish to create your own, you can achieve this
-using C# extension methods and LINQ to XML for the core classes, all of which implement `ILogixSerializable` to retrieve
-the underlying `XElement` object.
-
-## Quick Start
-Install package from Nuget.
+You cna consume the library via Nuget.
 ```powershell
 Install-Package L5Sharp
 ```
->If you want both packages, you can install `L5Sharp.Extensions`, which has a dependency on `L5Sharp`.
->
+>Previously I had two separate libraries but have since consolidated to a single package to avoid confusion and since
+> I think most people will want all functionality anyway. `L5Sharp.Extensions` is no longer maintained.
 
-Load an L5X file using the primary entry point `LogixContent` class.
-```c#
-var content = LogixContent.Load("C:\PathToMyFile\FileName.L5X");
-```
-Get started by querying any type across the L5X using the `Find<T>()` and LINQ extensions.
-```csharp
-var results = content.Find<Tag>()
+## Quick Start
+1. Install package from Nuget.
+    ```powershell
+    Install-Package L5Sharp
+    ```
+2. Load an L5X file using the `L5X` class static factory method like so.
+    ```c#
+    var content = L5X.Load("C:\PathToMyFile\FileName.L5X");
+    ```
+3. Get started by querying elements across the L5X using the `Query()` methods and LINQ extensions. 
+The following query gets all tags and their nested tag members of type TIMER and returns the TagName,
+Description, and Preset value in a flat list ordered by TagName.
+    ```csharp
+    var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
                 .Where(t => t.DataType == "TIMER")
-                .Select(t => new { t.TagName, t.Description, t.Value.As<TIMER>().PRE })
+                .Select(t => new {t.TagName, t.Description, Preset = t["PRE"].Value})
+                .OrderBy(v => v.TagName)
                 .ToList();
-```
-The above query gets all tags and their nested tag members of type TIMER and returns the TagName,
-Description, and Preset value in a flat list.
->`Find<T>()` returns an `IEnumerable<T>`, allowing for complex queries
-using LINQ and the strongly typed objects in the library.
-> Since `Find<T>()` queries the entire L5X for the specified type, the above query
-> will return all **Tag** components found, including controller and program tags.
+    ```
+
+    >`Query<T>()` returns an `IEnumerable<T>`, allowing for complex queries 
+   > using LINQ and the strongly typed objects in the library. 
+   > Since `Query<T>()` queries the entire L5X for the specified type, the above query 
+   > will return all **Tag** components found, including controller and program tags.
 
 ## Usage
 The following is some basic examples of how you can use this library

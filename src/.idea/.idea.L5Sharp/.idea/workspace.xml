@@ -8,17 +8,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Common/CrossReference.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Common/CrossReference.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Common/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Common/Instruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Common/NeutralText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Common/NeutralText.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Block.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Block.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Line.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Line.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/InstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/InstructionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/NeutralTextTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/NeutralTextTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Finishing updates to instruction and block for now. I know there are limitations with the referencing logic, but am going to kick fixing these down the road in favor of pushing new release to start consuming and finding issues.">
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,11 +53,10 @@
     <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Linq.Expressions/src/System/Linq/Expressions/UnaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4e67de1df4984c1cb908c4c0e1dbacf57b888/8b/6adefd7b/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp/Elements/Block.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/L5Sharp/Elements/Sheet.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -371,7 +362,7 @@
       <workItem from="1700598188944" duration="21430000" />
       <workItem from="1700667283927" duration="48297000" />
       <workItem from="1700873452620" duration="42061000" />
-      <workItem from="1701115691201" duration="4059000" />
+      <workItem from="1701115691201" duration="4877000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -716,7 +707,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="312" />
+    <option name="localTasksCounter" value="313" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -752,7 +743,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="fixed errors" />
     <MESSAGE value="version change" />
     <MESSAGE value="Made Revision.cs based on string value to fix issues with double rounding. Fixed tests" />
     <MESSAGE value="Testing and fix to StringType.cs to add '' characters to serialized output." />
@@ -777,7 +767,8 @@
     <MESSAGE value="L5X documentation" />
     <MESSAGE value="FBD development" />
     <MESSAGE value="Reworked the FBD model. Moved to single Block.cs class. Added factory methods for creating different elements and blocks." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reworked the FBD model. Moved to single Block.cs class. Added factory methods for creating different elements and blocks." />
+    <MESSAGE value="Finishing updates to instruction and block for now. I know there are limitations with the referencing logic, but am going to kick fixing these down the road in favor of pushing new release to start consuming and finding issues." />
+    <option name="LAST_COMMIT_MESSAGE" value="Finishing updates to instruction and block for now. I know there are limitations with the referencing logic, but am going to kick fixing these down the road in favor of pushing new release to start consuming and finding issues." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -787,19 +778,6 @@
           <line>283</line>
           <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\Types\StringType.cs" initialLine="282" containingFunctionPresentation="Method 'ToArray'" />
           <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp/L5X.cs</url>
-          <line>232</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp\L5X.cs" initialLine="251" containingFunctionPresentation="Method 'Query'">
-            <startOffsets>
-              <option value="12511" />
-            </startOffsets>
-            <endOffsets>
-              <option value="12512" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="130" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

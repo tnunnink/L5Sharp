@@ -21,7 +21,7 @@ namespace L5Sharp.Tests
             var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
                 .Where(t => t.DataType == "TIMER")
-                .Select(t => new {t.TagName, t.Description, Preset = t.Value.As<TIMER>().PRE})
+                .Select(t => new {t.TagName, t.Description, Preset = t["PRE"].Value})
                 .OrderBy(v => v.TagName)
                 .ToList();
 
