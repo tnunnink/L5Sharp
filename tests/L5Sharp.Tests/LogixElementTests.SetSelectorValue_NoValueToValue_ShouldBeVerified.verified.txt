@@ -1,0 +1,3 @@
+﻿<Test>
+  <Child SelectorValue="Value" />
+</Test>

@@ -1,0 +1,3 @@
+﻿<Container>
+  <Test RequiredValue="Test_2" />
+</Container>

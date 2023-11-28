@@ -1,0 +1,7 @@
+﻿<Test>
+  <ChildElements>
+    <ChildElement SomeValue="Child_1" />
+    <ChildElement SomeValue="Child_2" />
+    <ChildElement SomeValue="Child_3" />
+  </ChildElements>
+</Test>

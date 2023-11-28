@@ -8,9 +8,48 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed bugs and tests to prep for release.">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/ConnectionTests.New_Overridden_ShouldBeVerified.verified.txt" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.AddAfter_AlternateType_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.AddAfter_ValidElement_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.AddBefore_AlternateType_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.AddBefore_ValidElement_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.Remove_HasParent_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.Replace_AlternateType_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.Replace_ValidElement_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetChildValue_HasValueDifferentValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetChildValue_HasValueToNull_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetChildValue_NoValueToValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetComplex_HasValueDifferentValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetComplex_HasValueToNull_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetComplex_NoValueToValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetContainer_HasValueDifferentValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetContainer_HasValueToNull_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetContainer_NoValueCollectionWithElements_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetContainer_NoValueToEmptyCollection_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetDescription_HasValueDifferentValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetDescription_HasValueToNull_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetDescription_NoValueToValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetProperty_HasValueDifferentValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetProperty_HasValueToNull_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetProperty_NoValueToValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetRequiredValue_HasValueDifferentValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetRequiredValue_NoValueToValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetSelectorValue_HasValueDifferentValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetSelectorValue_HasValueToNull_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetSelectorValue_NoValueToValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetValue_ToEmptyHasValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetValue_ToNullHasValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetValue_ToValueEmptyValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetValue_ToValueFromNull_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.SetValue_ToValueHasValue_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/Elements/DiagramElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Elements/DiagramElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,38 +119,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Notification.DisplayName-DoNotAsk-Plugin Error": "Plugins failed to load",
-    "Notification.DoNotAsk-Plugin Error": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "TODO_SCOPE": "All Places",
-    "WebServerToolWindowFactoryState": "false",
-    "a7604713-2340-41ef-8914-9a0e821f9675.executor": "Debug",
-    "bb4529a5-d289-453a-84c6-89ce8148c18f.executor": "Debug",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Notification.DisplayName-DoNotAsk-Plugin Error&quot;: &quot;Plugins failed to load&quot;,
+    &quot;Notification.DoNotAsk-Plugin Error&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;a7604713-2340-41ef-8914-9a0e821f9675.executor&quot;: &quot;Debug&quot;,
+    &quot;bb4529a5-d289-453a-84c6-89ce8148c18f.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "C#"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;C#&quot;
     ],
-    "rider.external.source.directories": [
-      "C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
-      "C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
-      "C:\\Users\\tnunnink\\AppData\\Local\\Symbols\\src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\tnunnink\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration>C:\Users\tnunnink\AppData\Roaming\Subversion</configuration>
@@ -363,7 +402,8 @@
       <workItem from="1700598188944" duration="21430000" />
       <workItem from="1700667283927" duration="48297000" />
       <workItem from="1700873452620" duration="42061000" />
-      <workItem from="1701115691201" duration="14199000" />
+      <workItem from="1701115691201" duration="14296000" />
+      <workItem from="1701173319807" duration="14124000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -708,7 +748,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="315" />
+    <option name="localTasksCounter" value="316" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -718,7 +758,7 @@
     <option name="coveragePercentColumnWidth" value="33" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="325" />
+    <option name="symbolColumnWidth" value="323" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -744,7 +784,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Testing and fix to StringType.cs to add '' characters to serialized output." />
     <MESSAGE value="Update to Tag API. Made Scope.cs part of base model. Updated enums. More testings. Added performance testing for Tag lookup to see if we lost any speed with new updates. Attempting to optimize deserialization of tag data and tag objects as much as possible. reorganized some extensions." />
     <MESSAGE value="updated version" />
     <MESSAGE value="updated TagNameComparer.Qualified comparison to use string ordinal ignore case comparison." />
@@ -769,7 +808,8 @@
     <MESSAGE value="Finishing updates to instruction and block for now. I know there are limitations with the referencing logic, but am going to kick fixing these down the road in favor of pushing new release to start consuming and finding issues." />
     <MESSAGE value="Updated README.md" />
     <MESSAGE value="Fixed bugs and tests to prep for release." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed bugs and tests to prep for release." />
+    <MESSAGE value="adding verification file" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding verification file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

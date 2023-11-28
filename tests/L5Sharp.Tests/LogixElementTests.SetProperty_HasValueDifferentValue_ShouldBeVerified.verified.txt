@@ -1,0 +1,3 @@
+﻿<Test>
+  <Property><![CDATA[This is the new value]]></Property>
+</Test>

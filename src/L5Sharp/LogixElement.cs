@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -14,7 +13,8 @@ namespace L5Sharp;
 /// A base class for all types that can be serialized and deserialized from a L5X file. This abstract class enforces
 /// the <see cref="ILogixSerializable"/> interface and a constructor taking a <see cref="XElement"/> for initialization
 /// of and underlying element object. Deriving classes will have access to the underlying element and
-/// methods for easily getting and setting data.
+/// methods for easily getting and setting data. Implementing classes need to also provide at least a constructor taking
+/// a single <see cref="XElement"/> and pass it to the base constructor to be deserializable by the library.
 /// </summary>
 [PublicAPI]
 public abstract class LogixElement : ILogixSerializable
@@ -75,23 +75,23 @@ public abstract class LogixElement : ILogixSerializable
     /// </summary>
     /// <returns>A <see cref="string"/> representing the name of the L5X element type.</returns>
     /// <remarks>
-    /// The "L5XType" is nothing more than the name of the underlying element for the object.
-    /// Most L5X elements correspond to a class type of the library with the same or similar name.
-    /// Each class type in this library can also support multiple element types (e.g. Tag/LocalTag/ConfigTag).
-    /// This property will indicate the actual type of the underlying element as opposed to the actual type you
-    /// can retrieve from <c>GetType()</c>.
+    /// The "L5XType" is nothing more than the name of the underlying <see cref="XElement"/> for the object.
+    /// Most L5X element names correspond to a class type of the library with the same or similar name.
+    /// However, each class type in this library can also support multiple element types (e.g. Tag/LocalTag/ConfigTag).
+    /// This property will indicate the actual type of the underlying element as opposed to the actual class type of
+    /// the object.
     /// </remarks>
     public string L5XType => Element.Name.LocalName;
 
     /// <summary>
-    /// The scope of the <c>LogixElement</c>, indicating whether it is a globally scoped controller element,
+    /// The scope of the element, indicating whether it is a globally scoped controller element,
     /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
     /// </summary>
     /// <value>A <see cref="Enums.Scope"/> option indicating the scope type for the element.</value>
     /// <remarks>
     /// <para>
     /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
-    /// If the ancestor is program element first, it is <c>Program</c> scoped.
+    /// If the ancestor is a program element first, it is <c>Program</c> scoped.
     /// If the ancestor is a AddOnInstructionDefinition element first, it is <c>Instruction</c> scoped.
     /// If the ancestor is a controller element first, it is <c>Controller</c> scoped.
     /// If no ancestor is found, we assume the component has <c>Null</c> scope, meaning it is not attached to a L5X tree.
@@ -105,8 +105,8 @@ public abstract class LogixElement : ILogixSerializable
     public Scope Scope => Scope.Type(Element);
 
     /// <summary>
-    /// The name of the ancestral <c>LogixElement</c>, indicating the program, instruction, or controller for which
-    /// it is contained.
+    /// The logix name of an ancestral element, indicating the program, instruction, or controller
+    /// for which this element is contained. This is essentially the scope name for a given logix element.
     /// </summary>
     /// <value>
     /// A <see cref="string"/> representing the name of the program, instruction, or controller in which this component
@@ -213,7 +213,7 @@ public abstract class LogixElement : ILogixSerializable
     /// Converts this element to the specified element type name. 
     /// </summary>
     /// <param name="typeName">The name of the element type to convert this logix element to.</param>
-    /// <returns></returns>
+    /// <returns>A new <see cref="LogixElement"/> instance with the converted element name.</returns>
     /// <exception cref="ArgumentException"><c>typeName</c> is null or empty.</exception>
     /// <exception cref="InvalidOperationException">The specified type name is not supported by this class type.</exception>
     /// <remarks>
@@ -229,7 +229,7 @@ public abstract class LogixElement : ILogixSerializable
             throw new ArgumentException("Type name can not be null or empty to perform conversion", nameof(typeName));
 
         if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert {L5XType} to type {typeName}");
+            throw new InvalidOperationException($"Can not convert element type '{L5XType}' to type '{typeName}'.");
 
         if (L5XType == typeName) return this;
 
@@ -238,11 +238,13 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Converts this element to the specified element type name. 
+    /// Converts this element to the specified element type name.
     /// </summary>
-    /// <param name="typeName">The name of the element type to convert this logix element to.</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"><c>typeName</c> is null or empty.</exception>
+    /// <param name="typeName">The name of the element type to convert this logix element to. This will default to the
+    /// first configured L5XType of the specified logix type parameter, but can optionally be provided if the type
+    /// to convert to is not the default L5XType name.</param>
+    /// <typeparam name="TElement">The <see cref="LogixElement"/> type to convert this element type to.</typeparam>
+    /// <returns>A new <see cref="LogixElement"/> of the specified generic type with the converted element name.</returns>
     /// <exception cref="InvalidOperationException">The specified type name is not supported by this class type.</exception>
     /// <remarks>
     /// This simply updates the underlying element name to the provided name if it is a supported type name for this
@@ -256,7 +258,7 @@ public abstract class LogixElement : ILogixSerializable
         typeName ??= typeof(TElement).L5XType();
 
         if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert {L5XType} to type {typeName}");
+            throw new InvalidOperationException($"Can not convert element type '{L5XType}' to type '{typeName}'.");
 
         if (L5XType == typeName) return (TElement)this;
 
@@ -522,31 +524,6 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets the value of the specified child element parsed as the specified generic type parameter if it exists.
-    /// If the element does not exist, returns <c>default</c> value of the generic type parameter.
-    /// </summary>
-    /// <param name="name">The name of the child element.</param>
-    /// <param name="separator"></param>
-    /// <typeparam name="T">The return type of the value.</typeparam>
-    /// <returns>
-    /// If found, the value of child element parsed as the generic type parameter.
-    /// If not found, returns <c>default</c>.
-    /// </returns>
-    /// <remarks>
-    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
-    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
-    /// the property name (assuming its the name matches the underlying element property).
-    /// </remarks>
-    protected IEnumerable<T> GetValues<T>(string name, char separator = ' ')
-    {
-        var value = Element.Attribute(name)?.Value;
-        
-        return value is not null
-            ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
-            : Enumerable.Empty<T>();
-    }
-
-    /// <summary>
     /// Sets the value of an attribute, adds an attribute, or removes an attribute.
     /// </summary>
     /// <param name="name">The name of the attribute to set.</param>
@@ -656,13 +633,14 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetProperty<T>(T value, [CallerMemberName] string? name = null)
     {
+        var element = Element.Element(name);
+        
         if (value is null)
         {
-            Element.Element(name)?.Remove();
+            element?.Remove();
             return;
         }
-
-        var element = Element.Element(name);
+        
         if (element is null)
         {
             Element.Add(new XElement(name, new XCData(value.ToString())));
@@ -719,20 +697,21 @@ public abstract class LogixElement : ILogixSerializable
     protected void SetContainer<TChild>(LogixContainer<TChild>? value, [CallerMemberName] string? name = null)
         where TChild : LogixElement
     {
+        var element = Element.Element(name);
+        
         if (value is null)
         {
-            Element.Element(name)?.Remove();
+            element?.Remove();
             return;
         }
-
-        var existing = Element.Element(name);
-        if (existing is null)
+        
+        if (element is null)
         {
             Element.Add(value.Serialize());
             return;
         }
 
-        existing.ReplaceWith(value.Serialize());
+        element.ReplaceWith(value.Serialize());
     }
 
     /// <summary>
@@ -761,7 +740,7 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Adds, removes, or updates the common logix description child element on the current underlying element object.
-    /// If null, will remove the child element. If not null, will either add as the first chile element or replace the
+    /// If null, will remove the child element. If not null, will either add as the first child element or replace the
     /// existing child element.
     /// </summary>
     /// <param name="value">The description value to set.</param>

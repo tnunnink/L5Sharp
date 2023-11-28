@@ -149,4 +149,29 @@ public abstract class DiagramElement : LogixElement, ILogixReferencable
 
     /// <inheritdoc />
     public override int GetHashCode() => ID.GetHashCode();
+    
+    /// <summary>
+    /// Gets a collection of values for the specified attribute name parsed as the specified generic type parameter if it exists.
+    /// If the element does not exist, returns an empty collection of the generic type parameter.
+    /// </summary>
+    /// <param name="name">The name of the attribute.</param>
+    /// <param name="separator">The value separator character. Default is ' '.</param>
+    /// <typeparam name="T">The return type of the value.</typeparam>
+    /// <returns>
+    /// If found, all values of the attribute split on the specified separator and parsed as the generic type parameter.
+    /// If not found, returns an empty collection.
+    /// </returns>
+    /// <remarks>
+    /// This method makes getting/setting attributes with collection of values as a single string with a certain separator
+    /// character as concise as possible for derived classes. This method is added here since only types like <see cref="Block"/>
+    /// are using this method overload.
+    /// </remarks>
+    protected IEnumerable<T> GetValues<T>(string name, char separator = ' ')
+    {
+        var value = Element.Attribute(name)?.Value;
+        
+        return value is not null
+            ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
+            : Enumerable.Empty<T>();
+    }
 }

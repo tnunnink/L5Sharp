@@ -5,6 +5,7 @@
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>10</LangVersion>
         <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -254,6 +255,36 @@
       </None>
       <None Update="Elements\SheetTests.Wire_ValidOperands_ShouldBeVerified.verified.txt">
         <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.SetValue_ToValueHasValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.SetSelectorValue_NoValueToValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.AddAfter_ValidElement_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.AddAfter_AlternateType_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.AddBefore_AlternateType_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.Replace_ValidElement_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.SetProperty_NoValueToValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.SetContainer_NoValueToEmptyCollection_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.SetDescription_NoValueToValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixElementTests.SetDateTime_NoValueToValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

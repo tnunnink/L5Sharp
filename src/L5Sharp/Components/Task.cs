@@ -36,6 +36,8 @@ public class Task : LogixComponent
         Priority = new TaskPriority(10);
         Rate = new ScanRate(10);
         Watchdog = new Watchdog(500);
+        InhibitTask = false;
+        DisableUpdateOutputs = false;
     }
 
     /// <summary>
@@ -51,7 +53,7 @@ public class Task : LogixComponent
     /// Gets the type of the task component (Continuous, Periodic, Event).
     /// </summary>
     /// <value>A <see cref="Enums.TaskType"/> enum representing the type of the task.</value>
-    public TaskType? Type
+    public TaskType Type
     {
         get => GetRequiredValue<TaskType>();
         set => SetRequiredValue(value);
@@ -174,7 +176,7 @@ public class Task : LogixComponent
     }
 
     /// <summary>
-    /// Removes the specified program name from the underlying list of <see cref="Scheduled"/>
+    /// Removes the specified program name from the underlying list of <see cref="Scheduled"/> programs.
     /// </summary>
     /// <param name="program">The name of the program to cancel.</param>
     public void Cancel(string program)

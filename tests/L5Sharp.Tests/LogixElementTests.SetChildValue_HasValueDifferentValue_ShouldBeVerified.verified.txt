@@ -1,0 +1,3 @@
+﻿<Test>
+  <Child ChildValue="321" />
+</Test>
