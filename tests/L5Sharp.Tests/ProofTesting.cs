@@ -37,32 +37,6 @@ public class ProofTesting
     }
 
     [Test]
-    public void GetInstructionMethods()
-    {
-        
-       
-        
-        var type = typeof(Instruction);
-
-        var method = type.GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .FirstOrDefault(m => m.ReturnType == typeof(Instruction) && m.Name == "XIO");
-        
-        var parameter = Expression.Parameter(typeof(Argument[]), "args");
-        
-        var function = Expression.Call(method!, parameter);
-        
-        var factory = Expression.Lambda<Func<Argument[], Instruction>>(function, parameter);
-
-        var instruction = factory.Compile().Invoke(new Argument[]{"MyTagName"});
-        
-        instruction.Should().NotBeNull();
-        instruction.Key.Should().Be("XIO");
-        instruction.Signature.Should().Be("XIO(data_bit);");
-        instruction.Text.Should().Be("XIO(MyTagName)");
-        instruction.Arguments.Should().HaveCount(1);
-    }
-
-    [Test]
     public void Query()
     {
         var content = L5X.Load(Known.Example);

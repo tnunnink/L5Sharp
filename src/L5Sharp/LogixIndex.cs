@@ -245,25 +245,25 @@ internal class LogixIndex
     /// </summary>
     private void IndexCodeReferences()
     {
-        var contentTypes = RoutineType.All().Select(r => r.ContentName).ToList();
-
-        var targets = _content.Descendants().Where(e => contentTypes.Contains(e.Name.LocalName));
-
-        foreach (var target in targets)
+        var routines = _content.Descendants(L5XName.Program).SelectMany(p => p.Descendants(L5XName.Routine));
+        
+        foreach (var routine in routines)
         {
-            switch (target.Name.LocalName)
+            var type = routine.Attribute(L5XName.Type)?.Value.Parse<RoutineType>().ContentName;
+            
+            switch (type)
             {
                 case L5XName.RLLContent:
-                    AddReferences(target.Descendants(L5XName.Rung).SelectMany(x => new Rung(x).References()));
+                    AddReferences(routine.Descendants(L5XName.Rung).SelectMany(x => new Rung(x).References()));
                     break;
                 case L5XName.STContent:
-                    AddReferences(target.Descendants(L5XName.Line).SelectMany(x => new Line(x).References()));
+                    AddReferences(routine.Descendants(L5XName.Line).SelectMany(x => new Line(x).References()));
                     break;
                 case L5XName.FBDContent:
-                    AddReferences(target.Descendants(L5XName.Sheet).SelectMany(x => new Sheet(x).References()));
+                    AddReferences(routine.Descendants(L5XName.Sheet).SelectMany(x => new Sheet(x).References()));
                     break;
                 case L5XName.SFCContent:
-                    AddReferences(new Chart(target).References());
+                    AddReferences(new Chart(routine).References());
                     break;
             }
         }

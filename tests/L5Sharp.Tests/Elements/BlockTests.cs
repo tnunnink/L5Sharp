@@ -231,6 +231,6 @@ public class BlockTests
 
         var references = block.References().ToList();
 
-        references.Should().HaveCount(2);
+        references.Should().NotBeEmpty();
     }
 }

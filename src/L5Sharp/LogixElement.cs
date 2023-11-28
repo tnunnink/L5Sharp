@@ -312,7 +312,7 @@ public abstract class LogixElement : ILogixSerializable
             element = element.Convert(L5XType);
         }
 
-        Element.AddAfterSelf(element.Serialize());
+        Element.ReplaceWith(element.Serialize());
     }
 
     /// <summary>

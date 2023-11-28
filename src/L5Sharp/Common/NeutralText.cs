@@ -100,7 +100,7 @@ public sealed class NeutralText
     /// Gets a collection of tag names found in the current neutral text.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values that were in from the current text.</returns>
-    /// <seealso cref="TagsIn(Instruction)"/>
+    /// <seealso cref="TagsIn(string)"/>
     public IEnumerable<TagName> Tags() => Regex.Matches(_text, TagName.SearchPattern).Select(t => new TagName(t.Value));
 
     /// <summary>
@@ -108,8 +108,7 @@ public sealed class NeutralText
     /// </summary>
     /// <param name="instruction">The instruction for which to find tags as arguments to.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing tag names found in the specified instruction.</returns>
-    public IEnumerable<TagName> TagsIn(Instruction instruction) =>
-        Instructions(instruction).SelectMany(i => i.Text.Tags());
+    public IEnumerable<TagName> TagsIn(string instruction) => Instructions(instruction).SelectMany(i => i.Text.Tags());
 
     /// <inheritdoc />
     public override string ToString() => _text;

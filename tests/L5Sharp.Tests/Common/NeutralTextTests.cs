@@ -31,7 +31,7 @@ namespace L5Sharp.Tests.Common
         {
             var text = new NeutralText(string.Empty);
 
-            text.ToString().Should().Be(";");
+            text.ToString().Should().Be(string.Empty);
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace L5Sharp.Tests.Common
 
             var result = text.Instructions();
 
-            result.First().Should().BeEquivalentTo(text);
+            result.First().Text.Should().Be(text);
         }
         
         [Test]
@@ -175,8 +175,8 @@ namespace L5Sharp.Tests.Common
 
             var result = text.Instructions("XIC").ToList();
 
-            result.Should().Contain("XIC(Tag.Status.Active)");
-            result.Should().Contain("XIC(Tag.Status.Enabled)");
+            result.Should().Contain(Instruction.Parse("XIC(Tag.Status.Active)"));
+            result.Should().Contain(Instruction.Parse("XIC(Tag.Status.Enabled)"));
         }
 
         [Test]

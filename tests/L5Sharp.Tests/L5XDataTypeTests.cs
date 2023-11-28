@@ -87,7 +87,7 @@ public class L5XDataTypeTests
         var content = L5X.Load(Known.Test);
         var dataType = content.DataTypes.Get(Known.DataType);
         
-        FluentActions.Invoking(() => dataType.AddAfter(new Tag())).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => dataType.AddAfter(new Tag())).Should().Throw<InvalidOperationException>();
     }
     
     [Test]

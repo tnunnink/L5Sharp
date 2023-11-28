@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading;
 using JetBrains.Annotations;
 using L5Sharp.Utilities;
 
@@ -53,6 +52,11 @@ public sealed class Instruction
     /// of an instruction signature into separate parsable values.
     /// </summary>
     private const string ArgumentSplitPattern = ",(?![^[]*])";
+    
+    /// <summary>
+    /// Lazy list of all known instructions and their corresponding factory method function.
+    /// </summary>
+    private static Dictionary<string, Func<Instruction>> _known = Factories().ToDictionary(x => x.Key, x => x.Value);
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided string key and regex signature pattern.
@@ -68,16 +72,6 @@ public sealed class Instruction
         Key = key;
         Signature = signature ?? $"{key}({DefaultArgs(arguments.Length)})";
         Arguments = arguments;
-        Operadns = ExtractOperands(Signature);
-    }
-
-    private IEnumerable<string> ExtractOperands(string signature)
-    {
-        var input = Regex.Match(Signature, SignaturePattern).Value[1..^1];
-
-        return !string.IsNullOrEmpty(input)
-            ? Regex.Split(input, ArgumentSplitPattern)
-            : Enumerable.Empty<string>().ToArray();
     }
 
     /// <summary>
@@ -110,7 +104,17 @@ public sealed class Instruction
     /// The collection of operand names found in the signature of the instruction.
     /// </summary>
     /// 
-    public IEnumerable<string> Operadns { get; }
+    public IEnumerable<string> Operadns
+    {
+        get
+        {
+            var input = Regex.Match(Signature, SignaturePattern).Value[1..^1];
+
+            return !string.IsNullOrEmpty(input)
+                ? Regex.Split(input, ArgumentSplitPattern)
+                : Enumerable.Empty<string>().ToArray();
+        }
+    }
 
     /// <summary>
     /// The <see cref="NeutralText"/> representation of the instruction instance.
@@ -184,7 +188,7 @@ public sealed class Instruction
         var signature = Regex.Match(text, SignaturePattern).Value[1..^1];
         var arguments = Regex.Split(signature, ArgumentSplitPattern).Select(Argument.Parse).ToArray();
 
-        return _known.Value.TryGetValue(key, out var create)
+        return _known.TryGetValue(key, out var create)
             ? create().Of(arguments)
             : new Instruction(key, arguments: arguments);
     }
@@ -195,7 +199,7 @@ public sealed class Instruction
     /// <returns>
     /// A <see cref="IEnumerable{T}"/> containing all known <see cref="Instruction"/> instances with no arguments.
     /// </returns>
-    public static IEnumerable<string> Keys() => _known.Value.Keys.AsEnumerable();
+    public static IEnumerable<string> Keys() => _known.Keys.AsEnumerable();
 
     /// <summary>
     /// Retrieves teh argument for a specified operand name from the instruction.
@@ -216,6 +220,24 @@ public sealed class Instruction
     public Argument? GetArgument(int index)
     {
         return index >= 0 && index < Arguments.Count() ? Arguments.ElementAt(index) : default;
+    }
+
+    /// <summary>
+    /// Retrieves all <see cref="TagName"/> values from this instruction instance's arguments.
+    /// </summary>
+    /// <returns>A collection of <see cref="TagName"/> values cotnained by the instruction.</returns>
+    public IEnumerable<TagName> Tags()
+    {
+        var tags = new List<TagName>();
+        
+        foreach (var argument in Arguments)
+        {
+            if (argument.IsTag) tags.Add((TagName)argument);
+            if (!argument.IsExpression) continue;
+            tags.AddRange(((NeutralText)argument).Tags());
+        }
+
+        return tags;
     }
 
     /// <summary>
@@ -268,20 +290,6 @@ public sealed class Instruction
     /// <param name="right">The right <see cref="Instruction"/> to compare.</param>
     /// <returns><c>true</c> if the values are not equal; Otherwise, <c>false</c>.</returns>
     public static bool operator !=(Instruction? left, Instruction? right) => !Equals(left, right);
-
-    /// <summary>
-    /// Implicitly converts the <see cref="Instruction"/> instance to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="instruction">The instruction to convert.</param>
-    /// <returns>A <see cref="string"/> representing the instrcution key.</returns>
-    public static implicit operator string(Instruction instruction) => instruction.Key;
-
-    /// <summary>
-    /// Explicitly converts the <see cref="string"/> value to an <see cref="Instruction"/> instance.
-    /// </summary>
-    /// <param name="key">The string key of the instrution.</param>
-    /// <returns></returns>
-    public static implicit operator Instruction(string key) => new(key, $"{key}()");
 
     #region Factories
 
@@ -1707,17 +1715,11 @@ public sealed class Instruction
     }
 
     /// <summary>
-    /// Lazy list of all known instructions and their corresponding factory method function.
-    /// </summary>
-    private static Lazy<Dictionary<string, Func<Instruction>>> _known =>
-        new(() => GetFactories().ToDictionary(x => x.Key, x => x.Value), LazyThreadSafetyMode.ExecutionAndPublication);
-
-    /// <summary>
     /// Indexes all instruction factory methods in the class and creates a function returning the instruction 
     /// mathcing the specified key or method name. The method is passed null argumnts and therefore will be a default
     /// instruction instance. Callers can then use <see cref="Of"/> to pass argument array.
     /// </summary>
-    private static IEnumerable<KeyValuePair<string, Func<Instruction>>> GetFactories()
+    private static IEnumerable<KeyValuePair<string, Func<Instruction>>> Factories()
     {
         var methods = typeof(Instruction).GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Where(m => m.ReturnType == typeof(Instruction) && m.Name.All(char.IsUpper));

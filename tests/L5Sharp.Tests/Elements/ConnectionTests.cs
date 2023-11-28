@@ -30,7 +30,7 @@ public class ConnectionTests
         connection.InputSize.Should().Be(0);
         connection.OutputCxnPoint.Should().Be(0);
         connection.OutputSize.Should().Be(0);
-        connection.Type.Should().BeNull();
+        connection.Type.Should().Be(ConnectionType.Unknown);
         connection.Priority.Should().Be(ConnectionPriority.Scheduled);
         connection.InputConnectionType.Should().Be(TransmissionType.Multicast);
         connection.InputProductionTrigger.Should().Be(ProductionTrigger.Cyclic);
@@ -38,7 +38,7 @@ public class ConnectionTests
         connection.Unicast.Should().BeFalse();
         connection.EventId.Should().Be(0);
         connection.InputTagSuffix.Should().Be("I");
-        connection.InputTagSuffix.Should().Be("O");
+        connection.OutputTagSuffix.Should().Be("O");
         connection.InputTag.Should().BeNull();
         connection.OutputTag.Should().BeNull();
     }

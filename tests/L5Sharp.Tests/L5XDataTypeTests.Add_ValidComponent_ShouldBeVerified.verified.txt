@@ -152,7 +152,7 @@ Dint Array]]></Description>
       <Member Name="Flag" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read Only" />
     </Members>
   </DataType>
-  <DataType Name="TestType" Family="NoFamily" Class="User">
+  <DataType Name="NewType" Family="NoFamily" Class="User">
     <Description><![CDATA[This is a test]]></Description>
     <Members>
       <Member Name="Member1" DataType="DINT" Dimension="0" Radix="Binary" ExternalAccess="Read/Write" Hidden="false" />

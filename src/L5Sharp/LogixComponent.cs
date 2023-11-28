@@ -90,7 +90,7 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     /// A <see cref="ComponentKey"/> value representing composite set of properties that identify this component
     /// within an L5X tree.
     /// </value>
-    public ComponentKey Key => new(Element.Name.LocalName, Name);
+    public ComponentKey Key => new(GetType().L5XType(), Name);
 
     /// <summary>
     /// Returns a collection of <see cref="LogixComponent"/> that this component depends on to be valid within a given

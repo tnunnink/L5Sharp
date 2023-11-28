@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Utilities;
@@ -32,10 +33,8 @@ public class Chart : Diagram
     /// <inheritdoc />
     public override int Number => 0;
 
-    public override IEnumerable<CrossReference> References()
-    {
-        throw new NotImplementedException();
-    }
+    /// <inheritdoc />
+    public override IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
 
     /// <inheritdoc />
     protected override IEnumerable<string> Ordering()
