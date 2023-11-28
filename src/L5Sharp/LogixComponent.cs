@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
@@ -106,6 +107,30 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     public virtual IEnumerable<LogixComponent> Dependencies() => Enumerable.Empty<LogixComponent>();
 
     /// <summary>
+    /// Deletes this component and it's references from the current attached L5X file.
+    /// </summary>
+    /// <remarks>
+    /// This method can be helpful for completely scrubbing a L5X file of the specific component, which means removing
+    /// references to it as well as the component itself. This is on contrast to <see cref="LogixComponent.Remove()"/>
+    /// which will simply remove this element from the parent container. If this component is not attached to an L5X
+    /// then it will simply return and not throw any exceptions. Obviously, use this with caution as you will not be able
+    /// to undo the process except for the fact that you have reference to component being deleted. 
+    /// </remarks>
+    public virtual void Delete()
+    {
+        if (Element.Parent is null || !IsAttached) return;
+        
+        var references = References();
+
+        foreach (var reference in references)
+        {
+            reference.Element.Remove();
+        }
+        
+        Element.Remove();
+    }
+
+    /// <summary>
     /// Creates a new <see cref="L5X"/> with the provided logix component as the target type.
     /// </summary>
     /// <param name="softwareRevision">The optional software revision, or version of Studio to export the component as.</param>
@@ -116,7 +141,6 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
         softwareRevision ??= L5X?.Info.SoftwareRevision;
 
         var content = L5X.New(this, softwareRevision);
-        content.Add(this);
 
         var dependencies = Dependencies().ToList();
         foreach (var dependency in dependencies)

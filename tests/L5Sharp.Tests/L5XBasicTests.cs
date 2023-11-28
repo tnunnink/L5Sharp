@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
+using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Samples;
 using Task = System.Threading.Tasks.Task;
@@ -10,35 +11,85 @@ namespace L5Sharp.Tests;
 public class L5XBasicTests
 {
     [Test]
-    public void New_KnownTest_ShouldNotBeNull()
+    public void Constructor_KnownTest_ShouldNotBeNull()
     {
         var element = XElement.Load(Known.Test);
-        
+
         var l5X = new L5X(element);
 
         l5X.Should().NotBeNull();
     }
-    
+
     [Test]
-    public void New_LotsOfTags_ShouldNotBeNull()
+    public void Constructor_LotsOfTags_ShouldNotBeNull()
     {
         var element = XElement.Load(Known.LotOfTags);
-        
+
         var l5X = new L5X(element);
 
         l5X.Should().NotBeNull();
     }
-    
+
     [Test]
-    public void New_Template_ShouldNotBeNull()
+    public void Constructor_Template_ShouldNotBeNull()
     {
         var element = XElement.Load(Known.Example);
-        
+
         var l5X = new L5X(element);
 
         l5X.Should().NotBeNull();
     }
-    
+
+    [Test]
+    public void New_WithControllerAndProcessorNames_ShouldNotBeNullAndExpectedValues()
+    {
+        var content = L5X.New("ControllerName", "1756-L83E");
+
+        content.Should().NotBeNull();
+        content.Controller.Name.Should().Be("ControllerName");
+        content.Controller.ProcessorType.Should().Be("1756-L83E");
+    }
+
+    [Test]
+    public Task New_ValidValues_ShouldBeVerified()
+    {
+        var content = L5X.New("ControllerName", "1756-L83E");
+
+        return VerifyXml(content.Serialize().ToString()).ScrubMember("ExportDate");
+    }
+
+    [Test]
+    public void New_NullName_ShouldThrowException()
+    {
+        FluentActions.Invoking(() => L5X.New(null!, "Test")).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void New_NullProcessor_ShouldThrowException()
+    {
+        FluentActions.Invoking(() => L5X.New("Test", null!)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public Task New_ValidComponent_ShouldBeVerified()
+    {
+        var component = new DataType
+        {
+            Name = "TestType",
+            Description = "This is a test component",
+        };
+
+        var content = L5X.New(component);
+
+        return VerifyXml(content.Serialize().ToString()).ScrubMember("ExportDate");
+    }
+
+    [Test]
+    public void New_NullComponent_shouldThrowException()
+    {
+        FluentActions.Invoking(() => L5X.New(null!)).Should().Throw<ArgumentException>();
+    }
+
     [Test]
     public void Info_ValidContent_ShouldHaveExpectedValues()
     {
@@ -53,7 +104,7 @@ public class L5XBasicTests
         content.Info.Owner.Should().Be("tnunnink, EN Engineering");
         content.Info.ExportDate.Should().NotBeNull();
     }
-    
+
     [Test]
     public void Query_TypeNameOverload_ShouldNotBeEmpty()
     {
@@ -83,7 +134,7 @@ public class L5XBasicTests
 
         results.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void Query_NoElement_ShouldBeEmpty()
     {
@@ -95,20 +146,101 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void Find_ValidComponent_ShouldNotBeNull()
+    public void All_ValidComponentKey_ShouldHaveExpectedCount()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var results = content.All(new ComponentKey("Tag", "SimpleBool"));
+
+        results.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void All_ValidTypeAndNullName_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.All<Tag>(null!)).Should().Throw<ArgumentException>();
+    }
+    
+    [Test]
+    public void All_ValidTypeAndEmptyName_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.All<Tag>(string.Empty)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void All_ValidTypeAndName_ShouldHaveExpectedCount()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var results = content.All<Tag>("SimpleBool");
+
+        results.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void All_WithMultipleScopedInstances_ShouldHaveExpectedCount()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var results = content.All<Tag>("TestSimpleTag");
+
+        results.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void All_ValidTagName_ShouldHaveExpectedCount()
+    {
+        var content = L5X.Load(Known.Test);
+
+        //Note that only specifying a string we assume tag since the overloaded TagName will get
+        //implicitly converted to a string and we are not specifying a component type.
+        var results = content.All("TestSimpleTag.DintMember");
+
+        results.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void Find_ValidKey_ShouldBeExpectedTypeAndName()
+    {
+        var content = Logix.Load(Known.Test);
+
+        var component = content.Find(new ComponentKey("DataType", Known.DataType));
+        
+        component.Should().NotBeNull();
+        component?.Name.Should().Be(Known.DataType);
+    }
+    
+    [Test]
+    public void Find_ValidKeyAndContainer_ShouldBeExpectedTypeAndName()
+    {
+        var content = Logix.Load(Known.Test);
+
+        var component = content.Find(new ComponentKey("Tag", Known.Tag));
+        
+        component.Should().NotBeNull();
+        component?.Name.Should().Be(Known.DataType);
+    }
+
+    [Test]
+    public void Find_ValidComponent_ShouldBeExpectedName()
     {
         var content = Logix.Load(Known.Test);
 
         var component = content.Find<DataType>(Known.DataType);
 
         component.Should().NotBeNull();
+        component?.Name.Should().Be(Known.DataType);
     }
-
+    
     [Test]
     public void Find_ValidTagName_ShouldNotBeNull()
     {
         var content = L5X.Load(Known.Test);
-        
+
         var tag = content.Find(Known.Tag);
 
         tag.Should().NotBeNull();
@@ -120,51 +252,51 @@ public class L5XBasicTests
         var content = L5X.Load(Known.Test);
         var tag = content.Get(Known.Tag);
 
-        var references = content.ReferencesTo(tag).ToList(); 
+        var references = content.ReferencesTo(tag).ToList();
 
         references.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
         var content = L5X.Load(Known.Test);
         var count = content.DataTypes.Count();
-        var dataType = new DataType {Name = "TestAdd"};
-        
+        var dataType = new DataType { Name = "TestAdd" };
+
         content.Add(dataType);
-        
+
         content.DataTypes.Count().Should().Be(count + 1);
     }
-    
+
     [Test]
     public Task Add_ValidComponent_ShouldBeVerified()
     {
         var content = L5X.Load(Known.Test);
-        var dataType = new DataType {Name = "TestAdd"};
-        
+        var dataType = new DataType { Name = "TestAdd" };
+
         content.Add(dataType);
-        
-        return Verify(content.DataTypes.Serialize().ToString());
+
+        return VerifyXml(content.DataTypes.Serialize().ToString()).ScrubMember("ExportDate");
     }
-    
+
     [Test]
     public void Serialize_WhenCalled_ShouldNotBeNull()
     {
         var content = L5X.Load(Known.Empty);
-        
+
         var result = content.Serialize();
 
         result.Should().NotBeNull();
     }
-    
+
     [Test]
     public Task Serialize_WhenCalled_ShouldBeValid()
     {
         var content = L5X.Load(Known.Empty);
-        
+
         var result = content.Serialize().ToString();
 
-        return Verify(result);
+        return VerifyXml(result).ScrubMember("ExportDate");
     }
 }

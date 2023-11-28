@@ -1,0 +1,18 @@
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="TestType" TargetType="DataType" ContainsContext="true" Owner="tnunnink" ExportDate="Scrubbed">
+  <Controller Use="Context">
+    <DataTypes>
+      <DataType Name="TestType" Family="NoFamily" Class="User">
+        <Description>This is a test component</Description>
+        <Members />
+      </DataType>
+    </DataTypes>
+    <Modules />
+    <AddOnInstructionDefinitions />
+    <Tags />
+    <Programs />
+    <Tasks />
+    <ParameterConnections />
+    <Trends />
+    <QuickWatchLists />
+  </Controller>
+</RSLogix5000Content>

@@ -148,6 +148,18 @@ public class Task : LogixComponent
     }
 
     /// <summary>
+    /// Retrieves a collection of <see cref="Program"/> components that are scheduled to this <see cref="Task"/>.
+    /// </summary>
+    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Program"/> component objects schedule to this task.</value>
+    /// <remarks>
+    /// This is an extension to the type and uses the attached L5X file to retrieve the program components.
+    /// Therefore if this task is not attached it will return and empty collection. Also if no program exists with the
+    /// scheduled name, this will return an empty collection.
+    /// </remarks>
+    public IEnumerable<Program> Programs =>
+        L5X?.Programs.Where(p => Scheduled.Any(s => s == p.Name)) ?? Enumerable.Empty<Program>();
+
+    /// <summary>
     /// The collection of program names that are scheduled to the task.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
@@ -159,6 +171,19 @@ public class Task : LogixComponent
     public override L5X Export(Revision? softwareRevision = null)
     {
         throw new NotSupportedException("Task components do not support export function.");
+    }
+
+    /// <inheritdoc />
+    public override void Delete()
+    {
+        if (Element.Parent is null || !IsAttached) return;
+        
+        foreach (var program in Programs)
+        {
+            program.Delete();
+        }
+        
+        Element.Remove();
     }
 
     /// <summary>

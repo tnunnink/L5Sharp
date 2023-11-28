@@ -6,6 +6,7 @@ using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Elements;
 using L5Sharp.Samples;
+using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests;
 
@@ -23,6 +24,10 @@ public class ProofTesting
 
         stopwatch.Stop();
         Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds}");
+
+        var tag = new Tag { Name = "MyTimer", Value = new TIMER { PRE = 5000 } };
+        
+        
     }
 
     [Test]

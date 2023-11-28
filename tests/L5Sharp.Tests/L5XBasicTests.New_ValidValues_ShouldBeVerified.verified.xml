@@ -1,0 +1,13 @@
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="ControllerName" TargetType="Controller" ContainsContext="false" Owner="tnunnink" ExportDate="Scrubbed">
+  <Controller Name="ControllerName" ProcessorType="1756-L83E">
+    <DataTypes />
+    <Modules />
+    <AddOnInstructionDefinitions />
+    <Tags />
+    <Programs />
+    <Tasks />
+    <ParameterConnections />
+    <Trends />
+    <QuickWatchLists />
+  </Controller>
+</RSLogix5000Content>

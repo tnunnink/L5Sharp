@@ -520,7 +520,7 @@ public abstract class LogixElement : ILogixSerializable
 
         return attribute is not null
             ? DateTime.ParseExact(attribute.Value, format, CultureInfo.CurrentCulture)
-            : default;
+            : null;
     }
 
     /// <summary>

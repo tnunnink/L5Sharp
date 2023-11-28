@@ -135,5 +135,23 @@ namespace L5Sharp.Tests
 
             results.Should().NotBeEmpty();
         }
+
+        [Test]
+        public void SomeMoreTagQueriesAcrossTheL5XFile()
+        {
+            var content = L5X.Load(Known.Test);
+            
+            var allTags = content.Query<Tag>().ToList();
+
+            var programTags = allTags.Where(t => t.Scope == Scope.Program);
+            var ioTags = allTags.Where(t => t.Name.Contains(':'));
+            var readWriteTags = allTags.Where(t => t.ExternalAccess == ExternalAccess.ReadWrite);
+            var timerTags = allTags.Where(t => t.DataType == "TIMER");
+
+            programTags.Should().NotBeEmpty();
+            ioTags.Should().NotBeEmpty();
+            readWriteTags.Should().NotBeEmpty();
+            timerTags.Should().NotBeEmpty();
+        }
     }
 }

@@ -217,12 +217,6 @@
         <DependentUpon>DataTypeMemberTests.cs</DependentUpon>
         <ParentFile>DataTypeMemberTests</ParentFile>
       </None>
-      <None Update="L5XBasicTests.Serialize_WhenCalled_ShouldBeValid.verified.txt">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
-      </None>
-      <None Update="L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.txt">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
-      </None>
       <None Update="Elements\SheetTests.InputReferences_AddValidReference_ShouldBeVerified.verified.txt">
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
@@ -285,6 +279,12 @@
       </None>
       <None Update="LogixElementTests.SetDateTime_NoValueToValue_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixElementTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.New_ValidValues_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

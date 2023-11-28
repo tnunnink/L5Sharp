@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using L5Sharp.Common;
 using L5Sharp.Utilities;
@@ -81,4 +83,11 @@ public class L5XInfo
     public DateTime? ExportDate => _element.Attribute(L5XName.ExportDate)?.Value is not null
         ? DateTime.ParseExact(_element.Attribute(L5XName.ExportDate)?.Value, L5X.DateTimeFormat, null)
         : default;
+
+    /// <summary>
+    /// Gets the set of configured export options for the L5X file.
+    /// </summary>
+    /// <value>A collection of <see cref="string"/> indicating the option values.</value>
+    public IEnumerable<string> ExportOptions => _element.Attribute(L5XName.ExportOptions)?.Value
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Enumerable.Empty<string>();
 }

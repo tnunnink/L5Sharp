@@ -198,15 +198,29 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// Creates a new <see cref="L5X"/> file with the standard root content and controller elements, and configures them
+    /// Creates a new blank <see cref="L5X"/> file with the standard root content and controller elements, and configures them
     /// with the provided controller name, processor, and revision. 
     /// </summary>
     /// <param name="name">The name of the controller.</param>
-    /// <param name="processor">The processor catalog number.</param>
+    /// <param name="processor">The processor type of the controller.</param>
     /// <param name="revision">The optional software revision of the processor.</param>
-    /// <returns>A new default <see cref="L5X"/> with the specified controller properties.</returns>
-    public static L5X New(string name, string processor, Revision? revision = null) =>
-        new(NewContent(name, nameof(Controller), revision));
+    /// <returns>A new <see cref="L5X"/> instance with the specified controller properties.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="processor"/> is null or empty.</exception>
+    public static L5X New(string name, string processor, Revision? revision = null)
+    {
+        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.");
+        if (string.IsNullOrEmpty(processor)) throw new ArgumentException("Name can not be null or empty.");
+        
+        var content = NewContent(name, nameof(Controller), revision);
+        
+        var controller = new XElement(L5XName.Controller,
+            new XAttribute(L5XName.Name, name),
+            new XAttribute(L5XName.ProcessorType, processor)
+        );
+        
+        content.Add(controller);
+        return new L5X(content);
+    }
 
     /// <summary>
     /// Creates a new <see cref="L5X"/> file with the provided <see cref="LogixComponent"/> object instance as the export
@@ -215,8 +229,15 @@ public class L5X : ILogixSerializable
     /// <param name="component">The component that will serve as the target for the new L5X.</param>
     /// <param name="revision">The software revision of the L5X file.</param>
     /// <returns>A new <see cref="L5X"/> with the default root and target component as the content of the file.</returns>
-    public static L5X New(LogixComponent component, Revision? revision = null) 
-        => new(NewContent(component.Name, component.L5XType, revision));
+    /// <exception cref="ArgumentNullException"><paramref name="component"/> is null.</exception>
+    public static L5X New(LogixComponent component, Revision? revision = null)
+    {
+        if (component is null) throw new ArgumentNullException(nameof(component));
+        var content = NewContent(component.Name, component.L5XType, revision);
+        var file = new L5X(content);
+        file.Add(component);
+        return file;
+    }
 
     /// <summary>
     /// Creates a new <see cref="L5X"/> with the provided L5X string content.
@@ -311,28 +332,28 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// Adds the given logix component to the first found container within the L5X tree. 
+    /// Adds the provided <see cref="LogixComponent"/> to the first found container within the L5X file. 
     /// </summary>
     /// <param name="component">The component to add to the L5X.</param>
-    /// <typeparam name="TComponent">The type of component to add to the L5X.</typeparam>
     /// <remarks>
-    /// This provides a more dynamic way to add content to an L5X file. Note that this only adds to the first
-    /// container found of the specific type. If you are adding scoped components such as <c>Tag</c> or <c>Routine</c>
-    /// you should be doing so in the context of a <c>Program</c> component.
+    /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top level
+    /// container, it will work for most types. However, note that this only adds to the first container found of the specific type.
+    /// If you are adding scoped components such as <see cref="Tag"/> or <see cref="Routine"/> you should be doing so in the context
+    /// of a specific <see cref="Program"/> component, or use the overload accepting a specific container.
     /// </remarks>
-    public void Add<TComponent>(TComponent component) where TComponent : LogixComponent
+    /// <seealso cref="Add(L5Sharp.LogixComponent,string)"/>
+    public void Add(LogixComponent component)
     {
-        var containerType = typeof(TComponent).L5XContainer();
+        var containerType = component.GetType().L5XContainer();
         var container = GetContainer(containerType);
         container.Add(component.Serialize());
     }
 
     /// <summary>
-    /// Adds a component to the specified container within the L5X file. 
+    /// Adds the provided <see cref="LogixComponent"/> to the specified container within the L5X file. 
     /// </summary>
     /// <param name="component">The component to add to the L5X.</param>
     /// <param name="container">The container name (controller, program, or instruction) in which to add the component.</param>
-    /// <typeparam name="TComponent">The type of component to add to the L5X.</typeparam>
     /// <exception cref="InvalidOperationException">No container was found in the L5X for the specified type and container name.</exception>
     /// <remarks>
     /// This provides a more dynamic way to add content to an L5X file. This method will look for a container element
@@ -340,9 +361,9 @@ public class L5X : ILogixSerializable
     /// container name. For example, if you try to add a Module to a Program, this will fail even if a program with the
     /// container name exists, because there is no Modules container in a Program component.
     /// </remarks>
-    public void Add<TComponent>(TComponent component, string container) where TComponent : LogixComponent
+    public void Add(LogixComponent component, string container)
     {
-        var type = typeof(TComponent).L5XContainer();
+        var type = component.GetType().L5XContainer();
         var target = _content.Descendants(type).FirstOrDefault(e => Scope.Container(e) == container);
         if (target is null)
             throw new InvalidOperationException($"Not container with name '{container}' was found in the L5X.");
@@ -487,7 +508,7 @@ public class L5X : ILogixSerializable
     /// <remarks>
     /// <para>
     /// If there are multiple different scoped components with the same component key, this method will return the first
-    /// found object. For types like <c>Tag</c>, this will be the controller scoped instance (as it is indexed first).
+    /// found object. For types like <c>Tag</c>, this will typically be the controller scoped instance (as it is indexed first).
     /// For non-scoped components, there should be only one component anyway. 
     /// </para>
     /// <para>
