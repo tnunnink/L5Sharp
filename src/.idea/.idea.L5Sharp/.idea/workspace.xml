@@ -9,22 +9,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added tests for LogixElement.cs. Added register method to LogixSerializer.cs. Updates some docs.">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidComponent_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidValues_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/Components/Task.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/L5XInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5XInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Examples.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Serialize_WhenCalled_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Serialize_WhenCalled_ShouldBeValid.verified.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/L5Sharp/L5Sharp.csproj.DotSettings" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/GlobalUsing.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp/L5Sharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp/L5Sharp.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ProgramTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ProgramTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/ConnectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/ConnectionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/L5XExtensionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/L5XExtensionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,11 +66,12 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Linq.Expressions/src/System/Linq/Expressions/UnaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp/Elements/DiagramElement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/L5Sharp/Elements/Sheet.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp/LogixContainer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../tests/TestProject1/GlobalUsings.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../tests/TestProject1/UnitTest1.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -794,19 +791,6 @@
           <line>283</line>
           <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\Types\StringType.cs" initialLine="282" containingFunctionPresentation="Method 'ToArray'" />
           <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp/L5X.cs</url>
-          <line>235</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp\L5X.cs" initialLine="235" containingFunctionPresentation="Method 'New'">
-            <startOffsets>
-              <option value="11146" />
-            </startOffsets>
-            <endOffsets>
-              <option value="11216" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

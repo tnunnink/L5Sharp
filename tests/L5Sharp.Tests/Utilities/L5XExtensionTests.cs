@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Components;
 using L5Sharp.Utilities;
-using Task = L5Sharp.Components.Task;
 
 namespace L5Sharp.Tests.Utilities;
 

@@ -4,7 +4,6 @@ using L5Sharp.Elements;
 using L5Sharp.Enums;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
-using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Elements;
 

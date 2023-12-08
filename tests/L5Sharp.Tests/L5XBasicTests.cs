@@ -3,7 +3,6 @@ using FluentAssertions;
 using L5Sharp.Common;
 using L5Sharp.Components;
 using L5Sharp.Samples;
-using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests;
 

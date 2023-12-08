@@ -8,7 +8,6 @@ using L5Sharp.Tests.Types.Custom;
 using L5Sharp.Types;
 using L5Sharp.Types.Atomics;
 using L5Sharp.Types.Predefined;
-using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Components;
 

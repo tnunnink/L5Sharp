@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Common;
 using L5Sharp.Enums;
-using Task = L5Sharp.Components.Task;
 
 namespace L5Sharp.Tests.Components
 {
@@ -11,7 +10,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var task = new Task();
+            var task = new L5Task();
 
             task.Should().NotBeNull();
         }
@@ -19,7 +18,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_Default_ShouldHaveDefaults()
         {
-            var task = new Task();
+            var task = new L5Task();
 
             task.Name.Should().BeEmpty();
             task.Type.Should().Be(TaskType.Periodic);
@@ -35,7 +34,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void New_WithValues_ShouldHaveExpectedValues()
         {
-            var task = new Task
+            var task = new L5Task
             {
                 Name = "Test",
                 Type = TaskType.Continuous,
@@ -61,9 +60,9 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void Clone_WhenCalled_ShouldBeAllNewReferences()
         {
-            var task = new Task { Name = "Test" };
+            var task = new L5Task { Name = "Test" };
 
-            var clone = task.Clone<Task>();
+            var clone = task.Clone<L5Task>();
 
             clone.Should().NotBeSameAs(task);
             clone.Name.Should().Be(task.Name);
@@ -79,7 +78,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void Schedule_ValidName_ShouldHaveExpectedPrograms()
         {
-            var task = new Task();
+            var task = new L5Task();
 
             task.Schedule("Test");
 
@@ -89,7 +88,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public void Cancel_Existing_ShouldHaveExpectedPrograms()
         {
-            var task = new Task();
+            var task = new L5Task();
 
             task.Schedule("Test");
             task.Scheduled.Should().HaveCount(1);
@@ -99,9 +98,9 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
-        public System.Threading.Tasks.Task Serialize_Default_ShouldBeVerified()
+        public Task Serialize_Default_ShouldBeVerified()
         {
-            var task = new Task();
+            var task = new L5Task();
 
             var xml = task.Serialize().ToString();
 
@@ -109,9 +108,9 @@ namespace L5Sharp.Tests.Components
         }
 
         [Test]
-        public System.Threading.Tasks.Task Serialize_Initialized_ShouldBeVerified()
+        public Task Serialize_Initialized_ShouldBeVerified()
         {
-            var task = new Task
+            var task = new L5Task
             {
                 Name = "Test",
                 Type = TaskType.Continuous,
