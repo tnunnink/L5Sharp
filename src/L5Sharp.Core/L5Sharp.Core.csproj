@@ -22,6 +22,9 @@
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageId>L5Sharp</PackageId>
+        <PackageProjectUrl>https://github.com/tnunnink/L5Sharp</PackageProjectUrl>
+        <PackageLicenseUrl></PackageLicenseUrl>
+        <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>
