@@ -1,7 +1,4 @@
 ﻿using FluentAssertions;
-using L5Sharp.Components;
-using L5Sharp.Elements;
-using L5Sharp.Enums;
 
 namespace L5Sharp.Tests.Components;
 

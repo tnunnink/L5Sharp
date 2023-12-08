@@ -1,8 +1,4 @@
 ﻿using System.Xml.Linq;
-using L5Sharp.Enums;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
-using L5Sharp.Types.Predefined;
 
 // ReSharper disable MemberCanBePrivate.Global
 

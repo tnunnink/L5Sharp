@@ -1,5 +1,4 @@
 using FluentAssertions;
-using L5Sharp.Utilities.Catalog;
 
 namespace L5Sharp.Tests.Utilities
 {

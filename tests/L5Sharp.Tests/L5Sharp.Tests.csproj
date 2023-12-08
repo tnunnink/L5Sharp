@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\L5Sharp\L5Sharp.csproj" />
+        <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj" />
         <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
 

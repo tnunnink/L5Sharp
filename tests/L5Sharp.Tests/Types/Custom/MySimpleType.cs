@@ -1,7 +1,4 @@
 ﻿using System.Xml.Linq;
-using L5Sharp.Enums;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Tests.Types.Custom;
 

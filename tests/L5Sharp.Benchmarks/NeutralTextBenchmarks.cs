@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-using L5Sharp.Common;
+using L5Sharp.Core;
 
 namespace L5Sharp.Benchmarks;
 

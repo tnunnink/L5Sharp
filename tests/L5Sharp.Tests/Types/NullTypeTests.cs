@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using L5Sharp.Enums;
-using L5Sharp.Types;
 
 namespace L5Sharp.Tests.Types;
 

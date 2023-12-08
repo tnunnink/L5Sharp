@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests", "..\tests\L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Samples", "..\tests\L5Sharp.Samples\L5Sharp.Samples.csproj", "{EBD410F5-C4E8-4D12-86B4-08B190B50B63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp", "L5Sharp\L5Sharp.csproj", "{927D481B-CB0E-4FA5-A5DC-98D8ECE5EF56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Core", "L5Sharp.Core\L5Sharp.Core.csproj", "{927D481B-CB0E-4FA5-A5DC-98D8ECE5EF56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Benchmarks", "..\tests\L5Sharp.Benchmarks\L5Sharp.Benchmarks.csproj", "{F52CE1E1-B8AC-431B-901F-55824D6F5E40}"
 EndProject

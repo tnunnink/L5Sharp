@@ -1,7 +1,5 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Enums;
-using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests.Types.Predefined
 {

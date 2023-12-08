@@ -2,10 +2,6 @@
 using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
-using L5Sharp.Enums;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
-using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests.Types.Atomics;
 

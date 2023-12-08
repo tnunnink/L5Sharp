@@ -1,7 +1,5 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Enums;
-using L5Sharp.Utilities;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 

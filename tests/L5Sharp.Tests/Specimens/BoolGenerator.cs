@@ -1,5 +1,4 @@
 ﻿using AutoFixture.Kernel;
-using L5Sharp.Types.Atomics;
 
 namespace L5Sharp.Tests.Specimens
 {

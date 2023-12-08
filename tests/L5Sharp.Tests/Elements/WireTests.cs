@@ -1,8 +1,6 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Elements;
-using L5Sharp.Samples;
-using L5Sharp.Utilities;
+
 
 namespace L5Sharp.Tests.Elements;
 

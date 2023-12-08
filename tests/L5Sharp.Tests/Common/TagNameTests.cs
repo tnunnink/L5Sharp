@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using FluentAssertions;
-using L5Sharp.Common;
 
 namespace L5Sharp.Tests.Common
 {

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <Title>L5Sharp</Title>
+        <Authors>Timothy Nunnink</Authors>
+        <Version>0.17.0</Version>
+        <AssemblyVersion>0.17.0</AssemblyVersion>
+        <FileVersion>0.17.0.0</FileVersion>
+        <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
+        <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
+        <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <!--<PackageIcon>icon.png</PackageIcon>-->
+        <RepositoryType>git</RepositoryType>
+        <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+        <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+        <None Remove="L5Sharp.csproj.DotSettings" />
+        <None Remove="L5Sharp.Core.csproj.DotSettings" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="L5Sharp.sln.DotSettings" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
+    </ItemGroup>
+</Project>

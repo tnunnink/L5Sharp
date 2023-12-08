@@ -1,6 +1,4 @@
-﻿using L5Sharp.Common;
-
-namespace L5Sharp.Tests.Common;
+﻿namespace L5Sharp.Tests.Common;
 
 [TestFixture]
 public class CrossReferenceTests

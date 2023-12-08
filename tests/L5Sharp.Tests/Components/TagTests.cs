@@ -1,13 +1,6 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
-using L5Sharp.Common;
-using L5Sharp.Components;
-using L5Sharp.Enums;
-using L5Sharp.Samples;
 using L5Sharp.Tests.Types.Custom;
-using L5Sharp.Types;
-using L5Sharp.Types.Atomics;
-using L5Sharp.Types.Predefined;
 
 namespace L5Sharp.Tests.Components;
 
