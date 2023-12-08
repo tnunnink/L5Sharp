@@ -18,10 +18,12 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Merged library into single namespace L5Sharp.Core</PackageReleaseNotes>
+        <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <AssemblyName>L5Sharp</AssemblyName>
         <PackageId>L5Sharp</PackageId>
+        <Product>L5Sharp</Product>
     </PropertyGroup>
 
     <ItemGroup>
