@@ -205,14 +205,14 @@ public class L5X : ILogixSerializable
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.");
         if (string.IsNullOrEmpty(processor)) throw new ArgumentException("Name can not be null or empty.");
-        
+
         var content = NewContent(name, nameof(Controller), revision);
-        
+
         var controller = new XElement(L5XName.Controller,
             new XAttribute(L5XName.Name, name),
             new XAttribute(L5XName.ProcessorType, processor)
         );
-        
+
         content.Add(controller);
         return new L5X(content);
     }
@@ -1030,8 +1030,21 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// Retrieves a collection of <see cref="CrossReference"/> objects that reference the specified <paramref
-    /// name="component"/>.
+    /// Retrieves all <see cref="CrossReference"/> objects found in the L5X file.
+    /// </summary>
+    /// <returns>A collection of all <see cref="CrossReference"/> objects found in the L5X.</returns>
+    /// <remarks>
+    /// <para>
+    /// A cross reference object contains information about the element and location of the object that has a reference
+    /// to a given component. This library has a built in mechanism for parsing and indexing both tag and logic references
+    /// to various components for efficient lookup. This can allow the caller to find references for many objects at a time
+    /// without having to iterate the L5X multiple times.
+    /// </para>
+    /// </remarks>
+    public IEnumerable<CrossReference> References() => Index.References.SelectMany(r => r.Value);
+
+    /// <summary>
+    /// Retrieves a collection of <see cref="CrossReference"/> objects that reference the specified <paramref name="component"/>.
     /// </summary>
     /// <param name="component">The <see cref="LogixComponent"/> to retrieve references for.</param>
     /// <returns>A collection of <see cref="CrossReference"/> objects that reference the specified <paramref name="component"/>.</returns>
@@ -1044,7 +1057,7 @@ public class L5X : ILogixSerializable
     /// without having to iterate the L5X multiple times.
     /// </para>
     /// </remarks>
-    public IEnumerable<CrossReference> ReferencesTo(LogixComponent component)
+    public IEnumerable<CrossReference> References(LogixComponent component)
     {
         if (component is null) throw new ArgumentNullException(nameof(component));
 
@@ -1069,7 +1082,7 @@ public class L5X : ILogixSerializable
     /// without having to iterate the L5X multiple times.
     /// </para>
     /// </remarks>
-    public IEnumerable<CrossReference> ReferencesTo<TComponent>(string name) where TComponent : LogixComponent
+    public IEnumerable<CrossReference> References<TComponent>(string name) where TComponent : LogixComponent
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.", nameof(name));

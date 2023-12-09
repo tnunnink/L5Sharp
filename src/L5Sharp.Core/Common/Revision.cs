@@ -21,9 +21,11 @@ public sealed class Revision : IComparable
     }
 
     /// <summary>
-    /// 
+    /// Creates a new <see cref="Revision"/> with the specified value.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The Major.Minor revision value to initialize the type with.</param>
+    /// <exception cref="ArgumentException"><paramref name="value"/> is null or empty.</exception>
+    /// <exception cref="FormatException"><paramref name="value"/> is not in a valid format Major.Minor.</exception>
     public Revision(string value)
     {
         if (string.IsNullOrEmpty(value))

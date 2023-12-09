@@ -1,20 +1,13 @@
 ﻿namespace L5Sharp.Core;
 
+/// <summary>
+/// Represents a component type.
+/// </summary>
 public class ComponentType : LogixEnum<ComponentType, string>
 {
     private ComponentType(string name, string value) : base(name, value)
     {
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public virtual string ContainerName => $"{Name}s";
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public virtual bool IsTopLevel => Name != Routine.Name;
 
     /// <summary>
     /// Represents a <b>DataType</b> <see cref="ComponentType"/>.

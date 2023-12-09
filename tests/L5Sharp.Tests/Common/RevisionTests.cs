@@ -6,7 +6,7 @@ namespace L5Sharp.Tests.Common
     [TestFixture]
     public class RevisionTests
     {
-        private Fixture _fixture;
+        private Fixture? _fixture;
 
         [SetUp]
         public void Setup()
@@ -162,6 +162,17 @@ namespace L5Sharp.Tests.Common
         {
             var first = new Revision(1.2);
             var second = new Revision(1.1);
+
+            var result = first > second;
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void OperatorGreaterThanForString_FirstGreaterThanSecond_ShouldBeTrue()
+        {
+            var first = new Revision("1.02");
+            var second = new Revision("1.01");
 
             var result = first > second;
 

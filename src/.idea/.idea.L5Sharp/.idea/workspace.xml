@@ -8,7 +8,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Merged library into single namespace L5Sharp.Core so that going forward reorganizations won't cause breaking changes. Incrementing to v.0.17" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="removed old content">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/WatchTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/WatchTag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/RevisionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/RevisionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,8 +63,6 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/L5Sharp/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/L5Sharp/Elements/Sheet.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Elements/ConnectionTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -708,7 +715,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="318" />
+    <option name="localTasksCounter" value="319" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -744,7 +751,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="TagDictionary.cs and extension development for optimized serach of tag objects in L5X" />
     <MESSAGE value="removed performance project" />
     <MESSAGE value="updated versions" />
     <MESSAGE value="fixed bug with FindAll" />
@@ -769,7 +775,8 @@
     <MESSAGE value="Added tests for LogixElement.cs. Added register method to LogixSerializer.cs. Updates some docs." />
     <MESSAGE value="explicitly set Task using alias in global using file to attempt to change L5Sharp to single namespace." />
     <MESSAGE value="Merged library into single namespace L5Sharp.Core so that going forward reorganizations won't cause breaking changes. Incrementing to v.0.17" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged library into single namespace L5Sharp.Core so that going forward reorganizations won't cause breaking changes. Incrementing to v.0.17" />
+    <MESSAGE value="removed old content" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed old content" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

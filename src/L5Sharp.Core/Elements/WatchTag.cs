@@ -18,7 +18,7 @@ public class WatchTag : LogixElement
     public WatchTag()
     {
         Specifier = TagName.Empty;
-        Scope = string.Empty;
+        ScopeName = string.Empty;
     }
 
     /// <summary>
@@ -44,9 +44,14 @@ public class WatchTag : LogixElement
     /// Specify the name of program, equipment phase, or Add-On Instruction that contains the watch tag.
     /// </summary>
     /// <value>A <see cref="string"/> representing the scope of the tag. If controller scope set to empty.</value>
-    public string Scope
+    /// <remarks>
+    /// This property internally (in the L5X) is named Scope, but we are renaming it to ScopeName to avoid
+    /// the property name issues. I wanted Scope to remain the same at the logix element level since more types will
+    /// make use of that property.
+    /// </remarks>
+    public string ScopeName
     {
-        get => GetRequiredValue<string>();
-        set => SetRequiredValue(value);
+        get => GetRequiredValue<string>(nameof(Scope));
+        set => SetRequiredValue(value, nameof(Scope));
     }
 }

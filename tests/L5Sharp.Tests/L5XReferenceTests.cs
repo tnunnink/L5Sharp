@@ -11,7 +11,7 @@ public class L5XReferenceTests
     {
         var content = L5X.Load(Known.Test);
         
-        var references = content.ReferencesTo<Tag>("TestSimpleTag").ToList();
+        var references = content.References<Tag>("TestSimpleTag").ToList();
         
         references.Should().NotBeEmpty();
     }
@@ -20,7 +20,7 @@ public class L5XReferenceTests
     public void UpdatingTextForKnownRungWithTagReferenceShouldUpdateAndReturnEmptyReferences()
     {
         var content = L5X.Load(Known.Test);
-        var initialReferences = content.ReferencesTo<Tag>("TestSimpleTag").ToList();
+        var initialReferences = content.References<Tag>("TestSimpleTag").ToList();
         initialReferences.Should().NotBeEmpty();
         var rung = initialReferences.First(r =>
                 r.Container == "MainProgram" && r.Routine == "Main" && r.ElementId == "2")
@@ -31,7 +31,7 @@ public class L5XReferenceTests
         //It should update the index internally an recalling FindReferences should return an empty collection.
         rung!.Text = "This is me fucking with the text.";
 
-        var finalReferences = content.ReferencesTo<Tag>("TestSimpleTag").ToList();
+        var finalReferences = content.References<Tag>("TestSimpleTag").ToList();
         finalReferences.Should().BeEmpty();
     }
 }

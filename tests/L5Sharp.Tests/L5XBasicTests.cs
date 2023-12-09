@@ -248,7 +248,7 @@ public class L5XBasicTests
         var content = L5X.Load(Known.Test);
         var tag = content.Get(Known.Tag);
 
-        var references = content.ReferencesTo(tag).ToList();
+        var references = content.References(tag).ToList();
 
         references.Should().NotBeEmpty();
     }

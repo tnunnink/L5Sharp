@@ -157,7 +157,7 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     /// at least one property value referencing this component's name.
     /// </returns>
     public IEnumerable<CrossReference> References() =>
-        L5X is not null ? L5X.ReferencesTo(this) : Enumerable.Empty<CrossReference>();
+        L5X is not null ? L5X.References(this) : Enumerable.Empty<CrossReference>();
 
     /// <inheritdoc />
     /// <remarks>This override returns the component name of the type.</remarks>
