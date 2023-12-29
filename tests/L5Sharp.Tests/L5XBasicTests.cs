@@ -218,7 +218,7 @@ public class L5XBasicTests
         var component = content.Find(new ComponentKey("Tag", Known.Tag));
         
         component.Should().NotBeNull();
-        component?.Name.Should().Be(Known.DataType);
+        component?.Name.Should().Be(Known.Tag);
     }
 
     [Test]

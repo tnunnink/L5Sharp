@@ -21,7 +21,7 @@ namespace L5Sharp.Tests.Common
             instruction.Key.Should().Be("Test");
             instruction.Signature.Should().Be("Test()");
             instruction.Arguments.Should().BeEmpty();
-            instruction.Operadns.Should().BeEmpty();
+            instruction.Operands.Should().BeEmpty();
             instruction.Text.Should().Be("Test()");
             instruction.IsConditional.Should().BeFalse();
             instruction.IsRoutineCall.Should().BeFalse();
@@ -45,7 +45,7 @@ namespace L5Sharp.Tests.Common
             instruction.Key.Should().Be("XIC");
             instruction.Signature.Should().Be("XIC(data_bit)");
             instruction.Arguments.Should().HaveCount(1);
-            instruction.Operadns.Should().HaveCount(1);
+            instruction.Operands.Should().HaveCount(1);
             instruction.Text.Should().Be("XIC(MyTag)");
             instruction.IsConditional.Should().BeTrue();
             instruction.IsRoutineCall.Should().BeFalse();
@@ -61,7 +61,7 @@ namespace L5Sharp.Tests.Common
             instruction.Key.Should().Be("OTE");
             instruction.Signature.Should().Contain("OTE(data_bit)");
             instruction.Arguments.Should().HaveCount(1);
-            instruction.Operadns.Should().HaveCount(1);
+            instruction.Operands.Should().HaveCount(1);
             instruction.Text.Should().Be("OTE(MyTag)");
             instruction.IsConditional.Should().BeFalse();
             instruction.IsRoutineCall.Should().BeFalse();
@@ -77,7 +77,7 @@ namespace L5Sharp.Tests.Common
             instruction.Key.Should().Be("TON");
             instruction.Signature.Should().Contain("TON(timer,preset,accum)");
             instruction.Arguments.Should().HaveCount(3);
-            instruction.Operadns.Should().HaveCount(3);
+            instruction.Operands.Should().HaveCount(3);
             instruction.Text.Should().Be("TON(SomeTimer,5000,0)");
             instruction.IsConditional.Should().BeFalse();
             instruction.IsRoutineCall.Should().BeFalse();
@@ -94,7 +94,7 @@ namespace L5Sharp.Tests.Common
             instruction.Signature.Should()
                 .Contain("JSR(routine_name,number_of_inputs,input_1,input_n,return_1,return_n)");
             instruction.Arguments.Should().HaveCount(4);
-            instruction.Operadns.Should().HaveCount(6);
+            instruction.Operands.Should().HaveCount(6);
             instruction.Text.Should().Be("JSR(Routine,1,In1,Out1)");
             instruction.IsConditional.Should().BeFalse();
             instruction.IsRoutineCall.Should().BeTrue();
@@ -110,7 +110,7 @@ namespace L5Sharp.Tests.Common
             instruction.Key.Should().Be("EVENT");
             instruction.Signature.Should().Contain("EVENT(task)");
             instruction.Arguments.Should().HaveCount(1);
-            instruction.Operadns.Should().HaveCount(1);
+            instruction.Operands.Should().HaveCount(1);
             instruction.Text.Should().Be("EVENT(MyTask)");
             instruction.IsConditional.Should().BeFalse();
             instruction.IsRoutineCall.Should().BeFalse();

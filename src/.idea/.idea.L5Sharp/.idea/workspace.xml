@@ -8,15 +8,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="removed old content">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/LogixEnumTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/WatchTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/WatchTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/RevisionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/RevisionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixEnum.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/InstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/InstructionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +66,7 @@
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Elements/ConnectionTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -112,8 +112,8 @@
       &quot;C#&quot;
     ],
     &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache&quot;,
       &quot;C:\\Users\\tnunnink\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
@@ -371,6 +371,10 @@
       <workItem from="1700873452620" duration="42061000" />
       <workItem from="1701115691201" duration="14296000" />
       <workItem from="1701173319807" duration="24643000" />
+      <workItem from="1702345145288" duration="2569000" />
+      <workItem from="1702391689065" duration="1742000" />
+      <workItem from="1703796358954" duration="1245000" />
+      <workItem from="1703800672625" duration="6779000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -715,7 +719,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="319" />
+    <option name="localTasksCounter" value="320" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -751,7 +755,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="removed performance project" />
     <MESSAGE value="updated versions" />
     <MESSAGE value="fixed bug with FindAll" />
     <MESSAGE value="Update TagName.cs to make Depth and Member use regex patterns instead of member iteration to be more efficient. Removed Regex.Compiled as is slows down construction of objects for minimal performance gain." />
@@ -776,7 +779,8 @@
     <MESSAGE value="explicitly set Task using alias in global using file to attempt to change L5Sharp to single namespace." />
     <MESSAGE value="Merged library into single namespace L5Sharp.Core so that going forward reorganizations won't cause breaking changes. Incrementing to v.0.17" />
     <MESSAGE value="removed old content" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed old content" />
+    <MESSAGE value="Renamed WatchTag Scope to ScopeName to avoid conflicting property names." />
+    <option name="LAST_COMMIT_MESSAGE" value="Renamed WatchTag Scope to ScopeName to avoid conflicting property names." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

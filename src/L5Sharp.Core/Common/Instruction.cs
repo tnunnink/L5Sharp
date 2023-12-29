@@ -103,7 +103,7 @@ public sealed class Instruction
     /// The collection of operand names found in the signature of the instruction.
     /// </summary>
     /// 
-    public IEnumerable<string> Operadns
+    public IEnumerable<string> Operands
     {
         get
         {
@@ -143,7 +143,7 @@ public sealed class Instruction
     /// <summary>
     /// Indicates whether the instruction argument cound matches the operand count.
     /// </summary>
-    public bool IsValid => Key is nameof(JSR) or nameof(SBR) or nameof(RET) || Operadns.Count() == Arguments.Count();
+    public bool IsValid => Key is nameof(JSR) or nameof(SBR) or nameof(RET) || Operands.Count() == Arguments.Count();
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided key and optional arguments.
@@ -207,7 +207,7 @@ public sealed class Instruction
     /// <returns>A <see cref="Argument"/> representing the value passed </returns>
     public Argument? GetArgument(string operand)
     {
-        var index = Operadns.ToList().IndexOf(operand);
+        var index = Operands.ToList().IndexOf(operand);
         return index >= 0 ? Arguments.ElementAt(index) : default;
     }
     
