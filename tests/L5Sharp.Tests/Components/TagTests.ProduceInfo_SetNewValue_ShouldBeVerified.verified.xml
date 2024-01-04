@@ -1,0 +1,6 @@
+﻿<Tag Name="Test" TagType="Produced" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal">
+  <Data Format="Decorated">
+    <DataValue DataType="DINT" Radix="Decimal" Value="123" />
+  </Data>
+  <ProduceInfo ProduceCount="2" ProgrammaticallySendEventTrigger="true" UnicastPermitted="true" MinimumRPI="0.33" MaximumRPI="12345.11" DefaultRPI="100" />
+</Tag>

@@ -286,6 +286,12 @@
       <None Update="L5XBasicTests.Add_ValidComponent_ShouldBeVerified.verified.xml">
         <DependentUpon>L5XBasicTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.ProduceInfo_SetNewValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.ConsumeInfo_SetNewValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

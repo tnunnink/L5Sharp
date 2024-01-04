@@ -846,4 +846,47 @@ public class TagTests
         result.Value.Should().BeOfType<REAL>();
         result.Value.Should().Be(2.3f);
     }
+
+    #region ProduceConsumeTests
+
+    [Test]
+    public Task ProduceInfo_SetNewValue_ShouldBeVerified()
+    {
+        var tag = new Tag { Name = "Test", Value = 123, TagType = TagType.Produced };
+
+        tag.ProduceInfo = new ProduceInfo
+        {
+            ProduceCount = 2,
+            ProgrammaticallySendEventTrigger = true,
+            UnicastPermitted = true,
+            MinimumRPI = 0.33,
+            MaximumRPI = 12345.11,
+            DefaultRPI = 100
+        };
+
+        var xml = tag.Serialize().ToString();
+
+        return VerifyXml(xml);
+    }
+    
+    [Test]
+    public Task ConsumeInfo_SetNewValue_ShouldBeVerified()
+    {
+        var tag = new Tag { Name = "Test", Value = 123, TagType = TagType.Consumed };
+
+        tag.ConsumeInfo = new ConsumeInfo
+        {
+            Producer = "SomeController",
+            RemoteTag = "SomeTag.Name.Value.1",
+            RemoteInstance = 0,
+            Unicast = true,
+            RPI = 100.12
+        };
+
+        var xml = tag.Serialize().ToString();
+
+        return VerifyXml(xml);
+    }
+
+    #endregion
 }

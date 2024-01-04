@@ -212,6 +212,34 @@ public class Tag : LogixComponent
         get => GetValue<bool?>();
         set => SetValue(value);
     }
+    
+    /// <summary>
+    /// The <see cref="Core.ProduceInfo"/> defining the configuration for a produced tag.
+    /// </summary>
+    /// <value>An instance of the <see cref="Core.ProduceInfo"/> sub element containing produced tag configuration.</value>
+    /// <remarks>
+    /// If a tag contains configuration for <see cref="ProduceInfo"/> make sure to set the <see cref="TagType"/>
+    /// property accordingly.
+    /// </remarks>
+    public ProduceInfo? ProduceInfo
+    {
+        get => GetComplex<ProduceInfo>();
+        set => SetComplex(value);
+    }
+    
+    /// <summary>
+    /// The <see cref="Core.ConsumeInfo"/> defining the configuration for a consumed tag.
+    /// </summary>
+    /// <value>An instance of the <see cref="Core.ConsumeInfo"/> sub element containing consumed tag configuration.</value>
+    /// <remarks>
+    /// If a tag contains configuration for <see cref="ConsumeInfo"/> make sure to set the <see cref="TagType"/>
+    /// property accordingly.
+    /// </remarks>
+    public ConsumeInfo? ConsumeInfo
+    {
+        get => GetComplex<ConsumeInfo>();
+        set => SetComplex(value);
+    }
 
     /// <summary>
     /// The configured unit value of the tag.
