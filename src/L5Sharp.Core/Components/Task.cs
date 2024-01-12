@@ -160,7 +160,8 @@ public class Task : LogixComponent
     /// The collection of program names that are scheduled to the task.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
-    /// <remarks>This member just returns the read only list of scheduled programs. To modify the list, use </remarks>
+    /// <remarks>This member just returns the read only list of scheduled programs. To modify the list, use
+    /// the methods <see cref="Schedule"/> or <see cref="Cancel"/>.</remarks>
     public IEnumerable<string> Scheduled =>
         Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
 

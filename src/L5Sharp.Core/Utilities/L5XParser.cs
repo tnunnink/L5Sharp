@@ -98,6 +98,22 @@ public static class L5XParser
     }
 
     /// <summary>
+    /// Parses the provided string input to the specified type using the predefined L5X parser functions.
+    /// </summary>
+    /// <param name="input">The string input to parse.</param>
+    /// <param name="type">The type to parse the input to.</param>
+    /// <returns>The resulting parsed object value.</returns>
+    /// <exception cref="InvalidOperationException">When a parser was not found to the specified type.</exception>
+    public static object Parse(this string input, Type type)
+    {
+        var parser = GetParser(type);
+
+        var value = parser(input);
+
+        return value;
+    }
+
+    /// <summary>
     /// Gets a parser function for the specified type.
     /// </summary>
     /// <remarks>
