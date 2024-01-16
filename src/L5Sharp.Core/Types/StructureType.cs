@@ -304,7 +304,7 @@ public abstract class StructureType : LogixType
     /// </summary>
     /// <param name="sender">The object that initiated the data change event.</param>
     /// <param name="e">The event arguments of the data changed event.</param>
-    protected virtual void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
+    protected virtual void OnMemberDataChanged(object? sender, EventArgs e) => RaiseDataChanged(sender);
 
     /// <summary>
     /// Remove old event handler and attach new to ensure no memory leak.

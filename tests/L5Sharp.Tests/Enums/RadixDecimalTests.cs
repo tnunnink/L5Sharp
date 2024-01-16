@@ -17,19 +17,19 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Format(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Decimal.FormatValue(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Format(new REAL())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Decimal.FormatValue(new REAL())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Decimal.Format(new BOOL());
+            var result = Radix.Decimal.FormatValue(new BOOL());
 
             result.Should().Be("0");
         }
@@ -37,7 +37,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Decimal.Format(new BOOL(true));
+            var result = Radix.Decimal.FormatValue(new BOOL(true));
 
             result.Should().Be("1");
         }
@@ -45,7 +45,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_ValidSint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new SINT(20));
+            var result = Radix.Decimal.FormatValue(new SINT(20));
 
             result.Should().Be("20");
         }
@@ -53,7 +53,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_ValidInt_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new INT(20));
+            var result = Radix.Decimal.FormatValue(new INT(20));
 
             result.Should().Be("20");
         }
@@ -61,7 +61,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_ValidDint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new DINT(20));
+            var result = Radix.Decimal.FormatValue(new DINT(20));
 
             result.Should().Be("20");
         }
@@ -69,7 +69,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_ValidLint_ShouldBeExpectedFormat()
         {
-            var result = Radix.Decimal.Format(new LINT(20));
+            var result = Radix.Decimal.FormatValue(new LINT(20));
 
             result.Should().Be("20");
         }
@@ -77,20 +77,20 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Parse(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Decimal.ParseValue(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Parse_Invalid_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Parse("null")).Should().Throw<FormatException>()
+            FluentActions.Invoking(() => Radix.Decimal.ParseValue("null")).Should().Throw<FormatException>()
                 .WithMessage("Input 'null' does not have expected Decimal format.");
         }
 
         [Test]
         public void Parse_InvalidLength_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.Parse("92233720368547758070"))
+            FluentActions.Invoking(() => Radix.Decimal.ParseValue("92233720368547758070"))
                 .Should().Throw<ArgumentOutOfRangeException>()
                 .WithMessage("Input '92233720368547758070' is out of range for the Decimal Radix. (Parameter 'Input')");
         }
@@ -98,7 +98,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_sbyte_ShouldBeExpected()
         {
-            var atomic = (SINT)Radix.Decimal.Parse(sbyte.MaxValue.ToString());
+            var atomic = (SINT)Radix.Decimal.ParseValue(sbyte.MaxValue.ToString());
 
             atomic.Should().Be(new SINT(sbyte.MaxValue));
         }
@@ -106,7 +106,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_byte_ShouldBeExpected()
         {
-            var atomic = (USINT)Radix.Decimal.Parse(byte.MaxValue.ToString());
+            var atomic = (USINT)Radix.Decimal.ParseValue(byte.MaxValue.ToString());
 
             atomic.Should().Be(new USINT(byte.MaxValue));
         }
@@ -114,7 +114,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_short_ShouldBeExpected()
         {
-            var atomic = (INT)Radix.Decimal.Parse(short.MaxValue.ToString());
+            var atomic = (INT)Radix.Decimal.ParseValue(short.MaxValue.ToString());
 
             atomic.Should().Be(new INT(short.MaxValue));
         }
@@ -122,7 +122,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_ushort_ShouldBeExpected()
         {
-            var atomic = (UINT)Radix.Decimal.Parse(ushort.MaxValue.ToString());
+            var atomic = (UINT)Radix.Decimal.ParseValue(ushort.MaxValue.ToString());
 
             atomic.Should().Be(new UINT(ushort.MaxValue));
         }
@@ -130,7 +130,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_int_ShouldBeExpected()
         {
-            var atomic = (DINT)Radix.Decimal.Parse(int.MaxValue.ToString());
+            var atomic = (DINT)Radix.Decimal.ParseValue(int.MaxValue.ToString());
 
             atomic.Should().Be(int.MaxValue);
         }
@@ -138,7 +138,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_uint_ShouldBeExpected()
         {
-            var atomic = (UDINT)Radix.Decimal.Parse(uint.MaxValue.ToString());
+            var atomic = (UDINT)Radix.Decimal.ParseValue(uint.MaxValue.ToString());
 
             atomic.Should().Be(uint.MaxValue);
         }
@@ -146,7 +146,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_long_ShouldBeExpected()
         {
-            var atomic = (LINT)Radix.Decimal.Parse(long.MaxValue.ToString());
+            var atomic = (LINT)Radix.Decimal.ParseValue(long.MaxValue.ToString());
 
             atomic.Should().Be(long.MaxValue);
         }
@@ -154,7 +154,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_ulong_ShouldBeExpected()
         {
-            var atomic = (ULINT)Radix.Decimal.Parse(ulong.MaxValue.ToString());
+            var atomic = (ULINT)Radix.Decimal.ParseValue(ulong.MaxValue.ToString());
 
             atomic.Should().Be(ulong.MaxValue);
         }

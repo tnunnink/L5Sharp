@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>LINT</b> Logix atomic data type, or a type analogous to a <see cref="long"/>.
 /// </summary>
-public sealed class LINT : AtomicType, IComparable, IConvertible
+public sealed class LINT : AtomicType, IComparable, IConvertible, ILogixParsable<LINT>
 {
     private readonly long _value;
 
@@ -103,19 +103,40 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
     public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
-    /// Parses the provided string value to a new <see cref="LINT"/>.
+    /// Parses a string into a <see cref="LINT"/> value.
     /// </summary>
-    /// <param name="value">The string value to parse.</param>
+    /// <param name="value">The string to parse.</param>
     /// <returns>A <see cref="LINT"/> representing the parsed value.</returns>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public static LINT Parse(string value)
+    public new static LINT Parse(string value)
     {
         if (long.TryParse(value, out var result))
             return new LINT(result);
 
         var radix = Radix.Infer(value);
-        var atomic = radix.Parse(value);
+        var atomic = radix.ParseValue(value);
         var converted = (long)Convert.ChangeType(atomic, typeof(long));
+        return new LINT(converted, radix);
+    }
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="LINT"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The parsed <see cref="LINT"/> value if successful; Otherwise, <c>null</c>.</returns>
+    public new static LINT? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return default;
+
+        if (long.TryParse(value, out var primitive))
+            return new LINT(primitive);
+
+        if (!Radix.TryInfer(value, out var radix))
+            return default;
+
+        var parsed = radix.ParseValue(value);
+        var converted = (long)Convert.ChangeType(parsed, typeof(long));
         return new LINT(converted, radix);
     }
     
@@ -132,9 +153,9 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
     /// member (Tag, DataValue, DataValueMember) so that it can replace it's data type with the new atomic value. This is
     /// captured in <see cref="LogixMember"/>.
     /// </remarks>
-    protected override void OnMemberDataChanged(object sender, EventArgs e)
+    protected override void OnMemberDataChanged(object? sender, EventArgs e)
     {
-        var member = (LogixMember)sender;
+        if (sender is not LogixMember member) return;
         var bit = int.Parse(member.Name);
         var value = member.DataType.As<BOOL>();
         var result = value ? _value | (long)1 << bit : _value & ~(1 << bit);
@@ -185,16 +206,16 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider provider) => _value != 0;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value != 0;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider provider) => (byte)_value;
+    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)_value;
 
     /// <inheritdoc />
-    char IConvertible.ToChar(IFormatProvider provider) => (char)_value;
+    char IConvertible.ToChar(IFormatProvider? provider) => (char)_value;
 
     /// <inheritdoc />
-    DateTime IConvertible.ToDateTime(IFormatProvider provider)
+    DateTime IConvertible.ToDateTime(IFormatProvider? provider)
     {
         var milliseconds = _value / 1000;
         var microseconds = _value % 1000;
@@ -203,32 +224,32 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
     }
 
     /// <inheritdoc />
-    decimal IConvertible.ToDecimal(IFormatProvider provider) =>
+    decimal IConvertible.ToDecimal(IFormatProvider? provider) =>
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider provider) => _value;
+    double IConvertible.ToDouble(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider provider) => (short)_value;
+    short IConvertible.ToInt16(IFormatProvider? provider) => (short)_value;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider provider) => (int)_value;
+    int IConvertible.ToInt32(IFormatProvider? provider) => (int)_value;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider provider) => _value;
+    long IConvertible.ToInt64(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider provider) => (sbyte)_value;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)_value;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider provider) => _value;
+    float IConvertible.ToSingle(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    string IConvertible.ToString(IFormatProvider provider) => ToString();
+    string IConvertible.ToString(IFormatProvider? provider) => ToString();
 
     /// <inheritdoc />
-    object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+    object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
     {
         var convertible = (IConvertible)this;
 
@@ -258,13 +279,13 @@ public sealed class LINT : AtomicType, IComparable, IConvertible
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider provider) => (ushort)_value;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)_value;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider provider) => (uint)_value;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)_value;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider provider) => (ulong)_value;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)_value;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.

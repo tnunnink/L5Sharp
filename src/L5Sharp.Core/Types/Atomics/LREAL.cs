@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>LREAL</b> Logix atomic data type, or a type analogous to a <see cref="double"/>.
 /// </summary>
-public sealed class LREAL : AtomicType, IComparable, IConvertible
+public sealed class LREAL : AtomicType, IComparable, IConvertible, ILogixParsable<LREAL>
 {
     private readonly double _value;
 
@@ -96,23 +96,46 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
 
     /// <inheritdoc />
     public override int GetHashCode() => _value.GetHashCode();
-
+    
     /// <summary>
-    /// Parses the provided string value to a new <see cref="LREAL"/>.
+    /// Parses a string into a <see cref="LREAL"/> value.
     /// </summary>
-    /// <param name="value">The string value to parse.</param>
+    /// <param name="value">The string to parse.</param>
     /// <returns>A <see cref="LREAL"/> representing the parsed value.</returns>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public static LREAL Parse(string value)
+    public new static LREAL Parse(string value)
     {
-        if (value.Contains("QNAN")) return new LREAL(float.NaN);
-
+        if (value.Contains("QNAN")) return new LREAL(double.NaN);
+        
         if (double.TryParse(value, out var result))
             return new LREAL(result);
 
         var radix = Radix.Infer(value);
-        var atomic = radix.Parse(value);
+        var atomic = radix.ParseValue(value);
         var converted = (double)Convert.ChangeType(atomic, typeof(double));
+        return new LREAL(converted, radix);
+    }
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="LREAL"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The parsed <see cref="LREAL"/> value if successful; Otherwise, <c>null</c>.</returns>
+    public new static LREAL? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return default;
+        
+        if (value.Contains("QNAN")) return new LREAL(double.NaN);
+
+        if (double.TryParse(value, out var primitive))
+            return new LREAL(primitive);
+
+        if (!Radix.TryInfer(value, out var radix))
+            return default;
+
+        var parsed = radix.ParseValue(value);
+        var converted = (double)Convert.ChangeType(parsed, typeof(double));
         return new LREAL(converted, radix);
     }
     
@@ -160,46 +183,46 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider provider) => _value != 0;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value != 0;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider provider) => (byte)_value;
+    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)_value;
 
     /// <inheritdoc />
-    char IConvertible.ToChar(IFormatProvider provider) =>  
+    char IConvertible.ToChar(IFormatProvider? provider) =>  
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Char)} is not supported.");
 
     /// <inheritdoc />
-    DateTime IConvertible.ToDateTime(IFormatProvider provider) =>
+    DateTime IConvertible.ToDateTime(IFormatProvider? provider) =>
         throw new InvalidCastException($"Conversion from {Name} to {nameof(DateTime)} is not supported.");
 
     /// <inheritdoc />
-    decimal IConvertible.ToDecimal(IFormatProvider provider) =>
+    decimal IConvertible.ToDecimal(IFormatProvider? provider) =>
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider provider) => _value;
+    double IConvertible.ToDouble(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider provider) => (short)_value;
+    short IConvertible.ToInt16(IFormatProvider? provider) => (short)_value;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider provider) => (int)_value;
+    int IConvertible.ToInt32(IFormatProvider? provider) => (int)_value;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider provider) => (long)_value;
+    long IConvertible.ToInt64(IFormatProvider? provider) => (long)_value;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider provider) => (sbyte)_value;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)_value;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider provider) => (float)_value;
+    float IConvertible.ToSingle(IFormatProvider? provider) => (float)_value;
 
     /// <inheritdoc />
-    string IConvertible.ToString(IFormatProvider provider) => ToString();
+    string IConvertible.ToString(IFormatProvider? provider) => ToString();
 
     /// <inheritdoc />
-    object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+    object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
     {
         var convertible = (IConvertible)this;
 
@@ -229,13 +252,13 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider provider) => (ushort)_value;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)_value;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider provider) => (uint)_value;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)_value;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider provider) => (ulong)_value;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)_value;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.

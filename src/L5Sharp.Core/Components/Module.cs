@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 
 namespace L5Sharp.Core;
 
@@ -29,11 +30,13 @@ public class Module : LogixComponent
         MajorFault = default;
         SafetyEnabled = default;
         Keying = ElectronicKeying.CompatibleModule;
-        Ports = new LogixContainer<Port>();
+        Ports = [];
         Communications = new Communications();
     }
 
+    
     /// <inheritdoc />
+    [UsedImplicitly]
     public Module(XElement element) : base(element)
     {
     }
@@ -228,7 +231,7 @@ public class Module : LogixComponent
     /// This property is not directly part of the L5X structure, but is a helper to make accessing the slot number simple.
     /// This property looks for an upstream <see cref="Port"/> with a valid slot byte number.
     /// </remarks>
-    public byte? Slot => Ports.FirstOrDefault(p => p.Upstream && p.Address.IsSlot)?.Address.ToSlot();
+    public byte? Slot => Ports.FirstOrDefault(p => p is { Upstream: true, Address.IsSlot: true })?.Address.ToSlot();
 
     /// <summary>
     /// Gets the IP address of the current module if one exists. If the module does not have an IP, returns null.
@@ -346,9 +349,9 @@ public class Module : LogixComponent
             throw new InvalidOperationException(
                 $"The module '{Name}' does not have a port for downstream module connections.");
 
-        if (parentPort.Type == "Ethernet" && address is null) address = Address.DefaultIP();
+        if (parentPort.Type == "Ethernet" && address is null) address = Address.IP();
         if (parentPort.Address.IsSlot && IsAttached && address is null) address = NextSlot();
-        address ??= Address.DefaultSlot();
+        address ??= Address.Slot();
 
         var childPort = new Port {Id = 1, Type = parentPort.Type, Address = address, Upstream = true};
 
@@ -394,7 +397,7 @@ public class Module : LogixComponent
                 {
                     Id = p.Number,
                     Type = p.Type,
-                    Address = p.Type == "Ethernet" ? Address.DefaultIP() : Address.DefaultSlot(),
+                    Address = p.Type == "Ethernet" ? Address.IP() : Address.Slot(),
                     Upstream = !p.DownstreamOnly
                 }).ToList()),
             Description = entry.Description
@@ -417,7 +420,7 @@ public class Module : LogixComponent
             .OrderByDescending(b => b)
             .FirstOrDefault();
 
-        return next.HasValue ? Address.Slot(next.Value) : Address.DefaultSlot();
+        return next.HasValue ? Address.Slot(next.Value) : Address.Slot();
     }
 
     #endregion

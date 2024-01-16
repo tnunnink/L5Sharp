@@ -31,8 +31,8 @@ public static class LogixData
     /// delegate functions. This is what we are using to create strongly typed logix type objects at runtime.
     /// </summary>
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixType>>> Deserializers = new(() =>
-            AppDomain.CurrentDomain.GetAssemblies().Distinct().SelectMany(Introspect)
-                .ToDictionary(k => k.Key, k => k.Value), LazyThreadSafetyMode.ExecutionAndPublication);
+        AppDomain.CurrentDomain.GetAssemblies().Distinct().SelectMany(Introspect)
+            .ToDictionary(k => k.Key, k => k.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
     /// Returns the singleton null <see cref="LogixType"/> object.
@@ -134,7 +134,7 @@ public static class LogixData
     /// </summary>
     private static LogixType DeserializeFormatted(XElement element)
     {
-        DataFormat.TryFromName(element.Attribute(L5XName.Format)?.Value, out var format);
+        var format = element.Attribute(L5XName.Format)?.Value.TryParse<DataFormat>();
         if (format is null) return Null;
         if (format == DataFormat.String) return DeserializeString(element);
         return element.FirstNode is XElement root ? Deserialize(root) : Null;
@@ -142,7 +142,7 @@ public static class LogixData
 
     /// <summary>
     /// Handles deserializing an element to a atomic value type logix type.
-    /// This method will call upon <see cref="Atomic"/> to generate the known concrete atomic type we need.
+    /// This method will call upon <see cref="AtomicType"/> to generate the known concrete atomic type we need.
     /// This implementation ignores any specified Radix because we have found cases where the Radix does not match
     /// the actual format of the value, therefore, we always infer the format, and then parse.
     /// </summary>
@@ -150,7 +150,7 @@ public static class LogixData
     {
         var dataType = element.Get(L5XName.DataType);
         var value = element.Get(L5XName.Value);
-        return Atomic.Parse(dataType, value);
+        return AtomicType.Parse(dataType, value);
     }
 
     /// <summary>
@@ -166,12 +166,15 @@ public static class LogixData
             : typeof(ComplexType);
 
         var arrayType = typeof(ArrayType<>).MakeGenericType(type);
+        var arrayName = arrayType.FullName ??
+                        throw new InvalidOperationException(
+                            $"Could not determine the full name for array of type {arrayType}.");
 
-        if (Deserializers.Value.TryGetValue(arrayType.FullName, out var cached))
+        if (Deserializers.Value.TryGetValue(arrayName, out var cached))
             return cached.Invoke(element);
 
         var deserializer = arrayType.Deserializer<LogixType>();
-        Deserializers.Value.Add(arrayType.FullName, deserializer);
+        Deserializers.Value.Add(arrayName, deserializer);
         return deserializer.Invoke(element);
     }
 
@@ -185,7 +188,7 @@ public static class LogixData
         var value = element.Attribute(L5XName.Value);
         var structure = element.Element(L5XName.Structure);
 
-        return value is not null ? Atomic.Parse(dataType, value.Value)
+        return value is not null ? AtomicType.Parse(dataType, value.Value)
             : structure is not null ? DeserializeStructure(structure)
             : throw element.L5XError(L5XName.Element);
     }
@@ -220,14 +223,15 @@ public static class LogixData
     /// or string type. String structure is unique in that it will have a data value member called DATA with a ASCII
     /// radix, a non-null element value, and a data type attribute value equal to that of the parent structure element attribute.
     /// </summary>
-    private static bool HasStringStructure(XElement element)
+    private static bool HasStringStructure(XElement? element)
     {
+        if (element is null) return false;
+
         //If this is a structure or structure member it could potentially be the string structure.
         if (element.Name == L5XName.Structure || element.Name == L5XName.StructureMember)
         {
             return element.Elements(L5XName.DataValueMember).Any(e =>
-                e?.Value is not null
-                && e.Attribute(L5XName.Name)?.Value == "DATA"
+                e.Attribute(L5XName.Name)?.Value == "DATA"
                 && e.Attribute(L5XName.DataType)?.Value == e.Parent?.Attribute(L5XName.DataType)?.Value
                 && e.Attribute(L5XName.Radix)?.Value == "ASCII");
         }
@@ -253,8 +257,8 @@ public static class LogixData
         var types = assembly.GetTypes().Where(t =>
             (typeof(StructureType).IsAssignableFrom(t) || typeof(StringType).IsAssignableFrom(t))
             && t != typeof(ComplexType) && t != typeof(StringType)
-            && t is {IsAbstract: false, IsPublic: true}
-            && t.GetConstructor(new[] {typeof(XElement)}) is not null);
+            && t is { IsAbstract: false, IsPublic: true }
+            && t.GetConstructor(new[] { typeof(XElement) }) is not null);
 
         foreach (var type in types)
         {
@@ -271,7 +275,7 @@ public static class LogixData
     {
         return assembly.GetTypes().Where(t =>
             typeof(LogixType).IsAssignableFrom(t)
-            && t is {IsAbstract: false, IsPublic: true}
+            && t is { IsAbstract: false, IsPublic: true }
             && t != typeof(ComplexType) && t != typeof(StringType)
             && t != typeof(ArrayType) && t != typeof(ArrayType<>)
             && t != typeof(NullType));

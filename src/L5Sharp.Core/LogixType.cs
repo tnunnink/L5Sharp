@@ -108,7 +108,7 @@ public abstract class LogixType : ILogixSerializable
     /// </summary>
     /// <param name="sender">The objet initiating the data changed event. This could be this object, or a descendent
     /// member or type in the data hierarchy.</param>
-    protected void RaiseDataChanged(object sender) => DataChanged?.Invoke(sender, EventArgs.Empty);
+    protected void RaiseDataChanged(object? sender) => DataChanged?.Invoke(sender, EventArgs.Empty);
 
     /// <inheritdoc />
     public override string ToString() => Name;

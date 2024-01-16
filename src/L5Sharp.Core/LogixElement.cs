@@ -349,6 +349,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected T? GetValue<T>([CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var value = Element.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
@@ -372,6 +375,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected T? GetValue<T>(Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var value = selector.Invoke(Element)?.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
@@ -394,6 +400,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected T? GetValue<T>(XName child, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var value = Element.Element(child)?.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
@@ -412,8 +421,11 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected T GetRequiredValue<T>([CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var value = Element.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : throw Element.L5XError(name!);
+        return value is not null ? value.Parse<T>() : throw Element.L5XError(name);
     }
 
     /// <summary>
@@ -433,6 +445,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected T? GetProperty<T>([CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var value = Element.Element(name)?.Value;
         return value is not null ? value.Parse<T>() : default;
     }
@@ -454,6 +469,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected T? GetComplex<T>([CallerMemberName] string? name = null) where T : LogixElement
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         return Element.Element(name)?.Deserialize<T>();
     }
 
@@ -473,6 +491,9 @@ public abstract class LogixElement : ILogixSerializable
     protected LogixContainer<TChild> GetContainer<TChild>([CallerMemberName] string? name = null)
         where TChild : LogixElement
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var container = Element.Element(name);
         if (container is null) throw Element.L5XError(name);
         return new LogixContainer<TChild>(container);
@@ -512,6 +533,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected DateTime? GetDateTime(string? format = null, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         format ??= "ddd MMM d HH:mm:ss yyyy";
 
         var attribute = Element.Attribute(name);
@@ -535,6 +559,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetValue<T>(T? value, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         Element.SetAttributeValue(name, value);
     }
 
@@ -557,8 +584,11 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetValue<T>(T? value, Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var element = selector.Invoke(Element);
-        if (element is null) throw Element.L5XError(name!);
+        if (element is null) throw Element.L5XError(name);
         element.SetAttributeValue(name, value);
     }
 
@@ -579,6 +609,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetValue<T>(T? value, XName child, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         if (value is null)
         {
             Element.Element(child)?.Attribute(name)?.Remove();
@@ -610,6 +643,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetRequiredValue<T>(T value, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         if (value is null)
             throw new ArgumentNullException(nameof(value), $"Property {name} can not be null.");
 
@@ -631,21 +667,26 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetProperty<T>(T value, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var element = Element.Element(name);
-        
+
         if (value is null)
         {
             element?.Remove();
             return;
         }
-        
+
+        var property = value.ToString() ?? throw new ArgumentException("Property value can not be null", nameof(value));
+
         if (element is null)
         {
-            Element.Add(new XElement(name, new XCData(value.ToString())));
+            Element.Add(new XElement(name, new XCData(property)));
             return;
         }
 
-        element.ReplaceWith(new XElement(name, new XCData(value.ToString())));
+        element.ReplaceWith(new XElement(name, new XCData(property)));
     }
 
     /// <summary>
@@ -663,6 +704,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetComplex<T>(T? value, [CallerMemberName] string? name = null) where T : ILogixSerializable
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var element = Element.Element(name);
 
         if (value is null)
@@ -695,14 +739,17 @@ public abstract class LogixElement : ILogixSerializable
     protected void SetContainer<TChild>(LogixContainer<TChild>? value, [CallerMemberName] string? name = null)
         where TChild : LogixElement
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var element = Element.Element(name);
-        
+
         if (value is null)
         {
             element?.Remove();
             return;
         }
-        
+
         if (element is null)
         {
             Element.Add(value.Serialize());
@@ -725,6 +772,9 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected void SetDateTime(DateTime? value, string? format = null, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         if (value is null)
         {
             Element.Attribute(name)?.Remove();

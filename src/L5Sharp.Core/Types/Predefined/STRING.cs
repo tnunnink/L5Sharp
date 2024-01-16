@@ -6,7 +6,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a predefined String Logix data type.
 /// </summary>
-public sealed class STRING : StringType
+public sealed class STRING : StringType, ILogixParsable<STRING>
 {
     //This is the built in length of string types in Logix
     private const int PredefinedLength = 82;
@@ -37,6 +37,21 @@ public sealed class STRING : StringType
 
     /// <inheritdoc />
     public override DataTypeClass Class => DataTypeClass.Predefined;
+
+    /// <summary>
+    /// Parses the provided string into a <see cref="STRING"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="STRING"/> representing the parsed value.</returns>
+    public static STRING Parse(string value) => new(value);
+
+    /// <summary>
+    /// Tries to parse the provided string into a <see cref="STRING"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="STRING"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
+    public static STRING? TryParse(string? value) =>
+        value is not null && value.Length <= PredefinedLength ? new STRING(value) : null;
 
     /// <summary>
     /// Converts the provided <see cref="string"/> to a <see cref="STRING"/> value.

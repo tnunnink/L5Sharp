@@ -19,7 +19,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new SINT(20));
+            var result = radix.FormatValue(new SINT(20));
 
             result.Should().Be("'$14'");
         }
@@ -27,7 +27,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_Ascii_ShouldBeExpected()
         {
-            var ascii = Radix.Ascii.Format(new DINT(123456));
+            var ascii = Radix.Ascii.FormatValue(new DINT(123456));
 
             ascii.Should().Be("'$00$01$E2@'");
         }
@@ -37,7 +37,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new INT(20));
+            var result = radix.FormatValue(new INT(20));
 
             result.Should().Be("'$00$14'");
         }
@@ -47,7 +47,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new DINT(20));
+            var result = radix.FormatValue(new DINT(20));
 
             result.Should().Be("'$00$00$00$14'");
         }
@@ -57,7 +57,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.Ascii;
 
-            var result = radix.Format(new LINT(20));
+            var result = radix.FormatValue(new LINT(20));
 
             result.Should().Be("'$00$00$00$00$00$00$00$14'");
         }
@@ -69,7 +69,7 @@ namespace L5Sharp.Tests.Enums
             {
                 var value = new SINT(i);
 
-                var formatted = Radix.Ascii.Format(value);
+                var formatted = Radix.Ascii.FormatValue(value);
                 var expected = Convert.ToChar(i).ToString();
 
                 formatted.Should().Be($"'{expected}'");
@@ -84,7 +84,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Ascii.Parse(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Ascii.ParseValue(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -92,27 +92,27 @@ namespace L5Sharp.Tests.Enums
         {
             const string invalid = "00@";
 
-            FluentActions.Invoking(() => Radix.Ascii.Parse(invalid)).Should().Throw<FormatException>()
+            FluentActions.Invoking(() => Radix.Ascii.ParseValue(invalid)).Should().Throw<FormatException>()
                 .WithMessage($"Input '{invalid}' does not have expected Ascii format.");
         }
 
         [Test]
         public void Parse_LengthZero_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Ascii.Parse("''")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Ascii.ParseValue("''")).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Parse_LengthTooLarge_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Ascii.Parse("'$00$00$00$00$00$00$00$00$00'")).Should()
+            FluentActions.Invoking(() => Radix.Ascii.ParseValue("'$00$00$00$00$00$00$00$00$00'")).Should()
                 .Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
         public void Parse_Tab_ShouldBeExpected()
         {
-            var atomic = Radix.Ascii.Parse("'$t'");
+            var atomic = Radix.Ascii.ParseValue("'$t'");
 
             atomic.Should().Be(9);
         }
@@ -120,7 +120,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_LineFeed_ShouldBeExpected()
         {
-            var atomic = Radix.Ascii.Parse("'$l'");
+            var atomic = Radix.Ascii.ParseValue("'$l'");
 
             atomic.Should().Be(10);
         }
@@ -128,7 +128,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_FormFeed_ShouldBeExpected()
         {
-            var atomic = Radix.Ascii.Parse("'$p'");
+            var atomic = Radix.Ascii.ParseValue("'$p'");
 
             atomic.Should().Be(12);
         }
@@ -136,7 +136,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Return_ShouldBeExpected()
         {
-            var atomic = Radix.Ascii.Parse("'$r'");
+            var atomic = Radix.Ascii.ParseValue("'$r'");
 
             atomic.Should().Be(13);
         }
@@ -144,7 +144,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_DollarSign_ShouldBeExpected()
         {
-            var atomic = Radix.Ascii.Parse("'$$'");
+            var atomic = Radix.Ascii.ParseValue("'$$'");
 
             atomic.Should().Be(36);
         }
@@ -152,7 +152,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_SingleQuote_ShouldBeExpected()
         {
-            var atomic = Radix.Ascii.Parse("'$''");
+            var atomic = Radix.Ascii.ParseValue("'$''");
 
             atomic.Should().Be(39);
         }
@@ -160,7 +160,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_ValidSint_ShouldBeExpected()
         {
-            var value = Radix.Ascii.Parse("'$14'");
+            var value = Radix.Ascii.ParseValue("'$14'");
 
             value.Should().Be(new SINT(20));
         }
@@ -168,7 +168,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_ValidDint_ShouldBeExpected()
         {
-            var value = Radix.Ascii.Parse("'$00$01$E2@'");
+            var value = Radix.Ascii.ParseValue("'$00$01$E2@'");
 
             value.Should().Be(new DINT(123456));
         }
@@ -176,7 +176,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Valid_ShouldBeExpected()
         {
-            var value = Radix.Ascii.Parse("'$12D$F1A'");
+            var value = Radix.Ascii.ParseValue("'$12D$F1A'");
 
             value.Should().Be(new DINT(306508097));
         }

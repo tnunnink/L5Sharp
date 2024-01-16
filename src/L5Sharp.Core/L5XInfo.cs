@@ -79,7 +79,7 @@ public class L5XInfo
     /// Gets the date time that the L5X file was exported.
     /// </summary>
     public DateTime? ExportDate => _element.Attribute(L5XName.ExportDate)?.Value is not null
-        ? DateTime.ParseExact(_element.Attribute(L5XName.ExportDate)?.Value, L5X.DateTimeFormat, null)
+        ? DateTime.ParseExact(_element.Attribute(L5XName.ExportDate)?.Value!, L5X.DateTimeFormat, null)
         : default;
 
     /// <summary>

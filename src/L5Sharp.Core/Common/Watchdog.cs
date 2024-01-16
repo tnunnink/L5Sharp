@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <see cref="ArgumentOutOfRangeException"/>.
 /// This parameter will control how long a task can rung before triggering a major fault.
 /// </remarks>
-public readonly struct Watchdog : IEquatable<Watchdog>
+public readonly struct Watchdog : IEquatable<Watchdog>, ILogixParsable<Watchdog>
 {
     private readonly float _watchdog;
 
@@ -33,9 +33,9 @@ public readonly struct Watchdog : IEquatable<Watchdog>
     }
 
     /// <summary>
-    /// 
+    /// Creates a default 500ms <see cref="Watchdog"/> value.
     /// </summary>
-    /// <returns>A new <c>Watchdog</c> value.</returns>
+    /// <returns>A new <see cref="Watchdog"/> value.</returns>
     public static Watchdog Default() => new(500);
 
     /// <summary>
@@ -53,12 +53,19 @@ public readonly struct Watchdog : IEquatable<Watchdog>
     public static implicit operator Watchdog(float watchdog) => new(watchdog);
 
     /// <summary>
-    /// Parses a string value into a <see cref="Watchdog"/>.
+    /// Parses a string into a <see cref="Watchdog"/> value.
     /// </summary>
-    /// <param name="str">The string to parse.</param>
-    /// <returns>A <see cref="Watchdog"/> value if the parse was successful; otherwise; the default value.</returns>
-    public static Watchdog Parse(string str) =>
-        float.TryParse(str, out var result) ? new Watchdog(result) : default;
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The <see cref="Watchdog"/> representing the parsed value.</returns>
+    public static Watchdog Parse(string value) => float.Parse(value);
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="Watchdog"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="Watchdog"/> representing the parsed value if successful; Otherwise; <c>default</c>.</returns>
+    public static Watchdog TryParse(string? value) =>
+        float.TryParse(value, out var result) ? new Watchdog(result) : default;
 
     /// <inheritdoc />
     public override string ToString() => _watchdog.ToString(CultureInfo.CurrentCulture);

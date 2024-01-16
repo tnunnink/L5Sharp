@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// This value type class make working with string tag name easier by providing
 /// methods fo analyzing and breaking the tag name into constituent parts (members).
 /// </remarks>
-public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
+public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixParsable<TagName>
 {
     private readonly string _tagName;
 
@@ -27,7 +27,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     public const string AnchorPattern =
         @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
-    
+
     /// <summary>
     /// The regex pattern for Logix tag names without starting and ending anchors.
     /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e. instruction keys)
@@ -126,16 +126,30 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     public bool IsQualified => IsQualifiedTagName(_tagName);
 
     /// <summary>
+    /// Gets the static empty <see cref="TagName"/> value.
+    /// </summary>
+    public static TagName Empty => new(string.Empty);
+
+    /// <summary>
+    /// Parses the provided string into a <see cref="TagName"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="TagName"/> representing the parsed value.</returns>
+    public static TagName Parse(string value) => new(value);
+
+    /// <summary>
+    /// Tries to parse the provided string into a <see cref="TagName"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="TagName"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
+    public static TagName? TryParse(string? value) => value is not null ? new TagName(value) : null;
+
+    /// <summary>
     /// Determines if the provided string value is a valid tag name.
     /// </summary>
     /// <param name="value">The <see cref="string"/> to test.</param>
     /// <returns><c>true</c> if the value is a valid qualified tag name; Otherwise, <c>false</c>.</returns>
     public static bool IsTag(string value) => IsQualifiedTagName(value);
-
-    /// <summary>
-    /// Gets the static empty <see cref="TagName"/> value.
-    /// </summary>
-    public static TagName Empty => new(string.Empty);
 
     /// <summary>
     /// Concatenates two strings to produce a new <see cref="TagName"/> value. This method will also insert the '.'
@@ -287,7 +301,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
             return tagName[..tagName.IndexOf(ArrayCloseSeparator)];
         }
 
-        var index = tagName.IndexOfAny(new[] {MemberSeparator, ArrayOpenSeparator});
+        var index = tagName.IndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
         return index > 0 ? tagName[..index] : tagName;
     }
 
@@ -298,7 +312,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     private static string GetMember(string tagName)
     {
-        var index = tagName.LastIndexOfAny(new[] {MemberSeparator, ArrayOpenSeparator});
+        var index = tagName.LastIndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
         var length = tagName.Length - index;
         return index >= 0 ? tagName.Substring(index, length).TrimStart(MemberSeparator) : tagName;
     }
@@ -308,7 +322,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
     /// of tag names this can get called on.
     /// </summary>
-    private static IEnumerable<string> GetMembers(string tagName) => 
+    private static IEnumerable<string> GetMembers(string tagName) =>
         NormalizeDelimiter(tagName).Split(MemberSeparator, StringSplitOptions.RemoveEmptyEntries);
 
     /// <summary>

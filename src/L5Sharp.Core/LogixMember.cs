@@ -270,13 +270,13 @@ public class LogixMember : ILogixSerializable
     /// <summary>
     /// Handles raising the <see cref="DataChanged"/> event for the member.
     /// </summary>
-    private void RaiseDataChanged(object sender) => DataChanged?.Invoke(sender, EventArgs.Empty);
+    private void RaiseDataChanged(object? sender) => DataChanged?.Invoke(sender, EventArgs.Empty);
 
     /// <summary>
     /// Captures nested data type data change event and in turn fires local data changed event.
     /// This routes/bubbles up the event sender to the root of the type/member hierarchy. 
     /// </summary>
-    private void OnDataTypeChanged(object sender, EventArgs e)
+    private void OnDataTypeChanged(object? sender, EventArgs e)
     {
         //If the sender is an atomic type (which is intercepted by atomic types)
         //then we realize this is a value change and need to replace the member type with the new value.

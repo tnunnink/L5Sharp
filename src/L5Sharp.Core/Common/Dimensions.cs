@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// These dimensions are represented by the properties X, Y, and Z.
 /// This class also provides helpful methods and properties for working with dimensions of an array.
 /// </remarks>
-public sealed class Dimensions : IEquatable<Dimensions>
+public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensions>
 {
     private Dimensions()
     {
@@ -191,15 +191,15 @@ public sealed class Dimensions : IEquatable<Dimensions>
     }
 
     /// <summary>
-    /// Parses the provided string to a <see cref="Dimensions"/> object.
+    /// Parses the provided string into a <see cref="Dimensions"/> value.
     /// </summary>
-    /// <param name="value">The value to parse.</param>
+    /// <param name="value">The string to parse.</param>
     /// <returns>
-    /// A new <see cref="Dimensions"/> object that represents parsed dimensional value.
+    /// A <see cref="Dimensions"/> object that represents parsed dimensional value.
     /// If value empty or 0; returns <see cref="Empty"/>.
     /// </returns>
-    /// <exception cref="ArgumentNullException">value is null</exception>
-    /// <exception cref="ArgumentException"> value contains invalid characters.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="value"></paramref> is null.</exception>
+    /// <exception cref="ArgumentException"> <paramref name="value"></paramref> contains invalid characters.</exception>
     /// <remarks>
     /// Valid dimensions must have only numbers and special characters "[ ,]". If more than 3 numbers are
     /// found in the provided value, or the numbers are not parsable to a <see cref="ushort"/>,
@@ -223,47 +223,34 @@ public sealed class Dimensions : IEquatable<Dimensions>
             3 => new Dimensions(numbers[0], numbers[1], numbers[2]),
             2 => new Dimensions(numbers[0], numbers[1]),
             1 => new Dimensions(numbers[0]),
-            _ => throw new ArgumentOutOfRangeException(nameof(numbers.Count),
+            _ => throw new ArgumentOutOfRangeException(nameof(value),
                 $"Value '{value}' has a invalid number of arguments. Expecting between 1 and 3 arguments.")
         };
     }
 
     /// <summary>
-    /// Attempts to parse the provided string to a <see cref="Dimensions"/> object.
+    /// Tries to parse the provided string into a <see cref="Dimensions"/> value.
     /// </summary>
-    /// <param name="value">The value to parse.</param>
-    /// <param name="dimensions">When the method returns, the value of the parsed dimensions if successful;
-    /// otherwise, null</param>
-    /// <returns>true if the parse was successful; otherwise, false.</returns>
-    /// <exception cref="ArgumentNullException">value is null</exception>
-    /// <remarks>
-    /// Valid dimensions must have only numbers and special characters "[ ,]". If more than 3 numbers are
-    /// found in the provided value, or the numbers are not parsable to a <see cref="ushort"/>,
-    /// then exception will be thrown.
-    /// </remarks>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="Dimensions"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
     /// <example>1 2 3 -or- [1,2,3]</example>
     /// <seealso cref="Parse"/>
-    public static bool TryParse(string value, out Dimensions? dimensions)
+    public static Dimensions? TryParse(string? value)
     {
         if (string.IsNullOrEmpty(value))
-        {
-            dimensions = null;
-            return false;
-        }
+            return null;
 
         var numbers = Regex.Matches(value, @"\d+")
             .Select(m => ushort.Parse(m.Value))
             .ToList();
 
-        dimensions = numbers.Count switch
+        return numbers.Count switch
         {
             3 => new Dimensions(numbers[0], numbers[1], numbers[2]),
             2 => new Dimensions(numbers[0], numbers[1]),
             1 => new Dimensions(numbers[0]),
             _ => null
         };
-
-        return dimensions is not null;
     }
 
     /// <summary>

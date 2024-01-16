@@ -8,7 +8,7 @@ namespace L5Sharp.Core;
 /// Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <see cref="bool"/>. This object is meant
 /// to wrap the DataValue or DataValueMember data for the L5X tag data structure.
 /// </summary>
-public sealed class BOOL : AtomicType, IComparable, IConvertible
+public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable<BOOL>
 {
     private readonly bool _value;
 
@@ -30,7 +30,7 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
         _value = value;
         Radix = Radix.Decimal;
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="BOOL"/> with the provided value.
     /// </summary>
@@ -108,12 +108,12 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
     public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
-    /// Parses the provided string value to a new <see cref="BOOL"/>.
+    /// Parses the provided string into a <see cref="BOOL"/> value.
     /// </summary>
-    /// <param name="value">The string value to parse.</param>
+    /// <param name="value">The string to parse.</param>
     /// <returns>A <see cref="BOOL"/> representing the parsed value.</returns>
     /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public static BOOL Parse(string value)
+    public new static BOOL Parse(string value)
     {
         if (bool.TryParse(value, out var result))
             return new BOOL(result);
@@ -126,10 +126,31 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
                 return new BOOL();
             default:
                 var radix = Radix.Infer(value);
-                var atomic = radix.Parse(value);
+                var atomic = radix.ParseValue(value);
                 var converted = (bool)Convert.ChangeType(atomic, typeof(bool));
                 return new BOOL(converted, radix);
         }
+    }
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="BOOL"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The parsed <see cref="BOOL"/> value if successful; Otherwise, <c>null</c>.</returns>
+    public new static BOOL? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return default;
+
+        if (bool.TryParse(value, out var primitive))
+            return new BOOL(primitive);
+
+        if (!Radix.TryInfer(value, out var radix))
+            return default;
+
+        var parsed = radix.ParseValue(value);
+        var converted = (bool)Convert.ChangeType(parsed, typeof(bool));
+        return new BOOL(converted, radix);
     }
 
     // Contains the implicit .NET conversions for the type.
@@ -190,46 +211,46 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider provider) => _value;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider provider) => _value ? (byte)1 : default;
+    byte IConvertible.ToByte(IFormatProvider? provider) => _value ? (byte)1 : default;
 
     /// <inheritdoc />
-    char IConvertible.ToChar(IFormatProvider provider) =>
+    char IConvertible.ToChar(IFormatProvider? provider) =>
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Char)} is not supported.");
 
     /// <inheritdoc />
-    DateTime IConvertible.ToDateTime(IFormatProvider provider) =>
+    DateTime IConvertible.ToDateTime(IFormatProvider? provider) =>
         throw new InvalidCastException($"Conversion from {Name} to {nameof(DateTime)} is not supported.");
 
     /// <inheritdoc />
-    decimal IConvertible.ToDecimal(IFormatProvider provider) =>
+    decimal IConvertible.ToDecimal(IFormatProvider? provider) =>
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider provider) => _value ? (double)1 : default;
+    double IConvertible.ToDouble(IFormatProvider? provider) => _value ? (double)1 : default;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider provider) => _value ? (short)1 : default;
+    short IConvertible.ToInt16(IFormatProvider? provider) => _value ? (short)1 : default;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider provider) => _value ? 1 : default;
+    int IConvertible.ToInt32(IFormatProvider? provider) => _value ? 1 : default;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider provider) => _value ? (long)1 : default;
+    long IConvertible.ToInt64(IFormatProvider? provider) => _value ? (long)1 : default;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider provider) => _value ? (sbyte)1 : default;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => _value ? (sbyte)1 : default;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider provider) => _value ? (float)1 : default;
+    float IConvertible.ToSingle(IFormatProvider? provider) => _value ? (float)1 : default;
 
     /// <inheritdoc />
-    string IConvertible.ToString(IFormatProvider provider) => ToString();
+    string IConvertible.ToString(IFormatProvider? provider) => ToString();
 
     /// <inheritdoc />
-    object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+    object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
     {
         var convertible = (IConvertible)this;
 
@@ -259,13 +280,13 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider provider) => _value ? (ushort)1 : default;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => _value ? (ushort)1 : default;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider provider) => _value ? (uint)1 : default;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => _value ? (uint)1 : default;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider provider) => _value ? (ulong)1 : default;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => _value ? (ulong)1 : default;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.

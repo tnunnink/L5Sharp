@@ -19,13 +19,13 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_WhenCalled_ReturnsNull()
         {
-            FluentActions.Invoking(() => Radix.Null.Format(new DINT())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Null.FormatValue(new DINT())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Parse_WhenCalled_ReturnsNull()
         {
-            FluentActions.Invoking(() => Radix.Null.Parse("Doesn't matter")).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Null.ParseValue("Doesn't matter")).Should().Throw<NotSupportedException>();
         }
     }
 }

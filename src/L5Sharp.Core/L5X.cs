@@ -6,8 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using JetBrains.Annotations;
-using Task = L5Sharp.Core.Task;
-using task = System.Threading.Tasks.Task;
+using TTask = System.Threading.Tasks.Task;
 
 
 namespace L5Sharp.Core;
@@ -144,7 +143,7 @@ public class L5X : ILogixSerializable
     /// Gets the collection of <see cref="Task"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Task"/> components.</value>
-    public LogixContainer<Core.Task> Tasks => new(GetContainer(L5XName.Tasks));
+    public LogixContainer<Task> Tasks => new(GetContainer(L5XName.Tasks));
 
     /// <summary>
     /// The container collection of <see cref="ParameterConnection"/> components found in the L5X file.
@@ -188,7 +187,7 @@ public class L5X : ILogixSerializable
     {
         await using var stream = new FileStream(fileName, FileMode.Open);
         var element = await XElement.LoadAsync(stream, LoadOptions.SetLineInfo, token);
-        var l5X = await task.Run(() => new L5X(element), token);
+        var l5X = await TTask.Run(() => new L5X(element), token);
         return l5X;
     }
 
@@ -517,7 +516,7 @@ public class L5X : ILogixSerializable
     public LogixComponent? Find(ComponentKey key)
     {
         return Index.Components.TryGetValue(key, out var components)
-            ? components.Values.First()?.Deserialize<LogixComponent>()
+            ? components.Values.First().Deserialize<LogixComponent>()
             : default;
     }
 
@@ -583,7 +582,7 @@ public class L5X : ILogixSerializable
         var key = new ComponentKey(typeof(TComponent).L5XType(), name);
 
         return Index.Components.TryGetValue(key, out var components)
-            ? components.Values.First()?.Deserialize<TComponent>()
+            ? components.Values.First().Deserialize<TComponent>()
             : default;
     }
 

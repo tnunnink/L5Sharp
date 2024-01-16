@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents an argument to an instruction, which could be a tag name reference or an immediate atomic value.
 /// </summary>
-public class Argument
+public class Argument : ILogixParsable<Argument>
 {
     private readonly object _value;
 
@@ -87,28 +87,48 @@ public class Argument
     public static Argument Empty => new(string.Empty);
 
     /// <summary>
-    /// Parses the string input into a valid <see cref="Argument"/> object.
+    /// Parses the provided string into a <see cref="Argument"/> value.
     /// </summary>
-    /// <param name="value">Teh string value to parse.</param>
-    /// <returns>A <see cref="Argument"/> representing the string input.</returns>
+    /// <param name="value">Teh string to parse.</param>
+    /// <returns>An <see cref="Argument"/> representing the parsed value.</returns>
     /// <exception cref="ArgumentException"><c>value</c> is null or empty</exception>
-    /// <remarks>This parse method expects the string to be an <see cref="AtomicType"/> immediate value,
-    /// a single <see cref="TagName"/> value, or an expression that can be represented as
-    /// <see cref="NeutralText"/> type.
-    /// </remarks>
     public static Argument Parse(string? value)
     {
-        //Empty value - lets not crash on empty or invalid arguments.
-        if (string.IsNullOrEmpty(value)) return Empty;
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty to parse.");
 
         //Unknown value - Can be found in TON instructions and probably others.
         if (value == "?") return Unknown;
 
-        //Literal string value - We need to intercept this before the Atomic.TryParse method to prevent exceptions.
+        //Literal string value - We need to intercept this before the Atomic.TryParse method to prevent overflows.
         if (value.StartsWith('\'') && value.EndsWith('\'')) return new Argument(value);
 
         //Immediate atomic value
-        if (Atomic.TryParse(value, out var atomic) && atomic is not null) return new Argument(atomic);
+        var atomic = AtomicType.TryParse(value);
+        if (atomic is not null) return new Argument(atomic);
+
+        //TagName or Expression otherwise
+        return TagName.IsTag(value) ? new Argument(new TagName(value)) : new Argument(new NeutralText(value));
+    }
+
+    /// <summary>
+    /// Parses the provided string into a <see cref="Argument"/> value.
+    /// </summary>
+    /// <param name="value">Teh string to parse.</param>
+    /// <returns>An <see cref="Argument"/> representing the parsed value if successful; Otherwise, <see cref="Empty"/>.</returns>
+    public static Argument TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return Empty;
+        
+        //Unknown value - Can be found in TON instructions and probably others.
+        if (value == "?") return Unknown;
+
+        //Literal string value - We need to intercept this before the Atomic.TryParse method to prevent overflows.
+        if (value.StartsWith('\'') && value.EndsWith('\'')) return new Argument(value);
+
+        //Immediate atomic value
+        var atomic = AtomicType.TryParse(value);
+        if (atomic is not null) return new Argument(atomic);
 
         //TagName or Expression otherwise
         return TagName.IsTag(value) ? new Argument(new TagName(value)) : new Argument(new NeutralText(value));
@@ -233,7 +253,7 @@ public class Argument
     public override int GetHashCode() => _value.GetHashCode();
 
     /// <inheritdoc />
-    public override string ToString() => _value.ToString();
+    public override string ToString() => _value.ToString()!;
 
     /// <summary>
     /// Determines whether two Argument objects are equal.

@@ -1,16 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <LangVersion>10</LangVersion>
+        <LangVersion>12</LangVersion>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>0.18.3</Version>
-        <AssemblyVersion>0.18.3</AssemblyVersion>
-        <FileVersion>0.18.3.0</FileVersion>
+        <Version>0.19.0</Version>
+        <AssemblyVersion>0.19.0</AssemblyVersion>
+        <FileVersion>0.19.0.0</FileVersion>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
@@ -18,12 +17,13 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Added Parse function taking Type parameter.</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to .NET7. Reworked LogixParser.cs. Added new ILogixParsable.cs. Fixed tests and documentation.</PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageId>L5Sharp</PackageId>
         <PackageProjectUrl>https://github.com/tnunnink/L5Sharp</PackageProjectUrl>
         <NeutralLanguage>en-US</NeutralLanguage>
+        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>

@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <see cref="ArgumentOutOfRangeException"/>.
 /// This parameter will control the scan order of task components as related to other tasks.
 /// </remarks>
-public readonly struct TaskPriority : IEquatable<TaskPriority>
+public readonly struct TaskPriority : IEquatable<TaskPriority>, ILogixParsable<TaskPriority>
 {
     private readonly byte _priority;
 
@@ -44,12 +44,19 @@ public readonly struct TaskPriority : IEquatable<TaskPriority>
     public static implicit operator TaskPriority(byte priority) => new(priority);
 
     /// <summary>
-    /// Parses a string value into a <see cref="TaskPriority"/>.
+    /// Parses a string into a <see cref="TaskPriority"/> value.
     /// </summary>
-    /// <param name="str">The string to parse.</param>
-    /// <returns>A <see cref="TaskPriority"/> value if the parse was successful; otherwise; the default value.</returns>
-    public static TaskPriority Parse(string str) =>
-        byte.TryParse(str, out var result) ? new TaskPriority(result) : default;
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The <see cref="TaskPriority"/> representing the parsed value.</returns>
+    public static TaskPriority Parse(string value) => byte.Parse(value);
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="TaskPriority"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="TaskPriority"/> representing the parsed value if successful; Otherwise; <c>default</c>.</returns>
+    public static TaskPriority TryParse(string? value) =>
+        byte.TryParse(value, out var result) ? new TaskPriority(result) : default;
 
     /// <inheritdoc />
     public bool Equals(TaskPriority other) => _priority == other._priority;

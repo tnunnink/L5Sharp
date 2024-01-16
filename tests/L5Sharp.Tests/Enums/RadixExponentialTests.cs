@@ -19,19 +19,19 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Format(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.Exponential.FormatValue(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Format(new DINT())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.Exponential.FormatValue(new DINT())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
         public void Format_Zero_ShouldBeExpectedFormat()
         {
-            var result = Radix.Exponential.Format(new REAL());
+            var result = Radix.Exponential.FormatValue(new REAL());
 
             result.Should().Be("0.00000000e+000");
         }
@@ -41,7 +41,7 @@ namespace L5Sharp.Tests.Enums
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
-            var result = Radix.Exponential.Format(new REAL(value));
+            var result = Radix.Exponential.FormatValue(new REAL(value));
 
             result.Should().Be(value.ToString("e8", CultureInfo.InvariantCulture));
         }
@@ -49,7 +49,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_CustomRealSevenDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Exponential.Format(new REAL(1.123e3f));
+            var result = Radix.Exponential.FormatValue(new REAL(1.123e3f));
 
             result.Should().Be("1.12300000e+003");
         }
@@ -57,19 +57,19 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Parse(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Exponential.ParseValue(null!)).Should().Throw<ArgumentException>();
         }
         
         [Test]
         public void Parse_Empty_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Exponential.Parse(string.Empty)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Exponential.ParseValue(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Parse_Exponential_ShouldBeExpected()
         {
-            var result = Radix.Exponential.Parse("1.12300000e+002");
+            var result = Radix.Exponential.ParseValue("1.12300000e+002");
 
             result.Should().Be(112.3f);
         }

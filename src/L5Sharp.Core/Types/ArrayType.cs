@@ -277,7 +277,7 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <summary>
     /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
     /// </summary>
-    private void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
+    private void OnMemberDataChanged(object? sender, EventArgs e) => RaiseDataChanged(sender);
 }
 
 /// <summary>

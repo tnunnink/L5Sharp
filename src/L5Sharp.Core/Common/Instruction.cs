@@ -185,7 +185,7 @@ public sealed class Instruction
 
         var key = text[..text.IndexOf('(')];
         var signature = Regex.Match(text, SignaturePattern).Value[1..^1];
-        var arguments = Regex.Split(signature, ArgumentSplitPattern).Select(Argument.Parse).ToArray();
+        var arguments = Regex.Split(signature, ArgumentSplitPattern).Select(Argument.TryParse).ToArray();
 
         return _known.TryGetValue(key, out var create)
             ? create().Of(arguments)

@@ -19,7 +19,7 @@ namespace L5Sharp.Core;
 /// <seealso cref="Instruction"/>
 /// <seealso cref="TagName"/>
 /// <seealso cref="Keyword"/>
-public sealed class NeutralText
+public sealed class NeutralText : ILogixParsable<NeutralText>
 {
     private readonly string _text;
 
@@ -51,6 +51,20 @@ public sealed class NeutralText
     /// </summary>
     /// <returns>An empty <see cref="NeutralText"/> object.</returns>
     public static NeutralText Empty => new(string.Empty);
+    
+    /// <summary>
+    /// Parses the provided string into a <see cref="NeutralText"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="NeutralText"/> representing the parsed value.</returns>
+    public static NeutralText Parse(string value) => new(value);
+
+    /// <summary>
+    /// Tries to parse the provided string into a <see cref="NeutralText"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="NeutralText"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
+    public static NeutralText? TryParse(string? value) => value is not null ? new NeutralText(value) : null;
 
     /// <summary>
     /// Returns a value indicating whether a specified instruction key occurs within this neutral text.
@@ -157,7 +171,7 @@ public sealed class NeutralText
     /// <returns>A <c>NeutralText</c> that represents the value of the <c>string</c>.</returns>
     public static implicit operator NeutralText(string text) => new(text);
 
-    private bool TextIsBalanced(string value, char opening, char closing)
+    private static bool TextIsBalanced(string value, char opening, char closing)
     {
         var characters = new Stack<char>();
 

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Xml.Linq;
 using FluentAssertions;
 
 
@@ -22,8 +23,6 @@ public class ProofTesting
         Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds}");
 
         var tag = new Tag { Name = "MyTimer", Value = new TIMER { PRE = 5000 } };
-        
-        
     }
 
     [Test]

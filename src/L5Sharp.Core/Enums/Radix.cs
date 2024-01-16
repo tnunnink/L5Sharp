@@ -71,9 +71,6 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
-    /// <inheritdoc />
-    public override string ToString() => Value;
-
     /// <summary>
     /// Gets the default <see cref="Radix"/> value for the provided logix type.
     /// </summary>
@@ -124,10 +121,9 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         if (name is null)
             throw new FormatException(
-                @$"Could not determine Radix from input '{input}'. 
-                        Verify that the input string is an accepted Radix format.");
+                $"Could not determine Radix from input '{input}'. Verify that the input string is an accepted Radix format.");
 
-        return FromName(name);
+        return Parse(name);
     }
 
     /// <summary>
@@ -135,13 +131,13 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     /// <param name="input">The string input for which to infer the radix format.</param>
     /// <param name="radix">If parsed successfully, then the <see cref="Radix"/> representing the format of the input;
-    /// Otherwise, <c>null</c>.</param>
+    /// Otherwise, a <see cref="Null"/> radix format.</param>
     /// <returns><c>true</c> if a <c>Radix</c> format was inferred from the string input; Otherwise, <c>false</c>.</returns>
-    public static bool TryInfer(string input, out Radix? radix)
+    public static bool TryInfer(string input, out Radix radix)
     {
         var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
-        radix = name is not null ? FromName(name) : null;
-        return radix is not null;
+        radix = name is not null ? Parse(name) : Null;
+        return radix != Null;
     }
 
     /// <summary>
@@ -170,14 +166,14 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>
     /// A string that represents the value of the atomic type in the current radix base number style.
     /// </returns>
-    public abstract string Format(AtomicType atomic);
+    public abstract string FormatValue(AtomicType atomic);
 
     /// <summary>
     /// Parses a string input of a given Radix formatted value into an atomic value type. 
     /// </summary>
     /// <param name="input">The string value to parse.</param>
     /// <returns>An <see cref="AtomicType"/> representing the value of the formatted string.</returns>
-    public abstract AtomicType Parse(string input);
+    public abstract AtomicType ParseValue(string input);
 
     /// <summary>
     /// Converts the provided <see cref="AtomicType"/> to the specified base number.
@@ -265,40 +261,32 @@ public abstract class Radix : LogixEnum<Radix, string>
         { nameof(DateTimeNs), s => DateTimeNs.HasFormat(s) }
     };
 
-    private class NullRadix : Radix
+    private class NullRadix() : Radix("NullType", "NullType")
     {
-        public NullRadix() : base("NullType", "NullType")
-        {
-        }
-
         protected override string Specifier => string.Empty;
 
         protected override bool HasFormat(string input) =>
             throw new NotSupportedException($"{Name} Radix does not support formatting atomic values");
 
-        public override string Format(AtomicType atomic) =>
+        public override string FormatValue(AtomicType atomic) =>
             throw new NotSupportedException($"{Name} Radix does not support formatting atomic values");
 
-        public override AtomicType Parse(string input) =>
+        public override AtomicType ParseValue(string input) =>
             throw new NotSupportedException($"{Name} Radix does not support parsing atomic values");
     }
 
-    private class BinaryRadix : Radix
+    private class BinaryRadix() : Radix(nameof(Binary), nameof(Binary))
     {
         private const int BaseNumber = 2;
         private const int CharsPerByte = 8;
         private const string ByteSeparator = "_";
         private const string Pattern = @"(?<=\d)(?=(\d\d\d\d)+(?!\d))";
 
-        public BinaryRadix() : base(nameof(Binary), nameof(Binary))
-        {
-        }
-
         protected override string Specifier => "2#";
 
         protected override bool HasFormat(string input) => !input.IsEmpty() && input.StartsWith(Specifier);
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -309,7 +297,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return $"{Specifier}{formatted}";
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -319,20 +307,16 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
-    private class OctalRadix : Radix
+    private class OctalRadix() : Radix(nameof(Octal), nameof(Octal))
     {
         private const int BaseNumber = 8;
         private const int CharsPerByte = 3;
         private const string ByteSeparator = "_";
         private const string Pattern = @"(?<=\d)(?=(\d\d\d)+(?!\d))";
 
-        public OctalRadix() : base(nameof(Octal), nameof(Octal))
-        {
-        }
-
         protected override string Specifier => "8#";
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -343,7 +327,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return $"{Specifier}{formatted}";
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -353,12 +337,8 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
-    private class DecimalRadix : Radix
+    private class DecimalRadix() : Radix(nameof(Decimal), nameof(Decimal))
     {
-        public DecimalRadix() : base(nameof(Decimal), nameof(Decimal))
-        {
-        }
-
         protected override string Specifier => string.Empty;
 
         protected override bool HasFormat(string input)
@@ -371,7 +351,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return !input.IsEmpty() && input.All(char.IsDigit);
         }
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -390,7 +370,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             };
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -423,20 +403,16 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
-    private class HexRadix : Radix
+    private class HexRadix() : Radix(nameof(Hex), nameof(Hex))
     {
         private const int BaseNumber = 16;
         private const int BitsPerByte = 2;
         private const string ByteSeparator = "_";
         private const string Pattern = @"(?<=\w)(?=(\w\w\w\w)+(?!\w))";
 
-        public HexRadix() : base(nameof(Hex), nameof(Hex))
-        {
-        }
-
         protected override string Specifier => "16#";
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -447,7 +423,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return $"{Specifier}{formatted}";
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -457,12 +433,8 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
-    private class FloatRadix : Radix
+    private class FloatRadix() : Radix(nameof(Float), nameof(Float))
     {
-        public FloatRadix() : base(nameof(Float), nameof(Float))
-        {
-        }
-
         protected override string Specifier => string.Empty;
 
         protected override bool HasFormat(string input)
@@ -476,7 +448,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return input.Contains('.') && input.Replace(".", string.Empty).All(char.IsDigit);
         }
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -488,7 +460,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return ((float)(REAL)atomic).ToString("0.0######", CultureInfo.InvariantCulture);
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -496,12 +468,8 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
-    private class ExponentialRadix : Radix
+    private class ExponentialRadix() : Radix(nameof(Exponential), nameof(Exponential))
     {
-        public ExponentialRadix() : base(nameof(Exponential), nameof(Exponential))
-        {
-        }
-
         protected override string Specifier => "";
 
         protected override bool HasFormat(string input)
@@ -518,7 +486,7 @@ public abstract class Radix : LogixEnum<Radix, string>
                                         .All(char.IsDigit);
         }
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -530,7 +498,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return ((float)(REAL)atomic).ToString("e8", CultureInfo.InvariantCulture);
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -541,7 +509,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
     }
 
-    private class AsciiRadix : Radix
+    private class AsciiRadix() : Radix(nameof(Ascii), nameof(Ascii).ToUpper())
     {
         private const int BaseNumber = 16;
         private const int BitsPerByte = 2;
@@ -559,16 +527,12 @@ public abstract class Radix : LogixEnum<Radix, string>
             { "$'", "27" }
         };
 
-        public AsciiRadix() : base(nameof(Ascii), nameof(Ascii).ToUpper())
-        {
-        }
-
         protected override string Specifier => "'";
 
         protected override bool HasFormat(string input) =>
             input.StartsWith(Specifier) && input.EndsWith(Specifier) && Regex.IsMatch(input, Pattern);
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -579,7 +543,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return $"{Specifier}{formatted}{Specifier}";
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -658,20 +622,16 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
-    private class DateTimeRadix : Radix
+    private class DateTimeRadix() : Radix(nameof(DateTime), "Date/Time")
     {
         private const string Separator = "_";
         private const string Suffix = "Z";
         private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
         private const long TicksPerMicrosecond = TimeSpan.TicksPerMillisecond / 1000;
 
-        public DateTimeRadix() : base(nameof(DateTime), "Date/Time")
-        {
-        }
-
         protected override string Specifier => "DT#";
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -690,7 +650,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return $"{Specifier}{str}{Suffix}";
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 
@@ -707,18 +667,14 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
-    private class DateTimeNsRadix : Radix
+    private class DateTimeNsRadix() : Radix(nameof(DateTimeNs), "Date/Time (ns)")
     {
         private const string Separator = "_";
         private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
 
-        public DateTimeNsRadix() : base(nameof(DateTimeNs), "Date/Time (ns)")
-        {
-        }
-
         protected override string Specifier => "LDT#";
 
-        public override string Format(AtomicType atomic)
+        public override string FormatValue(AtomicType atomic)
         {
             ValidateType(atomic);
 
@@ -737,7 +693,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             return $"{Specifier}{str}";
         }
 
-        public override AtomicType Parse(string input)
+        public override AtomicType ParseValue(string input)
         {
             ValidateFormat(input);
 

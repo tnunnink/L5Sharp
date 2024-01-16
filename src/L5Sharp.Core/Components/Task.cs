@@ -70,9 +70,9 @@ public class Task : LogixComponent
     /// The scan rate (ms) of the task component. Default of 10.
     /// </summary>
     /// <value>>A <see cref="ScanRate"/> value type representing the <see cref="float"/> rate of the task.</value>
-    public ScanRate? Rate
+    public ScanRate Rate
     {
-        get => GetValue<ScanRate?>();
+        get => GetValue<ScanRate>();
         set => SetValue(value);
     }
 

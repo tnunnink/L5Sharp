@@ -554,7 +554,7 @@ public class Tag : LogixComponent
     /// <summary>
     /// Triggers <see cref="SetData"/> when a nested data type value of this tag's <see cref="Value"/> changes.
     /// </summary>
-    private void OnDataChanged(object sender, EventArgs e) => SetData(Root.Value);
+    private void OnDataChanged(object? sender, EventArgs e) => SetData(Root.Value);
 
     /// <summary>
     /// Handles setting the data of the root tag and updating the root properties

@@ -80,11 +80,9 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void Parse_InvalidNumber_ShouldBeUnknown()
+        public void Parse_InvalidNumber_ShouldThrowException()
         {
-            var vendor = Vendor.Parse("-11");
-
-            vendor.Should().Be(Vendor.Unknown);
+            FluentActions.Invoking(() => Vendor.Parse("-11")) .Should().Throw<OverflowException>();
         }
 
         [Test]

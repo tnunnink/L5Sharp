@@ -7,10 +7,13 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a revision number that is expressed by as {Major}.{Minor}.
 /// </summary>
-public sealed class Revision : IComparable
+public sealed partial class Revision : IComparable, ILogixParsable<Revision>
 {
     private const string RevisionSeparator = ".";
     private readonly string _value;
+    
+    [GeneratedRegex("^[0-9]+\\.[0-9]+$")]
+    private static partial Regex RevisionPattern();
 
     /// <summary>
     /// Creates a new default <see cref="Revision"/> with value 1.0.
@@ -31,7 +34,7 @@ public sealed class Revision : IComparable
         if (string.IsNullOrEmpty(value))
             throw new ArgumentException("Revision value can not be null or empty.");
 
-        if (!Regex.IsMatch(value, @"^[0-9]+\.[0-9]+$"))
+        if (!RevisionPattern().IsMatch(value))
             throw new FormatException(
                 $"Value '{value}' is invalid revision format. Revision format must be Major.Minor.");
 
@@ -95,6 +98,26 @@ public sealed class Revision : IComparable
 
     /// <inheritdoc />
     public override string ToString() => _value;
+    
+    /// <summary>
+    /// Parses the provided string into a <see cref="Revision"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="Revision"/> representing the parsed value.</returns>
+    public static Revision Parse(string value) => new(value);
+
+    /// <summary>
+    /// Tries to parse the provided string into a <see cref="Revision"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="Revision"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
+    public static Revision? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return default;
+
+        return RevisionPattern().IsMatch(value) ? new Revision(value) : default;
+    }
 
     /// <summary>
     /// Determines if the provided objects are equal.

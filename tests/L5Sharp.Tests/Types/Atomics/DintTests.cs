@@ -772,6 +772,19 @@ namespace L5Sharp.Tests.Types.Atomics
 
             type.Should().Be(123);
         }
+        
+        [Test]
+        [TestCase("123")]
+        [TestCase("2#0000_0000_0000_0000_0000_0000_0111_1011")]
+        [TestCase("8#000_000_000_173")]
+        [TestCase("16#0000_007b")]
+        public void TryParse_ValidFormat_ShouldBeExpectedValue(string value)
+        {
+            var atomic = DINT.TryParse(value);
+
+            atomic.Should().NotBeNull();
+            atomic.Should().Be(123);
+        }
 
         [Test]
         public void Equals_AreEqual_ShouldBeTrue()

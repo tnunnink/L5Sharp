@@ -11,7 +11,7 @@ namespace L5Sharp.Core;
 /// Some known/common types that are available as static members of this class
 /// include <see cref="Discrete"/>, <see cref="Analog"/>, <see cref="Controller"/>, and <see cref="Communications"/>.
 /// </remarks>
-public class ProductType
+public class ProductType : ILogixParsable<ProductType>
 {
     /// <summary>
     /// Creates a new <see cref="ProductType"/> entity with the provided id and name.
@@ -74,12 +74,20 @@ public class ProductType
     public static implicit operator ProductType(ushort productTypeId) => new(productTypeId);
 
     /// <summary>
-    /// Creates a new <see cref="ProductType"/> using the provided product Id.
+    /// Parses a string into a <see cref="ProductType"/> value.
     /// </summary>
-    /// <param name="productId">The unique valid that identifies the Product.</param>
-    /// <returns>A new <see cref="ProductType"/> object with the provided Id.</returns>
-    public static ProductType Parse(string productId) =>
-        ushort.TryParse(productId, out var id) ? new ProductType(id) : Unknown;
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The <see cref="ProductType"/> representing the parsed value.</returns>
+    public static ProductType Parse(string value) => new(ushort.Parse(value));
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="ProductType"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="ProductType"/> representing the parsed value if successful;
+    /// Otherwise; <see cref="Unknown"/>.</returns>
+    public static ProductType TryParse(string? value) =>
+        ushort.TryParse(value, out var result) ? new ProductType(result) : Unknown;
 
     /// <inheritdoc />
     public override string ToString() => Name;

@@ -334,36 +334,32 @@ namespace L5Sharp.Tests.Common
         [Test]
         public void TryParse_Null_ShouldBeNullAndFalse()
         {
-            var result = Dimensions.TryParse(null!, out var dimensions);
+            var dimensions = Dimensions.TryParse(null!);
             
-            result.Should().BeFalse();
             dimensions.Should().BeNull();
         }
 
         [Test]
         public void TryParse_Empty_ShouldBeNullAndFalse()
         {
-            var result = Dimensions.TryParse(string.Empty, out var dimensions);
+            var dimensions = Dimensions.TryParse(string.Empty);
             
-            result.Should().BeFalse();
             dimensions.Should().BeNull();
         }
 
         [Test]
         public void TryParse_MoreThanThreeDimensions_ShouldBeNullAndFalse()
         {
-            var result = Dimensions.TryParse("1 4 3 8", out var dimensions);
-
-            result.Should().BeFalse();
+            var dimensions = Dimensions.TryParse("1 4 3 8");
+            
             dimensions.Should().BeNull();
         }
         
         [Test]
         public void TryParse_ValidPattern_ShouldNotBeNullAndTrue()
         {
-            var result = Dimensions.TryParse("1", out var dimensions);
+            var dimensions = Dimensions.TryParse("1");
             
-            result.Should().BeTrue();
             dimensions.Should().NotBeNull();
             dimensions?.X.Should().Be(1);
             dimensions?.Y.Should().Be(0);
@@ -374,9 +370,8 @@ namespace L5Sharp.Tests.Common
         [Test]
         public void TryParse_TwoDimension_ShouldHaveExpectedValues()
         {
-            var result = Dimensions.TryParse("3 10", out var dimensions);
-
-            result.Should().BeTrue();
+            var dimensions = Dimensions.TryParse("3 10");
+            
             dimensions.Should().NotBeNull();
             dimensions?.X.Should().Be(3);
             dimensions?.Y.Should().Be(10);
@@ -387,9 +382,8 @@ namespace L5Sharp.Tests.Common
         [Test]
         public void TryParse_ThreeDimension_ShouldHaveExpectedValues()
         {
-            var result = Dimensions.TryParse("3 10, 6", out var dimensions);
-
-            result.Should().BeTrue();
+            var dimensions = Dimensions.TryParse("3 10, 6");
+            
             dimensions.Should().NotBeNull();
             dimensions?.X.Should().Be(3);
             dimensions?.Y.Should().Be(10);
@@ -486,7 +480,7 @@ namespace L5Sharp.Tests.Common
         {
             var d1 = new Dimensions(5);
 
-            var result = d1.Equals((object)null);
+            var result = d1.Equals((object)null!);
 
             result.Should().BeFalse();
         }

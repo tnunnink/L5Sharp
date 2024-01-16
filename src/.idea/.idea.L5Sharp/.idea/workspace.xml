@@ -8,13 +8,69 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added Produce/Consume info for Tag component. Incremented version.">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/ParseTests.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/L5Sharp.Core/ILogixParsable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixParserTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Argument.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Argument.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Dimensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/NeutralText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/NeutralText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/ProductType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/ProductType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Revision.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/ScanRate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/ScanRate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/TaskPriority.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/TaskPriority.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Vendor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Vendor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Watchdog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Watchdog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Block.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Block.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/Radix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Enums/Radix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/TriggerOperation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Enums/TriggerOperation.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixEnum.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/LogixEnumTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/LogixEnumTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixIndex.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixIndex.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixMember.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomic.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/AtomicType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/AtomicType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/BOOL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/BOOL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/DINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/DINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/INT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/INT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LREAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LREAL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/REAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/REAL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/SINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/SINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/UDINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/UDINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/UINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/UINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/ULINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/ULINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/USINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/USINT.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_DIGITAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_DIGITAL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/STRING.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/STRING.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/DimensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/DimensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixAsciiTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixAsciiTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixBinaryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixBinaryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeNsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeNsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDateTimeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDecimalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixDecimalTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixExponentialTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixExponentialTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixFloatTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixFloatTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixHexTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixHexTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixNullTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixNullTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixOctalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/RadixOctalTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/AtomicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/AtomicTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,8 +113,10 @@
     <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/Type.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Linq.Expressions/src/System/Linq/Expressions/UnaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/889595c0c9f04f5199bbadadab8ed150b1d8a0/67/188d3af4/IParsable`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/DataType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -372,7 +430,7 @@
       <workItem from="1702345145288" duration="2569000" />
       <workItem from="1702391689065" duration="1742000" />
       <workItem from="1703796358954" duration="1245000" />
-      <workItem from="1703800672625" duration="24959000" />
+      <workItem from="1703800672625" duration="77268000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -790,17 +848,17 @@
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Enums/LogixEnumTests.cs</url>
-          <line>84</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Enums\LogixEnumTests.cs" initialLine="84" containingFunctionPresentation="Method 'Options_AllEnums_ShouldNotBeEmpty'">
+          <url>file://$PROJECT_DIR$/L5Sharp.Core/LogixParser.cs</url>
+          <line>98</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\LogixParser.cs" initialLine="162" containingFunctionPresentation="Method 'GetParser'">
             <startOffsets>
-              <option value="2528" />
+              <option value="4223" />
             </startOffsets>
             <endOffsets>
-              <option value="2558" />
+              <option value="4276" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="7" />
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 /// Vendor's are defined by Rockwell and assigned unique Id and name.
 /// Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
 /// </remarks>
-public class Vendor
+public class Vendor : ILogixParsable<Vendor>
 {
     /// <summary>
     /// Creates a new <see cref="Vendor"/> value with the provided id and name.
@@ -61,11 +61,20 @@ public class Vendor
     public static implicit operator Vendor(ushort vendorId) => new(vendorId);
 
     /// <summary>
-    /// Creates a new <see cref="Vendor"/> using the provided vendor Id.
+    /// Parses a string into a <see cref="Vendor"/> value.
     /// </summary>
-    /// <param name="vendorId">The unique valid that identifies the Vendor.</param>
-    /// <returns>A new <see cref="Vendor"/> object with the provided Id.</returns>
-    public static Vendor Parse(string vendorId) => ushort.TryParse(vendorId, out var id) ? new Vendor(id) : Unknown;
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The <see cref="Vendor"/> representing the parsed value.</returns>
+    public static Vendor Parse(string value) => new(ushort.Parse(value));
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="Vendor"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="Vendor"/> representing the parsed value if successful;
+    /// Otherwise; <see cref="Unknown"/>.</returns>
+    public static Vendor TryParse(string? value) =>
+        ushort.TryParse(value, out var result) ? new Vendor(result) : Unknown;
 
     /// <inheritdoc />
     public override string ToString() => Name;

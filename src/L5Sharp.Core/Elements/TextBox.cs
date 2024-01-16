@@ -62,7 +62,7 @@ public class TextBox : DiagramElement
         var diagram = Element.Parent ??
             throw new InvalidOperationException("Can not attach text to element that does not have a parent.");
         
-        diagram.LastNode.AddAfterSelf(element);
+        diagram.LastNode?.AddAfterSelf(element);
     }
 
     /// <summary>

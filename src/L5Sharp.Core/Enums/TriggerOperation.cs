@@ -12,20 +12,6 @@ public class TriggerOperation : LogixEnum<TriggerOperation, int>
     }
 
     /// <summary>
-    /// Parses a string number into the corresponding <see cref="TriggerOperation"/>.
-    /// </summary>
-    /// <param name="value">The string integer number to parse.</param>
-    /// <returns>A <see cref="TriggerOperation"/> value.</returns>
-    /// <exception cref="FormatException"><c>value</c> is not a parsable integer.</exception>
-    public static TriggerOperation Parse(string value)
-    {
-        if (!int.TryParse(value, out var number))
-            throw new FormatException($"Could not parse Trigger Operation value {value}");
-
-        return FromValue(number);
-    }
-
-    /// <summary>
     /// Represents a ExactEqual <see cref="TriggerOperation"/> value.
     /// </summary>
     public static readonly TriggerOperation ExactEqual = new(nameof(ExactEqual), 0);

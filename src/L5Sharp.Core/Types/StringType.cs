@@ -289,7 +289,7 @@ public class StringType : StructureType, IEnumerable<char>
         var matches = Regex.Matches(value, LogixAsciiPattern);
         return matches.Select(m =>
         {
-            var parsed = (SINT)Radix.Ascii.Parse($"'{m.Value}'");
+            var parsed = (SINT)Radix.Ascii.ParseValue($"'{m.Value}'");
             return new SINT(parsed, Radix.Ascii);
         }).ToArray();
     }

@@ -188,9 +188,9 @@ public class Block : DiagramElement
     {
         var references = new List<CrossReference> { new(Element, L5XName.Instruction, Type) };
 
-        if (Operand is null || !Operand.IsTag) 
+        if (Operand is null || !Operand.IsTag)
             return references;
-        
+
         references.Add(new CrossReference(Element, L5XName.Tag, Operand.ToString(), Type));
         references.AddRange(Tags.Select(t => new CrossReference(Element, L5XName.Tag, t, Type)));
         return references;
@@ -948,8 +948,8 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.X, 0));
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Routine, routine));
-        element.Add(new XAttribute(L5XName.In, string.Join(' ', inputs) ?? string.Empty));
-        element.Add(new XAttribute(L5XName.Ret, string.Join(' ', outputs) ?? string.Empty));
+        element.Add(new XAttribute(L5XName.In, string.Join(' ', inputs ?? Enumerable.Empty<string>())));
+        element.Add(new XAttribute(L5XName.Ret, string.Join(' ', outputs ?? Enumerable.Empty<string>())));
         return new Block(element);
     }
 
@@ -986,13 +986,13 @@ public class Block : DiagramElement
         {
             var block = sheet.Block(wire.FromID);
             if (block is null) continue;
-            
+
             if (block.Type == L5XName.OCon)
             {
                 arguments.AddRange(GetPair()?.Endpoints() ?? Enumerable.Empty<KeyValuePair<Argument, string>>());
                 continue;
             }
-            
+
             var arg = block.GetArguments(wire.FromParam);
             arguments.Add(new KeyValuePair<Argument, string>(arg, block.Type));
         }
@@ -1016,7 +1016,7 @@ public class Block : DiagramElement
                 arguments.AddRange(GetPair()?.Endpoints() ?? Enumerable.Empty<KeyValuePair<Argument, string>>());
                 continue;
             }
-            
+
             var arg = block.GetArguments(wire.ToParam);
             arguments.Add(new KeyValuePair<Argument, string>(arg, block.Type));
         }
@@ -1029,7 +1029,7 @@ public class Block : DiagramElement
         var operand = Operand is not null && Operand.IsTag ? new TagName(Operand.ToString()) : TagName.Empty;
         var parameter = param is not null ? new TagName(param) : TagName.Empty;
         return TagName.Concat(operand, parameter);
-        
+
         /*return L5XType switch
         {
             L5XName.IRef => Operand is not null && Operand.IsTag ? (TagName)Operand : TagName.Empty,

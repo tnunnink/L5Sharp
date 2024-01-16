@@ -57,7 +57,7 @@ internal class LogixIndex
     /// </summary>
     private void AddReference(CrossReference reference)
     {
-        if (!References.TryAdd(reference.Key, new List<CrossReference> { reference }))
+        if (!References.TryAdd(reference.Key, [reference]))
             References[reference.Key].Add(reference);
     }
 
@@ -91,8 +91,10 @@ internal class LogixIndex
     /// components or references from the index. This is because after the object has changed we no longer have access
     /// to the previous state.
     /// </summary>
-    private void OnContentChanging(object sender, XObjectChangeEventArgs e)
+    private void OnContentChanging(object? sender, XObjectChangeEventArgs e)
     {
+        if (sender is null) return;
+        
         if (e.ObjectChange is XObjectChange.Remove)
         {
             if (IsComponentElement(sender)) RemoveComponent((XElement)sender);
@@ -119,8 +121,10 @@ internal class LogixIndex
     /// and the element or property value is one that would refer to an indexed object, we will update the state of the index
     /// to ensure consistency.
     /// </summary>
-    private void OnContentChanged(object sender, XObjectChangeEventArgs e)
+    private void OnContentChanged(object? sender, XObjectChangeEventArgs e)
     {
+        if (sender is null) return;
+        
         if (e.ObjectChange is XObjectChange.Add)
         {
             if (IsComponentElement(sender)) AddComponent((XElement)sender);
@@ -230,7 +234,7 @@ internal class LogixIndex
         {
             var componentName = target.Attribute(L5XName.DataType)!.Value;
             var reference = new CrossReference(target, L5XName.DataType, componentName);
-            if (!References.TryAdd(reference.Key, new List<CrossReference> { reference }))
+            if (!References.TryAdd(reference.Key, [reference]))
                 References[reference.Key].Add(reference);
         }
     }

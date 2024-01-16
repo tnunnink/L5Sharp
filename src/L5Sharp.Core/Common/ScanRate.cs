@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <see cref="ArgumentOutOfRangeException"/>.
 /// This parameter will control the rate at which the <see cref="Task"/> component is scanned.
 /// </remarks>
-public readonly struct ScanRate : IEquatable<ScanRate>
+public readonly struct ScanRate : IEquatable<ScanRate>, ILogixParsable<ScanRate>
 {
     private readonly float _rate;
 
@@ -45,12 +45,19 @@ public readonly struct ScanRate : IEquatable<ScanRate>
     public static implicit operator ScanRate(float rate) => new(rate);
 
     /// <summary>
-    /// Parses a string value into a <see cref="ScanRate"/>.
+    /// Parses a string into a <see cref="ScanRate"/> value.
     /// </summary>
-    /// <param name="str">The string to parse.</param>
-    /// <returns>A <see cref="ScanRate"/> value if the parse was successful; otherwise; the default value.</returns>
-    public static ScanRate Parse(string str) =>
-        float.TryParse(str, out var result) ? new ScanRate(result) : default;
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The <see cref="ScanRate"/> representing the parsed value.</returns>
+    public static ScanRate Parse(string value) => float.Parse(value);
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="ScanRate"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>A <see cref="ScanRate"/> representing the parsed value if successful; Otherwise; <c>default</c>.</returns>
+    public static ScanRate TryParse(string? value) =>
+        float.TryParse(value, out var result) ? new ScanRate(result) : default;
 
     /// <inheritdoc />
     public override string ToString() => _rate.ToString(CultureInfo.CurrentCulture);

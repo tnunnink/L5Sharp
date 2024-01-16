@@ -110,11 +110,9 @@ namespace L5Sharp.Tests.Common
         }
         
         [Test]
-        public void Parse_InvalidNumber_ShouldBeUnknown()
+        public void Parse_InvalidNumber_ShouldThrowException()
         {
-            var productType = ProductType.Parse("-11");
-
-            productType.Should().Be(ProductType.Unknown);
+            FluentActions.Invoking(() => ProductType.Parse("-11")) .Should().Throw<OverflowException>();
         }
 
         [Test]

@@ -24,7 +24,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public abstract class AtomicType : LogixType
+public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
 {
     /// <inheritdoc />
     public sealed override DataTypeFamily Family => DataTypeFamily.None;
@@ -52,6 +52,64 @@ public abstract class AtomicType : LogixType
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> representing the format of the atomic type value.</value>
     public abstract Radix Radix { get; }
+    
+    /// <summary>
+    /// Parses the provided string value into an atomic type value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>An <see cref="AtomicType"/> representing the parsed value and format of the provided string.</returns>
+    /// <exception cref="FormatException"><c>value</c> does not have a valid Radix format to be parsed as an
+    /// atomic type.</exception>
+    public static AtomicType Parse(string value)
+    {
+        return value.IsEquivalent("true") ? new BOOL(true)
+            : value.IsEquivalent("false") ? new BOOL()
+            : Radix.Infer(value).ParseValue(value);
+    }
+    
+    /// <summary>
+    /// Parses the provided string value into the atomic type value specified by name.
+    /// </summary>
+    /// <param name="name">The name of the atomic type.</param>
+    /// <param name="value">The string value to parse.</param>
+    /// <returns>An <see cref="AtomicType"/> representing the parsed value and format of the provided string.</returns>
+    /// <exception cref="ArgumentException"><c>name</c> does not represent a valid atomic type.</exception>
+    /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as the specified atomic type.</exception>
+    public static AtomicType Parse(string name, string value)
+    {
+        return name switch
+        {
+            nameof(BOOL) => BOOL.Parse(value),
+            "BIT" => BOOL.Parse(value),
+            nameof(SINT) => SINT.Parse(value),
+            nameof(INT) => INT.Parse(value),
+            nameof(DINT) => DINT.Parse(value),
+            nameof(LINT) => LINT.Parse(value),
+            nameof(REAL) => REAL.Parse(value),
+            nameof(USINT) => USINT.Parse(value),
+            nameof(UINT) => UINT.Parse(value),
+            nameof(UDINT) => UDINT.Parse(value),
+            nameof(ULINT) => ULINT.Parse(value),
+            nameof(LREAL) => LREAL.Parse(value),
+            _ => throw new ArgumentException($"The type name '{name}' is not a valid {typeof(AtomicType)}")
+        };
+    }
+
+    /// <summary>
+    /// Tries to parse the provided string value into an atomic type value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>An <see cref="AtomicType"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
+    public static AtomicType? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return default;
+
+        if (value.IsEquivalent("true")) return new BOOL(true);
+        if (value.IsEquivalent("false")) return new BOOL(false);
+
+        return Radix.TryInfer(value, out var radix) ? radix.ParseValue(value) : default;
+    }
 
     /// <summary>
     /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/> values.
@@ -63,14 +121,14 @@ public abstract class AtomicType : LogixType
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
     /// </summary>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public override string ToString() => Radix.Format(this);
+    public override string ToString() => Radix.FormatValue(this);
 
     /// <summary>
     /// Returns the atomic value formatted in the specified <see cref="Core.Radix"/> format.
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(this);
+    public string ToString(Radix radix) => radix.FormatValue(this);
 
     /// <summary>
     /// Serialized the atomic type as the DataValue <see cref="XElement"/>.
@@ -91,5 +149,5 @@ public abstract class AtomicType : LogixType
     /// </summary>
     /// <param name="sender">The member sending the data changed event.</param>
     /// <param name="e">The event args.</param>
-    protected virtual void OnMemberDataChanged(object sender, EventArgs e) => RaiseDataChanged(sender);
+    protected virtual void OnMemberDataChanged(object? sender, EventArgs e) => RaiseDataChanged(sender);
 }

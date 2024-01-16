@@ -8,9 +8,12 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Provides a wrapper around the string port address value to indicate what type of address the value is.
 /// </summary>
-public class Address
+public partial class Address : ILogixParsable<Address>
 {
     private readonly string _value;
+
+    [GeneratedRegex("^[A-Za-z][A-Za-z0-9.-]{1,63}$")]
+    private static partial Regex HostNamePattern();
 
     /// <summary>
     /// Creates a new <see cref="Address"/> with the provided string value.
@@ -21,7 +24,7 @@ public class Address
     {
         _value = address ?? throw new ArgumentNullException(nameof(address));
     }
-        
+
     /// <summary>
     /// Indicates whether the current <see cref="Address"/> is a slot number address.
     /// </summary>
@@ -42,7 +45,7 @@ public class Address
     /// A host name must start with a letter, contain only alpha-numeric characters or special characters '.' and '-',
     /// and have a maximum length of 64 characters.
     /// </remarks>
-    public bool IsHostName => Regex.IsMatch(_value, "^[A-Za-z][A-Za-z0-9.-]{1,63}$");
+    public bool IsHostName => HostNamePattern().IsMatch(_value);
 
     /// <summary>
     /// Indicates that the address value is an empty string.
@@ -53,87 +56,48 @@ public class Address
     /// Represents no address value, or an empty string.
     /// </summary>
     public static Address None => new(string.Empty);
-
-    /// <summary>
-    /// Converts the current <see cref="string"/> to a <see cref="Address"/> value.
-    /// </summary>
-    /// <param name="address">The value to convert.</param>
-    /// <returns>A <see cref="Address"/> representing the address value.</returns>
-    public static implicit operator Address(string address) => new(address);
-        
-    /// <summary>
-    /// Converts the current <see cref="Address"/> to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="address">The value to convert.</param>
-    /// <returns>A <see cref="string"/> representing the address value.</returns>
-    public static implicit operator string(Address address) => address.ToString();
     
     /// <summary>
-    /// Converts the current <see cref="string"/> to a <see cref="Address"/> value.
-    /// </summary>
-    /// <param name="address">The value to convert.</param>
-    /// <returns>A <see cref="Address"/> representing the address value.</returns>
-    public static implicit operator Address(byte address) => new(address.ToString());
-        
-    /// <summary>
-    /// Converts the current <see cref="Address"/> to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="address">The value to convert.</param>
-    /// <returns>A <see cref="string"/> representing the address value.</returns>
-    public static implicit operator byte(Address address) => byte.Parse(address._value);
-        
-    /// <summary>
-    /// Creates a new <see cref="Address"/> instance from the provided <see cref="IPAddress"/> object.
-    /// </summary>
-    /// <param name="ipAddress">The <see cref="IPAddress"/> value that represents the port address.</param>
-    /// <returns>A new <see cref="Address"/> value from the provided IP.</returns>
-    /// <exception cref="ArgumentNullException">ipAddress is null.</exception>
-    public static Address FromIP(IPAddress ipAddress)
-    {
-        if (ipAddress is null) throw new ArgumentNullException(nameof(ipAddress));
-        return new Address(ipAddress.ToString());
-    }
-        
-    /// <summary>
-    /// Creates a new <see cref="Address"/> instance from the provided byte slot number value.
-    /// </summary>
-    /// <param name="slot">the byte number value that represents the port address.</param>
-    /// <returns>A new <see cref="Address"/> value from the provided slot number.</returns>
-    public static Address FromSlot(byte slot) => new(slot.ToString());
-
-    /// <summary>
-    /// Creates a new <see cref="Address"/> with the common default IP of 192.168.0.1.
+    /// Creates a new <see cref="Address"/> with the optional IP address value.
     /// </summary>
     /// <returns>A <see cref="Address"/> with the default IP value.</returns>
-    public static Address DefaultIP() => new("192.168.0.1");
-        
-    /// <summary>
-    /// Creates a new <see cref="Address"/> with the default slot 0.
-    /// </summary>
-    /// <returns>A <see cref="Address"/> with the default slot value.</returns>
-    public static Address DefaultSlot() => new("0");
+    public static Address IP(string? ip = default) => ip is not null ? new Address(ip) : new Address("192.168.0.1");
 
     /// <summary>
-    /// Creates a new <see cref="Address"/> with the specified slot number.
+    /// Creates a new <see cref="Address"/> with the optional slot number.
     /// </summary>
-    /// <param name="slot">The slot number to create.</param>
-    /// <returns></returns>
-    public static Address Slot(byte slot) => new($"{slot}");
-        
+    /// <param name="slot">The slot number to create. If not provided will default to 0.</param>
+    /// <returns>A <see cref="Address"/> representing a slot number within a chassis.</returns>
+    public static Address Slot(byte slot = 0) => new($"{slot}");
+    
     /// <summary>
-    /// 
+    /// Parses a string into a <see cref="Address"/> value.
     /// </summary>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>The <see cref="Address"/> representing the parsed value.</returns>
+    public static Address Parse(string value) => new(value);
+
+    /// <summary>
+    /// Tries to parse a string into a <see cref="Address"/> value.
+    /// </summary>
+    /// <param name="value">The string to parse.</param>
+    /// <returns>An <see cref="Address"/> representing the parsed value if successful; Otherwise, <see cref="None"/>.</returns>
+    public static Address TryParse(string? value) => string.IsNullOrEmpty(value) ? None : new Address(value);
+
+    /// <summary>
+    /// Converts the address value to an IPAddress object.
+    /// </summary>
+    /// <returns>An <see cref="IPAddress"/> object representing the address.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the address value is not a valid IP address.</exception>
     public IPAddress ToIPAddress() => IsIPv4
         ? IPAddress.Parse(_value)
         : throw new InvalidOperationException($"The current address '{_value}' is not a valid IP address");
 
     /// <summary>
-    /// 
+    /// Converts the current address to a slot number.
     /// </summary>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
+    /// <returns>The slot number of the address.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the address is not a valid slot number.</exception>
     public byte ToSlot() => IsSlot
         ? byte.Parse(_value)
         : throw new InvalidOperationException($"The current address '{_value}' is not a valid slot number");
@@ -172,4 +136,32 @@ public class Address
     /// <param name="right">An object to compare.</param>
     /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
     public static bool operator !=(Address? left, Address? right) => !Equals(left, right);
+    
+    /// <summary>
+    /// Converts the current <see cref="string"/> to a <see cref="Address"/> value.
+    /// </summary>
+    /// <param name="address">The value to convert.</param>
+    /// <returns>A <see cref="Address"/> representing the address value.</returns>
+    public static implicit operator Address(string address) => new(address);
+
+    /// <summary>
+    /// Converts the current <see cref="Address"/> to a <see cref="string"/> value.
+    /// </summary>
+    /// <param name="address">The value to convert.</param>
+    /// <returns>A <see cref="string"/> representing the address value.</returns>
+    public static implicit operator string(Address address) => address.ToString();
+
+    /// <summary>
+    /// Converts the current <see cref="string"/> to a <see cref="Address"/> value.
+    /// </summary>
+    /// <param name="address">The value to convert.</param>
+    /// <returns>A <see cref="Address"/> representing the address value.</returns>
+    public static implicit operator Address(byte address) => new(address.ToString());
+
+    /// <summary>
+    /// Converts the current <see cref="Address"/> to a <see cref="string"/> value.
+    /// </summary>
+    /// <param name="address">The value to convert.</param>
+    /// <returns>A <see cref="string"/> representing the address value.</returns>
+    public static implicit operator byte(Address address) => byte.Parse(address._value);
 }

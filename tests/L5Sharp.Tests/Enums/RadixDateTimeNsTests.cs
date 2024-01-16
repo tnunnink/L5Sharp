@@ -17,13 +17,13 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.DateTimeNs.Format(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => Radix.DateTimeNs.FormatValue(null!)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => Radix.DateTimeNs.Format(new REAL())).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => Radix.DateTimeNs.FormatValue(new REAL())).Should().Throw<NotSupportedException>();
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new LINT(1638277952000000));
+            var result = radix.FormatValue(new LINT(1638277952000000));
 
             result.Should().Be("LDT#1970-01-19-17:04:37.952_000_000(UTC-06:00)");
         }
@@ -41,7 +41,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new LINT(1641016800000000000));
+            var result = radix.FormatValue(new LINT(1641016800000000000));
 
             result.Should().Be("LDT#2022-01-01-00:00:00.000_000_000(UTC-06:00)");
         }
@@ -51,7 +51,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new LINT(1641016800000001001));
+            var result = radix.FormatValue(new LINT(1641016800000001001));
 
             //loss of accuracy causes the 1 nano second to be lost
             result.Should().Be("LDT#2022-01-01-00:00:00.000_001_000(UTC-06:00)");
@@ -62,7 +62,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Format(new LINT(1641016800000001500));
+            var result = radix.FormatValue(new LINT(1641016800000001500));
 
             result.Should().Be("LDT#2022-01-01-00:00:00.000_001_500(UTC-06:00)");
         }
@@ -72,7 +72,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.DateTimeNs;
             
-            var result = radix.Parse("LDT#1970-01-19-17:04:37.952_000_000(UTC-06:00)");
+            var result = radix.ParseValue("LDT#1970-01-19-17:04:37.952_000_000(UTC-06:00)");
 
             result.Should().Be(1638277952000000);
         }
@@ -80,7 +80,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_NoSpecifier_ShouldThrowFormatException()
         {
-            FluentActions.Invoking(() => Radix.DateTimeNs.Parse("2021-11-30-07:12:32.000_000_000(UTC-06:00)")).Should()
+            FluentActions.Invoking(() => Radix.DateTimeNs.ParseValue("2021-11-30-07:12:32.000_000_000(UTC-06:00)")).Should()
                 .Throw<FormatException>();
         }
         
@@ -89,7 +89,7 @@ namespace L5Sharp.Tests.Enums
         {
             var radix = Radix.DateTimeNs;
 
-            var result = radix.Parse("LDT#2022-01-01-00:00:00.000_000_000(UTC-06:00)");
+            var result = radix.ParseValue("LDT#2022-01-01-00:00:00.000_000_000(UTC-06:00)");
 
             result.Should().Be(1641016800000000000);
         }

@@ -113,17 +113,13 @@ public class ArgumentTests
     [Test]
     public void Parse_Null_ShouldBeEmpty()
     {
-        var argument = Argument.Parse(null);
-
-        argument.Should().Be(string.Empty);
+        FluentActions.Invoking(() => Argument.Parse(null)).Should().Throw<ArgumentException>();
     }
 
     [Test]
-    public void Parse_EmptyString_ShouldBeEmpty()
+    public void Parse_EmptyString_ShouldThrowException()
     {
-        var argument = Argument.Parse(string.Empty);
-
-        argument.Should().Be(string.Empty);
+        FluentActions.Invoking(() => Argument.Parse(string.Empty)).Should().Throw<ArgumentException>();
     }
 
     [Test]

@@ -39,6 +39,15 @@ public abstract class LogixEnum
     public string Name { get; }
 
     /// <summary>
+    /// Retrieves all names for all <see cref="LogixEnum"/> defined in the library.
+    /// </summary>
+    /// <returns>A collection <see cref="string"/> names for all enums.</returns>
+    public static IEnumerable<string> Names()
+    {
+        return Enums.Value.SelectMany(v => v.Value).Select(x => x.Name);
+    }
+
+    /// <summary>
     /// Retrieves all names for a <see cref="LogixEnum"/> of the specified enum type.
     /// </summary>
     /// <param name="type">The type for which to retrieve the enumeration names.</param>
@@ -106,7 +115,7 @@ public abstract class LogixEnum
     {
         var baseType = typeof(LogixEnum);
 
-        return Assembly.GetAssembly(baseType).GetTypes()
+        return baseType.Assembly.GetTypes()
             .Where(t => baseType.IsAssignableFrom(t))
             .ToDictionary(t => t, t => GetOptions(t).ToArray());
     }
@@ -125,7 +134,7 @@ public abstract class LogixEnum
 
         return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
             .Where(f => type.IsAssignableFrom(f.FieldType))
-            .Select(f => (LogixEnum)f.GetValue(null))
+            .Select(f => (LogixEnum)f.GetValue(null)!)
             .OrderBy(e => e.Name);
     }
 }
@@ -143,27 +152,16 @@ public abstract class LogixEnum
 /// <typeparam name="TValue">The type of the inner value.</typeparam>
 public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     IEquatable<LogixEnum<TEnum, TValue>>,
-    IComparable<LogixEnum<TEnum, TValue>>
+    IComparable<LogixEnum<TEnum, TValue>>,
+    ILogixParsable<TEnum>
     where TEnum : LogixEnum<TEnum, TValue>
     where TValue : IEquatable<TValue>, IComparable<TValue>
 {
-    private static readonly Lazy<Dictionary<string, TEnum>> FromNamOptions =
-        new(() => Options<TEnum>().ToDictionary(item => item.Name));
-
-    private static readonly Lazy<Dictionary<string, TEnum>> FromNameIgnoreCaseOptions = new(() =>
+    private static readonly Lazy<Dictionary<string, TEnum>> NameLookup = new(() =>
         Options<TEnum>().ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase));
 
-    private static readonly Lazy<Dictionary<TValue, TEnum>> FromValueOptions = new(() =>
-    {
-        var dictionary = new Dictionary<TValue, TEnum>();
-
-        foreach (var option in Options<TEnum>())
-        {
-            dictionary.TryAdd(option.Value, option);
-        }
-
-        return dictionary;
-    });
+    private static readonly Lazy<Dictionary<string, TEnum>> ValueLookup = new(() =>
+        Options<TEnum>().ToDictionary(item => item.ToString()));
 
     /// <summary>
     /// Creates an enumeration with the specified name and value.
@@ -186,141 +184,61 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// Returns all enumeration options for the specified enumeration type.
     /// </summary>
     /// <returns>An <see cref="IEnumerable{T}"/> containing all enumeration values of the specified type.</returns>
-    public static IEnumerable<TEnum> All() => FromNamOptions.Value.Values.ToList().AsReadOnly();
+    public static IEnumerable<TEnum> All() => Options<TEnum>().ToList().AsReadOnly();
 
     /// <summary>
-    /// Gets the item associated with the specified name.
+    /// Parses the specified string representation of an enumeration name or value into its corresponding
+    /// enumeration type.
     /// </summary>
-    /// <param name="name">The name of the item to get.</param>
-    /// <param name="ignoreCase"><c>true</c> to ignore case during the comparison; otherwise, <c>false</c>.</param>
-    /// <returns>
-    /// The item associated with the specified name. 
-    /// If the specified name is not found, throws a <see cref="KeyNotFoundException"/>.
-    /// </returns>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>.</exception> 
-    /// <exception cref="KeyNotFoundException"><paramref name="name"/> does not exist.</exception> 
-    /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromName(string, out TEnum)"/>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromName(string, bool, out TEnum)"/>
-    public static TEnum FromName(string name, bool ignoreCase = false)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Argument can not be null or empty.", name);
-
-        return GetFromName(ignoreCase ? FromNameIgnoreCaseOptions.Value : FromNamOptions.Value);
-
-        TEnum GetFromName(IReadOnlyDictionary<string, TEnum> dictionary)
-        {
-            if (!dictionary.TryGetValue(name, out var result))
-                throw new KeyNotFoundException($"No {typeof(TEnum).Name} with Name \\\"{name}\\\" found.");
-
-            return result;
-        }
-    }
-
-    /// <summary>
-    /// Gets the item associated with the specified name.
-    /// </summary>
-    /// <param name="name">The name of the item to get.</param>
-    /// <param name="result">
-    /// When this method returns, contains the item associated with the specified name, if the key is found; 
-    /// otherwise, <c>null</c>. This parameter is passed uninitialized.</param>
-    /// <returns>
-    /// <c>true</c> if the <see cref="LogixEnum{TEnum, TValue}"/> contains an item with the specified name; otherwise, <c>false</c>.
-    /// </returns>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>.</exception> 
-    /// <seealso cref="LogixEnum{TEnum, TValue}.FromName(string, bool)"/>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromName(string, bool, out TEnum)"/>
-    public static bool TryFromName(string? name, out TEnum? result) => TryFromName(name, false, out result);
-
-    /// <summary>
-    /// Gets the item associated with the specified name.
-    /// </summary>
-    /// <param name="name">The name of the item to get.</param>
-    /// <param name="ignoreCase"><c>true</c> to ignore case during the comparison; otherwise, <c>false</c>.</param>
-    /// <param name="result">
-    /// When this method returns, contains the item associated with the specified name, if the name is found; 
-    /// otherwise, <c>null</c>. This parameter is passed uninitialized.</param>
-    /// <returns>
-    /// <c>true</c> if the <see cref="LogixEnum{TEnum, TValue}"/> contains an item with the specified name; otherwise, <c>false</c>.
-    /// </returns>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>.</exception> 
-    /// <seealso cref="LogixEnum{TEnum, TValue}.FromName(string, bool)"/>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromName(string, out TEnum)"/>
-    public static bool TryFromName(string? name, bool ignoreCase, out TEnum? result)
-    {
-        if (!string.IsNullOrEmpty(name))
-            return ignoreCase
-                ? FromNameIgnoreCaseOptions.Value.TryGetValue(name, out result)
-                : FromNamOptions.Value.TryGetValue(name, out result);
-
-        result = default;
-        return false;
-    }
-
-    /// <summary>
-    /// Gets an item associated with the specified value.
-    /// </summary>
-    /// <param name="value">The value of the item to get.</param>
-    /// <returns>
-    /// The first item found that is associated with the specified value.
-    /// If the specified value is not found, throws a <see cref="KeyNotFoundException"/>.
-    /// </returns>
-    /// <exception cref="KeyNotFoundException"><paramref name="value"/> does not exist.</exception> 
-    /// <seealso cref="LogixEnum{TEnum, TValue}.FromValue(TValue, TEnum)"/>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromValue(TValue, out TEnum)"/>
-    public static TEnum FromValue(TValue value)
+    /// <param name="value">The string representation of the enum. This can be the name or value.</param>
+    /// <returns>The enum value corresponding to the specified string representation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="value"/> is null.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown if no enum value with the specified string representation is found.</exception>
+    /// <remarks>
+    /// This method will first check for enums by name. If none exist, then it will check the value lookup dictionary
+    /// of enumeration values converted to string. This combines factories for name and value
+    /// into a single method to avoid having to worry about the right one to use.
+    /// In this library we typically represent the XML value as the <see cref="Value"/> property which is also a string,
+    /// but we also in some places will relay on name, and we want to support both.
+    /// </remarks>
+    public static TEnum Parse(string value)
     {
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        if (!FromValueOptions.Value.TryGetValue(value, out var result))
-            throw new KeyNotFoundException($"No {typeof(TEnum).Name} with Value {value} found.");
+        if (NameLookup.Value.TryGetValue(value, out var named))
+            return named;
 
-        return result;
+        if (ValueLookup.Value.TryGetValue(value, out var literal))
+            return literal;
+
+        throw new KeyNotFoundException($"No {typeof(TEnum).Name} with Value {value} found.");
     }
 
     /// <summary>
-    /// Gets an item associated with the specified value.
+    /// Tries to parse the specified string representation of an enumeration name or value into its corresponding
+    /// enumeration type.
     /// </summary>
-    /// <param name="value">The value of the item to get.</param>
-    /// <param name="defaultValue">The value to return when item not found.</param>
-    /// <returns>
-    /// The first item found that is associated with the specified value.
-    /// If the specified value is not found, returns <paramref name="defaultValue"/>.
-    /// </returns>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.FromValue(TValue)"/>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.TryFromValue(TValue, out TEnum)"/>
-    public static TEnum FromValue(TValue value, TEnum defaultValue)
+    /// <param name="value">The string to parse. This can be the name or value.</param>
+    /// <returns>The enum value corresponding to the specified string representation if found; Otherwise, <c>null</c>.</returns>
+    /// <remarks>
+    /// This method will first check for enums by name. If none exist, then it will check the value lookup dictionary
+    /// of enumeration values converted to string. This combines factories for name and value
+    /// into a single method to avoid having to worry about the right one to use.
+    /// In this library we typically represent the XML value as the <see cref="Value"/> property which is also a string,
+    /// but we also in some places will relay on name, and we want to support both.
+    /// </remarks>
+    public static TEnum? TryParse(string? value)
     {
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
-
-        return FromValueOptions.Value.GetValueOrDefault(value, defaultValue);
-    }
-
-    /// <summary>
-    /// Gets an item associated with the specified value.
-    /// </summary>
-    /// <param name="value">The value of the item to get.</param>
-    /// <param name="result">
-    /// When this method returns, contains the item associated with the specified value, if the value is found; 
-    /// otherwise, <c>null</c>. This parameter is passed uninitialized.</param>
-    /// <returns>
-    /// <c>true</c> if the <see cref="LogixEnum{TEnum, TValue}"/> contains an item with the specified name; otherwise, <c>false</c>.
-    /// </returns>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.FromValue(TValue)"/>
-    /// <seealso cref="LogixEnum{TEnum, TValue}.FromValue(TValue, TEnum)"/>
-    public static bool TryFromValue(TValue? value, out TEnum? result)
-    {
-        if (value is not null)
-            return FromValueOptions.Value.TryGetValue(value, out result);
-
-        result = default;
-        return false;
+        return value is not null
+            ? NameLookup.Value.TryGetValue(value, out var named)
+                ? named
+                : ValueLookup.Value.GetValueOrDefault(value)
+            : null;
     }
 
     /// <inheritdoc />
-    public override string ToString() => Value.ToString();
+    public sealed override string ToString() => Value.ToString()!;
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
@@ -367,8 +285,8 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// </summary>
     /// <param name="other">An <see cref="LogixEnum{TEnum, TValue}"/> value to compare to this instance.</param>
     /// <returns>A signed number indicating the relative values of this instance and <paramref name="other"/>.</returns>
-    public virtual int CompareTo(LogixEnum<TEnum, TValue> other) =>
-        Value.CompareTo(other.Value);
+    public virtual int CompareTo(LogixEnum<TEnum, TValue>? other) =>
+        other is not null ? Value.CompareTo(other.Value) : -1;
 
     /// <summary>
     /// Compares this instance to a specified <see cref="LogixEnum{TEnum, TValue}"/> and returns an indication if
@@ -411,40 +329,17 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     public static bool operator >=(LogixEnum<TEnum, TValue> left, LogixEnum<TEnum, TValue> right) =>
         left.CompareTo(right) >= 0;
 
-
     /// <summary>
     /// Implicitly converts the provided <see cref="LogixEnum{TEnum,TValue}"/> to the underlying value. 
     /// </summary>
-    /// <param name="logixEnum">The enumeration type.</param>
+    /// <param name="enumeration">The enumeration type.</param>
     /// <returns>A value representing the enumeration</returns>
-    public static implicit operator TValue(LogixEnum<TEnum, TValue> logixEnum) => logixEnum.Value;
-
+    public static implicit operator TValue(LogixEnum<TEnum, TValue> enumeration) => enumeration.Value;
 
     /// <summary>
     /// Implicitly converts the provided value to a <see cref="LogixEnum{TEnum,TValue}"/>. 
     /// </summary>
     /// <param name="value">The enumeration value.</param>
     /// <returns>A enumeration value representing the value type.</returns>
-    public static explicit operator LogixEnum<TEnum, TValue>(TValue value) => FromValue(value);
-
-
-    /*private static TEnum[] GetOptions()
-    {
-        var baseType = typeof(TEnum);
-
-        return Assembly.GetAssembly(baseType)
-            .GetTypes()
-            .Where(t => baseType.IsAssignableFrom(t))
-            .SelectMany(GetFieldsOfType<TEnum>)
-            .OrderBy(t => t.Name)
-            .ToArray();
-    }*/
-
-    /*private static List<TFieldType> GetFieldsOfType<TFieldType>(Type type)
-    {
-        return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-            .Where(f => type.IsAssignableFrom(f.FieldType))
-            .Select(f => (TFieldType)f.GetValue(null))
-            .ToList();
-    }*/
+    public static explicit operator LogixEnum<TEnum, TValue>(TValue value) => Parse(value.ToString()!);
 }
