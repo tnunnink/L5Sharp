@@ -23,6 +23,21 @@ public static class LogixParser
         GetParsers().ToDictionary(t => t.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
+    /// Determines if the provided type is one that the <see cref="LogixParser"/> extensions can parse, meaning it is
+    /// either a type that implements a custom type converter from string (primitive .NET types) or one that implements
+    /// <see cref="ILogixParsable{T}"/> which are cached within this static factory class.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>
+    /// <c>true</c> if the type has a type converter that can convert from string or if the type implements
+    /// (or derives from a class implementing) <see cref="ILogixParsable{T}"/>; Otherwise, <c>false</c>.
+    /// </returns>
+    public static bool IsParsable(this Type type)
+    {
+        return Parsers.Value.ContainsKey(type) || TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(string));
+    }
+
+    /// <summary>
     /// Parses the provided string input to the specified type using the predefined L5X parser functions.
     /// </summary>
     /// <param name="input">The string input to parse.</param>
@@ -126,6 +141,10 @@ public static class LogixParser
 
         foreach (var type in types)
         {
+            if (!type.IsPublic)
+            {
+                Console.WriteLine(type.Name);
+            }
             var parse = BuildParseFunction(type);
             var tryParse = BuildTryParseFunction(type);
             var parsers = new Parsers(parse, tryParse);
@@ -167,9 +186,8 @@ public static class LogixParser
     {
         return type.GetInterfaces().Any(i =>
                    i.IsGenericType &&
-                   i.GetGenericTypeDefinition() == typeof(ILogixParsable<>)
-                   && i.GetGenericArguments().First() == type)
-               && type is { IsPublic: true };
+                   i.GetGenericTypeDefinition() == typeof(ILogixParsable<>) &&
+                   i.GetGenericArguments().All(a => !a.IsGenericTypeParameter));
     }
 }
 

@@ -6,6 +6,33 @@ namespace L5Sharp.Tests;
 public class LogixParserTests
 {
     [Test]
+    [TestCase(typeof(bool))]
+    [TestCase(typeof(int))]
+    [TestCase(typeof(uint))]
+    [TestCase(typeof(float))]
+    [TestCase(typeof(double))]
+    [TestCase(typeof(string))]
+    [TestCase(typeof(DateTime))]
+    public void IsParsable_NativeType_ShouldBeTrue(Type type)
+    {
+        type.IsParsable().Should().BeTrue();
+    }
+    
+    [Test]
+    [TestCase(typeof(TagName))]
+    [TestCase(typeof(Dimensions))]
+    [TestCase(typeof(Radix))]
+    [TestCase(typeof(ExternalAccess))]
+    [TestCase(typeof(DINT))]
+    [TestCase(typeof(REAL))]
+    [TestCase(typeof(AtomicType))]
+    [TestCase(typeof(STRING))]
+    public void IsParsable_LogixType_ShouldBeTrue(Type type)
+    {
+        type.IsParsable().Should().BeTrue();
+    }
+    
+    [Test]
     [TestCase("true", true, typeof(bool))]
     [TestCase("123", 123, typeof(int))]
     [TestCase("lol", "lol", typeof(string))]
@@ -45,10 +72,30 @@ public class LogixParserTests
     }
 
     [Test]
+    public void Parse_RadixTypeFromDerivedEnumValue_ToEnsurePrivateClassesAreAlsoParsable()
+    {
+        var type = Radix.Octal.GetType();
+        var result = "Octal".Parse(type);
+
+        result.Should().NotBeNull();
+        result.Should().Be(Radix.Octal);
+    }
+    
+    [Test]
+    public void Parse_RadixTypeFromDerivedEnumValue_ToEnsureThatThisAlsoParsedToOtherRadixTypes()
+    {
+        var type = Radix.Decimal.GetType();
+        var result = "Octal".Parse(type);
+
+        result.Should().NotBeNull();
+        result.Should().Be(Radix.Octal);
+    }
+
+    [Test]
     public void Parse_RadixByValue_ShouldBeExpected()
     {
         var result = "ASCII".Parse<Radix>();
-        
+
         result.Should().NotBeNull();
         result.Should().Be(Radix.Ascii);
     }
@@ -61,7 +108,7 @@ public class LogixParserTests
         result.Should().NotBeNull();
         result.Should().Be(TriggerOperation.TriggerLevel);
     }
-    
+
     [Test]
     public void Parse_TriggerOperationWhichHasIntValueTypeByName_ShouldBeExpected()
     {
@@ -84,7 +131,7 @@ public class LogixParserTests
     public void ParseByType_LogixEnum_ShouldBeExpected()
     {
         var result = "RLL".Parse(typeof(RoutineType));
-        
+
         result.Should().NotBeNull();
         result.Should().Be(RoutineType.RLL);
     }

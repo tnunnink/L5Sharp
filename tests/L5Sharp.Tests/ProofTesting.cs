@@ -47,4 +47,20 @@ public class ProofTesting
 
         parent.Should().NotBeNull();
     }
+
+    [Test]
+    public void ParserTypeTests()
+    {
+        var types = typeof(LogixParser).Assembly.GetTypes().Where(t =>
+            t.GetInterfaces().Any(i => 
+                i.IsGenericType && 
+                i.GetGenericTypeDefinition() == typeof(ILogixParsable<>) &&
+                i.GetGenericArguments().All(a => !a.IsGenericTypeParameter)))
+            .ToList();
+
+        foreach (var type in types)
+        {
+            Console.WriteLine(type.FullName);
+        }
+    }
 }
