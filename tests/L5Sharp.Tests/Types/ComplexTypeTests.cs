@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Runtime.InteropServices;
+using System.Xml.Linq;
 using FluentAssertions;
 
 namespace L5Sharp.Tests.Types;
@@ -572,5 +573,86 @@ public class ComplexTypeTests
         var xml = type.Serialize().ToString();
 
         return Verify(xml);
+    }
+    
+    [Test]
+    public void IsEquivalent_AreEqual_ShouldBeTrue()
+    {
+        var first = new ComplexType("Test", new List<LogixMember>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+        
+        var second = new ComplexType("Test", new List<LogixMember>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeTrue();
+    }
+    
+    [Test]
+    public void IsEquivalent_AreNotEqualByValue_ShouldBeFalse()
+    {
+        var first = new ComplexType("Test", new List<LogixMember>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+        
+        var second = new ComplexType("Test", new List<LogixMember>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.45f),
+            new("Member5", new TIMER())
+        });
+
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeFalse();
+    }
+    
+    [Test]
+    public void IsEquivalent_AreNotEqualByName_ShouldBeFalse()
+    {
+        var first = new ComplexType("Test", new List<LogixMember>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+        
+        var second = new ComplexType("Test", new List<LogixMember>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member6", new TIMER())
+        });
+
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeFalse();
     }
 }

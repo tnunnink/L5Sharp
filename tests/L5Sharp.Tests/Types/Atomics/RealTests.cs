@@ -806,6 +806,28 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Count.Should().Be(capacity);
         }
+        
+        [Test]
+        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        {
+            var first = new REAL(1.23f);
+            var second = new REAL(1.23f);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new REAL(1.23f);
+            var second = new REAL(1.32f);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeFalse();
+        }
 
         [Test]
         public void GetHashCode_RandomValue_ShouldBeHashOfValue()

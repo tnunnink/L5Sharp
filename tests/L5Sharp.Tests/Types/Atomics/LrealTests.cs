@@ -806,6 +806,28 @@ public class LrealTests
 
             result.Count.Should().Be(capacity);
         }
+        
+        [Test]
+        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        {
+            var first = new LREAL(1.23);
+            var second = new LREAL(1.23);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new LREAL(1.23);
+            var second = new LREAL(1.32);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeFalse();
+        }
 
         [Test]
         public void GetHashCode_RandomValue_ShouldBeHashOfValue()

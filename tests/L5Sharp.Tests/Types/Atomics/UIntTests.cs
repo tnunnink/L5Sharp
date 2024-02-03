@@ -267,6 +267,28 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Should().BeFalse();
         }
+        
+        [Test]
+        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        {
+            var first = new UINT(1);
+            var second = new UINT(1);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new UINT(1);
+            var second = new UINT(0);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeFalse();
+        }
 
         [Test]
         public void OperatorEquals_AreEqual_ShouldBeTrue()

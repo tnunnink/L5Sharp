@@ -333,6 +333,22 @@ public abstract class LogixElement : ILogixSerializable
     public virtual XElement Serialize() => Element;
 
     /// <summary>
+    /// Determines if the provided <see cref="LogixElement"/> is equivalent to this element in terms of both type and
+    /// state, including all child elements and values. 
+    /// </summary>
+    /// <param name="other">The <see cref="LogixElement"/> to compare.</param>
+    /// <returns><c>ture</c> if the elements are equivalent; Otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This internally compares the underlying XML nodes of the two elements to determine if all their
+    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e. it
+    /// compares the entire XML structure).
+    /// </remarks>
+    public bool IsEquivalent(LogixElement other)
+    {
+        return XNode.DeepEquals(Element, other.Element);
+    }
+
+    /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
     /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
     /// </summary>

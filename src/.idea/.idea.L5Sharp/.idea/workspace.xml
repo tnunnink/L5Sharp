@@ -10,9 +10,15 @@
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixParserTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixParserTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -374,7 +380,7 @@
       <workItem from="1702391689065" duration="1742000" />
       <workItem from="1703796358954" duration="1245000" />
       <workItem from="1703800672625" duration="78106000" />
-      <workItem from="1705431612618" duration="1181000" />
+      <workItem from="1705431612618" duration="7050000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -719,7 +725,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="323" />
+    <option name="localTasksCounter" value="324" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -755,7 +761,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Remove Extensions project and migrated back into primary project. Reorganized classes and code. Remoed LogixContent.cs and moved code into new primary entry point class L5X.cs. Updated LogixComponent.cs with new reference methods and L5X property to retrieve root from child elements. Updated and fixed some tests. Updated namespaces. Start of 0.16.0 with new features and organization." />
     <MESSAGE value="Created new L5XTypeAttribute.cs to replace the XmlTypeAttribute. This class allows multiple XML types to be defined so that components or elements can support multiple different XElements from the L5X (tag specifically) allowing us to remove LocalTag.cs. LogixContainer.cs also was updated to account for adding elements with different name and extensions were added and updated to get correct L5X type names." />
     <MESSAGE value="Further refinements and updates to new core L5X class. Continued to clean up and reorg code and documentation. Working on adding cross referencing and dependency functionality to component classes. Added some tests, fixed bugs. Moves some properties from component up into element and from tag up to component. Make ComponentKey.cs a new standard for identifying components globally. Preparing to rip off generic type from LogixComponent.cs to help with pattern matching for other methods like export and global mutation methods" />
     <MESSAGE value="Removed generic parameter from LogixComponent.cs. to simplify patter matching and type constraints. It was really only needed for methods that are now moved to LogixElement." />
@@ -780,7 +785,8 @@
     <MESSAGE value="Updated some docs. Added new LogixEnum.cs base class so that we can have a set of methods for retrieving enumeration options by just providing a Type instance and not using generic type definitions. This simplifies patter matching and gives us a nicer base for all enums. Added and fixed tests." />
     <MESSAGE value="Added Produce/Consume info for Tag component. Incremented version." />
     <MESSAGE value="Upgraded to .NET7. Reworked LogixParser.cs. Added new ILogixParsable.cs. Fixed tests and documentation." />
-    <option name="LAST_COMMIT_MESSAGE" value="Upgraded to .NET7. Reworked LogixParser.cs. Added new ILogixParsable.cs. Fixed tests and documentation." />
+    <MESSAGE value="Slight alteration to the types LogixParser.cs returns. Needed it to return private Radix classes as well so I can parse those to the runtime type. Also added IsParsable extension to allow callers to determine if a given type is supported by my LogixParser.cs extensions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Slight alteration to the types LogixParser.cs returns. Needed it to return private Radix classes as well so I can parse those to the runtime type. Also added IsParsable extension to allow callers to determine if a given type is supported by my LogixParser.cs extensions." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

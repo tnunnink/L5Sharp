@@ -92,6 +92,22 @@ public abstract class LogixType : ILogixSerializable
 
     /// <inheritdoc />
     public override int GetHashCode() => Name.GetHashCode();
+    
+    /// <summary>
+    /// Determines if the provided <see cref="LogixType"/> is equivalent to this type in terms of the underlying XML
+    /// data that comprise the complex object.
+    /// </summary>
+    /// <param name="other">The <see cref="LogixType"/> to compare.</param>
+    /// <returns><c>ture</c> if the types are equivalent; Otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This internally compares the underlying XML nodes of the two types to determine if all their
+    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e. it
+    /// compares the entire XML structure).
+    /// </remarks>
+    public bool IsEquivalent(LogixType other)
+    {
+        return XNode.DeepEquals(Serialize(), other.Serialize());
+    }
 
     /// <summary>
     /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixType"/>;
@@ -284,7 +300,7 @@ public abstract class LogixType : ILogixSerializable
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
-    public static implicit operator LogixType(LogixType[,] value) =>ToArrayType(value);
+    public static implicit operator LogixType(LogixType[,] value) => ToArrayType(value);
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixType"/>.
@@ -300,7 +316,7 @@ public abstract class LogixType : ILogixSerializable
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(Dictionary<string, LogixType> value) =>
         new ComplexType(nameof(ComplexType), value.Select(m => new LogixMember(m.Key, m.Value)));
-    
+
     /// <summary>
     /// Converts the current array object to a <see cref="ArrayType{TLogixType}"/> of the concrete logix type by
     /// inspecting the first element's type in the array. 
@@ -321,7 +337,7 @@ public abstract class LogixType : ILogixSerializable
         var type = array.Cast<LogixType>().First().GetType();
         var arrayType = typeof(ArrayType<>).MakeGenericType(type);
         var parameterType = typeof(Array);
-        var constructor = arrayType.GetConstructor(new[] { parameterType })!;
+        var constructor = arrayType.GetConstructor([parameterType])!;
         var parameter = Expression.Parameter(parameterType, "array");
         var creator = Expression.New(constructor, parameter);
         var lambda = Expression.Lambda<Func<Array, ArrayType>>(creator, parameter);

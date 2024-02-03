@@ -141,10 +141,6 @@ public static class LogixParser
 
         foreach (var type in types)
         {
-            if (!type.IsPublic)
-            {
-                Console.WriteLine(type.Name);
-            }
             var parse = BuildParseFunction(type);
             var tryParse = BuildTryParseFunction(type);
             var parsers = new Parsers(parse, tryParse);

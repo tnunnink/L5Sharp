@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 
 namespace L5Sharp.Core;
 
@@ -11,6 +12,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[PublicAPI]
 public class Routine : LogixComponent
 {
     /// <summary>

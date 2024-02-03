@@ -520,7 +520,7 @@ public class LogixElementTests
 
         return Verify(element.Serialize().ToString());
     }
-    
+
     [Test]
     public Task SetContainer_NoValueCollectionWithElements_ShouldBeVerified()
     {
@@ -529,9 +529,9 @@ public class LogixElementTests
 
         element.ChildElements = new LogixContainer<ChildElement>
         {
-            new() { SomeValue = "Child_1"},
-            new() { SomeValue = "Child_2"},
-            new() { SomeValue = "Child_3"}
+            new() { SomeValue = "Child_1" },
+            new() { SomeValue = "Child_2" },
+            new() { SomeValue = "Child_3" }
         };
 
         return Verify(element.Serialize().ToString());
@@ -550,9 +550,9 @@ public class LogixElementTests
 
         element.ChildElements = new LogixContainer<ChildElement>
         {
-            new() { SomeValue = "Child_3"},
-            new() { SomeValue = "Child_2"},
-            new() { SomeValue = "Child_1"}
+            new() { SomeValue = "Child_3" },
+            new() { SomeValue = "Child_2" },
+            new() { SomeValue = "Child_1" }
         };
 
         return Verify(element.Serialize().ToString());
@@ -573,7 +573,7 @@ public class LogixElementTests
 
         return Verify(element.Serialize().ToString());
     }
-    
+
     [Test]
     public void GetDateTime_HasValue_ShouldBeExpectedValue()
     {
@@ -628,7 +628,7 @@ public class LogixElementTests
 
         return Verify(element.Serialize().ToString());
     }
-    
+
     [Test]
     public Task SetDescription_NoValueToValue_ShouldBeVerified()
     {
@@ -954,6 +954,99 @@ public class LogixElementTests
         converted.L5XType.Should().Be("Test");
         converted.Should().BeOfType<TestElement>();
         converted.Should().BeSameAs(element);
+    }
+
+    [Test]
+    public void IsEquivalent_AreEquivalent_ShouldBeTrue()
+    {
+        var first = new TestElement();
+        var second = new TestElement();
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsEquivalent_AreEquivalentWithSetProperties_ShouldBeTrue()
+    {
+        var first = new TestElement
+        {
+            OptionalValue = "Testing",
+            Property = "SomeValue",
+            Description = "This is a test",
+            Date = new DateTime(2024, 1, 1)
+        };
+
+        var second = new TestElement
+        {
+            OptionalValue = "Testing",
+            Property = "SomeValue",
+            Description = "This is a test",
+            Date = new DateTime(2024, 1, 1)
+        };
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeTrue();
+    }
+    
+    [Test]
+    public void IsEquivalent_AreNotEquivalentWithOneDifferent_ShouldBeFalse()
+    {
+        var first = new TestElement
+        {
+            OptionalValue = "Testing",
+            Property = "SomeValue",
+            Description = "This is a  test",
+            Date = new DateTime(2024, 1, 1)
+        };
+
+        var second = new TestElement
+        {
+            OptionalValue = "Testing",
+            Property = "SomeValue",
+            Description = "This is a test",
+            Date = new DateTime(2024, 1, 1)
+        };
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeFalse();
+    }
+    
+    [Test]
+    public void IsEquivalent_AreNotEquivalentOneUnsetProperty_ShouldBeFalse()
+    {
+        var first = new TestElement
+        {
+            Property = "SomeValue",
+            Description = "This is a test",
+            Date = new DateTime(2024, 1, 1)
+        };
+
+        var second = new TestElement
+        {
+            OptionalValue = "Testing",
+            Property = "SomeValue",
+            Description = "This is a test",
+            Date = new DateTime(2024, 1, 1)
+        };
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void IsEquivalent_DifferentType_ShouldBeFalse()
+    {
+        var first = new TestElement();
+        var second = new ChildElement();
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeFalse();
     }
 }
 

@@ -568,6 +568,28 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Count.Should().Be(capacity);
         }
+        
+        [Test]
+        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        {
+            var first = new SINT(1);
+            var second = new SINT(1);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeTrue();
+        }
+        
+        [Test]
+        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        {
+            var first = new SINT(1);
+            var second = new SINT(0);
+
+            var result = first.IsEquivalent(second);
+
+            result.Should().BeFalse();
+        }
 
         [Test]
         public void GetHashCode_RandomValue_ShouldBeHashOfValue()

@@ -23,4 +23,26 @@ public class RungTests
         rung.Comment.Should().BeNull();
         rung.Text.Should().Be(NeutralText.Empty);
     }
+
+    [Test]
+    public void IsEquivalent_AreEqual_ShouldBeTrue()
+    {
+        var first = new Rung("XIC(SomeTag)OTE(AnotherTag);");
+        var second = new Rung("XIC(SomeTag)OTE(AnotherTag);");
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeTrue();
+    }
+    
+    [Test]
+    public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+    {
+        var first = new Rung("XIC(SomeTag)OTL(AnotherTag);");
+        var second = new Rung("XIC(SomeTag)OTE(AnotherTag);");
+
+        var result = first.IsEquivalent(second);
+
+        result.Should().BeFalse();
+    }
 }

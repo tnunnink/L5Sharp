@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 
 namespace L5Sharp.Core;
 
@@ -12,6 +13,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[PublicAPI]
 [L5XType(L5XName.Tag)]
 [L5XType(L5XName.LocalTag)]
 [L5XType(L5XName.ConfigTag)]
@@ -384,7 +386,7 @@ public class Tag : LogixComponent
     /// </remarks>
     public IEnumerable<Tag> Members()
     {
-        var members = Parent is null ? new List<Tag> {this} : new List<Tag>();
+        var members = Parent is null ? [this] : new List<Tag>();
 
         foreach (var member in Value.Members)
         {
@@ -409,7 +411,7 @@ public class Tag : LogixComponent
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var members = Parent is null && predicate.Invoke(TagName) ? new List<Tag> {this} : new List<Tag>();
+        var members = Parent is null && predicate.Invoke(TagName) ? [this] : new List<Tag>();
 
         foreach (var member in Value.Members)
         {
@@ -437,7 +439,7 @@ public class Tag : LogixComponent
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var members = Parent is null && predicate.Invoke(this) ? new List<Tag> {this} : new List<Tag>();
+        var members = Parent is null && predicate.Invoke(this) ? [this] : new List<Tag>();
 
         foreach (var member in Value.Members)
         {
