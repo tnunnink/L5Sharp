@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
+using System.Xml.Linq;
+using FluentAssertions;
 
 namespace L5Sharp.Tests;
 
@@ -176,5 +178,46 @@ public class LogixParserTests
         var result = "true".Parse<AtomicType>();
 
         result.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void IsItPossibleToFilterByWhatIsParsableToAGivenType()
+    {
+        var test = L5X.Load(Known.Example);
+
+        var values = GetDistinctValues(test).ToList();
+
+        var stopwatch = Stopwatch.StartNew();
+
+        var typed = values.Where(v => v.TryParse(typeof(int)) is not null).ToList();
+        
+        stopwatch.Stop();
+        Console.WriteLine(stopwatch.ElapsedMilliseconds);
+
+        foreach (var type in typed)
+        {
+            Console.WriteLine(type);
+        }
+    }
+
+    private static IEnumerable<string> GetDistinctValues(ILogixSerializable content)
+    {
+        var values = new HashSet<string>();
+
+        foreach (var element in content.Serialize().DescendantsAndSelf())
+        {
+            var value = element.Value.Trim().Trim(';');
+            if (string.IsNullOrEmpty(value)) continue;
+            values.Add(element.Value);
+        }
+
+        foreach (var attribute in content.Serialize().DescendantsAndSelf().Attributes())
+        {
+            var value = attribute.Value.Trim();
+            if (string.IsNullOrEmpty(value)) continue;
+            values.Add(attribute.Value);
+        }
+
+        return values;
     }
 }

@@ -13,12 +13,6 @@ namespace L5Sharp.Core;
 /// </summary>
 public static class LogixParser
 {
-    /*private static readonly Dictionary<Type, Func<string, object>> Parsers = new()
-    {
-        //Types
-        { typeof(AtomicType), AtomicType.Parse },        
-    };*/
-
     private static readonly Lazy<Dictionary<Type, Parsers>> Parsers = new(() =>
         GetParsers().ToDictionary(t => t.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -130,9 +124,9 @@ public static class LogixParser
         //The fallback is just seeing if the type has a defined converter which primitive types do.
         var converter = TypeDescriptor.GetConverter(type);
         if (converter.CanConvertFrom(typeof(string)))
-            return s => converter.ConvertFrom(s);
+            return s => converter.IsValid(s) ? converter.ConvertFrom(s) : null;
 
-        throw new InvalidOperationException($"No try parse function has been defined for type '{type}'");
+        return _ => null;
     }
 
     private static IEnumerable<KeyValuePair<Type, Parsers>> GetParsers()
