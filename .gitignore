@@ -7,7 +7,7 @@
 /data/
 /local/
 /tests/L5Sharp.Context.Tests/TestFiles/Template.xml
-L5X.xsd
+/tests/L5Sharp.AcdTest/*
 
 # User-specific files
 *.rsuser
