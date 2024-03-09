@@ -64,6 +64,4 @@ public class RoutineTests
 
         routine.Content<Rung>().Count().Should().Be(3);
     }
-    
-    
 }

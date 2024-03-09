@@ -956,12 +956,21 @@ public class LogixElementTests
         converted.Should().BeSameAs(element);
     }
 
+    /*[Test]
+    public void Parse_ValidXml_ShouldNotBeNull()
+    {
+        
+        var element = LogixElement.Parse("");
+
+        element.Should().NotBeNull();
+    }*/
+
     [Test]
     public void IsEquivalent_AreEquivalent_ShouldBeTrue()
     {
         var first = new TestElement();
         var second = new TestElement();
-
+        
         var result = first.IsEquivalent(second);
 
         result.Should().BeTrue();

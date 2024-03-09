@@ -49,6 +49,20 @@ public class Program : LogixComponent
         get => GetValue<ProgramType>() ?? ProgramType.Normal;
         set => SetValue(value);
     }
+    
+    /// <summary>
+    /// The <see cref="ComponentClass"/> value indicating whether this component is a standard or safety type component.
+    /// </summary>
+    /// <value>A <see cref="Core.ComponentClass"/> option representing class of the component.</value>
+    /// <remarks>
+    /// Specify the class of the program. This attribute applies only to safety controller projects.
+    /// Do not use this attribute if the program is an Equipment Phase program.
+    /// </remarks>
+    public ComponentClass? Class
+    {
+        get => GetValue<ComponentClass>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The value indicating whether the program has current test edits pending.

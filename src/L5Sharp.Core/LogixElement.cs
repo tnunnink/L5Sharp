@@ -15,7 +15,7 @@ namespace L5Sharp.Core;
 /// a single <see cref="XElement"/> and pass it to the base constructor to be deserializable by the library.
 /// </summary>
 [PublicAPI]
-public abstract class LogixElement : ILogixSerializable
+public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixElement>
 {
     /// <summary>
     /// Creates a new default <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
@@ -331,21 +331,20 @@ public abstract class LogixElement : ILogixSerializable
     /// </para>
     /// </remarks>
     public virtual XElement Serialize() => Element;
-
-    /// <summary>
-    /// Determines if the provided <see cref="LogixElement"/> is equivalent to this element in terms of both type and
-    /// state, including all child elements and values. 
-    /// </summary>
-    /// <param name="other">The <see cref="LogixElement"/> to compare.</param>
-    /// <returns><c>ture</c> if the elements are equivalent; Otherwise, <c>false</c>.</returns>
-    /// <remarks>
-    /// This internally compares the underlying XML nodes of the two elements to determine if all their
-    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e. it
-    /// compares the entire XML structure).
-    /// </remarks>
-    public bool IsEquivalent(LogixElement other)
+    
+    /// <inheritdoc />
+    public static LogixElement Parse(string value)
     {
-        return XNode.DeepEquals(Element, other.Element);
+        var element = XElement.Parse(value);
+        return element.Deserialize();
+    }
+
+    /// <inheritdoc />
+    public static LogixElement? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return default;
+        var element = XElement.Parse(value);
+        return element.Deserialize();
     }
 
     /// <summary>

@@ -1,0 +1,5 @@
+﻿<Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" Class="Safety" DataType="DINT" Radix="Decimal">
+  <Data Format="Decorated">
+    <DataValue DataType="DINT" Radix="Decimal" Value="100" />
+  </Data>
+</Tag>

@@ -175,6 +175,17 @@ public class Tag : LogixComponent
     }
 
     /// <summary>
+    /// The <see cref="ComponentClass"/> value indicating whether this component is a standard or safety type component.
+    /// </summary>
+    /// <value>A <see cref="Core.ComponentClass"/> option representing class of the component.</value>
+    /// <remarks>Specify the class of the tag. This attribute applies only to safety controller projects.</remarks>
+    public ComponentClass? Class
+    {
+        get => GetValue<ComponentClass>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
     /// A type indicating whether the current tag component is a base tag, or alias for another tag instance.
     /// </summary>
     /// <value>A <see cref="Core.TagType"/> option representing the type of tag component.</value>
@@ -214,7 +225,7 @@ public class Tag : LogixComponent
         get => GetValue<bool?>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// The <see cref="Core.ProduceInfo"/> defining the configuration for a produced tag.
     /// </summary>
@@ -228,7 +239,7 @@ public class Tag : LogixComponent
         get => GetComplex<ProduceInfo>();
         set => SetComplex(value);
     }
-    
+
     /// <summary>
     /// The <see cref="Core.ConsumeInfo"/> defining the configuration for a consumed tag.
     /// </summary>
@@ -330,7 +341,7 @@ public class Tag : LogixComponent
             return remaining.IsEmpty ? tag : tag[remaining];
         }
     }
-    
+
     /// <summary>
     /// Adds a new member to the tag's complex data structure.
     /// </summary>
@@ -481,8 +492,8 @@ public class Tag : LogixComponent
     /// <typeparam name="TLogixType">The logix data type of the tag. Type must have parameterless constructor to create.</typeparam>
     /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
     public static Tag New<TLogixType>(string name) where TLogixType : LogixType, new() =>
-        new() {Name = name, Value = new TLogixType()};
-    
+        new() { Name = name, Value = new TLogixType() };
+
     /// <summary>
     /// Removes a member with the specified name from the tag's complex data structure.
     /// </summary>
@@ -499,7 +510,7 @@ public class Tag : LogixComponent
             throw new InvalidOperationException("Can only mutate ComplexType tags.");
         complexType.Remove(name);
     }
-    
+
     /// <summary>
     /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
     /// this <c>Tag</c>. 

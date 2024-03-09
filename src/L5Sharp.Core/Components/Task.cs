@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 
 namespace L5Sharp.Core;
 
@@ -20,6 +21,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[PublicAPI]
 public class Task : LogixComponent
 {
     /// <summary>
@@ -54,6 +56,19 @@ public class Task : LogixComponent
     {
         get => GetRequiredValue<TaskType>();
         set => SetRequiredValue(value);
+    }
+
+    /// <summary>
+    /// The <see cref="ComponentClass"/> value indicating whether this component is a standard or safety type component.
+    /// </summary>
+    /// <value>A <see cref="Core.ComponentClass"/> option representing class of the component.</value>
+    /// <remarks>
+    /// Specify the class of the task. This attribute applies only to safety controller projects.
+    /// </remarks>
+    public ComponentClass? Class
+    {
+        get => GetValue<ComponentClass>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -117,7 +132,7 @@ public class Task : LogixComponent
         get => GetValue<TaskEventTrigger>(L5XName.EventInfo.XName());
         set => SetValue(value, L5XName.EventInfo.XName());
     }
-    
+
     /// <summary>
     /// The tag name that the event task consumes. Only used for event tasks.
     /// </summary>
@@ -130,7 +145,7 @@ public class Task : LogixComponent
         get => GetValue<TagName>(L5XName.EventInfo.XName());
         set => SetValue(value, L5XName.EventInfo.XName());
     }
-    
+
     /// <summary>
     /// The value indicating whether timeouts are enabled for the event task. Only used for event tasks.
     /// </summary>
@@ -175,12 +190,12 @@ public class Task : LogixComponent
     public override void Delete()
     {
         if (Element.Parent is null || !IsAttached) return;
-        
+
         foreach (var program in Programs)
         {
             program.Delete();
         }
-        
+
         Element.Remove();
     }
 

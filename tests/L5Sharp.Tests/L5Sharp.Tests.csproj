@@ -292,6 +292,9 @@
       <None Update="Components\TagTests.ConsumeInfo_SetNewValue_ShouldBeVerified.verified.xml">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.Class_SetValidValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

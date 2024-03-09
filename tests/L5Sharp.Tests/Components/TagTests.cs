@@ -889,4 +889,14 @@ public class TagTests
     }
 
     #endregion
+    
+    [Test]
+    public Task Class_SetValidValue_ShouldBeVerified()
+    {
+        var tag = new Tag { Name = "Test", Class = ComponentClass.Safety, Value = 100};
+
+        var xml = tag.Serialize().ToString();
+
+        return VerifyXml(xml); 
+    }
 }

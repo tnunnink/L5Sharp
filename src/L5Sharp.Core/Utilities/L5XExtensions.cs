@@ -37,7 +37,7 @@ public static class L5XExtensions
             throw new ArgumentException(
                 $"The type {type.Name} is not assignable (inherited) from '{typeof(TReturn).Name}'.");
 
-        var constructor = type.GetConstructor(new[] { typeof(XElement) });
+        var constructor = type.GetConstructor([typeof(XElement)]);
 
         if (constructor is null || !constructor.IsPublic)
             throw new ArgumentException(
@@ -83,6 +83,23 @@ public static class L5XExtensions
     /// This could be used a lot since Logix naming is case agnostic.</remarks>
     public static bool IsEquivalent(this string value, string other) =>
         StringComparer.OrdinalIgnoreCase.Equals(value, other);
+
+    /// <summary>
+    /// Determines if the provided object is structurally or deeply equal to another object by performing a compare
+    /// of the underlying XML data for the objects. 
+    /// </summary>
+    /// <param name="serializable">This <see cref="ILogixSerializable"/> object to compare.</param>
+    /// <param name="other">The other <see cref="ILogixSerializable"/> to compare.</param>
+    /// <returns><c>ture</c> if the objects are equivalent; Otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This internally compares the underlying XML nodes of the two elements to determine if all their
+    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e. it
+    /// compares the entire XML structure).
+    /// </remarks>
+    public static bool IsEquivalent(this ILogixSerializable serializable, ILogixSerializable other)
+    {
+        return XNode.DeepEquals(serializable.Serialize(), other.Serialize());
+    }
 
     /// <summary>
     /// Gets the L5X element name of the type's containing element. 

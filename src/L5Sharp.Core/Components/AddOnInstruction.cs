@@ -46,6 +46,19 @@ public class AddOnInstruction : LogixComponent
     public AddOnInstruction(XElement element) : base(element)
     {
     }
+    
+    /// <summary>
+    /// The <see cref="ComponentClass"/> value indicating whether this component is a standard or safety type component.
+    /// </summary>
+    /// <value>A <see cref="Core.ComponentClass"/> option representing class of the component.</value>
+    /// <remarks>
+    /// Specify the class of the Add-On Instruction. This attribute applies only to safety controller projects.
+    /// </remarks>
+    public ComponentClass? Class
+    {
+        get => GetValue<ComponentClass>();
+        set => SetValue(value);
+    }
 
     /// <summary>
     /// The revision of the instruction.
