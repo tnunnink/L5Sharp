@@ -45,4 +45,53 @@ public class RungTests
 
         result.Should().BeFalse();
     }
+
+    [Test]
+    public Task New_Default_ShouldBeVerified()
+    {
+        var rung = new Rung();
+
+        return VerifyXml(rung.Serialize().ToString());
+    }
+    
+    [Test]
+    public Task New_TextOverload_ShouldBeVerified()
+    {
+        var rung = new Rung("XIC(MyTag)[OTE(SomeOutput)TMR(TimerTag,?,?)];");
+
+        return VerifyXml(rung.Serialize().ToString());
+    }
+
+    [Test]
+    public Task SetComment_DefaultRung_ShouldBeValid()
+    {
+        var rung = new Rung();
+
+        rung.Comment = "This is a test comment";
+
+        return VerifyXml(rung.Serialize().ToString());
+    }
+    
+    [Test]
+    public Task SetCommentThenText_ShouldBeValid()
+    {
+        var rung = new Rung();
+
+        rung.Comment = "This is a test comment";
+        rung.Text = "AFI;";
+
+        return VerifyXml(rung.Serialize().ToString());
+    }
+
+    [Test]
+    public Task SetTextToNullThenCommentThenTextAgainShouldBeValid()
+    {
+        var rung = new Rung();
+
+        rung.Text = null!;
+        rung.Comment = "This is a test comment";
+        rung.Text = "AFI;";
+
+        return VerifyXml(rung.Serialize().ToString());
+    }
 }

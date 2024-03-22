@@ -70,7 +70,7 @@ public class Rung : LogixCode
     public string? Comment
     {
         get => GetProperty<string>();
-        set => SetProperty(value);
+        set => SetFirstProperty(value);
     }
     
     /// <summary>

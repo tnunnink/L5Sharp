@@ -353,7 +353,7 @@ public static class LogixTypeExtensions
         if (array is null) throw new ArgumentNullException(nameof(array));
         var arrayType = typeof(ArrayType<>).MakeGenericType(typeof(TLogixType));
         var parameterType = typeof(TLogixType[]);
-        var constructor = arrayType.GetConstructor(new[] { parameterType })!;
+        var constructor = arrayType.GetConstructor([parameterType])!;
         var parameter = Expression.Parameter(parameterType, "array");
         var creator = Expression.New(constructor, parameter);
         var lambda = Expression.Lambda<Func<TLogixType[], ArrayType<TLogixType>>>(creator, parameter);

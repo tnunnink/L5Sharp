@@ -703,6 +703,50 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
 
         element.ReplaceWith(new XElement(name, new XCData(property)));
     }
+    
+    /// <summary>
+    /// Adds, updates, or removes the first child element with the provided value type object.
+    /// </summary>
+    /// <param name="name">The name of the property element to add, update, or remove.</param>
+    /// <param name="value">The value to assign to the child element. The child element is removed if the value is null.
+    /// Otherwise, the value is converted to its string representation, wrapped in a <see cref="XCData"/> object,
+    /// and assigned to the Value property of the child element.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <remarks>
+    /// <para>
+    /// This method will always set the first child element directly under the element for which it is called. This is
+    /// important for various element types as they need to ensure the the order of child elements or properties to
+    /// be correctly imported.
+    /// </para>
+    /// <para>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </para>
+    /// </remarks>
+    protected void SetFirstProperty<T>(T value, [CallerMemberName] string? name = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        var property = value?.ToString();
+        var element = Element.Element(name);
+
+        if (property is null)
+        {
+            element?.Remove();
+            return;
+        }
+
+        if (element is null)
+        {
+            Element.AddFirst(new XElement(name, new XCData(property)));
+            return;
+        }
+
+        element.ReplaceWith(new XElement(name, new XCData(property)));
+    }
+    
 
     /// <summary>
     /// Sets the complex type object of a child element, adds a child element, or removes a child element.

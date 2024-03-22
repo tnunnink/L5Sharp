@@ -156,6 +156,19 @@ public class TagTests
         parent?.TagName.Should().Be("Test.Simple");
     }
 
+    [Test]
+    public void New_NamedComplexType_ShouldHaveExpectedDataTypeAndMembers()
+    {
+        var tag = new Tag { Name = "Test", Value = new ComplexType("MyCustomType") };
+        
+        tag.Add("Member01", new DINT(100));
+        tag.Add("Member02", new TIMER { PRE = 3000 });
+        tag.Add("Member03", new ComplexType("SubType"));
+
+        tag.DataType.Should().Be("MyCustomType");
+        tag.Members().Where(m => m.TagName.Depth == 1).Should().HaveCount(3);
+    }
+
     #endregion
 
     #region DeserializeTests
@@ -868,7 +881,7 @@ public class TagTests
 
         return VerifyXml(xml);
     }
-    
+
     [Test]
     public Task ConsumeInfo_SetNewValue_ShouldBeVerified()
     {
@@ -889,14 +902,14 @@ public class TagTests
     }
 
     #endregion
-    
+
     [Test]
     public Task Class_SetValidValue_ShouldBeVerified()
     {
-        var tag = new Tag { Name = "Test", Class = ComponentClass.Safety, Value = 100};
+        var tag = new Tag { Name = "Test", Class = ComponentClass.Safety, Value = 100 };
 
         var xml = tag.Serialize().ToString();
 
-        return VerifyXml(xml); 
+        return VerifyXml(xml);
     }
 }

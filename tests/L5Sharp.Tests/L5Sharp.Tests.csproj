@@ -295,6 +295,9 @@
       <None Update="Components\TagTests.Class_SetValidValue_ShouldBeVerified.verified.xml">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
+      <None Update="Elements\RungTests.SetTextToNullThenCommentThenTextAgainShouldBeValid.verified.xml">
+        <DependentUpon>RungTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
