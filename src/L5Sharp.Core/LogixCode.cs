@@ -21,7 +21,7 @@ namespace L5Sharp.Core;
 /// same number.
 /// </para>
 /// </remarks>
-public abstract class LogixCode : LogixElement, ILogixReferencable
+public abstract class LogixCode : LogixObject, ILogixReferencable
 {
     /// <summary>
     /// Creates a new <see cref="LogixCode"/> instance with default values.

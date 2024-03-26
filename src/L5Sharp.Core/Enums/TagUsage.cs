@@ -19,7 +19,6 @@ public class TagUsage : LogixEnum<TagUsage, string>
     /// </returns>
     public static TagUsage Default(LogixType logixType) => logixType is AtomicType ? Input : InOut;
 
-
     /// <summary>
     /// Represents a Null <see cref="TagUsage"/> value.
     /// </summary>

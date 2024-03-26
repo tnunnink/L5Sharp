@@ -33,8 +33,6 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(REAL).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(0);
             type.Radix.Should().Be(Radix.Float);
         }
@@ -134,17 +132,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var clone = type.Clone();
 
             clone.Should().Be(1.23f);
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new REAL(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]

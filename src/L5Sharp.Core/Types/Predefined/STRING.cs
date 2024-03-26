@@ -35,9 +35,6 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
     {
     }
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
     /// <summary>
     /// Parses the provided string into a <see cref="STRING"/> value.
     /// </summary>

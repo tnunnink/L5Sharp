@@ -20,8 +20,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new ALARM_DIGITAL();
 
             type.Name.Should().Be(nameof(ALARM_DIGITAL));
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(28);
             type.Severity.Should().Be(0);
             type.MinDurationPRE.Should().Be(0);

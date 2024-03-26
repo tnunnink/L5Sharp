@@ -49,16 +49,6 @@ public static class L5XExtensions
     }
 
     /// <summary>
-    /// A concise method for getting a required attribute value from a XElement object.
-    /// </summary>
-    /// <param name="element">The element containing the attribute to retrieve.</param>
-    /// <param name="name">The name of the attribute value to get.</param>
-    /// <returns>The <see cref="string"/> value of the element's specified attribute.</returns>
-    /// <exception cref="InvalidOperationException">No attribute with <c>name</c> exists for the current element.</exception>
-    public static string Get(this XElement element, XName name) =>
-        element.Attribute(name)?.Value ?? throw element.L5XError(name);
-
-    /// <summary>
     /// Determines if the current string is a value <see cref="TagName"/> string.
     /// </summary>
     /// <param name="input">The string input to analyze.</param>
@@ -99,6 +89,42 @@ public static class L5XExtensions
     public static bool IsEquivalent(this ILogixSerializable serializable, ILogixSerializable other)
     {
         return XNode.DeepEquals(serializable.Serialize(), other.Serialize());
+    }
+
+    /// <summary>
+    /// Determines if the provided element has a structure that represents a <see cref="StringType"/> structure,
+    /// structure member, array, or array member.
+    /// </summary>
+    /// <param name="element">The element to check for the known string data structure.</param>
+    /// <returns><c>true</c> if the element has the string type structure, otherwise <c>false</c>.</returns>
+    /// <remarks>
+    /// This is needed to determine if we are deserializing a complex type or string type. String structure is unique
+    /// in that it will have a data value member called DATA with a ASCII radix, a non-null element value, and a
+    /// data type attribute value equal to that of the parent structure element attribute. If we don't intercept this
+    /// structure prior to deserializing it, we will encounter exceptions because it doesn't conform to the normal
+    /// convention that data value members should represent and atomic structure. My thought is Logix did this to conserve
+    /// space in the L5X, but not sure.
+    /// </remarks>
+    public static bool IsStringData(this XElement? element)
+    {
+        if (element is null) return false;
+
+        //If this is a structure or structure member it could potentially be the string structure.
+        if (element.Name == L5XName.Structure || element.Name == L5XName.StructureMember)
+        {
+            return element.Elements(L5XName.DataValueMember).Any(e =>
+                e.Attribute(L5XName.Name)?.Value == "DATA"
+                && e.Attribute(L5XName.DataType)?.Value == e.Parent?.Attribute(L5XName.DataType)?.Value
+                && e.Attribute(L5XName.Radix)?.Value == "ASCII");
+        }
+
+        //If this is an array or array member, we need to get elements and check if they are all string structure or not.
+        if (element.Name == L5XName.Array || element.Name == L5XName.ArrayMember)
+        {
+            return element.Elements().Select(e => e.Element(L5XName.Structure)).All(x => x.IsStringData());
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -201,6 +227,49 @@ public static class L5XExtensions
     /// the code more concise.
     /// </remarks>
     public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
+    
+    /// <summary>
+    /// Gets the name value of the current member <see cref="XElement"/> object. This can be either the <c>Name</c> or
+    /// <c>Index</c> attribute depending on what member type it is.
+    /// </summary>
+    /// <param name="element">The element object for which to get the name.</param>
+    /// <returns>A <see cref="string"/> containing the value of the name or index attribute. If neither attribute is
+    /// found then this returns an empty string.</returns>
+    public static string MemberName(this XElement element)
+    {
+        var name = element.Attribute(L5XName.Name)?.Value;
+        if (name is not null) return name;
+
+        var index = element.Attribute(L5XName.Index)?.Value;
+        return index ?? string.Empty;
+    }
+    
+    /// <summary>
+    /// Gets the <c>DataType</c> attribute value for the provided element or it's parent element, which ever value is
+    /// found first.
+    /// </summary>
+    /// <param name="element">The element to retrieve the data type for.</param>
+    /// <returns>A <see cref="string"/> indicating the value of the data type property.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if this element or it's parent does not have a
+    /// <c>DataType</c> attribute.</exception>
+    /// <remarks>
+    /// This is a helper for deserializing data structures. Most data elements have the data type we need
+    /// in order to determine which object to construct, but some don't and we need to look at it's parent element
+    /// to find out. Obviously, if we can't find the <c>DataType</c> value then we can't deserialize the type.
+    /// </remarks>
+    public static string DataType(this XElement element)
+    {
+        //first check the provided element and return if found.
+        var local = element.Attribute(L5XName.DataType)?.Value;
+        if (local is not null) return local;
+
+        //then check the parent element and return if found.
+        var parent = element.Parent?.Attribute(L5XName.DataType)?.Value;
+        if (parent is not null) return parent;
+        
+        //otherwise we don't really know. This breaks the convention.
+        throw element.L5XError(L5XName.DataType);
+    }
 
     /// <summary>
     /// Determines the tag name for a given <see cref="XElement"/> representing a module IO tag.
@@ -242,6 +311,16 @@ public static class L5XExtensions
             return "C";
         }
     }
+    
+    /// <summary>
+    /// A concise method for getting a required attribute value from a XElement object.
+    /// </summary>
+    /// <param name="element">The element containing the attribute to retrieve.</param>
+    /// <param name="name">The name of the attribute value to get.</param>
+    /// <returns>The <see cref="string"/> value of the element's specified attribute.</returns>
+    /// <exception cref="InvalidOperationException">No attribute with <c>name</c> exists for the current element.</exception>
+    public static string Get(this XElement element, XName name) =>
+        element.Attribute(name)?.Value ?? throw element.L5XError(name);
 
     /// <summary>
     /// Returns the string value as a <see cref="XName"/> value object.

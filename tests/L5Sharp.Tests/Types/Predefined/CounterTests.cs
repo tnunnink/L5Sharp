@@ -20,8 +20,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new COUNTER();
 
             type.Name.Should().Be(nameof(COUNTER));
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(7);
             type.PRE.Should().Be(0);
             type.ACC.Should().Be(0);

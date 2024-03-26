@@ -28,8 +28,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new STRING();
 
             type.Name.Should().Be("STRING");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.String);
             type.ToString().Should().BeEmpty();
             type.LEN.Should().NotBeNull();
             type.LEN.Should().BeOfType<DINT>();
@@ -39,12 +37,12 @@ namespace L5Sharp.Tests.Types.Predefined
 
             var data = type.Members.FirstOrDefault(m => m.Name == "DATA");
             data.Should().NotBeNull();
-            data?.DataType.Should().NotBeNull();
-            data?.DataType.Name.Should().NotBeNull();
+            data?.Value.Should().NotBeNull();
+            data?.Value.Name.Should().NotBeNull();
 
             var len = type.Members.FirstOrDefault(m => m.Name == "LEN");
             len.Should().NotBeNull();
-            len?.DataType.Should().NotBeNull();
+            len?.Value.Should().NotBeNull();
         }
 
         [Test]

@@ -34,8 +34,6 @@ public class StringTypeTests
         var type = new StringType();
 
         type.Name.Should().Be(nameof(StringType));
-        type.Family.Should().Be(DataTypeFamily.String);
-        type.Class.Should().Be(DataTypeClass.Unknown);
         type.Members.Should().HaveCount(2);
         type.LEN.Should().Be(0);
         type.DATA.As<ArrayType<SINT>>();

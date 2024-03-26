@@ -26,9 +26,6 @@ public sealed class TIMER : StructureType
     {
     }
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
     /// <summary>
     /// Gets the <see cref="PRE"/> member of the <see cref="TIMER"/> data type.
     /// </summary>

@@ -33,8 +33,6 @@ public class LrealTests
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(LREAL).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(0);
             type.Radix.Should().Be(Radix.Float);
         }
@@ -134,17 +132,6 @@ public class LrealTests
             var clone = type.Clone();
 
             clone.Should().Be(1.23);
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new LREAL(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]

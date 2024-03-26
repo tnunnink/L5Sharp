@@ -20,8 +20,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new MESSAGE();
 
             type.Name.Should().Be(nameof(MESSAGE));
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(13);
             type.MessageType.Should().BeEquivalentTo("");
             type.RequestedLength.Should().BeEquivalentTo(0);

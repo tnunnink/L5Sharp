@@ -11,8 +11,6 @@ public class NullTypeTests
         var type = NullType.Instance;
 
         type.Name.Should().Be("NULL");
-        type.Family.Should().Be(DataTypeFamily.None);
-        type.Class.Should().Be(DataTypeClass.Unknown);
         type.Members.Should().BeEmpty();
     }
 

@@ -27,8 +27,6 @@ namespace L5Sharp.Tests.Types.Custom
         {
         }
 
-        public override DataTypeClass Class => DataTypeClass.User;
-
         /// <summary>
         /// A simple boolean member
         /// </summary>

@@ -20,8 +20,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new TIMER();
 
             type.Name.Should().Be(nameof(TIMER));
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(5);
             type.DN.Should().Be(0);
             type.EN.Should().Be(0);

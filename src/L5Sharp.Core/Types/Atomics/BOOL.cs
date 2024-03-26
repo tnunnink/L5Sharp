@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
@@ -8,27 +7,44 @@ namespace L5Sharp.Core;
 /// Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <see cref="bool"/>. This object is meant
 /// to wrap the DataValue or DataValueMember data for the L5X tag data structure.
 /// </summary>
+[L5XType(nameof(BOOL))]
 public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable<BOOL>
 {
+    /// <summary>
+    /// The underlying typed value which is set upon construction and not changed. If the user changed
+    /// </summary>
     private readonly bool _value;
+    
+    /// <summary>
+    /// The value of the underlying data parsed to the corresponding primitive value type.
+    /// </summary>
+    private bool GetValue()
+    {
+        var value = Radix.ParseValue(Value);
+        return value is bool typed ? typed : (bool)Convert.ChangeType(value, typeof(bool));
+    }
+
+    /// <inheritdoc />
+    public BOOL(XElement element) : base(element)
+    {
+        _value = GetValue();
+    }
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
     /// </summary>
-    public BOOL()
+    public BOOL() : base(CreateElement(nameof(BOOL), Radix.Decimal, false))
     {
-        _value = default;
-        Radix = Radix.Decimal;
+        _value = GetValue();
     }
 
     /// <summary>
     /// Creates a new <see cref="BOOL"/> with the provided value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    public BOOL(bool value)
+    public BOOL(bool value) : base(CreateElement(nameof(BOOL), Radix.Decimal, value))
     {
-        _value = value;
-        Radix = Radix.Decimal;
+        _value = GetValue();
     }
 
     /// <summary>
@@ -36,22 +52,18 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable
     /// </summary>
     /// <param name="value">The <see cref="int"/> value to initialize the type with. All non-zero value
     /// will be evaluated as <c>true</c>.</param>
-    public BOOL(int value)
+    public BOOL(int value) : base(CreateElement(nameof(BOOL), Radix.Decimal, value == 1))
     {
-        _value = value != 0;
-        Radix = Radix.Decimal;
+        _value = GetValue();
     }
 
     /// <summary>
     /// Creates a new <see cref="BOOL"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Core.Radix"/> number format of the value.</param>
-    public BOOL(Radix radix)
+    public BOOL(Radix radix) : base(CreateElement(nameof(BOOL), radix, false))
     {
-        _value = default;
-        if (radix is null) throw new ArgumentNullException(nameof(radix));
-        if (!radix.SupportsType(this)) throw new ArgumentException("", nameof(radix));
-        Radix = radix;
+        _value = GetValue();
     }
 
     /// <summary>
@@ -59,22 +71,10 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public BOOL(bool value, Radix radix)
+    public BOOL(bool value, Radix radix) : base(CreateElement(nameof(BOOL), radix, value))
     {
-        _value = value;
-        if (radix is null) throw new ArgumentNullException(nameof(radix));
-        if (!radix.SupportsType(this)) throw new ArgumentException("", nameof(radix));
-        Radix = radix;
+        _value = GetValue();
     }
-
-    /// <inheritdoc />
-    public override string Name => nameof(BOOL);
-
-    /// <inheritdoc />
-    public override Radix Radix { get; }
-
-    /// <inheritdoc />
-    public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -100,9 +100,6 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable
             _ => false
         };
     }
-
-    /// <inheritdoc />
-    public override byte[] GetBytes() => BitConverter.GetBytes(_value);
 
     /// <inheritdoc />
     public override int GetHashCode() => _value.GetHashCode();

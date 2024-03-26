@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 /// contains some of the common properties and functions that all FBD/SFC elements share,
 /// such as X and Y coordinates, and ID.
 /// </summary>
-public abstract class DiagramElement : LogixElement, ILogixReferencable
+public abstract class DiagramElement : LogixObject, ILogixReferencable
 {
     /// <summary>
     /// Creates a new <see cref="DiagramElement"/> with default values and initializes the required \

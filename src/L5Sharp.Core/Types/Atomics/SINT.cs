@@ -1,44 +1,52 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents a <b>SINT</b> Logix atomic data type, or a type analogous to <see cref="sbyte"/>.
 /// </summary>
+[L5XType(nameof(SINT))]
 public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable<SINT>
 {
-    private readonly sbyte _value;
+    /// <summary>
+    /// The value of the underlying data parsed to the corresponding primitive value type.
+    /// </summary>
+    private new sbyte Value
+    {
+        get
+        {
+            var value = Radix.ParseValue(base.Value);
+            return value is sbyte typed ? typed : (sbyte)Convert.ChangeType(value, typeof(sbyte));
+        }
+    }
+    
+    /// <inheritdoc />
+    public SINT(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// Creates a new default <see cref="SINT"/> type.
     /// </summary>
-    public SINT()
+    public SINT() : base(CreateElement(nameof(SINT), Radix.Decimal, 0))
     {
-        _value = default;
-        Radix = Radix.Decimal;
     }
 
     /// <summary>
     /// Creates a new <see cref="SINT"/> with the provided value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    public SINT(sbyte value)
+    public SINT(sbyte value) : base(CreateElement(nameof(SINT), Radix.Decimal, value))
     {
-        _value = value;
-        Radix = Radix.Decimal;
     }
 
     /// <summary>
     /// Creates a new <see cref="SINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Core.Radix"/> number format of the value.</param>
-    public SINT(Radix radix)
+    public SINT(Radix radix) : base(CreateElement(nameof(SINT), radix, 0))
     {
-        _value = default;
-        if (radix is null) throw new ArgumentNullException(nameof(radix));
-        if (!radix.SupportsType(this))
-            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
-        Radix = radix;
     }
 
     /// <summary>
@@ -46,20 +54,9 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public SINT(sbyte value, Radix radix)
+    public SINT(sbyte value, Radix radix) : base(CreateElement(nameof(SINT), radix, value))
     {
-        _value = value;
-        if (radix is null) throw new ArgumentNullException(nameof(radix));
-        if (!radix.SupportsType(this))
-            throw new ArgumentException($"Invalid Radix {radix} for atomic type {Name}.", nameof(radix));
-        Radix = radix;
     }
-
-    /// <inheritdoc />
-    public override string Name => nameof(SINT);
-
-    /// <inheritdoc />
-    public override Radix Radix { get; }
 
     /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
@@ -68,7 +65,7 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
     public BOOL this[int bit] =>
-        Member(bit.ToString())?.DataType.As<BOOL>() ??
+        Member(bit.ToString())?.Value.As<BOOL>() ??
         throw new ArgumentOutOfRangeException($"The bit index {bit} is out of range for a {Name} atomic value.");
 
     /// <inheritdoc />
@@ -77,9 +74,9 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
         return obj switch
         {
             null => 1,
-            SINT typed => _value.CompareTo(typed._value),
-            AtomicType atomic => _value.CompareTo((sbyte)Convert.ChangeType(atomic, typeof(sbyte))),
-            ValueType value => _value.CompareTo((sbyte)Convert.ChangeType(value, typeof(sbyte))),
+            SINT typed => Value.CompareTo(typed.Value),
+            AtomicType atomic => Value.CompareTo((sbyte)Convert.ChangeType(atomic, typeof(sbyte))),
+            ValueType value => Value.CompareTo((sbyte)Convert.ChangeType(value, typeof(sbyte))),
             _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
         };
     }
@@ -89,18 +86,15 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     {
         return obj switch
         {
-            SINT value => value._value == _value,
-            AtomicType atomic => _value.Equals((sbyte)Convert.ChangeType(atomic, typeof(sbyte))),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(sbyte))),
+            SINT value => value.Value == Value,
+            AtomicType atomic => Value.Equals((sbyte)Convert.ChangeType(atomic, typeof(sbyte))),
+            ValueType value => Value.Equals(Convert.ChangeType(value, typeof(sbyte))),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override byte[] GetBytes() => unchecked( [(byte)_value]);
-
-    /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
     /// Parses a string into a <see cref="SINT"/> value.
@@ -140,28 +134,6 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
         return new SINT(converted, radix);
     }
 
-    /// <summary>
-    /// Executes the logic to update the atomic value and forward the data changed event up the type/member hierarchy. 
-    /// </summary>
-    /// <param name="sender">The member sending the change event.</param>
-    /// <param name="e">The event args of the event.</param>
-    /// <remarks>
-    /// Atomic members (bits) represent the value of the type. When the member data changed event is triggered,
-    /// we want to intercept that on the parent atomic type in order to change/update the reflected value. We can do that
-    /// by getting the changed member (sender) name (bit number) and value (bit value) and setting to get the updated
-    /// value. However, since atomic types ar immutable, we have to send the changed value up the chain to the parent
-    /// member (Tag, DataValue, DataValueMember) so that it can replace it's data type with the new atomic value. This is
-    /// captured in <see cref="LogixMember"/>.
-    /// </remarks>
-    protected override void OnMemberDataChanged(object? sender, EventArgs e)
-    {
-        if (sender is not LogixMember member) return;
-        var bit = int.Parse(member.Name);
-        var value = member.DataType.As<BOOL>();
-        var result = (sbyte)(value ? _value | (sbyte)(1 << bit) : _value & (sbyte)~(1 << bit));
-        RaiseDataChanged(new SINT(result, Radix));
-    }
-
     // Contains the implicit .NET conversions for the type.
 
     #region Conversions
@@ -178,7 +150,7 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="sbyte"/> type value.</returns>
-    public static implicit operator sbyte(SINT atomic) => atomic._value;
+    public static implicit operator sbyte(SINT atomic) => atomic.Value;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="SINT"/> value.
@@ -206,13 +178,13 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value != 0;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => Value != 0;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)_value;
+    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)Value;
 
     /// <inheritdoc />
-    char IConvertible.ToChar(IFormatProvider? provider) => (char)_value;
+    char IConvertible.ToChar(IFormatProvider? provider) => (char)Value;
 
     /// <inheritdoc />
     DateTime IConvertible.ToDateTime(IFormatProvider? provider) =>
@@ -223,22 +195,22 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider? provider) => _value;
+    double IConvertible.ToDouble(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider? provider) => _value;
+    short IConvertible.ToInt16(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider? provider) => _value;
+    int IConvertible.ToInt32(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider? provider) => _value;
+    long IConvertible.ToInt64(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider? provider) => _value;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider? provider) => _value;
+    float IConvertible.ToSingle(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
     string IConvertible.ToString(IFormatProvider? provider) => ToString();
@@ -274,13 +246,13 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)_value;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)Value;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)_value;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)Value;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)_value;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)Value;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.
@@ -291,27 +263,27 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     private object ToAtomic(Type conversionType)
     {
         if (conversionType == typeof(BOOL))
-            return new BOOL(_value != 0);
+            return new BOOL(Value != 0);
         if (conversionType == typeof(SINT))
-            return new SINT(_value);
+            return new SINT(Value);
         if (conversionType == typeof(INT))
-            return new INT(_value);
+            return new INT(Value);
         if (conversionType == typeof(DINT))
-            return new DINT(_value);
+            return new DINT(Value);
         if (conversionType == typeof(LINT))
-            return new LINT(_value);
+            return new LINT(Value);
         if (conversionType == typeof(REAL))
-            return new REAL(_value);
+            return new REAL(Value);
         if (conversionType == typeof(LREAL))
-            return new LREAL(_value);
+            return new LREAL(Value);
         if (conversionType == typeof(USINT))
-            return new USINT((byte)_value);
+            return new USINT((byte)Value);
         if (conversionType == typeof(UINT))
-            return new UINT((ushort)_value);
+            return new UINT((ushort)Value);
         if (conversionType == typeof(UDINT))
-            return new UDINT((uint)_value);
+            return new UDINT((uint)Value);
         if (conversionType == typeof(ULINT))
-            return new ULINT((ulong)_value);
+            return new ULINT((ulong)Value);
 
         throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
     }

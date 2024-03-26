@@ -18,32 +18,23 @@ namespace L5Sharp.Core;
 /// </remarks>
 public abstract class StructureType : LogixType
 {
-    private readonly List<LogixMember> _members;
-
     /// <summary>
     /// Creates a new <see cref="StructureType"/> instance.
     /// </summary>
     /// <param name="name">The name of the type.</param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    protected StructureType(string name)
+    protected StructureType(string name) : base(CreateStructureType(name, Enumerable.Empty<Member>()))
     {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty for a structure type object.");
-
-        Name = name;
-        _members = new List<LogixMember>();
     }
 
     /// <summary>
-    /// Creates a new <see cref="StructureType"/> with the provided name and collection of <see cref="LogixMember"/> objects.
+    /// Creates a new <see cref="StructureType"/> with the provided name and collection of <see cref="Member"/> objects.
     /// </summary>
     /// <param name="name">The name of the structure type.</param>
     /// <param name="members">The members of the structure type.</param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    /// <exception cref="ArgumentNullException"><c>members</c> is null.</exception>
-    protected StructureType(string name, IEnumerable<LogixMember> members) : this(name)
+    protected StructureType(string name, IEnumerable<Member> members) : base(CreateStructureType(name, members))
     {
-        AddMembers(members.ToList());
     }
 
     /// <summary>
@@ -52,38 +43,12 @@ public abstract class StructureType : LogixType
     /// <param name="element">The element to parse as the new member object.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
-    protected StructureType(XElement element)
+    protected StructureType(XElement element) : base(element)
     {
-        if (element is null) throw new ArgumentNullException(nameof(element));
-        Name = element.Get(L5XName.DataType);
-        _members = element.Elements().Select(e =>
-        {
-            var member = new LogixMember(e);
-            member.DataChanged += OnMemberDataChanged;
-            return member;
-        }).ToList();
     }
 
     /// <inheritdoc />
-    public override string Name { get; }
-
-    /// <inheritdoc />
-    public override DataTypeFamily Family => DataTypeFamily.None;
-
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Unknown;
-
-    /// <inheritdoc />
-    public override IEnumerable<LogixMember> Members => _members.AsEnumerable();
-
-    /// <inheritdoc />
-    public override XElement Serialize()
-    {
-        var element = new XElement(L5XName.Structure);
-        element.Add(new XAttribute(L5XName.DataType, Name));
-        element.Add(_members.Select(m => m.Serialize()));
-        return element;
-    }
+    public override IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
 
     /// <summary>
     /// Gets the logix type for the specified member. 
@@ -99,14 +64,12 @@ public abstract class StructureType : LogixType
     /// </remarks>
     protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null) where TLogixType : LogixType
     {
-        var type = Members.SingleOrDefault(m => m.Name == name)?.DataType;
+        var element = Element.Elements().SingleOrDefault(m => m.Name == name);
 
-        return type switch
-        {
-            null => throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}"),
-            AtomicType atomicType => (TLogixType)Convert.ChangeType(atomicType, typeof(TLogixType)),
-            _ => (TLogixType)type
-        };
+        if (element is null)
+            throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
+
+        return element.Deserialize<TLogixType>();
     }
 
     /// <summary>
@@ -135,18 +98,16 @@ public abstract class StructureType : LogixType
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (value is null) throw new ArgumentNullException(nameof(value));
 
-        var current = _members.SingleOrDefault(e => e.Name == name);
+        var existing = Element.Elements().SingleOrDefault(m => m.Name == name)?.ToMember();
 
-        if (current is null)
+        if (existing is null)
         {
-            var member = new LogixMember(name, value);
-            member.DataChanged += OnMemberDataChanged;
-            _members.Add(member);
-            RaiseDataChanged(this);
+            var member = new Member(name, value);
+            Element.Add(member.Serialize());
             return;
         }
 
-        current.DataType = value;
+        existing.Value = value;
     }
 
     /// <summary>
@@ -154,13 +115,12 @@ public abstract class StructureType : LogixType
     /// </summary>
     /// <param name="member">The member to add.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    protected void AddMember(LogixMember member)
+    protected void AddMember(Member member)
     {
         if (member is null)
-            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
-        member.DataChanged += OnMemberDataChanged;
-        _members.Add(member);
-        RaiseDataChanged(this);
+            throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
+
+        Element.Add(member.Serialize());
     }
 
     /// <summary>
@@ -168,30 +128,24 @@ public abstract class StructureType : LogixType
     /// </summary>
     /// <param name="members">The collection of members to add.</param>
     /// <exception cref="ArgumentNullException"><c>members</c> is null or any member in <c>members</c> is null.</exception>
-    protected void AddMembers(ICollection<LogixMember> members)
+    protected void AddMembers(ICollection<Member> members)
     {
         if (members is null) throw new ArgumentNullException(nameof(members));
 
         foreach (var member in members)
         {
             if (member is null)
-                throw new ArgumentNullException(nameof(members), "Structure type does not allow null members.");
-            member.DataChanged += OnMemberDataChanged;
-            _members.Add(member);
-        }
+                throw new ArgumentNullException(nameof(members),
+                    "Can not add a null member to a structure type object.");
 
-        RaiseDataChanged(this);
+            Element.Add(member.Serialize());
+        }
     }
 
     /// <summary>
     /// Clears all members from the structure type.
     /// </summary>
-    protected void ClearMembers()
-    {
-        foreach (var member in _members) member.DataChanged -= OnMemberDataChanged;
-        _members.Clear();
-        RaiseDataChanged(this);
-    }
+    protected void ClearMembers() => Element.RemoveNodes();
 
     /// <summary>
     /// Inserts the provided member at the specified index of the structure type. 
@@ -201,29 +155,20 @@ public abstract class StructureType : LogixType
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">index is less than 0. -or- index is greater than the length of
     /// the member collection.</exception>
-    protected void InsertMember(int index, LogixMember member)
+    protected void InsertMember(int index, Member member)
     {
         if (member is null)
-            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
+            throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
 
-        member.DataChanged += OnMemberDataChanged;
-        _members.Insert(index, member);
-        RaiseDataChanged(this);
+        var target = Element.Elements().ElementAt(index);
+        target.AddBeforeSelf(member.Serialize());
     }
 
     /// <summary>
     /// Removes a member with the specified name from the structure type.
     /// </summary>
     /// <param name="name">The name of the member to remove.</param>
-    protected void RemoveMember(string name)
-    {
-        var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
-        if (index == -1) return;
-        var member = _members[index];
-        member.DataChanged -= OnMemberDataChanged;
-        _members.RemoveAt(index);
-        RaiseDataChanged(this);
-    }
+    protected void RemoveMember(string name) => Element.Elements().SingleOrDefault(e => e.Name == name)?.Remove();
 
     /// <summary>
     /// Removes a member at the specified index from the structure type.
@@ -231,10 +176,8 @@ public abstract class StructureType : LogixType
     /// <param name="index">The zero-based index of the member to remove.</param>
     protected void RemoveMember(int index)
     {
-        var member = _members[index];
-        member.DataChanged -= OnMemberDataChanged;
-        _members.RemoveAt(index);
-        RaiseDataChanged(this);
+        var target = Element.Elements().ElementAt(index);
+        target.Remove();
     }
 
     /// <summary>
@@ -244,21 +187,19 @@ public abstract class StructureType : LogixType
     /// <param name="member">The member to replace the current member with.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
-    protected void ReplaceMember(string name, LogixMember member)
+    protected void ReplaceMember(string name, Member member)
     {
         if (member is null)
-            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
+            throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
 
-        var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+        var target = Element.Elements().SingleOrDefault(e => e.Name == name);
 
-        if (index == -1)
+        if (target is null)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
 
-        Resubscribe(_members[index], member);
-        _members[index] = member;
-        RaiseDataChanged(this);
+        target.ReplaceWith(member.Serialize());
     }
-
+    
     /// <summary>
     /// Replaces a member having the specified name with a new member instance of the same name and provided <see cref="LogixType"/>.
     /// </summary>
@@ -271,15 +212,13 @@ public abstract class StructureType : LogixType
         if (type is null)
             throw new ArgumentNullException(nameof(type));
 
-        var index = _members.FindIndex(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+        var target = Element.Elements().SingleOrDefault(e => e.Name.LocalName.IsEquivalent(name));
 
-        if (index == -1)
+        if (target is null)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
 
-        var member = new LogixMember(name, type);
-        Resubscribe(_members[index], member);
-        _members[index] = member;
-        RaiseDataChanged(this);
+        var member = new Member(name, type);
+        target.ReplaceWith(member.Serialize());
     }
 
     /// <summary>
@@ -288,74 +227,26 @@ public abstract class StructureType : LogixType
     /// <param name="index">The zer-based index at which to replace the member.</param>
     /// <param name="member">The member to replace the current member with.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    protected void ReplaceMember(int index, LogixMember member)
+    protected void ReplaceMember(int index, Member member)
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
 
-        Resubscribe(_members[index], member);
-        _members[index] = member;
-        RaiseDataChanged(this);
+        var target = Element.Elements().ElementAt(index);
+        target.ReplaceWith(member.Serialize());
     }
-
+    
     /// <summary>
-    /// Raises the local logix type <c>DataChanged</c> event, allowing nested member data change event to bubble up the
-    /// to the root member.
+    /// Creates the default <see cref="XElement"/> representing the underlying structure type.
     /// </summary>
-    /// <param name="sender">The object that initiated the data change event.</param>
-    /// <param name="e">The event arguments of the data changed event.</param>
-    protected virtual void OnMemberDataChanged(object? sender, EventArgs e) => RaiseDataChanged(sender);
-
-    /// <summary>
-    /// Remove old event handler and attach new to ensure no memory leak.
-    /// </summary>
-    private void Resubscribe(LogixMember remove, LogixMember add)
+    private static XElement CreateStructureType(string? name, IEnumerable<Member> members)
     {
-        remove.DataChanged -= OnMemberDataChanged;
-        add.DataChanged += OnMemberDataChanged;
-    }
-}
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Can not create structure type with null or empty name.");
 
-/// <summary>
-/// Extensions methods for the <see cref="StructureType"/> class.
-/// </summary>
-public static class StructureTypeExtensions
-{
-    /// <summary>
-    /// Traverses the type/member hierarchy of the <see cref="StructureType"/> data and builds a collection of
-    /// <see cref="DataType"/> objects based on all the user defined types in the tree.
-    /// </summary>
-    /// <param name="type">The structure type for which to generate a list of user defined type objects.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing a <see cref="DataType"/> for each user type in the
-    /// structure's type/member hierarchy</returns>
-    public static IEnumerable<DataType> ToUDT(this StructureType type)
-    {
-        var results = new List<DataType>();
-
-        if (type.Class == DataTypeClass.User)
-        {
-            var userType = new DataType
-            {
-                Name = type.Name,
-                Class = type.Class,
-                Family = type.Family,
-                Members = new LogixContainer<DataTypeMember>(type.Members.Select(m => new DataTypeMember
-                {
-                    Name = m.Name,
-                    DataType = m.DataType.Name,
-                    Dimension = m.DataType is ArrayType array ? array.Dimensions : Dimensions.Empty,
-                    Radix = Radix.Default(m.DataType),
-                    ExternalAccess = ExternalAccess.ReadWrite
-                }))
-            };
-
-            results.Add(userType);
-        }
-
-        foreach (var member in type.Members)
-            if (member.DataType is ComplexType structureType)
-                results.AddRange(structureType.ToUDT());
-
-        return results;
+        var element = new XElement(L5XName.Structure);
+        element.Add(new XAttribute(L5XName.DataType, name));
+        element.Add(members.Select(m => m.Serialize()));
+        return element;
     }
 }

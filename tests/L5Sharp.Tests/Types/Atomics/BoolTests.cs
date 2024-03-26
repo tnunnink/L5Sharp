@@ -33,8 +33,6 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(BOOL).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(0);
             type.Radix.Should().Be(Radix.Decimal);
         }
@@ -59,13 +57,13 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new BOOL(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new BOOL((Radix)null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void New_InvalidRadix_ShouldThrowArgumentException()
+        public void New_InvalidRadix_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => new BOOL(Radix.Exponential)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new BOOL(Radix.Exponential)).Should().Throw<NotSupportedException>();
         }
 
         [Test]
@@ -84,9 +82,9 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
+        public void New_ValueAndRadixInvalidRadix_ShouldThrowNotSupportedException()
         {
-            FluentActions.Invoking(() => new BOOL(true, Radix.Exponential)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new BOOL(true, Radix.Exponential)).Should().Throw<NotSupportedException>();
         }
         
         [Test]
@@ -125,17 +123,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var clone = type.Clone();
 
             clone.Should().Be(true);
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new BOOL(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]
@@ -787,12 +774,32 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var stopwatch = new Stopwatch();
 
-            var range = Enumerable.Range(0, capacity).Select(_ => new BOOL(123)).ToList();
+            var range = Enumerable.Range(0, capacity).Select(_ => new BOOL(true)).ToList();
 
             stopwatch.Start();
-            var result = range.Where(v => v == new BOOL(123)).ToList();
+            var result = range.Where(v => v == true).ToList();
             stopwatch.Stop();
 
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            result.Count.Should().Be(capacity);
+        }
+        
+        [Test]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        [TestCase(100000)]
+        [TestCase(1000000)]
+        public void Equals_OverLargeCollectionOfPrimitivesAsComparison_ShouldWorkEquallyFast(int capacity)
+        {
+            var stopwatch = new Stopwatch();
+
+            var range = Enumerable.Range(0, capacity).Select(_ => true).ToList();
+
+            stopwatch.Start();
+            var result = range.Where(v => v).ToList();
+            stopwatch.Stop();
+
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
             result.Count.Should().Be(capacity);
         }
 

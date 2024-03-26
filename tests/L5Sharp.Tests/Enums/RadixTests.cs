@@ -1,7 +1,4 @@
-﻿using System;
-using AutoFixture;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using FluentAssertions;
 
 namespace L5Sharp.Tests.Enums
 {
@@ -78,44 +75,6 @@ namespace L5Sharp.Tests.Enums
             var radix = Radix.Default(type);
 
             radix.Should().Be(Radix.Decimal);
-        }
-
-        [Test]
-        public void SupportsType_Null_ShouldBeFalse()
-        {
-            var result = Radix.Decimal.SupportsType(null!);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsType_NonAtomic_ShouldBeFalse()
-        {
-            var type = new STRING();
-
-            var result = Radix.Decimal.SupportsType(type);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsType_AtomicAsIDataType_ShouldBeTrue()
-        {
-            var type = (LogixType)new BOOL();
-
-            var result = Radix.Decimal.SupportsType(type);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsType_ComplexAsIDataType_ShouldBeFalse()
-        {
-            var type = (LogixType)new STRING();
-
-            var result = Radix.Decimal.SupportsType(type);
-
-            result.Should().BeFalse();
         }
 
         [Test]

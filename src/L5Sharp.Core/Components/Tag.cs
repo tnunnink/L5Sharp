@@ -21,16 +21,14 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.OutputTag)]
 public class Tag : LogixComponent
 {
-    private readonly LogixMember _member;
+    private readonly Member _member;
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> with default values.
     /// </summary>
     public Tag()
     {
-        _member = new LogixMember(Element);
-        _member.DataChanged += OnDataChanged;
-
+        _member = new Member(Element);
         Root = this;
         TagType = TagType.Base;
         ExternalAccess = ExternalAccess.ReadWrite;
@@ -44,9 +42,7 @@ public class Tag : LogixComponent
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Tag(XElement element) : base(element)
     {
-        _member = new LogixMember(Element);
-        _member.DataChanged += OnDataChanged;
-
+        _member = new Member(Element);
         Root = this;
     }
 
@@ -61,7 +57,7 @@ public class Tag : LogixComponent
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
     /// tag member objects.
     /// </remarks>
-    private Tag(Tag root, LogixMember member, Tag parent) : base(root.Element)
+    private Tag(Tag root, Member member, Tag parent) : base(root.Element)
     {
         _member = member ?? throw new ArgumentNullException(nameof(member));
         Root = root ?? throw new ArgumentNullException(nameof(root));
@@ -160,8 +156,8 @@ public class Tag : LogixComponent
     /// </remarks>
     public LogixType Value
     {
-        get => _member.DataType;
-        set => _member.DataType = value;
+        get => _member.Value;
+        set => _member.Value = value;
     }
 
     /// <summary>
@@ -355,7 +351,7 @@ public class Tag : LogixComponent
     /// </remarks>
     public void Add(string name, LogixType value)
     {
-        var member = new LogixMember(name, value);
+        var member = new Member(name, value);
         if (Value is not ComplexType complexType)
             throw new InvalidOperationException("Can only mutate ComplexType tags.");
         complexType.Add(member);
@@ -508,6 +504,7 @@ public class Tag : LogixComponent
     {
         if (Value is not ComplexType complexType)
             throw new InvalidOperationException("Can only mutate ComplexType tags.");
+        
         complexType.Remove(name);
     }
 
@@ -565,32 +562,15 @@ public class Tag : LogixComponent
     #region Internal
 
     /// <summary>
-    /// Triggers <see cref="SetData"/> when a nested data type value of this tag's <see cref="Value"/> changes.
+    /// After setting the data element we need to also update the tag attributes to keep them in sync.
     /// </summary>
-    private void OnDataChanged(object? sender, EventArgs e) => SetData(Root.Value);
-
-    /// <summary>
-    /// Handles setting the data of the root tag and updating the root properties
-    /// </summary>
-    private void SetData(LogixType value)
+    protected override void SetData(LogixType? value)
     {
-        var data = Element.Elements().FirstOrDefault(e =>
-            DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
-
-        if (data is null)
-            Element.Add(GenerateData(value));
-        else
-            data.ReplaceWith(GenerateData(value));
-
-        SetTagAttributes(value);
-    }
-
-    /// <summary>
-    /// Handles setting the <see cref="DataType"/>, <see cref="Radix"/>, and <see cref="Dimensions"/> of the underlying
-    /// element for the tag.
-    /// </summary>
-    private void SetTagAttributes(LogixType value)
-    {
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
+        
+        base.SetData(value);
+        
         Element.SetAttributeValue(L5XName.DataType, value.Name);
 
         var radix = value is AtomicType atomicType ? atomicType.Radix
@@ -603,31 +583,6 @@ public class Tag : LogixComponent
     }
 
     /// <summary>
-    /// Generates the root data element for a tag component provided a logix type.
-    /// </summary>
-    private static XElement GenerateData(LogixType type)
-    {
-        return type switch
-        {
-            StringType stringType => stringType.Serialize(),
-            ALARM_ANALOG alarmAnalog => GenerateFormatted(alarmAnalog, DataFormat.Alarm),
-            ALARM_DIGITAL alarmDigital => GenerateFormatted(alarmDigital, DataFormat.Alarm),
-            MESSAGE message => GenerateFormatted(message, DataFormat.Message),
-            ILogixSerializable serializable => GenerateFormatted(serializable, DataFormat.Decorated)
-        };
-    }
-
-    /// <summary>
-    /// Generates data element with provided format value and serializable type.
-    /// </summary>
-    private static XElement GenerateFormatted(ILogixSerializable type, DataFormat format)
-    {
-        var data = new XElement(L5XName.Data, new XAttribute(L5XName.Format, format));
-        data.Add(type.Serialize());
-        return data;
-    }
-
-    /// <summary>
     /// Handles determining the tag name of the current object from the underlying XElement. This handles module
     /// tag elements (ConfigTag, InputTag, OutputTag) as well as normal component elements (Tag, LocalTag).
     /// </summary>
@@ -636,48 +591,9 @@ public class Tag : LogixComponent
         var xName = Element.Name;
 
         if (xName == L5XName.ConfigTag || xName == L5XName.InputTag || xName == L5XName.OutputTag)
-            return ModuleTagName(Element);
+            return Element.ModuleTagName();
 
         return Element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-    }
-
-    /// <summary>
-    /// A helper for determining a module tag name for an input, output, or config tag element. This involves getting
-    /// the tag suffix, module name, parent module name, and configured slot number.
-    /// </summary>
-    private static string ModuleTagName(XElement element)
-    {
-        var suffix = DetermineModuleSuffix(element);
-
-        var moduleName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.Name)?.Value;
-
-        var parentName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.ParentModule)?.Value;
-
-        var slot = element
-            .Ancestors(L5XName.Module)
-            .Descendants(L5XName.Port)
-            .Where(p => bool.TryParse(p.Attribute(L5XName.Upstream)?.Value!, out _)
-                        && p.Attribute(L5XName.Type)?.Value != "Ethernet"
-                        && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
-            .Select(p => p.Attribute(L5XName.Address)?.Value)
-            .FirstOrDefault();
-
-        return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";
-    }
-
-    private static string DetermineModuleSuffix(XElement element)
-    {
-        if (element.Name == L5XName.ConfigTag) return "C";
-
-        if (element.Name == L5XName.InputTag)
-            return element.Parent?.Attribute(L5XName.InputTagSuffix)?.Value ?? "I";
-
-        if (element.Name == L5XName.OutputTag)
-            return element.Parent?.Attribute(L5XName.OutputTagSuffix)?.Value ?? "O";
-
-        throw new ArgumentException($"Module tag element name {element.Name} not valid.");
     }
 
     /// <summary>

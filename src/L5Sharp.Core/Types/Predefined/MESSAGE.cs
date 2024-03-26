@@ -53,13 +53,10 @@ public sealed class MESSAGE : StructureType
     }
 
     /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
-    /// <inheritdoc />
     public override XElement Serialize()
     {
         var element = new XElement(L5XName.MessageParameters);
-        element.Add(Members.Select(m => new XAttribute(m.Name, m.DataType)));
+        element.Add(Members.Select(m => new XAttribute(m.Name, m.Value)));
         return element;
     }
 

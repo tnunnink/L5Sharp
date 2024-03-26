@@ -29,7 +29,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_ValidBoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Hex.FormatValue(new BOOL());
+            var result = Radix.Hex.FormatValue(false);
 
             result.Should().Be("16#0");
         }
@@ -37,7 +37,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_ValidBoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Hex.FormatValue(new BOOL(true));
+            var result = Radix.Hex.FormatValue(true);
 
             result.Should().Be("16#1");
         }

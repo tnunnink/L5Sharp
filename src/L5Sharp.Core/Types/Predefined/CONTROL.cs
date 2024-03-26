@@ -31,9 +31,6 @@ public sealed class CONTROL : StructureType
     {
     }
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
     /// <summary>
     /// Gets the <see cref="LEN"/> member of the <see cref="CONTROL"/> data type.
     /// </summary>

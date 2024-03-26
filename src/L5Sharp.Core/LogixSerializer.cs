@@ -18,11 +18,27 @@ namespace L5Sharp.Core;
 public static class LogixSerializer
 {
     /// <summary>
+    /// A collection of types to exclude from the deserialization factories since we handle them separately.
+    /// </summary>
+    private static readonly List<Type> Exclusions =
+    [
+        typeof(ComplexType), typeof(StringType), typeof(ArrayType<>), typeof(NullType)
+    ];
+
+    /// <summary>
     /// The global cache for all <see cref="LogixElement"/> object deserializer delegate functions.
     /// </summary>
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixElement>>> Deserializers = new(() =>
-            Introspect(typeof(LogixSerializer).Assembly).ToDictionary(k => k.Key, v => v.Value),
-        LazyThreadSafetyMode.ExecutionAndPublication);
+        Default().ToDictionary(k => k.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
+
+    /// <summary>
+    /// A system wide lookup of all <see cref="LogixType"/> objects by L5XType name obtained using reflection. This does
+    /// not include the internal generic types such as StructureType, ComplexType, StringType, ArrayType, or ArrayType{T},
+    /// or NullType, but rather types that can be instantiated (atomic or complex) for which we may need to create a generic
+    /// array of.
+    /// </summary>
+    private static readonly Dictionary<string, Type> DataTypes =
+        AppDomain.CurrentDomain.GetAssemblies().SelectMany(FindDataTypes).ToDictionary(k => k.L5XType(), v => v);
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.
@@ -36,7 +52,7 @@ public static class LogixSerializer
     /// </remarks>
     public static TElement Deserialize<TElement>(this XElement element) where TElement : LogixElement =>
         (TElement)Deserialize(element);
-    
+
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the first matching <see cref="LogixElement"/> type found in the
     /// element hierarchy.
@@ -53,7 +69,8 @@ public static class LogixSerializer
     /// </remarks>
     public static LogixElement Deserialize(this XElement element)
     {
-        if (element is null) throw new ArgumentNullException(nameof(element));
+        if (element is null)
+            throw new ArgumentNullException(nameof(element));
 
         while (true)
         {
@@ -88,7 +105,7 @@ public static class LogixSerializer
                 $"The type must derive from {typeof(LogixElement)}, be public, non-abstract," +
                 $" and have a constructor accepting a single {typeof(XElement)}";
             throw new ArgumentException(
-                $"Type '{typeof(TElement)} is not a valid deserializable logix type. {explanation}");            
+                $"Type '{typeof(TElement)} is not a valid deserializable logix type. {explanation}");
         }
 
         var deserializer = type.Deserializer<LogixElement>();
@@ -100,6 +117,23 @@ public static class LogixSerializer
             if (!Deserializers.Value.TryAdd(pair.Key, pair.Value))
                 throw new InvalidOperationException($"Type '{pair.Key}' is already registered with another function.");
         }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    private static IEnumerable<KeyValuePair<string, Func<XElement, LogixElement>>> Default()
+    {
+        var deserializers = new List<KeyValuePair<string, Func<XElement, LogixElement>>>();
+
+        //Adds custom data deserializer functions defined in this file below.
+        deserializers.AddRange(DataDeserializers());
+
+        //Scan and add types from this assembly.
+        var assembly = typeof(LogixSerializer).Assembly;
+        deserializers.AddRange(Introspect(assembly));
+
+        return deserializers;
     }
 
     /// <summary>
@@ -133,8 +167,168 @@ public static class LogixSerializer
     private static bool IsDeserializableType(Type type)
     {
         return typeof(LogixElement).IsAssignableFrom(type) &&
+               !Exclusions.Contains(type) &&
                type is { IsAbstract: false, IsPublic: true } &&
                type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(XElement) },
                    null) is not null;
     }
+
+    /// <summary>
+    /// Returns a collection of custom deserializer functions that will know how to deserialize the complex
+    /// data structures found on tag elements.
+    /// </summary>
+    /// <returns></returns>
+    private static IEnumerable<KeyValuePair<string, Func<XElement, LogixElement>>> DataDeserializers()
+    {
+        var deserializers = new List<KeyValuePair<string, Func<XElement, LogixElement>>>
+        {
+            new(L5XName.Data, DeserializeData),
+            new(L5XName.DefaultData, DeserializeData),
+            new(L5XName.DataValue, DeserializeAtomic),
+            new(L5XName.DataValueMember, DeserializeAtomic),
+            new(L5XName.Element, DeserializeElement),
+            new(L5XName.Array, DeserializeArray),
+            new(L5XName.ArrayMember, DeserializeArray),
+            new(L5XName.Structure, DeserializeStructure),
+            new(L5XName.StructureMember, DeserializeStructure)
+        };
+
+        return deserializers;
+    }
+
+    /// <summary>
+    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
+    /// inheriting from <see cref="LogixType"/>. 
+    /// </summary>
+    private static IEnumerable<Type> FindDataTypes(Assembly assembly)
+    {
+        return assembly.GetTypes().Where(t =>
+            typeof(LogixType).IsAssignableFrom(t)
+            && t is { IsAbstract: false, IsPublic: true }
+            && t != typeof(ComplexType) && t != typeof(StringType)
+            && t != typeof(ArrayType) && t != typeof(ArrayType<>)
+            && t != typeof(NullType));
+    }
+
+    #region DataSerialization
+
+    /// <summary>
+    /// Handles deserializing a data or default data element with a format attribute to a logix data object.
+    /// This method will forward call down the chain based on the format of the data structure.
+    /// </summary>
+    private static LogixElement DeserializeData(XElement element)
+    {
+        var format = element.Attribute(L5XName.Format)?.Value.TryParse<DataFormat>();
+
+        if (format is null)
+            return LogixType.Null;
+
+        if (format == DataFormat.String)
+            return DeserializeString(element);
+
+        if (element.FirstNode is not XElement data)
+            return LogixType.Null;
+
+        //We could just call deserialize again, but we risk infinite loops if the child is not registered or recognizable.
+        //Probably not going to happen, but we can stop and throw an exception if it is not the expected element, which is probably better.
+        return data.Name.ToString() switch
+        {
+            L5XName.DataValue => DeserializeAtomic(element),
+            L5XName.DataValueMember => DeserializeAtomic(element),
+            L5XName.Element => DeserializeElement(element),
+            L5XName.Array => DeserializeArray(element),
+            L5XName.ArrayMember => DeserializeArray(element),
+            L5XName.Structure => DeserializeStructure(element),
+            L5XName.StructureMember => DeserializeStructure(element),
+            L5XName.AlarmAnalogParameters => new ALARM_ANALOG(element),
+            L5XName.AlarmDigitalParameters => new ALARM_DIGITAL(element),
+            L5XName.MessageParameters => new MESSAGE(element),
+            _ => throw new NotSupportedException($"The element '{element.Name}' is not a supported data element.")
+        };
+    }
+
+    /// <summary>
+    /// Handles deserializing an element to a atomic value type. This will get the data type name and use that to lookup
+    /// the corresponding deserializer in the cache. All atomic types should be registered and able to be create this
+    /// way by passing in the DataValue, DataValueMember, or Element element.
+    /// </summary>
+    private static LogixElement DeserializeAtomic(XElement element)
+    {
+        var dataType = element.DataType();
+
+        if (Deserializers.Value.TryGetValue(dataType, out var deserializer))
+            return deserializer.Invoke(element);
+
+        throw new InvalidOperationException($"The data type '{dataType}' is not a valid atomic data type.");
+    }
+
+    /// <summary>
+    /// Handles deserializing an array to an array type logix element. This will get the data type name and use that
+    /// to lookup the corresponding type information. Once we get that we can form a generic deserializer, check for
+    /// it's existence, and deserialize the provided element.
+    /// </summary>
+    private static LogixElement DeserializeArray(XElement element)
+    {
+        var dataType = element.DataType();
+
+        //We either know the type (atomic or registered), or we create the generic string or complex type.
+        var type = DataTypes.TryGetValue(dataType, out var known) ? known
+            : element.IsStringData() ? typeof(StringType)
+            : typeof(ComplexType);
+
+        var arrayType = typeof(ArrayType<>).MakeGenericType(type);
+        var arrayName = arrayType.FullName!;
+
+        if (Deserializers.Value.TryGetValue(arrayName, out var cached))
+            return cached.Invoke(element);
+
+        var deserializer = arrayType.Deserializer<LogixType>();
+        Deserializers.Value.Add(arrayName, deserializer);
+        return deserializer.Invoke(element);
+    }
+
+    /// <summary>
+    /// Handles deserializing an array index element to a logix type, either atomic, string, or structure,
+    /// depending on the state of the element.
+    /// </summary>
+    private static LogixElement DeserializeElement(XElement element)
+    {
+        var value = element.Attribute(L5XName.Value);
+        if (value is not null) return DeserializeAtomic(element);
+
+        var structure = element.Element(L5XName.Structure);
+        if (structure is not null) return DeserializeStructure(structure);
+
+        throw element.L5XError(L5XName.Element);
+    }
+
+    /// <summary>
+    /// Handles deserializing an element to a <see cref="StructureType"/> logix type. Will check for registered types
+    /// to create the concrete type if available. Otherwise we resort to a more generic <see cref="StringType"/>
+    /// for string element structures or <see cref="ComplexType"/> for everything else.
+    /// </summary>
+    private static LogixElement DeserializeStructure(XElement element)
+    {
+        var dataType = element.DataType();
+
+        if (Deserializers.Value.TryGetValue(dataType, out var deserializer))
+            return deserializer.Invoke(element);
+
+        return element.IsStringData() ? new StringType(element) : new ComplexType(element);
+    }
+
+    /// <summary>
+    /// Handles deserializing an element to a <see cref="StringType"/> logix type. Will check for registered types to
+    /// create the concrete type if available. Otherwise we resort to a more generic <see cref="StringType"/> object.
+    /// </summary>
+    private static LogixElement DeserializeString(XElement element)
+    {
+        var dataType = element.DataType();
+
+        return Deserializers.Value.TryGetValue(dataType, out var deserializer)
+            ? deserializer.Invoke(element)
+            : new StringType(element);
+    }
+
+    #endregion
 }

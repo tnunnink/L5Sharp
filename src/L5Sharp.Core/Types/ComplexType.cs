@@ -16,11 +16,6 @@ namespace L5Sharp.Core;
 /// </remarks>
 public class ComplexType : StructureType
 {
-    /// <inheritdoc />
-    public ComplexType(XElement element) : base(element)
-    {
-    }
-
     /// <summary>
     /// Creates a new empty <see cref="ComplexType"/> with the name 'ComplexType' indicating this represents some generic
     /// or non-descriptive type with members configured by the user. 
@@ -45,23 +40,28 @@ public class ComplexType : StructureType
     /// <param name="members"></param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
     /// <exception cref="ArgumentNullException"><c>members</c> is null or any member in <c>members</c> is null.</exception>
-    public ComplexType(string name, IEnumerable<LogixMember> members) : base(name, members)
+    public ComplexType(string name, IEnumerable<Member> members) : base(name, members)
+    {
+    }
+    
+    /// <inheritdoc />
+    public ComplexType(XElement element) : base(element)
     {
     }
 
     /// <summary>
     /// Adds the provided member to the end of the type member collection.
     /// </summary>
-    /// <param name="member">The <see cref="LogixMember"/> to add.</param>
+    /// <param name="member">The <see cref="Member"/> to add.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    public void Add(LogixMember member) => AddMember(member);
+    public void Add(Member member) => AddMember(member);
 
     /// <summary>
     /// Adds the provided member collection to the end of the type member collection.
     /// </summary>
-    /// <param name="members">The collection of <see cref="LogixMember"/> to add.</param>
+    /// <param name="members">The collection of <see cref="Member"/> to add.</param>
     /// <exception cref="ArgumentNullException"><c>members</c> or any object in <c>members</c> is null.</exception>
-    public void AddRange(ICollection<LogixMember> members) => AddMembers(members);
+    public void AddRange(ICollection<Member> members) => AddMembers(members);
 
     /// <summary>
     /// Removes all members from the current type.
@@ -76,7 +76,7 @@ public class ComplexType : StructureType
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">index is less than 0. -or- index is greater than the length of
     /// the member collection.</exception>
-    public void Insert(int index, LogixMember member) => InsertMember(index, member);
+    public void Insert(int index, Member member) => InsertMember(index, member);
 
     /// <summary>
     /// Removes a member with the specified name from the type member collection.
@@ -97,7 +97,7 @@ public class ComplexType : StructureType
     /// <param name="member">The member to replace the current member with.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
     /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
-    public void Replace(string name, LogixMember member) => ReplaceMember(name, member);
+    public void Replace(string name, Member member) => ReplaceMember(name, member);
     
     /// <summary>
     /// Replaces a member having the specified name with a new member instance of the same name and
@@ -115,5 +115,5 @@ public class ComplexType : StructureType
     /// <param name="index">The zer-based index at which to replace the member.</param>
     /// <param name="member">The member to replace the current member with.</param>
     /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    public void Replace(int index, LogixMember member) => ReplaceMember(index, member);
+    public void Replace(int index, Member member) => ReplaceMember(index, member);
 }

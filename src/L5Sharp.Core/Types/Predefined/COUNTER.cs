@@ -28,9 +28,6 @@ public sealed class COUNTER : StructureType
     {
     }
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
     /// <summary>
     /// Gets the <see cref="PRE"/> member of the <see cref="COUNTER"/> data type.
     /// </summary>

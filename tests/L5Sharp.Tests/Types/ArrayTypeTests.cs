@@ -40,7 +40,7 @@ namespace L5Sharp.Tests.Types
         public void Constructor_ArrayOfDifferentTypes_ShouldThrowArgumentException()
         {
             FluentActions.Invoking(() =>
-                    new ArrayType<LogixType>(new[] { new BOOL(), new DINT(), new TIMER(), LogixData.Null }))
+                    new ArrayType<LogixType>(new[] { new BOOL(), new DINT(), new TIMER(), LogixType.Null }))
                 .Should().Throw<ArgumentException>();
         }
 
@@ -60,8 +60,6 @@ namespace L5Sharp.Tests.Types
             array.Name.Should().Be("DINT[4]");
             array.Dimensions.Length.Should().Be(4);
             array.Radix.Should().Be(Radix.Decimal);
-            array.Class.Should().Be(DataTypeClass.Atomic);
-            array.Family.Should().Be(DataTypeFamily.None);
             array.Members.Should().HaveCount(4);
             array[0].As<DINT>().Should().Be(1);
             array[1].As<DINT>().Should().Be(2);
@@ -78,8 +76,6 @@ namespace L5Sharp.Tests.Types
             array.Name.Should().Be("TIMER[3]");
             array.Dimensions.Length.Should().Be(3);
             array.Radix.Should().Be(Radix.Null);
-            array.Class.Should().Be(DataTypeClass.Predefined);
-            array.Family.Should().Be(DataTypeFamily.None);
             array.Members.Should().HaveCount(3);
             array[0].As<TIMER>().PRE.Should().Be(1000);
             array[1].As<TIMER>().PRE.Should().Be(2000);
@@ -94,8 +90,6 @@ namespace L5Sharp.Tests.Types
             array.Name.Should().Be("STRING[3]");
             array.Dimensions.Length.Should().Be(3);
             array.Radix.Should().Be(Radix.Null);
-            array.Class.Should().Be(DataTypeClass.Predefined);
-            array.Family.Should().Be(DataTypeFamily.String);
             array.Members.Should().HaveCount(3);
             array[0].ToString().Should().Be("Test");
             array[1].ToString().Should().Be("Test");
@@ -316,7 +310,7 @@ namespace L5Sharp.Tests.Types
 
             index.As<DINT>().Should().Be(6);
         }
-        
+
         [Test]
         public void GetIndexOfArray_ThreeDimensional_ShouldReturnExpected()
         {
@@ -440,7 +434,7 @@ namespace L5Sharp.Tests.Types
             var elements = array.Members.ToArray();
 
             elements.Should().NotBeEmpty();
-            elements.Select(e => e.DataType).Should().AllBeOfType<DINT>();
+            elements.Select(e => e.Value).Should().AllBeOfType<DINT>();
         }
 
         [Test]
@@ -491,7 +485,7 @@ namespace L5Sharp.Tests.Types
             // ReSharper disable once CoVariantArrayConversion this is the test
             var array = new ArrayType<LogixType>(new DINT[] { 1, 2, 3, 4 });
 
-            var casted = array.Of<DINT>();
+            var casted = array.Cast<DINT>();
             casted.Should().NotBeNull();
             casted.Dimensions.Length.Should().Be(4);
 
@@ -505,7 +499,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType<DINT>(new DINT[] { 1, 2, 3, 4 });
 
-            FluentActions.Invoking(() => array.Of<INT>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => array.Cast<INT>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -513,7 +507,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType<INT>(new INT[] { 1, 2, 3, 4 });
 
-            FluentActions.Invoking(() => array.Of<DINT>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => array.Cast<DINT>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -521,7 +515,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType<TIMER>(new TIMER[] { new(), new(), new() });
 
-            var casted = array.Of<StructureType>();
+            var casted = array.Cast<StructureType>();
 
             casted.Should().NotBeNull();
             casted.Should().AllBeOfType<TIMER>();
@@ -618,8 +612,6 @@ namespace L5Sharp.Tests.Types
 
             array.Name.Should().Be("REAL[5]");
             array.Dimensions.Should().Be(new Dimensions(5));
-            array.Class.Should().Be(DataTypeClass.Atomic);
-            array.Family.Should().Be(DataTypeFamily.None);
 
             array[0].As<REAL>().Should().Be(0.0f);
             array[1].As<REAL>().Should().Be(1.1f);
@@ -647,8 +639,6 @@ namespace L5Sharp.Tests.Types
 
             array.Name.Should().Be("TIMER[5]");
             array.Dimensions.Should().Be(new Dimensions(5));
-            array.Class.Should().Be(DataTypeClass.Predefined);
-            array.Family.Should().Be(DataTypeFamily.None);
             array.Should().AllBeOfType<TIMER>();
 
             array[1].As<TIMER>().PRE.Should().Be(1000);

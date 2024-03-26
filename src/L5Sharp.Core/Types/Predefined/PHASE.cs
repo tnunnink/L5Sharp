@@ -68,9 +68,6 @@ public sealed class PHASE : StructureType
     {
     }
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
     /// <summary>
     /// Gets the <c>State</c> member of the <see cref="PHASE"/> type.
     /// </summary>

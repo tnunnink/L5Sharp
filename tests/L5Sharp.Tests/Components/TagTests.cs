@@ -28,7 +28,7 @@ public class TagTests
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-        tag.Value.Should().Be(LogixData.Null);
+        tag.Value.Should().Be(LogixType.Null);
         tag.Constant.Should().BeFalse();
         tag.TagType.Should().Be(TagType.Base);
         tag.Usage.Should().BeNull();
@@ -197,7 +197,7 @@ public class TagTests
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
         tag.TagType.Should().Be(TagType.Base);
         tag.Constant.Should().BeFalse();
-        tag.Value.Should().Be(LogixData.Null);
+        tag.Value.Should().Be(LogixType.Null);
     }
 
     [Test]
@@ -428,7 +428,7 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
         //Name does not matter just the members
-        tag.Value = new ComplexType("Test", new List<LogixMember>
+        tag.Value = new ComplexType("Test", new List<Member>
         {
             new("PRE", 5000),
             new("ACC", 1234),

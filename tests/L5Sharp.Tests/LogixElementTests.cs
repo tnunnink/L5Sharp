@@ -1061,7 +1061,7 @@ public class LogixElementTests
 
 [L5XType("Test", "Container")]
 [L5XType("Alternate", "Container")]
-public class TestElement : LogixElement
+public class TestElement : LogixObject
 {
     public TestElement()
     {
@@ -1126,7 +1126,7 @@ public class TestElement : LogixElement
     }
 }
 
-public class ChildElement : LogixElement
+public class ChildElement : LogixObject
 {
     public ChildElement()
     {

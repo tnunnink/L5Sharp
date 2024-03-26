@@ -21,11 +21,6 @@ namespace L5Sharp.Core;
 public abstract class ArrayType : LogixType, IEnumerable
 {
     /// <summary>
-    /// The array's collection of <see cref="LogixMember"/> objects representing the elements of the array type.
-    /// </summary>
-    private readonly List<LogixMember> _elements;
-
-    /// <summary>
     /// Creates a new array type from the provided array object.
     /// </summary>
     /// <param name="array">An array of logix types. Array can not be empty, contain null items,
@@ -35,25 +30,8 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <exception cref="ArgumentException"><c>array</c> contains no elements, <c>null</c> or <c>NullType</c> elements,
     /// or objects with different logix type names.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c>array</c> rank is greater than 3 dimensions.</exception>
-    protected internal ArrayType(Array array)
+    protected internal ArrayType(Array array) : base(CreateArray(array))
     {
-        Dimensions = Dimensions.FromArray(array);
-
-        var collection = array.Cast<LogixType>().ToList();
-
-        if (collection.Count == 0)
-            throw new ArgumentException("Array can not be initialized with no items.", nameof(array));
-        if (collection.Any(t => t is null or NullType))
-            throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
-        if (collection.Select(t => t.GetType()).Distinct().Count() != 1)
-            throw new ArgumentException("Array can not be initialized with different logix type items.", nameof(array));
-
-        _elements = Dimensions.Indices().Zip(collection, (i, t) =>
-        {
-            var member = new LogixMember(i, t);
-            member.DataChanged += OnMemberDataChanged;
-            return member;
-        }).ToList();
     }
 
     /// <summary>
@@ -62,59 +40,35 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <param name="element">The element to parse.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
-    protected internal ArrayType(XElement element)
+    protected internal ArrayType(XElement element) : base(element)
     {
-        if (element is null) throw new ArgumentNullException(nameof(element));
-
-        Dimensions = element.Attribute(L5XName.Dimensions)?.Value.Parse<Dimensions>() ??
-                     throw element.L5XError(L5XName.Dimensions);
-
-        _elements = element.Elements().Select(e =>
-        {
-            var member = new LogixMember(e);
-            member.DataChanged += OnMemberDataChanged;
-            return member;
-        }).ToList();
     }
 
-    /// <summary>
-    /// The name of the logix type the array contains.
-    /// </summary>
-    /// <value>A <see cref="string"/> containing the text name of the logix type for which the array contains.</value>
-    /// <remarks>This is used to delineate from the <see cref="LogixType.Name"/> property of the array type
-    /// which is the type name and the dimensions index concatenated. The type name is used for serialization.</remarks>
-    public string TypeName => _elements.First().DataType.Name;
-
-    /// <inheritdoc />
+    /*///
     /// <remarks>
     /// The name of an array type will be the name of it's contained element types with the dimensions index
     /// text appended. This helps differentiate types when querying so we don't return both the base type and arrays of
     /// the specified base type. This is also similar to how the name appears from the logix designer.
     /// </remarks>
-    public override string Name => $"{_elements.First().DataType.Name}{Dimensions.ToIndex()}";
+    public override string Name => $"{Members.First().DataType.Name}{Dimensions.ToIndex()}";*/
+    //todo will this be an issue just using the data type.
 
     /// <inheritdoc />
-    public override DataTypeFamily Family => _elements.First().DataType.Family;
+    public override IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => _elements.First().DataType.Class;
 
     /// <summary>
     /// The dimensions of the the array, which define the length and rank of the array's elements.
     /// </summary>
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions.</value>
-    /// <remarks>Array type must have non-empty dimensions to be constructed.</remarks>
-    public Dimensions Dimensions { get; }
+    public Dimensions Dimensions => GetRequiredValue<Dimensions>();
 
     /// <summary>
     /// Gets the radix format of the the array type elements.
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> format if the array is an atomic type array;
     /// otherwise, the radix <see cref="L5Sharp.Core.Radix.Null"/> format.</value>
-    public Radix Radix => _elements.First().DataType is AtomicType atomicType ? atomicType.Radix : Radix.Null;
-
-    /// <inheritdoc />
-    public override IEnumerable<LogixMember> Members => _elements.AsEnumerable();
+    public Radix Radix => GetValue<Radix>() ?? Radix.Null;
 
     /// <summary>
     /// Gets the <see cref="LogixType"/> instance at the specified index.
@@ -201,24 +155,28 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast.</typeparam>
     /// <returns>A <see cref="ArrayType{TLogixType}"/> of the specified.</returns>
-    public ArrayType<TLogixType> Of<TLogixType>() where TLogixType : LogixType => this.Cast<TLogixType>().ToArray();
+    public ArrayType<TLogixType> Cast<TLogixType>() where TLogixType : LogixType =>
+        Enumerable.Cast<TLogixType>(this).ToArray();
 
-    /// <inheritdoc />
-    public override XElement Serialize()
+    private static XElement CreateArray(Array array)
     {
-        var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, TypeName));
-        element.Add(new XAttribute(L5XName.Dimensions, Dimensions));
-        if (Radix != Radix.Null) element.Add(new XAttribute(L5XName.Radix, Radix));
-        element.Add(_elements.Select(e =>
-        {
-            var index = new XElement(L5XName.Element, new XAttribute(L5XName.Index, e.Name));
+        var types = array.Cast<LogixType>().ToArray();
+        var type = types.Length > 0 ? types[0] : Null;
+        var dimensions = Dimensions.FromArray(types);
 
-            switch (e.DataType)
+        var element = new XElement(L5XName.Array);
+        element.Add(new XAttribute(L5XName.DataType, type.Name));
+        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
+        if (type is AtomicType atomic) element.Add(new XAttribute(L5XName.Radix, atomic.Radix));
+
+        var elements = dimensions.Indices().Zip(types, (i, t) =>
+        {
+            var index = new XElement(L5XName.Element, new XAttribute(L5XName.Index, i));
+
+            switch (t)
             {
                 case AtomicType atomicType:
-                    var value = Radix != Radix.Null ? atomicType.ToString(Radix) : atomicType.ToString();
-                    index.Add(new XAttribute(L5XName.Value, value));
+                    index.Add(new XAttribute(L5XName.Value, atomicType));
                     break;
                 case StringType stringType:
                     index.Add(stringType.SerializeStructure());
@@ -229,7 +187,9 @@ public abstract class ArrayType : LogixType, IEnumerable
             }
 
             return index;
-        }));
+        });
+
+        element.Add(elements);
 
         return element;
     }
@@ -242,13 +202,13 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
     protected TLogixType GetIndex<TLogixType>(string index) where TLogixType : LogixType
     {
-        var member = _elements.SingleOrDefault(m => m.Name == index);
+        var member = Element.Elements().SingleOrDefault(m => m.Name == index)?.ToMember();
 
         if (member is null)
             throw new ArgumentOutOfRangeException(nameof(index),
                 $"The index '{index}' is outside the bound of the array.");
 
-        return member.DataType.As<TLogixType>();
+        return member.Value.As<TLogixType>();
     }
 
     /// <summary>
@@ -262,22 +222,17 @@ public abstract class ArrayType : LogixType, IEnumerable
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        var member = _elements.SingleOrDefault(m => m.Name == index);
+        var member = Element.Elements().SingleOrDefault(m => m.Name == index)?.ToMember();
 
         if (member is null)
             throw new ArgumentOutOfRangeException(nameof(index),
                 $"The index '{index}' is outside the bound of the array.");
 
-        member.DataType = value;
+        member.Value = value;
     }
 
     /// <inheritdoc />
-    IEnumerator IEnumerable.GetEnumerator() => _elements.GetEnumerator();
-
-    /// <summary>
-    /// This method needs to be attached to each member of the type to enable the bubbling up of nested member data changed events.
-    /// </summary>
-    private void OnMemberDataChanged(object? sender, EventArgs e) => RaiseDataChanged(sender);
+    IEnumerator IEnumerable.GetEnumerator() => Members.Select(m => m.Value).GetEnumerator();
 }
 
 /// <summary>
@@ -292,6 +247,11 @@ public abstract class ArrayType : LogixType, IEnumerable
 /// </footer>
 public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> where TLogixType : LogixType
 {
+    /// <inheritdoc />
+    public ArrayType(XElement element) : base(element)
+    {
+    }
+    
     /// <summary>
     /// Creates a new <see cref="ArrayType{TLogixType}"/> initialized with the provided one dimensional array.
     /// </summary>
@@ -333,11 +293,6 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     /// <exception cref="ArgumentException"><c>array</c> is empty, contains <c>null</c> or <c>NullType</c> elements,
     /// or is an array of more than one logix type.</exception>
     public ArrayType(TLogixType[,,] array) : base(array)
-    {
-    }
-
-    /// <inheritdoc />
-    public ArrayType(XElement element) : base(element)
     {
     }
 
@@ -399,7 +354,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     public static implicit operator ArrayType<TLogixType>(TLogixType[,,] array) => new(array);
 
     /// <inheritdoc />
-    public IEnumerator<TLogixType> GetEnumerator() => Members.Select(m => m.DataType.As<TLogixType>()).GetEnumerator();
+    public IEnumerator<TLogixType> GetEnumerator() => Members.Select(m => m.Value.As<TLogixType>()).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

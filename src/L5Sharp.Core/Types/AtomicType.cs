@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -27,32 +25,33 @@ namespace L5Sharp.Core;
 public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
 {
     /// <inheritdoc />
-    public sealed override DataTypeFamily Family => DataTypeFamily.None;
-
-    /// <inheritdoc />
-    public sealed override DataTypeClass Class => DataTypeClass.Atomic;
-
-    /// <inheritdoc />
-    public override IEnumerable<LogixMember> Members
+    protected internal AtomicType(XElement element) : base(element)
     {
-        get
-        {
-            var bits = new BitArray(GetBytes());
-            for (var i = 0; i < bits.Count; i++)
-            {
-                var member = new LogixMember(i.ToString(), new BOOL(bits[i]));
-                member.DataChanged += OnMemberDataChanged;
-                yield return member;
-            }
-        }
     }
 
     /// <summary>
     /// The radix format for the <see cref="AtomicType"/>.
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> representing the format of the atomic type value.</value>
-    public abstract Radix Radix { get; }
+    /// <remarks>
+    /// This value is ont actually read from the underlying XML element but instead inferred from the value
+    /// of the underlying data element. This is because some elements were observed to show the incorrect format
+    /// which could cause runtime errors when trying to parse the string value. The Radix will however be written to the
+    /// element upon creation of an <see cref="AtomicType"/> and should never be changed. Radix and Value are immutable
+    /// properties.
+    /// </remarks>
+    public Radix Radix => Radix.Infer(Value);
     
+    /// <summary>
+    /// The actual value of the <see cref="AtomicType"/> as the formatted string representation.
+    /// </summary>
+    /// <remarks>
+    /// This value is parsed in derived atomic types and used to give the class value semantics. The intention
+    /// is that the atomic types should be immutable. This way the radix and value attributes don't become invalid,
+    /// and also we can't have mutable data for the properties used in equality checks.
+    /// </remarks>
+    protected string Value => GetRequiredValue<string>();
+
     /// <summary>
     /// Parses the provided string value into an atomic type value.
     /// </summary>
@@ -62,36 +61,26 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
     /// atomic type.</exception>
     public static AtomicType Parse(string value)
     {
-        return value.IsEquivalent("true") ? new BOOL(true)
-            : value.IsEquivalent("false") ? new BOOL()
-            : Radix.Infer(value).ParseValue(value);
-    }
-    
-    /// <summary>
-    /// Parses the provided string value into the atomic type value specified by name.
-    /// </summary>
-    /// <param name="name">The name of the atomic type.</param>
-    /// <param name="value">The string value to parse.</param>
-    /// <returns>An <see cref="AtomicType"/> representing the parsed value and format of the provided string.</returns>
-    /// <exception cref="ArgumentException"><c>name</c> does not represent a valid atomic type.</exception>
-    /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as the specified atomic type.</exception>
-    public static AtomicType Parse(string name, string value)
-    {
-        return name switch
+        if (value.IsEquivalent("true")) return new BOOL(true);
+        if (value.IsEquivalent("false")) return new BOOL(false);
+
+        var radix = Radix.Infer(value);
+        var parsed = radix.ParseValue(value);
+        
+        return parsed switch
         {
-            nameof(BOOL) => BOOL.Parse(value),
-            "BIT" => BOOL.Parse(value),
-            nameof(SINT) => SINT.Parse(value),
-            nameof(INT) => INT.Parse(value),
-            nameof(DINT) => DINT.Parse(value),
-            nameof(LINT) => LINT.Parse(value),
-            nameof(REAL) => REAL.Parse(value),
-            nameof(USINT) => USINT.Parse(value),
-            nameof(UINT) => UINT.Parse(value),
-            nameof(UDINT) => UDINT.Parse(value),
-            nameof(ULINT) => ULINT.Parse(value),
-            nameof(LREAL) => LREAL.Parse(value),
-            _ => throw new ArgumentException($"The type name '{name}' is not a valid {typeof(AtomicType)}")
+            bool typed => new BOOL(typed, radix),
+            sbyte typed => new INT(typed, radix),
+            short typed => new INT(typed, radix),
+            int typed => new DINT(typed, radix),
+            long typed => new LINT(typed, radix),
+            float typed => new REAL(typed, radix),
+            byte typed => new USINT(typed, radix),
+            ushort typed => new UINT(typed, radix),
+            uint typed => new UDINT(typed, radix),
+            ulong typed => new ULINT(typed, radix),
+            double typed => new LREAL(typed, radix),
+            _ => throw new FormatException($"The value '{value}' cannot be parsed as an atomic type.")
         };
     }
 
@@ -102,52 +91,81 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
     /// <returns>An <see cref="AtomicType"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
     public static AtomicType? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
-            return default;
-
+        if (string.IsNullOrEmpty(value)) return default;
         if (value.IsEquivalent("true")) return new BOOL(true);
         if (value.IsEquivalent("false")) return new BOOL(false);
-
-        return Radix.TryInfer(value, out var radix) ? radix.ParseValue(value) : default;
+        if (!Radix.TryInfer(value, out var radix)) return default;
+        
+        var parsed = radix.ParseValue(value);
+        
+        return parsed switch
+        {
+            bool typed => new BOOL(typed, radix),
+            sbyte typed => new INT(typed, radix),
+            short typed => new INT(typed, radix),
+            int typed => new DINT(typed, radix),
+            long typed => new LINT(typed, radix),
+            float typed => new REAL(typed, radix),
+            byte typed => new USINT(typed, radix),
+            ushort typed => new UINT(typed, radix),
+            uint typed => new UDINT(typed, radix),
+            ulong typed => new ULINT(typed, radix),
+            double typed => new LREAL(typed, radix),
+            _ => throw new FormatException($"The value '{value}' cannot be parsed as an atomic type.")
+        };
     }
-
-    /// <summary>
-    /// Returns the <see cref="AtomicType"/> value as an array of <see cref="byte"/> values.
-    /// </summary>
-    /// <returns>An array of <see cref="byte"/> representing the value of the type.</returns>
-    public abstract byte[] GetBytes();
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
     /// </summary>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public override string ToString() => Radix.FormatValue(this);
+    public override string ToString() => Value;
 
     /// <summary>
     /// Returns the atomic value formatted in the specified <see cref="Core.Radix"/> format.
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.FormatValue(this);
+    public string ToString(Radix radix) => Format(radix);
 
     /// <summary>
-    /// Serialized the atomic type as the DataValue <see cref="XElement"/>.
+    /// Creates a new <see cref="XElement"/> containing the data for the atomic type object using the provided name,
+    /// radix, and formatted value.
     /// </summary>
-    /// <returns>A <see cref="XElement"/> containing the data for the atomic type.</returns>
-    public override XElement Serialize()
+    protected static XElement CreateElement(string name, Radix radix, ValueType value)
     {
+        if (radix is null)
+            throw new ArgumentNullException(nameof(radix), "Can not create atomic with null radix.");
+
+        //Convert the value type to the correct format.
+        var atomic = radix.FormatValue(value);
+            
         var element = new XElement(L5XName.DataValue);
-        element.Add(new XAttribute(L5XName.DataType, Name));
-        element.Add(new XAttribute(L5XName.Radix, Radix));
-        element.Add(new XAttribute(L5XName.Value, ToString()));
+        element.Add(new XAttribute(L5XName.DataType, name));
+        element.Add(new XAttribute(L5XName.Radix, radix));
+        element.Add(new XAttribute(L5XName.Value, atomic));
         return element;
     }
-
+    
     /// <summary>
-    /// Trigger the <see cref="LogixType.DataChanged"/> event when a atomic member data changed event is fired to forward
-    /// the call up the type/member hierarchy.
+    /// Converts this atomic type to the value type and uses the provided radix to return the formatted string value. 
     /// </summary>
-    /// <param name="sender">The member sending the data changed event.</param>
-    /// <param name="e">The event args.</param>
-    protected virtual void OnMemberDataChanged(object? sender, EventArgs e) => RaiseDataChanged(sender);
+    private string Format(Radix radix)
+    {
+        return this switch
+        {
+            BOOL atomic => radix.FormatValue((bool)atomic),
+            SINT atomic => radix.FormatValue((sbyte)atomic),
+            INT atomic => radix.FormatValue((short)atomic),
+            DINT atomic => radix.FormatValue((int)atomic),
+            LINT atomic => radix.FormatValue((long)atomic),
+            REAL atomic => radix.FormatValue((float)atomic),
+            USINT atomic => radix.FormatValue((byte)atomic),
+            UINT atomic => radix.FormatValue((ushort)atomic),
+            UDINT atomic => radix.FormatValue((uint)atomic),
+            ULINT atomic => radix.FormatValue((ulong)atomic),
+            LREAL atomic => radix.FormatValue((double)atomic),
+            _ => throw new NotSupportedException($"The atomic type {GetType()} is not supported.")
+        };
+    }
 }

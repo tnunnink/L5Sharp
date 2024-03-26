@@ -99,9 +99,6 @@ public class StringType : StructureType, IEnumerable<char>
     {
     }
 
-    /// <inheritdoc />
-    public sealed override DataTypeFamily Family => DataTypeFamily.String;
-
     /// <summary>
     /// Gets the LEN member of the string type structure. 
     /// </summary>
@@ -229,12 +226,12 @@ public class StringType : StructureType, IEnumerable<char>
     /// <summary>
     /// Generates the static string type logix members given the string data.
     /// </summary>
-    private static IEnumerable<LogixMember> GenerateMembers(string value)
+    private static IEnumerable<Member> GenerateMembers(string value)
     {
         var array = ToArray(value);
-        var len = new LogixMember(nameof(LEN), new DINT(array.Length));
-        var data = new LogixMember(nameof(DATA), new ArrayType<SINT>(array));
-        return new List<LogixMember> { len, data };
+        var len = new Member(nameof(LEN), new DINT(array.Length));
+        var data = new Member(nameof(DATA), new ArrayType<SINT>(array));
+        return new List<Member> { len, data };
     }
 
     /// <summary>
@@ -242,7 +239,7 @@ public class StringType : StructureType, IEnumerable<char>
     /// DATA array length. This method will create the SINT array of the specified length and then
     /// assign the provided value.
     /// </summary>
-    private static IEnumerable<LogixMember> GenerateMembers(string value, ushort length)
+    private static IEnumerable<Member> GenerateMembers(string value, ushort length)
     {
         var array = ToArray(value);
 
@@ -250,10 +247,10 @@ public class StringType : StructureType, IEnumerable<char>
             throw new ArgumentOutOfRangeException(nameof(value),
                 $"The string value '{value}' length {value.Length} is greater than the predefined length {length}.");
 
-        var len = new LogixMember(nameof(LEN), new DINT(array.Length));
-        var data = new LogixMember(nameof(DATA), GenerateData(array, length));
+        var len = new Member(nameof(LEN), new DINT(array.Length));
+        var data = new Member(nameof(DATA), GenerateData(array, length));
 
-        return new List<LogixMember> { len, data };
+        return new List<Member> { len, data };
     }
 
     /// <summary>
@@ -289,7 +286,7 @@ public class StringType : StructureType, IEnumerable<char>
         var matches = Regex.Matches(value, LogixAsciiPattern);
         return matches.Select(m =>
         {
-            var parsed = (SINT)Radix.Ascii.ParseValue($"'{m.Value}'");
+            var parsed = (sbyte)Radix.Ascii.ParseValue($"'{m.Value}'");
             return new SINT(parsed, Radix.Ascii);
         }).ToArray();
     }

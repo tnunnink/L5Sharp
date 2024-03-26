@@ -11,9 +11,7 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-/// This class exposes the common data type properties, such as <see cref="Name"/>, <see cref="Family"/>,
-/// <see cref="Class"/>, and <see cref="Members"/>. This class also provides common implicit conversions between .NET
-/// base types and LogixType classes so that the tag values may be set in a concise way.
+
 /// </para>
 /// </remarks>
 /// <seealso cref="AtomicType"/>
@@ -25,45 +23,34 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public abstract class LogixType : ILogixSerializable
+public abstract class LogixType : LogixElement
 {
-    /// <summary>
-    /// The name of the logix type.
-    /// </summary>
-    /// <value>A <see cref="string"/> name identifying the logix type.</value>
-    public abstract string Name { get; }
+    /// <inheritdoc />
+    protected LogixType()
+    {
+    }
+
+    /// <inheritdoc />
+    protected LogixType(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
-    /// The family (string or none) of the type.
+    /// The type name of the logix data.
     /// </summary>
-    /// <value>A <see cref="DataTypeFamily"/> option representing the family value.</value>
-    public abstract DataTypeFamily Family { get; }
+    /// <value>A <see cref="string"/> name identifying the data type of the data object.</value>
+    public virtual string Name => Element.Get(L5XName.DataType);
 
     /// <summary>
-    /// The class (atomic, predefined, user-defined) that the type belongs to.
+    /// The collection of <see cref="Core.Member"/> objects that make up the structure of the data.
     /// </summary>
-    /// <value>A <see cref="DataTypeClass"/> option representing the class type.</value>
-    public abstract DataTypeClass Class { get; }
-
-    /// <summary>
-    /// The collection of <see cref="LogixMember"/> objects that make up the structure of the type.
-    /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="LogixMember"/> objects.</value>
+    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Core.Member"/> objects.</value>
     /// <remarks>
-    /// All logix types, with the exception of a <c>BOOL</c> and <c>REAL/LREAL</c>, have what can be considered
+    /// All logix data, with the exception of a <c>BOOL</c> and <c>REAL/LREAL</c>, have what can be considered
     /// members. Every derived type must implement this property for which it returns a collection of members, forming
     /// the type/member hierarchy of the logix type.
     /// </remarks>
-    public abstract IEnumerable<LogixMember> Members { get; }
-
-    /// <summary>
-    /// An event that triggers when the <see cref="LogixType"/> members collection changes.
-    /// </summary>
-    /// <remarks>
-    /// This event is allowing us to detect when the value of a immediate or nested logix type changes. This is important
-    /// for tag so that it can know when to update the underlying XML data structure represented by the in-memory data structure. 
-    /// </remarks>
-    public event EventHandler? DataChanged;
+    public virtual IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
     /// <summary>
     /// Casts the <see cref="LogixType"/> to the type of the generic parameter.
@@ -72,14 +59,16 @@ public abstract class LogixType : ILogixSerializable
     /// <exception cref="InvalidCastException">The object can not be casted to the specified type.</exception>
     /// <returns>The logix type object casted as the specified generic type parameter.</returns>
     public TLogixType As<TLogixType>() where TLogixType : LogixType => (TLogixType)this;
-
+    
     /// <summary>
-    /// Returns a new deep cloned instance of the current type.
+    /// Gets a <see cref="Core.Member"/> with the specified name if it exists for the <see cref="LogixType"/>;
+    /// Otherwise, returns <c>null</c>.
     /// </summary>
-    /// <returns>A new instance of the specified logix type with the same property values.</returns>
-    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a single <see cref="XElement"/> argument.</exception>
-    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public LogixType Clone() => LogixData.Deserialize(new XElement(Serialize()));
+    /// <param name="name">The name of the member to get.</param>
+    /// <returns>A <see cref="Core.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <remarks>This performs a case insensitive comparison for the member name.</remarks>
+    public Member? Member(string name) =>
+        Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
@@ -93,28 +82,13 @@ public abstract class LogixType : ILogixSerializable
     /// <inheritdoc />
     public override int GetHashCode() => Name.GetHashCode();
 
-    /// <summary>
-    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixType"/>;
-    /// Otherwise, returns <c>null</c>.
-    /// </summary>
-    /// <param name="name">The name of the member to get.</param>
-    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
-    /// <remarks>This performs a case insensitive comparison for the member name.</remarks>
-    public LogixMember? Member(string name) =>
-        Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
-
-    /// <summary>
-    /// Raising the <see cref="DataChanged"/> event for the type with the provided object sender.
-    /// </summary>
-    /// <param name="sender">The objet initiating the data changed event. This could be this object, or a descendent
-    /// member or type in the data hierarchy.</param>
-    protected void RaiseDataChanged(object? sender) => DataChanged?.Invoke(sender, EventArgs.Empty);
-
     /// <inheritdoc />
     public override string ToString() => Name;
-
-    /// <inheritdoc />
-    public abstract XElement Serialize();
+    
+    /// <summary>
+    /// Returns the singleton null <see cref="LogixType"/> object.
+    /// </summary>
+    public static LogixType Null => NullType.Instance;
 
     /// <summary>
     /// Determines whether the <see cref="LogixType"/> values are equal.
@@ -299,7 +273,7 @@ public abstract class LogixType : ILogixSerializable
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(Dictionary<string, LogixType> value) =>
-        new ComplexType(nameof(ComplexType), value.Select(m => new LogixMember(m.Key, m.Value)));
+        new ComplexType(nameof(ComplexType), value.Select(m => new Member(m.Key, m.Value)));
 
     /// <summary>
     /// Converts the current array object to a <see cref="ArrayType{TLogixType}"/> of the concrete logix type by

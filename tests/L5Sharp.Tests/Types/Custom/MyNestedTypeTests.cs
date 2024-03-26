@@ -47,7 +47,7 @@ namespace L5Sharp.Tests.Types.Custom
             foreach (var member in members)
             {
                 member.Should().NotBeNull();
-                member.DataType.Should().NotBeNull();
+                member.Value.Should().NotBeNull();
             }
         }
 

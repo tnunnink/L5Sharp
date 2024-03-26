@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
@@ -9,7 +8,6 @@ namespace L5Sharp.Core;
 /// or string.
 /// </summary>
 /// <remarks>This would be the default for any tag that has no data type defined.</remarks>
-// ReSharper disable once InconsistentNaming
 public sealed class NullType : LogixType
 {
     private static readonly NullType Singleton = new();
@@ -22,16 +20,7 @@ public sealed class NullType : LogixType
     public override string Name => "NULL";
 
     /// <inheritdoc />
-    public override DataTypeFamily Family => DataTypeFamily.None;
-
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Unknown;
-
-    /// <inheritdoc />
-    public override IEnumerable<LogixMember> Members => Enumerable.Empty<LogixMember>();
-
-    /// <inheritdoc />
-    public override XElement Serialize() => new(L5XName.Data, new XAttribute(L5XName.Format, DataFormat.Decorated));
+    public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullType"/> logix type.

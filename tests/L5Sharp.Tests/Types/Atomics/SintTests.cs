@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Types.Atomics
     public class SintTests
     {
         private sbyte _random;
-        private Fixture _fixture;
+        private Fixture? _fixture;
 
         [SetUp]
         public void Setup()
@@ -34,8 +34,6 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(SINT).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(8);
             type.Radix.Should().Be(Radix.Decimal);
         }
@@ -60,7 +58,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new SINT(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new SINT((Radix)null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -97,20 +95,9 @@ namespace L5Sharp.Tests.Types.Atomics
 
             var members = type.Members.ToList();
 
-            var bitsEqualToOne = members.Where(m => m.DataType == true).ToList();
+            var bitsEqualToOne = members.Where(m => m.Value == true).ToList();
 
             bitsEqualToOne.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = new[] { (byte)_random };
-            var type = new SINT(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]

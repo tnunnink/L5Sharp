@@ -74,9 +74,6 @@ public sealed class PID : StructureType
     {
     }
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
     /// <summary>
     /// Gets the <c>CTL</c> member of the <see cref="PID"/> type.
     /// </summary>

@@ -45,9 +45,6 @@ public sealed class ALARM : StructureType
     {
     }
 
-    /// <inheritdoc />
-    public override DataTypeClass Class => DataTypeClass.Predefined;
-
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM"/> data type.
     /// </summary>

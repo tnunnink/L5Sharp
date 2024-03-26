@@ -132,24 +132,6 @@
       <None Update="Components\ModuleTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
-      <None Update="LogixMemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_StructureDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_ArrayOfAtomicDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_StringDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_ArrayOfStructureDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_ArrayOfStringDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
       <None Update="Components\ModuleTests.Serialize_Initialized_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>

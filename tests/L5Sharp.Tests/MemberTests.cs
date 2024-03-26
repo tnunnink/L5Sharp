@@ -6,12 +6,12 @@ using FluentAssertions;
 namespace L5Sharp.Tests;
 
 [TestFixture]
-public class LogixMemberTests
+public class MemberTests
 {
     [Test]
     public void New_ValidArguments_ShouldNotBeNull()
     {
-        var member = new LogixMember("Test", new BOOL());
+        var member = new Member("Test", new BOOL());
 
         member.Should().NotBeNull();
     }
@@ -19,16 +19,16 @@ public class LogixMemberTests
     [Test]
     public void New_ValidArguments_ShouldHaveExpectedValues()
     {
-        var member = new LogixMember("Test", new BOOL());
+        var member = new Member("Test", new BOOL());
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<BOOL>();
+        member.Value.Should().BeOfType<BOOL>();
     }
 
     [Test]
     public void New_NullName_ShouldHaveEmptyName()
     {
-        var member = new LogixMember(null!, new BOOL());
+        var member = new Member(null!, new BOOL());
 
         member.Should().NotBeNull();
         member.Name.Should().BeEmpty();
@@ -37,17 +37,11 @@ public class LogixMemberTests
     [Test]
     public void New_NullType_ShouldHaveDataTypeOfTypeNullType()
     {
-        var member = new LogixMember("Test", null!);
+        var member = new Member("Test", null!);
 
         member.Should().NotBeNull();
-        member.DataType.Should().NotBeNull();
-        member.DataType.Should().BeOfType<NullType>();
-    }
-
-    [Test]
-    public void New_NullElement_ShouldThrowArgumentNullException()
-    {
-        FluentActions.Invoking(() => new LogixMember(null!)).Should().Throw<ArgumentNullException>();
+        member.Value.Should().NotBeNull();
+        member.Value.Should().BeOfType<NullType>();
     }
 
     [Test]
@@ -55,12 +49,13 @@ public class LogixMemberTests
     {
         const string xml = "<DataValueMember Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" Value=\"123\" />";
         var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
 
-        var member = new LogixMember(element);
+        var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<DINT>();
-        member.DataType.Should().Be(123);
+        member.Value.Should().BeOfType<DINT>();
+        member.Value.Should().Be(123);
     }
 
     [Test]
@@ -74,16 +69,17 @@ public class LogixMemberTests
             <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1"" />
             </StructureMember>";
         var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
 
-        var member = new LogixMember(element);
+        var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<TIMER>();
-        member.DataType.Member("PRE")!.DataType.Should().Be(1000);
-        member.DataType.Member("ACC")!.DataType.Should().Be(2000);
-        member.DataType.Member("EN")!.DataType.Should().Be(1);
-        member.DataType.Member("TT")!.DataType.Should().Be(1);
-        member.DataType.Member("DN")!.DataType.Should().Be(1);
+        member.Value.Should().BeOfType<TIMER>();
+        member.Value.Member("PRE")!.Value.Should().Be(1000);
+        member.Value.Member("ACC")!.Value.Should().Be(2000);
+        member.Value.Member("EN")!.Value.Should().Be(1);
+        member.Value.Member("TT")!.Value.Should().Be(1);
+        member.Value.Member("DN")!.Value.Should().Be(1);
     }
 
     [Test]
@@ -97,17 +93,18 @@ public class LogixMemberTests
             <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1"" />
             </StructureMember>";
         var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
 
-        var member = new LogixMember(element);
+        var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<ComplexType>();
-        member.DataType.Name.Should().Be("CustomType");
-        member.DataType.Member("PRE")!.DataType.Should().Be(1000);
-        member.DataType.Member("ACC")!.DataType.Should().Be(2000);
-        member.DataType.Member("EN")!.DataType.Should().Be(1);
-        member.DataType.Member("TT")!.DataType.Should().Be(1);
-        member.DataType.Member("DN")!.DataType.Should().Be(1);
+        member.Value.Should().BeOfType<ComplexType>();
+        member.Value.Name.Should().Be("CustomType");
+        member.Value.Member("PRE")!.Value.Should().Be(1000);
+        member.Value.Member("ACC")!.Value.Should().Be(2000);
+        member.Value.Member("EN")!.Value.Should().Be(1);
+        member.Value.Member("TT")!.Value.Should().Be(1);
+        member.Value.Member("DN")!.Value.Should().Be(1);
     }
 
     [Test]
@@ -118,13 +115,14 @@ public class LogixMemberTests
             <DataValueMember Name=""DATA"" DataType=""STRING"" Radix=""ASCII""><![CDATA[This is a string type value]]></DataValueMember>
             </StructureMember>";
         var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
 
-        var member = new LogixMember(element);
+        var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<STRING>();
-        member.DataType.Member("LEN")!.DataType.Should().Be(27);
-        member.DataType.ToString().Should().Be("This is a string type value");
+        member.Value.Should().BeOfType<STRING>();
+        member.Value.Member("LEN")!.Value.Should().Be(27);
+        member.Value.ToString().Should().Be("This is a string type value");
     }
 
     [Test]
@@ -137,15 +135,16 @@ public class LogixMemberTests
             <Element Index=""[3]"" Value=""4.4"" />
             </ArrayMember>";
         var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
 
-        var member = new LogixMember(element);
+        var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<ArrayType<REAL>>();
-        member.DataType.As<ArrayType>()[0].Should().Be(1.1f);
-        member.DataType.As<ArrayType>()[1].Should().Be(2.2f);
-        member.DataType.As<ArrayType>()[2].Should().Be(3.3f);
-        member.DataType.As<ArrayType>()[3].Should().Be(4.4f);
+        member.Value.Should().BeOfType<ArrayType<REAL>>();
+        member.Value.As<ArrayType>()[0].Should().Be(1.1f);
+        member.Value.As<ArrayType>()[1].Should().Be(2.2f);
+        member.Value.As<ArrayType>()[2].Should().Be(3.3f);
+        member.Value.As<ArrayType>()[3].Should().Be(4.4f);
     }
 
     [Test]
@@ -181,14 +180,15 @@ public class LogixMemberTests
             </Element>
             </ArrayMember>";
         var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
 
-        var member = new LogixMember(element);
+        var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<ArrayType<TIMER>>();
-        member.DataType.As<ArrayType>()[0].Should().BeOfType<TIMER>();
-        member.DataType.As<ArrayType>()[1].Should().BeOfType<TIMER>();
-        member.DataType.As<ArrayType>()[2].Should().BeOfType<TIMER>();
+        member.Value.Should().BeOfType<ArrayType<TIMER>>();
+        member.Value.As<ArrayType>()[0].Should().BeOfType<TIMER>();
+        member.Value.As<ArrayType>()[1].Should().BeOfType<TIMER>();
+        member.Value.As<ArrayType>()[2].Should().BeOfType<TIMER>();
     }
 
     [Test]
@@ -215,22 +215,23 @@ public class LogixMemberTests
             </Element>
             </ArrayMember>";
         var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
 
-        var member = new LogixMember(element);
+        var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.DataType.Should().BeOfType<ArrayType<STRING>>();
-        member.DataType.As<ArrayType>()[0].Should().BeOfType<STRING>();
-        member.DataType.As<ArrayType>()[1].Should().BeOfType<STRING>();
-        member.DataType.As<ArrayType>()[2].Should().BeOfType<STRING>();
+        member.Value.Should().BeOfType<ArrayType<STRING>>();
+        member.Value.As<ArrayType>()[0].Should().BeOfType<STRING>();
+        member.Value.As<ArrayType>()[1].Should().BeOfType<STRING>();
+        member.Value.As<ArrayType>()[2].Should().BeOfType<STRING>();
     }
 
     [Test]
     public void GetDataType_AtomicType_ShouldHaveExpectedValues()
     {
-        var member = new LogixMember("Test", 123);
+        var member = new Member("Test", 123);
 
-        var dataType = member.DataType;
+        var dataType = member.Value;
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<DINT>();
@@ -240,9 +241,9 @@ public class LogixMemberTests
     [Test]
     public void GetDataType_StructureType_ShouldHaveExpectedValues()
     {
-        var member = new LogixMember("Test", new TIMER { PRE = 123 });
+        var member = new Member("Test", new TIMER { PRE = 123 });
 
-        var dataType = member.DataType;
+        var dataType = member.Value;
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<TIMER>();
@@ -252,9 +253,9 @@ public class LogixMemberTests
     [Test]
     public void GetDataType_ArrayType_ShouldHaveExpectedValues()
     {
-        var member = new LogixMember("Test", new DINT[] { 1, 2, 3, 4 });
+        var member = new Member("Test", new DINT[] { 1, 2, 3, 4 });
 
-        var dataType = member.DataType;
+        var dataType = member.Value;
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<ArrayType<DINT>>();
@@ -267,9 +268,9 @@ public class LogixMemberTests
     [Test]
     public void GetDataType_StringType_ShouldHaveExpectedValues()
     {
-        var member = new LogixMember("Test", "This is a test");
+        var member = new Member("Test", "This is a test");
 
-        var dataType = member.DataType;
+        var dataType = member.Value;
 
         dataType.Should().NotBeNull();
         dataType.Should().BeOfType<STRING>();
@@ -279,215 +280,215 @@ public class LogixMemberTests
     [Test]
     public void SetDataType_AtomicToStructure_ShouldThrowInvalidCastException()
     {
-        var member = new LogixMember("Test", 123);
+        var member = new Member("Test", 123);
 
-        FluentActions.Invoking(() => member.DataType = new TIMER()).Should().Throw<InvalidCastException>();
+        FluentActions.Invoking(() => member.Value = new TIMER()).Should().Throw<InvalidCastException>();
     }
 
     [Test]
     public void SetDataType_StructureToAtomic_ShouldThrowArgumentException()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
 
-        FluentActions.Invoking(() => member.DataType = 123).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => member.Value = 123).Should().Throw<ArgumentException>();
     }
     
     [Test]
     public void SetDataType_FromValueToNull_ShouldBeOfTypeNullType()
     {
-        var member = new LogixMember("Test", 123);
+        var member = new Member("Test", 123);
 
-        member.DataType = null!;
+        member.Value = null!;
 
-        member.DataType.Should().BeOfType<NullType>();
+        member.Value.Should().BeOfType<NullType>();
     }
 
     [Test]
     public void SetDataType_FromNullToValue_ShouldHaveExpectedValues()
     {
-        var member = new LogixMember("Test", LogixData.Null);
+        var member = new Member("Test", LogixType.Null);
 
-        member.DataType = 123;
+        member.Value = 123;
 
-        member.DataType.Should().BeOfType<DINT>();
-        member.DataType.Should().Be(123);
+        member.Value.Should().BeOfType<DINT>();
+        member.Value.Should().Be(123);
     }
 
     [Test]
     public void SetDataType_BOOL_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", false);
+        var member = new Member("Test", false);
 
-        member.DataType = true;
+        member.Value = true;
 
-        member.DataType.Should().BeOfType<BOOL>();
-        member.DataType.As<BOOL>().Radix.Should().Be(Radix.Decimal);
-        member.DataType.Should().Be(true);
+        member.Value.Should().BeOfType<BOOL>();
+        member.Value.As<BOOL>().Radix.Should().Be(Radix.Decimal);
+        member.Value.Should().Be(true);
     }
 
     [Test]
     public void SetDataType_SINT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new SINT(12, Radix.Binary));
+        var member = new Member("Test", new SINT(12, Radix.Binary));
 
-        member.DataType = 21;
+        member.Value = 21;
 
-        member.DataType.Should().BeOfType<SINT>();
-        member.DataType.As<SINT>().Radix.Should().Be(Radix.Binary);
-        member.DataType.Should().Be(21);
+        member.Value.Should().BeOfType<SINT>();
+        member.Value.As<SINT>().Radix.Should().Be(Radix.Binary);
+        member.Value.Should().Be(21);
     }
     
     [Test]
     public void SetDataType_INT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new INT(1234, Radix.Binary));
+        var member = new Member("Test", new INT(1234, Radix.Binary));
 
-        member.DataType = 4321;
+        member.Value = 4321;
 
-        member.DataType.Should().BeOfType<INT>();
-        member.DataType.As<INT>().Radix.Should().Be(Radix.Binary);
-        member.DataType.Should().Be(4321);
+        member.Value.Should().BeOfType<INT>();
+        member.Value.As<INT>().Radix.Should().Be(Radix.Binary);
+        member.Value.Should().Be(4321);
     }
     
     [Test]
     public void SetDataType_DINT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", 123);
+        var member = new Member("Test", 123);
 
-        member.DataType = 321;
+        member.Value = 321;
 
-        member.DataType.Should().BeOfType<DINT>();
-        member.DataType.As<DINT>().Radix.Should().Be(Radix.Decimal);
-        member.DataType.Should().Be(321);
+        member.Value.Should().BeOfType<DINT>();
+        member.Value.As<DINT>().Radix.Should().Be(Radix.Decimal);
+        member.Value.Should().Be(321);
     }
     
     [Test]
     public void SetDataType_LINT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new LINT(long.MaxValue, Radix.Hex));
+        var member = new Member("Test", new LINT(long.MaxValue, Radix.Hex));
 
-        member.DataType = new DINT(1000, Radix.Ascii);
+        member.Value = new DINT(1000, Radix.Ascii);
 
-        member.DataType.Should().BeOfType<LINT>();
-        member.DataType.As<LINT>().Radix.Should().Be(Radix.Hex);
-        member.DataType.Should().Be(1000);
+        member.Value.Should().BeOfType<LINT>();
+        member.Value.As<LINT>().Radix.Should().Be(Radix.Hex);
+        member.Value.Should().Be(1000);
     }
     
     [Test]
     public void SetDataType_USINT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new USINT(12, Radix.Binary));
+        var member = new Member("Test", new USINT(12, Radix.Binary));
 
-        member.DataType = 21;
+        member.Value = 21;
 
-        member.DataType.Should().BeOfType<USINT>();
-        member.DataType.As<USINT>().Radix.Should().Be(Radix.Binary);
-        member.DataType.Should().Be(21);
+        member.Value.Should().BeOfType<USINT>();
+        member.Value.As<USINT>().Radix.Should().Be(Radix.Binary);
+        member.Value.Should().Be(21);
     }
     
     [Test]
     public void SetDataType_UINT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new UINT(1234, Radix.Binary));
+        var member = new Member("Test", new UINT(1234, Radix.Binary));
 
-        member.DataType = 4321;
+        member.Value = 4321;
 
-        member.DataType.Should().BeOfType<UINT>();
-        member.DataType.As<UINT>().Radix.Should().Be(Radix.Binary);
-        member.DataType.Should().Be(4321);
+        member.Value.Should().BeOfType<UINT>();
+        member.Value.As<UINT>().Radix.Should().Be(Radix.Binary);
+        member.Value.Should().Be(4321);
     }
     
     [Test]
     public void SetDataType_UDINT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new UDINT(123));
+        var member = new Member("Test", new UDINT(123));
 
-        member.DataType = 321;
+        member.Value = 321;
 
-        member.DataType.Should().BeOfType<UDINT>();
-        member.DataType.As<UDINT>().Radix.Should().Be(Radix.Decimal);
-        member.DataType.Should().Be(321);
+        member.Value.Should().BeOfType<UDINT>();
+        member.Value.As<UDINT>().Radix.Should().Be(Radix.Decimal);
+        member.Value.Should().Be(321);
     }
     
     [Test]
     public void SetDataType_ULINT_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new ULINT(long.MaxValue, Radix.Hex));
+        var member = new Member("Test", new ULINT(long.MaxValue, Radix.Hex));
 
-        member.DataType = new DINT(1000, Radix.Ascii);
+        member.Value = new DINT(1000, Radix.Ascii);
 
-        member.DataType.Should().BeOfType<ULINT>();
-        member.DataType.As<ULINT>().Radix.Should().Be(Radix.Hex);
-        member.DataType.Should().Be(1000);
+        member.Value.Should().BeOfType<ULINT>();
+        member.Value.As<ULINT>().Radix.Should().Be(Radix.Hex);
+        member.Value.Should().Be(1000);
     }
     
     [Test]
     public void SetDataType_REAL_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new REAL(float.MaxValue, Radix.Exponential));
+        var member = new Member("Test", new REAL(float.MaxValue, Radix.Exponential));
 
-        member.DataType = 123.123f;
+        member.Value = 123.123f;
 
-        member.DataType.Should().BeOfType<REAL>();
-        member.DataType.As<REAL>().Radix.Should().Be(Radix.Exponential);
-        member.DataType.Should().Be(123.123f);
+        member.Value.Should().BeOfType<REAL>();
+        member.Value.As<REAL>().Radix.Should().Be(Radix.Exponential);
+        member.Value.Should().Be(123.123f);
     }
     
     [Test]
     public void SetDataType_LREAL_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new LREAL(double.MaxValue));
+        var member = new Member("Test", new LREAL(double.MaxValue));
 
-        member.DataType = 123.123;
+        member.Value = 123.123;
 
-        member.DataType.Should().BeOfType<LREAL>();
-        member.DataType.As<LREAL>().Radix.Should().Be(Radix.Float);
-        member.DataType.Should().Be(123.123);
+        member.Value.Should().BeOfType<LREAL>();
+        member.Value.As<LREAL>().Radix.Should().Be(Radix.Float);
+        member.Value.Should().Be(123.123);
     }
 
     [Test]
     public void SetDataType_StructureAsConcreteType_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
 
-        member.DataType = new TIMER { PRE = 5000, EN = true };
+        member.Value = new TIMER { PRE = 5000, EN = true };
 
-        member.DataType.As<TIMER>().PRE.Should().Be(5000);
-        member.DataType.As<TIMER>().EN.Should().Be(true);
+        member.Value.As<TIMER>().PRE.Should().Be(5000);
+        member.Value.As<TIMER>().EN.Should().Be(true);
     }
 
     [Test]
     public void SetDataType_StructureAsGenericStructureType_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
 
-        member.DataType = new ComplexType("TIMER", new List<LogixMember> { new("PRE", 5000), new("EN", true) });
+        member.Value = new ComplexType("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) });
 
-        member.DataType.As<TIMER>().PRE.Should().Be(5000);
-        member.DataType.As<TIMER>().EN.Should().Be(true);
+        member.Value.As<TIMER>().PRE.Should().Be(5000);
+        member.Value.As<TIMER>().EN.Should().Be(true);
     }
 
     [Test]
     public void SetDataType_StructureAsDictionary_ShouldBeExpectedValue()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
 
-        member.DataType = new Dictionary<string, LogixType>
+        member.Value = new Dictionary<string, LogixType>
         {
             { "PRE", 5000 },
             { "EN", true }
         };
 
-        member.DataType.As<TIMER>().PRE.Should().Be(5000);
-        member.DataType.As<TIMER>().EN.Should().Be(true);
+        member.Value.As<TIMER>().PRE.Should().Be(5000);
+        member.Value.As<TIMER>().EN.Should().Be(true);
     }
 
     [Test]
     public void SetDataType_StructureWithMembersNotInType_ShouldOnlySetMembersThatAreInType()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
 
-        member.DataType = new Dictionary<string, LogixType>
+        member.Value = new Dictionary<string, LogixType>
         {
             { "Test", 123 },
             { "PRE", 5000 },
@@ -495,20 +496,20 @@ public class LogixMemberTests
             { "EN", true }
         };
 
-        member.DataType.As<TIMER>().PRE.Should().Be(5000);
-        member.DataType.As<TIMER>().ACC.Should().Be(0);
-        member.DataType.As<TIMER>().EN.Should().Be(true);
-        member.DataType.As<TIMER>().TT.Should().Be(false);
-        member.DataType.As<TIMER>().DN.Should().Be(false);
+        member.Value.As<TIMER>().PRE.Should().Be(5000);
+        member.Value.As<TIMER>().ACC.Should().Be(0);
+        member.Value.As<TIMER>().EN.Should().Be(true);
+        member.Value.As<TIMER>().TT.Should().Be(false);
+        member.Value.As<TIMER>().DN.Should().Be(false);
     }
 
     [Test]
     public void SetDataType_ImmediateAtomic_ShouldRaiseDataChangedEvent()
     {
-        var member = new LogixMember("Test", 123);
+        var member = new Member("Test", 123);
         var monitor = member.Monitor();
 
-        member.DataType = 321;
+        member.Value = 321;
 
         monitor.Should().Raise("DataChanged");
     }
@@ -516,10 +517,10 @@ public class LogixMemberTests
     [Test]
     public void SetDataType_ImmediateStructure_ShouldRaiseDataChangedEvent()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
         var monitor = member.Monitor();
 
-        member.DataType = new TIMER { PRE = 5000 };
+        member.Value = new TIMER { PRE = 5000 };
 
         monitor.Should().Raise("DataChanged");
     }
@@ -527,10 +528,10 @@ public class LogixMemberTests
     [Test]
     public void SetDataType_ImmediateArray_ShouldRaiseDataChangedEvent()
     {
-        var member = new LogixMember("Test", new DINT[] { 1, 2, 3, 4 });
+        var member = new Member("Test", new DINT[] { 1, 2, 3, 4 });
         var monitor = member.Monitor();
 
-        member.DataType = new DINT[] { 4, 3, 2, 1 };
+        member.Value = new DINT[] { 4, 3, 2, 1 };
 
         monitor.Should().Raise("DataChanged");
     }
@@ -538,22 +539,22 @@ public class LogixMemberTests
     [Test]
     public void SetDataType_NestedAtomicMember_ShouldRaiseDataChangedEventAndHaveCorrectValue()
     {
-        var member = new LogixMember("Test", 0);
+        var member = new Member("Test", 0);
         var monitor = member.Monitor();
 
-        member.DataType.Member("0")!.DataType = true;
+        member.Value.Member("0")!.Value = true;
 
         monitor.Should().Raise("DataChanged");
-        member.DataType.Should().Be(1);
+        member.Value.Should().Be(1);
     }
 
     [Test]
     public void SetDataType_NestedStructureMember_ShouldRaiseDataChangedEvent()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
         var monitor = member.Monitor();
 
-        member.DataType.Member("PRE")!.DataType = 10000;
+        member.Value.Member("PRE")!.Value = 10000;
 
         monitor.Should().Raise("DataChanged");
     }
@@ -561,10 +562,10 @@ public class LogixMemberTests
     [Test]
     public void SetDataType_NestedStructureMemberStatic_ShouldRaiseDataChangedEvent()
     {
-        var member = new LogixMember("Test", new TIMER());
+        var member = new Member("Test", new TIMER());
         var monitor = member.Monitor();
 
-        member.DataType.As<TIMER>().PRE = 10000;
+        member.Value.As<TIMER>().PRE = 10000;
 
         monitor.Should().Raise("DataChanged");
     }
@@ -572,7 +573,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_AtomicDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", 123);
+        var member = new Member("Test", 123);
 
         var xml = member.Serialize().ToString();
 
@@ -582,7 +583,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_StructureDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", new TIMER { PRE = 1000, ACC = 2000, EN = 1, DN = 1, TT = 1 });
+        var member = new Member("Test", new TIMER { PRE = 1000, ACC = 2000, EN = 1, DN = 1, TT = 1 });
 
         var xml = member.Serialize().ToString();
 
@@ -592,7 +593,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_StringDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", "This is a string type value");
+        var member = new Member("Test", "This is a string type value");
 
         var xml = member.Serialize().ToString();
 
@@ -602,7 +603,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_ArrayOfAtomicDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", new REAL[] { 1.1f, 2.2f, 3.3f, 4.4f });
+        var member = new Member("Test", new REAL[] { 1.1f, 2.2f, 3.3f, 4.4f });
 
         var xml = member.Serialize().ToString();
 
@@ -612,7 +613,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_ArrayOfStructureDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", new TIMER[] { new(), new(), new() });
+        var member = new Member("Test", new TIMER[] { new(), new(), new() });
 
         var xml = member.Serialize().ToString();
 
@@ -622,7 +623,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_ArrayOfStringDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", new STRING[] { "Test1", "Test2", "Test3" });
+        var member = new Member("Test", new STRING[] { "Test1", "Test2", "Test3" });
 
         var xml = member.Serialize().ToString();
 

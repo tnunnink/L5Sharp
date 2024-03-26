@@ -29,7 +29,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Octal.FormatValue(new BOOL());
+            var result = Radix.Octal.FormatValue(false);
 
             result.Should().Be("8#0");
         }
@@ -37,7 +37,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Octal.FormatValue(new BOOL(true));
+            var result = Radix.Octal.FormatValue(true);
 
             result.Should().Be("8#1");
         }

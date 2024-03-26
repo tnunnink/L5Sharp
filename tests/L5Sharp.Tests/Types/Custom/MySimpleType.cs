@@ -18,8 +18,6 @@ public class MySimpleType : ComplexType
     {
     }
 
-    public override DataTypeClass Class => DataTypeClass.User;
-
     public BOOL M1
     {
         get => GetMember<BOOL>();

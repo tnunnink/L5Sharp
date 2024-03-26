@@ -17,14 +17,14 @@ public class LogixDataTests
                 </StructureMember>";
         var element = XElement.Parse(xml);
 
-        var type = LogixData.Deserialize(element);
+        var type = element.Deserialize<TIMER>();
 
         type.Should().NotBeNull();
         type.Should().BeOfType<TIMER>();
-        type.As<TIMER>().PRE.Should().Be(5000);
-        type.As<TIMER>().ACC.Should().Be(1234);
-        type.As<TIMER>().EN.Should().Be(1);
-        type.As<TIMER>().TT.Should().Be(1);
-        type.As<TIMER>().DN.Should().Be(1);
+        type.PRE.Should().Be(5000);
+        type.ACC.Should().Be(1234);
+        type.EN.Should().Be(1);
+        type.TT.Should().Be(1);
+        type.DN.Should().Be(1);
     }
 }

@@ -33,8 +33,6 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(DINT).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(32);
             type.Radix.Should().Be(Radix.Decimal);
         }
@@ -59,7 +57,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new DINT(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new DINT((Radix)null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -96,7 +94,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             var members = type.Members.ToList();
 
-            var bitsEqualToOne = members.Where(m => m.DataType == true).ToList();
+            var bitsEqualToOne = members.Where(m => m.Value == true).ToList();
 
             bitsEqualToOne.Should().NotBeEmpty();
         }
@@ -110,8 +108,8 @@ namespace L5Sharp.Tests.Types.Atomics
 
             bit.Should().NotBeNull();
             bit?.Name.Should().Be("1");
-            bit?.DataType.Should().BeOfType<BOOL>();
-            bit?.DataType.Should().Be(true);
+            bit?.Value.Should().BeOfType<BOOL>();
+            bit?.Value.Should().Be(true);
         }
 
         [Test]
@@ -162,7 +160,7 @@ namespace L5Sharp.Tests.Types.Atomics
             clone.Should().Be(123);
         }
 
-        [Test]
+        /*[Test]
         public void Index_ValidIndex_ShouldBeExpected()
         {
             var type = new DINT(1);
@@ -180,18 +178,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var type = new DINT(1);
 
             FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new DINT(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
-        }
+        }*/
 
         [Test]
         public Task Serialize_Default_ShouldBeValid()
@@ -229,7 +216,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var type = new DINT();
             using var monitor = type.Monitor();
 
-            type.Members.First().DataType = true;
+            type.Members.First().Value = true;
 
             monitor.Should().Raise("DataChanged");
         }
