@@ -15,7 +15,7 @@ namespace L5Sharp.Tests.Types
             FluentActions.Invoking(() => new ArrayType<LogixType>(((LogixType[])null)!)).Should()
                 .Throw<ArgumentNullException>();
         }
-        
+
         [Test]
         public void Constructor_EmptyArray_ShouldBeEmpty()
         {
@@ -24,7 +24,7 @@ namespace L5Sharp.Tests.Types
             array.Should().BeEmpty();
             array.Members.Should().BeEmpty();
         }
-        
+
         [Test]
         public void Constructor_EmptyArray_ShouldHaveExpectedTypeName()
         {
@@ -32,7 +32,7 @@ namespace L5Sharp.Tests.Types
 
             array.Name.Should().Be("DINT");
         }
-        
+
         [Test]
         public void Constructor_ArrayOfNullTypes_ShouldThrowArgumentException()
         {
@@ -531,7 +531,7 @@ namespace L5Sharp.Tests.Types
             casted.Should().NotBeNull();
             casted.Should().AllBeOfType<TIMER>();
         }
-        
+
         [Test]
         public Task Serialize_EmptyArray_ShouldBeVerified()
         {
@@ -540,8 +540,8 @@ namespace L5Sharp.Tests.Types
             var xml = array.Serialize().ToString();
 
             return Verify(xml);
-        } 
-        
+        }
+
         [Test]
         public void SetIndex_ArrayOfNull_ShouldWork()
         {
@@ -551,7 +551,7 @@ namespace L5Sharp.Tests.Types
 
             array[1].Should().NotBeNull();
         }
-        
+
         [Test]
         public Task Serialize_ArrayOfNull_ShouldBeVerified()
         {

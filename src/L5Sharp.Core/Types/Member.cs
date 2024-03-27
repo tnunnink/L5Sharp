@@ -84,7 +84,7 @@ public sealed class Member : LogixElement
         switch (Value)
         {
             case NullType:
-                SetNull(type);
+                SetData(type);
                 break;
             case AtomicType current:
                 var atomicType = (AtomicType)type;
@@ -103,18 +103,6 @@ public sealed class Member : LogixElement
                 SetStructure(structureType);
                 break;
         }
-    }
-
-    private void SetNull(LogixType type)
-    {
-        //If this is the data element and there is no parent element, we need to update it in place.
-        if (Element.IsDataElement() && Element.Parent is null)
-        {
-            
-            return;
-        }
-        
-        SetData(type);
     }
 
     /// <summary>

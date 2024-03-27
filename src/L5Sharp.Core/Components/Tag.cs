@@ -21,7 +21,7 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.OutputTag)]
 public class Tag : LogixComponent
 {
-    private readonly Member _member;
+    private readonly Member? _member;
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> with default values.
@@ -156,8 +156,17 @@ public class Tag : LogixComponent
     /// </remarks>
     public LogixType Value
     {
-        get => _member.Value;
-        set => _member.Value = value;
+        get => _member?.Value ?? GetData();
+        set
+        {
+            if (_member is not null)
+            {
+                _member.Value = value;
+                return;
+            } 
+            
+            SetData(value);
+        }
     }
 
     /// <summary>
@@ -303,7 +312,7 @@ public class Tag : LogixComponent
     /// member object. This property is determined using the hierarchical structure of the tag component.
     /// </para>
     /// </remarks>
-    public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
+    public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member?.Name) : new TagName(Name);
 
     /// <summary>
     /// Gets the tag member having the provided tag name value. The tag name can represent either an immediate member

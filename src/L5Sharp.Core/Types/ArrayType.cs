@@ -197,7 +197,7 @@ public abstract class ArrayType : LogixType, IEnumerable
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => Members.Select(m => m.Value).GetEnumerator();
-    
+
     /// <summary>
     /// Creates a new array data structure element with the provided array object. This method will
     /// determine the dimensions from the provided array. It will also used the first item in the array
@@ -207,10 +207,13 @@ public abstract class ArrayType : LogixType, IEnumerable
     private static XElement CreateArray(Array array)
     {
         var dimensions = Dimensions.FromArray(array);
-        var collection = array.Cast<LogixType>().ToArray();
-        var first = collection.Length > 0 ? collection[0] ?? Null : Null;
-        var dataType = first != Null ? first.Name : array.GetType().GetElementType()?.Name ?? Null;
         
+        var collection = array.Cast<LogixType>().ToArray();
+        ValidateCollection(collection);
+        
+        var first = collection.Length > 0 ? collection[0] : null;
+        var dataType = first?.Name ?? (array.GetType().GetElementType()?.Name ?? Null);
+
         var element = new XElement(L5XName.Array);
         element.Add(new XAttribute(L5XName.DataType, dataType));
         element.Add(new XAttribute(L5XName.Dimensions, dimensions));
@@ -220,6 +223,15 @@ public abstract class ArrayType : LogixType, IEnumerable
         element.Add(elements);
 
         return element;
+    }
+
+    /// <summary>
+    /// Checks that the array of types is valid or that there exists no null type elements.
+    /// </summary>
+    private static void ValidateCollection(IEnumerable<LogixType?> array)
+    {
+        if (array.Any(t => t is null or NullType))
+            throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
     }
 
     /// <summary>
@@ -263,7 +275,7 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
     public ArrayType(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="ArrayType{TLogixType}"/> initialized with the provided one dimensional array.
     /// </summary>

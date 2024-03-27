@@ -212,8 +212,8 @@ public abstract class StructureType : LogixType
     /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
     protected void ReplaceMember(string name, LogixType type)
     {
-        if (type is null)
-            throw new ArgumentNullException(nameof(type));
+        if (type is null or NullType)
+            throw new ArgumentNullException(nameof(type), "Can not replace member with null data.");
 
         var target = Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name));
 
