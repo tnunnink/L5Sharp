@@ -22,7 +22,7 @@ public class AddOnInstruction : LogixComponent
     /// <summary>
     /// Creates a new <see cref="AddOnInstruction"/> with default values.
     /// </summary>
-    public AddOnInstruction() : base(new XElement(L5XName.AddOnInstructionDefinition))
+    public AddOnInstruction() : base(L5XName.AddOnInstructionDefinition)
     {
         Revision = new Revision();
         ExecutePreScan = false;

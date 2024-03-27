@@ -30,7 +30,7 @@ public class DataType : LogixComponent
     /// <summary>
     /// Creates a new <see cref="DataType"/> with default values.
     /// </summary>
-    public DataType()
+    public DataType() : base(L5XName.DataType)
     {
         Family = DataTypeFamily.None;
         Class = DataTypeClass.User;

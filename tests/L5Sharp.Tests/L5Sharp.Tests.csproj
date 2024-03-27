@@ -280,6 +280,33 @@
       <None Update="Elements\RungTests.SetTextToNullThenCommentThenTextAgainShouldBeValid.verified.xml">
         <DependentUpon>RungTests.cs</DependentUpon>
       </None>
+      <None Update="Types\MemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_StructureDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_StringDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_ArrayOfAtomicDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_ArrayOfStructureDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_ArrayOfStringDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Custom\MySimpleTypeTests.Serialize_UpdatedMember_ShouldBeVerified.verified.txt">
+        <DependentUpon>MySimpleTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayTypeTests.Serialize_EmptyArray_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\RoutineTests.AddSheet_ValidSheetObject_ShouldWork.verified.txt">
+        <DependentUpon>RoutineTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

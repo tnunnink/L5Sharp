@@ -158,42 +158,6 @@ public abstract class ArrayType : LogixType, IEnumerable
     public ArrayType<TLogixType> Cast<TLogixType>() where TLogixType : LogixType =>
         Enumerable.Cast<TLogixType>(this).ToArray();
 
-    private static XElement CreateArray(Array array)
-    {
-        var types = array.Cast<LogixType>().ToArray();
-        var type = types.Length > 0 ? types[0] : Null;
-        var dimensions = Dimensions.FromArray(types);
-
-        var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, type.Name));
-        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
-        if (type is AtomicType atomic) element.Add(new XAttribute(L5XName.Radix, atomic.Radix));
-
-        var elements = dimensions.Indices().Zip(types, (i, t) =>
-        {
-            var index = new XElement(L5XName.Element, new XAttribute(L5XName.Index, i));
-
-            switch (t)
-            {
-                case AtomicType atomicType:
-                    index.Add(new XAttribute(L5XName.Value, atomicType));
-                    break;
-                case StringType stringType:
-                    index.Add(stringType.SerializeStructure());
-                    break;
-                case StructureType structureType:
-                    index.Add(structureType.Serialize());
-                    break;
-            }
-
-            return index;
-        });
-
-        element.Add(elements);
-
-        return element;
-    }
-
     /// <summary>
     /// Handles getting the logix type at the specified index of the current array from the underlying member collection. 
     /// </summary>
@@ -202,7 +166,7 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
     protected TLogixType GetIndex<TLogixType>(string index) where TLogixType : LogixType
     {
-        var member = Element.Elements().SingleOrDefault(m => m.Name == index)?.ToMember();
+        var member = Element.Elements().SingleOrDefault(m => m.MemberName() == index)?.ToMember();
 
         if (member is null)
             throw new ArgumentOutOfRangeException(nameof(index),
@@ -222,7 +186,7 @@ public abstract class ArrayType : LogixType, IEnumerable
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        var member = Element.Elements().SingleOrDefault(m => m.Name == index)?.ToMember();
+        var member = Element.Elements().SingleOrDefault(m => m.MemberName() == index)?.ToMember();
 
         if (member is null)
             throw new ArgumentOutOfRangeException(nameof(index),
@@ -233,6 +197,54 @@ public abstract class ArrayType : LogixType, IEnumerable
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => Members.Select(m => m.Value).GetEnumerator();
+    
+    /// <summary>
+    /// Creates a new array data structure element with the provided array object. This method will
+    /// determine the dimensions from the provided array. It will also used the first item in the array
+    /// to seed the data type name and radix if available. If this collection contains no items we will resort
+    /// to the type name of the array element type.
+    /// </summary>
+    private static XElement CreateArray(Array array)
+    {
+        var dimensions = Dimensions.FromArray(array);
+        var collection = array.Cast<LogixType>().ToArray();
+        var first = collection.Length > 0 ? collection[0] ?? Null : Null;
+        var dataType = first != Null ? first.Name : array.GetType().GetElementType()?.Name ?? Null;
+        
+        var element = new XElement(L5XName.Array);
+        element.Add(new XAttribute(L5XName.DataType, dataType));
+        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
+        if (first is AtomicType atomic) element.Add(new XAttribute(L5XName.Radix, atomic.Radix));
+
+        var elements = dimensions.Indices().Zip(collection, CreateArrayElement);
+        element.Add(elements);
+
+        return element;
+    }
+
+    /// <summary>
+    /// Creates an array index element with the provided index string and logix type data object.
+    /// The format of the element will depend on the logix type provided, atomic, string, or structure.
+    /// </summary>
+    private static XElement CreateArrayElement(string index, LogixType type)
+    {
+        var element = new XElement(L5XName.Element, new XAttribute(L5XName.Index, index));
+
+        switch (type)
+        {
+            case AtomicType atomicType:
+                element.Add(new XAttribute(L5XName.Value, atomicType));
+                break;
+            case StringType stringType:
+                element.Add(stringType.Serialize(L5XName.Structure));
+                break;
+            case StructureType structureType:
+                element.Add(structureType.Serialize());
+                break;
+        }
+
+        return element;
+    }
 }
 
 /// <summary>

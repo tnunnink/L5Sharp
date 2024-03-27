@@ -12,7 +12,7 @@ public class ProduceInfo : LogixElement
     /// <summary>
     /// Creates a new <see cref="ProduceInfo"/> with default values.
     /// </summary>
-    public ProduceInfo()
+    public ProduceInfo() : base(L5XName.ProduceInfo)
     {
     }
 

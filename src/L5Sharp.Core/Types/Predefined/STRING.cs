@@ -10,16 +10,16 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
 {
     //This is the built in length of string types in Logix
     private const int PredefinedLength = 82;
+    
+    /// <inheritdoc />
+    public STRING(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// Creates a new empty <see cref="STRING"/> type.
     /// </summary>
-    public STRING() : base(nameof(STRING), string.Empty)
-    {
-    }
-
-    /// <inheritdoc />
-    public STRING(XElement element) : base(element, PredefinedLength)
+    public STRING() : base(string.Empty)
     {
     }
 
@@ -31,9 +31,16 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <c>value</c> length is greater than the predefined Logix string length of 82 characters.
     /// </exception>
-    public STRING(string value) : base(nameof(STRING), value, PredefinedLength)
+    public STRING(string value) : base(value)
     {
     }
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// Name is overriden to always return STRING since we know that is the type name here and the underlying
+    /// data element does not contain the data type name for newly created instances.
+    /// </remarks>
+    public override string Name => nameof(STRING);
 
     /// <summary>
     /// Parses the provided string into a <see cref="STRING"/> value.

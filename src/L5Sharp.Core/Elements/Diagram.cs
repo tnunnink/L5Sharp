@@ -23,7 +23,7 @@ public abstract class Diagram : LogixCode
     /// <summary>
     /// Creates a new <see cref="Diagram"/> with default values.
     /// </summary>
-    protected Diagram()
+    protected Diagram(string name) : base(name)
     {
     }
 

@@ -11,7 +11,7 @@ public class Communications : LogixElement
     /// <summary>
     /// Creates a new <see cref="Communications"/> with default values.
     /// </summary>
-    public Communications()
+    public Communications() : base(L5XName.Communications)
     {
         Element.Add(new XElement(L5XName.ConfigTag));
         Connections = new LogixContainer<Connection>();
@@ -25,7 +25,7 @@ public class Communications : LogixElement
     public Communications(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// A Tag component containing the configuration data for the module.
     /// </summary>

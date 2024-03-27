@@ -33,7 +33,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(ULINT).ToUpper());
-            type.Members.Should().HaveCount(64);
+            type.Members.Should().BeEmpty();
             type.Radix.Should().Be(Radix.Decimal);
         }
 
@@ -57,7 +57,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new ULINT((Radix)null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new ULINT(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -85,41 +85,6 @@ namespace L5Sharp.Tests.Types.Atomics
         public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
         {
             FluentActions.Invoking(() => new ULINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new ULINT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.Value == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Member_ValidMember_ShouldNotBeExpectedNameAndValue()
-        {
-            var type = new ULINT(123);
-
-            var bit = type.Member("1");
-
-            bit.Should().NotBeNull();
-            bit?.Name.Should().Be("1");
-            bit?.Value.Should().BeOfType<BOOL>();
-            bit?.Value.Should().Be(true);
-        }
-
-        [Test]
-        public void Member_InvalidMember_ShouldBeNull()
-        {
-            var type = new ULINT(123);
-
-            var bit = type.Member("100");
-
-            bit.Should().BeNull();
         }
 
         [Test]
@@ -208,17 +173,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var xml = type.Serialize().ToString();
 
             return Verify(xml);
-        }
-
-        [Test]
-        public void DataChanged_WhenMemberIsSet_ShouldRaiseEvent()
-        {
-            var type = new ULINT();
-            using var monitor = type.Monitor();
-
-            type.Members.First().Value = true;
-
-            monitor.Should().Raise("DataChanged");
         }
 
         [Test]

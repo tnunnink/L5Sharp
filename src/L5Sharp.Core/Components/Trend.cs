@@ -16,7 +16,7 @@ namespace L5Sharp.Core;
 public class Trend : LogixComponent
 {
     /// <inheritdoc />
-    public Trend()
+    public Trend() : base(L5XName.Trend)
     {
         SamplePeriod = 1;
         CaptureSizeType = CaptureSizeType.Samples;

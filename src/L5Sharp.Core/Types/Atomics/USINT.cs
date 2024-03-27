@@ -1,35 +1,21 @@
 ﻿using System;
-using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents a <b>USINT</b> Logix atomic data type, or a type analogous to a <see cref="byte"/>.
 /// </summary>
-[L5XType(nameof(USINT))]
 public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsable<USINT>
 {
     /// <summary>
-    /// The value of the underlying data parsed to the corresponding primitive value type.
+    /// The underlying primitive value which is set upon construction and not changed.
     /// </summary>
-    private new byte Value
-    {
-        get
-        {
-            var value = Radix.ParseValue(base.Value);
-            return value is byte typed ? typed : (byte)Convert.ChangeType(value, typeof(byte));
-        }
-    }
-    
-    /// <inheritdoc />
-    public USINT(XElement element) : base(element)
-    {
-    }
+    private readonly byte _value;
 
     /// <summary>
     /// Creates a new default <see cref="USINT"/> type.
     /// </summary>
-    public USINT() : base(CreateElement(nameof(USINT), Radix.Decimal, 0))
+    public USINT()
     {
     }
 
@@ -37,15 +23,16 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     /// Creates a new <see cref="USINT"/> with the provided value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    public USINT(byte value) : base(CreateElement(nameof(USINT), Radix.Decimal, value))
+    public USINT(byte value)
     {
+        _value = value;
     }
 
     /// <summary>
     /// Creates a new <see cref="USINT"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Core.Radix"/> number format of the value.</param>
-    public USINT(Radix radix) : base(CreateElement(nameof(USINT), radix, 0))
+    public USINT(Radix radix) : base(radix)
     {
     }
 
@@ -54,19 +41,13 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public USINT(byte value, Radix radix) : base(CreateElement(nameof(USINT), radix, value))
+    public USINT(byte value, Radix radix) : base(radix)
     {
+        _value = value;
     }
-
-    /// <summary>
-    /// Gets bit member's data type value at the specified bit index. 
-    /// </summary>
-    /// <param name="bit">The zero based bit index of the value to get.</param>
-    /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
-    public BOOL this[int bit] =>
-        Member(bit.ToString())?.Value.As<BOOL>() ??
-        throw new ArgumentOutOfRangeException($"The bit index {bit} is out of range for a {Name} atomic value.");
+    
+    /// <inheritdoc />
+    public override string Name => nameof(USINT);
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -74,9 +55,9 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
         return obj switch
         {
             null => 1,
-            USINT typed => Value.CompareTo(typed.Value),
-            AtomicType atomic => Value.CompareTo((byte)Convert.ChangeType(atomic, typeof(byte))),
-            ValueType value => Value.CompareTo((byte)Convert.ChangeType(value, typeof(byte))),
+            USINT typed => _value.CompareTo(typed._value),
+            AtomicType atomic => _value.CompareTo((byte)Convert.ChangeType(atomic, typeof(byte))),
+            ValueType value => _value.CompareTo((byte)Convert.ChangeType(value, typeof(byte))),
             _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
         };
     }
@@ -86,15 +67,15 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     {
         return obj switch
         {
-            USINT value => value.Value == Value,
-            AtomicType atomic => Value.Equals((byte)Convert.ChangeType(atomic, typeof(byte))),
-            ValueType value => Value.Equals(Convert.ChangeType(value, typeof(byte))),
+            USINT value => value._value == _value,
+            AtomicType atomic => _value.Equals((byte)Convert.ChangeType(atomic, typeof(byte))),
+            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(byte))),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => Value.GetHashCode();
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Parses a string into a <see cref="USINT"/> value.
@@ -150,7 +131,7 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="byte"/> type value.</returns>
-    public static implicit operator byte(USINT atomic) => atomic.Value;
+    public static implicit operator byte(USINT atomic) => atomic._value;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="USINT"/> value.
@@ -178,13 +159,13 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider? provider) => Value != 0;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value != 0;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider? provider) => Value;
+    byte IConvertible.ToByte(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    char IConvertible.ToChar(IFormatProvider? provider) => (char)Value;
+    char IConvertible.ToChar(IFormatProvider? provider) => (char)_value;
 
     /// <inheritdoc />
     DateTime IConvertible.ToDateTime(IFormatProvider? provider) =>
@@ -195,22 +176,22 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider? provider) => Value;
+    double IConvertible.ToDouble(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider? provider) => Value;
+    short IConvertible.ToInt16(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider? provider) => Value;
+    int IConvertible.ToInt32(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider? provider) => Value;
+    long IConvertible.ToInt64(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)Value;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)_value;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider? provider) => Value;
+    float IConvertible.ToSingle(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
     string IConvertible.ToString(IFormatProvider? provider) => ToString();
@@ -246,13 +227,13 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider? provider) => Value;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider? provider) => Value;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => _value;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider? provider) => Value;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => _value;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.
@@ -263,27 +244,27 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     private object ToAtomic(Type conversionType)
     {
         if (conversionType == typeof(BOOL))
-            return new BOOL(Value != 0);
+            return new BOOL(_value != 0);
         if (conversionType == typeof(SINT))
-            return new SINT((sbyte)Value);
+            return new SINT((sbyte)_value);
         if (conversionType == typeof(INT))
-            return new INT(Value);
+            return new INT(_value);
         if (conversionType == typeof(DINT))
-            return new DINT(Value);
+            return new DINT(_value);
         if (conversionType == typeof(LINT))
-            return new LINT(Value);
+            return new LINT(_value);
         if (conversionType == typeof(REAL))
-            return new REAL(Value);
+            return new REAL(_value);
         if (conversionType == typeof(LREAL))
-            return new LREAL(Value);
+            return new LREAL(_value);
         if (conversionType == typeof(USINT))
-            return new USINT(Value);
+            return new USINT(_value);
         if (conversionType == typeof(UINT))
-            return new UINT(Value);
+            return new UINT(_value);
         if (conversionType == typeof(UDINT))
-            return new UDINT(Value);
+            return new UDINT(_value);
         if (conversionType == typeof(ULINT))
-            return new ULINT(Value);
+            return new ULINT(_value);
 
         throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
     }

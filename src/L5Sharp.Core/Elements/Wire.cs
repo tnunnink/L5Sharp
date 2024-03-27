@@ -21,7 +21,7 @@ public class Wire : LogixElement
     /// <summary>
     /// Creates a new <see cref="Wire"/> with default values.
     /// </summary>
-    public Wire()
+    public Wire() : base(L5XName.Wire)
     {
         Element.SetAttributeValue(L5XName.FromID, 0);
         Element.SetAttributeValue(L5XName.ToID, 0);

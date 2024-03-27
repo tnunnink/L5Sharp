@@ -51,7 +51,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             type.Should().NotBeNull();
             type.Name.Should().Be(nameof(UINT).ToUpper());
-            type.Members.Should().HaveCount(16);
+            type.Members.Should().BeEmpty();
             type.Should().Be(0);
         }
 
@@ -61,18 +61,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var type = new UINT(_random);
 
             type.Should().Be(_random);
-        }
-
-        [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new UINT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.Value.As<BOOL>() == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
         }
 
         [Test]

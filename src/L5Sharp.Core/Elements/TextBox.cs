@@ -23,7 +23,7 @@ public class TextBox : DiagramElement
     /// Creates a new <see cref="TextBox"/> with the provided text.
     /// </summary>
     /// <param name="text">The text to initialize the text box with.</param>
-    public TextBox(string text)
+    public TextBox(string text) : base(L5XName.TextBox)
     {
         Element.SetAttributeValue(L5XName.Text, text);
     }

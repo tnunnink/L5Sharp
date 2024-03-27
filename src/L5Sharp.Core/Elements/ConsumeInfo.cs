@@ -12,7 +12,7 @@ public class ConsumeInfo : LogixElement
     /// <summary>
     /// Creates a new <see cref="ConsumeInfo"/> with default values.
     /// </summary>
-    public ConsumeInfo()
+    public ConsumeInfo() : base(L5XName.ConsumeInfo)
     {
     }
 

@@ -16,7 +16,7 @@ public class DataTypeMember : LogixObject
     /// <summary>
     /// Creates a new <see cref="DataTypeMember"/> with default values.
     /// </summary>
-    public DataTypeMember()
+    public DataTypeMember() : base(L5XName.Member)
     {
         Name = string.Empty;
         DataType = string.Empty;

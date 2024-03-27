@@ -15,7 +15,7 @@ public sealed class Line : LogixCode
     /// <summary>
     /// Creates a new <see cref="Line"/> with default values.
     /// </summary>
-    public Line()
+    public Line() : base(L5XName.Line)
     {
         Element.ReplaceNodes(new XCData(NeutralText.Empty));
     }
@@ -37,7 +37,7 @@ public sealed class Line : LogixCode
     /// When importing, Logix ignores the rung number and imports Rung's in order of the container sequence,
     /// meaning, its really only necessary to specify valid text, which is why this constructor is available,
     /// allowing concise construction of a <c>Rung</c> object.</remarks>
-    public Line(NeutralText text)
+    public Line(NeutralText text) : base(L5XName.Line)
     {
         Element.ReplaceNodes(new XCData(text));
     }

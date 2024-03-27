@@ -12,7 +12,7 @@ public class Security : LogixElement
     /// <summary>
     /// Creates a new <see cref="Security"/> with default values.
     /// </summary>
-    public Security()
+    public Security() : base(L5XName.Security)
     {
     }
 

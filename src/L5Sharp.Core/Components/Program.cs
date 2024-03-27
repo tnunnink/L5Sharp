@@ -19,7 +19,7 @@ public class Program : LogixComponent
     /// <summary>
     /// Creates a new <see cref="Program"/> with default values.
     /// </summary>
-    public Program()
+    public Program() : base(L5XName.Program)
     {
         Type = ProgramType.Normal;
         TestEdits = default;

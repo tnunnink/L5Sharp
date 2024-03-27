@@ -26,7 +26,7 @@ public abstract class LogixCode : LogixObject, ILogixReferencable
     /// <summary>
     /// Creates a new <see cref="LogixCode"/> instance with default values.
     /// </summary>
-    protected LogixCode()
+    protected LogixCode(string name) : base(name)
     {
     }
 
@@ -53,14 +53,15 @@ public abstract class LogixCode : LogixObject, ILogixReferencable
     }
     
     /// <summary>
-    /// 
+    /// The location text that identifies the location of the code segment. This is similar to number but just adds the
+    /// L5X type name.
     /// </summary>
     public string Location => $"{L5XType} {Number}".Trim();
 
     /// <summary>
     /// The the parent <see cref="Core.Routine"/> component for the current <c>LogixCode</c> element.
     /// </summary>
-    /// <value>A <see cref="string"/> containing the name of the <c>Routine</c> if found; Otherwise, and empty string.</value>
+    /// <value>A <see cref="Routine"/> element if found; Otherwise, and <c>null</c>.</value>
     public Routine? Routine
     {
         get

@@ -16,7 +16,7 @@ public abstract class DiagramElement : LogixObject, ILogixReferencable
     /// Creates a new <see cref="DiagramElement"/> with default values and initializes the required \
     /// diagram element properties ID, X, and Y to 0.
     /// </summary>
-    protected DiagramElement()
+    protected DiagramElement(string name) : base(name)
     {
         Element.SetAttributeValue(L5XName.ID, 0);
         Element.SetAttributeValue(L5XName.X, 0);

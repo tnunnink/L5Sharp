@@ -8,13 +8,6 @@ namespace L5Sharp.Tests;
 [TestFixture]
 public class LogixElementTests
 {
-    [OneTimeSetUp]
-    public void Setup()
-    {
-        LogixSerializer.Register<TestElement>();
-        LogixSerializer.Register<ChildElement>();
-    }
-
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
@@ -1063,7 +1056,7 @@ public class LogixElementTests
 [L5XType("Alternate", "Container")]
 public class TestElement : LogixObject
 {
-    public TestElement()
+    public TestElement() : base("Test")
     {
     }
 
@@ -1128,7 +1121,7 @@ public class TestElement : LogixObject
 
 public class ChildElement : LogixObject
 {
-    public ChildElement()
+    public ChildElement() : base(nameof(ChildElement))
     {
     }
 

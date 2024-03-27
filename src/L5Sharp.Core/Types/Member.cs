@@ -20,7 +20,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Member : LogixElement
+public sealed class Member : LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="Member"/> object with the provided name and logix type.
@@ -28,7 +28,7 @@ public class Member : LogixElement
     /// <param name="name">The name of the member. If <c>null</c> will default to an empty string.</param>
     /// <param name="type">The <see cref="LogixType"/> representing the member's data. If <c>null</c>
     /// will default to <see cref="NullType"/>.</param>
-    public Member(string? name, LogixType? type) : base(CreateElement(name, type))
+    public Member(string name, LogixType type) : base(CreateElement(name, type))
     {
     }
 
@@ -63,7 +63,7 @@ public class Member : LogixElement
     /// </remarks>
     public LogixType Value
     {
-        get => GetValue();
+        get => GetData();
         set => SetValue(value);
     }
 
@@ -71,167 +71,126 @@ public class Member : LogixElement
     #region Internals
 
     /// <summary>
-    /// Retrieves the value associated with the Member by deserializing the data element. This will also
-    /// handle root tag and parameter elements by forwarding the call down the element tree using GetData.
+    /// Sets the underlying value of the member to the provided logix type. This is a special setter specific to member,
+    /// as this is where we update the data for a given data structure. We handle the cases for logix types null,
+    /// atomic, string, array, and structure. If the provided type can not be cast to the current type then we will get
+    /// a <see cref="InvalidCastException"/>. This will help let the user know that they are setting values incorrectly.
     /// </summary>
-    private LogixType GetValue()
+    private void SetValue(LogixType type)
     {
-        var elementsWithData = new[]
-        {
-            L5XName.Tag,
-            L5XName.LocalTag,
-            L5XName.ConfigTag,
-            L5XName.InputTag,
-            L5XName.OutputTag,
-            L5XName.Parameter 
-        };
-        
-        return Element.Name.ToString() switch
-        {
-            var name when elementsWithData.Contains(name) => GetData(),
-            _ => Element.Deserialize<LogixType>()
-        };
-    }
-
-    /// <summary>
-    /// Sets the underlying value of the member to the provided logix type. This is a special setter since we want to
-    /// actually update the data for the member. We handle the cases for the current value being null, atomic, or some
-    /// other structure (complex or array).
-    /// </summary>
-    private void SetValue(LogixType? type)
-    {
-        if (type is null)
-            throw new ArgumentNullException(nameof(type), "Can not set member with null data.");
+        if (type is null || type == LogixType.Null)
+            throw new ArgumentNullException(nameof(type), "Can not set member with null data type.");
 
         switch (Value)
         {
-            //If no data is set, this should be a root tag member, and we can use the underlying SetData to add the
-            //new data element. Once set then we only ever update the value from the member.
             case NullType:
-                SetData(type);
-                return;
-            //Only atomics ultimately need their value set. WE are sneakily doing this through the backing element.
-            //This will first convert the incoming type to the target type to ensure no type conversion issues.
-            //Then will format with the current radix format.
-            case AtomicType atomicType:
-            {
-                var atomic = (AtomicType)Convert.ChangeType(type, atomicType.GetType());
-                Element.SetAttributeValue(L5XName.Value, atomic.ToString(atomicType.Radix));
-                return;
-            }
-            //Finally, everything else is a structure in which we join members, and forward the call down the hierarchy
-            //until we set all matching data.
-            default:
-                Value.Members
-                    .Join(type.Members, m => m.Name, m => m.Name, (t, s) => new { t, s })
-                    .ToList()
-                    .ForEach(x => { x.t.Value = x.s.Value; });
+                SetNull(type);
+                break;
+            case AtomicType current:
+                var atomicType = (AtomicType)type;
+                SetAtomic(atomicType, current);
+                break;
+            case StringType:
+                var stringType = (StringType)type;
+                SetString(stringType);
+                break;
+            case ArrayType:
+                var arrayType = (ArrayType)type;
+                SetStructure(arrayType);
+                break;
+            case StructureType:
+                var structureType = (StructureType)type;
+                SetStructure(structureType);
                 break;
         }
     }
 
+    private void SetNull(LogixType type)
+    {
+        //If this is the data element and there is no parent element, we need to update it in place.
+        if (Element.IsDataElement() && Element.Parent is null)
+        {
+            
+            return;
+        }
+        
+        SetData(type);
+    }
+
+    /// <summary>
+    /// Sets the value for whatever data value member element is the element for this member.
+    /// This will first convert the incoming type to the target type to ensure no type conversion issues.
+    /// Then will format with the current radix format.
+    /// </summary>
+    private void SetAtomic(AtomicType atomic, AtomicType current)
+    {
+        var value = (AtomicType)Convert.ChangeType(atomic, current.GetType());
+        Element.SetAttributeValue(L5XName.Value, value.ToString(current.Radix));
+    }
+
+    /// <summary>
+    /// Sets the string value of a data or data value member element using the given logix type. Also updates the length
+    /// attribute. Will throw exception if the provided type can not be cast to a <see cref="StringType"/>.
+    /// </summary>
+    private void SetString(StringType stringType)
+    {
+        switch (Element.Name.LocalName)
+        {
+            case L5XName.Data:
+                SetData(stringType);
+                return;
+            case L5XName.Structure:
+            case L5XName.StructureMember:
+            {
+                var len = Element.Elements().FirstOrDefault(e => e.MemberName() == "LEN");
+                len?.SetAttributeValue(L5XName.Value, stringType.LEN);
+                var data = Element.Elements().FirstOrDefault(e => e.MemberName() == "DATA");
+                data?.SetValue(new XCData($"'{stringType}'"));
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Joins each child member for this member and the provided type data structure on name and sets each subsequent value.
+    /// This will effectively forward the update down the type/member hierarchy until it gets to atomics or string.
+    /// </summary>
+    private void SetStructure(LogixType type)
+    {
+        Value.Members
+            .Join(type.Members, m => m.Name, m => m.Name, (t, s) => new { t, s })
+            .ToList()
+            .ForEach(x => { x.t.Value = x.s.Value; });
+    }
+
     /// <summary>
     /// Creates a new member element to contain the underlying member data for this object using the provided name
-    /// and <see cref="LogixType"/> data.
+    /// and <see cref="LogixType"/> data. Members are really only different from the logix type structures in that the
+    /// element names end in Member and the have the Name attribute. So we can build them more dynamically this way.
     /// </summary>
-    private static XElement CreateElement(string? name, LogixType? type)
+    private static XElement CreateElement(string name, LogixType type)
     {
-        name ??= string.Empty;
-        type ??= LogixType.Null;
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Can not create member with null or empty name", nameof(name));
 
-        return type switch
+        if (type is null || type == LogixType.Null)
+            throw new ArgumentException("Can not create member with null data type.");
+
+        //Get either the normal data element or if a string then the "Structure" element
+        var data = type is StringType stringType ? stringType.Serialize(L5XName.Structure) : type.Serialize();
+
+        //If it happens that the type is already a Member element then return that with updated name.
+        if (data.Name.LocalName.Contains(nameof(Member)))
         {
-            AtomicType atomicType => CreateValueMember(name, atomicType),
-            ArrayType arrayType => CreateArrayMember(name, arrayType),
-            StringType stringType => CreateStringMember(name, stringType),
-            StructureType structureType => CreateStructureMember(name, structureType),
-            _ => throw new NotSupportedException($"Can not create member with type {type.Name}.")
-        };
-    }
+            data.SetAttributeValue(L5XName.Name, name);
+            return data;
+        }
 
-    /// <summary>
-    /// Handles serializing a <see cref="AtomicType"/> as a ValueMember element.
-    /// </summary>
-    private static XElement CreateValueMember(string name, AtomicType type)
-    {
-        var element = new XElement(L5XName.DataValueMember);
-        element.Add(new XAttribute(L5XName.Name, name));
-        element.Add(new XAttribute(L5XName.DataType, type.Name));
-        if (type is not BOOL) element.Add(new XAttribute(L5XName.Radix, type.Radix));
-        element.Add(new XAttribute(L5XName.Value, type));
-        return element;
-    }
-
-    /// <summary>
-    /// Handles serializing a <see cref="ArrayType"/> as a ArrayMember element.
-    /// </summary>
-    private static XElement CreateArrayMember(string name, ArrayType type)
-    {
-        var element = new XElement(L5XName.ArrayMember);
-        element.Add(new XAttribute(L5XName.Name, name));
-        element.Add(new XAttribute(L5XName.DataType, type.Name));
-        element.Add(new XAttribute(L5XName.Dimensions, type.Dimensions));
-        if (type.Radix != Radix.Null) element.Add(new XAttribute(L5XName.Radix, type.Radix));
-
-        element.Add(type.Members.Select(m =>
-        {
-            var index = new XElement(L5XName.Element, new XAttribute(L5XName.Index, m.Name));
-
-            switch (m.Value)
-            {
-                case AtomicType atomicType:
-                    var value = type.Radix != Radix.Null ? atomicType.ToString(type.Radix) : atomicType.ToString();
-                    index.Add(new XAttribute(L5XName.Value, value));
-                    break;
-                case StringType stringType:
-                    index.Add(stringType.SerializeStructure());
-                    break;
-                case StructureType structureType:
-                    index.Add(structureType.Serialize());
-                    break;
-            }
-
-            return index;
-        }));
-        return element;
-    }
-
-    /// <summary>
-    /// Handles serializing a <see cref="StructureType"/> as a StructureMember element.
-    /// </summary>
-    private static XElement CreateStructureMember(string name, LogixType type)
-    {
-        var element = new XElement(L5XName.StructureMember);
-        element.Add(new XAttribute(L5XName.Name, name));
-        element.Add(new XAttribute(L5XName.DataType, type.Name));
-        element.Add(type.Members.Select(m => m.Serialize()));
-        return element;
-    }
-
-    /// <summary>
-    /// Handles serializing a <see cref="StringType"/> as a StructureMember element.
-    /// </summary>
-    private static XElement CreateStringMember(string name, StringType type)
-    {
-        var element = new XElement(L5XName.StructureMember);
-        element.Add(new XAttribute(L5XName.Name, name));
-        element.Add(new XAttribute(L5XName.DataType, type.Name));
-
-        var len = new XElement(L5XName.DataValueMember);
-        len.Add(new XAttribute(L5XName.Name, nameof(type.LEN)));
-        len.Add(new XAttribute(L5XName.DataType, type.LEN.Name));
-        len.Add(new XAttribute(L5XName.Radix, Radix.Decimal));
-        len.Add(new XAttribute(L5XName.Value, type.LEN));
-        element.Add(len);
-
-        var data = new XElement(L5XName.DataValueMember);
-        data.Add(new XAttribute(L5XName.Name, nameof(type.DATA)));
-        data.Add(new XAttribute(L5XName.DataType, type.Name));
-        data.Add(new XAttribute(L5XName.Radix, Radix.Ascii));
-        data.Add(new XCData($"'{type}'"));
-        element.Add(data);
-
-        return element;
+        //Otherwise create a new Member element with same data and name.
+        var member = new XElement($"{data.Name}Member", new XAttribute(L5XName.Name, name));
+        member.Add(data.Attributes());
+        member.Add(data.Elements());
+        return member;
     }
 
     #endregion

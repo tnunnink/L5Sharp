@@ -11,7 +11,16 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-
+/// <see cref="LogixType"/> is a special type of <see cref="LogixElement"/> which models the tag data structure found
+/// in L5X files. This class contains a <see cref="Name"/> and <see cref="Members"/> which comprise the hierarchy of
+/// data for a given type. This class has built in conversion for implicitly converting .NET primitives and collections
+/// (arrays and dictionaries) to the corresponding <see cref="LogixType"/> derived class.
+/// </para>
+/// <para>
+/// The serialization implemented in the library will always attempt to instantiate the concrete type of a
+/// given <see cref="LogixType"/>. For example, a TIMER L5X data structure is always deserialized as the concrete
+/// <c>TIMER</c> class, so that the user can cast the type and manipulate the structure statically and compile time.
+/// This applies for <see cref="AtomicType"/>, <see cref="ArrayType"/>, and all derived instance of <see cref="StructureType"/>.
 /// </para>
 /// </remarks>
 /// <seealso cref="AtomicType"/>
@@ -26,7 +35,7 @@ namespace L5Sharp.Core;
 public abstract class LogixType : LogixElement
 {
     /// <inheritdoc />
-    protected LogixType()
+    protected LogixType(string name) : base(name)
     {
     }
 
@@ -39,7 +48,7 @@ public abstract class LogixType : LogixElement
     /// The type name of the logix data.
     /// </summary>
     /// <value>A <see cref="string"/> name identifying the data type of the data object.</value>
-    public virtual string Name => Element.Get(L5XName.DataType);
+    public virtual string Name => Element.DataType();
 
     /// <summary>
     /// The collection of <see cref="Core.Member"/> objects that make up the structure of the data.
@@ -300,38 +309,5 @@ public abstract class LogixType : LogixElement
         var creator = Expression.New(constructor, parameter);
         var lambda = Expression.Lambda<Func<Array, ArrayType>>(creator, parameter);
         return lambda.Compile().Invoke(array);
-    }
-}
-
-/// <summary>
-/// A static class containing extension methods for the <see cref="LogixType"/> class.
-/// </summary>
-public static class LogixTypeExtensions
-{
-    /// <summary>
-    /// Converts the current one dimensional array of logix type objects to a <see cref="ArrayType{TLogixType}"/>
-    /// of the concrete logix type. 
-    /// </summary>
-    /// <param name="array">The array to convert.</param>
-    /// <typeparam name="TLogixType">The logix type of the elements of the array.</typeparam>
-    /// <returns>An <see cref="ArrayType{TLogixType}"/> representing the current array containing all the elements
-    /// of the array.</returns>
-    /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
-    /// <remarks>
-    /// This extension uses reflection and compiled lambda functions to create the concrete generic array type
-    /// from the current logix type array, and is used by logix type for implicitly converting arrays to a logix type.
-    /// </remarks>
-    public static ArrayType<TLogixType> ToArrayType<TLogixType>(this IEnumerable<TLogixType> array)
-        where TLogixType : LogixType
-    {
-        if (array is null) throw new ArgumentNullException(nameof(array));
-        var arrayType = typeof(ArrayType<>).MakeGenericType(typeof(TLogixType));
-        var parameterType = typeof(TLogixType[]);
-        var constructor = arrayType.GetConstructor([parameterType])!;
-        var parameter = Expression.Parameter(parameterType, "array");
-        var creator = Expression.New(constructor, parameter);
-        var lambda = Expression.Lambda<Func<TLogixType[], ArrayType<TLogixType>>>(creator, parameter);
-        var func = lambda.Compile();
-        return func.Invoke(array.ToArray());
     }
 }

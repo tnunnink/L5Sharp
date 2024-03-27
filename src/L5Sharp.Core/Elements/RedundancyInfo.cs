@@ -13,7 +13,7 @@ public class RedundancyInfo : LogixElement
     /// <summary>
     /// Creates a new <see cref="RedundancyInfo"/> with default values.
     /// </summary>
-    public RedundancyInfo()
+    public RedundancyInfo() : base(L5XName.RedundancyInfo)
     {
     }
 

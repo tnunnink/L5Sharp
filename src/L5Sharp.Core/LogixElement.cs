@@ -16,12 +16,12 @@ namespace L5Sharp.Core;
 public abstract class LogixElement : ILogixSerializable
 {
     /// <summary>
-    /// Creates a new default <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
-    /// L5XType name of the element. 
+    /// Creates a new <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
+    /// provided element name.
     /// </summary>
-    protected LogixElement()
+    protected LogixElement(string name)
     {
-        Element = new XElement(GetType().L5XType());
+        Element = new XElement(name);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
     /// single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public LogixElement Clone() => new XElement(Element).Deserialize();
+    public LogixElement Clone() => new XElement(Serialize()).Deserialize();
 
     /// <summary>
     /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
@@ -97,7 +97,7 @@ public abstract class LogixElement : ILogixSerializable
     /// single <see cref="XElement"/> argument.</exception>
     /// <exception cref="InvalidCastException">The deserialized type can not be cast to the specified generic type parameter.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public TElement Clone<TElement>() where TElement : LogixElement => new XElement(Element).Deserialize<TElement>();
+    public TElement Clone<TElement>() where TElement : LogixElement => new XElement(Serialize()).Deserialize<TElement>();
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
@@ -330,20 +330,27 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets the element's <see cref="LogixType"/> representing the objects data structure. This will only be found for
-    /// tag elements and parameters, but is here to help get and deserialize the structure easier. 
+    /// Gets the element's <see cref="LogixType"/> representing the objects data structure. 
     /// </summary>
     /// <returns>
     /// A <see cref="LogixType"/> object representing the simple or complex data structure for the element.
     /// </returns>
     /// <remarks>
-    /// This is a specialized helper 
+    /// This is a specialized helper used to get a tag or parameter <see cref="LogixType"/> data structure.
+    /// This method will get the first data element with a supported data format and deserialize the object as a
+    /// concrete <see cref="LogixType"/> using the logix serializer. This will work for either Data or DefaultData
+    /// elements.
     /// </remarks>
     protected LogixType GetData()
     {
+        //If this is a data element already, then deserialize it as the logix type base class.
+        if (Element.IsDataElement()) return Element.Deserialize<LogixType>();
+        
+        //Otherwise assume this is a tag or parameter which has a child data element. Get the supported formatted element.
         var data = Element.Elements().FirstOrDefault(e =>
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
+        //Return that or null of not found.
         return data is not null ? data.Deserialize<LogixType>() : LogixType.Null;
     }
 
@@ -672,27 +679,39 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected virtual void SetData(LogixType? data)
     {
+        //Parameter and LocalTag have the element DefaultData instead of Data.
         var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
-        data ??= LogixType.Null;
-
+        data ??= LogixType.Null; //Always use our Null type instead of actual null.
+        
+        var formatted = GenerateDataElement(name, data);
+        
+        //If this is the data element then replace it.
+        if (Element.IsDataElement())
+        {
+            Element.ReplaceAttributes(formatted.Attributes());
+            Element.ReplaceNodes(formatted.Elements());
+            return;
+        }
+        
+        //If not and there is a child data element with a supported element then get it.
         var existing = Element.Elements(name).FirstOrDefault(e =>
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
-        var formatted = GenerateDataElement(name, data);
-
+        //If that is null then add as a child the new data.
         if (existing is null)
         {
             Element.Add(formatted);
             return;
         }
 
+        //If found replace.
         existing.ReplaceWith(formatted);
         return;
 
-        //Local function to generate a new formatted data element.
+        //Local function to generate a new formatted data element for the given type.
         XElement GenerateDataElement(string n, LogixType t)
         {
-            //First check for string type since there is no child element (Data is the element)
+            //First check for string type since there is no child element (Data is the element in this case)
             if (t is StringType str) return str.Serialize();
 
             //All other format types are wrapped in a containing data element with a format attribute.

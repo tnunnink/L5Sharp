@@ -12,8 +12,6 @@ namespace L5Sharp.Core;
 /// This class uses a dictionary to cache deserialization functions for types deriving from LogixElement.
 /// We are using compiled expression functions as they are more performant that invoking constructors via reflection.
 /// We are also caching them for reuse so we don't have to build them each time we call <see cref="Deserialize"/>.
-/// Users can register custom implementations of a <c>LogixElement</c> using <see cref="Register{TElement}"/>, which will
-/// allow the type to be deserialized as calls to the type are made throughout the library.
 /// </summary>
 public static class LogixSerializer
 {
@@ -29,7 +27,7 @@ public static class LogixSerializer
     /// The global cache for all <see cref="LogixElement"/> object deserializer delegate functions.
     /// </summary>
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixElement>>> Deserializers = new(() =>
-        Default().ToDictionary(k => k.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
+        Scan().ToDictionary(k => k.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
     /// A system wide lookup of all <see cref="LogixType"/> objects by L5XType name obtained using reflection. This does
@@ -50,8 +48,8 @@ public static class LogixSerializer
     /// The return object must specify a public constructor accepting a <see cref="XElement"/> parameter for
     /// deserialization to work.
     /// </remarks>
-    public static TElement Deserialize<TElement>(this XElement element) where TElement : LogixElement =>
-        (TElement)Deserialize(element);
+    public static TElement Deserialize<TElement>(this XElement element) 
+        where TElement : LogixElement => (TElement)Deserialize(element);
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the first matching <see cref="LogixElement"/> type found in the
@@ -83,55 +81,26 @@ public static class LogixSerializer
     }
 
     /// <summary>
-    /// Registers the specified logix element type to the global logix serialization cache to be used for
-    /// deserializing the type.
+    /// Creates our global deserialization collection to initialize our dictionary lookup. This will add custom data
+    /// deserializer functions defined in this file, as well as scan this and all loaded assemblies for deserializable
+    /// types the are defined in this an other libraries in order to make our <see cref="LogixSerializer"/> implementation
+    /// aware of the types it can create.
     /// </summary>
-    /// <typeparam name="TElement">The type to register.</typeparam>
-    /// <exception cref="ArgumentException">The specified type is not deserializable, meaning it does not inherit
-    /// from <see cref="LogixElement"/>, is not public, is abstract, or does not have a constructor taking a single
-    /// <see cref="XElement"/> parameter.</exception>
-    /// <exception cref="InvalidOperationException">A type with the same name (L5XType) is already registered.</exception>
-    /// <remarks>
-    /// Not that this is common, but this gives external users a means to register custom <see cref="LogixElement"/>
-    /// derived types with the library so that they can be deserialized and used thought other parts of the library.
-    /// </remarks>
-    public static void Register<TElement>() where TElement : LogixElement
-    {
-        var type = typeof(TElement);
-
-        if (!IsDeserializableType(type))
-        {
-            var explanation =
-                $"The type must derive from {typeof(LogixElement)}, be public, non-abstract," +
-                $" and have a constructor accepting a single {typeof(XElement)}";
-            throw new ArgumentException(
-                $"Type '{typeof(TElement)} is not a valid deserializable logix type. {explanation}");
-        }
-
-        var deserializer = type.Deserializer<LogixElement>();
-        var deserializers = type.L5XTypes()
-            .Select(t => new KeyValuePair<string, Func<XElement, LogixElement>>(t, deserializer));
-
-        foreach (var pair in deserializers)
-        {
-            if (!Deserializers.Value.TryAdd(pair.Key, pair.Value))
-                throw new InvalidOperationException($"Type '{pair.Key}' is already registered with another function.");
-        }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    private static IEnumerable<KeyValuePair<string, Func<XElement, LogixElement>>> Default()
+    private static IEnumerable<KeyValuePair<string, Func<XElement, LogixElement>>> Scan()
     {
         var deserializers = new List<KeyValuePair<string, Func<XElement, LogixElement>>>();
 
         //Adds custom data deserializer functions defined in this file below.
         deserializers.AddRange(DataDeserializers());
 
-        //Scan and add types from this assembly.
-        var assembly = typeof(LogixSerializer).Assembly;
-        deserializers.AddRange(Introspect(assembly));
+        //Scan and add types from this assembly first.
+        var sharp = typeof(LogixSerializer).Assembly;
+        deserializers.AddRange(Introspect(sharp));
+
+        //Scan other loaded assemblies for use defined types.
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a != sharp);
+        foreach (var assembly in assemblies)
+            deserializers.AddRange(Introspect(assembly));
 
         return deserializers;
     }
@@ -248,18 +217,14 @@ public static class LogixSerializer
     }
 
     /// <summary>
-    /// Handles deserializing an element to a atomic value type. This will get the data type name and use that to lookup
-    /// the corresponding deserializer in the cache. All atomic types should be registered and able to be create this
-    /// way by passing in the DataValue, DataValueMember, or Element element.
+    /// Handles deserializing an element to a atomic value type. This will get the data type name  and value and use
+    /// our predefined parse function on AtomicType to instantiate the data 
     /// </summary>
     private static LogixElement DeserializeAtomic(XElement element)
     {
         var dataType = element.DataType();
-
-        if (Deserializers.Value.TryGetValue(dataType, out var deserializer))
-            return deserializer.Invoke(element);
-
-        throw new InvalidOperationException($"The data type '{dataType}' is not a valid atomic data type.");
+        var value = element.Get(L5XName.Value);
+        return AtomicType.Parse(dataType, value);
     }
 
     /// <summary>
@@ -297,9 +262,7 @@ public static class LogixSerializer
         if (value is not null) return DeserializeAtomic(element);
 
         var structure = element.Element(L5XName.Structure);
-        if (structure is not null) return DeserializeStructure(structure);
-
-        throw element.L5XError(L5XName.Element);
+        return structure is not null ? DeserializeStructure(structure) : LogixType.Null;
     }
 
     /// <summary>

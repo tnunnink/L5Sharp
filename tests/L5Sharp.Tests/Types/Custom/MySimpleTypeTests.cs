@@ -36,4 +36,21 @@ public class MySimpleTypeTests
 
         return Verify(xml);
     }
+
+    [Test]
+    public Task Serialize_UpdatedMember_ShouldBeVerified()
+    {
+        var type = new MySimpleType();
+
+        type.M1 = true;
+        type.M2 = 12;
+        type.M3 = 100;
+        type.M4 = 10000;
+        type.M5 = 123456789;
+        type.M6 = 1.23f;
+        
+        var xml = type.Serialize().ToString();
+
+        return Verify(xml);
+    }
 }

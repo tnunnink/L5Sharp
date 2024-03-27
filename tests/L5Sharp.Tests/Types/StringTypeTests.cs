@@ -7,9 +7,11 @@ namespace L5Sharp.Tests.Types;
 public class StringTypeTests
 {
     [Test]
-    public void New_NullName_ShouldThrowException()
+    public void New_ValueOverRide_ShouldHaveExpectedString()
     {
-        FluentActions.Invoking(() => new StringType(null!, "")).Should().Throw<ArgumentException>();
+        var type = new StringType("This is the test value");
+
+        type.ToString().Should().Be("This is the test value");
     }
 
     [Test]
@@ -33,7 +35,7 @@ public class StringTypeTests
     {
         var type = new StringType();
 
-        type.Name.Should().Be(nameof(StringType));
+        type.Name.Should().BeEmpty();
         type.Members.Should().HaveCount(2);
         type.LEN.Should().Be(0);
         type.DATA.As<ArrayType<SINT>>();
@@ -133,29 +135,6 @@ public class StringTypeTests
     }
 
     [Test]
-    public void DATA_SetValue_ShouldBeExpected()
-    {
-        var type = new StringType("This is a test");
-
-        type.DATA = new ArrayType<SINT>(new SINT[] { 1, 2, 3, 4 });
-
-        type.DATA[0].Should().Be(1);
-        type.DATA[1].Should().Be(2);
-        type.DATA[2].Should().Be(3);
-        type.DATA[3].Should().Be(4);
-    }
-
-    [Test]
-    public void DATA_SetToSintArrayOrAsciiCharacters_ShouldBeExpected()
-    {
-        var type = new StringType("This is a test");
-
-        type.DATA = new SINT[] { "'T'", "'h'", "'a'", "'t'" };
-
-        type.Should().BeEquivalentTo("That is a test");
-    }
-
-    [Test]
     public Task Serialize_Default_ShouldBeVerified()
     {
         var type = new StringType();
@@ -168,7 +147,7 @@ public class StringTypeTests
     [Test]
     public Task Serialize_WithValues_ShouldBeVerified()
     {
-        var type = new StringType("MyStringType", "This is the string value");
+        var type = new StringType("This is the string value");
 
         var xml = type.Serialize().ToString();
 
@@ -180,7 +159,7 @@ public class StringTypeTests
     {
         var type = new StringType();
 
-        var xml = type.SerializeStructure().ToString();
+        var xml = type.Serialize(L5XName.Structure).ToString();
 
         return Verify(xml);
     }
@@ -190,7 +169,7 @@ public class StringTypeTests
     {
         var type = new StringType("MyStringType", "This is the string value");
 
-        var xml = type.SerializeStructure().ToString();
+        var xml = type.Serialize(L5XName.Structure).ToString();
 
         return Verify(xml);
     }
@@ -210,9 +189,8 @@ public class StringTypeTests
     public void Operator_String_ShouldBeExpected()
     {
         StringType type = "This is a test";
-
-        type.Name.Should().Be(nameof(StringType));
-        type.Should().BeEquivalentTo("This is a test");
+        
+        type.ToString().Should().Be("This is a test");
     }
 
     [Test]
@@ -222,7 +200,7 @@ public class StringTypeTests
 
         string value = type;
 
-        value.Should().BeEquivalentTo("This is a test");
+        value.Should().Be("This is a test");
     }
 
     [Test]

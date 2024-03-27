@@ -12,7 +12,7 @@ public sealed class NullType : LogixType
 {
     private static readonly NullType Singleton = new();
 
-    private NullType()
+    private NullType() : base(L5XName.Data)
     {
     }
 

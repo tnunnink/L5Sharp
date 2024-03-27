@@ -15,7 +15,7 @@ public class Parameter : LogixObject
     /// <summary>
     /// Creates a new <see cref="Parameter"/> with default values.
     /// </summary>
-    public Parameter()
+    public Parameter() : base(L5XName.Parameter)
     {
         Name = string.Empty;
         TagType = TagType.Base;

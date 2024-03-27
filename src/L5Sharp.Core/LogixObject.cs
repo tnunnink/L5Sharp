@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 public abstract class LogixObject : LogixElement
 {
     /// <inheritdoc />
-    protected LogixObject()
+    protected LogixObject(string name) : base(name)
     {
     }
     

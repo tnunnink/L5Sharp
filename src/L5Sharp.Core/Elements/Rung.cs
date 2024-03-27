@@ -13,7 +13,7 @@ public class Rung : LogixCode
     /// <summary>
     /// Creates a new <see cref="Rung"/> with default values.
     /// </summary>
-    public Rung()
+    public Rung() : base(L5XName.Rung)
     {
         Type = RungType.Normal;
         Text = NeutralText.Empty;
@@ -37,7 +37,7 @@ public class Rung : LogixCode
     /// When importing, Logix ignores the rung number and imports Rung's in order of the container sequence,
     /// meaning, its really only necessary to specify valid text, which is why this constructor is available,
     /// allowing concise construction of a <c>Rung</c> object.</remarks>
-    public Rung(NeutralText text, string? comment = null)
+    public Rung(NeutralText text, string? comment = null) : base(L5XName.Rung)
     {
         Type = RungType.Normal;
         Text = text;

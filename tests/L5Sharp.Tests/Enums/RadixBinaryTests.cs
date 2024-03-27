@@ -29,7 +29,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Binary.FormatValue(false);
+            var result = Radix.Binary.FormatValue(new BOOL());
 
             result.Should().Be("2#0");
         }
@@ -37,7 +37,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Binary.FormatValue(true);
+            var result = Radix.Binary.FormatValue(new BOOL(true));
 
             result.Should().Be("2#1");
         }

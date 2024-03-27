@@ -22,7 +22,7 @@ public class Routine : LogixComponent
     /// By default this will be a RLL routine type.
     /// To specify a different type, use the <see cref="RoutineType"/> constructor.
     /// </remarks>
-    public Routine()
+    public Routine() : base(L5XName.Routine)
     {
         Element.Add(new XAttribute(L5XName.Type, RoutineType.RLL));
         Element.Add(new XElement(L5XName.RLLContent));
@@ -33,7 +33,7 @@ public class Routine : LogixComponent
     /// </summary>
     /// <param name="type">The <see cref="RoutineType"/> of the routine.</param>
     /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
-    public Routine(RoutineType type)
+    public Routine(RoutineType type) : base(L5XName.Routine)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
         Element.Add(new XAttribute(L5XName.Type, type));

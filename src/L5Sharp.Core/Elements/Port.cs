@@ -17,7 +17,7 @@ public class Port : LogixObject
     /// <summary>
     /// Creates a new <see cref="Port"/> with default values.
     /// </summary>
-    public Port()
+    public Port() : base(L5XName.Port)
     {
         Id = 0;
         Type = string.Empty;

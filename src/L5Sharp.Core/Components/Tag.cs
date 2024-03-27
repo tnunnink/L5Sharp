@@ -26,7 +26,7 @@ public class Tag : LogixComponent
     /// <summary>
     /// Creates a new <see cref="Tag"/> with default values.
     /// </summary>
-    public Tag()
+    public Tag() : base(L5XName.Tag)
     {
         _member = new Member(Element);
         Root = this;

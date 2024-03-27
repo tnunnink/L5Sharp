@@ -18,7 +18,7 @@ namespace L5Sharp.Core;
 public class Module : LogixComponent
 {
     /// <inheritdoc />
-    public Module()
+    public Module() : base(L5XName.Module)
     {
         CatalogNumber = string.Empty;
         Vendor = Vendor.Unknown;

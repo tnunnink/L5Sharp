@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
@@ -7,44 +6,27 @@ namespace L5Sharp.Core;
 /// Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <see cref="bool"/>. This object is meant
 /// to wrap the DataValue or DataValueMember data for the L5X tag data structure.
 /// </summary>
-[L5XType(nameof(BOOL))]
 public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable<BOOL>
 {
     /// <summary>
-    /// The underlying typed value which is set upon construction and not changed. If the user changed
+    /// The underlying primitive value which is set upon construction and not changed.
     /// </summary>
     private readonly bool _value;
-    
-    /// <summary>
-    /// The value of the underlying data parsed to the corresponding primitive value type.
-    /// </summary>
-    private bool GetValue()
-    {
-        var value = Radix.ParseValue(Value);
-        return value is bool typed ? typed : (bool)Convert.ChangeType(value, typeof(bool));
-    }
-
-    /// <inheritdoc />
-    public BOOL(XElement element) : base(element)
-    {
-        _value = GetValue();
-    }
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
     /// </summary>
-    public BOOL() : base(CreateElement(nameof(BOOL), Radix.Decimal, false))
+    public BOOL()
     {
-        _value = GetValue();
     }
 
     /// <summary>
     /// Creates a new <see cref="BOOL"/> with the provided value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    public BOOL(bool value) : base(CreateElement(nameof(BOOL), Radix.Decimal, value))
+    public BOOL(bool value)
     {
-        _value = GetValue();
+        _value = value;
     }
 
     /// <summary>
@@ -52,18 +34,17 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable
     /// </summary>
     /// <param name="value">The <see cref="int"/> value to initialize the type with. All non-zero value
     /// will be evaluated as <c>true</c>.</param>
-    public BOOL(int value) : base(CreateElement(nameof(BOOL), Radix.Decimal, value == 1))
+    public BOOL(int value)
     {
-        _value = GetValue();
+        _value = value == 1;
     }
 
     /// <summary>
     /// Creates a new <see cref="BOOL"/> value with the provided radix format.
     /// </summary>
     /// <param name="radix">The <see cref="Core.Radix"/> number format of the value.</param>
-    public BOOL(Radix radix) : base(CreateElement(nameof(BOOL), radix, false))
+    public BOOL(Radix radix) : base(radix)
     {
-        _value = GetValue();
     }
 
     /// <summary>
@@ -71,10 +52,13 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
     /// <param name="radix">The optional radix format of the value.</param>
-    public BOOL(bool value, Radix radix) : base(CreateElement(nameof(BOOL), radix, value))
+    public BOOL(bool value, Radix radix) : base(radix)
     {
-        _value = GetValue();
+        _value = value;
     }
+
+    /// <inheritdoc />
+    public override string Name => nameof(BOOL);
 
     /// <inheritdoc />
     public int CompareTo(object? obj)

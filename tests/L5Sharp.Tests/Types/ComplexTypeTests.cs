@@ -161,6 +161,7 @@ public class ComplexTypeTests
             new("String", "Test Value"),
             new("Structure", new TIMER { PRE = 2000 }),
         };
+        
         var type = new ComplexType();
 
         type.AddRange(expected);

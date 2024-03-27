@@ -34,7 +34,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(SINT).ToUpper());
-            type.Members.Should().HaveCount(8);
+            type.Members.Should().BeEmpty();
             type.Radix.Should().Be(Radix.Decimal);
         }
 
@@ -86,18 +86,6 @@ namespace L5Sharp.Tests.Types.Atomics
         public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
         {
             FluentActions.Invoking(() => new SINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new SINT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.Value == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
         }
 
         [Test]

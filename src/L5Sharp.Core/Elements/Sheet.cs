@@ -36,7 +36,7 @@ public class Sheet : Diagram
     /// <summary>
     /// Creates a new <see cref="Sheet"/> with default values.
     /// </summary>
-    public Sheet()
+    public Sheet() : base(L5XName.Sheet)
     {
     }
 

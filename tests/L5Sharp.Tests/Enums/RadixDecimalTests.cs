@@ -29,7 +29,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_BoolFalse_ShouldBeExpected()
         {
-            var result = Radix.Decimal.FormatValue(false);
+            var result = Radix.Decimal.FormatValue(new BOOL());
 
             result.Should().Be("0");
         }
@@ -37,7 +37,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Format_BoolTrue_ShouldBeExpected()
         {
-            var result = Radix.Decimal.FormatValue(true);
+            var result = Radix.Decimal.FormatValue(new BOOL(true));
 
             result.Should().Be("1");
         }
@@ -98,65 +98,136 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_sbyte_ShouldBeExpected()
         {
-            var value = (sbyte)Radix.Decimal.ParseValue(sbyte.MaxValue.ToString());
+            var atomic = (SINT)Radix.Decimal.ParseValue(sbyte.MaxValue.ToString());
 
-            value.Should().Be(new SINT(sbyte.MaxValue));
+            atomic.Should().Be(new SINT(sbyte.MaxValue));
         }
         
         [Test]
         public void Parse_byte_ShouldBeExpected()
         {
-            var value = (byte)Radix.Decimal.ParseValue(byte.MaxValue.ToString());
+            var atomic = (USINT)Radix.Decimal.ParseValue(byte.MaxValue.ToString());
 
-            value.Should().Be(new USINT(byte.MaxValue));
+            atomic.Should().Be(new USINT(byte.MaxValue));
         }
 
         [Test]
         public void Parse_short_ShouldBeExpected()
         {
-            var value = (short)Radix.Decimal.ParseValue(short.MaxValue.ToString());
+            var atomic = (INT)Radix.Decimal.ParseValue(short.MaxValue.ToString());
 
-            value.Should().Be(new INT(short.MaxValue));
+            atomic.Should().Be(new INT(short.MaxValue));
         }
         
         [Test]
         public void Parse_ushort_ShouldBeExpected()
         {
-            var value = (ushort)Radix.Decimal.ParseValue(ushort.MaxValue.ToString());
+            var atomic = (UINT)Radix.Decimal.ParseValue(ushort.MaxValue.ToString());
 
-            value.Should().Be(new UINT(ushort.MaxValue));
+            atomic.Should().Be(new UINT(ushort.MaxValue));
         }
 
         [Test]
         public void Parse_int_ShouldBeExpected()
         {
-            var value = (int)Radix.Decimal.ParseValue(int.MaxValue.ToString());
+            var atomic = (DINT)Radix.Decimal.ParseValue(int.MaxValue.ToString());
 
-            value.Should().Be(int.MaxValue);
+            atomic.Should().Be(int.MaxValue);
         }
         
         [Test]
         public void Parse_uint_ShouldBeExpected()
         {
-            var value = (uint)Radix.Decimal.ParseValue(uint.MaxValue.ToString());
+            var atomic = (UDINT)Radix.Decimal.ParseValue(uint.MaxValue.ToString());
 
-            value.Should().Be(uint.MaxValue);
+            atomic.Should().Be(uint.MaxValue);
         }
 
         [Test]
         public void Parse_long_ShouldBeExpected()
         {
-            var value = (long)Radix.Decimal.ParseValue(long.MaxValue.ToString());
+            var atomic = (LINT)Radix.Decimal.ParseValue(long.MaxValue.ToString());
 
-            value.Should().Be(long.MaxValue);
+            atomic.Should().Be(long.MaxValue);
         }
         
         [Test]
         public void Parse_ulong_ShouldBeExpected()
         {
-            var value = (ulong)Radix.Decimal.ParseValue(ulong.MaxValue.ToString());
+            var atomic = (ULINT)Radix.Decimal.ParseValue(ulong.MaxValue.ToString());
 
-            value.Should().Be(ulong.MaxValue);
+            atomic.Should().Be(ulong.MaxValue);
+        }
+
+        [Test]
+        public void SupportsType_Bool_ShouldBeTrue()
+        {
+            var type = new BOOL();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_Sint_ShouldBeTrue()
+        {
+            var type = new SINT();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+        
+        [Test]
+        public void SupportsType_USint_ShouldBeTrue()
+        {
+            var type = new USINT();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_Int_ShouldBeTrue()
+        {
+            var type = new INT();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_Dint_ShouldBeTrue()
+        {
+            var type = new DINT();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+        
+        
+        [Test]
+        public void SupportsType_Lint_ShouldBeTrue()
+        {
+            var type = new LINT();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeTrue();
+        }
+
+        [Test]
+        public void SupportsType_Real_ShouldBeFalse()
+        {
+            var type = new REAL();
+
+            var supported = Radix.Decimal.SupportsType(type);
+
+            supported.Should().BeFalse();
         }
     }
 }

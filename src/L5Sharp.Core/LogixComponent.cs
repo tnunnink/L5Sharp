@@ -29,7 +29,7 @@ namespace L5Sharp.Core;
 public abstract class LogixComponent : LogixObject, ILogixReferencable
 {
     /// <inheritdoc />
-    protected LogixComponent()
+    protected LogixComponent(string name) : base(name)
     {
         Element.SetAttributeValue(L5XName.Name, string.Empty);
     }

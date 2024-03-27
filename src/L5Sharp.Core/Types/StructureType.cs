@@ -64,7 +64,7 @@ public abstract class StructureType : LogixType
     /// </remarks>
     protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null) where TLogixType : LogixType
     {
-        var element = Element.Elements().SingleOrDefault(m => m.Name == name);
+        var element = Element.Elements().SingleOrDefault(m => m.MemberName() == name);
 
         if (element is null)
             throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
@@ -98,7 +98,7 @@ public abstract class StructureType : LogixType
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (value is null) throw new ArgumentNullException(nameof(value));
 
-        var existing = Element.Elements().SingleOrDefault(m => m.Name == name)?.ToMember();
+        var existing = Element.Elements().SingleOrDefault(m => m.MemberName() == name)?.ToMember();
 
         if (existing is null)
         {
@@ -168,7 +168,10 @@ public abstract class StructureType : LogixType
     /// Removes a member with the specified name from the structure type.
     /// </summary>
     /// <param name="name">The name of the member to remove.</param>
-    protected void RemoveMember(string name) => Element.Elements().SingleOrDefault(e => e.Name == name)?.Remove();
+    protected void RemoveMember(string name)
+    {
+        Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name))?.Remove();
+    }
 
     /// <summary>
     /// Removes a member at the specified index from the structure type.
@@ -192,14 +195,14 @@ public abstract class StructureType : LogixType
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
 
-        var target = Element.Elements().SingleOrDefault(e => e.Name == name);
+        var target = Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name));
 
         if (target is null)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
 
         target.ReplaceWith(member.Serialize());
     }
-    
+
     /// <summary>
     /// Replaces a member having the specified name with a new member instance of the same name and provided <see cref="LogixType"/>.
     /// </summary>
@@ -212,7 +215,7 @@ public abstract class StructureType : LogixType
         if (type is null)
             throw new ArgumentNullException(nameof(type));
 
-        var target = Element.Elements().SingleOrDefault(e => e.Name.LocalName.IsEquivalent(name));
+        var target = Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name));
 
         if (target is null)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
@@ -233,9 +236,10 @@ public abstract class StructureType : LogixType
             throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
 
         var target = Element.Elements().ElementAt(index);
+        
         target.ReplaceWith(member.Serialize());
     }
-    
+
     /// <summary>
     /// Creates the default <see cref="XElement"/> representing the underlying structure type.
     /// </summary>

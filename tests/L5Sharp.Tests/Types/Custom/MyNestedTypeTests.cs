@@ -26,18 +26,6 @@ namespace L5Sharp.Tests.Types.Custom
         }
 
         [Test]
-        public void Testing()
-        {
-            var nested = new MyNestedType();
-
-            nested.Simple.M1 = true;
-
-            nested.Tmr.PRE = new DINT(5000);
-
-            nested.Flags[2] = true;
-        }
-
-        [Test]
         public void Members_WhenCalled_ShouldReturnInstantiatedMembers()
         {
             var type = new MyNestedType();

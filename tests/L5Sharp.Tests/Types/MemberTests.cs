@@ -3,7 +3,7 @@ using FluentAssertions;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 
-namespace L5Sharp.Tests;
+namespace L5Sharp.Tests.Types;
 
 [TestFixture]
 public class MemberTests
@@ -26,22 +26,15 @@ public class MemberTests
     }
 
     [Test]
-    public void New_NullName_ShouldHaveEmptyName()
+    public void New_NullName_ShouldThrowException()
     {
-        var member = new Member(null!, new BOOL());
-
-        member.Should().NotBeNull();
-        member.Name.Should().BeEmpty();
+        FluentActions.Invoking(() => new Member(null!, new BOOL())).Should().Throw<ArgumentException>();
     }
 
     [Test]
-    public void New_NullType_ShouldHaveDataTypeOfTypeNullType()
+    public void New_NullType_ShouldThrowException()
     {
-        var member = new Member("Test", null!);
-
-        member.Should().NotBeNull();
-        member.Value.Should().NotBeNull();
-        member.Value.Should().BeOfType<NullType>();
+        FluentActions.Invoking(() => new Member("Test", null!)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -286,32 +279,27 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_StructureToAtomic_ShouldThrowArgumentException()
+    public void SetDataType_StructureToAtomic_ShouldThrowInvalidCastException()
     {
         var member = new Member("Test", new TIMER());
 
-        FluentActions.Invoking(() => member.Value = 123).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => member.Value = 123).Should().Throw<InvalidCastException>();
     }
     
     [Test]
-    public void SetDataType_FromValueToNull_ShouldBeOfTypeNullType()
+    public void SetDataType_ToNull_ShouldThrowException()
     {
         var member = new Member("Test", 123);
 
-        member.Value = null!;
-
-        member.Value.Should().BeOfType<NullType>();
+        FluentActions.Invoking(() => member.Value = null!).Should().Throw<ArgumentException>();
     }
-
+    
     [Test]
-    public void SetDataType_FromNullToValue_ShouldHaveExpectedValues()
+    public void SetDataType_ToNullType_ShouldThrowException()
     {
-        var member = new Member("Test", LogixType.Null);
+        var member = new Member("Test", 123);
 
-        member.Value = 123;
-
-        member.Value.Should().BeOfType<DINT>();
-        member.Value.Should().Be(123);
+        FluentActions.Invoking(() => member.Value = LogixType.Null).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -501,73 +489,6 @@ public class MemberTests
         member.Value.As<TIMER>().EN.Should().Be(true);
         member.Value.As<TIMER>().TT.Should().Be(false);
         member.Value.As<TIMER>().DN.Should().Be(false);
-    }
-
-    [Test]
-    public void SetDataType_ImmediateAtomic_ShouldRaiseDataChangedEvent()
-    {
-        var member = new Member("Test", 123);
-        var monitor = member.Monitor();
-
-        member.Value = 321;
-
-        monitor.Should().Raise("DataChanged");
-    }
-
-    [Test]
-    public void SetDataType_ImmediateStructure_ShouldRaiseDataChangedEvent()
-    {
-        var member = new Member("Test", new TIMER());
-        var monitor = member.Monitor();
-
-        member.Value = new TIMER { PRE = 5000 };
-
-        monitor.Should().Raise("DataChanged");
-    }
-
-    [Test]
-    public void SetDataType_ImmediateArray_ShouldRaiseDataChangedEvent()
-    {
-        var member = new Member("Test", new DINT[] { 1, 2, 3, 4 });
-        var monitor = member.Monitor();
-
-        member.Value = new DINT[] { 4, 3, 2, 1 };
-
-        monitor.Should().Raise("DataChanged");
-    }
-
-    [Test]
-    public void SetDataType_NestedAtomicMember_ShouldRaiseDataChangedEventAndHaveCorrectValue()
-    {
-        var member = new Member("Test", 0);
-        var monitor = member.Monitor();
-
-        member.Value.Member("0")!.Value = true;
-
-        monitor.Should().Raise("DataChanged");
-        member.Value.Should().Be(1);
-    }
-
-    [Test]
-    public void SetDataType_NestedStructureMember_ShouldRaiseDataChangedEvent()
-    {
-        var member = new Member("Test", new TIMER());
-        var monitor = member.Monitor();
-
-        member.Value.Member("PRE")!.Value = 10000;
-
-        monitor.Should().Raise("DataChanged");
-    }
-
-    [Test]
-    public void SetDataType_NestedStructureMemberStatic_ShouldRaiseDataChangedEvent()
-    {
-        var member = new Member("Test", new TIMER());
-        var monitor = member.Monitor();
-
-        member.Value.As<TIMER>().PRE = 10000;
-
-        monitor.Should().Raise("DataChanged");
     }
 
     [Test]

@@ -15,7 +15,7 @@ public class ParameterConnection : LogixObject
     /// <summary>
     /// Creates a new <see cref="ParameterConnection"/> with default values.
     /// </summary>
-    public ParameterConnection()
+    public ParameterConnection() : base(L5XName.ParameterConnection)
     {
         EndPoint1 = string.Empty;
         EndPoint2 = string.Empty;

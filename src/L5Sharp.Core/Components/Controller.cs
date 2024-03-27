@@ -35,7 +35,7 @@ public class Controller : LogixComponent
     /// <summary>
     /// Creates a new <see cref="Controller"/> with default values.
     /// </summary>
-    public Controller() : base(new XElement(L5XName.Controller))
+    public Controller() : base(L5XName.Controller)
     {
         Use = Use.Context;
     }

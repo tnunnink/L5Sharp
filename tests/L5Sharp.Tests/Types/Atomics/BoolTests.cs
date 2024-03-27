@@ -57,13 +57,13 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new BOOL((Radix)null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new BOOL(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void New_InvalidRadix_ShouldThrowNotSupportedException()
+        public void New_InvalidRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new BOOL(Radix.Exponential)).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => new BOOL(Radix.Exponential)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -82,9 +82,9 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void New_ValueAndRadixInvalidRadix_ShouldThrowNotSupportedException()
+        public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new BOOL(true, Radix.Exponential)).Should().Throw<NotSupportedException>();
+            FluentActions.Invoking(() => new BOOL(true, Radix.Exponential)).Should().Throw<ArgumentException>();
         }
         
         [Test]
@@ -777,7 +777,7 @@ namespace L5Sharp.Tests.Types.Atomics
             var range = Enumerable.Range(0, capacity).Select(_ => new BOOL(true)).ToList();
 
             stopwatch.Start();
-            var result = range.Where(v => v == true).ToList();
+            var result = range.Where(v => v == new BOOL(true)).ToList();
             stopwatch.Stop();
 
             Console.WriteLine(stopwatch.ElapsedMilliseconds);

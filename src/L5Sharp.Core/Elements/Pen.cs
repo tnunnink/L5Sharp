@@ -19,7 +19,7 @@ public class Pen : LogixObject
     /// <summary>
     /// Creates a new <see cref="Pen"/> with default values.
     /// </summary>
-    public Pen()
+    public Pen() : base(L5XName.Pen)
     {
         Name = string.Empty;
         Color = "16#00ff_0000";

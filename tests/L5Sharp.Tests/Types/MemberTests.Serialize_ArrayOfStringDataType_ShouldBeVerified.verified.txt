@@ -1,0 +1,20 @@
+﻿<ArrayMember Name="Test" DataType="STRING" Dimensions="3">
+  <Element Index="[0]">
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="5" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['Test1']]></DataValueMember>
+    </Structure>
+  </Element>
+  <Element Index="[1]">
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="5" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['Test2']]></DataValueMember>
+    </Structure>
+  </Element>
+  <Element Index="[2]">
+    <Structure DataType="STRING">
+      <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="5" />
+      <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['Test3']]></DataValueMember>
+    </Structure>
+  </Element>
+</ArrayMember>
