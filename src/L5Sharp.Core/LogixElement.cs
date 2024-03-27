@@ -681,17 +681,10 @@ public abstract class LogixElement : ILogixSerializable
     {
         //Parameter and LocalTag have the element DefaultData instead of Data.
         var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
-        data ??= LogixType.Null; //Always use our Null type instead of actual null.
+        //Always use our Null type instead of actual null.
+        data ??= LogixType.Null;
         
         var formatted = GenerateDataElement(name, data);
-        
-        //If this is the data element then replace it.
-        if (Element.IsDataElement())
-        {
-            Element.ReplaceAttributes(formatted.Attributes());
-            Element.ReplaceNodes(formatted.Elements());
-            return;
-        }
         
         //If not and there is a child data element with a supported element then get it.
         var existing = Element.Elements(name).FirstOrDefault(e =>

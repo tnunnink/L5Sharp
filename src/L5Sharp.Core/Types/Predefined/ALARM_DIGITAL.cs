@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 // ReSharper disable InconsistentNaming
 
@@ -13,7 +15,7 @@ public sealed class ALARM_DIGITAL : StructureType
     /// <summary>
     /// Creates a new <see cref="ALARM_DIGITAL"/> data type instance.
     /// </summary>
-    public ALARM_DIGITAL() : base(nameof(ALARM_DIGITAL))
+    public ALARM_DIGITAL() : base(new XElement(L5XName.AlarmDigitalParameters))
     {
         Severity = new DINT();
         MinDurationPRE = new DINT();
@@ -49,6 +51,10 @@ public sealed class ALARM_DIGITAL : StructureType
     public ALARM_DIGITAL(XElement element) : base(element)
     {
     }
+
+    /// <inheritdoc />
+    public override IEnumerable<Member> Members =>
+        Element.Attributes().Select(a => new Member(a.Name.LocalName, AtomicType.Parse(a.Value)));
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.

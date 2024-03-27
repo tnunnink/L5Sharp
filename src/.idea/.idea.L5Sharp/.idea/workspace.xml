@@ -8,14 +8,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Continued rework and testing">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.Serialize_ArrayOfNull_ShouldBeVerified.verified.txt" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Dimensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LREAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LREAL.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Member.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_DIGITAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_DIGITAL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/ControlTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/ControlTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/CounterTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/CounterTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +75,7 @@
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Enums/Radix.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Enums/Radix.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Types/AtomicType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/L5Sharp.Core/Types/Member.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Enums/RadixAsciiTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Enums/RadixBinaryTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Enums/RadixDecimalTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -850,32 +856,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs</url>
-          <line>685</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\LogixElement.cs" initialLine="683" containingFunctionPresentation="Method 'SetData'">
-            <startOffsets>
-              <option value="34931" />
-            </startOffsets>
-            <endOffsets>
-              <option value="34979" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs</url>
-          <line>689</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\LogixElement.cs" initialLine="687" containingFunctionPresentation="Method 'SetData'">
-            <startOffsets>
-              <option value="35089" />
-            </startOffsets>
-            <endOffsets>
-              <option value="35090" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs</url>

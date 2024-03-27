@@ -92,25 +92,6 @@ public static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines if the current element is one that represents a data element or an element which contains tag data.
-    /// </summary>
-    /// <param name="element">The element to check.</param>
-    /// <returns><c>true</c> if the element is a data element, otherwise <c>false</c>.</returns>
-    /// <remarks>
-    /// This is a helper to make determining if the element we are working with is a data element which can
-    /// be directly deserialized from our logix serializer implementation. This could also help for querying the L5X
-    /// element structure.
-    /// </remarks>
-    public static bool IsDataElement(this XElement element)
-    {
-        return element.Name.LocalName is 
-            L5XName.Data or L5XName.DefaultData or L5XName.DataValue or L5XName.DataValueMember or
-            L5XName.Array or L5XName.ArrayMember or L5XName.Element or 
-            L5XName.Structure or L5XName.StructureMember or 
-            L5XName.MessageParameters or L5XName.AlarmAnalogParameters or L5XName.AlarmDigitalParameters;
-    }
-
-    /// <summary>
     /// Determines if the provided element has a structure that represents a <see cref="StringType"/> structure,
     /// structure member, array, or array member.
     /// </summary>

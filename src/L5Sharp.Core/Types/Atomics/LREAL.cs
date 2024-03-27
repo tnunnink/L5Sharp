@@ -86,6 +86,10 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible, ILogixParsabl
     public new static LREAL Parse(string value)
     {
         if (value.Contains("QNAN")) return new LREAL(double.NaN);
+        
+        if (double.TryParse(value, out var primitive))
+            return new LREAL(primitive);
+        
         var radix = Radix.Infer(value);
         var atomic = radix.ParseValue(value);
         var converted = (double)Convert.ChangeType(atomic, typeof(double));
