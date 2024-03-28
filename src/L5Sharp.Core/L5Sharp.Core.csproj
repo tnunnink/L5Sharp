@@ -43,4 +43,10 @@
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2023.2.0"/>
     </ItemGroup>
+    
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>L5Sharp.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
 </Project>

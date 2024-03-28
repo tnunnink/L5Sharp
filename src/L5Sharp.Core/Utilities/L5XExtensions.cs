@@ -92,42 +92,6 @@ public static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines if the provided element has a structure that represents a <see cref="StringType"/> structure,
-    /// structure member, array, or array member.
-    /// </summary>
-    /// <param name="element">The element to check for the known string data structure.</param>
-    /// <returns><c>true</c> if the element has the string type structure, otherwise <c>false</c>.</returns>
-    /// <remarks>
-    /// This is needed to determine if we are deserializing a complex type or string type. String structure is unique
-    /// in that it will have a data value member called DATA with a ASCII radix, a non-null element value, and a
-    /// data type attribute value equal to that of the parent structure element attribute. If we don't intercept this
-    /// structure prior to deserializing it, we will encounter exceptions because it doesn't conform to the normal
-    /// convention that data value members should represent and atomic structure. My thought is Logix did this to conserve
-    /// space in the L5X, but not sure.
-    /// </remarks>
-    public static bool IsStringData(this XElement? element)
-    {
-        if (element is null) return false;
-
-        //If this is a structure or structure member it could potentially be the string structure.
-        if (element.Name == L5XName.Structure || element.Name == L5XName.StructureMember)
-        {
-            return element.Elements(L5XName.DataValueMember).Any(e =>
-                e.Attribute(L5XName.Name)?.Value == "DATA"
-                && e.Attribute(L5XName.DataType)?.Value == e.Parent?.Attribute(L5XName.DataType)?.Value
-                && e.Attribute(L5XName.Radix)?.Value == "ASCII");
-        }
-
-        //If this is an array or array member, we need to get elements and check if they are all string structure or not.
-        if (element.Name == L5XName.Array || element.Name == L5XName.ArrayMember)
-        {
-            return element.Elements().Select(e => e.Element(L5XName.Structure)).All(x => x.IsStringData());
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Gets the L5X element name of the type's containing element. 
     /// </summary>
     /// <param name="type">The type to get the L5X element name for.</param>
@@ -257,7 +221,7 @@ public static class L5XExtensions
     /// in order to determine which object to construct, but some don't and we need to look at it's parent element
     /// to find out. Obviously, if we can't find the <c>DataType</c> value then we can't deserialize the type.
     /// </remarks>
-    public static string DataType(this XElement element)
+    public static string? DataType(this XElement element)
     {
         //first check the provided element and return if found.
         var local = element.Attribute(L5XName.DataType)?.Value;
@@ -265,10 +229,7 @@ public static class L5XExtensions
 
         //then check the parent element and return if found.
         var parent = element.Parent?.Attribute(L5XName.DataType)?.Value;
-        if (parent is not null) return parent;
-        
-        //otherwise we don't really know. This breaks the convention.
-        throw element.L5XError(L5XName.DataType);
+        return parent ?? null;
     }
 
     /// <summary>

@@ -44,15 +44,6 @@ public abstract class ArrayType : LogixType, IEnumerable
     {
     }
 
-    /*///
-    /// <remarks>
-    /// The name of an array type will be the name of it's contained element types with the dimensions index
-    /// text appended. This helps differentiate types when querying so we don't return both the base type and arrays of
-    /// the specified base type. This is also similar to how the name appears from the logix designer.
-    /// </remarks>
-    public override string Name => $"{Members.First().DataType.Name}{Dimensions.ToIndex()}";*/
-    //todo will this be an issue just using the data type.
-
     /// <inheritdoc />
     public override IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
 
@@ -155,9 +146,11 @@ public abstract class ArrayType : LogixType, IEnumerable
     /// </summary>
     /// <typeparam name="TLogixType">The logix type to cast.</typeparam>
     /// <returns>A <see cref="ArrayType{TLogixType}"/> of the specified.</returns>
-    public ArrayType<TLogixType> Cast<TLogixType>() where TLogixType : LogixType =>
-        Enumerable.Cast<TLogixType>(this).ToArray();
+    public ArrayType<TLogixType> Cast<TLogixType>() where TLogixType : LogixType => new(Element);
 
+    /// <inheritdoc />
+    public override string ToString() => $"{Name}{Dimensions.ToIndex()}";
+    
     /// <summary>
     /// Handles getting the logix type at the specified index of the current array from the underlying member collection. 
     /// </summary>
@@ -207,10 +200,11 @@ public abstract class ArrayType : LogixType, IEnumerable
     private static XElement CreateArray(Array array)
     {
         var dimensions = Dimensions.FromArray(array);
-        
+
         var collection = array.Cast<LogixType>().ToArray();
-        ValidateCollection(collection);
-        
+        if (collection.Any(t => t is null or NullType))
+            throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
+
         var first = collection.Length > 0 ? collection[0] : null;
         var dataType = first?.Name ?? (array.GetType().GetElementType()?.Name ?? Null);
 
@@ -223,15 +217,6 @@ public abstract class ArrayType : LogixType, IEnumerable
         element.Add(elements);
 
         return element;
-    }
-
-    /// <summary>
-    /// Checks that the array of types is valid or that there exists no null type elements.
-    /// </summary>
-    private static void ValidateCollection(IEnumerable<LogixType?> array)
-    {
-        if (array.Any(t => t is null or NullType))
-            throw new ArgumentException("Array can not be initialized with null items.", nameof(array));
     }
 
     /// <summary>
@@ -248,7 +233,7 @@ public abstract class ArrayType : LogixType, IEnumerable
                 element.Add(new XAttribute(L5XName.Value, atomicType));
                 break;
             case StringType stringType:
-                element.Add(stringType.Serialize(L5XName.Structure));
+                element.Add(stringType.SerializeStructure());
                 break;
             case StructureType structureType:
                 element.Add(structureType.Serialize());
@@ -273,17 +258,6 @@ public sealed class ArrayType<TLogixType> : ArrayType, IEnumerable<TLogixType> w
 {
     /// <inheritdoc />
     public ArrayType(XElement element) : base(element)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ArrayType{TLogixType}"/> initialized with the provided one dimensional array.
-    /// </summary>
-    /// <param name="array">The one dimensional array to initialize the array type with.</param>
-    /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>array</c> is empty, contains <c>null</c> or <c>NullType</c> elements,
-    /// or is an array of more than one logix type.</exception>
-    public ArrayType(Array array) : base(array)
     {
     }
 

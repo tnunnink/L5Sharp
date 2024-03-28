@@ -35,7 +35,7 @@ public class StringTypeTests
     {
         var type = new StringType();
 
-        type.Name.Should().BeEmpty();
+        type.Name.Should().Be(nameof(StringType));
         type.Members.Should().HaveCount(2);
         type.LEN.Should().Be(0);
         type.DATA.As<ArrayType<SINT>>();
@@ -100,6 +100,22 @@ public class StringTypeTests
         type.LEN.Should().Be(14);
         type.Should().BeEquivalentTo("This is a test");
     }
+    
+    [Test]
+    public void Members_GetValue_ShouldBeExpected()
+    {
+        var type = new StringType("This is a test value");
+
+        var member = type.Members.ToList();
+
+        var len = member[0];
+        len.Name.Should().Be("LEN");
+        len.Value.Should().Be(20);
+
+        var data = member[1];
+        data.Name.Should().Be("DATA");
+        data.Value.Should().BeOfType<ArrayType<SINT>>();
+    }
 
     [Test]
     public void LEN_GetValue_ShouldBeExpected()
@@ -159,7 +175,7 @@ public class StringTypeTests
     {
         var type = new StringType();
 
-        var xml = type.Serialize(L5XName.Structure).ToString();
+        var xml = type.SerializeStructure().ToString();
 
         return Verify(xml);
     }
@@ -169,7 +185,7 @@ public class StringTypeTests
     {
         var type = new StringType("MyStringType", "This is the string value");
 
-        var xml = type.Serialize(L5XName.Structure).ToString();
+        var xml = type.SerializeStructure().ToString();
 
         return Verify(xml);
     }

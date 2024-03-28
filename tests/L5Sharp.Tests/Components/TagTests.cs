@@ -827,8 +827,7 @@ public class TagTests
         tag.Name.Should().Be("MyTimer");
         tag.Value.Should().BeOfType<TIMER>();
     }
-
-
+    
     [Test]
     public void With_RootTagValidValue_ShouldUpdateValue()
     {
@@ -912,4 +911,19 @@ public class TagTests
 
         return VerifyXml(xml);
     }
+
+    #region SpecialPredefinedTests
+
+    [Test]
+    public void AnalogAlarm()
+    {
+        var tag = new Tag { Name = "Test", Value = new ALARM_ANALOG() };
+
+        var data = tag.Value.As<ALARM_ANALOG>();
+
+        data.Deadband = 1.34f;
+        tag["Deadband"].Value = 1.34f;
+    }
+
+    #endregion
 }

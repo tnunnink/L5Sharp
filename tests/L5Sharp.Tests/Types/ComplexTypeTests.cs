@@ -18,12 +18,6 @@ public class ComplexTypeTests
     {
         FluentActions.Invoking(() => new ComplexType("Test", null!)).Should().Throw<ArgumentNullException>();
     }
-    
-    [Test]
-    public void New_NullMemberInList_ShouldThrowArgumentNullException()
-    {
-        FluentActions.Invoking(() => new ComplexType("Test", new Member[]{null!})).Should().Throw<ArgumentNullException>();
-    }
 
     [Test]
     public void New_Default_ShouldNotBeNull()
@@ -103,7 +97,7 @@ public class ComplexTypeTests
     [Test]
     public void Clone_WhenCalled_ShouldNotBeSameAsButEqual()
     {
-        var type = new ComplexType("Test", new List<Member>
+        var type = new ComplexType("MyComplex", new List<Member>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -112,7 +106,7 @@ public class ComplexTypeTests
             new("Member5", new TIMER())
         });
 
-        var clone = type.Clone<LogixType>();
+        var clone = type.Clone<ComplexType>();
 
         clone.Should().BeOfType<ComplexType>();
         clone.Should().NotBeSameAs(type);

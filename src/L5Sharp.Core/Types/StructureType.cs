@@ -96,7 +96,7 @@ public abstract class StructureType : LogixType
         where TLogixType : LogixType
     {
         if (name is null) throw new ArgumentNullException(nameof(name));
-        if (value is null) throw new ArgumentNullException(nameof(value));
+        if (value is null or NullType) throw new ArgumentNullException(nameof(value));
 
         var existing = Element.Elements().SingleOrDefault(m => m.MemberName() == name)?.ToMember();
 
@@ -236,7 +236,7 @@ public abstract class StructureType : LogixType
             throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
 
         var target = Element.Elements().ElementAt(index);
-        
+
         target.ReplaceWith(member.Serialize());
     }
 

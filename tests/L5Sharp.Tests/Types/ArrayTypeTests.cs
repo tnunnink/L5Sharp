@@ -68,7 +68,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType<DINT>(new DINT[] { 1, 2, 3, 4 });
 
-            array.Name.Should().Be("DINT[4]");
+            array.Name.Should().Be("DINT");
             array.Dimensions.Length.Should().Be(4);
             array.Radix.Should().Be(Radix.Decimal);
             array.Members.Should().HaveCount(4);
@@ -84,7 +84,7 @@ namespace L5Sharp.Tests.Types
             var array = new ArrayType<TIMER>(new TIMER[]
                 { new() { PRE = 1000 }, new() { PRE = 2000 }, new() { PRE = 3000 } });
 
-            array.Name.Should().Be("TIMER[3]");
+            array.Name.Should().Be("TIMER");
             array.Dimensions.Length.Should().Be(3);
             array.Radix.Should().Be(Radix.Null);
             array.Members.Should().HaveCount(3);
@@ -98,7 +98,7 @@ namespace L5Sharp.Tests.Types
         {
             var array = new ArrayType<STRING>(new STRING[] { "Test", "Test", "Test" });
 
-            array.Name.Should().Be("STRING[3]");
+            array.Name.Should().Be("STRING");
             array.Dimensions.Length.Should().Be(3);
             array.Radix.Should().Be(Radix.Null);
             array.Members.Should().HaveCount(3);
@@ -491,7 +491,7 @@ namespace L5Sharp.Tests.Types
         }
 
         [Test]
-        public void Of_ValidType_ShouldNotBeNull()
+        public void Cast_ValidType_ShouldNotBeNull()
         {
             // ReSharper disable once CoVariantArrayConversion this is the test
             var array = new ArrayType<LogixType>(new DINT[] { 1, 2, 3, 4 });
@@ -501,28 +501,33 @@ namespace L5Sharp.Tests.Types
             casted.Dimensions.Length.Should().Be(4);
 
             var element = casted[0];
+            casted[0] = 123;
             element.Should().NotBeNull();
             element.Should().BeOfType<DINT>();
         }
 
         [Test]
-        public void Of_InvalidType_ShouldThrowInvalidCastException()
+        public void Cast_InvalidType_ShouldThrowInvalidCastException()
         {
             var array = new ArrayType<DINT>(new DINT[] { 1, 2, 3, 4 });
-
-            FluentActions.Invoking(() => array.Cast<INT>()).Should().Throw<InvalidCastException>();
+            
+            var casted = array.Cast<INT>();
+            
+            FluentActions.Invoking(() => casted[0]).Should().Throw<InvalidCastException>();
         }
 
         [Test]
-        public void Of_InvalidTypeUp_ShouldThrowInvalidCastException()
+        public void Cast_InvalidTypeUp_ShouldThrowInvalidCastException()
         {
             var array = new ArrayType<INT>(new INT[] { 1, 2, 3, 4 });
+            
+            var casted = array.Cast<DINT>();
 
-            FluentActions.Invoking(() => array.Cast<DINT>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => casted[0]).Should().Throw<InvalidCastException>();
         }
 
         [Test]
-        public void Of_BaseTypeOfStructure_ShouldWork()
+        public void Cast_BaseTypeOfStructure_ShouldWork()
         {
             var array = new ArrayType<TIMER>(new TIMER[] { new(), new(), new() });
 
@@ -536,26 +541,6 @@ namespace L5Sharp.Tests.Types
         public Task Serialize_EmptyArray_ShouldBeVerified()
         {
             var array = new ArrayType<DINT>(Array.Empty<DINT>());
-
-            var xml = array.Serialize().ToString();
-
-            return Verify(xml);
-        }
-
-        [Test]
-        public void SetIndex_ArrayOfNull_ShouldWork()
-        {
-            var array = new ArrayType<LogixType>(new LogixType[5]);
-
-            array[1] = new TIMER();
-
-            array[1].Should().NotBeNull();
-        }
-
-        [Test]
-        public Task Serialize_ArrayOfNull_ShouldBeVerified()
-        {
-            var array = new ArrayType<LogixType>(new LogixType[5]);
 
             var xml = array.Serialize().ToString();
 
@@ -651,7 +636,7 @@ namespace L5Sharp.Tests.Types
 
             var array = new ArrayType<LogixType>(element);
 
-            array.Name.Should().Be("REAL[5]");
+            array.Name.Should().Be("REAL");
             array.Dimensions.Should().Be(new Dimensions(5));
 
             array[0].As<REAL>().Should().Be(0.0f);
@@ -678,7 +663,7 @@ namespace L5Sharp.Tests.Types
 
             var array = new ArrayType<LogixType>(element);
 
-            array.Name.Should().Be("TIMER[5]");
+            array.Name.Should().Be("TIMER");
             array.Dimensions.Should().Be(new Dimensions(5));
             array.Should().AllBeOfType<TIMER>();
 

@@ -339,18 +339,15 @@ public abstract class LogixElement : ILogixSerializable
     /// This is a specialized helper used to get a tag or parameter <see cref="LogixType"/> data structure.
     /// This method will get the first data element with a supported data format and deserialize the object as a
     /// concrete <see cref="LogixType"/> using the logix serializer. This will work for either Data or DefaultData
-    /// elements.
+    /// elements. This helper is meant for <c>Tag</c> and <c>Parameter</c>.
     /// </remarks>
     protected LogixType GetData()
     {
-        //If this is a data element already, then deserialize it as the logix type base class.
-        if (Element.IsDataElement()) return Element.Deserialize<LogixType>();
-        
-        //Otherwise assume this is a tag or parameter which has a child data element. Get the supported formatted element.
+        //This assumes the element is a tag or parameter object and has the child Data element with a supported format.
         var data = Element.Elements().FirstOrDefault(e =>
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
-        //Return that or null of not found.
+        //Return that or Null of not found.
         return data is not null ? data.Deserialize<LogixType>() : LogixType.Null;
     }
 

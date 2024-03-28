@@ -30,7 +30,7 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
     /// We are passing a dummy XElement to the base class because we don't want it to use reflection to
     /// generate the default element.
     /// </remarks>
-    protected internal AtomicType() : base(new XElement(L5XName.DefaultData))
+    protected internal AtomicType() : base(new XElement(L5XName.DataValue))
     {
         Radix = Radix.Default(this);
     }
@@ -40,7 +40,7 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
     /// We are passing a dummy XElement to the base class because we don't want it to use reflection to
     /// generate the default element.
     /// </remarks>
-    protected internal AtomicType(Radix radix) : base(new XElement(L5XName.DefaultData))
+    protected internal AtomicType(Radix radix) : base(new XElement(L5XName.DataValue))
     {
         if (radix is null)
             throw new ArgumentNullException(nameof(radix));
@@ -113,23 +113,7 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
         if (value.IsEquivalent("false")) return new BOOL(false);
 
         var radix = Radix.Infer(value);
-        var parsed = radix.ParseValue(value);
-
-        return parsed switch
-        {
-            BOOL typed => new BOOL(typed, radix),
-            SINT typed => new SINT(typed, radix),
-            INT typed => new INT(typed, radix),
-            DINT typed => new DINT(typed, radix),
-            LINT typed => new LINT(typed, radix),
-            REAL typed => new REAL(typed, radix),
-            USINT typed => new USINT(typed, radix),
-            UINT typed => new UINT(typed, radix),
-            UDINT typed => new UDINT(typed, radix),
-            ULINT typed => new ULINT(typed, radix),
-            LREAL typed => new LREAL(typed, radix),
-            _ => throw new FormatException($"The value '{value}' cannot be parsed as an atomic type.")
-        };
+        return radix.ParseValue(value);
     }
 
     /// <summary>
@@ -142,25 +126,7 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
         if (string.IsNullOrEmpty(value)) return default;
         if (value.IsEquivalent("true")) return new BOOL(true);
         if (value.IsEquivalent("false")) return new BOOL(false);
-        if (!Radix.TryInfer(value, out var radix)) return default;
-
-        var parsed = radix.ParseValue(value);
-
-        return parsed switch
-        {
-            BOOL typed => new BOOL(typed, radix),
-            SINT typed => new INT(typed, radix),
-            INT typed => new INT(typed, radix),
-            DINT typed => new DINT(typed, radix),
-            LINT typed => new LINT(typed, radix),
-            REAL typed => new REAL(typed, radix),
-            USINT typed => new USINT(typed, radix),
-            UINT typed => new UINT(typed, radix),
-            UDINT typed => new UDINT(typed, radix),
-            ULINT typed => new ULINT(typed, radix),
-            LREAL typed => new LREAL(typed, radix),
-            _ => throw new FormatException($"The value '{value}' cannot be parsed as an atomic type.")
-        };
+        return Radix.TryInfer(value, out var radix) ? radix.ParseValue(value) : default;
     }
 
     /// <summary>

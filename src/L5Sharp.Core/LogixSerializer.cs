@@ -200,19 +200,19 @@ public static class LogixSerializer
 
         //We could just call deserialize again, but we risk infinite loops if the child is not registered or recognizable.
         //Probably not going to happen, but we can stop and throw an exception if it is not the expected element, which is probably better.
-        return data.Name.ToString() switch
+        return data.Name.LocalName switch
         {
-            L5XName.DataValue => DeserializeAtomic(element),
-            L5XName.DataValueMember => DeserializeAtomic(element),
-            L5XName.Element => DeserializeElement(element),
-            L5XName.Array => DeserializeArray(element),
-            L5XName.ArrayMember => DeserializeArray(element),
-            L5XName.Structure => DeserializeStructure(element),
-            L5XName.StructureMember => DeserializeStructure(element),
-            L5XName.AlarmAnalogParameters => new ALARM_ANALOG(element),
-            L5XName.AlarmDigitalParameters => new ALARM_DIGITAL(element),
-            L5XName.MessageParameters => new MESSAGE(element),
-            _ => throw new NotSupportedException($"The element '{element.Name}' is not a supported data element.")
+            L5XName.DataValue => DeserializeAtomic(data),
+            L5XName.DataValueMember => DeserializeAtomic(data),
+            L5XName.Element => DeserializeElement(data),
+            L5XName.Array => DeserializeArray(data),
+            L5XName.ArrayMember => DeserializeArray(data),
+            L5XName.Structure => DeserializeStructure(data),
+            L5XName.StructureMember => DeserializeStructure(data),
+            L5XName.AlarmAnalogParameters => new ALARM_ANALOG(data),
+            L5XName.AlarmDigitalParameters => new ALARM_DIGITAL(data),
+            L5XName.MessageParameters => new MESSAGE(data),
+            _ => throw new NotSupportedException($"The element '{data.Name}' is not a supported data element.")
         };
     }
 
@@ -222,7 +222,7 @@ public static class LogixSerializer
     /// </summary>
     private static LogixElement DeserializeAtomic(XElement element)
     {
-        var dataType = element.DataType();
+        var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
         var value = element.Get(L5XName.Value);
         return AtomicType.Parse(dataType, value);
     }
@@ -234,7 +234,7 @@ public static class LogixSerializer
     /// </summary>
     private static LogixElement DeserializeArray(XElement element)
     {
-        var dataType = element.DataType();
+        var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
 
         //We either know the type (atomic or registered), or we create the generic string or complex type.
         var type = DataTypes.TryGetValue(dataType, out var known) ? known
@@ -272,7 +272,7 @@ public static class LogixSerializer
     /// </summary>
     private static LogixElement DeserializeStructure(XElement element)
     {
-        var dataType = element.DataType();
+        var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
 
         if (Deserializers.Value.TryGetValue(dataType, out var deserializer))
             return deserializer.Invoke(element);
@@ -286,11 +286,47 @@ public static class LogixSerializer
     /// </summary>
     private static LogixElement DeserializeString(XElement element)
     {
-        var dataType = element.DataType();
+        var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
 
         return Deserializers.Value.TryGetValue(dataType, out var deserializer)
             ? deserializer.Invoke(element)
             : new StringType(element);
+    }
+    
+    /// <summary>
+    /// Determines if the provided element has a structure that represents a <see cref="StringType"/> structure,
+    /// structure member, array, or array member.
+    /// </summary>
+    /// <param name="element">The element to check for the known string data structure.</param>
+    /// <returns><c>true</c> if the element has the string type structure, otherwise <c>false</c>.</returns>
+    /// <remarks>
+    /// This is needed to determine if we are deserializing a complex type or string type. String structure is unique
+    /// in that it will have a data value member called DATA with a ASCII radix, a non-null element value, and a
+    /// data type attribute value equal to that of the parent structure element attribute. If we don't intercept this
+    /// structure prior to deserializing it, we will encounter exceptions because it doesn't conform to the normal
+    /// convention that data value members should represent and atomic structure. My thought is Logix did this to conserve
+    /// space in the L5X, but not sure.
+    /// </remarks>
+    private static bool IsStringData(this XElement? element)
+    {
+        if (element is null) return false;
+
+        //If this is a structure or structure member it could potentially be the string structure.
+        if (element.Name == L5XName.Structure || element.Name == L5XName.StructureMember)
+        {
+            return element.Elements(L5XName.DataValueMember).Any(e =>
+                e.Attribute(L5XName.Name)?.Value == "DATA"
+                && e.Attribute(L5XName.DataType)?.Value == e.Parent?.Attribute(L5XName.DataType)?.Value
+                && e.Attribute(L5XName.Radix)?.Value == "ASCII");
+        }
+
+        //If this is an array or array member, we need to get elements and check if they are all string structure or not.
+        if (element.Name == L5XName.Array || element.Name == L5XName.ArrayMember)
+        {
+            return element.Elements().Select(e => e.Element(L5XName.Structure)).All(x => x.IsStringData());
+        }
+
+        return false;
     }
 
     #endregion

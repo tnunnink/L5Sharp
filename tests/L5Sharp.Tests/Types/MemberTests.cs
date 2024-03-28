@@ -52,6 +52,44 @@ public class MemberTests
     }
 
     [Test]
+    public void New_DataValueElement_ShouldHaveExpectedProperties()
+    {
+        const string xml = "<DataValue DataType=\"DINT\" Radix=\"Decimal\" Value=\"123\" />";
+        var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
+
+        var member = new Member("Test", type);
+
+        member.Name.Should().Be("Test");
+        member.Value.Should().BeOfType<DINT>();
+        member.Value.Should().Be(123);
+    }
+
+    [Test]
+    public void New_StructureElement_ShouldHaveExpectedProperties()
+    {
+        const string xml = @"<Structure DataType=""TIMER"">
+            <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""1000"" />
+            <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""2000"" />
+            <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""1"" />
+            <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""1"" />
+            <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1"" />
+            </Structure>";
+        var element = XElement.Parse(xml);
+        var type = element.Deserialize<LogixType>();
+
+        var member = new Member("Test", type);
+
+        member.Name.Should().Be("Test");
+        member.Value.Should().BeOfType<TIMER>();
+        member.Value.Member("PRE")!.Value.Should().Be(1000);
+        member.Value.Member("ACC")!.Value.Should().Be(2000);
+        member.Value.Member("EN")!.Value.Should().Be(1);
+        member.Value.Member("TT")!.Value.Should().Be(1);
+        member.Value.Member("DN")!.Value.Should().Be(1);
+    }
+
+    [Test]
     public void New_StructureMemberElement_ShouldHaveExpectedProperties()
     {
         const string xml = @"<StructureMember Name=""Test"" DataType=""TIMER"">
@@ -269,9 +307,9 @@ public class MemberTests
         dataType.Should().BeOfType<STRING>();
         dataType.Should().Be("This is a test");
     }
-    
+
     [Test]
-    public void SetDataType_AtomicToStructure_ShouldThrowInvalidCastException()
+    public void SetValue_AtomicToStructure_ShouldThrowInvalidCastException()
     {
         var member = new Member("Test", 123);
 
@@ -279,23 +317,23 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_StructureToAtomic_ShouldThrowInvalidCastException()
+    public void SetValue_StructureToAtomic_ShouldThrowInvalidCastException()
     {
         var member = new Member("Test", new TIMER());
 
         FluentActions.Invoking(() => member.Value = 123).Should().Throw<InvalidCastException>();
     }
-    
+
     [Test]
-    public void SetDataType_ToNull_ShouldThrowException()
+    public void SetValue_ToNull_ShouldThrowException()
     {
         var member = new Member("Test", 123);
 
         FluentActions.Invoking(() => member.Value = null!).Should().Throw<ArgumentException>();
     }
-    
+
     [Test]
-    public void SetDataType_ToNullType_ShouldThrowException()
+    public void SetValue_ToNullType_ShouldThrowException()
     {
         var member = new Member("Test", 123);
 
@@ -303,7 +341,7 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_BOOL_ShouldBeExpectedValue()
+    public void SetValue_BOOL_ShouldBeExpectedValue()
     {
         var member = new Member("Test", false);
 
@@ -315,7 +353,7 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_SINT_ShouldBeExpectedValue()
+    public void SetValue_SINT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new SINT(12, Radix.Binary));
 
@@ -325,9 +363,9 @@ public class MemberTests
         member.Value.As<SINT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(21);
     }
-    
+
     [Test]
-    public void SetDataType_INT_ShouldBeExpectedValue()
+    public void SetValue_INT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new INT(1234, Radix.Binary));
 
@@ -337,9 +375,9 @@ public class MemberTests
         member.Value.As<INT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(4321);
     }
-    
+
     [Test]
-    public void SetDataType_DINT_ShouldBeExpectedValue()
+    public void SetValue_DINT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", 123);
 
@@ -349,9 +387,9 @@ public class MemberTests
         member.Value.As<DINT>().Radix.Should().Be(Radix.Decimal);
         member.Value.Should().Be(321);
     }
-    
+
     [Test]
-    public void SetDataType_LINT_ShouldBeExpectedValue()
+    public void SetValue_LINT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new LINT(long.MaxValue, Radix.Hex));
 
@@ -361,9 +399,9 @@ public class MemberTests
         member.Value.As<LINT>().Radix.Should().Be(Radix.Hex);
         member.Value.Should().Be(1000);
     }
-    
+
     [Test]
-    public void SetDataType_USINT_ShouldBeExpectedValue()
+    public void SetValue_USINT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new USINT(12, Radix.Binary));
 
@@ -373,9 +411,9 @@ public class MemberTests
         member.Value.As<USINT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(21);
     }
-    
+
     [Test]
-    public void SetDataType_UINT_ShouldBeExpectedValue()
+    public void SetValue_UINT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new UINT(1234, Radix.Binary));
 
@@ -385,9 +423,9 @@ public class MemberTests
         member.Value.As<UINT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(4321);
     }
-    
+
     [Test]
-    public void SetDataType_UDINT_ShouldBeExpectedValue()
+    public void SetValue_UDINT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new UDINT(123));
 
@@ -397,9 +435,9 @@ public class MemberTests
         member.Value.As<UDINT>().Radix.Should().Be(Radix.Decimal);
         member.Value.Should().Be(321);
     }
-    
+
     [Test]
-    public void SetDataType_ULINT_ShouldBeExpectedValue()
+    public void SetValue_ULINT_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new ULINT(long.MaxValue, Radix.Hex));
 
@@ -409,9 +447,9 @@ public class MemberTests
         member.Value.As<ULINT>().Radix.Should().Be(Radix.Hex);
         member.Value.Should().Be(1000);
     }
-    
+
     [Test]
-    public void SetDataType_REAL_ShouldBeExpectedValue()
+    public void SetValue_REAL_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new REAL(float.MaxValue, Radix.Exponential));
 
@@ -421,9 +459,9 @@ public class MemberTests
         member.Value.As<REAL>().Radix.Should().Be(Radix.Exponential);
         member.Value.Should().Be(123.123f);
     }
-    
+
     [Test]
-    public void SetDataType_LREAL_ShouldBeExpectedValue()
+    public void SetValue_LREAL_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new LREAL(double.MaxValue));
 
@@ -435,7 +473,18 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_StructureAsConcreteType_ShouldBeExpectedValue()
+    public void SetValue_STRING_ShouldBeExpected()
+    {
+        var member = new Member("Test", "this is a test string");
+
+        member.Value = "This is an updated test string";
+
+        member.Value.Should().BeOfType<STRING>();
+        member.Value.ToString().Should().Be("This is an updated test string");
+    }
+
+    [Test]
+    public void SetValue_StructureAsConcreteType_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new TIMER());
 
@@ -446,7 +495,7 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_StructureAsGenericStructureType_ShouldBeExpectedValue()
+    public void SetValue_StructureAsGenericStructureType_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new TIMER());
 
@@ -457,7 +506,7 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_StructureAsDictionary_ShouldBeExpectedValue()
+    public void SetValue_StructureAsDictionary_ShouldBeExpectedValue()
     {
         var member = new Member("Test", new TIMER());
 
@@ -472,7 +521,7 @@ public class MemberTests
     }
 
     [Test]
-    public void SetDataType_StructureWithMembersNotInType_ShouldOnlySetMembersThatAreInType()
+    public void SetValue_StructureWithMembersNotInType_ShouldOnlySetMembersThatAreInType()
     {
         var member = new Member("Test", new TIMER());
 
@@ -550,4 +599,49 @@ public class MemberTests
 
         return Verify(xml);
     }
+
+    #region InternalsTests
+
+    [Test]
+    public void New_ElementOverload_ShouldHaveExpectedValues()
+    {
+        const string xml = "<DataValueMember Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" Value=\"123\" />";
+        var element = XElement.Parse(xml);
+
+        var member = new Member(element);
+
+        member.Name.Should().Be("Test");
+        member.Value.Should().BeOfType<DINT>();
+        member.Value.Should().Be(123);
+    }
+
+    [Test]
+    public void New_ElementOverloadWithTagNullData_ShouldHaveExpectedValues()
+    {
+        const string xml = "<Tag Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" />";
+        var element = XElement.Parse(xml);
+
+        var member = new Member(element);
+
+        member.Name.Should().Be("Test");
+        member.Value.Should().BeOfType<NullType>();
+        member.Value.Should().Be(LogixType.Null);
+    }
+
+    [Test]
+    public void SetData_TagWithNullData_ShouldHaveExpectedValueAfterUpdate()
+    {
+        
+        const string xml = "<Tag Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" />";
+        var element = XElement.Parse(xml);
+        var member = new Member(element);
+
+        member.Value = 123;
+
+        member.Name.Should().Be("Test");
+        member.Value.Should().BeOfType<DINT>();
+        member.Value.Should().Be(123);
+    }
+
+    #endregion
 }

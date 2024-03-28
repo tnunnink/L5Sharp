@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
 // ReSharper disable InconsistentNaming Logix naming
 
@@ -15,76 +16,91 @@ public sealed class ALARM_ANALOG : StructureType
     /// </summary>
     public ALARM_ANALOG() : base(new XElement(L5XName.AlarmAnalogParameters))
     {
-        EnableIn = new BOOL();
-        In = new REAL();
-        InFault = new BOOL();
-        HHEnabled = new BOOL();
-        HEnabled = new BOOL();
-        LEnabled = new BOOL();
-        LLEnabled = new BOOL();
-        AckRequired = new BOOL();
-        ProgAckAll = new BOOL();
-        OperAckAll = new BOOL();
-        HHProgAck = new BOOL();
-        HHOperAck = new BOOL();
-        HProgAck = new BOOL();
-        HOperAck = new BOOL();
-        LProgAck = new BOOL();
-        LOperAck = new BOOL();
-        LLProgAck = new BOOL();
-        LLOperAck = new BOOL();
-        ROCPosProgAck = new BOOL();
-        ROCPosOperAck = new BOOL();
-        ROCNegProgAck = new BOOL();
-        ROCNegOperAck = new BOOL();
-        ProgSuppress = new BOOL();
-        OperSuppress = new BOOL();
-        ProgUnsuppress = new BOOL();
-        OperUnsuppress = new BOOL();
-        HHOperShelve = new BOOL();
-        HOperShelve = new BOOL();
-        LOperShelve = new BOOL();
-        LLOperShelve = new BOOL();
-        ROCPosOperShelve = new BOOL();
-        ROCNegOperShelve = new BOOL();
-        ProgUnshelveAll = new BOOL();
-        HHOperUnshelve = new BOOL();
-        HOperUnshelve = new BOOL();
-        LOperUnshelve = new BOOL();
-        LLOperUnshelve = new BOOL();
-        ROCPosOperUnshelve = new BOOL();
-        ROCNegOperUnshelve = new BOOL();
-        ProgDisable = new BOOL();
-        OperDisable = new BOOL();
-        ProgEnable = new BOOL();
-        OperEnable = new BOOL();
-        AlarmCountReset = new BOOL();
-        HHMinDurationEnable = new BOOL();
-        HMinDurationEnable = new BOOL();
-        LMinDurationEnable = new BOOL();
-        LLMinDurationEnable = new BOOL();
-        HHLimit = new REAL();
-        HHSeverity = new DINT();
-        HLimit = new REAL();
-        HSeverity = new DINT();
-        LLimit = new REAL();
-        LSeverity = new DINT();
-        LLLimit = new REAL();
-        LLSeverity = new DINT();
-        MinDurationPRE = new DINT();
-        ShelveDuration = new DINT();
-        MaxShelveDuration = new DINT();
-        Deadband = new REAL();
-        ROCPosLimit = new REAL();
-        ROCPosSeverity = new DINT();
-        ROCNegLimit = new REAL();
-        ROCNegSeverity = new DINT();
-        ROCPeriod = new REAL();
+        EnableIn = false;
+        In = 0;
+        InFault = false;
+        HHEnabled = false;
+        HEnabled = false;
+        LEnabled = false;
+        LLEnabled = false;
+        AckRequired = false;
+        ProgAckAll = false;
+        OperAckAll = false;
+        HHProgAck = false;
+        HHOperAck = false;
+        HProgAck = false;
+        HOperAck = false;
+        LProgAck = false;
+        LOperAck = false;
+        LLProgAck = false;
+        LLOperAck = false;
+        ROCPosProgAck = false;
+        ROCPosOperAck = false;
+        ROCNegProgAck = false;
+        ROCNegOperAck = false;
+        ProgSuppress = false;
+        OperSuppress = false;
+        ProgUnsuppress = false;
+        OperUnsuppress = false;
+        HHOperShelve = false;
+        HOperShelve = false;
+        LOperShelve = false;
+        LLOperShelve = false;
+        ROCPosOperShelve = false;
+        ROCNegOperShelve = false;
+        ProgUnshelveAll = false;
+        HHOperUnshelve = false;
+        HOperUnshelve = false;
+        LOperUnshelve = false;
+        LLOperUnshelve = false;
+        ROCPosOperUnshelve = false;
+        ROCNegOperUnshelve = false;
+        ProgDisable = false;
+        OperDisable = false;
+        ProgEnable = false;
+        OperEnable = false;
+        AlarmCountReset = false;
+        HHMinDurationEnable = false;
+        HMinDurationEnable = false;
+        LMinDurationEnable = false;
+        LLMinDurationEnable = false;
+        HHLimit = 0;
+        HHSeverity = new int();
+        HLimit = 0;
+        HSeverity = new int();
+        LLimit = 0;
+        LSeverity = new int();
+        LLLimit = 0;
+        LLSeverity = new int();
+        MinDurationPRE = new int();
+        ShelveDuration = new int();
+        MaxShelveDuration = new int();
+        Deadband = 0;
+        ROCPosLimit = 0;
+        ROCPosSeverity = new int();
+        ROCNegLimit = 0;
+        ROCNegSeverity = new int();
+        ROCPeriod = 0;
     }
 
     /// <inheritdoc />
     public ALARM_ANALOG(XElement element) : base(element)
     {
+    }
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// A <see cref="ALARM_ANALOG"/> is a special Rockwell defined data type that does not contain decorated member elements.
+    /// All values are stored as local attributes on the data element. When using this type with a tag, you must cast
+    /// the tag <c>Value</c> as the message type and set these properties statically.
+    /// </remarks>
+    public override IEnumerable<Member> Members => GenerateVirtualMembers();
+
+    private IEnumerable<Member> GenerateVirtualMembers()
+    {
+        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
+        yield return new Member(nameof(In), () => In, t => { In = t.As<REAL>(); });
+        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
     }
 
     /// <summary>
@@ -531,9 +547,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="HHSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT HHSeverity
+    public int HHSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
@@ -549,9 +565,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="HSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT HSeverity
+    public int HSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
@@ -567,9 +583,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="LSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT LSeverity
+    public int LSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
@@ -585,36 +601,36 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="LLSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT LLSeverity
+    public int LLSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="MinDurationPRE"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT MinDurationPRE
+    public int MinDurationPRE
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ShelveDuration"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT ShelveDuration
+    public int ShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="MaxShelveDuration"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT MaxShelveDuration
+    public int MaxShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
@@ -639,9 +655,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="ROCPosSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT ROCPosSeverity
+    public int ROCPosSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 
@@ -657,9 +673,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="ROCNegSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public DINT ROCNegSeverity
+    public int ROCNegSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue<int>();
         set => SetRequiredValue(value);
     }
 

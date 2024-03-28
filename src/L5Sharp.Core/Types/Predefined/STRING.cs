@@ -10,7 +10,7 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
 {
     //This is the built in length of string types in Logix
     private const int PredefinedLength = 82;
-    
+
     /// <inheritdoc />
     public STRING(XElement element) : base(element)
     {
@@ -33,6 +33,9 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
     /// </exception>
     public STRING(string value) : base(value)
     {
+        if (value.Length > PredefinedLength)
+            throw new ArgumentOutOfRangeException(nameof(value), value,
+                $"Value must be less than {PredefinedLength} characters.");
     }
 
     /// <inheritdoc />

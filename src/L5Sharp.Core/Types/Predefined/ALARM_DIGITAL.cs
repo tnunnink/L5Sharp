@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 // ReSharper disable InconsistentNaming
@@ -53,8 +52,19 @@ public sealed class ALARM_DIGITAL : StructureType
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members =>
-        Element.Attributes().Select(a => new Member(a.Name.LocalName, AtomicType.Parse(a.Value)));
+    /// <remarks>
+    /// A <see cref="ALARM_ANALOG"/> is a special Rockwell defined data type that does not contain decorated member elements.
+    /// All values are stored as local attributes on the data element. When using this type with a tag, you must cast
+    /// the tag <c>Value</c> as the message type and set these properties statically.
+    /// </remarks>
+    public override IEnumerable<Member> Members => GenerateVirtualMembers();
+
+    private IEnumerable<Member> GenerateVirtualMembers()
+    {
+        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
+        yield return new Member(nameof(In), () => In, t => { In = t.As<BOOL>(); });
+        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
+    }
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.

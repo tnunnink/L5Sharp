@@ -93,7 +93,7 @@ public abstract class LogixType : LogixElement
 
     /// <inheritdoc />
     public override string ToString() => Name;
-    
+
     /// <summary>
     /// Returns the singleton null <see cref="LogixType"/> object.
     /// </summary>
@@ -260,21 +260,21 @@ public abstract class LogixType : LogixElement
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
-    public static implicit operator LogixType(LogixType[] value) => ToArrayType(value);
+    public static implicit operator LogixType(LogixType[] value) => new ArrayType<LogixType>(value);
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixType"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
-    public static implicit operator LogixType(LogixType[,] value) => ToArrayType(value);
+    public static implicit operator LogixType(LogixType[,] value) => new ArrayType<LogixType>(value);
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixType"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
-    public static implicit operator LogixType(LogixType[,,] value) => ToArrayType(value);
+    public static implicit operator LogixType(LogixType[,,] value) => new ArrayType<LogixType>(value);
 
     /// <summary>
     /// Converts the provided <see cref="Dictionary{TKey,TValue}"/> to a <see cref="LogixType"/>.
@@ -283,31 +283,4 @@ public abstract class LogixType : LogixElement
     /// <returns>A <see cref="LogixType"/> representing the converted value.</returns>
     public static implicit operator LogixType(Dictionary<string, LogixType> value) =>
         new ComplexType(nameof(ComplexType), value.Select(m => new Member(m.Key, m.Value)));
-
-    /// <summary>
-    /// Converts the current array object to a <see cref="ArrayType{TLogixType}"/> of the concrete logix type by
-    /// inspecting the first element's type in the array. 
-    /// </summary>
-    /// <param name="array">The array to convert.</param>
-    /// <returns>
-    /// An <see cref="ArrayType"/> representing the containing all the elements of the array object as
-    /// the the concrete generic type array.
-    /// </returns>
-    /// <exception cref="ArgumentNullException"><c>array</c> is null.</exception>
-    /// <remarks>
-    /// This uses reflection and compiled lambda functions to create the concrete array type
-    /// from the current logix type array, and is used by logix type for implicitly converting arrays to a logix type.
-    /// </remarks>
-    private static ArrayType ToArrayType(Array array)
-    {
-        if (array is null) throw new ArgumentNullException(nameof(array));
-        var type = array.Cast<LogixType>().First().GetType();
-        var arrayType = typeof(ArrayType<>).MakeGenericType(type);
-        var parameterType = typeof(Array);
-        var constructor = arrayType.GetConstructor([parameterType])!;
-        var parameter = Expression.Parameter(parameterType, "array");
-        var creator = Expression.New(constructor, parameter);
-        var lambda = Expression.Lambda<Func<Array, ArrayType>>(creator, parameter);
-        return lambda.Compile().Invoke(array);
-    }
 }

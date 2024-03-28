@@ -9,18 +9,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/L5Sharp.Core/Enums/MessageType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Rungs/Message_Rung.L5X" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Dimensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Dimensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LREAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Atomics/LREAL.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/ArrayType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/AtomicType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/AtomicType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Member.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_ANALOG.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_DIGITAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/ALARM_DIGITAL.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/ControlTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/ControlTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/CounterTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/CounterTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/MESSAGE.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/Predefined/MESSAGE.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Types/StructureType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmAnalogTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmAnalogTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringTypeTests.SerializeStructure_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringTypeTests.SerializeStructure_Default_ShouldBeVerified.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringTypeTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -408,6 +420,7 @@
       <workItem from="1711050419621" duration="1671000" />
       <workItem from="1711122733101" duration="1219000" />
       <workItem from="1711453109884" duration="39635000" />
+      <workItem from="1711631442637" duration="11439000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -762,7 +775,7 @@
     <option name="coveragePercentColumnWidth" value="33" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="356" />
+    <option name="symbolColumnWidth" value="380" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -846,29 +859,55 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexTypeTests.cs</url>
-          <line>567</line>
+          <line>561</line>
           <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Types\ComplexTypeTests.cs" initialLine="567" containingFunctionPresentation="Method 'Serialize_Test_ShouldBeVerified'">
             <startOffsets>
-              <option value="16298" />
+              <option value="16081" />
             </startOffsets>
             <endOffsets>
-              <option value="16336" />
+              <option value="16119" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayTypeTests.cs</url>
-          <line>549</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Types\ArrayTypeTests.cs" initialLine="549" containingFunctionPresentation="Method 'SetIndex_ArrayOfNull_ShouldWork'">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringTypeTests.cs</url>
+          <line>37</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Types\StringTypeTests.cs" initialLine="37" containingFunctionPresentation="Method 'New_Default_ShouldHaveExpectedValues'">
             <startOffsets>
-              <option value="16612" />
+              <option value="784" />
             </startOffsets>
             <endOffsets>
-              <option value="16635" />
+              <option value="813" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="40" />
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringTypeTests.cs</url>
+          <line>40</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Types\StringTypeTests.cs" initialLine="40" containingFunctionPresentation="Method 'New_Default_ShouldHaveExpectedValues'">
+            <startOffsets>
+              <option value="899" />
+            </startOffsets>
+            <endOffsets>
+              <option value="931" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringTypeTests.cs</url>
+          <line>116</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Types\StringTypeTests.cs" initialLine="116" containingFunctionPresentation="Method 'Members_GetValue_ShouldBeExpected'">
+            <startOffsets>
+              <option value="3589" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3637" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="57" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -888,6 +927,7 @@
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.LogixContentAgainstTemplateTests.FindReferencesToAnalogTag" memberName="this" />
         <PinnedItemInfo parentTag="Type#L5Sharp.LogixMember" memberName="DataType" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Core.Tests.LogixContentTagTests.References_AgainstKnownTest_ShouldNotBeEmpty" memberName="this" />
+        <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.Types.StringTypeTests.Members_GetValue_ShouldBeExpected" memberName="len" />
         <PinnedItemInfo parentTag="Type#L5Sharp.Types.AtomicType" memberName="Radix" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.Components.RoutineTests.New_RungCollection_ShouldHaveExpectedCount" memberName="this" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Querying.RungQuery.Flatten" memberName="definition" />
