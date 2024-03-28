@@ -29,21 +29,23 @@ public sealed class Member : LogixElement
     private readonly string? _name;
 
     /// <summary>
-    /// 
+    /// The custom getter function for a "virtual" member. If not null this will always be used in place of the normal
+    /// getter methods.
     /// </summary>
     private readonly Func<LogixType>? _getter;
-    
+
     /// <summary>
-    /// 
+    /// The custom setter function for a "virtual" member. If not null this will always be used in place of the normal
+    /// setter methods.
     /// </summary>
     private readonly Action<LogixType>? _setter;
 
     /// <summary>
     /// Creates a new <see cref="Member"/> object with the provided name and logix type.
     /// </summary>
-    /// <param name="name">The name of the member. If <c>null</c> will default to an empty string.</param>
-    /// <param name="type">The <see cref="LogixType"/> representing the member's data. If <c>null</c>
-    /// will default to <see cref="NullType"/>.</param>
+    /// <param name="name">The name of the member.</param>
+    /// <param name="type">The <see cref="LogixType"/> contianing the member's data.</param>
+    /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="type"/> is null or empty.</exception>
     public Member(string name, LogixType type) : base(CreateElement(name, type))
     {
     }
@@ -56,7 +58,7 @@ public sealed class Member : LogixElement
     /// LogixSerializer implementation since there is not mappings of the elements to it that are not already used for
     /// other types. Meaning, even data value, structure, and array members should be deserialized to the
     /// <see cref="LogixType"/> class and not the <see cref="Member"/>. So this is kind of a special internal class
-    /// that helps build the logix data structure. 
+    /// that helps build the logix data structure.
     /// </remarks>
     internal Member(XElement element) : base(element)
     {
@@ -65,7 +67,7 @@ public sealed class Member : LogixElement
     /// <summary>
     /// Creates a new "virtual" <see cref="Member"/> object with the provided name, getter, and setter functions. There
     /// is no backing XElement in this scenario, but the provided delegates will be called in place of the get/set for
-    /// <see cref="Value"/> of allow special logix type objects to provide a mapping of a member object to it's custom
+    /// <see cref="Value"/> to allow special logix type objects to provide a mapping of a member object to it's custom
     /// backing L5X data element. This is used for the custom classes like <see cref="ALARM_ANALOG"/>,
     /// <see cref="ALARM_DIGITAL"/>, <see cref="MESSAGE"/> and others.
     /// </summary>
@@ -83,6 +85,10 @@ public sealed class Member : LogixElement
     /// The name of the <see cref="Member"/>.
     /// </summary>
     /// <value>A <see cref="string"/> representing the member name or array element index.</value>
+    /// <remarks>
+    /// All member names are immutable. To change the name of a member for a given tag or data structure you
+    /// must remove and add a new member element. This can only be done for <c>ComplexType</c> objects.
+    /// </remarks>
     public string Name => _name ?? Element.MemberName();
 
     /// <summary>
@@ -90,7 +96,18 @@ public sealed class Member : LogixElement
     /// </summary>
     /// <value>A <see cref="LogixType"/> containing the member data.</value>
     /// <remarks>
-    /// 
+    /// <para>
+    /// <see cref="Member"/> has special internal methods for setting the underlying value of the data elements.
+    /// Note that setting a member value will not change the "type" of the member but rather simply update the underlying
+    /// value. This is to prevent the type structure from being inadvertently overwritten. You can change the type
+    /// structure to replace members using a <see cref="ComplexType"/> for custom types.
+    /// </para>
+    /// <para>
+    /// Also note that you must set the value with the the correct corresponding logix type
+    /// (e.g. AtomicType = AtomicType, StringType = StringType, ArrayType = ArrayType).
+    /// Arrays and structures will join provided value structure on the member name and forward the call down the
+    /// hierarchy in order to set complex object values.
+    /// </para>
     /// </remarks>
     public LogixType Value
     {
@@ -111,14 +128,9 @@ public sealed class Member : LogixElement
         //If a custom getter is provided then return that.
         if (_getter is not null) return _getter();
 
-        //If not currently a data element (tag or parameter) then use the built in element GetData to get the child
-        //data element and deserialize that.
-        if (!Element.IsData()) return GetData();
-
-        //Otherwise deserialize this decorated member as a LogixType.
-        if (Element.IsDecoratedData()) return Element.Deserialize<LogixType>();
-
-        throw new InvalidOperationException($"Member element {Element.Name} is not a valid data element.");
+        //If not currently a data element (tag or parameter) then use the built in element GetData to get the child data element.
+        //Otherwise, deserialize this decorated member as a using the LogixSerializer.
+        return Element.IsData() ? Element.Deserialize<LogixType>() : GetData();
     }
 
     /// <summary>
@@ -143,7 +155,7 @@ public sealed class Member : LogixElement
         //Otherwise this is a normal decorated or tag member object
         switch (Value)
         {
-            case NullType: //Only a tag or parameter element should have this case.
+            case NullType: //Only a tag element should have this case after initial construction.
                 SetData(type);
                 break;
             case AtomicType current:
@@ -264,14 +276,9 @@ internal static class MemberExtension
 
     /// <summary>
     /// Determines if the current element is one that represents a data element or an element which contains tag data.
-    /// </summary>
-    /// <param name="element">The element to check.</param>
-    /// <returns><c>true</c> if the element is a data element, otherwise <c>false</c>.</returns>
-    /// <remarks>
     /// This is a helper to make determining if the element we are working with is a data element which can
-    /// be directly deserialized from our logix serializer implementation. This could also help for querying the L5X
-    /// element structure.
-    /// </remarks>
+    /// be directly deserialized from our logix serializer implementation.
+    /// </summary>
     internal static bool IsData(this XElement element)
     {
         return element.Name.LocalName is
@@ -280,12 +287,5 @@ internal static class MemberExtension
             L5XName.Structure or L5XName.StructureMember or
             L5XName.MessageParameters or L5XName.AlarmAnalogParameters or L5XName.AlarmDigitalParameters or
             L5XName.CoordinateSystemParameters or L5XName.AxisParameters or L5XName.MotionGroupParameters;
-    }
-
-    internal static bool IsDecoratedData(this XElement element)
-    {
-        return element.L5XType() is
-            L5XName.DataValue or L5XName.DataValueMember or L5XName.Element or
-            L5XName.Array or L5XName.ArrayMember or L5XName.Structure or L5XName.StructureMember;
     }
 }

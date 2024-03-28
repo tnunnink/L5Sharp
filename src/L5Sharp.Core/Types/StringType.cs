@@ -19,7 +19,8 @@ namespace L5Sharp.Core;
 /// <para>
 /// StringType has special cases in terms of it's L5X structure. Rockwell treats strings sort of like a value type,
 /// giving it a special <see cref="DataFormat"/>. However, when serialized as a member of a complex structure, the data
-/// looks more like a generic structure type.</para>
+/// looks more like a generic structure type.
+/// </para>
 /// </remarks>
 public class StringType : StructureType, IEnumerable<char>
 {
@@ -138,19 +139,25 @@ public class StringType : StructureType, IEnumerable<char>
         var data = Element.Elements().FirstOrDefault(e => e.MemberName() == nameof(DATA));
         return data is not null ? data.Value.TrimStart('\'').TrimEnd('\'') : string.Empty;
     }
-    
+
     /// <summary>
     /// Generates the "virtual" data members for the <see cref="StringType"/>. All string types have
     /// the LEN and DATA member which contain the length and array of ASCII characters. We will allow these to be
-    /// retrieved as nested data member, but they have no setter. This is because of how string are serialized. Strings
+    /// retrieved as nested data members, but they have no setter. This is because of how strings are serialized. Strings
     /// are treated as immutable types like Atomics. You only update their value on a tag or member which will know
     /// how to update the corresponding data element. You can not update the member values. This is actually how
     /// Logix Designer works as well.
     /// </summary>
     private IEnumerable<Member> GenerateVirtualMembers()
     {
-        yield return new Member(nameof(LEN), () => LEN, _ => {});
-        yield return new Member(nameof(DATA), () => DATA, _ => {});
+        const string message = "Set the string value for the parent tag to update this value.";
+
+        yield return new Member(nameof(LEN), () => LEN,
+            _ => throw new InvalidOperationException(
+                $"The LEN member for {typeof(StringType)} objects is read only. {message}."));
+        yield return new Member(nameof(DATA), () => DATA,
+            _ => throw new InvalidOperationException(
+                $"The DATA member for {typeof(StringType)} objects is read only. {message}."));
     }
 
     /// <summary>

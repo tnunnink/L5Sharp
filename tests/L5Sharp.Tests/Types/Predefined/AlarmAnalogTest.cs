@@ -20,8 +20,7 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new ALARM_ANALOG();
 
             type.Name.Should().Be(nameof(ALARM_ANALOG));
-            //type.Members.Should().HaveCount(65);
-            type.Members.Should().BeEmpty();
+            type.Members.Should().HaveCount(65);
             type.EnableIn.Should().Be(false);
             type.In.Should().Be(0);
             type.InFault.Should().Be(false);
@@ -71,7 +70,7 @@ namespace L5Sharp.Tests.Types.Predefined
             type.LMinDurationEnable.Should().Be(false);
             type.LLMinDurationEnable.Should().Be(false);
             type.HHLimit.Should().Be(0);
-            type.HHSeverity.Should().Be(0);
+            type.HHSeverity.Should().Be(500);
             type.HLimit.Should().Be(0);
             type.HSeverity.Should().Be(0);
             type.LLimit.Should().Be(0);
@@ -221,7 +220,18 @@ namespace L5Sharp.Tests.Types.Predefined
             
             var xml = type.Serialize().ToString();
 
-            return Verify(xml);
+            return VerifyXml(xml);
+        }
+
+        [Test]
+        public Task SetMember_ValidType_ShouldBeVerified()
+        {
+            var type = new ALARM_ANALOG();
+
+            type.In = 1.34f;
+            
+            var xml = type.Serialize().ToString();
+            return VerifyXml(xml);
         }
     }
 }

@@ -52,19 +52,15 @@ public sealed class ALARM_DIGITAL : StructureType
     }
 
     /// <inheritdoc />
+    public override string Name => nameof(ALARM_DIGITAL);
+
+    /// <inheritdoc />
     /// <remarks>
     /// A <see cref="ALARM_ANALOG"/> is a special Rockwell defined data type that does not contain decorated member elements.
     /// All values are stored as local attributes on the data element. When using this type with a tag, you must cast
     /// the tag <c>Value</c> as the message type and set these properties statically.
     /// </remarks>
     public override IEnumerable<Member> Members => GenerateVirtualMembers();
-
-    private IEnumerable<Member> GenerateVirtualMembers()
-    {
-        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
-        yield return new Member(nameof(In), () => In, t => { In = t.As<BOOL>(); });
-        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
-    }
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.
@@ -316,5 +312,42 @@ public sealed class ALARM_DIGITAL : StructureType
     {
         get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
+    }
+
+    /// <summary>
+    /// Creates the collection of virtual members for this custom predefined type.
+    /// </summary>
+    private IEnumerable<Member> GenerateVirtualMembers()
+    {
+        yield return new Member(nameof(Severity), () => Severity, t => { Severity = t.As<DINT>(); });
+        yield return new Member(nameof(MinDurationPRE), () => MinDurationPRE, t => { MinDurationPRE = t.As<DINT>(); });
+        yield return new Member(nameof(ShelveDuration), () => ShelveDuration, t => { ShelveDuration = t.As<DINT>(); });
+        yield return new Member(nameof(MaxShelveDuration), () => MaxShelveDuration,
+            t => { MaxShelveDuration = t.As<DINT>(); });
+        yield return new Member(nameof(ProgTime), () => ProgTime, t => { ProgTime = t.As<LINT>(); });
+        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
+        yield return new Member(nameof(In), () => In, t => { In = t.As<BOOL>(); });
+        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
+        yield return new Member(nameof(Condition), () => Condition, t => { Condition = t.As<BOOL>(); });
+        yield return new Member(nameof(AckRequired), () => AckRequired, t => { AckRequired = t.As<BOOL>(); });
+        yield return new Member(nameof(Latched), () => Latched, t => { Latched = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgAck), () => ProgAck, t => { ProgAck = t.As<BOOL>(); });
+        yield return new Member(nameof(OperAck), () => OperAck, t => { OperAck = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgReset), () => ProgReset, t => { ProgReset = t.As<BOOL>(); });
+        yield return new Member(nameof(OperReset), () => OperReset, t => { OperReset = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgSuppress), () => ProgSuppress, t => { ProgSuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(OperSuppress), () => OperSuppress, t => { OperSuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgUnsuppress), () => ProgUnsuppress, t => { ProgUnsuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(OperUnsuppress), () => OperUnsuppress, t => { OperUnsuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(OperShelve), () => OperShelve, t => { OperShelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgUnshelve), () => ProgUnshelve, t => { ProgUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(OperUnshelve), () => OperUnshelve, t => { OperUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgDisable), () => ProgDisable, t => { ProgDisable = t.As<BOOL>(); });
+        yield return new Member(nameof(OperDisable), () => OperDisable, t => { OperDisable = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgEnable), () => ProgEnable, t => { ProgEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(OperEnable), () => OperEnable, t => { OperEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(AlarmCountReset), () => AlarmCountReset,
+            t => { AlarmCountReset = t.As<BOOL>(); });
+        yield return new Member(nameof(UseProgTime), () => UseProgTime, t => { UseProgTime = t.As<BOOL>(); });
     }
 }

@@ -159,9 +159,6 @@
       <None Update="Types\ArrayTypeTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt">
         <DependentUpon>ArrayTypeTests.cs</DependentUpon>
       </None>
-      <None Update="Types\Predefined\AlarmAnalogTest.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
-        <DependentUpon>AlarmAnalogTest.cs</DependentUpon>
-      </None>
       <None Update="Types\Predefined\AlarmDigitalTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
         <DependentUpon>AlarmDigitalTests.cs</DependentUpon>
       </None>
@@ -306,6 +303,9 @@
       </None>
       <None Update="Components\RoutineTests.AddSheet_ValidSheetObject_ShouldWork.verified.txt">
         <DependentUpon>RoutineTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Predefined\AlarmAnalogTest.SetMember_ValidType_ShouldBeVerified.verified.xml">
+        <DependentUpon>AlarmAnalogTest.cs</DependentUpon>
       </None>
     </ItemGroup>
 

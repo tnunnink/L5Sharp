@@ -65,21 +65,21 @@ public sealed class ALARM_ANALOG : StructureType
         LMinDurationEnable = false;
         LLMinDurationEnable = false;
         HHLimit = 0;
-        HHSeverity = new int();
+        HHSeverity = 500;
         HLimit = 0;
-        HSeverity = new int();
+        HSeverity = new DINT();
         LLimit = 0;
-        LSeverity = new int();
+        LSeverity = new DINT();
         LLLimit = 0;
-        LLSeverity = new int();
-        MinDurationPRE = new int();
-        ShelveDuration = new int();
-        MaxShelveDuration = new int();
+        LLSeverity = new DINT();
+        MinDurationPRE = new DINT();
+        ShelveDuration = new DINT();
+        MaxShelveDuration = new DINT();
         Deadband = 0;
         ROCPosLimit = 0;
-        ROCPosSeverity = new int();
+        ROCPosSeverity = new DINT();
         ROCNegLimit = 0;
-        ROCNegSeverity = new int();
+        ROCNegSeverity = new DINT();
         ROCPeriod = 0;
     }
 
@@ -89,19 +89,15 @@ public sealed class ALARM_ANALOG : StructureType
     }
 
     /// <inheritdoc />
+    public override string Name => nameof(ALARM_ANALOG);
+
+    /// <inheritdoc />
     /// <remarks>
     /// A <see cref="ALARM_ANALOG"/> is a special Rockwell defined data type that does not contain decorated member elements.
     /// All values are stored as local attributes on the data element. When using this type with a tag, you must cast
     /// the tag <c>Value</c> as the message type and set these properties statically.
     /// </remarks>
     public override IEnumerable<Member> Members => GenerateVirtualMembers();
-
-    private IEnumerable<Member> GenerateVirtualMembers()
-    {
-        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
-        yield return new Member(nameof(In), () => In, t => { In = t.As<REAL>(); });
-        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
-    }
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_ANALOG"/> data type.
@@ -547,9 +543,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="HHSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int HHSeverity
+    public DINT HHSeverity
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
@@ -565,9 +561,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="HSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int HSeverity
+    public DINT HSeverity
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
@@ -583,9 +579,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="LSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int LSeverity
+    public DINT LSeverity
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
@@ -601,36 +597,36 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="LLSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int LLSeverity
+    public DINT LLSeverity
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="MinDurationPRE"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int MinDurationPRE
+    public DINT MinDurationPRE
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ShelveDuration"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int ShelveDuration
+    public DINT ShelveDuration
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="MaxShelveDuration"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int MaxShelveDuration
+    public DINT MaxShelveDuration
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
@@ -655,9 +651,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="ROCPosSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int ROCPosSeverity
+    public DINT ROCPosSeverity
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
@@ -673,9 +669,9 @@ public sealed class ALARM_ANALOG : StructureType
     /// <summary>
     /// Gets the <see cref="ROCNegSeverity"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>
-    public int ROCNegSeverity
+    public DINT ROCNegSeverity
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue<DINT>();
         set => SetRequiredValue(value);
     }
 
@@ -686,5 +682,88 @@ public sealed class ALARM_ANALOG : StructureType
     {
         get => GetRequiredValue<REAL>();
         set => SetRequiredValue(value);
+    }
+
+    /// <summary>
+    /// Creates the collection of virtual members for this custom predefined type.
+    /// </summary>
+    private IEnumerable<Member> GenerateVirtualMembers()
+    {
+        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
+        yield return new Member(nameof(In), () => In, t => { In = t.As<REAL>(); });
+        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
+        yield return new Member(nameof(HHEnabled), () => HHEnabled, t => { HHEnabled = t.As<BOOL>(); });
+        yield return new Member(nameof(HEnabled), () => HEnabled, t => { HEnabled = t.As<BOOL>(); });
+        yield return new Member(nameof(LEnabled), () => LEnabled, t => { LEnabled = t.As<BOOL>(); });
+        yield return new Member(nameof(LLEnabled), () => LLEnabled, t => { LLEnabled = t.As<BOOL>(); });
+        yield return new Member(nameof(AckRequired), () => AckRequired, t => { AckRequired = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgAckAll), () => ProgAckAll, t => { ProgAckAll = t.As<BOOL>(); });
+        yield return new Member(nameof(OperAckAll), () => OperAckAll, t => { OperAckAll = t.As<BOOL>(); });
+        yield return new Member(nameof(HHProgAck), () => HHProgAck, t => { HHProgAck = t.As<BOOL>(); });
+        yield return new Member(nameof(HHOperAck), () => HHOperAck, t => { HHOperAck = t.As<BOOL>(); });
+        yield return new Member(nameof(HProgAck), () => HProgAck, t => { HProgAck = t.As<BOOL>(); });
+        yield return new Member(nameof(HOperAck), () => HOperAck, t => { HOperAck = t.As<BOOL>(); });
+        yield return new Member(nameof(LProgAck), () => LProgAck, t => { LProgAck = t.As<BOOL>(); });
+        yield return new Member(nameof(LOperAck), () => LOperAck, t => { LOperAck = t.As<BOOL>(); });
+        yield return new Member(nameof(LLProgAck), () => LLProgAck, t => { LLProgAck = t.As<BOOL>(); });
+        yield return new Member(nameof(LLOperAck), () => LLOperAck, t => { LLOperAck = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCPosProgAck), () => ROCPosProgAck, t => { ROCPosProgAck = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCPosOperAck), () => ROCPosOperAck, t => { ROCPosOperAck = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCNegProgAck), () => ROCNegProgAck, t => { ROCNegProgAck = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCNegOperAck), () => ROCNegOperAck, t => { ROCNegOperAck = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgSuppress), () => ProgSuppress, t => { ProgSuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(OperSuppress), () => OperSuppress, t => { OperSuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgUnsuppress), () => ProgUnsuppress, t => { ProgUnsuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(OperUnsuppress), () => OperUnsuppress, t => { OperUnsuppress = t.As<BOOL>(); });
+        yield return new Member(nameof(HHOperShelve), () => HHOperShelve, t => { HHOperShelve = t.As<BOOL>(); });
+        yield return new Member(nameof(HOperShelve), () => HOperShelve, t => { HOperShelve = t.As<BOOL>(); });
+        yield return new Member(nameof(LOperShelve), () => LOperShelve, t => { LOperShelve = t.As<BOOL>(); });
+        yield return new Member(nameof(LLOperShelve), () => LLOperShelve, t => { LLOperShelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCPosOperShelve), () => ROCPosOperShelve,
+            t => { ROCPosOperShelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCNegOperShelve), () => ROCNegOperShelve,
+            t => { ROCNegOperShelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgUnshelveAll), () => ProgUnshelveAll,
+            t => { ProgUnshelveAll = t.As<BOOL>(); });
+        yield return new Member(nameof(HHOperUnshelve), () => HHOperUnshelve, t => { HHOperUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(HOperUnshelve), () => HOperUnshelve, t => { HOperUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(LOperUnshelve), () => LOperUnshelve, t => { LOperUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(LLOperUnshelve), () => LLOperUnshelve, t => { LLOperUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCPosOperUnshelve), () => ROCPosOperUnshelve,
+            t => { ROCPosOperUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ROCNegOperUnshelve), () => ROCNegOperUnshelve,
+            t => { ROCNegOperUnshelve = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgDisable), () => ProgDisable, t => { ProgDisable = t.As<BOOL>(); });
+        yield return new Member(nameof(OperDisable), () => OperDisable, t => { OperDisable = t.As<BOOL>(); });
+        yield return new Member(nameof(ProgEnable), () => ProgEnable, t => { ProgEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(OperEnable), () => OperEnable, t => { OperEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(AlarmCountReset), () => AlarmCountReset,
+            t => { AlarmCountReset = t.As<BOOL>(); });
+        yield return new Member(nameof(HHMinDurationEnable), () => HHMinDurationEnable,
+            t => { HHMinDurationEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(HMinDurationEnable), () => HMinDurationEnable,
+            t => { HMinDurationEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(LMinDurationEnable), () => LMinDurationEnable,
+            t => { LMinDurationEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(LLMinDurationEnable), () => LLMinDurationEnable,
+            t => { LLMinDurationEnable = t.As<BOOL>(); });
+        yield return new Member(nameof(HHLimit), () => HHLimit, t => { HHLimit = t.As<REAL>(); });
+        yield return new Member(nameof(HHSeverity), () => HHSeverity, t => { HHSeverity = t.As<DINT>(); });
+        yield return new Member(nameof(HLimit), () => HLimit, t => { HLimit = t.As<REAL>(); });
+        yield return new Member(nameof(HSeverity), () => HSeverity, t => { HSeverity = t.As<DINT>(); });
+        yield return new Member(nameof(LLimit), () => LLimit, t => { LLimit = t.As<REAL>(); });
+        yield return new Member(nameof(LSeverity), () => LSeverity, t => { LSeverity = t.As<DINT>(); });
+        yield return new Member(nameof(LLLimit), () => LLLimit, t => { LLLimit = t.As<REAL>(); });
+        yield return new Member(nameof(LLSeverity), () => LLSeverity, t => { LLSeverity = t.As<DINT>(); });
+        yield return new Member(nameof(MinDurationPRE), () => MinDurationPRE, t => { MinDurationPRE = t.As<DINT>(); });
+        yield return new Member(nameof(ShelveDuration), () => ShelveDuration, t => { ShelveDuration = t.As<DINT>(); });
+        yield return new Member(nameof(MaxShelveDuration), () => MaxShelveDuration,
+            t => { MaxShelveDuration = t.As<DINT>(); });
+        yield return new Member(nameof(Deadband), () => Deadband, t => { Deadband = t.As<REAL>(); });
+        yield return new Member(nameof(ROCPosLimit), () => ROCPosLimit, t => { ROCPosLimit = t.As<REAL>(); });
+        yield return new Member(nameof(ROCPosSeverity), () => ROCPosSeverity, t => { ROCPosSeverity = t.As<DINT>(); });
+        yield return new Member(nameof(ROCNegLimit), () => ROCNegLimit, t => { ROCNegLimit = t.As<REAL>(); });
+        yield return new Member(nameof(ROCNegSeverity), () => ROCNegSeverity, t => { ROCNegSeverity = t.As<DINT>(); });
+        yield return new Member(nameof(ROCPeriod), () => ROCPeriod, t => { ROCPeriod = t.As<REAL>(); });
     }
 }

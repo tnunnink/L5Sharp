@@ -35,6 +35,9 @@ public sealed class MESSAGE : StructureType
     public MESSAGE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    public override string Name => nameof(MESSAGE);
 
     /// <inheritdoc />
     public override IEnumerable<Member> Members => GenerateVirtualMembers();

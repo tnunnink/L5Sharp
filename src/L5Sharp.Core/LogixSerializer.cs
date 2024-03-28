@@ -312,7 +312,7 @@ public static class LogixSerializer
         if (element is null) return false;
 
         //If this is a structure or structure member it could potentially be the string structure.
-        if (element.Name == L5XName.Structure || element.Name == L5XName.StructureMember)
+        if (element.Name.LocalName is L5XName.Structure or L5XName.StructureMember)
         {
             return element.Elements(L5XName.DataValueMember).Any(e =>
                 e.Attribute(L5XName.Name)?.Value == "DATA"
@@ -321,12 +321,8 @@ public static class LogixSerializer
         }
 
         //If this is an array or array member, we need to get elements and check if they are all string structure or not.
-        if (element.Name == L5XName.Array || element.Name == L5XName.ArrayMember)
-        {
-            return element.Elements().Select(e => e.Element(L5XName.Structure)).All(x => x.IsStringData());
-        }
-
-        return false;
+        return element.Name.LocalName is L5XName.Array or L5XName.ArrayMember 
+               && element.Elements().Select(e => e.Element(L5XName.Structure)).All(x => x.IsStringData());
     }
 
     #endregion
