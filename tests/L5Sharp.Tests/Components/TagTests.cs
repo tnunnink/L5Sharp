@@ -76,6 +76,16 @@ public class TagTests
     }
 
     [Test]
+    public void New_NameAndValueOverload_ShouldHaveExpectedValues()
+    {
+        var tag = new Tag("Test", 123);
+
+        tag.Name.Should().Be("Test");
+        tag.Value.Should().BeOfType<DINT>();
+        tag.Value.Should().Be(123);
+    }
+
+    [Test]
     public void New_Atomic_ShouldHaveExpectedValue()
     {
         var tag = new Tag { Name = "Test", Value = true };
@@ -479,18 +489,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void SetValue_StaticMemberOfStructureType_ShouldRaiseDataChanged()
-    {
-        var tag = new Tag { Name = "Test", Value = new TIMER() };
-        using var monitor = tag.Value.Monitor();
-
-        tag.Value.As<TIMER>().PRE = 5000;
-
-        monitor.Should().Raise("DataChanged");
+        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidCastException>();
     }
 
     [Test]
@@ -502,17 +501,6 @@ public class TagTests
 
         var xml = tag.Serialize().ToString();
         return Verify(xml);
-    }
-
-    [Test]
-    public void SetValue_StaticMemberOfNestedType_ShouldRaiseDataChanged()
-    {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
-        using var monitor = tag.Value.Monitor();
-
-        tag.Value.As<MyNestedType>().Simple.M4 = 5000;
-
-        monitor.Should().Raise("DataChanged");
     }
 
     [Test]
@@ -641,6 +629,30 @@ public class TagTests
         members.Should().Contain(t => t.TagName == "Test.TT");
         members.Should().Contain(t => t.TagName == "Test.ACC");
         members.Should().Contain(t => t.TagName == "Test.PRE");
+    }
+    
+    [Test]
+    public void Members_StringType_ShouldHaveExpectedCount()
+    {
+        var tag = new Tag { Name = "Test", Value = "This is a test value" };
+
+        var members = tag.Members().ToList();
+
+        members.Should().HaveCount(85);
+    }
+
+    [Test]
+    public void Members_StringType_ShouldHaveContainExpectedTagNames()
+    {
+        var tag = new Tag { Name = "Test", Value = "This is a test value" };
+
+        var members = tag.Members().ToList();
+
+        members.Should().Contain(t => t.TagName == "Test.LEN");
+        members.Should().Contain(t => t.TagName == "Test.DATA");
+        members.Should().Contain(t => t.TagName == "Test.DATA[0]");
+        members.Should().Contain(t => t.TagName == "Test.DATA[1]");
+        members.Should().Contain(t => t.TagName == "Test.DATA[63]");
     }
 
     [Test]
@@ -772,6 +784,16 @@ public class TagTests
         var members = tag.MembersOf("Fake").ToList();
 
         members.Should().BeEmpty();
+    }
+
+    [Test]
+    public void TagNames_NestedType_ShouldHaveExpectedCount()
+    {
+        var tag = new Tag("Test", new MyNestedType());
+
+        var names = tag.TagNames().ToList();
+
+        names.Should().NotBeEmpty();
     }
 
     #endregion

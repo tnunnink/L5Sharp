@@ -19,7 +19,7 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.ConfigTag)]
 [L5XType(L5XName.InputTag)]
 [L5XType(L5XName.OutputTag)]
-public class Tag : LogixComponent
+public sealed class Tag : LogixComponent
 {
     private readonly Member _member;
 
@@ -28,11 +28,25 @@ public class Tag : LogixComponent
     /// </summary>
     public Tag() : base(L5XName.Tag)
     {
-        _member = new Member(Element);
+        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        _member = new Member(Element.LogixName(), GetData, SetData);
+
         Root = this;
         TagType = TagType.Base;
         ExternalAccess = ExternalAccess.ReadWrite;
         Constant = false;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> initialized with the provided name and value.
+    /// </summary>
+    /// <param name="name">The name of the Tag.</param>
+    /// <param name="value">The <see cref="LogixType"/> value of the Tag.</param>
+    /// <param name="description">the optional description of the tag.</param>
+    public Tag(string name, LogixType value, string? description = default) : this()
+    {
+        Name = name;
+        Value = value;
     }
 
     /// <summary>
@@ -42,20 +56,22 @@ public class Tag : LogixComponent
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Tag(XElement element) : base(element)
     {
-        _member = new Member(Element);
+        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        _member = new Member(Element.LogixName(), GetData, SetData);
+
         Root = this;
     }
 
     /// <summary>
     /// Creates a new nested member <see cref="Tag"/> initialized with the root tag, underlying member,
-    /// and optional parent tag.
+    /// and parent tag.
     /// </summary>
     /// <param name="root">The root or base tag of this tag member.</param>
     /// <param name="member">The underlying member that this tag wraps.</param>
     /// <param name="parent">The parent tag of this tag member.</param>
     /// <remarks>
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
-    /// tag member objects.
+    /// wrapped members as Tag objects.
     /// </remarks>
     private Tag(Tag root, Member member, Tag parent) : base(root.Element)
     {
@@ -289,8 +305,10 @@ public class Tag : LogixComponent
     public Tag Root { get; }
 
     /// <summary>
-    /// 
+    /// Gets the <see cref="Tag"/> object from the L5X that is the alias for this tag object.
     /// </summary>
+    /// <value>The <see cref="Tag"/> object that represents the alias if found. If this object is not
+    /// attached, or <see cref="AliasFor"/> is not set, then this will return <c>null</c>.</value>
     public Tag? Alias => AliasFor is not null ? L5X?.Find(AliasFor) : default;
 
     /// <summary>
@@ -504,7 +522,7 @@ public class Tag : LogixComponent
     {
         if (Value is not ComplexType complexType)
             throw new InvalidOperationException("Can only mutate ComplexType tags.");
-        
+
         complexType.Remove(name);
     }
 
@@ -547,13 +565,14 @@ public class Tag : LogixComponent
     {
         if (Parent is null)
         {
-            SetData(value);
+            base.SetData(value);
+            UpdateDataAttributes(value);
             return new Tag(Element);
         }
 
         if (Parent.Value is not ComplexType complexType)
             throw new InvalidOperationException(
-                $"Can not mutate tag data for parent type {Parent.DataType} as it is not a complex type instance.");
+                $"Can not mutate tag data for parent type {Parent.DataType} as it is not a complex type object.");
 
         complexType.Replace(TagName.Member, value);
         return Root[TagName.Path];
@@ -561,16 +580,35 @@ public class Tag : LogixComponent
 
     #region Internal
 
-    /// <summary>
-    /// After setting the data element we need to also update the tag attributes to keep them in sync.
-    /// </summary>
+    /// <inheritdoc />
+    /// <remarks>
+    /// After setting the data element we need to also update the tag attributes to keep them in with
+    /// the currently assigned value.
+    /// </remarks>
     protected override void SetData(LogixType? value)
     {
         if (value is null)
             throw new ArgumentNullException(nameof(value));
-        
+
+        //So if the data is already set, we don't want to replace it, we want to use a member to update the data.
+        var member = (Element.Element(L5XName.Data)?.FirstNode as XElement)?.ToMember();
+        if (member is not null)
+        {
+            member.Value = value;
+            return;
+        }
+
+        //If there is not data then we want to add it using the base implementation.
         base.SetData(value);
-        
+        UpdateDataAttributes(value);
+    }
+
+    /// <summary>
+    /// handles updating the root tag element DataType, Radix, and Dimensions when we replace the root
+    /// data element.
+    /// </summary>
+    private void UpdateDataAttributes(LogixType value)
+    {
         Element.SetAttributeValue(L5XName.DataType, value.Name);
 
         var radix = value is AtomicType atomicType ? atomicType.Radix

@@ -88,6 +88,34 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
+        public void GetBits_WhenCalled_ShouldHaveExpectedCount()
+        {
+            var type = new DINT(123);
+
+            var bits = type.GetBits();
+
+            bits.Should().HaveCount(32);
+        }
+
+        [Test]
+        public void Bit_ValidIndex_ShouldBeExpectedValue()
+        {
+            var type = new DINT(123);
+
+            var bit = type[1];
+            
+            bit.Should().Be(true);
+        }
+
+        [Test]
+        public void Bit_InvalidIndex_ShouldBeThrowException()
+        {
+            var type = new DINT(123);
+
+            FluentActions.Invoking(() => type[100]) .Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Test]
         public void As_AtomicType_ShouldNotBeNull()
         {
             var type = new DINT();
@@ -143,6 +171,17 @@ namespace L5Sharp.Tests.Types.Atomics
             var type = new DINT(1);
 
             FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Test]
+        public void GetBytes_WhenCalled_ReturnsExpected()
+        {
+            var expected = BitConverter.GetBytes(_random);
+            var type = new DINT(_random);
+
+            var bytes = type.GetBytes();
+
+            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]
@@ -294,7 +333,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToString_WhenCalled_ShouldBeExpectedValue()
         {
@@ -713,7 +752,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             type.Should().Be(123);
         }
-        
+
         [Test]
         [TestCase("123")]
         [TestCase("2#0000_0000_0000_0000_0000_0000_0111_1011")]
@@ -824,7 +863,7 @@ namespace L5Sharp.Tests.Types.Atomics
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
             result.Count.Should().Be(capacity);
         }
-        
+
         [Test]
         public void IsEquivalent_AreEqual_ShouldBeTrue()
         {
@@ -835,7 +874,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void IsEquivalent_AreNotEqual_ShouldBeFalse()
         {

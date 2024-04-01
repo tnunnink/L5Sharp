@@ -23,7 +23,7 @@ public abstract class StructureType : LogixType
     /// </summary>
     /// <param name="name">The name of the type.</param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    protected StructureType(string name) : base(CreateStructureType(name, Enumerable.Empty<Member>()))
+    protected StructureType(string name) : base(CreateStructure(name, Enumerable.Empty<Member>()))
     {
     }
 
@@ -33,7 +33,7 @@ public abstract class StructureType : LogixType
     /// <param name="name">The name of the structure type.</param>
     /// <param name="members">The members of the structure type.</param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    protected StructureType(string name, IEnumerable<Member> members) : base(CreateStructureType(name, members))
+    protected StructureType(string name, IEnumerable<Member> members) : base(CreateStructure(name, members))
     {
     }
 
@@ -243,7 +243,7 @@ public abstract class StructureType : LogixType
     /// <summary>
     /// Creates the default <see cref="XElement"/> representing the underlying structure type.
     /// </summary>
-    private static XElement CreateStructureType(string? name, IEnumerable<Member> members)
+    private static XElement CreateStructure(string? name, IEnumerable<Member> members)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Can not create structure type with null or empty name.");

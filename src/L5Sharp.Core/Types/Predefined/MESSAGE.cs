@@ -35,19 +35,12 @@ public sealed class MESSAGE : StructureType
     public MESSAGE(XElement element) : base(element)
     {
     }
-    
+
     /// <inheritdoc />
     public override string Name => nameof(MESSAGE);
 
     /// <inheritdoc />
     public override IEnumerable<Member> Members => GenerateVirtualMembers();
-
-    private IEnumerable<Member> GenerateVirtualMembers()
-    {
-        yield return new Member(nameof(MessageType), () => new STRING(MessageType.Value),
-            t => { MessageType = MessageType.Parse(t.ToString()); });
-        yield return new Member(nameof(RequestedLength), () => RequestedLength, t => { RequestedLength = (INT)t; });
-    }
 
     /// <summary>
     /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> data object.
@@ -153,8 +146,8 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public BOOL CacheConnections
     {
-        get => GetRequiredValue<BOOL>();
-        set => SetRequiredValue(value);
+        get => GetValue<BOOL>() ?? false;
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -162,7 +155,26 @@ public sealed class MESSAGE : StructureType
     /// </summary>
     public BOOL LargePacketUsage
     {
-        get => GetRequiredValue<BOOL>();
-        set => SetRequiredValue(value);
+        get => GetValue<BOOL>() ?? false;
+        set => SetValue(value);
+    }
+
+    private IEnumerable<Member> GenerateVirtualMembers()
+    {
+        yield return new Member(nameof(MessageType), () => new STRING(MessageType.Value),
+            t => { MessageType = MessageType.Parse(t.ToString()); });
+        yield return new Member(nameof(RequestedLength), () => RequestedLength, t => { RequestedLength = (INT)t; });
+        yield return new Member(nameof(ConnectionPath), () => ConnectionPath,
+            t => { ConnectionPath = t.As<STRING>(); });
+        yield return new Member(nameof(ConnectedFlag), () => ConnectedFlag, t => { ConnectedFlag = (INT)t; });
+        yield return new Member(nameof(CommTypeCode), () => CommTypeCode, t => { CommTypeCode = (INT)t; });
+        yield return new Member(nameof(ServiceCode), () => ServiceCode, t => { ServiceCode = (INT)t; });
+        yield return new Member(nameof(ObjectType), () => ObjectType, t => { ObjectType = (INT)t; });
+        yield return new Member(nameof(TargetObject), () => TargetObject, t => { TargetObject = (INT)t; });
+        yield return new Member(nameof(AttributeNumber), () => AttributeNumber, t => { AttributeNumber = (INT)t; });
+        yield return new Member(nameof(LocalIndex), () => LocalIndex, t => { LocalIndex = (INT)t; });
+        yield return new Member(nameof(DestinationTag), () => DestinationTag, t => { DestinationTag = (STRING)t; });
+        yield return new Member(nameof(CacheConnections), () => CacheConnections, t => { CacheConnections = (BOOL)t; });
+        yield return new Member(nameof(LargePacketUsage), () => LargePacketUsage, t => { LargePacketUsage = (BOOL)t; });
     }
 }

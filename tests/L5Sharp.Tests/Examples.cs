@@ -12,7 +12,7 @@ namespace L5Sharp.Tests
 
             var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
-                .Where(t => t.DataType == "TIMER")
+                .Where(t => t.DataType == "TIMER" && t.Dimensions == Dimensions.Empty)
                 .Select(t => new {t.TagName, t.Description, Preset = t["PRE"].Value})
                 .OrderBy(v => v.TagName)
                 .ToList();

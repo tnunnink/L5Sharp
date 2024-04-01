@@ -341,7 +341,7 @@ public abstract class LogixElement : ILogixSerializable
     /// concrete <see cref="LogixType"/> using the logix serializer. This will work for either Data or DefaultData
     /// elements. This helper is meant for <c>Tag</c> and <c>Parameter</c>.
     /// </remarks>
-    protected LogixType GetData()
+    protected virtual LogixType GetData()
     {
         //This assumes the element is a tag or parameter object and has the child Data element with a supported format.
         var data = Element.Elements().FirstOrDefault(e =>
@@ -670,7 +670,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <param name="data">The <see cref="LogixType"/> data to update.</param>
     /// <remarks>
     /// This is a specialized helper which will generate the new formatted data element to wrap the provided type element
-    /// if needed. If will also determine which XName to use based on whether this is a tag, local tag, or parameter.
+    /// if needed. It will also determine which XName to use based on whether this is a tag, local tag, or parameter.
     /// This is only intended for use with Tag and Parameter and will completely add or replace the existing root data
     /// element.
     /// </remarks>
@@ -683,18 +683,18 @@ public abstract class LogixElement : ILogixSerializable
         
         var formatted = GenerateDataElement(name, data);
         
-        //If not and there is a child data element with a supported element then get it.
+        //Try to get the existing child data element.
         var existing = Element.Elements(name).FirstOrDefault(e =>
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
-        //If that is null then add as a child the new data.
+        //If that is null then add the new data.
         if (existing is null)
         {
             Element.Add(formatted);
             return;
         }
 
-        //If found replace.
+        //If found then just replace.
         existing.ReplaceWith(formatted);
         return;
 

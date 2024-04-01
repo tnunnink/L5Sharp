@@ -615,33 +615,5 @@ public class MemberTests
         member.Value.Should().Be(123);
     }
 
-    [Test]
-    public void New_ElementOverloadWithTagNullData_ShouldHaveExpectedValues()
-    {
-        const string xml = "<Tag Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" />";
-        var element = XElement.Parse(xml);
-
-        var member = new Member(element);
-
-        member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<NullType>();
-        member.Value.Should().Be(LogixType.Null);
-    }
-
-    [Test]
-    public void SetData_TagWithNullData_ShouldHaveExpectedValueAfterUpdate()
-    {
-        
-        const string xml = "<Tag Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" />";
-        var element = XElement.Parse(xml);
-        var member = new Member(element);
-
-        member.Value = 123;
-
-        member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<DINT>();
-        member.Value.Should().Be(123);
-    }
-
     #endregion
 }

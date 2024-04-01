@@ -156,6 +156,16 @@ namespace L5Sharp.Tests.Enums
 
             atomic.Should().Be(39);
         }
+        
+        [Test]
+        public void Format_SingleQuote_ShouldBeExpected()
+        {
+            var atomic = new SINT(39);
+            
+            var formatted = Radix.Ascii.FormatValue(atomic);
+
+            formatted.Should().Be("'");
+        }
 
         [Test]
         public void Parse_ValidSint_ShouldBeExpected()

@@ -1,16 +1,16 @@
 ﻿<Program Name="TestProgram" Type="Normal" TestEdits="false" Disabled="false" UseAsFolder="false" Use="Target">
   <Tags>
-    <Tag Name="InputTag" TagType="Base" ExternalAccess="Read/Write" Constant="false">
+    <Tag Name="InputTag" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal">
       <Data Format="Decorated">
         <DataValue DataType="DINT" Radix="Decimal" Value="101" />
       </Data>
     </Tag>
-    <Tag Name="OutputTag" TagType="Base" ExternalAccess="Read/Write" Constant="false">
+    <Tag Name="OutputTag" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal">
       <Data Format="Decorated">
         <DataValue DataType="DINT" Radix="Decimal" Value="0" />
       </Data>
     </Tag>
-    <Tag Name="Add_Block" TagType="Base" ExternalAccess="Read/Write" Constant="false">
+    <Tag Name="Add_Block" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="FBD_MATH">
       <Data Format="Decorated">
         <Structure DataType="FBD_MATH" />
       </Data>

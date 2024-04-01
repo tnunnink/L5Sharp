@@ -11,9 +11,10 @@ namespace L5Sharp.Core;
 /// <para>
 /// Members are used to define the structure of other <see cref="LogixType"/> objects. Since each member holds a
 /// strongly typed reference to it's <see cref="Value"/>, the structure forms a hierarchical tree of nested members
-/// and types.
+/// and types, which is the basis for how Tag data is serialized to an L5X file.
 /// </para>
 /// <para>
+/// A <see cref="Member"/> is a special element class that will only be
 /// </para>
 /// </remarks>
 /// <footer>
@@ -46,7 +47,7 @@ public sealed class Member : LogixElement
     /// <param name="name">The name of the member.</param>
     /// <param name="type">The <see cref="LogixType"/> contianing the member's data.</param>
     /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="type"/> is null or empty.</exception>
-    public Member(string name, LogixType type) : base(CreateElement(name, type))
+    public Member(string name, LogixType type) : base(CreateMember(name, type))
     {
     }
 
@@ -111,79 +112,77 @@ public sealed class Member : LogixElement
     /// </remarks>
     public LogixType Value
     {
-        get => GetValue();
-        set => SetValue(value);
+        get => GetData();
+        set => SetData(value);
     }
 
     #region Internals
 
-    /// <summary>
-    /// Handles forwarding the call to the correct place to retrieve the actual value for this member. This would be easy
-    /// if we could treat everything as decorated data, but there are some exceptions since Logix formats certain types
-    /// differently. To solve this we are providing an internal constructor which allows type to provide custom getters
-    /// for retrieving data. If not provided, we assume this is a tag/parameter element or an actual decorated member element.
-    /// </summary>
-    private LogixType GetValue()
+    /// <inheritdoc />
+    /// <remarks>
+    /// For member elements we want to just call deserialize of the current element, which should represent a data
+    /// element (value, array, structure, etc.). However we also provided custom getter to allow special classes to
+    /// specify how to retrieve the underlying data, so we will call that if provided. This is a work around for special
+    /// data formats (Alarm, Message, etc.) as well as root Tag tag component.
+    /// </remarks>
+    protected override LogixType GetData()
     {
-        //If a custom getter is provided then return that.
-        if (_getter is not null) return _getter();
-
-        //If not currently a data element (tag or parameter) then use the built in element GetData to get the child data element.
-        //Otherwise, deserialize this decorated member as a using the LogixSerializer.
-        return Element.IsData() ? Element.Deserialize<LogixType>() : GetData();
+        return _getter is not null ? _getter() : Element.Deserialize<LogixType>();
     }
 
-    /// <summary>
+    /// <inheritdoc />
+    /// <remarks>
     /// Sets the underlying value of the member to the provided logix type. This is a special setter specific to member,
     /// as this is where we update the data for a given data structure. We handle the cases for all base logix types
     /// including null, atomic, string, array, and structure. If the provided type can not be cast to the current type
     /// then we will get a <see cref="InvalidCastException"/>. This will help let the user know that they are setting
     /// values incorrectly.
-    /// </summary>
-    private void SetValue(LogixType type)
+    /// </remarks>
+    protected override void SetData(LogixType? data)
     {
-        if (type is null || type == LogixType.Null)
-            throw new ArgumentNullException(nameof(type), "Can not set member with null data.");
-
+        //Never allow null data.
+        if (data is null or NullType)
+            throw new ArgumentNullException(nameof(data), "Can not set member with null data.");
+        
         //Always use the custom setter if provided.
         if (_setter is not null)
         {
-            _setter.Invoke(type);
+            _setter.Invoke(data);
             return;
         }
-
-        //Otherwise this is a normal decorated or tag member object
+        
+        //Otherwise this is a normal decorated data element and we need to handle the set based on the current value.
         switch (Value)
         {
-            case NullType: //Only a tag element should have this case after initial construction.
-                SetData(type);
-                break;
-            case AtomicType current:
-                var atomicType = (AtomicType)type;
-                SetAtomic(atomicType, current);
+            case NullType: //todo perhaps make a decision on if this should or should not be here.
+                throw new InvalidOperationException("The member data is null and can not be... ");
+            case AtomicType:
+                var atomicType = (AtomicType)data;
+                SetAtomic(atomicType);
                 break;
             case StringType:
-                var stringType = (StringType)type;
+                var stringType = (StringType)data;
                 SetString(stringType);
                 break;
             case ArrayType:
-                var arrayType = (ArrayType)type;
+                var arrayType = (ArrayType)data;
                 SetStructure(arrayType);
                 break;
             case StructureType:
-                var structureType = (StructureType)type;
+                var structureType = (StructureType)data;
                 SetStructure(structureType);
                 break;
         }
     }
 
     /// <summary>
-    /// Sets the value for whatever data value member element is the element for this member.
-    /// This will first convert the incoming type to the target type to ensure no type conversion issues.
+    /// Sets the <c>Value</c> for whatever data element is the element for this member.
+    /// This will first convert the incoming type to the current type to ensure no type conversion issues (or throw exception if so).
     /// Then will format with the current radix format.
     /// </summary>
-    private void SetAtomic(AtomicType atomic, AtomicType current)
+    private void SetAtomic(AtomicType atomic)
     {
+        var current = (AtomicType)Value;
         var value = (AtomicType)Convert.ChangeType(atomic, current.GetType());
         Element.SetAttributeValue(L5XName.Value, value.ToString(current.Radix));
     }
@@ -228,32 +227,33 @@ public sealed class Member : LogixElement
 
     /// <summary>
     /// Creates a new member element to contain the underlying member data for this object using the provided name
-    /// and <see cref="LogixType"/> data. Members are really only different from the logix type structures in that the
-    /// element names append "Member" and the have the Name attribute. So we can build them more dynamically this way
-    /// and not have to have a method to construct each type manually.
+    /// and <see cref="LogixType"/> data. Members are really only different from the base decorated data in that the
+    /// element names append "Member" and the have the <c>Name</c> attribute.
+    /// So we can build them more dynamically this way and not have to have a method to construct each type manually.
     /// </summary>
-    private static XElement CreateElement(string name, LogixType type)
+    // ReSharper disable once SuggestBaseTypeForParameter no this should always be a LogixType derivative
+    private static XElement CreateMember(string name, LogixType data)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Can not create member with null or empty name", nameof(name));
 
-        if (type is null || type == LogixType.Null)
+        if (data is null or NullType)
             throw new ArgumentException("Can not create member with null data type.");
 
         //Get either the normal data element or if a string then the "Structure" element
-        var data = type is StringType stringType ? stringType.SerializeStructure() : type.Serialize();
+        var element = data is StringType stringType ? stringType.SerializeStructure() : data.Serialize();
 
-        //If it happens that the type already contains a member element, then return that with updated name.
-        if (data.Name.LocalName.Contains(nameof(Member)))
+        //If it happens that the data already contains a member element, then return that with updated name.
+        if (element.Name.LocalName.Contains(nameof(Member)))
         {
-            data.SetAttributeValue(L5XName.Name, name);
-            return data;
+            element.SetAttributeValue(L5XName.Name, name);
+            return element;
         }
 
         //Otherwise create a new member element with same data and name.
-        var member = new XElement($"{data.Name}Member", new XAttribute(L5XName.Name, name));
-        member.Add(data.Attributes());
-        member.Add(data.Elements());
+        var member = new XElement($"{element.Name}Member", new XAttribute(L5XName.Name, name));
+        member.Add(element.Attributes());
+        member.Add(element.Elements());
         return member;
     }
 
@@ -270,22 +270,7 @@ internal static class MemberExtension
     /// </summary>
     /// <remarks>
     /// This is only to make some syntax nicer in places where I'm using LINQ and what the chain
-    /// the creation of the <see cref="Member"/>.
+    /// the creation of the <see cref="Member"/> in place.
     /// </remarks>
     internal static Member ToMember(this XElement element) => new(element);
-
-    /// <summary>
-    /// Determines if the current element is one that represents a data element or an element which contains tag data.
-    /// This is a helper to make determining if the element we are working with is a data element which can
-    /// be directly deserialized from our logix serializer implementation.
-    /// </summary>
-    internal static bool IsData(this XElement element)
-    {
-        return element.Name.LocalName is
-            L5XName.Data or L5XName.DefaultData or L5XName.DataValue or L5XName.DataValueMember or
-            L5XName.Array or L5XName.ArrayMember or L5XName.Element or
-            L5XName.Structure or L5XName.StructureMember or
-            L5XName.MessageParameters or L5XName.AlarmAnalogParameters or L5XName.AlarmDigitalParameters or
-            L5XName.CoordinateSystemParameters or L5XName.AxisParameters or L5XName.MotionGroupParameters;
-    }
 }

@@ -64,8 +64,7 @@ namespace L5Sharp.Tests.Types.Predefined
         [Test]
         public void New_AsciiStringValue_ShouldBeExpectedValue()
         {
-            const string text =
-                "'$0B$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'";
+            const string text = "'$0B$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'";
 
             var type = new STRING(text);
 
@@ -111,7 +110,7 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void TypeEquals_AreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new STRING();
             var second = new STRING();
@@ -122,7 +121,7 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void TypeEquals_AreNotEqual_ShouldBeFalse()
+        public void Equals_AreNotEqual_ShouldBeFalse()
         {
             var first = new STRING("This is first");
             var second = new STRING("This is second");
@@ -133,10 +132,11 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void TypeEquals_AreSame_ShouldBeTrue()
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var first = new STRING();
 
+            // ReSharper disable once EqualExpressionComparison
             var result = first.Equals(first);
 
             result.Should().BeTrue();
@@ -144,42 +144,11 @@ namespace L5Sharp.Tests.Types.Predefined
 
 
         [Test]
-        public void TypeEquals_Null_ShouldBeFalse()
+        public void Equals_Null_ShouldBeFalse()
         {
             var first = new STRING();
 
             var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new STRING();
-            var second = new STRING();
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new STRING();
-
-            var result = first.Equals((object)first);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var first = new STRING();
-
-            var result = first.Equals((object)null);
 
             result.Should().BeFalse();
         }

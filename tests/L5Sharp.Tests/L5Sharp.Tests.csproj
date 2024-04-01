@@ -218,13 +218,13 @@
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
       <None Update="Elements\ReferenceBlockTests.New_IRefOverloaded_ShouldBeVerified.verified.txt">
-        <DependentUpon>InRefTests.cs</DependentUpon>
+        <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
       <None Update="Elements\BlockTests.New_Overriden_ShouldBeVerified.verified.txt">
         <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
       <None Update="Elements\ReferenceBlockTests.New_ORefOverloaded_ShouldBeVerified.verified.txt">
-        <DependentUpon>InRefTests.cs</DependentUpon>
+        <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
       <None Update="Elements\SheetTests.Wire_ValidOperands_ShouldBeVerified.verified.txt">
         <DependentUpon>SheetTests.cs</DependentUpon>

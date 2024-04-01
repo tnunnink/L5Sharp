@@ -8,9 +8,6 @@ namespace L5Sharp.Core;
 /// </summary>
 public sealed class STRING : StringType, ILogixParsable<STRING>
 {
-    //This is the built in length of string types in Logix
-    private const int PredefinedLength = 82;
-
     /// <inheritdoc />
     public STRING(XElement element) : base(element)
     {
@@ -19,7 +16,7 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
     /// <summary>
     /// Creates a new empty <see cref="STRING"/> type.
     /// </summary>
-    public STRING() : base(string.Empty)
+    public STRING() : base(nameof(STRING), string.Empty)
     {
     }
 
@@ -31,19 +28,13 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <c>value</c> length is greater than the predefined Logix string length of 82 characters.
     /// </exception>
-    public STRING(string value) : base(value)
+    public STRING(string value) : base(nameof(STRING), value)
     {
-        if (value.Length > PredefinedLength)
-            throw new ArgumentOutOfRangeException(nameof(value), value,
-                $"Value must be less than {PredefinedLength} characters.");
     }
 
     /// <inheritdoc />
-    /// <remarks>
-    /// Name is overriden to always return STRING since we know that is the type name here and the underlying
-    /// data element does not contain the data type name for newly created instances.
-    /// </remarks>
-    public override string Name => nameof(STRING);
+    //This is the length of the predefined STRING type in Logix
+    protected override ushort MaxLength => 82;
 
     /// <summary>
     /// Parses the provided string into a <see cref="STRING"/> value.
@@ -57,8 +48,7 @@ public sealed class STRING : StringType, ILogixParsable<STRING>
     /// </summary>
     /// <param name="value">The string to parse.</param>
     /// <returns>A <see cref="STRING"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
-    public static STRING? TryParse(string? value) =>
-        value is not null && value.Length <= PredefinedLength ? new STRING(value) : null;
+    public static STRING? TryParse(string? value) => value is not null ? new STRING(value) : null;
 
     /// <summary>
     /// Converts the provided <see cref="string"/> to a <see cref="STRING"/> value.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -27,8 +28,9 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
 {
     /// <inheritdoc />
     /// <remarks>
-    /// We are passing a dummy XElement to the base class because we don't want it to use reflection to
-    /// generate the default element.
+    /// We are passing a dummy XElement to the base class. Atomics are seen as in memory immutable value types. In order
+    /// to be performant, we need to just wrap simple .NET primitive types. Therefore atomics are unique in that they
+    /// don't use the backing element, but will create it when the Serialize is called.
     /// </remarks>
     protected internal AtomicType() : base(new XElement(L5XName.DataValue))
     {
@@ -37,8 +39,9 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
 
     /// <inheritdoc />
     /// <remarks>
-    /// We are passing a dummy XElement to the base class because we don't want it to use reflection to
-    /// generate the default element.
+    /// We are passing a dummy XElement to the base class. Atomics are seen as in memory immutable value types. In order
+    /// to be performant, we need to just wrap simple .NET primitive types. Therefore atomics are unique in that they
+    /// don't use the backing element, but will create it when the Serialize is called.
     /// </remarks>
     protected internal AtomicType(Radix radix) : base(new XElement(L5XName.DataValue))
     {
@@ -152,6 +155,13 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
             _ => []
         };
     }
+
+    /// <summary>
+    /// Gets the array of bit representing the value of tha atomic type.
+    /// </summary>
+    /// <returns>A <see cref="BitArray"/> containing the array bit values</returns>
+    // ReSharper disable once ReturnTypeCanBeEnumerable.Global no I want an array
+    public BOOL[] GetBits() => new BitArray(GetBytes()).Cast<bool>().Select(b => new BOOL(b)).ToArray();
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.

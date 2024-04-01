@@ -78,7 +78,7 @@ public class Block : DiagramElement
     /// Represents the Operand property of a generic function block element. This can be the backing tag name,
     /// reference name, connector name, or routine name depending on the block type.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown when attempting to set the operand for an unsupported block type.</exception>
+    /// <exception cref="NotSupportedException">Thrown when attempting to set the operand for an unsupported block type.</exception>
     /// <value>An <see cref="Argument"/> object containing the value, which could be a tag name, immediate value, or simple string name.</value>
     /// <remarks>
     /// Since this class models all the different function block types, this proprty has to determine which attribute
