@@ -120,7 +120,7 @@ public sealed class BOOL : AtomicType, IComparable, IConvertible, ILogixParsable
     /// <returns>The parsed <see cref="BOOL"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static BOOL? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (bool.TryParse(value, out var primitive))

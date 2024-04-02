@@ -126,7 +126,7 @@ public abstract class AtomicType : LogixType, ILogixParsable<AtomicType>
     /// <returns>An <see cref="AtomicType"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
     public static AtomicType? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value)) return default;
+        if (value is null || value.IsEmpty()) return default;
         if (value.IsEquivalent("true")) return new BOOL(true);
         if (value.IsEquivalent("false")) return new BOOL(false);
         return Radix.TryInfer(value, out var radix) ? radix.ParseValue(value) : default;

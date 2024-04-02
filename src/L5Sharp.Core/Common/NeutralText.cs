@@ -51,7 +51,7 @@ public sealed class NeutralText : ILogixParsable<NeutralText>
     /// </summary>
     /// <returns>An empty <see cref="NeutralText"/> object.</returns>
     public static NeutralText Empty => new(string.Empty);
-    
+
     /// <summary>
     /// Parses the provided string into a <see cref="NeutralText"/> value.
     /// </summary>
@@ -85,35 +85,64 @@ public sealed class NeutralText : ILogixParsable<NeutralText>
     /// </summary>
     /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="Instruction"/> objects found in the text.</returns>
     public IEnumerable<Instruction> Instructions() =>
-        Regex.Matches(_text, Instruction.Pattern).Select(m => Instruction.Parse(m.Value));
-    
+        Regex.Matches(_text, Instruction.Pattern).Cast<Match>().Select(m => Instruction.Parse(m.Value));
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public IEnumerable<Instruction> Instructions(string key) =>
-        Regex.Matches(_text, Instruction.Pattern).Select(m => Instruction.Parse(m.Value)).Where(i => i.Key == key);
+    public IEnumerable<Instruction> Instructions(string key)
+    {
+        var matches = Regex.Matches(_text, Instruction.Pattern);
+
+        foreach (Match match in matches)
+        {
+            var instruction = Instruction.Parse(match.Value);
+            if (instruction.Key != key) continue;
+            yield return instruction;
+        }
+    }
 
     /// <summary>
     /// Returns a collection of <see cref="Instruction"/> objects that were found in the current neutral text value.
     /// </summary>
     /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="Instruction"/> objects found in the text.</returns>
-    public IEnumerable<Instruction> Instructions(Instruction instruction) =>
-        Regex.Matches(_text, Instruction.Pattern).Select(m => Instruction.Parse(m.Value)).Where(i => i == instruction);
+    public IEnumerable<Instruction> Instructions(Instruction instruction)
+    {
+        var matches = Regex.Matches(_text, Instruction.Pattern);
+
+        foreach (Match match in matches)
+        {
+            var i = Instruction.Parse(match.Value);
+            if (i != instruction) continue;
+            yield return i;
+        }
+    }
 
     /// <summary>
     /// Gets a collection of keywords found in the current neutral text.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Keyword"/> values found.</returns>
-    public IEnumerable<Keyword> Keywords() => Keyword.All().Where(k => _text.Contains(k.Value));
+    public IEnumerable<Keyword> Keywords()
+    {
+        return Keyword.All().Where(k => _text.Contains(k.Value));
+    }
 
     /// <summary>
     /// Gets a collection of tag names found in the current neutral text.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values that were in from the current text.</returns>
     /// <seealso cref="TagsIn(string)"/>
-    public IEnumerable<TagName> Tags() => Regex.Matches(_text, TagName.SearchPattern).Select(t => new TagName(t.Value));
+    public IEnumerable<TagName> Tags()
+    {
+        var matches = Regex.Matches(_text, TagName.SearchPattern);
+        
+        foreach (Match match in matches)
+        {
+            yield return new TagName(match.Value);
+        }
+    }
 
     /// <summary>
     /// Gets a collection of tag names found in the current neutral text that are operands or arguments to a specific instruction.
@@ -182,8 +211,10 @@ public sealed class NeutralText : ILogixParsable<NeutralText>
 
             if (!Equals(c, closing)) continue;
 
-            if (!characters.TryPop(out _))
+            if (characters.Count == 0)
                 return false;
+
+            characters.Pop();
         }
 
         return characters.Count == 0;

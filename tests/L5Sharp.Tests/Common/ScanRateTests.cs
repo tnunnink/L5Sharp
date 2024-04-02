@@ -50,7 +50,7 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void TypedEquals_AreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new ScanRate(1000);
             var second = new ScanRate(1000);
@@ -61,7 +61,7 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void TypedEquals_AreNotEqual_ShouldBeFalse()
+        public void Equals_AreNotEqual_ShouldBeFalse()
         {
             var first = new ScanRate(1000);
             var second = new ScanRate(2000);
@@ -72,7 +72,7 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void TypedEquals_AreSame_ShouldBeTrue()
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var first = new ScanRate(1000);
             var second = first;
@@ -84,44 +84,11 @@ namespace L5Sharp.Tests.Common
 
 
         [Test]
-        public void TypedEquals_Null_ShouldBeFalse()
+        public void Equals_Null_ShouldBeFalse()
         {
             var first = new ScanRate(1000);
 
             var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new ScanRate(1000);
-            var second = new ScanRate(1000);
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new ScanRate(1000);
-            var second = first;
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var first = new ScanRate(1000);
-
-            var result = first.Equals((object)null);
 
             result.Should().BeFalse();
         }

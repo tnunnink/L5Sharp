@@ -922,7 +922,7 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.X, 0));
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Operand, operand ?? Argument.Empty));
-        element.Add(new XAttribute(L5XName.VisiblePins, string.Join(' ', pins) ?? string.Empty));
+        element.Add(new XAttribute(L5XName.VisiblePins, pins.Combine(' ')));
         return new Block(element);
     }
 
@@ -935,7 +935,7 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Operand, operand ?? Argument.Empty));
 
-        var pins = string.Join(' ', definition.Parameters.Where(p => p.Visible == true).Select(p => p.Name));
+        var pins = definition.Parameters.Where(p => p.Visible == true).Select(p => p.Name).Combine(' ');
         element.Add(new XAttribute(L5XName.VisiblePins, pins));
 
         return new Block(element);
@@ -948,8 +948,8 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.X, 0));
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Routine, routine));
-        element.Add(new XAttribute(L5XName.In, string.Join(' ', inputs ?? Enumerable.Empty<string>())));
-        element.Add(new XAttribute(L5XName.Ret, string.Join(' ', outputs ?? Enumerable.Empty<string>())));
+        element.Add(new XAttribute(L5XName.In, inputs.Combine(' ')));
+        element.Add(new XAttribute(L5XName.Ret, outputs.Combine(' ')));
         return new Block(element);
     }
 
@@ -960,7 +960,7 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.X, 0));
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Routine, routine));
-        element.Add(new XAttribute(L5XName.VisiblePins, string.Join(' ', parameters) ?? string.Empty));
+        element.Add(new XAttribute(L5XName.VisiblePins, parameters.Combine(' ')));
         return new Block(element);
     }
 

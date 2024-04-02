@@ -464,7 +464,14 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateFormat(input);
 
-            return new REAL(float.Parse(input));
+            if (float.TryParse(input, out var floatValue))
+                return new REAL(floatValue, this);
+
+            if (double.TryParse(input, out var doubleValue))
+                return new LREAL(doubleValue, this);
+            
+            throw new ArgumentOutOfRangeException(nameof(input),
+                $"Input '{input}' is out of range for the {Name} Radix.");
         }
     }
 
@@ -481,7 +488,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             }
 
             return !input.IsEmpty() && input.Contains(".")
-                                    && input.Contains("e", StringComparison.OrdinalIgnoreCase)
+                                    && input.IndexOf("e", StringComparison.OrdinalIgnoreCase) >= 0
                                     && ReplaceAll(input, new[] { ".", "e", "E", "+", "-" }, string.Empty)
                                         .All(char.IsDigit);
         }
@@ -502,7 +509,14 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateFormat(input);
 
-            return new REAL(float.Parse(input));
+            if (float.TryParse(input, out var floatValue))
+                return new REAL(floatValue, this);
+
+            if (double.TryParse(input, out var doubleValue))
+                return new LREAL(doubleValue, this);
+            
+            throw new ArgumentOutOfRangeException(nameof(input),
+                $"Input '{input}' is out of range for the {Name} Radix.");
         }
 
         private static string ReplaceAll(string value, IEnumerable<string> items, string replacement) =>
@@ -560,7 +574,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             if (value.StartsWith(character))
                 return value.Substring(1, value.Length - 1);
 
-            return value.EndsWith(character) ? value[..^2] : value;
+            return value.EndsWith(character) ? value.Substring(0, value.Length - 1) : value;
         }
 
         private static string GenerateAscii(string str)
@@ -628,6 +642,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Suffix = "Z";
         private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
         private const long TicksPerMicrosecond = TimeSpan.TicksPerMillisecond / 1000;
+        private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
         protected override string Specifier => "DT#";
 
@@ -661,7 +676,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff",
                 CultureInfo.InvariantCulture);
 
-            var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) / TicksPerMicrosecond;
+            var timestamp = (time.Ticks - UnixEpoch.Ticks) / TicksPerMicrosecond;
 
             return new LINT(timestamp);
         }
@@ -671,6 +686,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     {
         private const string Separator = "_";
         private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
+        private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
         protected override string Specifier => "LDT#";
 
@@ -702,7 +718,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.fffffff00(UTCzzz)",
                 CultureInfo.InvariantCulture).ToUniversalTime();
 
-            var timestamp = (time.Ticks - System.DateTime.UnixEpoch.Ticks) * 100;
+            var timestamp = (time.Ticks - UnixEpoch.Ticks) * 100;
 
             return new LINT(timestamp);
         }

@@ -105,7 +105,7 @@ public sealed class UDINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     /// <returns>The parsed <see cref="UDINT"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static UDINT? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (uint.TryParse(value, out var primitive))

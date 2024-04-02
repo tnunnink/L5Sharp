@@ -12,7 +12,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void Constructor_NullArray_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new ArrayType<LogixType>(((LogixType[])null)!)).Should()
+            FluentActions.Invoking(() => new ArrayType<LogixType>(((LogixType[])null!)!)).Should()
                 .Throw<ArgumentNullException>();
         }
 
@@ -615,7 +615,7 @@ namespace L5Sharp.Tests.Types
         [Test]
         public void Deserialize_NullElement_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new ArrayType<LogixType>(((XElement)null)!)).Should()
+            FluentActions.Invoking(() => new ArrayType<LogixType>(((XElement)null!)!)).Should()
                 .Throw<ArgumentNullException>();
         }
 

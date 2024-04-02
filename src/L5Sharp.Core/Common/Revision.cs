@@ -7,13 +7,11 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a revision number that is expressed by as {Major}.{Minor}.
 /// </summary>
-public sealed partial class Revision : IComparable, ILogixParsable<Revision>
+public sealed class Revision : IComparable, ILogixParsable<Revision>
 {
-    private const string RevisionSeparator = ".";
+    private const char RevisionSeparator = '.';
     private readonly string _value;
-    
-    [GeneratedRegex("^[0-9]+\\.[0-9]+$")]
-    private static partial Regex RevisionPattern();
+    private static readonly Regex RevisionPattern = new("^[0-9]+\\.[0-9]+$");
 
     /// <summary>
     /// Creates a new default <see cref="Revision"/> with value 1.0.
@@ -34,7 +32,7 @@ public sealed partial class Revision : IComparable, ILogixParsable<Revision>
         if (string.IsNullOrEmpty(value))
             throw new ArgumentException("Revision value can not be null or empty.");
 
-        if (!RevisionPattern().IsMatch(value))
+        if (!RevisionPattern.IsMatch(value))
             throw new FormatException(
                 $"Value '{value}' is invalid revision format. Revision format must be Major.Minor.");
 
@@ -113,10 +111,10 @@ public sealed partial class Revision : IComparable, ILogixParsable<Revision>
     /// <returns>A <see cref="Revision"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
     public static Revision? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty()) 
             return default;
 
-        return RevisionPattern().IsMatch(value) ? new Revision(value) : default;
+        return RevisionPattern.IsMatch(value) ? new Revision(value) : default;
     }
 
     /// <summary>

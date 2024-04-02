@@ -137,7 +137,7 @@ namespace L5Sharp.Tests
 
             var programTags = allTags.Where(t => t.Scope == Scope.Program);
             var ioTags = allTags.Where(t => t.Name.Contains(':'));
-            var readWriteTags = allTags.Where(t => t.ExternalAccess == ExternalAccess.ReadWrite);
+            var readWriteTags = allTags.Where(t => t.ExternalAccess?.Equals(ExternalAccess.ReadWrite) is true);
             var timerTags = allTags.Where(t => t.DataType == "TIMER");
 
             programTags.Should().NotBeEmpty();

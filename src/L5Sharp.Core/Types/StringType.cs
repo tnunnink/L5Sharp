@@ -26,7 +26,7 @@ namespace L5Sharp.Core;
 /// </remarks>
 public class StringType : StructureType, IEnumerable<char>
 {
-    private const string LogixAsciiPattern = @"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]";
+    private static readonly Regex LogixAsciiPattern = new(@"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]");
     private readonly SINT[] _data;
 
     /// <inheritdoc />
@@ -232,6 +232,8 @@ public class StringType : StructureType, IEnumerable<char>
     /// </summary>
     private static SINT[] ToArray(string value)
     {
+        var result = new List<SINT>();
+        
         //Logix encloses strings in single quotes so we need to remove those if the are present.
         value = value.TrimStart('\'').TrimEnd('\'');
 
@@ -239,11 +241,14 @@ public class StringType : StructureType, IEnumerable<char>
         if (string.IsNullOrEmpty(value)) return Array.Empty<SINT>();
 
         //Breaks apart the string into single ASCII characters to be parsed.
-        var matches = Regex.Matches(value, LogixAsciiPattern);
-        return matches.Select(m =>
+        var matches = LogixAsciiPattern.Matches(value);
+
+        foreach (Match match in matches)
         {
-            var parsed = (SINT)Radix.Ascii.ParseValue($"'{m.Value}'");
-            return new SINT(parsed, Radix.Ascii);
-        }).ToArray();
+            var parsed = (SINT)Radix.Ascii.ParseValue($"'{match.Value}'");
+            result.Add(new SINT(parsed, Radix.Ascii));
+        }
+
+        return result.ToArray();
     }
 }

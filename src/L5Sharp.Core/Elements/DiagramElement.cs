@@ -88,7 +88,7 @@ public abstract class DiagramElement : LogixObject, ILogixReferencable
     /// This is an internally defined value so that we can identify instructions when referencing components.
     /// </remarks>
     public virtual string Location => Cell;
-    
+
     /// <summary>
     /// Moves this diagram element to the specified X and Y coordinates.
     /// </summary>
@@ -128,7 +128,7 @@ public abstract class DiagramElement : LogixObject, ILogixReferencable
         Element.SetAttributeValue(L5XName.X, x);
         Element.SetAttributeValue(L5XName.Y, y);
     }
-    
+
     /// <inheritdoc />
     public virtual IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
 
@@ -147,7 +147,7 @@ public abstract class DiagramElement : LogixObject, ILogixReferencable
 
     /// <inheritdoc />
     public override int GetHashCode() => ID.GetHashCode();
-    
+
     /// <summary>
     /// Gets a collection of values for the specified attribute name parsed as the specified generic type parameter if it exists.
     /// If the element does not exist, returns an empty collection of the generic type parameter.
@@ -167,7 +167,7 @@ public abstract class DiagramElement : LogixObject, ILogixReferencable
     protected IEnumerable<T> GetValues<T>(string name, char separator = ' ')
     {
         var value = Element.Attribute(name)?.Value;
-        
+
         return value is not null
             ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
             : Enumerable.Empty<T>();

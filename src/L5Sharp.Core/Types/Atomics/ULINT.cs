@@ -101,7 +101,7 @@ public sealed class ULINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     /// <returns>The parsed <see cref="ULINT"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static ULINT? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (ulong.TryParse(value, out var primitive))

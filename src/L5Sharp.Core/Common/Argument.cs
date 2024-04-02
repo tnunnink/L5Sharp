@@ -94,7 +94,7 @@ public class Argument : ILogixParsable<Argument>
     /// <exception cref="ArgumentException"><c>value</c> is null or empty</exception>
     public static Argument Parse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             throw new ArgumentException("Value can not be null or empty to parse.");
 
         //Unknown value - Can be found in TON instructions and probably others.
@@ -118,7 +118,7 @@ public class Argument : ILogixParsable<Argument>
     /// <returns>An <see cref="Argument"/> representing the parsed value if successful; Otherwise, <see cref="Empty"/>.</returns>
     public static Argument TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value)) return Empty;
+        if (value is null || value.IsEmpty()) return Empty;
         
         //Unknown value - Can be found in TON instructions and probably others.
         if (value == "?") return Unknown;

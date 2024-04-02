@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Types.Atomics
     public class USintTests
     {
         private byte _random;
-        private Fixture _fixture;
+        private Fixture? _fixture;
 
         [SetUp]
         public void Setup()

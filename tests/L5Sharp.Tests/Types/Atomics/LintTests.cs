@@ -58,7 +58,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new LINT((Radix)null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new LINT(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void ToDateTime_WhenCalled_ShouldThrowInvalidCastException()
         {
-            var expected = DateTime.UnixEpoch;
+            var expected = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             var type = new LINT() as IConvertible;
 
             var result = type.ToDateTime(CultureInfo.InvariantCulture);
@@ -377,7 +377,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void ToType_DateTime_ShouldThrowInvalidCastException()
         {
-            var expected = DateTime.UnixEpoch;
+            var expected = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             var type = new LINT() as IConvertible;
 
             var result = type.ToType(typeof(DateTime), CultureInfo.InvariantCulture);

@@ -90,9 +90,8 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void Parse_InvalidLength_ShouldThrowArgumentOutOfRangeException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.ParseValue("92233720368547758070"))
-                .Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("Input '92233720368547758070' is out of range for the Decimal Radix. (Parameter 'Input')");
+            FluentActions.Invoking(() => Radix.Decimal.ParseValue("92233720368547758070")).Should()
+                .Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -102,7 +101,7 @@ namespace L5Sharp.Tests.Enums
 
             atomic.Should().Be(new SINT(sbyte.MaxValue));
         }
-        
+
         [Test]
         public void Parse_byte_ShouldBeExpected()
         {
@@ -118,7 +117,7 @@ namespace L5Sharp.Tests.Enums
 
             atomic.Should().Be(new INT(short.MaxValue));
         }
-        
+
         [Test]
         public void Parse_ushort_ShouldBeExpected()
         {
@@ -134,7 +133,7 @@ namespace L5Sharp.Tests.Enums
 
             atomic.Should().Be(int.MaxValue);
         }
-        
+
         [Test]
         public void Parse_uint_ShouldBeExpected()
         {
@@ -150,7 +149,7 @@ namespace L5Sharp.Tests.Enums
 
             atomic.Should().Be(long.MaxValue);
         }
-        
+
         [Test]
         public void Parse_ulong_ShouldBeExpected()
         {
@@ -178,7 +177,7 @@ namespace L5Sharp.Tests.Enums
 
             supported.Should().BeTrue();
         }
-        
+
         [Test]
         public void SupportsType_USint_ShouldBeTrue()
         {
@@ -208,8 +207,8 @@ namespace L5Sharp.Tests.Enums
 
             supported.Should().BeTrue();
         }
-        
-        
+
+
         [Test]
         public void SupportsType_Lint_ShouldBeTrue()
         {

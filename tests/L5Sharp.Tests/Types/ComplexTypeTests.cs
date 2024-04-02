@@ -10,7 +10,7 @@ public class ComplexTypeTests
     [Test]
     public void New_NullElement_ShouldThrowArgumentNullException()
     {
-        FluentActions.Invoking(() => new ComplexType(((XElement)null)!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => new ComplexType(((XElement)null!)!)).Should().Throw<ArgumentNullException>();
     }
     
     [Test]

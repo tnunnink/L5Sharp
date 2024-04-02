@@ -48,7 +48,7 @@ public abstract class LogixType : LogixElement
     /// The type name of the logix data.
     /// </summary>
     /// <value>A <see cref="string"/> name identifying the data type of the data object.</value>
-    public virtual string Name => Element.DataType();
+    public virtual string Name => Element.DataType() ?? throw Element.L5XError(L5XName.DataType);
 
     /// <summary>
     /// The collection of <see cref="Core.Member"/> objects that make up the structure of the data.

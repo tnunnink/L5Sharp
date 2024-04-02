@@ -105,7 +105,7 @@ public sealed class LINT : AtomicType, IComparable, IConvertible, ILogixParsable
     /// <returns>The parsed <see cref="LINT"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static LINT? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (long.TryParse(value, out var primitive))

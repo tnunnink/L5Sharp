@@ -4,8 +4,9 @@
         <IsPackable>false</IsPackable>
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>10</LangVersion>
-        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <TargetFrameworks>net7.0;net481</TargetFrameworks>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>

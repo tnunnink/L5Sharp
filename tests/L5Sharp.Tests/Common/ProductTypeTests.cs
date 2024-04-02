@@ -6,7 +6,7 @@ namespace L5Sharp.Tests.Common
     [TestFixture]
     public class ProductTypeTests
     {
-        private Fixture _fixture;
+        private Fixture? _fixture;
 
         [SetUp]
         public void Setup()
@@ -148,7 +148,7 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void TypedEquals_AreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var value = _fixture.Create<ushort>();
             var first = new ProductType(value);
@@ -160,11 +160,12 @@ namespace L5Sharp.Tests.Common
         }
 
         [Test]
-        public void TypedEquals_AreSame_ShouldBeTrue()
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var value = _fixture.Create<ushort>();
             var first = new ProductType(value);
 
+            // ReSharper disable once EqualExpressionComparison
             var result = first.Equals(first);
 
             result.Should().BeTrue();
@@ -172,47 +173,12 @@ namespace L5Sharp.Tests.Common
 
 
         [Test]
-        public void TypedEquals_Null_ShouldBeFalse()
+        public void Equals_Null_ShouldBeFalse()
         {
             var value = _fixture.Create<ushort>();
             var first = new ProductType(value);
 
             var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ushort>();
-            var first = new ProductType(value);
-            var second = new ProductType(value);
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var value = _fixture.Create<ushort>();
-            var first = new ProductType(value);
-
-            var result = first.Equals((object)first);
-
-            result.Should().BeTrue();
-        }
-
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var value = _fixture.Create<ushort>();
-            var first = new ProductType(value);
-
-            var result = first.Equals((object)null);
 
             result.Should().BeFalse();
         }

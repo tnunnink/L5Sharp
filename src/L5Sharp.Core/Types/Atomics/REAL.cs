@@ -100,7 +100,7 @@ public sealed class REAL : AtomicType, IComparable, IConvertible, ILogixParsable
     /// <returns>The parsed <see cref="REAL"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static REAL? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (value.Contains("QNAN")) return new REAL(float.NaN);

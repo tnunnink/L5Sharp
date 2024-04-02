@@ -102,7 +102,7 @@ public sealed class SINT : AtomicType, IComparable, IConvertible, ILogixParsable
     /// <returns>The parsed <see cref="SINT"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static SINT? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (sbyte.TryParse(value, out var primitive))

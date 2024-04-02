@@ -101,7 +101,7 @@ public sealed class UINT : AtomicType, IComparable, IConvertible, ILogixParsable
     /// <returns>The parsed <see cref="UINT"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static UINT? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (ushort.TryParse(value, out var primitive))

@@ -215,6 +215,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
         if (value.IsEmpty()) return Empty;
 
         var numbers = Regex.Matches(value, @"\d+")
+            .Cast<Match>()
             .Select(m => ushort.Parse(m.Value))
             .ToList();
 
@@ -241,6 +242,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
             return null;
 
         var numbers = Regex.Matches(value, @"\d+")
+            .Cast<Match>()
             .Select(m => ushort.Parse(m.Value))
             .ToList();
 

@@ -8,12 +8,10 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Provides a wrapper around the string port address value to indicate what type of address the value is.
 /// </summary>
-public partial class Address : ILogixParsable<Address>
+public class Address : ILogixParsable<Address>
 {
     private readonly string _value;
-
-    [GeneratedRegex("^[A-Za-z][A-Za-z0-9.-]{1,63}$")]
-    private static partial Regex HostNamePattern();
+    private static readonly Regex HostNamePattern = new("^[A-Za-z][A-Za-z0-9.-]{1,63}$");
 
     /// <summary>
     /// Creates a new <see cref="Address"/> with the provided string value.
@@ -45,7 +43,7 @@ public partial class Address : ILogixParsable<Address>
     /// A host name must start with a letter, contain only alpha-numeric characters or special characters '.' and '-',
     /// and have a maximum length of 64 characters.
     /// </remarks>
-    public bool IsHostName => HostNamePattern().IsMatch(_value);
+    public bool IsHostName => HostNamePattern.IsMatch(_value);
 
     /// <summary>
     /// Indicates that the address value is an empty string.
@@ -56,7 +54,7 @@ public partial class Address : ILogixParsable<Address>
     /// Represents no address value, or an empty string.
     /// </summary>
     public static Address None => new(string.Empty);
-    
+
     /// <summary>
     /// Creates a new <see cref="Address"/> with the optional IP address value.
     /// </summary>
@@ -69,7 +67,7 @@ public partial class Address : ILogixParsable<Address>
     /// <param name="slot">The slot number to create. If not provided will default to 0.</param>
     /// <returns>A <see cref="Address"/> representing a slot number within a chassis.</returns>
     public static Address Slot(byte slot = 0) => new($"{slot}");
-    
+
     /// <summary>
     /// Parses a string into a <see cref="Address"/> value.
     /// </summary>
@@ -82,7 +80,7 @@ public partial class Address : ILogixParsable<Address>
     /// </summary>
     /// <param name="value">The string to parse.</param>
     /// <returns>An <see cref="Address"/> representing the parsed value if successful; Otherwise, <see cref="None"/>.</returns>
-    public static Address TryParse(string? value) => string.IsNullOrEmpty(value) ? None : new Address(value);
+    public static Address TryParse(string? value) => value is null || value.IsEmpty() ? None : new Address(value);
 
     /// <summary>
     /// Converts the address value to an IPAddress object.
@@ -136,7 +134,7 @@ public partial class Address : ILogixParsable<Address>
     /// <param name="right">An object to compare.</param>
     /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
     public static bool operator !=(Address? left, Address? right) => !Equals(left, right);
-    
+
     /// <summary>
     /// Converts the current <see cref="string"/> to a <see cref="Address"/> value.
     /// </summary>

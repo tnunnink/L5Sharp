@@ -6,6 +6,8 @@
 /// <typeparam name="T">The type of object to parse the string value into.</typeparam>
 public interface ILogixParsable<out T> where T : ILogixParsable<T>
 {
+    //
+#if NET7_0_OR_GREATER
     /// <summary>
     /// Parses the provided string into an instance of this type.
     /// </summary>
@@ -19,4 +21,5 @@ public interface ILogixParsable<out T> where T : ILogixParsable<T>
     /// <param name="value">The string to parse.</param>
     /// <returns>A new instance of this type representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
     static abstract T? TryParse(string? value);
+#endif
 }

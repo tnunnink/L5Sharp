@@ -128,8 +128,8 @@ public static class L5XExtensions
         var exception = new InvalidOperationException(message);
         exception.Data.Add("target", name);
         exception.Data.Add("line", line);
-        exception.Data.Add("element", element);
-        return exception;
+        exception.Data.Add("element", element.ToString());
+        return exception; 
     }
 
     /// <summary>
@@ -191,7 +191,7 @@ public static class L5XExtensions
     /// the code more concise.
     /// </remarks>
     public static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-    
+
     /// <summary>
     /// Gets the name value of the current member <see cref="XElement"/> object. This can be either the <c>Name</c> or
     /// <c>Index</c> attribute depending on what member type it is.
@@ -207,7 +207,7 @@ public static class L5XExtensions
         var index = element.Attribute(L5XName.Index)?.Value;
         return index ?? string.Empty;
     }
-    
+
     /// <summary>
     /// Gets the <c>DataType</c> attribute value for the provided element or it's parent element, which ever value is
     /// found first.
@@ -272,7 +272,7 @@ public static class L5XExtensions
             return "C";
         }
     }
-    
+
     /// <summary>
     /// A concise method for getting a required attribute value from a XElement object.
     /// </summary>
@@ -290,4 +290,111 @@ public static class L5XExtensions
     /// <returns>A <see cref="XName"/> object containing the string value.</returns>
     /// <remarks>This is to make converting from string to XName concise.</remarks>
     public static XName XName(this string value) => System.Xml.Linq.XName.Get(value);
+
+    /// <summary>
+    /// Combines the collection of string values into a single string separated by the provided character.
+    /// </summary>
+    /// <param name="enumerable">The collection to combine.</param>
+    /// <param name="separator">The character to separate the items of the collection.</param>
+    /// <returns>A <see cref="string"/> containing all the items of the collection separated by the provided character.</returns>
+    /// <remarks>This was added to assign with supporting net standard and LINQ syntax.</remarks>
+    public static string Combine(this IEnumerable<object>? enumerable, char separator)
+    {
+        return enumerable is not null ? string.Join(separator.ToString(), enumerable) : string.Empty;
+    }
+    
+    /*private static string TrimSingle(this string value, char character)
+    {
+        if (value.StartsWith(character) && value.EndsWith(character))
+            return value.Substring(1, value.Length - 2);
+
+        if (value.StartsWith(character))
+            return value.Substring(1, value.Length - 1);
+
+        return value.EndsWith(character) ? value.Substring(0, value.Length - 1) : value;
+    }*/
+
+    //Extensions for .NET Standard 2.0 to allow me not to have to rewrite the code in certain places. 
+#if NETSTANDARD2_0
+    /// <summary>
+    /// Tries to add a key-value pair to the dictionary.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The key of the pair to add.</param>
+    /// <param name="value">The value of the pair to add.</param>
+    /// <returns>
+    /// <c>true</c> if the pair was added successfully; otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>This is added to support this method for net standard 2.0.</remarks>
+    public static bool TryAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.ContainsKey(key)) return false;
+        dictionary.Add(key, value);
+        return true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool IsGenericTypeParameter(this Type type)
+    {
+        //todo not sure this is correct but we need to figure it out.
+        return type is { IsGenericType: true, IsGenericParameter: true };
+    }
+
+    /// <summary>
+    /// Determines whether the specified string contains a specific character.
+    /// </summary>
+    /// <param name="value">The string to check.</param>
+    /// <param name="character">The character to search for.</param>
+    /// <returns>
+    /// <c>true</c> if the specified string contains the character; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool Contains(this string value, char character)
+    {
+        return value.IndexOf(character) != -1;
+    }
+
+    /// <summary>
+    /// Determines whether the string starts with the specified character.
+    /// </summary>
+    /// <param name="value">The string to check.</param>
+    /// <param name="character">The character to compare.</param>
+    /// <returns>
+    /// true if the string starts with the specified character; otherwise, false.
+    /// </returns>
+    public static bool StartsWith(this string value, char character)
+    {
+        return value.Length != 0 && value[0] == character;
+    }
+
+    /// <summary>
+    /// Determines whether a string ends with a specified character.
+    /// </summary>
+    /// <param name="value">The string to search.</param>
+    /// <param name="character">The character to compare.</param>
+    /// <returns>true if <paramref name="value"/> ends with <paramref name="character"/>; otherwise, false.</returns>
+    public static bool EndsWith(this string value, char character)
+    {
+        return value.Length != 0 && value[value.Length - 1] == character;
+    }
+
+    /// <summary>
+    /// Splits a string into substrings based on a specified separator and removal options.
+    /// </summary>
+    /// <param name="value">The string to split.</param>
+    /// <param name="separator">A character used to specify the delimiter for splitting the string.
+    /// The separator itself is not included in the resulting substrings.</param>
+    /// <param name="options">Specifies whether empty substrings should be removed from the resulting array.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of strings that contains the substrings in the input string that are delimited by the separator.</returns>
+    public static IEnumerable<string> Split(this string value, char separator, StringSplitOptions options)
+    {
+        return value.Split([separator], options);
+    }
+
+#endif
 }

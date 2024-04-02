@@ -177,6 +177,7 @@ public class L5X : ILogixSerializable
     /// </remarks>
     public static L5X Load(string fileName) => new(XElement.Load(fileName));
 
+#if NET7_0_OR_GREATER
     /// <summary>
     /// 
     /// </summary>
@@ -190,6 +191,7 @@ public class L5X : ILogixSerializable
         var l5X = await TTask.Run(() => new L5X(element), token);
         return l5X;
     }
+#endif
 
     /// <summary>
     /// Creates a new blank <see cref="L5X"/> file with the standard root content and controller elements, and configures them

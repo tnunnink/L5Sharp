@@ -101,7 +101,7 @@ public sealed class USINT : AtomicType, IComparable, IConvertible, ILogixParsabl
     /// <returns>The parsed <see cref="USINT"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static USINT? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (byte.TryParse(value, out var primitive))

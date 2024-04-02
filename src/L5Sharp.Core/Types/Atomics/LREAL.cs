@@ -103,7 +103,7 @@ public sealed class LREAL : AtomicType, IComparable, IConvertible, ILogixParsabl
     /// <returns>The parsed <see cref="LREAL"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static LREAL? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
         
         if (value.Contains("QNAN")) return new LREAL(double.NaN);

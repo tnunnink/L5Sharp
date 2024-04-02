@@ -663,7 +663,7 @@ public sealed class Tag : LogixComponent
         }
 
         //Child descriptions are set in the comments element of a tag.
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
         {
             Element.Descendants(L5XName.Comment)
                 .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
@@ -711,7 +711,7 @@ public sealed class Tag : LogixComponent
     /// </summary>
     private void SetUnit(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
         {
             Element.Descendants(L5XName.EngineeringUnit)
                 .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,

@@ -106,7 +106,7 @@ public sealed class DINT : AtomicType, IComparable, IConvertible, ILogixParsable
     /// <returns>The parsed <see cref="DINT"/> value if successful; Otherwise, <c>null</c>.</returns>
     public new static DINT? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         if (int.TryParse(value, out var primitive))

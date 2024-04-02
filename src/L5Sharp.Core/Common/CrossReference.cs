@@ -157,7 +157,18 @@ public class CrossReference
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        return HashCode.Combine(Key, Scope, Container, Routine, ElementId, ElementType);
+        /*return HashCode.Combine(Key, Scope, Container, Routine, ElementId, ElementType);*/
+        unchecked // overflow is fine, the result will just wrap
+        {
+            var hash = 17;
+            hash = hash * 23 + Key.GetHashCode();
+            hash = hash * 23 + Scope.GetHashCode();
+            hash = hash * 23 + Container.GetHashCode();
+            hash = hash * 23 + Routine.GetHashCode();
+            hash = hash * 23 + ElementId.GetHashCode();
+            hash = hash * 23 + ElementType.GetHashCode();
+            return hash;
+        }
     }
 
     /// <inheritdoc />

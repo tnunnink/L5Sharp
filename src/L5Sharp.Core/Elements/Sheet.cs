@@ -31,7 +31,7 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.Sheet, L5XName.FBDContent)]
 public class Sheet : Diagram
 {
-    private static readonly HashSet<string> BlockTypes = typeof(Block).L5XTypes().ToHashSet();
+    private static readonly HashSet<string> BlockTypes = [..typeof(Block).L5XTypes()];
 
     /// <summary>
     /// Creates a new <see cref="Sheet"/> with default values.
