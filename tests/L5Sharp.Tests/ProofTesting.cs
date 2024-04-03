@@ -10,7 +10,7 @@ public class ProofTesting
     [Test]
     public void Scratch()
     {
-        var content = Logix.Load(Known.Test);
+        var content = L5X.Load(Known.Test);
         var sheet = content.Query<Sheet>().First();
 
         var references = sheet.References().Where(c => c.Type == nameof(Tag)).ToList();

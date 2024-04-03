@@ -34,7 +34,7 @@ public class DataType : LogixComponent
     {
         Family = DataTypeFamily.None;
         Class = DataTypeClass.User;
-        Members = new LogixContainer<DataTypeMember>();
+        Members = [];
     }
 
     /// <summary>

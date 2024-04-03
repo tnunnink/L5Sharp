@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -9,13 +8,10 @@ namespace L5Sharp.Core;
 /// A class containing information regarding the L5X export file. This information is found on the root
 /// RSLogix5000Content element, and is used by the Logix software to determine the context of the L5X file.
 /// </summary>
-public class L5XInfo
+public class L5XInfo : LogixElement
 {
-    private readonly XElement _element;
-
-    internal L5XInfo(XElement element)
+    internal L5XInfo(XElement element) : base(element)
     {
-        _element = element;
     }
     
     /// <summary>
@@ -25,8 +21,8 @@ public class L5XInfo
     /// <remarks>This is always 1.0. If the R</remarks>
     public Revision? SchemaRevision
     {
-        get => _element.Attribute(L5XName.SchemaRevision)?.Value.Parse<Revision>();
-        set => _element.SetAttributeValue(L5XName.SchemaRevision, value);
+        get => GetValue<Revision>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -35,8 +31,8 @@ public class L5XInfo
     /// <value>A <see cref="Revision"/> type that represent the major/minor revision of the software.</value>
     public Revision? SoftwareRevision
     {
-        get => _element.Attribute(L5XName.SoftwareRevision)?.Value.Parse<Revision>();
-        set => _element.SetAttributeValue(L5XName.SoftwareRevision, value);
+        get => GetValue<Revision>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -44,8 +40,8 @@ public class L5XInfo
     /// </summary>
     public string? TargetName
     {
-        get => _element.Attribute(L5XName.TargetName)?.Value;
-        set => _element.SetAttributeValue(L5XName.TargetName, value);
+        get => GetValue<string>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -53,8 +49,8 @@ public class L5XInfo
     /// </summary>
     public string? TargetType
     {
-        get => _element.Attribute(L5XName.TargetType)?.Value;
-        set => _element.SetAttributeValue(L5XName.TargetType, value);
+        get => GetValue<string>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -62,30 +58,23 @@ public class L5XInfo
     /// </summary>
     public bool? ContainsContext
     {
-        get => _element.Attribute(L5XName.ContainsContext)?.Value.Parse<bool>();
-        set => _element.SetAttributeValue(L5XName.ContainsContext, value);
+        get => GetValue<bool>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the owner that exported the current L5X file.
     /// </summary>
-    public string? Owner
-    {
-        get => _element.Attribute(L5XName.Owner)?.Value;
-        set => _element.SetAttributeValue(L5XName.Owner, value);
-    }
+    public string? Owner => GetValue<string>();
 
     /// <summary>
     /// Gets the date time that the L5X file was exported.
     /// </summary>
-    public DateTime? ExportDate => _element.Attribute(L5XName.ExportDate)?.Value is not null
-        ? DateTime.ParseExact(_element.Attribute(L5XName.ExportDate)?.Value!, L5X.DateTimeFormat, null)
-        : default;
+    public DateTime? ExportDate => GetDateTime();
 
     /// <summary>
     /// Gets the set of configured export options for the L5X file.
     /// </summary>
     /// <value>A collection of <see cref="string"/> indicating the option values.</value>
-    public IEnumerable<string> ExportOptions => _element.Attribute(L5XName.ExportOptions)?.Value
-        .Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Enumerable.Empty<string>();
+    public IEnumerable<string> ExportOptions => GetValues<string>();
 }

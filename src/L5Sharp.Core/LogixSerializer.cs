@@ -15,6 +15,9 @@ namespace L5Sharp.Core;
 /// </summary>
 public static class LogixSerializer
 {
+    //The prefix for types inheriting from a LogixType object.
+    private const string DataTypePrefix = "DataType:";
+
     /// <summary>
     /// A collection of types to exclude from the deserialization factories since we handle them separately.
     /// </summary>
@@ -48,7 +51,7 @@ public static class LogixSerializer
     /// The return object must specify a public constructor accepting a <see cref="XElement"/> parameter for
     /// deserialization to work.
     /// </remarks>
-    public static TElement Deserialize<TElement>(this XElement element) 
+    public static TElement Deserialize<TElement>(this XElement element)
         where TElement : LogixElement => (TElement)Deserialize(element);
 
     /// <summary>
@@ -120,8 +123,14 @@ public static class LogixSerializer
         foreach (var type in types)
         {
             var deserializer = type.Deserializer<LogixElement>();
-            deserializers.AddRange(type.L5XTypes()
-                .Select(t => new KeyValuePair<string, Func<XElement, LogixElement>>(t, deserializer)));
+
+            //We have to differentiate a "DataType" element and any other element since in theory you could create a
+            //data type with the name of a component or element, and we don't want our serializer to confuse the two types.
+            //Therefore we prepend all LogixType types with our internal known prefix and will use that when lookup occurs.
+            var isDataType = typeof(LogixType).IsAssignableFrom(type);
+            var names = type.L5XTypes().Select(n => isDataType ? $"{DataTypePrefix}{n}" : $"{n}");
+            var functions = names.Select(n => new KeyValuePair<string, Func<XElement, LogixElement>>(n, deserializer));
+            deserializers.AddRange(functions);
         }
 
         return deserializers;
@@ -138,15 +147,14 @@ public static class LogixSerializer
         return typeof(LogixElement).IsAssignableFrom(type) &&
                !Exclusions.Contains(type) &&
                type is { IsAbstract: false, IsPublic: true } &&
-               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(XElement) },
-                   null) is not null;
+               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, [typeof(XElement)], null) is not
+                   null;
     }
 
     /// <summary>
     /// Returns a collection of custom deserializer functions that will know how to deserialize the complex
     /// data structures found on tag elements.
     /// </summary>
-    /// <returns></returns>
     private static IEnumerable<KeyValuePair<string, Func<XElement, LogixElement>>> DataDeserializers()
     {
         var deserializers = new List<KeyValuePair<string, Func<XElement, LogixElement>>>
@@ -217,7 +225,7 @@ public static class LogixSerializer
     }
 
     /// <summary>
-    /// Handles deserializing an element to a atomic value type. This will get the data type name  and value and use
+    /// Handles deserializing an element to a atomic value type. This will get the data type name and value and use
     /// our predefined parse function on AtomicType to instantiate the data 
     /// </summary>
     private static LogixElement DeserializeAtomic(XElement element)
@@ -234,7 +242,9 @@ public static class LogixSerializer
     /// </summary>
     private static LogixElement DeserializeArray(XElement element)
     {
-        var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
+        //todo verify that we can just do this instead of creating the generic type.
+        return new ArrayType<LogixType>(element);
+        /*var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
 
         //We either know the type (atomic or registered), or we create the generic string or complex type.
         var type = DataTypes.TryGetValue(dataType, out var known) ? known
@@ -243,13 +253,16 @@ public static class LogixSerializer
 
         var arrayType = typeof(ArrayType<>).MakeGenericType(type);
         var arrayName = arrayType.FullName!;
+        
 
+        //We don't need to use the prefix to search arrays because it's impossible for a logix data type to have
+        //the full type name for the generic array type, so we simply add these as encountered.
         if (Deserializers.Value.TryGetValue(arrayName, out var cached))
             return cached.Invoke(element);
 
         var deserializer = arrayType.Deserializer<LogixType>();
         Deserializers.Value.Add(arrayName, deserializer);
-        return deserializer.Invoke(element);
+        return deserializer.Invoke(element);*/
     }
 
     /// <summary>
@@ -273,8 +286,9 @@ public static class LogixSerializer
     private static LogixElement DeserializeStructure(XElement element)
     {
         var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
+        var key = $"{DataTypePrefix}{dataType}";
 
-        if (Deserializers.Value.TryGetValue(dataType, out var deserializer))
+        if (Deserializers.Value.TryGetValue(key, out var deserializer))
             return deserializer.Invoke(element);
 
         return element.IsStringData() ? new StringType(element) : new ComplexType(element);
@@ -287,12 +301,13 @@ public static class LogixSerializer
     private static LogixElement DeserializeString(XElement element)
     {
         var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
+        var key = $"{DataTypePrefix}{dataType}";
 
-        return Deserializers.Value.TryGetValue(dataType, out var deserializer)
+        return Deserializers.Value.TryGetValue(key, out var deserializer)
             ? deserializer.Invoke(element)
             : new StringType(element);
     }
-    
+
     /// <summary>
     /// Determines if the provided element has a structure that represents a <see cref="StringType"/> structure,
     /// structure member, array, or array member.
@@ -321,7 +336,7 @@ public static class LogixSerializer
         }
 
         //If this is an array or array member, we need to get elements and check if they are all string structure or not.
-        return element.Name.LocalName is L5XName.Array or L5XName.ArrayMember 
+        return element.Name.LocalName is L5XName.Array or L5XName.ArrayMember
                && element.Elements().Select(e => e.Element(L5XName.Structure)).All(x => x.IsStringData());
     }
 

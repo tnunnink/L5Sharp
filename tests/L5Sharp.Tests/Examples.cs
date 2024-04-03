@@ -8,7 +8,7 @@ namespace L5Sharp.Tests
         [Test]
         public void SampleQuery001()
         {
-            var content = Logix.Load(Known.Test);
+            var content = L5X.Load(Known.Test);
 
             var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())

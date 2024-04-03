@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -28,43 +29,18 @@ public abstract class LogixElement : ILogixSerializable
     /// Initializes a new <see cref="LogixElement"/> with the provided <see cref="XElement"/>
     /// </summary>
     /// <param name="element">The L5X <see cref="XElement"/> to initialize the entity with.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>element</c> name does not match any configured L5XType for this class
-    /// type. These are defined via the <see cref="L5XTypeAttribute"/> on the derived classes.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="element"/> is null.</exception>
     protected LogixElement(XElement element)
     {
         Element = element ?? throw new ArgumentNullException(nameof(element));
     }
 
     /// <summary>
-    /// The underlying <see cref="XElement"/> representing the backing data for the entity. Use this object to store
-    /// and retrieve data for the component. This property is the basis for serialization and deserialization of
+    /// The underlying <see cref="XElement"/> representing the backing data for the object. Use this to store
+    /// and retrieve data for the object. This property is the basis for serialization and deserialization of
     /// L5X data.
     /// </summary>
     protected readonly XElement Element;
-
-    /// <summary>
-    /// Indicates whether this element is attached to a L5X document.
-    /// </summary>
-    /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
-    /// <remarks>
-    /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
-    /// If so we will assume this element is attached to an overall L5X document.
-    /// </remarks>
-    public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
-
-    /// <summary>
-    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
-    /// </summary>
-    /// <returns>
-    /// If the current element is attached to a L5X document (i.e. has the root content element),
-    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
-    /// </returns>
-    /// <remarks>
-    /// This allows attached logix elements to reach up to the L5X file in order to traverse or retrieve
-    /// other elements in the L5X. This is helpful/used for other extensions and cross referencing functions.
-    /// </remarks>
-    public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
     /// <summary>
     /// Returns the name of the L5XType for this <see cref="LogixElement"/> object.
@@ -210,6 +186,34 @@ public abstract class LogixElement : ILogixSerializable
 
         var value = Element.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : throw Element.L5XError(name);
+    }
+    
+    /// <summary>
+    /// Gets a collection of values for the specified attribute name parsed as the specified generic type parameter if it exists.
+    /// If the element does not exist, returns an empty collection of the generic type parameter.
+    /// </summary>
+    /// <param name="name">The name of the attribute.</param>
+    /// <param name="separator">The value separator character. Default is ' '.</param>
+    /// <typeparam name="T">The return type of the value.</typeparam>
+    /// <returns>
+    /// If found, all values of the attribute split on the specified separator and parsed as the generic type parameter.
+    /// If not found, returns an empty collection.
+    /// </returns>
+    /// <remarks>
+    /// This method makes getting/setting attributes with collection of values as a single string with a certain separator
+    /// character as concise as possible for derived classes. This method is added here since only types like <see cref="Block"/>
+    /// are using this method overload.
+    /// </remarks>
+    protected IEnumerable<T> GetValues<T>(char separator = ' ', [CallerMemberName] string? name = null)
+    {
+        if (name is null || name.IsEmpty())
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+        
+        var value = Element.Attribute(name)?.Value;
+
+        return value is not null
+            ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
+            : Enumerable.Empty<T>();
     }
 
     /// <summary>

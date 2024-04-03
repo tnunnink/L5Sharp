@@ -5,7 +5,11 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// 
+/// A base class for all logix elements that can be added or removed from a logix container and need reference the the
+/// scope in which they exists in a L5X document. Most elements and all components derive from this class. 
+/// which inherits from the base <see cref="LogixElement"/> class and adds properties for identifying the object scope
+/// as well as methods for adding, removing, and replacing the current object within the current L5X document.
+/// This is primarily to separate some of the API from what is used by <c>LogixType</c> objects.
 /// </summary>
 public abstract class LogixObject : LogixElement
 {
@@ -13,12 +17,35 @@ public abstract class LogixObject : LogixElement
     protected LogixObject(string name) : base(name)
     {
     }
-    
+
     /// <inheritdoc />
     protected LogixObject(XElement element) : base(element)
     {
     }
     
+    /// <summary>
+    /// Indicates whether this element is attached to an L5X document.
+    /// </summary>
+    /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
+    /// <remarks>
+    /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
+    /// If so we will assume this element is attached to an L5X document.
+    /// </remarks>
+    public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
+
+    /// <summary>
+    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
+    /// </summary>
+    /// <returns>
+    /// If the current element is attached to a L5X document (i.e. has the root content element),
+    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
+    /// </returns>
+    /// <remarks>
+    /// This allows attached logix elements to reach up to the L5X file in order to traverse or retrieve
+    /// other elements in the L5X. This is helpful/used for other extensions and cross referencing functions.
+    /// </remarks>
+    public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
+
     /// <summary>
     /// The scope of the element, indicating whether it is a globally scoped controller element,
     /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
@@ -35,7 +62,7 @@ public abstract class LogixObject : LogixElement
     /// <para>
     /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
     /// value as it helps uniquely identify elements within the L5X file, especially
-    /// <c>Tag</c> and <c>Routine</c> components.
+    /// <c>Tag</c>, <c>Routine</c>, and code elements.
     /// </para>
     /// </remarks>
     public Scope Scope => Scope.Type(Element);
@@ -61,9 +88,9 @@ public abstract class LogixObject : LogixElement
     public string Container => Scope.Container(Element);
 
     /// <summary>
-    /// Adds a new element of the same type directly after this element in the L5X document.
+    /// Adds a new object of the same type directly after this object in the L5X document.
     /// </summary>
-    /// <param name="element">The logix element to add.</param>
+    /// <param name="item">The logix object to add.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
     /// the provided logix element is not the same type or convertable to the type of this logix element.
@@ -76,20 +103,20 @@ public abstract class LogixObject : LogixElement
     /// underlying element type will have the correct sequence name. This is used primarily for types that support
     /// multiple elements (i.e. Tags).
     /// </remarks>
-    public void AddAfter(LogixObject element)
+    public void AddAfter(LogixObject item)
     {
-        if (element is null) throw new ArgumentNullException(nameof(element));
+        if (item is null) throw new ArgumentNullException(nameof(item));
 
         if (Element.Parent is null)
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
 
-        if (element.L5XType != L5XType)
+        if (item.L5XType != L5XType)
         {
-            element = element.Convert(L5XType);
+            item = item.Convert(L5XType);
         }
 
-        Element.AddAfterSelf(element.Serialize());
+        Element.AddAfterSelf(item.Serialize());
     }
 
     /// <summary>
@@ -124,7 +151,7 @@ public abstract class LogixObject : LogixElement
 
         Element.AddBeforeSelf(element.Serialize());
     }
-    
+
     /// <summary>
     /// Converts this element to the specified element type name. 
     /// </summary>

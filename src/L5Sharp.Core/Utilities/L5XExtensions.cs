@@ -214,8 +214,6 @@ public static class L5XExtensions
     /// </summary>
     /// <param name="element">The element to retrieve the data type for.</param>
     /// <returns>A <see cref="string"/> indicating the value of the data type property.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if this element or it's parent does not have a
-    /// <c>DataType</c> attribute.</exception>
     /// <remarks>
     /// This is a helper for deserializing data structures. Most data elements have the data type we need
     /// in order to determine which object to construct, but some don't and we need to look at it's parent element
