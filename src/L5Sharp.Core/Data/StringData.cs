@@ -33,7 +33,7 @@ public class StringData : StructureData, IEnumerable<char>
     public StringData(XElement element) : base(new XElement(L5XName.Data))
     {
         Name = element.DataType() ?? string.Empty;
-        _data = GenerateData(ToArray(GetStringValue(element)));
+        _data = GenerateData(GetDataArray(GetStringValue(element)));
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class StringData : StructureData, IEnumerable<char>
     public StringData(string? value) : base(new XElement(L5XName.Data))
     {
         Name = string.Empty;
-        _data = GenerateData(ToArray(value ?? string.Empty));
+        _data = GenerateData(GetDataArray(value ?? string.Empty));
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class StringData : StructureData, IEnumerable<char>
     public StringData(string? name, string? value) : base(new XElement(L5XName.Data))
     {
         Name = name ?? string.Empty;
-        _data = GenerateData(ToArray(value ?? string.Empty));
+        _data = GenerateData(GetDataArray(value ?? string.Empty));
     }
 
     /// <inheritdoc />
@@ -230,7 +230,7 @@ public class StringData : StructureData, IEnumerable<char>
     /// Converts the provided string value to a SINT array. Handles empty or null string by returning empty array.
     /// Trims start and end single quotes. Matches characters using known <see cref="LogixAsciiPattern"/>.
     /// </summary>
-    private static SINT[] ToArray(string value)
+    private static SINT[] GetDataArray(string value)
     {
         var result = new List<SINT>();
         

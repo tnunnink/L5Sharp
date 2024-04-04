@@ -24,6 +24,7 @@ public static class LogixSerializer
     /// </summary>
     private static readonly List<Type> Exclusions =
     [
+        typeof(LogixContainer<>), typeof(LogixInfo),
         typeof(ComplexData), typeof(StringData), typeof(ArrayData<>), typeof(NullData)
     ];
 

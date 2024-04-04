@@ -1,6 +1,6 @@
-﻿<Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="MyNestedType">
+﻿<Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="MyNestedData">
   <Data Format="Decorated">
-    <Structure DataType="MyNestedType">
+    <Structure DataType="MyNestedData">
       <DataValueMember Name="Indy" DataType="BOOL" Radix="Decimal" Value="0" />
       <StructureMember Name="Str" DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
@@ -13,7 +13,7 @@
         <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
         <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
       </StructureMember>
-      <StructureMember Name="Simple" DataType="MySimpleType">
+      <StructureMember Name="Simple" DataType="MySimpleData">
         <DataValueMember Name="M1" DataType="BOOL" Radix="Decimal" Value="0" />
         <DataValueMember Name="M2" DataType="SINT" Radix="Decimal" Value="0" />
         <DataValueMember Name="M3" DataType="INT" Radix="Decimal" Value="0" />

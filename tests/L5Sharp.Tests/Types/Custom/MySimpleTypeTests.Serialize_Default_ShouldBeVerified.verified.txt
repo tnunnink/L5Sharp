@@ -1,4 +1,4 @@
-﻿<Structure DataType="MySimpleType">
+﻿<Structure DataType="MySimpleData">
   <DataValueMember Name="M1" DataType="BOOL" Radix="Decimal" Value="0" />
   <DataValueMember Name="M2" DataType="SINT" Radix="Decimal" Value="0" />
   <DataValueMember Name="M3" DataType="INT" Radix="Decimal" Value="0" />

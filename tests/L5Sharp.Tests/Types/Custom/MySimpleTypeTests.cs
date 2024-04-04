@@ -18,7 +18,7 @@ public class MySimpleTypeTests
     {
         var type = new MySimpleData();
 
-        type.Name.Should().Be("MySimpleType");
+        type.Name.Should().Be("MySimpleData");
         type.M1.Should().Be(0);
         type.M2.Should().Be(0);
         type.M3.Should().Be(0);

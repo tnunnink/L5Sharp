@@ -8,9 +8,9 @@ namespace L5Sharp.Core;
 /// A class containing information regarding the L5X export file. This information is found on the root
 /// RSLogix5000Content element, and is used by the Logix software to determine the context of the L5X file.
 /// </summary>
-public class L5XInfo : LogixElement
+public class LogixInfo : LogixElement
 {
-    internal L5XInfo(XElement element) : base(element)
+    internal LogixInfo(XElement element) : base(element)
     {
     }
     

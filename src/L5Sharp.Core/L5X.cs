@@ -94,9 +94,9 @@ public class L5X : ILogixSerializable
     }
 
     /// <summary>
-    /// The <see cref="L5XInfo"/> representing the L5X content export information.
+    /// The <see cref="LogixInfo"/> representing the L5X content export information.
     /// </summary>
-    public L5XInfo Info => new(_content);
+    public LogixInfo Info => new(_content);
 
     /// <summary>
     /// The root <see cref="Core.Controller"/> component of the L5X file.

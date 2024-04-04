@@ -120,16 +120,23 @@ public class Routine : LogixComponent
     }
     
     /// <summary>
-    /// Updates the current routine's content by setting the required Type attribute and replacing the child content
-    /// element with a new element having the name of the provided <see cref="RoutineType"/> content.
+    /// Updates the current routine's content by setting the required Type attribute and adding or replacing the
+    /// child content element with a new element having the name of the provided <see cref="RoutineType"/> content.
     /// </summary>
     private void UpdateContent(RoutineType type)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
         
         Element.SetAttributeValue(L5XName.Type, type);
+
+        var content = Element.Element(type.ContentName);
+
+        if (content is null)
+        {
+            Element.Add(new XElement(type.ContentName));
+            return;
+        }
         
-        if (Element.HasElements) Element.RemoveNodes();
-        Element.Add(new XElement(type.ContentName));
+        content.ReplaceWith(new XElement(type.ContentName));
     }
 }
