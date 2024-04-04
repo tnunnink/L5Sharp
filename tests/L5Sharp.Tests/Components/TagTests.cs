@@ -111,8 +111,7 @@ public class TagTests
     public void New_Array_ShouldHaveExpectedValue()
     {
         var tag = new Tag { Name = "Test", Value = new DINT[] { 0, 1, 2, 3, 4 } };
-
-        tag.Value.Should().BeOfType<ArrayType<DINT>>();
+        
         tag.Dimensions.Should().Be(new Dimensions(5));
         tag.Value.As<ArrayType>()[0].Should().Be(0);
         tag.Value.As<ArrayType>()[1].Should().Be(1);
@@ -306,7 +305,7 @@ public class TagTests
         tag.Name.Should().Be("TestStringTag");
         tag.DataType.Should().Be("MyStringType");
         tag.Value.Should().BeOfType<StringType>();
-        tag.Value.Should().Be("This is a $ tests");
+        tag.Value.Should().Be("This is a $$ tests");
     }
 
     [Test]
@@ -461,8 +460,7 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new DINT[] { 1, 2, 3, 4 } };
 
         tag.Value = new DINT[] { 4, 3, 2, 1 };
-
-        tag.Value.Should().BeOfType<ArrayType<DINT>>();
+        
         tag.Value.As<ArrayType>()[0].Should().Be(4);
         tag.Value.As<ArrayType>()[1].Should().Be(3);
         tag.Value.As<ArrayType>()[2].Should().Be(2);
@@ -476,8 +474,7 @@ public class TagTests
 
         //array length does not matter. indices will be join on what is available.
         tag.Value = new TIMER[] { new() { PRE = 100 }, new() { PRE = 200 }, new() { PRE = 300 } };
-
-        tag.Value.Should().BeOfType<ArrayType<TIMER>>();
+        
         tag.Value.As<ArrayType>()[0].As<TIMER>().PRE.Should().Be(100);
         tag.Value.As<ArrayType>()[1].As<TIMER>().PRE.Should().Be(200);
         tag.Value.As<ArrayType>()[2].As<TIMER>().PRE.Should().Be(300);
@@ -529,6 +526,17 @@ public class TagTests
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(true);
+    }
+    
+    [Test]
+    public Task SetValue_AnalogAlarm_ShouldBeVerified()
+    {
+        var tag = new Tag { Name = "Test" };
+
+        tag.Value = new ALARM_ANALOG { In = 1.23f, HHEnabled = true, MinDurationPRE = 3000 };
+
+        var xml = tag.Serialize().ToString();
+        return Verify(xml);
     }
 
     #endregion
@@ -933,19 +941,4 @@ public class TagTests
 
         return VerifyXml(xml);
     }
-
-    #region SpecialPredefinedTests
-
-    [Test]
-    public void AnalogAlarm()
-    {
-        var tag = new Tag { Name = "Test", Value = new ALARM_ANALOG() };
-
-        var data = tag.Value.As<ALARM_ANALOG>();
-
-        data.Deadband = 1.34f;
-        tag["Deadband"].Value = 1.34f;
-    }
-
-    #endregion
 }

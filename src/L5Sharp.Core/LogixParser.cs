@@ -11,7 +11,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Static class containing extensions for parsing a given string value into a specified type, either primitive or a type
 /// defined in this library that implements the <see cref="ILogixParsable{T}"/>. This is the means through which we will
-/// "deserialize" of map string values to strongly typed values.
+/// "deserialize" or map string values to strongly typed values.
 /// </summary>
 public static class LogixParser
 {
@@ -203,7 +203,7 @@ public static class LogixParser
 
     /// <summary>
     /// Determines if the provided type is a type implementing the <see cref="ILogixParsable{T}"/> interface and
-    /// has a generic type argument that is a parameter and not another generic type argument. This should essentially
+    /// has a generic type argument that is not a generic type parameter. This should essentially
     /// return all concrete types that are parsable (have Parse/TryParse methods) in this library.
     /// </summary>
     private static bool IsLogixParsable(Type type)
@@ -244,6 +244,9 @@ public static class LogixParser
     }
 }
 
+/// <summary>
+/// And internal record containing the Parse and TypeParse function for a given Type.
+/// </summary>
 internal record Parsers(Func<string, object> Parse, Func<string, object?> TryParse)
 {
     public Func<string, object> Parse { get; } = Parse;

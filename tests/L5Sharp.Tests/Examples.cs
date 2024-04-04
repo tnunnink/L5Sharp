@@ -82,7 +82,7 @@ namespace L5Sharp.Tests
 
             var tags = content.Tags.Get("MultiDimensionalArray");
 
-            var array = tags.Value.As<ArrayType<DINT>>();
+            var array = tags.Value.As<ArrayType>().Cast<DINT>();
 
             array.Should().NotBeNull();
             array.Should().BeOfType<ArrayType<DINT>>();

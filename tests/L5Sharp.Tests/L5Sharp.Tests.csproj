@@ -308,6 +308,9 @@
       <None Update="Types\Predefined\AlarmAnalogTest.SetMember_ValidType_ShouldBeVerified.verified.xml">
         <DependentUpon>AlarmAnalogTest.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.SetValue_AnalogAlarm_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

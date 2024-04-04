@@ -8,69 +8,56 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// A generic collection that provides operations over an underlying <see cref="XElement"/> container
-/// of <see cref="LogixElement"/> objects.
+/// of <see cref="LogixObject"/> types.
 /// </summary>
-/// <typeparam name="TObject">The type inheriting <see cref="LogixElement"/>.</typeparam>
+/// <typeparam name="TObject">The type inheriting <see cref="LogixObject"/>.</typeparam>
 /// <remarks>
 /// <para>
-/// This class represents a wrapper around a L5X element that contains a sequence of child elements of the same type.
+/// This class represents a wrapper around a L5X element that contains a sequence of child elements.
 /// This class exposes collection methods for querying and modifying child elements of the container.
 /// Note that a container could potentially contain more than one type of child element, but this container class will
-/// only operate over the specified element type.
+/// only operate over the specified element type which is configured via the type's <see cref="L5XTypeAttribute"/>.
 /// </para>
 /// <para>
 /// The class is designed to only offer very basic operations, allowing it to be applicable to all container type elements,
-/// However, the user can extended the API for any container type using extension methods and <see cref="Serialize"/>
-/// to get the underlying <see cref="XElement"/> container object. See <see cref="ContainerExtensions"/> for examples.
+/// However, the user can extended the API for any container type using extension methods.
+/// See <see cref="ContainerExtensions"/> for examples demonstrating extensions for containers of type <see cref="LogixComponent"/>.
 /// </para>
 /// </remarks>
-public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable where TObject : LogixObject
+public class LogixContainer<TObject> : LogixElement, IEnumerable<TObject> where TObject : LogixObject
 {
-    /// <summary>
-    /// The underlying <see cref="XElement"/> representing the backing data for the container. Use this object to store
-    /// and retrieve data for the the collection.
-    /// </summary>
-    private readonly XElement _element;
-
     /// <summary>
     /// The type name of the child elements in the container. This is needed as we support containers with different
     /// element types, so we need to know the name of the correct type to return and deserialize.
-    /// This also allows types with secondary element names to be synced as they are added to the container. 
+    /// This also allows types with secondary element names to be synced/converted as they are added to the container. 
     /// </summary>
-    private readonly XName _type;
+    private readonly string _type;
 
     /// <summary>
-    /// Creates a empty <see cref="LogixContainer{TElement}"/> with the default type name.
+    /// Creates a empty <see cref="LogixContainer{TObject}"/> with the default type name.
     /// </summary>
-    public LogixContainer()
+    public LogixContainer() : base(typeof(TObject).L5XContainer())
     {
-        _element = new XElement(typeof(TObject).L5XContainer());
         _type = typeof(TObject).L5XType();
     }
 
     /// <summary>
-    /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided <see cref="XElement"/>. 
+    /// Creates a new <see cref="LogixContainer{TObject}"/> initialized with the provided <see cref="XElement"/>. 
     /// </summary>
-    /// <param name="container">The <see cref="XElement"/> containing a collection of elements.</param>
-    /// <param name="type">Optionally the type name of the child elements of the container. Will default to the
-    /// configured L5XType name if not provided.</param>
+    /// <param name="element">The <see cref="XElement"/> containing a collection of child elements.</param>
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
-    public LogixContainer(XElement container, XName? type = null)
+    public LogixContainer(XElement element) : base(element)
     {
-        _element = container ?? throw new ArgumentNullException(nameof(container));
-        _type = type ?? typeof(TObject).L5XType();
+        _type = typeof(TObject).L5XType();
     }
-
+    
     /// <summary>
-    /// Creates a empty <see cref="LogixContainer{TElement}"/> with the specified type name.
+    /// This is exclusively used by the <c>AddOnInstruction</c> component. Would be nice to figure something else out but
+    /// not sure what would be less of a workaround at this time.
     /// </summary>
-    /// <param name="name">The name of the container element.</param>
-    /// <param name="type">Optionally the type name of the child elements of the container. Will default to the
-    /// configured L5XType name if not provided.</param>
-    public LogixContainer(XName name, XName? type = null)
+    internal LogixContainer(string containerName) : base(containerName)
     {
-        _element = new XElement(name);
-        _type = type ?? typeof(TObject).L5XType();
+        _type = containerName.TrimEnd('s');
     }
 
     /// <summary>
@@ -85,38 +72,15 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
         foreach (var element in elements)
         {
             if (element is null)
-                throw new ArgumentNullException(nameof(element));
+                throw new ArgumentException("Can not initialize LogixContainer with null elements.");
 
             var xml = element.L5XType == _type
                 ? element.Serialize()
-                : element.Convert<TObject>(_type.LocalName).Serialize();
+                : element.Convert<TObject>(_type).Serialize();
 
-            _element.Add(xml);
+            Element.Add(xml);
         }
     }
-
-    /// <summary>
-    /// Indicates whether this container is attached to a L5X document.
-    /// </summary>
-    /// <value><c>true</c> if this is an attached container; Otherwise, <c>false</c>.</value>
-    /// <remarks>
-    /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
-    /// If so we will assume this element is attached to an overall L5X document.
-    /// </remarks>
-    public bool IsAttached => _element.Ancestors(L5XName.RSLogix5000Content).Any();
-
-    /// <summary>
-    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
-    /// </summary>
-    /// <returns>
-    /// If the current element is attached to a L5X document (i.e. has the root content element),
-    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
-    /// </returns>
-    /// <remarks>
-    /// This allows attached logix elements to reach up to the L5X file in order to traverse or retrieve
-    /// other elements in the L5X. This is helpful/used for other extensions and cross referencing functions.
-    /// </remarks>
-    public L5X? L5X => _element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
     /// <summary>
     /// Accesses a single element at the specified index of the container collection.
@@ -128,7 +92,7 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
     /// <exception cref="ArgumentNullException"><c>value</c> is null when setting index.</exception>
     public TObject this[int index]
     {
-        get => _element.Elements(_type).ElementAt(index).Deserialize<TObject>();
+        get => Element.Elements(_type).ElementAt(index).Deserialize<TObject>();
         set
         {
             if (value is null)
@@ -137,9 +101,9 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
 
             var xml = value.L5XType == _type
                 ? value.Serialize()
-                : value.Convert<TObject>(_type.LocalName).Serialize();
+                : value.Convert<TObject>(_type).Serialize();
 
-            _element.Elements(_type).ElementAt(index).ReplaceWith(xml);
+            Element.Elements(_type).ElementAt(index).ReplaceWith(xml);
         }
     }
 
@@ -155,13 +119,13 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
 
         var xml = element.L5XType == _type
             ? element.Serialize()
-            : element.Convert<TObject>(_type.LocalName).Serialize();
+            : element.Convert<TObject>(_type).Serialize();
 
-        var last = _element.Elements(_type).LastOrDefault();
+        var last = Element.Elements(_type).LastOrDefault();
 
         if (last is null)
         {
-            _element.Add(xml);
+            Element.Add(xml);
             return;
         }
 
@@ -181,17 +145,17 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
         foreach (var element in elements)
         {
             if (element is null)
-                throw new ArgumentNullException(nameof(element));
+                throw new ArgumentException("Can not add null elements to a LogixContainer.");
 
             var xml = element.L5XType == _type
                 ? element.Serialize()
-                : element.Convert<TObject>(_type.LocalName).Serialize();
+                : element.Convert<TObject>(_type).Serialize();
 
-            var last = _element.Elements(_type).LastOrDefault();
+            var last = Element.Elements(_type).LastOrDefault();
 
             if (last is null)
             {
-                _element.Add(xml);
+                Element.Add(xml);
                 continue;
             }
 
@@ -203,7 +167,7 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
     /// Gets the number of elements in the collection.
     /// </summary>
     /// <returns>A <see cref="int"/> representing the number of elements in the collection.</returns>
-    public int Count() => _element.Elements(_type).Count();
+    public int Count() => Element.Elements(_type).Count();
 
     /// <summary>
     /// Inserts the provided element at the specified index of the container collection.
@@ -220,15 +184,15 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
 
         var xml = element.L5XType == _type
             ? element.Serialize()
-            : element.Convert<TObject>(_type.LocalName).Serialize();
+            : element.Convert<TObject>(_type).Serialize();
 
-        _element.Elements(_type).ElementAt(index).AddBeforeSelf(xml);
+        Element.Elements(_type).ElementAt(index).AddBeforeSelf(xml);
     }
 
     /// <summary>
     /// Removes all elements in the container collection.
     /// </summary>
-    public void RemoveAll() => _element.Elements(_type).Remove();
+    public void RemoveAll() => Element.Elements(_type).Remove();
 
     /// <summary>
     /// Removes all elements that satisfy the provided condition predicate.
@@ -238,7 +202,7 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
     public void RemoveAll(Func<TObject, bool> condition)
     {
         if (condition is null) throw new ArgumentNullException(nameof(condition));
-        _element.Elements(_type).Where(e => condition.Invoke(e.Deserialize<TObject>())).Remove();
+        Element.Elements(_type).Where(e => condition.Invoke(e.Deserialize<TObject>())).Remove();
     }
 
     /// <summary>
@@ -249,7 +213,7 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
     /// number of elements in the collection.</exception>
     public void RemoveAt(int index)
     {
-        _element.Elements(_type).ElementAt(index).Remove();
+        Element.Elements(_type).ElementAt(index).Remove();
     }
 
     /// <summary>
@@ -261,7 +225,7 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
     {
         if (update is null) throw new ArgumentNullException(nameof(update));
 
-        foreach (var child in _element.Elements(_type))
+        foreach (var child in Element.Elements(_type))
         {
             var element = child.Deserialize<TObject>();
             update.Invoke(element);
@@ -280,7 +244,7 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
         if (update is null) throw new ArgumentNullException(nameof(update));
         if (condition is null) throw new ArgumentNullException(nameof(condition));
 
-        foreach (var child in _element.Elements(_type))
+        foreach (var child in Element.Elements(_type))
         {
             var element = child.Deserialize<TObject>();
             if (condition.Invoke(element))
@@ -289,11 +253,8 @@ public class LogixContainer<TObject> : IEnumerable<TObject>, ILogixSerializable 
     }
 
     /// <inheritdoc />
-    public XElement Serialize() => _element;
-
-    /// <inheritdoc />
     public IEnumerator<TObject> GetEnumerator() =>
-        _element.Elements(_type).Select(e => e.Deserialize<TObject>()).GetEnumerator();
+        Element.Elements(_type).Select(e => e.Deserialize<TObject>()).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

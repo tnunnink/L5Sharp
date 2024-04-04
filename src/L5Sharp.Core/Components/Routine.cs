@@ -24,22 +24,9 @@ public class Routine : LogixComponent
     /// </remarks>
     public Routine() : base(L5XName.Routine)
     {
-        Element.Add(new XAttribute(L5XName.Type, RoutineType.RLL));
-        Element.Add(new XElement(L5XName.RLLContent));
+        UpdateContent(RoutineType.RLL);
     }
-
-    /// <summary>
-    /// Creates a new <see cref="Routine"/> of the specified <see cref="RoutineType"/>.
-    /// </summary>
-    /// <param name="type">The <see cref="RoutineType"/> of the routine.</param>
-    /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
-    public Routine(RoutineType type) : base(L5XName.Routine)
-    {
-        if (type is null) throw new ArgumentNullException(nameof(type));
-        Element.Add(new XAttribute(L5XName.Type, type));
-        Element.Add(new XElement(type.ContentName));
-    }
-
+    
     /// <summary>
     /// Creates a new <see cref="Routine"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
@@ -50,13 +37,27 @@ public class Routine : LogixComponent
     }
 
     /// <summary>
+    /// Creates a new <see cref="Routine"/> of the specified <see cref="RoutineType"/>.
+    /// </summary>
+    /// <param name="type">The <see cref="RoutineType"/> of the routine.</param>
+    /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
+    public Routine(RoutineType type) : base(L5XName.Routine)
+    {
+        UpdateContent(type);
+    }
+
+    /// <summary>
     /// The type of the <see cref="Routine"/> component.
     /// </summary>
     /// <value>A <see cref="RoutineType"/> enum specifying the type content the routine contains.</value>
+    /// <remarks>
+    /// Setting this property after construction will automatically remove the current content element to
+    /// replace with a new element having the correct name. This means any configured content will be lost.
+    /// </remarks>
     public RoutineType Type
     {
         get => GetRequiredValue<RoutineType>();
-        set => SetRequiredValue(value);
+        set => UpdateContent(value);
     }
 
     /// <summary>
@@ -116,5 +117,19 @@ public class Routine : LogixComponent
         return content is not null
             ? new LogixContainer<TCode>(content)
             : throw Element.L5XError(Type.ContentName);
+    }
+    
+    /// <summary>
+    /// Updates the current routine's content by setting the required Type attribute and replacing the child content
+    /// element with a new element having the name of the provided <see cref="RoutineType"/> content.
+    /// </summary>
+    private void UpdateContent(RoutineType type)
+    {
+        if (type is null) throw new ArgumentNullException(nameof(type));
+        
+        Element.SetAttributeValue(L5XName.Type, type);
+        
+        if (Element.HasElements) Element.RemoveNodes();
+        Element.Add(new XElement(type.ContentName));
     }
 }

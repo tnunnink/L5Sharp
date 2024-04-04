@@ -27,8 +27,8 @@ public class Program : LogixComponent
         MainRoutineName = default;
         FaultRoutineName = default;
         UseAsFolder = default;
-        Tags = new LogixContainer<Tag>();
-        Routines = new LogixContainer<Routine>();
+        Tags = [];
+        Routines = [];
     }
 
     /// <summary>

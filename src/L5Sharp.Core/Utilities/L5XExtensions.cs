@@ -13,13 +13,6 @@ namespace L5Sharp.Core;
 internal static class L5XExtensions
 {
     /// <summary>
-    /// Determines if the current string is a value <see cref="TagName"/> string.
-    /// </summary>
-    /// <param name="input">The string input to analyze.</param>
-    /// <returns><c>true</c> if the string is a valid tag name string; otherwise, <c>false</c>.</returns>
-    internal static bool IsTag(this string input) => TagName.IsTag(input);
-
-    /// <summary>
     /// Determines if the current string is equal to string.Empty.
     /// </summary>
     /// <param name="value">The string input to analyze.</param>

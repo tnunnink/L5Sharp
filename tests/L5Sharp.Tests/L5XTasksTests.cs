@@ -33,4 +33,15 @@ public class L5XTasksTests
 
         FluentActions.Invoking(() => content.Tasks[100]).Should().Throw<ArgumentOutOfRangeException>();
     }
+
+    [Test]
+    public void Get_KnownTask_ShouldBeExpected()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Tasks.Get(Known.Task);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be(Known.Task);
+    }
 }

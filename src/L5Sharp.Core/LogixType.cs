@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -21,6 +20,10 @@ namespace L5Sharp.Core;
 /// given <see cref="LogixType"/>. For example, a TIMER L5X data structure is always deserialized as the concrete
 /// <c>TIMER</c> class, so that the user can cast the type and manipulate the structure statically and compile time.
 /// This applies for <see cref="AtomicType"/>, <see cref="ArrayType"/>, and all derived instance of <see cref="StructureType"/>.
+/// </para>
+/// <para>
+/// Is you wish to create in memory complex data structures, use the <see cref="ComplexType"/> class which exposes
+/// methods for adding, removing, replacing, and inserting <see cref="Core.Member"/> objects for the data structure.
 /// </para>
 /// </remarks>
 /// <seealso cref="AtomicType"/>
@@ -55,9 +58,9 @@ public abstract class LogixType : LogixElement
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Core.Member"/> objects.</value>
     /// <remarks>
-    /// All logix data, with the exception of a <c>BOOL</c> and <c>REAL/LREAL</c>, have what can be considered
-    /// members. Every derived type must implement this property for which it returns a collection of members, forming
-    /// the type/member hierarchy of the logix type.
+    /// Complex data structures such as <see cref="StructureType"/> and <see cref="ArrayType{TLogixType}"/> will return
+    /// members. <see cref="AtomicType"/> will not return the bit members since they are not present in the underlying
+    /// XML and having them would exponentially increase the number of members a given tags has.
     /// </remarks>
     public virtual IEnumerable<Member> Members => Enumerable.Empty<Member>();
 
@@ -68,7 +71,7 @@ public abstract class LogixType : LogixElement
     /// <exception cref="InvalidCastException">The object can not be casted to the specified type.</exception>
     /// <returns>The logix type object casted as the specified generic type parameter.</returns>
     public TLogixType As<TLogixType>() where TLogixType : LogixType => (TLogixType)this;
-    
+
     /// <summary>
     /// Gets a <see cref="Core.Member"/> with the specified name if it exists for the <see cref="LogixType"/>;
     /// Otherwise, returns <c>null</c>.

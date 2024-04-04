@@ -14,7 +14,7 @@ public class Communications : LogixElement
     public Communications() : base(L5XName.Communications)
     {
         Element.Add(new XElement(L5XName.ConfigTag));
-        Connections = new LogixContainer<Connection>();
+        Connections = [];
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class Communications : LogixElement
     public Tag? ConfigTag
     {
         get => GetComplex<Tag>();
-        set => SetComplex(value);
+        set => SetComplex(value?.Convert<Tag>(L5XName.ConfigTag));
     }
 
     /// <summary>

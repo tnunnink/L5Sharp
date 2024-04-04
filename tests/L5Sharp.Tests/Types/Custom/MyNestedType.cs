@@ -68,6 +68,7 @@ namespace L5Sharp.Tests.Types.Custom
         /// </summary>
         public ArrayType<BOOL> Flags
         {
+            //All arrays are deserialized as generic ArrayType<LogixType> but can be casted like this to get ArrayType<TType>
             get => GetMember<ArrayType<LogixType>>().Cast<BOOL>();
             set => SetMember(value);
         }
@@ -77,7 +78,7 @@ namespace L5Sharp.Tests.Types.Custom
         /// </summary>
         public ArrayType<COUNTER> Counters
         {
-            get => GetMember<ArrayType<COUNTER>>();
+            get => GetMember<ArrayType<LogixType>>().Cast<COUNTER>();
             set => SetMember(value);
         }
 
@@ -86,7 +87,7 @@ namespace L5Sharp.Tests.Types.Custom
         /// </summary>
         public ArrayType<STRING> Names
         {
-            get => GetMember<ArrayType<STRING>>();
+            get => GetMember<ArrayType<LogixType>>().Cast<STRING>();
             set => SetMember(value);
         }
     }

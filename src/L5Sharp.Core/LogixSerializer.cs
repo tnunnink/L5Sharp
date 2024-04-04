@@ -33,15 +33,6 @@ public static class LogixSerializer
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixElement>>> Deserializers = new(() =>
         Scan().ToDictionary(k => k.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    /*/// <summary>
-    /// A system wide lookup of all <see cref="LogixType"/> objects by L5XType name obtained using reflection. This does
-    /// not include the internal generic types such as StructureType, ComplexType, StringType, ArrayType, or ArrayType{T},
-    /// or NullType, but rather types that can be instantiated (atomic or complex) for which we may need to create a generic
-    /// array of.
-    /// </summary>
-    private static readonly Dictionary<string, Type> DataTypes =
-        AppDomain.CurrentDomain.GetAssemblies().SelectMany(FindDataTypes).ToDictionary(k => k.L5XType(), v => v);*/
-
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.
     /// </summary>
@@ -173,20 +164,6 @@ public static class LogixSerializer
 
         return deserializers;
     }
-
-    /// <summary>
-    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
-    /// inheriting from <see cref="LogixType"/>. 
-    /// </summary>
-    private static IEnumerable<Type> FindDataTypes(Assembly assembly)
-    {
-        return assembly.GetTypes().Where(t =>
-            typeof(LogixType).IsAssignableFrom(t)
-            && t is { IsAbstract: false, IsPublic: true }
-            && t != typeof(ComplexType) && t != typeof(StringType)
-            && t != typeof(ArrayType) && t != typeof(ArrayType<>)
-            && t != typeof(NullType));
-    }
     
     /// <summary>
     /// Builds a deserialization expression delegate which returns the specified type using the current type information.
@@ -256,6 +233,7 @@ public static class LogixSerializer
             L5XName.AlarmAnalogParameters => new ALARM_ANALOG(data),
             L5XName.AlarmDigitalParameters => new ALARM_DIGITAL(data),
             L5XName.MessageParameters => new MESSAGE(data),
+            //todo need to add remaining special predefined parameter types (Axis, Motion, Coordinate) 
             _ => throw new NotSupportedException($"The element '{data.Name}' is not a supported data element.")
         };
     }
@@ -272,33 +250,14 @@ public static class LogixSerializer
     }
 
     /// <summary>
-    /// Handles deserializing an array to an array type logix element. This will get the data type name and use that
-    /// to lookup the corresponding type information. Once we get that we can form a generic deserializer, check for
-    /// it's existence, and deserialize the provided element.
+    /// Handles deserializing an array to an array type logix element. Since the user can still case a generic
+    /// <see cref="ArrayType{TLogixType}"/> down to a more specific type using the Cast function, all we really need to
+    /// do is return a generic ArrayType wrapping the element. The DeserializeElement will ultimately get elements
+    /// that are concrete typed.
     /// </summary>
     private static LogixElement DeserializeArray(XElement element)
     {
-        //todo verify that we can just do this instead of creating the generic type.
         return new ArrayType<LogixType>(element);
-        /*var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
-
-        //We either know the type (atomic or registered), or we create the generic string or complex type.
-        var type = DataTypes.TryGetValue(dataType, out var known) ? known
-            : element.IsStringData() ? typeof(StringType)
-            : typeof(ComplexType);
-
-        var arrayType = typeof(ArrayType<>).MakeGenericType(type);
-        var arrayName = arrayType.FullName!;
-        
-
-        //We don't need to use the prefix to search arrays because it's impossible for a logix data type to have
-        //the full type name for the generic array type, so we simply add these as encountered.
-        if (Deserializers.Value.TryGetValue(arrayName, out var cached))
-            return cached.Invoke(element);
-
-        var deserializer = arrayType.Deserializer<LogixType>();
-        Deserializers.Value.Add(arrayName, deserializer);
-        return deserializer.Invoke(element);*/
     }
 
     /// <summary>

@@ -183,7 +183,7 @@ public class Task : LogixComponent
     /// <inheritdoc />
     public override L5X Export(Revision? softwareRevision = null)
     {
-        throw new NotSupportedException("Task components do not support export function.");
+        throw new NotSupportedException("Task components do not support the export function.");
     }
 
     /// <inheritdoc />

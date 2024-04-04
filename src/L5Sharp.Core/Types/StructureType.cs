@@ -68,7 +68,7 @@ public abstract class StructureType : LogixType
 
         if (element is null)
             throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
-
+        
         return element.Deserialize<TLogixType>();
     }
 

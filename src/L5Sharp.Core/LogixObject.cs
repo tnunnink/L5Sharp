@@ -5,11 +5,11 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A base class for all logix elements that can be added or removed from a logix container and need reference the the
-/// scope in which they exists in a L5X document. Most elements and all components derive from this class. 
-/// which inherits from the base <see cref="LogixElement"/> class and adds properties for identifying the object scope
-/// as well as methods for adding, removing, and replacing the current object within the current L5X document.
-/// This is primarily to separate some of the API from what is used by <c>LogixType</c> objects.
+/// A class implementing <see cref="LogixElement"/> that adds common properties and methods shared by most elements or
+/// components. These features include reference to the containing <see cref="L5X"/> document, the <see cref="Scope"/>
+/// and <see cref="Container"/> to identify where in the document they exists, and methods <see cref="AddBefore"/>,
+/// <see cref="AddBefore"/>, <see cref="Remove"/>, and <see cref="Replace"/> which allow easy way to mutate the object
+/// or collection of objects.
 /// </summary>
 public abstract class LogixObject : LogixElement
 {
@@ -22,7 +22,7 @@ public abstract class LogixObject : LogixElement
     protected LogixObject(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// Indicates whether this element is attached to an L5X document.
     /// </summary>

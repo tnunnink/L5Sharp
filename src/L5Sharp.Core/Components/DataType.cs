@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// The Logix <c>DataType</c> component. Contains the properties adn functionality that comprise the L5X DataType element.
+/// The Logix <c>DataType</c> component. Contains the properties and functionality that comprise the L5X DataType element.
 /// </summary>
 /// <remarks>
 /// <para>
