@@ -15,7 +15,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/blob/main/docfx/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/index.md/#L1">
   </head>
 
   <script type="module">
@@ -88,33 +88,44 @@ or testing processes for automation engineers.</p>
 <li>Make it easy and seamless to extend the API to support custom queries or functions.</li>
 <li>Support strongly typed mutable tag data, so we can reference complex structures statically at compile time.</li>
 </ol>
-<h2 id="feedback">Feedback</h2>
-<p>If you like or use this project, leave a star. If you have questions or issues,
-please post in the <a href="https://github.com/tnunnink/L5Sharp/issues">issues</a> tab
-of the project repository. Any feedback is always appreciated. Enjoy!</p>
-<h2 id="quick-start">Quick Start</h2>
-<p>Install package from Nuget.</p>
+<h2 id="packages">Packages</h2>
+<p>You can consume the library via NuGet.</p>
 <pre><code class="lang-powershell">Install-Package L5Sharp
 </code></pre>
-<p>Load an L5X file using the primary entry point <code>LogixContent</code> class.</p>
-<pre><code class="lang-c#">var content = LogixContent.Load(&quot;C:\PathToMyFile\FileName.L5X&quot;);
+<blockquote>
+<p>Previously I had two separate libraries but have since consolidated to a single package to avoid confusion and since
+I think most people would want all functionality anyway. <code>L5Sharp.Extensions</code> is no longer maintained.</p>
+</blockquote>
+<h2 id="quick-start">Quick Start</h2>
+<ol>
+<li><p>Install package from Nuget.</p>
+<pre><code class="lang-powershell">Install-Package L5Sharp
 </code></pre>
-<p>Get started by querying any type across the L5X using the <code>Find&lt;T&gt;()</code> and LINQ extensions.</p>
-<pre><code class="lang-csharp">var results = content.Find&lt;Tag&gt;()
-                .SelectMany(t =&gt; t.Members())
-                .Where(t =&gt; t.DataType == &quot;TIMER&quot;)
-                .Select(t =&gt; new { t.TagName, t.Comment, t.Value.As&lt;TIMER&gt;().PRE })
-                .ToList();
+</li>
+<li><p>Load an L5X file using the <code>L5X</code> class static factory methods.</p>
+<pre><code class="lang-c#">var content = L5X.Load(&quot;C:\PathToMyFile\FileName.L5X&quot;);
 </code></pre>
-<p>The above query gets all tags and their nested tag members of type TIMER and returns the TagName,
-Comment, and Preset value in a flat list.</p>
-<div class="NOTE">
-<h5>Note</h5>
-<p><code>Find&lt;T&gt;()</code> returns an <code>IEnumerable&lt;T&gt;</code>, allowing for complex queries
+</li>
+<li><p>Get started by querying elements across the L5X using the <code>Query()</code> methods and LINQ extensions.
+The following query gets all tags and their nested tag members of type TIMER and returns the TagName,
+Description, and Preset value in a flat list ordered by TagName.</p>
+<pre><code class="lang-csharp">var results = content.Query&lt;Tag&gt;()
+            .SelectMany(t =&gt; t.Members())
+            .Where(t =&gt; t.DataType == &quot;TIMER&quot;)
+            .Select(t =&gt; new {t.TagName, t.Description, Preset = t[&quot;PRE&quot;].Value})
+            .OrderBy(v =&gt; v.TagName)
+            .ToList();
+</code></pre>
+<blockquote>
+<p><code>Query&lt;T&gt;()</code> returns an <code>IEnumerable&lt;T&gt;</code>, allowing for complex queries
 using LINQ and the strongly typed objects in the library.
-Since <code>Find&lt;T&gt;()</code> queries the entire L5X for the specified type, the above query
-will return all <strong>Tag</strong> components found, including controller and program tags.</p>
-</div>
+Since <code>Query&lt;T&gt;()</code> queries the entire L5X for the specified type, the above query
+will return all <strong>Tag</strong> components found, including controller and program tags.
+The above query gets all tags and their nested tag members of type TIMER and returns the TagName,
+Comment, and Preset value in a flat list.</p>
+</blockquote>
+</li>
+</ol>
 <h2 id="usage">Usage</h2>
 <p>The <code>LogixContent</code> class contains <code>LogixContainer</code> collections for all L5X components,
 such as <a class="xref" href="api/L5Sharp.Components.Tag.html">Tag</a>, <a class="xref" href="api/L5Sharp.Components.DataType.html">DataType</a>,
@@ -278,7 +289,7 @@ see [Logix 5000 Controllers Import Export](../refs/Logix 5000 Controllers Import
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/docfx/index.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/index.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

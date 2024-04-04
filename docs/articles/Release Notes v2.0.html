@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>PLACEHOLDER </title>
+      <title>Release Notes 2.0 </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="PLACEHOLDER ">
+      <meta name="title" content="Release Notes 2.0 ">
       
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
@@ -15,7 +15,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/api/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/articles/Release Notes v2.0.md/#L1">
   </head>
 
   <script type="module">
@@ -72,13 +72,31 @@
         </div>
 
         <article data-uid="">
-<h1 id="placeholder">PLACEHOLDER</h1>
+<h2 id="release-notes-20">Release Notes 2.0</h2>
 
-<p>TODO: Add .NET projects to the <em>src</em> folder and run <code>docfx</code> to generate <strong>REAL</strong> <em>API Documentation</em>!</p>
+<p>This release follows from version 0.19.X. The reason for the version change is to represent this as a mostly complete
+and no longer a work in progress library. The reason for v2 and not v1 is because I accidentally released v1 a long time
+ago before backing into v0.1.</p>
+<p>This update mostly focused on adding .NET 2.0 standard support and merging how LogixTypes were deserialized with
+how all other LogixElements were deserialized, which makes the entire project more uniform and gives one point for
+deserialization of any element/type. Most of the API surface is the same with a couple minor tweaks. You should not notice too may changes.</p>
+<h3 id="changes">Changes</h3>
+<ol>
+<li>Adds support for .NET Standard 2.0 to make library compatible with .NET Framework applications.</li>
+<li><code>LogixType</code> now implements <code>LogixElement</code>, making them wrap an underlying element where possible,
+and allowing a single base class for all types.</li>
+<li>Combined the old <code>LogixData</code> with the <code>LogixSerializer</code> to have a single point of deserialization for all elements.</li>
+<li>Created new <code>LogixObject</code> which implements <code>LogixElement</code> and moved the common L5X, Scope, Container, and methods
+for adding, replacing, and removing the object from the L5X.</li>
+<li>Removed <code>AtomicType</code> bit members to avoid exceedingly large number of member tags it would generate when attemping to
+all tags in a file.</li>
+<li>Removed <code>Class</code> and <code>Family</code> properties from <code>LogixType</code> since they are not really useful.</li>
+<li>Renamed <code>LogixType</code> to <code>LogixData</code>, as well as all derivatives to better match the L5X naming convention.</li>
+</ol>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/api/index.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/articles/Release Notes v2.0.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

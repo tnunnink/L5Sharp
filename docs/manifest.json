@@ -2698,6 +2698,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/Release Notes v2.0.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/Release Notes v2.0.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/intro.md",
       "output": {
         ".html": {
