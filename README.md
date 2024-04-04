@@ -48,6 +48,10 @@ Description, and Preset value in a flat list ordered by TagName.
    > Since `Query<T>()` queries the entire L5X for the specified type, the above query 
    > will return all **Tag** components found, including controller and program tags.
 
+## Releases Notes
+   - [Version 2.0](https://tnunnink.github.io/L5Sharp/articles/Release%20Notes%202.0.html)
+
+
 ## Usage
 The following is some basic examples of how you can use this library
 to query and modify the L5X content.
@@ -132,8 +136,7 @@ added or removed.
 
 ### Modifying
 Modifying components is simple as well.
-The same component collection interface offers methods for adding,
-removing, and updating components.
+The same component collection interface offers methods for adding, removing, and updating components.
 
 ```csharp
 //Add a new component.
