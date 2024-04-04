@@ -810,23 +810,23 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new ULINT(1);
             var second = new ULINT(1);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new ULINT(1);
             var second = new ULINT(0);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

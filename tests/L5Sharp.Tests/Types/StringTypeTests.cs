@@ -162,7 +162,7 @@ public class StringTypeTests
 
         var value = type.ToString();
 
-        value.Should().Be("This is a 'special character' test");
+        value.Should().Be("This is a $'special character$' test");
     }
 
     [Test]

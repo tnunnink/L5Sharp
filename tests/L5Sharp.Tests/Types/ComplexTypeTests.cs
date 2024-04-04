@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using FluentAssertions;
 
 namespace L5Sharp.Tests.Types;
@@ -565,7 +564,7 @@ public class ComplexTypeTests
     }
     
     [Test]
-    public void IsEquivalent_AreEqual_ShouldBeTrue()
+    public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
         var first = new ComplexType("Test", new List<Member>
         {
@@ -586,13 +585,13 @@ public class ComplexTypeTests
         });
 
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeTrue();
     }
     
     [Test]
-    public void IsEquivalent_AreNotEqualByValue_ShouldBeFalse()
+    public void EquivalentTo_AreNotEqualByValue_ShouldBeFalse()
     {
         var first = new ComplexType("Test", new List<Member>
         {
@@ -613,13 +612,13 @@ public class ComplexTypeTests
         });
 
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }
     
     [Test]
-    public void IsEquivalent_AreNotEqualByName_ShouldBeFalse()
+    public void EquivalentTo_AreNotEqualByName_ShouldBeFalse()
     {
         var first = new ComplexType("Test", new List<Member>
         {
@@ -640,7 +639,7 @@ public class ComplexTypeTests
         });
 
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }

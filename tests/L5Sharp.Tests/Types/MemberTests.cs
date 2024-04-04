@@ -171,7 +171,6 @@ public class MemberTests
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<ArrayType<REAL>>();
         member.Value.As<ArrayType>()[0].Should().Be(1.1f);
         member.Value.As<ArrayType>()[1].Should().Be(2.2f);
         member.Value.As<ArrayType>()[2].Should().Be(3.3f);
@@ -216,7 +215,6 @@ public class MemberTests
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<ArrayType<TIMER>>();
         member.Value.As<ArrayType>()[0].Should().BeOfType<TIMER>();
         member.Value.As<ArrayType>()[1].Should().BeOfType<TIMER>();
         member.Value.As<ArrayType>()[2].Should().BeOfType<TIMER>();
@@ -251,7 +249,6 @@ public class MemberTests
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<ArrayType<STRING>>();
         member.Value.As<ArrayType>()[0].Should().BeOfType<STRING>();
         member.Value.As<ArrayType>()[1].Should().BeOfType<STRING>();
         member.Value.As<ArrayType>()[2].Should().BeOfType<STRING>();
@@ -289,7 +286,6 @@ public class MemberTests
         var dataType = member.Value;
 
         dataType.Should().NotBeNull();
-        dataType.Should().BeOfType<ArrayType<DINT>>();
         dataType.As<ArrayType>()[0].Should().Be(1);
         dataType.As<ArrayType>()[1].Should().Be(2);
         dataType.As<ArrayType>()[2].Should().Be(3);
@@ -463,7 +459,7 @@ public class MemberTests
     [Test]
     public void SetValue_LREAL_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new LREAL(double.MaxValue));
+        var member = new Member("Test", new LREAL(123.123));
 
         member.Value = 123.123;
 

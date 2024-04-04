@@ -469,7 +469,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             if (double.TryParse(input, out var doubleValue))
                 return new LREAL(doubleValue, this);
-            
+
             throw new ArgumentOutOfRangeException(nameof(input),
                 $"Input '{input}' is out of range for the {Name} Radix.");
         }
@@ -514,7 +514,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             if (double.TryParse(input, out var doubleValue))
                 return new LREAL(doubleValue, this);
-            
+
             throw new ArgumentOutOfRangeException(nameof(input),
                 $"Input '{input}' is out of range for the {Name} Radix.");
         }
@@ -529,7 +529,9 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int BitsPerByte = 2;
         private const char SpecifierChar = '\'';
         private const char ByteSeparator = '$';
-        private const string Pattern = @"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]";
+
+        private static readonly Regex AsciiPattern =
+            new(@"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]", RegexOptions.Compiled);
 
         private static readonly Dictionary<string, string> SpecialCharacters = new()
         {
@@ -544,7 +546,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         protected override string Specifier => "'";
 
         protected override bool HasFormat(string input) =>
-            input.StartsWith(Specifier) && input.EndsWith(Specifier) && Regex.IsMatch(input, Pattern);
+            input.StartsWith(Specifier) && input.EndsWith(Specifier) && AsciiPattern.IsMatch(input);
 
         public override string FormatValue(AtomicType atomic)
         {
@@ -561,20 +563,9 @@ public abstract class Radix : LogixEnum<Radix, string>
         {
             ValidateFormat(input);
 
-            var value = GenerateHex(TrimSingle(input, SpecifierChar));
+            var value = GenerateHex(input.TrimSingle(SpecifierChar));
 
             return ToAtomic(value, BitsPerByte, BaseNumber);
-        }
-
-        private static string TrimSingle(string value, char character)
-        {
-            if (value.StartsWith(character) && value.EndsWith(character))
-                return value.Substring(1, value.Length - 2);
-
-            if (value.StartsWith(character))
-                return value.Substring(1, value.Length - 1);
-
-            return value.EndsWith(character) ? value.Substring(0, value.Length - 1) : value;
         }
 
         private static string GenerateAscii(string str)
@@ -585,15 +576,23 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             foreach (var segment in segments)
             {
-                var character = Convert.ToChar(Convert.ToUInt16(segment, BaseNumber));
+                //If this is a special logix character we need to add the escape '$' and then that char...
+                var special = SpecialCharacters.FirstOrDefault(v => v.Value.IsEquivalent(segment));
+                if (special.Key is not null)
+                {
+                    builder.Append(special.Key);
+                    continue;
+                }
 
-                if (character == 9 || character == 10 || character == 12 || character == 13 ||
-                    character > 31 && character < 127)
+                //Chars between 31 and 127 are printable characters so just append.
+                var character = Convert.ToChar(Convert.ToUInt16(segment, BaseNumber));
+                if (character > 31 && character < 127)
                 {
                     builder.Append(character);
                     continue;
                 }
 
+                //Everything else is represented as Hex with '$' escape character.
                 builder.Append(ByteSeparator);
                 builder.Append(segment.ToUpper());
             }
@@ -603,7 +602,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         private static string GenerateHex(string input)
         {
-            var matches = Regex.Matches(input, Pattern);
+            var matches = AsciiPattern.Matches(input);
 
             var builder = new StringBuilder();
 

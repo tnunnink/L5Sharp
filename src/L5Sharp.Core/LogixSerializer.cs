@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Xml.Linq;
@@ -32,14 +33,14 @@ public static class LogixSerializer
     private static readonly Lazy<Dictionary<string, Func<XElement, LogixElement>>> Deserializers = new(() =>
         Scan().ToDictionary(k => k.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    /// <summary>
+    /*/// <summary>
     /// A system wide lookup of all <see cref="LogixType"/> objects by L5XType name obtained using reflection. This does
     /// not include the internal generic types such as StructureType, ComplexType, StringType, ArrayType, or ArrayType{T},
     /// or NullType, but rather types that can be instantiated (atomic or complex) for which we may need to create a generic
     /// array of.
     /// </summary>
     private static readonly Dictionary<string, Type> DataTypes =
-        AppDomain.CurrentDomain.GetAssemblies().SelectMany(FindDataTypes).ToDictionary(k => k.L5XType(), v => v);
+        AppDomain.CurrentDomain.GetAssemblies().SelectMany(FindDataTypes).ToDictionary(k => k.L5XType(), v => v);*/
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the specified object type.
@@ -185,6 +186,41 @@ public static class LogixSerializer
             && t != typeof(ComplexType) && t != typeof(StringType)
             && t != typeof(ArrayType) && t != typeof(ArrayType<>)
             && t != typeof(NullType));
+    }
+    
+    /// <summary>
+    /// Builds a deserialization expression delegate which returns the specified type using the current type information.
+    /// </summary>
+    /// <param name="type">The current type for which to build the expression.</param>
+    /// <typeparam name="TReturn">The return type of the expression delegate.</typeparam>
+    /// <returns>A <see cref="Func{TResult}"/> which accepts a <see cref="XElement"/> and returns the specified
+    /// return type.</returns>
+    /// <remarks>
+    /// This extension is the basis for how we build the deserialization functions using reflection and
+    /// expression trees. Using compiled expression trees is much more efficient that calling the invoke method for a type's
+    /// constructor info obtained via reflection. This method makes all the necessary checks on the current type, ensuring the
+    /// returned deserializer delegate will execute without exception.
+    /// </remarks>
+    private static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)    
+    {
+        if (type is null) throw new ArgumentNullException(nameof(type));
+
+        if (type.IsAbstract)
+            throw new ArgumentException($"Can not build deserializer expression for abstract type '{type.Name}'.");
+
+        if (!typeof(TReturn).IsAssignableFrom(type))
+            throw new ArgumentException(
+                $"The type {type.Name} is not assignable (inherited) from '{typeof(TReturn).Name}'.");
+
+        var constructor = type.GetConstructor([typeof(XElement)]);
+
+        if (constructor is null || !constructor.IsPublic)
+            throw new ArgumentException(
+                $"Can not build expression for type '{type.Name}' without public constructor accepting a XElement parameter.");
+
+        var parameter = Expression.Parameter(typeof(XElement), "e");
+        var expression = Expression.New(constructor, parameter);
+        return Expression.Lambda<Func<XElement, TReturn>>(expression, parameter).Compile();
     }
 
     #region DataSerialization

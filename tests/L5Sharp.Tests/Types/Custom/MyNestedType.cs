@@ -68,7 +68,7 @@ namespace L5Sharp.Tests.Types.Custom
         /// </summary>
         public ArrayType<BOOL> Flags
         {
-            get => GetMember<ArrayType<BOOL>>();
+            get => GetMember<ArrayType<LogixType>>().Cast<BOOL>();
             set => SetMember(value);
         }
 

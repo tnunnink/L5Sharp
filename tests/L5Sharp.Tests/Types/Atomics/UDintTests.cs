@@ -57,7 +57,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new UDINT((Radix)null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new UDINT(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -810,23 +810,23 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new UDINT(1);
             var second = new UDINT(1);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new UDINT(1);
             var second = new UDINT(0);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

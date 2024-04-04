@@ -795,23 +795,23 @@ public class LrealTests
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new LREAL(1.23);
             var second = new LREAL(1.23);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new LREAL(1.23);
             var second = new LREAL(1.32);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

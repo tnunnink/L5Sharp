@@ -54,6 +54,22 @@ public abstract class LogixElement : ILogixSerializable
     /// the object.
     /// </remarks>
     public string L5XType => Element.Name.LocalName;
+    
+    /// <summary>
+    /// Determines if the provided element is structurally or deeply equal to another by performing a compare
+    /// of the underlying XML data for the objects. 
+    /// </summary>
+    /// <param name="other">The other <see cref="LogixElement"/> to compare.</param>
+    /// <returns><c>ture</c> if the objects are equivalent; Otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This internally compares the underlying XML nodes of the two elements to determine if all their
+    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e. it
+    /// compares the entire XML structure).
+    /// </remarks>
+    public bool EquivalentTo(LogixElement other)
+    {
+        return XNode.DeepEquals(Serialize(), other.Serialize());
+    }
 
     /// <summary>
     /// Returns a new deep cloned instance of the current type.

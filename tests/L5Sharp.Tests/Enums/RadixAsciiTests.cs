@@ -25,14 +25,6 @@ namespace L5Sharp.Tests.Enums
         }
 
         [Test]
-        public void Format_Ascii_ShouldBeExpected()
-        {
-            var ascii = Radix.Ascii.FormatValue(new DINT(123456));
-
-            ascii.Should().Be("'$00$01$E2@'");
-        }
-
-        [Test]
         public void Format_AsciiValidInt_ShouldBeExpectedFormat()
         {
             var radix = Radix.Ascii;
@@ -63,10 +55,81 @@ namespace L5Sharp.Tests.Enums
         }
 
         [Test]
+        public void Format_LargeValue_ShouldBeExpected()
+        {
+            var ascii = Radix.Ascii.FormatValue(new DINT(123456));
+
+            ascii.Should().Be("'$00$01$E2@'");
+        }
+        
+        [Test]
+        public void Format_SpecialCharacterTab_ShouldBeExpected()
+        {
+            var atomic = new SINT(9);
+            
+            var formatted = Radix.Ascii.FormatValue(atomic);
+
+            formatted.Should().Be("'$t'");
+        }
+        
+        [Test]
+        public void Format_SpecialCharacterLineFeed_ShouldBeExpected()
+        {
+            var atomic = new SINT(10);
+            
+            var formatted = Radix.Ascii.FormatValue(atomic);
+
+            formatted.Should().Be("'$l'");
+        }
+        
+        [Test]
+        public void Format_SpecialCharacterFormFeed_ShouldBeExpected()
+        {
+            var atomic = new SINT(12);
+            
+            var formatted = Radix.Ascii.FormatValue(atomic);
+
+            formatted.Should().Be("'$p'");
+        }
+        
+        [Test]
+        public void Format_SpecialCharacterCarriageReturn_ShouldBeExpected()
+        {
+            var atomic = new SINT(13);
+            
+            var formatted = Radix.Ascii.FormatValue(atomic);
+
+            formatted.Should().Be("'$r'");
+        }
+        
+        [Test]
+        public void Format_SpecialCharacterDollarSign_ShouldBeExpected()
+        {
+            var atomic = new SINT(36);
+            
+            var formatted = Radix.Ascii.FormatValue(atomic);
+
+            formatted.Should().Be("'$$'");
+        }
+        
+        [Test]
+        public void Format_SpecialCharacterSingleQuote_ShouldBeExpected()
+        {
+            var atomic = new SINT(39);
+            
+            var formatted = Radix.Ascii.FormatValue(atomic);
+
+            formatted.Should().Be("'$''");
+        }
+
+        [Test]
         public void Format_AllValuesFrom32To126_ShouldMatchTheConvertedCharacter()
         {
             for (sbyte i = 32; i < 127; i++)
             {
+                //These are special characters
+                if (i is 36 or 39) continue;
+                
                 var value = new SINT(i);
 
                 var formatted = Radix.Ascii.FormatValue(value);
@@ -155,16 +218,6 @@ namespace L5Sharp.Tests.Enums
             var atomic = Radix.Ascii.ParseValue("'$''");
 
             atomic.Should().Be(39);
-        }
-        
-        [Test]
-        public void Format_SingleQuote_ShouldBeExpected()
-        {
-            var atomic = new SINT(39);
-            
-            var formatted = Radix.Ascii.FormatValue(atomic);
-
-            formatted.Should().Be("'");
         }
 
         [Test]

@@ -100,7 +100,7 @@ public class StringType : StructureType, IEnumerable<char>
     /// <returns>The <see cref="string"/> containing the value of the string type object.</returns>
     public override string ToString()
     {
-        var ascii = _data.Where(s => s > 0).Select(s => s.ToString(Radix.Ascii).TrimStart('\'').TrimEnd('\''));
+        var ascii = _data.Where(s => s > 0).Select(s => s.ToString(Radix.Ascii).TrimSingle('\''));
         return $"{string.Join(string.Empty, ascii)}";
     }
 

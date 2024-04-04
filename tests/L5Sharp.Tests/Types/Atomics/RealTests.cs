@@ -795,23 +795,23 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new REAL(1.23f);
             var second = new REAL(1.23f);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new REAL(1.23f);
             var second = new REAL(1.32f);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

@@ -959,18 +959,18 @@ public class LogixElementTests
     }*/
 
     [Test]
-    public void IsEquivalent_AreEquivalent_ShouldBeTrue()
+    public void EquivalentTo_AreEquivalent_ShouldBeTrue()
     {
         var first = new TestElement();
         var second = new TestElement();
         
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeTrue();
     }
 
     [Test]
-    public void IsEquivalent_AreEquivalentWithSetProperties_ShouldBeTrue()
+    public void EquivalentTo_AreEquivalentWithSetProperties_ShouldBeTrue()
     {
         var first = new TestElement
         {
@@ -988,13 +988,13 @@ public class LogixElementTests
             Date = new DateTime(2024, 1, 1)
         };
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeTrue();
     }
     
     [Test]
-    public void IsEquivalent_AreNotEquivalentWithOneDifferent_ShouldBeFalse()
+    public void EquivalentTo_AreNotEquivalentWithOneDifferent_ShouldBeFalse()
     {
         var first = new TestElement
         {
@@ -1012,13 +1012,13 @@ public class LogixElementTests
             Date = new DateTime(2024, 1, 1)
         };
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }
     
     [Test]
-    public void IsEquivalent_AreNotEquivalentOneUnsetProperty_ShouldBeFalse()
+    public void EquivalentTo_AreNotEquivalentOneUnsetProperty_ShouldBeFalse()
     {
         var first = new TestElement
         {
@@ -1035,18 +1035,18 @@ public class LogixElementTests
             Date = new DateTime(2024, 1, 1)
         };
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }
 
     [Test]
-    public void IsEquivalent_DifferentType_ShouldBeFalse()
+    public void EquivalentTo_DifferentType_ShouldBeFalse()
     {
         var first = new TestElement();
         var second = new ChildElement();
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }

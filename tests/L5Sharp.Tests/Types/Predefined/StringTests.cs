@@ -72,14 +72,14 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void SetValue_OutOfRangeString_ShouldThrowArgumentOutOfRangeException()
+        public void SetValue_OutOfRangeString_ShouldBeTruncated()
         {
-            STRING type = "";
+            const string expected =
+                "This is a really long test string to see if the argument out of range exception will work. The string length must be less than eighty two characters in length. Do you think this is long enough?";
 
-            FluentActions.Invoking(() =>
-                    type =
-                        "This is a really long test string to see if the argument out of range exception will work. The string length must be less than eighty two characters in length. Do you think this is long enough?")
-                .Should().Throw<ArgumentOutOfRangeException>();
+            STRING type = expected;
+
+            type.ToString().Length.Should().BeLessThan(expected.Length);
         }
 
         [Test]
