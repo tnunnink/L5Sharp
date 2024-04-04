@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Release Notes 2.0 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Release Notes 2.0 ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/articles/Release Notes v2.0.md/#L1">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h2 id="release-notes-20">Release Notes 2.0</h2>
+
+<p>This release follows from version 0.19.X. The reason for the version change is to represent this as a mostly complete
+and no longer a work in progress library. The reason for v2 and not v1 is because I accidentally released v1 a long time
+ago before backing into v0.1.</p>
+<p>This update mostly focused on adding .NET 2.0 standard support and merging how LogixTypes were deserialized with
+how all other LogixElements were deserialized, which makes the entire project more uniform and gives one point for
+deserialization of any element/type. Most of the API surface is the same with a couple minor tweaks. You should not notice too may changes.</p>
+<h3 id="changes">Changes</h3>
+<ol>
+<li>Adds support for .NET Standard 2.0 to make library compatible with .NET Framework applications.</li>
+<li><code>LogixType</code> now implements <code>LogixElement</code>, making them wrap an underlying element where possible,
+and allowing a single base class for all types.</li>
+<li>Combined the old <code>LogixData</code> with the <code>LogixSerializer</code> to have a single point of deserialization for all elements.</li>
+<li>Created new <code>LogixObject</code> which implements <code>LogixElement</code> and moved the common L5X, Scope, Container, and methods
+for adding, replacing, and removing the object from the L5X.</li>
+<li>Removed <code>AtomicType</code> bit members to avoid exceedingly large number of member tags it would generate when attemping to
+all tags in a file.</li>
+<li>Removed <code>Class</code> and <code>Family</code> properties from <code>LogixType</code> since they are not really useful.</li>
+<li>Renamed <code>LogixType</code> to <code>LogixData</code>, as well as all derivatives to better match the L5X naming convention.</li>
+</ol>
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/tnunnink/L5Sharp/blob/wip-version-2.0/docfx/articles/Release Notes v2.0.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

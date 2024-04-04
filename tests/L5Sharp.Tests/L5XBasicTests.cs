@@ -202,7 +202,7 @@ public class L5XBasicTests
     [Test]
     public void Find_ValidKey_ShouldBeExpectedTypeAndName()
     {
-        var content = Logix.Load(Known.Test);
+        var content = L5X.Load(Known.Test);
 
         var component = content.Find(new ComponentKey("DataType", Known.DataType));
         
@@ -213,7 +213,7 @@ public class L5XBasicTests
     [Test]
     public void Find_ValidKeyAndContainer_ShouldBeExpectedTypeAndName()
     {
-        var content = Logix.Load(Known.Test);
+        var content = L5X.Load(Known.Test);
 
         var component = content.Find(new ComponentKey("Tag", Known.Tag));
         
@@ -224,7 +224,7 @@ public class L5XBasicTests
     [Test]
     public void Find_ValidComponent_ShouldBeExpectedName()
     {
-        var content = Logix.Load(Known.Test);
+        var content = L5X.Load(Known.Test);
 
         var component = content.Find<DataType>(Known.DataType);
 

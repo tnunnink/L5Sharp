@@ -20,7 +20,7 @@ namespace L5Sharp.Tests.Components
             var component = new DataType();
 
             var xml = component.Serialize().ToString();
-
+            
             return Verify(xml);
         }
 

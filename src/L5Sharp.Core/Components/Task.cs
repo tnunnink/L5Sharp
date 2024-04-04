@@ -29,7 +29,7 @@ public class Task : LogixComponent
     /// </summary>
     /// <remarks>By default uses <see cref="TaskType.Periodic"/>, 10ms <see cref="Priority"/>, 10ms <see cref="Rate"/>,
     /// and 500ms <see cref="Watchdog"/>.</remarks>
-    public Task()
+    public Task() : base(L5XName.Task)
     {
         Type = TaskType.Periodic;
         Priority = new TaskPriority(10);
@@ -183,7 +183,7 @@ public class Task : LogixComponent
     /// <inheritdoc />
     public override L5X Export(Revision? softwareRevision = null)
     {
-        throw new NotSupportedException("Task components do not support export function.");
+        throw new NotSupportedException("Task components do not support the export function.");
     }
 
     /// <inheritdoc />

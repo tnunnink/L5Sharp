@@ -9,7 +9,7 @@ namespace L5Sharp.Tests.Types.Atomics
     public class SintTests
     {
         private sbyte _random;
-        private Fixture _fixture;
+        private Fixture? _fixture;
 
         [SetUp]
         public void Setup()
@@ -34,9 +34,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(SINT).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Members.Should().HaveCount(8);
+            type.Members.Should().BeEmpty();
             type.Radix.Should().Be(Radix.Decimal);
         }
 
@@ -88,29 +86,6 @@ namespace L5Sharp.Tests.Types.Atomics
         public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
         {
             FluentActions.Invoking(() => new SINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
-        }
-
-        [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new SINT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.DataType == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = new[] { (byte)_random };
-            var type = new SINT(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]
@@ -570,23 +545,23 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new SINT(1);
             var second = new SINT(1);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new SINT(1);
             var second = new SINT(0);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

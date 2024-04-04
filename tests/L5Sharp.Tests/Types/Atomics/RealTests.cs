@@ -33,8 +33,6 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(REAL).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(0);
             type.Radix.Should().Be(Radix.Float);
         }
@@ -103,7 +101,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new REAL();
 
-            var atomic = type.As<AtomicType>();
+            var atomic = type.As<AtomicData>();
 
             atomic.Should().NotBeNull();
         }
@@ -113,7 +111,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new REAL();
 
-            FluentActions.Invoking(() => type.As<StructureType>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -134,17 +132,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var clone = type.Clone();
 
             clone.Should().Be(1.23f);
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new REAL(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]
@@ -509,7 +496,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new REAL(1) as IConvertible;
 
-            FluentActions.Invoking(() => type.ToType(typeof(StructureType), CultureInfo.InvariantCulture)).Should()
+            FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
         }
 
@@ -808,23 +795,23 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new REAL(1.23f);
             var second = new REAL(1.23f);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new REAL(1.23f);
             var second = new REAL(1.32f);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

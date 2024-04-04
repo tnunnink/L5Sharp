@@ -9,10 +9,15 @@ using System.Threading;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Static class containing mappings for converting string values (XML typed value) to the strongly type object.
+/// Static class containing extensions for parsing a given string value into a specified type, either primitive or a type
+/// defined in this library that implements the <see cref="ILogixParsable{T}"/>. This is the means through which we will
+/// "deserialize" or map string values to strongly typed values.
 /// </summary>
 public static class LogixParser
 {
+    /// <summary>
+    /// The internal cache of all parse functions for types found in this library.
+    /// </summary>
     private static readonly Lazy<Dictionary<Type, Parsers>> Parsers = new(() =>
         GetParsers().ToDictionary(t => t.Key, v => v.Value), LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -93,7 +98,7 @@ public static class LogixParser
     }
 
     /// <summary>
-    /// Retrieves the parser function for the specified type.
+    /// Retrieves the <c>Parse</c> function for the specified type.
     /// </summary>
     /// <param name="type">The type for which the parser is requested.</param>
     /// <returns>The parser function that can parse a string into an object of the specified type.</returns>
@@ -116,6 +121,16 @@ public static class LogixParser
         throw new InvalidOperationException($"No parse function has been defined for type '{type}'");
     }
 
+    /// <summary>
+    /// Retrieves the <c>TryParse</c> function for the specified type.
+    /// </summary>
+    /// <param name="type">The type for which the parser is requested.</param>
+    /// <returns>The parser function that can attempt to parse a string into an object of the specified type and return default if not..</returns>
+    /// <remarks>
+    /// Simply looks to the local parser cache and returns one if found for the specified type.
+    /// Otherwise will use the <see cref="TypeDescriptor"/> of the current type and return the ConvertFrom function
+    /// if is capable of converting from a string type. If nothing is found then returns a func that always returns <c>null</c>.
+    /// </remarks>
     private static Func<string, object?> GetTryParser(Type type)
     {
         if (Parsers.Value.TryGetValue(type, out var parsers))
@@ -129,6 +144,10 @@ public static class LogixParser
         return _ => null;
     }
 
+    /// <summary>
+    /// Scans this assembly and returns a collection of types and corresponding <see cref="Parsers"/> which represent
+    /// the functions for parsing string to the concrete typed object.
+    /// </summary>
     private static IEnumerable<KeyValuePair<Type, Parsers>> GetParsers()
     {
         var types = typeof(LogixParser).Assembly.GetTypes().Where(IsLogixParsable);
@@ -142,10 +161,15 @@ public static class LogixParser
         }
     }
 
+    /// <summary>
+    /// Given the type implementing <see cref="ILogixParsable{T}"/>, builds a function that calls the <c>Parse</c>
+    /// method of the type given an object to parse. Building a function using expressions will be faster than
+    /// using reflection to invoke the method.
+    /// </summary>
     private static Func<string, object> BuildParseFunction(Type type)
     {
-        var method = type.GetMethod("Parse",
-            BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy, [typeof(string)]);
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+        var method = type.GetMethods(flags).FirstOrDefault(type.IsParseFunction);
 
         if (method is null)
             throw new InvalidOperationException($"No Parse method defined for type {type.Name}.");
@@ -157,10 +181,15 @@ public static class LogixParser
         return lambda.Compile();
     }
 
+    /// <summary>
+    /// Given the type implementing <see cref="ILogixParsable{T}"/>, builds a function that calls the <c>TypeParse</c>
+    /// method of the type given an object to parse. Building a function using expressions will be faster than
+    /// using reflection to invoke the method.
+    /// </summary>
     private static Func<string, object?> BuildTryParseFunction(Type type)
     {
-        var method = type.GetMethod("TryParse",
-            BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy, [typeof(string)]);
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+        var method = type.GetMethods(flags).FirstOrDefault(type.IsTryParseFunction);
 
         if (method is null)
             throw new InvalidOperationException($"No TryParse method defined for type {type.Name}.");
@@ -172,13 +201,54 @@ public static class LogixParser
         return lambda.Compile();
     }
 
+    /// <summary>
+    /// Determines if the provided type is a type implementing the <see cref="ILogixParsable{T}"/> interface and
+    /// has a generic type argument that is not a generic type parameter. This should essentially
+    /// return all concrete types that are parsable (have Parse/TryParse methods) in this library.
+    /// </summary>
     private static bool IsLogixParsable(Type type)
     {
         return type.GetInterfaces().Any(i =>
-                   i.IsGenericType &&
-                   i.GetGenericTypeDefinition() == typeof(ILogixParsable<>) &&
-                   i.GetGenericArguments().All(a => !a.IsGenericTypeParameter));
+            i.IsGenericType
+            && i.GetGenericTypeDefinition() == typeof(ILogixParsable<>)
+            && i.GetGenericArguments().All(a => !a.IsGenericParameter)
+        );
+    }
+
+    /// <summary>
+    /// Determines if the provided method info represents the <c>Parse</c> function defined by the
+    /// interface <see cref="ILogixParsable{T}"/>.
+    /// </summary>
+    private static bool IsParseFunction(this Type type, MethodInfo info)
+    {
+        var parameters = info.GetParameters();
+
+        return info.Name.Equals("Parse")
+               && info.ReturnType.IsAssignableFrom(type) 
+               && parameters.Length == 1
+               && parameters[0].ParameterType == typeof(string);
+    }
+    
+    /// <summary>
+    /// Determines if the provided method info represents the <c>TryParse</c> function defined by the
+    /// interface <see cref="ILogixParsable{T}"/>.
+    /// </summary>
+    private static bool IsTryParseFunction(this Type type, MethodInfo info)
+    {
+        var parameters = info.GetParameters();
+
+        return info.Name.Equals("TryParse")
+               && info.ReturnType.IsAssignableFrom(type) 
+               && parameters.Length == 1
+               && parameters[0].ParameterType == typeof(string);
     }
 }
 
-internal record Parsers(Func<string, object> Parse, Func<string, object?> TryParse);
+/// <summary>
+/// And internal record containing the Parse and TypeParse function for a given Type.
+/// </summary>
+internal record Parsers(Func<string, object> Parse, Func<string, object?> TryParse)
+{
+    public Func<string, object> Parse { get; } = Parse;
+    public Func<string, object?> TryParse { get; } = TryParse;
+}

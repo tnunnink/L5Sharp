@@ -27,7 +27,7 @@ public class LogixParserTests
     [TestCase(typeof(ExternalAccess))]
     [TestCase(typeof(DINT))]
     [TestCase(typeof(REAL))]
-    [TestCase(typeof(AtomicType))]
+    [TestCase(typeof(AtomicData))]
     [TestCase(typeof(STRING))]
     public void IsParsable_LogixType_ShouldBeTrue(Type type)
     {
@@ -175,7 +175,7 @@ public class LogixParserTests
     [Test]
     public void Parse_GenericAtomicTypeBooleanValue_ShouldBeExpected()
     {
-        var result = "true".Parse<AtomicType>();
+        var result = "true".Parse<AtomicData>();
 
         result.Should().NotBeNull();
     }

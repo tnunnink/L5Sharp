@@ -58,6 +58,7 @@ public class L5XTemplateTests
         stopwatch.Stop();
 
         Console.WriteLine(stopwatch.Elapsed);
+        Console.WriteLine(components.Count);
         components.Should().NotBeEmpty();
     }
 

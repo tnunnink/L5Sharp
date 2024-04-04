@@ -33,8 +33,6 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(BOOL).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(0);
             type.Radix.Should().Be(Radix.Decimal);
         }
@@ -94,7 +92,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new BOOL();
 
-            var atomic = type.As<AtomicType>();
+            var atomic = type.As<AtomicData>();
 
             atomic.Should().NotBeNull();
         }
@@ -104,7 +102,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new BOOL();
 
-            FluentActions.Invoking(() => type.As<StructureType>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -125,17 +123,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var clone = type.Clone();
 
             clone.Should().Be(true);
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new BOOL(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]
@@ -496,7 +483,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new BOOL(1) as IConvertible;
 
-            FluentActions.Invoking(() => type.ToType(typeof(StructureType), CultureInfo.InvariantCulture)).Should()
+            FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
         }
 
@@ -787,33 +774,53 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var stopwatch = new Stopwatch();
 
-            var range = Enumerable.Range(0, capacity).Select(_ => new BOOL(123)).ToList();
+            var range = Enumerable.Range(0, capacity).Select(_ => new BOOL(true)).ToList();
 
             stopwatch.Start();
-            var result = range.Where(v => v == new BOOL(123)).ToList();
+            var result = range.Where(v => v == new BOOL(true)).ToList();
             stopwatch.Stop();
 
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            result.Count.Should().Be(capacity);
+        }
+        
+        [Test]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        [TestCase(100000)]
+        [TestCase(1000000)]
+        public void Equals_OverLargeCollectionOfPrimitivesAsComparison_ShouldWorkEquallyFast(int capacity)
+        {
+            var stopwatch = new Stopwatch();
+
+            var range = Enumerable.Range(0, capacity).Select(_ => true).ToList();
+
+            stopwatch.Start();
+            var result = range.Where(v => v).ToList();
+            stopwatch.Stop();
+
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
             result.Count.Should().Be(capacity);
         }
 
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new BOOL(1);
             var second = new BOOL(1);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new BOOL(1);
             var second = new BOOL(0);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

@@ -37,8 +37,25 @@ public class DataFormat : LogixEnum<DataFormat, string>
     public static readonly DataFormat L5K = new(nameof(L5K), nameof(L5K));
 
     /// <summary>
-    /// A list of all data formats that are supported for deserialization of the library.
+    /// A list of all data formats that are supported for deserialization by this library (everything but L5K).
     /// </summary>
     public static readonly IEnumerable<DataFormat> Supported = new List<DataFormat>
         { Decorated, String, Alarm, Message };
+
+    /// <summary>
+    /// Returns the corresponding <see cref="DataFormat"/> for the provided <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="data">The <see cref="LogixData"/> to get the data format for.</param>
+    /// <returns>The <see cref="DataFormat"/> option indicating how the type's data is formatted in the L5X.</returns>
+    public static DataFormat FromData(LogixData data)
+    {
+        return data switch
+        {
+            StringData => String,
+            ALARM_ANALOG => Alarm,
+            ALARM_DIGITAL => Alarm,
+            MESSAGE => Message,
+            _ => Decorated
+        };
+    }
 }

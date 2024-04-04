@@ -33,8 +33,6 @@ public class LrealTests
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(LREAL).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
             type.Members.Should().HaveCount(0);
             type.Radix.Should().Be(Radix.Float);
         }
@@ -103,7 +101,7 @@ public class LrealTests
         {
             var type = new LREAL();
 
-            var atomic = type.As<AtomicType>();
+            var atomic = type.As<AtomicData>();
 
             atomic.Should().NotBeNull();
         }
@@ -113,7 +111,7 @@ public class LrealTests
         {
             var type = new LREAL();
 
-            FluentActions.Invoking(() => type.As<StructureType>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -134,17 +132,6 @@ public class LrealTests
             var clone = type.Clone();
 
             clone.Should().Be(1.23);
-        }
-
-        [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new LREAL(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]
@@ -509,7 +496,7 @@ public class LrealTests
         {
             var type = new LREAL(1) as IConvertible;
 
-            FluentActions.Invoking(() => type.ToType(typeof(StructureType), CultureInfo.InvariantCulture)).Should()
+            FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
         }
 
@@ -808,23 +795,23 @@ public class LrealTests
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new LREAL(1.23);
             var second = new LREAL(1.23);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new LREAL(1.23);
             var second = new LREAL(1.32);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

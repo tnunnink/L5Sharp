@@ -18,7 +18,7 @@ namespace L5Sharp.Core;
 public class Module : LogixComponent
 {
     /// <inheritdoc />
-    public Module()
+    public Module() : base(L5XName.Module)
     {
         CatalogNumber = string.Empty;
         Vendor = Vendor.Unknown;
@@ -222,6 +222,7 @@ public class Module : LogixComponent
         set => SetComplex(value);
     }
 
+    //Properties or methods extending the functionality of a Module component.
     #region Extensions
 
     /// <summary>
@@ -252,8 +253,8 @@ public class Module : LogixComponent
     /// <remarks>
     /// The L5X structure serializes modules in a flat list with each element having properties (ParentModule, ParentModPortId)
     /// defining the parent/child IO tree relationship. It would be nice to navigate this hierarchy programatically,
-    /// hence the reason for this extension method. Of course, this requires the module is attached to the L5X content.
-    /// In-memory created modules will inherently return an empty collection, as there is no L5X structure to introspect.
+    /// hence the reason for this extension. Of course, this requires the module is attached to the L5X content.
+    /// In-memory created modules will inherently return a null object, as there is no L5X structure to introspect.
     /// </remarks>
     public Module? Parent
     {
@@ -378,9 +379,11 @@ public class Module : LogixComponent
     /// <exception cref="InvalidOperationException">The module catalog service could not load the installed catalog
     /// database file -or- catalog number does not exist in the catalog database.</exception>
     /// <exception cref="ArgumentException"><c>catalogNumber</c> is null or empty.</exception>
-    /// <remarks>This factory method uses the <see cref="ModuleCatalog"/> service to lookup info for the specified
-    /// catalog number. If RSLogix is not installed on the current environment, this will throw an exception.</remarks>
-    public static Module Add(string name, string catalogNumber, Address? address = null)
+    /// <remarks>
+    /// This factory method uses the <see cref="ModuleCatalog"/> service to lookup info for the specified
+    /// catalog number. If RSLogix is not installed on the current environment, this will throw an exception.
+    /// </remarks>
+    public static Module New(string name, string catalogNumber, Address? address = null)
     {
         var catalog = new ModuleCatalog();
         var entry = catalog.Lookup(catalogNumber);

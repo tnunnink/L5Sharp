@@ -20,8 +20,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new ALARM();
 
             type.Name.Should().Be(nameof(ALARM));
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(24);
             type.EnableIn.Should().Be(0);
             type.In.Should().Be(0);

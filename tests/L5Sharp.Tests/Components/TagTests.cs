@@ -76,6 +76,16 @@ public class TagTests
     }
 
     [Test]
+    public void New_NameAndValueOverload_ShouldHaveExpectedValues()
+    {
+        var tag = new Tag("Test", 123);
+
+        tag.Name.Should().Be("Test");
+        tag.Value.Should().BeOfType<DINT>();
+        tag.Value.Should().Be(123);
+    }
+
+    [Test]
     public void New_Atomic_ShouldHaveExpectedValue()
     {
         var tag = new Tag { Name = "Test", Value = true };
@@ -101,14 +111,13 @@ public class TagTests
     public void New_Array_ShouldHaveExpectedValue()
     {
         var tag = new Tag { Name = "Test", Value = new DINT[] { 0, 1, 2, 3, 4 } };
-
-        tag.Value.Should().BeOfType<ArrayType<DINT>>();
+        
         tag.Dimensions.Should().Be(new Dimensions(5));
-        tag.Value.As<ArrayType>()[0].Should().Be(0);
-        tag.Value.As<ArrayType>()[1].Should().Be(1);
-        tag.Value.As<ArrayType>()[2].Should().Be(2);
-        tag.Value.As<ArrayType>()[3].Should().Be(3);
-        tag.Value.As<ArrayType>()[4].Should().Be(4);
+        tag.Value.As<ArrayData>()[0].Should().Be(0);
+        tag.Value.As<ArrayData>()[1].Should().Be(1);
+        tag.Value.As<ArrayData>()[2].Should().Be(2);
+        tag.Value.As<ArrayData>()[3].Should().Be(3);
+        tag.Value.As<ArrayData>()[4].Should().Be(4);
     }
 
     [Test]
@@ -125,7 +134,7 @@ public class TagTests
     [Test]
     public void Root_FromNestedDescendantMember_ShouldNotBeNullAndSameAsTag()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
         var root = tag["Simple.M1"].Root;
 
@@ -147,23 +156,23 @@ public class TagTests
     [Test]
     public void Parent_FromNestedDescendantMember_ShouldBeExpected()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
         var parent = tag["Simple.M1"].Parent;
 
         parent.Should().NotBeNull();
-        parent?.Value.Should().BeOfType<MySimpleType>();
+        parent?.Value.Should().BeOfType<MySimpleData>();
         parent?.TagName.Should().Be("Test.Simple");
     }
 
     [Test]
     public void New_NamedComplexType_ShouldHaveExpectedDataTypeAndMembers()
     {
-        var tag = new Tag { Name = "Test", Value = new ComplexType("MyCustomType") };
+        var tag = new Tag { Name = "Test", Value = new ComplexData("MyCustomType") };
         
         tag.Add("Member01", new DINT(100));
         tag.Add("Member02", new TIMER { PRE = 3000 });
-        tag.Add("Member03", new ComplexType("SubType"));
+        tag.Add("Member03", new ComplexData("SubType"));
 
         tag.DataType.Should().Be("MyCustomType");
         tag.Members().Where(m => m.TagName.Depth == 1).Should().HaveCount(3);
@@ -295,8 +304,8 @@ public class TagTests
         tag.Should().NotBeNull();
         tag.Name.Should().Be("TestStringTag");
         tag.DataType.Should().Be("MyStringType");
-        tag.Value.Should().BeOfType<StringType>();
-        tag.Value.Should().Be("This is a $ tests");
+        tag.Value.Should().BeOfType<StringData>();
+        tag.Value.Should().Be("This is a $$ tests");
     }
 
     [Test]
@@ -326,7 +335,7 @@ public class TagTests
         tag.DataType.Should().Be("SimpleType");
         tag.Constant.Should().BeFalse();
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
-        tag.Value.Should().BeOfType<ComplexType>();
+        tag.Value.Should().BeOfType<ComplexData>();
         tag.Member("BoolMember").Should().NotBeNull();
         tag.Member("SintMember").Should().NotBeNull();
         tag.Member("IntMember").Should().NotBeNull();
@@ -363,7 +372,7 @@ public class TagTests
         var value = tag.Value;
 
         value.Should().NotBeNull();
-        value.Should().BeOfType<NullType>();
+        value.Should().BeOfType<NullData>();
     }
 
     [Test]
@@ -428,7 +437,7 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
         //Name does not matter just the members
-        tag.Value = new ComplexType("Test", new List<LogixMember>
+        tag.Value = new ComplexData("Test", new List<Member>
         {
             new("PRE", 5000),
             new("ACC", 1234),
@@ -451,12 +460,11 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new DINT[] { 1, 2, 3, 4 } };
 
         tag.Value = new DINT[] { 4, 3, 2, 1 };
-
-        tag.Value.Should().BeOfType<ArrayType<DINT>>();
-        tag.Value.As<ArrayType>()[0].Should().Be(4);
-        tag.Value.As<ArrayType>()[1].Should().Be(3);
-        tag.Value.As<ArrayType>()[2].Should().Be(2);
-        tag.Value.As<ArrayType>()[3].Should().Be(1);
+        
+        tag.Value.As<ArrayData>()[0].Should().Be(4);
+        tag.Value.As<ArrayData>()[1].Should().Be(3);
+        tag.Value.As<ArrayData>()[2].Should().Be(2);
+        tag.Value.As<ArrayData>()[3].Should().Be(1);
     }
 
     [Test]
@@ -466,12 +474,11 @@ public class TagTests
 
         //array length does not matter. indices will be join on what is available.
         tag.Value = new TIMER[] { new() { PRE = 100 }, new() { PRE = 200 }, new() { PRE = 300 } };
-
-        tag.Value.Should().BeOfType<ArrayType<TIMER>>();
-        tag.Value.As<ArrayType>()[0].As<TIMER>().PRE.Should().Be(100);
-        tag.Value.As<ArrayType>()[1].As<TIMER>().PRE.Should().Be(200);
-        tag.Value.As<ArrayType>()[2].As<TIMER>().PRE.Should().Be(300);
-        tag.Value.As<ArrayType>()[3].As<TIMER>().PRE.Should().Be(0);
+        
+        tag.Value.As<ArrayData>()[0].As<TIMER>().PRE.Should().Be(100);
+        tag.Value.As<ArrayData>()[1].As<TIMER>().PRE.Should().Be(200);
+        tag.Value.As<ArrayData>()[2].As<TIMER>().PRE.Should().Be(300);
+        tag.Value.As<ArrayData>()[3].As<TIMER>().PRE.Should().Be(0);
     }
 
     [Test]
@@ -479,18 +486,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void SetValue_StaticMemberOfStructureType_ShouldRaiseDataChanged()
-    {
-        var tag = new Tag { Name = "Test", Value = new TIMER() };
-        using var monitor = tag.Value.Monitor();
-
-        tag.Value.As<TIMER>().PRE = 5000;
-
-        monitor.Should().Raise("DataChanged");
+        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidCastException>();
     }
 
     [Test]
@@ -505,22 +501,11 @@ public class TagTests
     }
 
     [Test]
-    public void SetValue_StaticMemberOfNestedType_ShouldRaiseDataChanged()
-    {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
-        using var monitor = tag.Value.Monitor();
-
-        tag.Value.As<MyNestedType>().Simple.M4 = 5000;
-
-        monitor.Should().Raise("DataChanged");
-    }
-
-    [Test]
     public Task SetValue_StaticMemberOfNestedType_ShouldBeVerifiedXml()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
-        tag.Value.As<MyNestedType>().Simple.M4 = 5000;
+        tag.Value.As<MyNestedData>().Simple.M4 = 5000;
 
         var xml = tag.Serialize().ToString();
         return Verify(xml);
@@ -531,7 +516,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        tag.Value = new Dictionary<string, LogixType>
+        tag.Value = new Dictionary<string, LogixData>
         {
             { "PRE", 5000 },
             { "ACC", 1234 },
@@ -541,6 +526,17 @@ public class TagTests
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(true);
+    }
+    
+    [Test]
+    public Task SetValue_AnalogAlarm_ShouldBeVerified()
+    {
+        var tag = new Tag { Name = "Test" };
+
+        tag.Value = new ALARM_ANALOG { In = 1.23f, HHEnabled = true, MinDurationPRE = 3000 };
+
+        var xml = tag.Serialize().ToString();
+        return Verify(xml);
     }
 
     #endregion
@@ -590,7 +586,7 @@ public class TagTests
     [Test]
     public void Member_NestedType_ShouldBeExpected()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
         var member = tag.Member("Simple.M1");
 
@@ -601,7 +597,7 @@ public class TagTests
     [Test]
     public void Member_ChainedCalls_ShouldBeExpected()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
         var nested = tag.Member("Simple")?.Member("M1");
 
@@ -642,11 +638,35 @@ public class TagTests
         members.Should().Contain(t => t.TagName == "Test.ACC");
         members.Should().Contain(t => t.TagName == "Test.PRE");
     }
+    
+    [Test]
+    public void Members_StringType_ShouldHaveExpectedCount()
+    {
+        var tag = new Tag { Name = "Test", Value = "This is a test value" };
+
+        var members = tag.Members().ToList();
+
+        members.Should().HaveCount(85);
+    }
+
+    [Test]
+    public void Members_StringType_ShouldHaveContainExpectedTagNames()
+    {
+        var tag = new Tag { Name = "Test", Value = "This is a test value" };
+
+        var members = tag.Members().ToList();
+
+        members.Should().Contain(t => t.TagName == "Test.LEN");
+        members.Should().Contain(t => t.TagName == "Test.DATA");
+        members.Should().Contain(t => t.TagName == "Test.DATA[0]");
+        members.Should().Contain(t => t.TagName == "Test.DATA[1]");
+        members.Should().Contain(t => t.TagName == "Test.DATA[63]");
+    }
 
     [Test]
     public void Members_NestedStructure_ShouldHaveExpectedCount()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
         var members = tag.Members().ToList();
 
@@ -656,11 +676,11 @@ public class TagTests
     [Test]
     public void Members_NestedStructure_AllDataTypesShouldNotBeNull()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
         var result = tag.Members().ToList().Select(m => m.Value).ToList();
 
-        result.Should().AllBeAssignableTo<LogixType>();
+        result.Should().AllBeAssignableTo<LogixData>();
     }
 
     [Test]
@@ -669,7 +689,7 @@ public class TagTests
         var tag = new Tag
         {
             Name = "Test",
-            Value = new MyNestedType()
+            Value = new MyNestedData()
         };
 
         var members = tag.Members().ToList();
@@ -696,7 +716,7 @@ public class TagTests
         var tag = new Tag
         {
             Name = "Test",
-            Value = new MyNestedType()
+            Value = new MyNestedData()
         };
 
         var members = tag.Members(t => t.Contains("Tmr"));
@@ -710,7 +730,7 @@ public class TagTests
         var tag = new Tag
         {
             Name = "Test",
-            Value = new MyNestedType()
+            Value = new MyNestedData()
         };
 
         var members = tag.Members(t => t.Members.Count() > 4);
@@ -724,7 +744,7 @@ public class TagTests
         var tag = new Tag
         {
             Name = "Test",
-            Value = new MyNestedType()
+            Value = new MyNestedData()
         };
 
         var members = tag.Members(t => TagName.Equals(t, "M1", TagNameComparer.Member));
@@ -738,7 +758,7 @@ public class TagTests
         var tag = new Tag
         {
             Name = "Test",
-            Value = new MyNestedType()
+            Value = new MyNestedData()
         };
 
         var members = tag.Members(t => t.DataType == "BOOL").ToList();
@@ -752,7 +772,7 @@ public class TagTests
         var tag = new Tag
         {
             Name = "Test",
-            Value = new MyNestedType()
+            Value = new MyNestedData()
         };
 
         var members = tag.MembersOf("Tmr").ToList();
@@ -766,12 +786,22 @@ public class TagTests
         var tag = new Tag
         {
             Name = "Test",
-            Value = new MyNestedType()
+            Value = new MyNestedData()
         };
 
         var members = tag.MembersOf("Fake").ToList();
 
         members.Should().BeEmpty();
+    }
+
+    [Test]
+    public void TagNames_NestedType_ShouldHaveExpectedCount()
+    {
+        var tag = new Tag("Test", new MyNestedData());
+
+        var names = tag.TagNames().ToList();
+
+        names.Should().NotBeEmpty();
     }
 
     #endregion
@@ -827,8 +857,7 @@ public class TagTests
         tag.Name.Should().Be("MyTimer");
         tag.Value.Should().BeOfType<TIMER>();
     }
-
-
+    
     [Test]
     public void With_RootTagValidValue_ShouldUpdateValue()
     {
@@ -846,7 +875,7 @@ public class TagTests
     [Test]
     public void With_NestedComplexType_ShouldHaveUpdatedValue()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedType() };
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
         var member = tag["Simple.M4"];
 

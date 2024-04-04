@@ -1,0 +1,34 @@
+﻿<Program Name="TestProgram" Type="Normal" TestEdits="false" Disabled="false" UseAsFolder="false" Use="Target">
+  <Tags>
+    <Tag Name="InputTag" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal">
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Radix="Decimal" Value="101" />
+      </Data>
+    </Tag>
+    <Tag Name="OutputTag" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal">
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="Add_Block" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="FBD_MATH">
+      <Data Format="Decorated">
+        <Structure DataType="FBD_MATH" />
+      </Data>
+    </Tag>
+  </Tags>
+  <Routines>
+    <Routine Name="Test" Type="FBD">
+      <FBDContent SheetSize="A0 - 841 x 1189 mm" SheetOrientation="Landscape">
+        <Sheet Number="1">
+          <IRef ID="0" X="100" Y="100" Operand="InputTag" />
+          <IRef ID="1" X="100" Y="200" Operand="100" />
+          <ORef ID="3" X="300" Y="100" Operand="OutputTag" />
+          <Block Type="ADD" ID="2" X="200" Y="100" Operand="Add_Block" VisiblePins="SourceA SourceB Destination" />
+          <Wire FromID="0" ToID="2" ToParam="SourceA" />
+          <Wire FromID="1" ToID="2" ToParam="SourceB" />
+          <Wire FromID="2" ToID="3" FromParam="Destination" />
+        </Sheet>
+      </FBDContent>
+    </Routine>
+  </Routines>
+</Program>

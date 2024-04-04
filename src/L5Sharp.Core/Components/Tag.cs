@@ -19,22 +19,34 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.ConfigTag)]
 [L5XType(L5XName.InputTag)]
 [L5XType(L5XName.OutputTag)]
-public class Tag : LogixComponent
+public sealed class Tag : LogixComponent
 {
-    private readonly LogixMember _member;
+    private readonly Member _member;
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> with default values.
     /// </summary>
-    public Tag()
+    public Tag() : base(L5XName.Tag)
     {
-        _member = new LogixMember(Element);
-        _member.DataChanged += OnDataChanged;
+        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        _member = new Member(Element.LogixName(), GetData, SetData);
 
         Root = this;
         TagType = TagType.Base;
         ExternalAccess = ExternalAccess.ReadWrite;
         Constant = false;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> initialized with the provided name and value.
+    /// </summary>
+    /// <param name="name">The name of the Tag.</param>
+    /// <param name="value">The <see cref="LogixData"/> value of the Tag.</param>
+    /// <param name="description">the optional description of the tag.</param>
+    public Tag(string name, LogixData value, string? description = default) : this()
+    {
+        Name = name;
+        Value = value;
     }
 
     /// <summary>
@@ -44,24 +56,24 @@ public class Tag : LogixComponent
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Tag(XElement element) : base(element)
     {
-        _member = new LogixMember(Element);
-        _member.DataChanged += OnDataChanged;
+        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        _member = new Member(Element.LogixName(), GetData, SetData);
 
         Root = this;
     }
 
     /// <summary>
     /// Creates a new nested member <see cref="Tag"/> initialized with the root tag, underlying member,
-    /// and optional parent tag.
+    /// and parent tag.
     /// </summary>
     /// <param name="root">The root or base tag of this tag member.</param>
     /// <param name="member">The underlying member that this tag wraps.</param>
     /// <param name="parent">The parent tag of this tag member.</param>
     /// <remarks>
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
-    /// tag member objects.
+    /// wrapped members as Tag objects.
     /// </remarks>
-    private Tag(Tag root, LogixMember member, Tag parent) : base(root.Element)
+    private Tag(Tag root, Member member, Tag parent) : base(root.Element)
     {
         _member = member ?? throw new ArgumentNullException(nameof(member));
         Root = root ?? throw new ArgumentNullException(nameof(root));
@@ -127,28 +139,28 @@ public class Tag : LogixComponent
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions of the tag.</value>
     /// <remarks>
     /// This value will always point to the dimensions property of <see cref="Value"/>, assuming it is an
-    /// <see cref="ArrayType"/>.
+    /// <see cref="ArrayData"/>.
     /// If <c>Value</c> is not an array type, this property will always return <see cref="L5Sharp.Core.Dimensions.Empty"/>.
     /// </remarks>
-    public Dimensions Dimensions => Value is ArrayType array ? array.Dimensions : Dimensions.Empty;
+    public Dimensions Dimensions => Value is ArrayData array ? array.Dimensions : Dimensions.Empty;
 
     /// <summary>
-    /// The radix format of <c>Value</c>. Only applies if the tag is an <see cref="AtomicType"/>.
+    /// The radix format of <c>Value</c>. Only applies if the tag is an <see cref="AtomicData"/>.
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> option representing data format of the tag value.</value>
     /// <remarks>
-    /// This value will always point to the radix of <see cref="Value"/>, assuming it is an <see cref="AtomicType"/>.
+    /// This value will always point to the radix of <see cref="Value"/>, assuming it is an <see cref="AtomicData"/>.
     /// If <c>Value</c> is not an atomic type, this property will always return <see cref="L5Sharp.Core.Radix.Null"/>.
     /// </remarks>
-    public Radix Radix => Value is AtomicType atomic ? atomic.Radix : Radix.Null;
+    public Radix Radix => Value is AtomicData atomic ? atomic.Radix : Radix.Null;
 
     /// <summary>
     /// The value or data of the <see cref="Tag"/>.
     /// </summary>
-    /// <value>A <see cref="LogixType"/> containing the tag data.</value>
+    /// <value>A <see cref="LogixData"/> containing the tag data.</value>
     /// <remarks>
     /// <para>
-    /// The <see cref="LogixType"/> is the basis for all tag data types. This property may represent the atomic
+    /// The <see cref="LogixData"/> is the basis for all tag data types. This property may represent the atomic
     /// value (bool, integer, float), string, complex structure, or array. <c>LogixType</c> has built in implicit operators
     /// to convert .NET types to <c>LogixType</c> objects so to make setting <c>Value</c> more concise.
     /// </para>
@@ -158,10 +170,10 @@ public class Tag : LogixComponent
     /// allowing the user to cast <c>Value</c> down to more derived types.
     /// </para>
     /// </remarks>
-    public LogixType Value
+    public LogixData Value
     {
-        get => _member.DataType;
-        set => _member.DataType = value;
+        get => _member.Value;
+        set => _member.Value = value;
     }
 
     /// <summary>
@@ -293,8 +305,10 @@ public class Tag : LogixComponent
     public Tag Root { get; }
 
     /// <summary>
-    /// 
+    /// Gets the <see cref="Tag"/> object from the L5X that is the alias for this tag object.
     /// </summary>
+    /// <value>The <see cref="Tag"/> object that represents the alias if found. If this object is not
+    /// attached, or <see cref="AliasFor"/> is not set, then this will return <c>null</c>.</value>
     public Tag? Alias => AliasFor is not null ? L5X?.Find(AliasFor) : default;
 
     /// <summary>
@@ -346,17 +360,17 @@ public class Tag : LogixComponent
     /// Adds a new member to the tag's complex data structure.
     /// </summary>
     /// <param name="name">The name of the member to add to the tag's data structure.</param>
-    /// <param name="value">The <see cref="LogixType"/> of the member to add to the tag's data structure.</param>
+    /// <param name="value">The <see cref="LogixData"/> of the member to add to the tag's data structure.</param>
     /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
     /// <remarks>
     /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexType"/> <c>Add</c> method. Therefore this is simply a helper to make mutating tag structures
+    /// <see cref="ComplexData"/> <c>Add</c> method. Therefore this is simply a helper to make mutating tag structures
     /// more concise.
     /// </remarks>
-    public void Add(string name, LogixType value)
+    public void Add(string name, LogixData value)
     {
-        var member = new LogixMember(name, value);
-        if (Value is not ComplexType complexType)
+        var member = new Member(name, value);
+        if (Value is not ComplexData complexType)
             throw new InvalidOperationException("Can only mutate ComplexType tags.");
         complexType.Add(member);
     }
@@ -491,7 +505,7 @@ public class Tag : LogixComponent
     /// <param name="name">The name of the tag.</param>
     /// <typeparam name="TLogixType">The logix data type of the tag. Type must have parameterless constructor to create.</typeparam>
     /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
-    public static Tag New<TLogixType>(string name) where TLogixType : LogixType, new() =>
+    public static Tag New<TLogixType>(string name) where TLogixType : LogixData, new() =>
         new() { Name = name, Value = new TLogixType() };
 
     /// <summary>
@@ -501,13 +515,14 @@ public class Tag : LogixComponent
     /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
     /// <remarks>
     /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexType"/> <c>Remove</c> method. Therefore this is simply a helper to make mutating tag structures
+    /// <see cref="ComplexData"/> <c>Remove</c> method. Therefore this is simply a helper to make mutating tag structures
     /// more concise.
     /// </remarks>
     public void Remove(string name)
     {
-        if (Value is not ComplexType complexType)
+        if (Value is not ComplexData complexType)
             throw new InvalidOperationException("Can only mutate ComplexType tags.");
+
         complexType.Remove(name);
     }
 
@@ -526,13 +541,13 @@ public class Tag : LogixComponent
     /// <summary>
     /// Returns as new <see cref="Tag"/> with the updated data type value provided. 
     /// </summary>
-    /// <param name="value">The <see cref="LogixType"/> value to change to.</param>
+    /// <param name="value">The <see cref="LogixData"/> value to change to.</param>
     /// <returns>
     /// A <see cref="Tag"/> with the same underlying <see cref="XElement"/> and corresponding properties with
-    /// <see cref="Value"/> changed to the provided <see cref="LogixType"/>.
+    /// <see cref="Value"/> changed to the provided <see cref="LogixData"/>.
     /// </returns>
     /// <exception cref="InvalidOperationException">When this tag is a nested tag member and it's parent tag's
-    /// <see cref="Value"/> property is not a <see cref="ComplexType"/> object.</exception>
+    /// <see cref="Value"/> property is not a <see cref="ComplexData"/> object.</exception>
     /// <remarks>
     /// <para>
     /// This is meant to be a concise way to change the data type of tag while leaving all else the same, since setting
@@ -546,17 +561,18 @@ public class Tag : LogixComponent
     /// will fail if <see cref="Value"/> for the parent tag is not a complex type object.
     /// </para>
     /// </remarks>
-    public Tag With(LogixType value)
+    public Tag With(LogixData value)
     {
         if (Parent is null)
         {
-            SetData(value);
+            base.SetData(value);
+            UpdateDataAttributes(value);
             return new Tag(Element);
         }
 
-        if (Parent.Value is not ComplexType complexType)
+        if (Parent.Value is not ComplexData complexType)
             throw new InvalidOperationException(
-                $"Can not mutate tag data for parent type {Parent.DataType} as it is not a complex type instance.");
+                $"Can not mutate tag data for parent type {Parent.DataType} as it is not a complex type object.");
 
         complexType.Replace(TagName.Member, value);
         return Root[TagName.Path];
@@ -564,67 +580,44 @@ public class Tag : LogixComponent
 
     #region Internal
 
-    /// <summary>
-    /// Triggers <see cref="SetData"/> when a nested data type value of this tag's <see cref="Value"/> changes.
-    /// </summary>
-    private void OnDataChanged(object? sender, EventArgs e) => SetData(Root.Value);
-
-    /// <summary>
-    /// Handles setting the data of the root tag and updating the root properties
-    /// </summary>
-    private void SetData(LogixType value)
+    /// <inheritdoc />
+    /// <remarks>
+    /// After setting the data element we need to also update the tag attributes to keep them in with
+    /// the currently assigned value.
+    /// </remarks>
+    protected override void SetData(LogixData? value)
     {
-        var data = Element.Elements().FirstOrDefault(e =>
-            DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
 
-        if (data is null)
-            Element.Add(GenerateData(value));
-        else
-            data.ReplaceWith(GenerateData(value));
+        //So if the data is already set, we don't want to replace it, we want to use a member to update the data.
+        var member = (Element.Element(L5XName.Data)?.FirstNode as XElement)?.ToMember();
+        if (member is not null)
+        {
+            member.Value = value;
+            return;
+        }
 
-        SetTagAttributes(value);
+        //If there is not data then we want to add it using the base implementation.
+        base.SetData(value);
+        UpdateDataAttributes(value);
     }
 
     /// <summary>
-    /// Handles setting the <see cref="DataType"/>, <see cref="Radix"/>, and <see cref="Dimensions"/> of the underlying
-    /// element for the tag.
+    /// handles updating the root tag element DataType, Radix, and Dimensions when we replace the root
+    /// data element.
     /// </summary>
-    private void SetTagAttributes(LogixType value)
+    private void UpdateDataAttributes(LogixData value)
     {
         Element.SetAttributeValue(L5XName.DataType, value.Name);
 
-        var radix = value is AtomicType atomicType ? atomicType.Radix
-            : value is ArrayType arrayType && arrayType.Radix != Radix.Null ? arrayType.Radix
+        var radix = value is AtomicData atomicType ? atomicType.Radix
+            : value is ArrayData arrayType && arrayType.Radix != Radix.Null ? arrayType.Radix
             : null;
         Element.SetAttributeValue(L5XName.Radix, radix);
 
-        var dimensions = value is ArrayType array ? array.Dimensions : null;
+        var dimensions = value is ArrayData array ? array.Dimensions : null;
         Element.SetAttributeValue(L5XName.Dimensions, dimensions);
-    }
-
-    /// <summary>
-    /// Generates the root data element for a tag component provided a logix type.
-    /// </summary>
-    private static XElement GenerateData(LogixType type)
-    {
-        return type switch
-        {
-            StringType stringType => stringType.Serialize(),
-            ALARM_ANALOG alarmAnalog => GenerateFormatted(alarmAnalog, DataFormat.Alarm),
-            ALARM_DIGITAL alarmDigital => GenerateFormatted(alarmDigital, DataFormat.Alarm),
-            MESSAGE message => GenerateFormatted(message, DataFormat.Message),
-            ILogixSerializable serializable => GenerateFormatted(serializable, DataFormat.Decorated)
-        };
-    }
-
-    /// <summary>
-    /// Generates data element with provided format value and serializable type.
-    /// </summary>
-    private static XElement GenerateFormatted(ILogixSerializable type, DataFormat format)
-    {
-        var data = new XElement(L5XName.Data, new XAttribute(L5XName.Format, format));
-        data.Add(type.Serialize());
-        return data;
     }
 
     /// <summary>
@@ -636,48 +629,9 @@ public class Tag : LogixComponent
         var xName = Element.Name;
 
         if (xName == L5XName.ConfigTag || xName == L5XName.InputTag || xName == L5XName.OutputTag)
-            return ModuleTagName(Element);
+            return Element.ModuleTagName();
 
         return Element.Attribute(L5XName.Name)?.Value ?? string.Empty;
-    }
-
-    /// <summary>
-    /// A helper for determining a module tag name for an input, output, or config tag element. This involves getting
-    /// the tag suffix, module name, parent module name, and configured slot number.
-    /// </summary>
-    private static string ModuleTagName(XElement element)
-    {
-        var suffix = DetermineModuleSuffix(element);
-
-        var moduleName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.Name)?.Value;
-
-        var parentName = element.Ancestors(L5XName.Module)
-            .FirstOrDefault()?.Attribute(L5XName.ParentModule)?.Value;
-
-        var slot = element
-            .Ancestors(L5XName.Module)
-            .Descendants(L5XName.Port)
-            .Where(p => bool.TryParse(p.Attribute(L5XName.Upstream)?.Value!, out _)
-                        && p.Attribute(L5XName.Type)?.Value != "Ethernet"
-                        && int.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
-            .Select(p => p.Attribute(L5XName.Address)?.Value)
-            .FirstOrDefault();
-
-        return slot is not null ? $"{parentName}:{slot}:{suffix}" : $"{moduleName}:{suffix}";
-    }
-
-    private static string DetermineModuleSuffix(XElement element)
-    {
-        if (element.Name == L5XName.ConfigTag) return "C";
-
-        if (element.Name == L5XName.InputTag)
-            return element.Parent?.Attribute(L5XName.InputTagSuffix)?.Value ?? "I";
-
-        if (element.Name == L5XName.OutputTag)
-            return element.Parent?.Attribute(L5XName.OutputTagSuffix)?.Value ?? "O";
-
-        throw new ArgumentException($"Module tag element name {element.Name} not valid.");
     }
 
     /// <summary>
@@ -709,7 +663,7 @@ public class Tag : LogixComponent
         }
 
         //Child descriptions are set in the comments element of a tag.
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
         {
             Element.Descendants(L5XName.Comment)
                 .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
@@ -757,7 +711,7 @@ public class Tag : LogixComponent
     /// </summary>
     private void SetUnit(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
         {
             Element.Descendants(L5XName.EngineeringUnit)
                 .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,

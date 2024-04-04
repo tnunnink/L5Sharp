@@ -6,7 +6,7 @@ namespace L5Sharp.Tests.Common
     [TestFixture]
     public class VendorTests
     {
-        private Fixture _fixture;
+        private Fixture? _fixture;
 
         [SetUp]
         public void Setup()

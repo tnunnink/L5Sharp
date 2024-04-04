@@ -15,7 +15,7 @@ public class Chart : Diagram
     /// <summary>
     /// Creates a new <see cref="Chart"/> with default values.
     /// </summary>
-    public Chart()
+    public Chart() : base(L5XName.SFCContent)
     {
     }
 

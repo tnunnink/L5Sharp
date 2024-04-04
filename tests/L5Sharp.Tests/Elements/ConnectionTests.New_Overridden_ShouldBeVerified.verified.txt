@@ -1,5 +1,5 @@
 ﻿<Connection Name="Test" RPI="4000" Type="Input" Priority="High" InputConnectionType="Unicast" InputProductionTrigger="Application" InputCxnPoint="100" InputSize="10" OutputCxnPoint="100" OutputSize="10" OutputRedundantOwner="true" Unicast="true" EventId="1" InputTagSuffix="II" OutputTagSuffix="OO">
-  <InputTag Name="" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT[100]" Radix="Decimal" Dimensions="100">
+  <InputTag Name="" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal" Dimensions="100">
     <Data Format="Decorated">
       <Array DataType="DINT" Dimensions="100" Radix="Decimal">
         <Element Index="[0]" Value="0" />
@@ -105,7 +105,7 @@
       </Array>
     </Data>
   </InputTag>
-  <OutputTag Name="" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="BOOL[100]" Radix="Decimal" Dimensions="100">
+  <OutputTag Name="" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="BOOL" Radix="Decimal" Dimensions="100">
     <Data Format="Decorated">
       <Array DataType="BOOL" Dimensions="100" Radix="Decimal">
         <Element Index="[0]" Value="0" />

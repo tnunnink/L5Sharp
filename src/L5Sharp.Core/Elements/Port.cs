@@ -12,12 +12,12 @@ namespace L5Sharp.Core;
 /// or the the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
 /// Each port is identifiable by the <see cref="Id"/> property. 
 /// </remarks>
-public class Port : LogixElement
+public class Port : LogixObject
 {
     /// <summary>
     /// Creates a new <see cref="Port"/> with default values.
     /// </summary>
-    public Port()
+    public Port() : base(L5XName.Port)
     {
         Id = 0;
         Type = string.Empty;

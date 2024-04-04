@@ -101,7 +101,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void SupportsType_AtomicAsIDataType_ShouldBeTrue()
         {
-            var type = (LogixType)new BOOL();
+            var type = (LogixData)new BOOL();
 
             var result = Radix.Decimal.SupportsType(type);
 
@@ -111,7 +111,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void SupportsType_ComplexAsIDataType_ShouldBeFalse()
         {
-            var type = (LogixType)new STRING();
+            var type = (LogixData)new STRING();
 
             var result = Radix.Decimal.SupportsType(type);
 

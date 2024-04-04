@@ -6,12 +6,12 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
 /// </summary>
-public class Connection : LogixElement
+public class Connection : LogixObject
 {
     /// <summary>
     /// Creates a new <see cref="Connection"/> with default values.
     /// </summary>
-    public Connection()
+    public Connection() : base(L5XName.Connection)
     {
         Name = string.Empty;
         RPI = 0;

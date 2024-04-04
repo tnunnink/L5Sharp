@@ -4,8 +4,9 @@
         <IsPackable>false</IsPackable>
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>10</LangVersion>
-        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <TargetFrameworks>net7.0;net481</TargetFrameworks>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -60,14 +61,14 @@
       <None Update="Types\Custom\MyNestedTypeTests.SetSimpleM4_Valid_ShouldBeValid.verified.txt">
         <DependentUpon>MyNestedTypeTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ArrayTypeTests.Serialize_SimpleOneDimensional_ShouldBeVerified.verified.txt">
-        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      <None Update="Types\ArrayDataTests.Serialize_SimpleOneDimensional_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayDataTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ArrayTypeTests.Serialize_SimpleThreeDimensional_ShouldBeVerified.verified.txt">
-        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      <None Update="Types\ArrayDataTests.Serialize_SimpleThreeDimensional_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayDataTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ArrayTypeTests.Serialize_SimpleTwoDimensional_ShouldBeVerified.verified.txt">
-        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      <None Update="Types\ArrayDataTests.Serialize_SimpleTwoDimensional_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayDataTests.cs</DependentUpon>
       </None>
       <None Update="Components\DataTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>DataTypeTests.cs</DependentUpon>
@@ -108,8 +109,8 @@
       <None Update="Types\Atomics\SintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
         <DependentUpon>SintTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ComplexTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
-        <DependentUpon>ComplexTypeTests.cs</DependentUpon>
+      <None Update="Types\ComplexDataTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>ComplexDataTests.cs</DependentUpon>
       </None>
       <None Update="Components\TagTests.SetValue_StaticMemberOfNestedType_ShouldBeVerifiedXml.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
@@ -132,24 +133,6 @@
       <None Update="Components\ModuleTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
-      <None Update="LogixMemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_StructureDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_ArrayOfAtomicDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_StringDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_ArrayOfStructureDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixMemberTests.Serialize_ArrayOfStringDataType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixMemberTests.cs</DependentUpon>
-      </None>
       <None Update="Components\ModuleTests.Serialize_Initialized_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
@@ -162,23 +145,20 @@
       <None Update="Types\Atomics\RealTests.Serialize_Value_ShouldBeValid.verified.txt">
         <DependentUpon>RealTests.cs</DependentUpon>
       </None>
-      <None Update="Types\NullTypeTests.SerializeShouldBeVerified.verified.txt">
-        <DependentUpon>NullTypeTests.cs</DependentUpon>
+      <None Update="Types\NullDataTests.SerializeShouldBeVerified.verified.txt">
+        <DependentUpon>NullDataTests.cs</DependentUpon>
       </None>
-      <None Update="Types\StringTypeTests.Serialize_Default_ShouldBeVerified.verified.txt">
-        <DependentUpon>StringTypeTests.cs</DependentUpon>
+      <None Update="Types\StringDataTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
       </None>
-      <None Update="Types\StringTypeTests.SerializeStructure_Default_ShouldBeVerified.verified.txt">
-        <DependentUpon>StringTypeTests.cs</DependentUpon>
+      <None Update="Types\StringDataTests.SerializeStructure_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ArrayTypeTests.Serialize_StringTypeArray_ShouldBeVerified.verified.txt">
-        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
+      <None Update="Types\ArrayDataTests.Serialize_StringTypeArray_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayDataTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ArrayTypeTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt">
-        <DependentUpon>ArrayTypeTests.cs</DependentUpon>
-      </None>
-      <None Update="Types\Predefined\AlarmAnalogTest.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
-        <DependentUpon>AlarmAnalogTest.cs</DependentUpon>
+      <None Update="Types\ArrayDataTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayDataTests.cs</DependentUpon>
       </None>
       <None Update="Types\Predefined\AlarmDigitalTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
         <DependentUpon>AlarmDigitalTests.cs</DependentUpon>
@@ -239,13 +219,13 @@
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
       <None Update="Elements\ReferenceBlockTests.New_IRefOverloaded_ShouldBeVerified.verified.txt">
-        <DependentUpon>InRefTests.cs</DependentUpon>
+        <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
       <None Update="Elements\BlockTests.New_Overriden_ShouldBeVerified.verified.txt">
         <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
       <None Update="Elements\ReferenceBlockTests.New_ORefOverloaded_ShouldBeVerified.verified.txt">
-        <DependentUpon>InRefTests.cs</DependentUpon>
+        <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
       <None Update="Elements\SheetTests.Wire_ValidOperands_ShouldBeVerified.verified.txt">
         <DependentUpon>SheetTests.cs</DependentUpon>
@@ -297,6 +277,39 @@
       </None>
       <None Update="Elements\RungTests.SetTextToNullThenCommentThenTextAgainShouldBeValid.verified.xml">
         <DependentUpon>RungTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_StructureDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_StringDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_ArrayOfAtomicDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_ArrayOfStructureDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\MemberTests.Serialize_ArrayOfStringDataType_ShouldBeVerified.verified.txt">
+        <DependentUpon>MemberTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Custom\MySimpleTypeTests.Serialize_UpdatedMember_ShouldBeVerified.verified.txt">
+        <DependentUpon>MySimpleTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\ArrayDataTests.Serialize_EmptyArray_ShouldBeVerified.verified.txt">
+        <DependentUpon>ArrayDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\RoutineTests.AddSheet_ValidSheetObject_ShouldWork.verified.txt">
+        <DependentUpon>RoutineTests.cs</DependentUpon>
+      </None>
+      <None Update="Types\Predefined\AlarmAnalogTest.SetMember_ValidType_ShouldBeVerified.verified.xml">
+        <DependentUpon>AlarmAnalogTest.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.SetValue_AnalogAlarm_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

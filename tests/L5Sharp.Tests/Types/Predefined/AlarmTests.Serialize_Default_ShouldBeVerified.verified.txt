@@ -1,5 +1,5 @@
 ﻿<Structure DataType="ALARM">
-  <DataValueMember Name="EnableIn" DataType="BOOL" Value="0" />
+  <DataValueMember Name="EnableIn" DataType="BOOL" Radix="Decimal" Value="0" />
   <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0" />
   <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="0.0" />
   <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="0.0" />
@@ -9,18 +9,18 @@
   <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0" />
   <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0" />
   <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0" />
-  <DataValueMember Name="EnableOut" DataType="BOOL" Value="0" />
-  <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0" />
-  <DataValueMember Name="HAlarm" DataType="BOOL" Value="0" />
-  <DataValueMember Name="LAlarm" DataType="BOOL" Value="0" />
-  <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0" />
-  <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0" />
-  <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0" />
+  <DataValueMember Name="EnableOut" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="HHAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="HAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="LAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="LLAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
   <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0" />
   <DataValueMember Name="Status" DataType="DINT" Radix="Decimal" Value="0" />
-  <DataValueMember Name="InstructFault" DataType="BOOL" Value="0" />
-  <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0" />
-  <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0" />
-  <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0" />
-  <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0" />
+  <DataValueMember Name="InstructFault" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="DeadbandInv" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Radix="Decimal" Value="0" />
+  <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Radix="Decimal" Value="0" />
 </Structure>

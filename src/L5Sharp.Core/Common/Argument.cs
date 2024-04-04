@@ -24,8 +24,8 @@ public class Argument : ILogixParsable<Argument>
     /// <summary>
     /// Indicates whether the argument is an immediate atomic value.
     /// </summary>
-    /// <value><c>true</c> if the underlying value is an <see cref="AtomicType"/> object; Otherwise, <c>false</c>.</value>
-    public bool IsAtomic => _value is AtomicType;
+    /// <value><c>true</c> if the underlying value is an <see cref="AtomicData"/> object; Otherwise, <c>false</c>.</value>
+    public bool IsAtomic => _value is AtomicData;
 
     /// <summary>
     /// Indicates whether the argument is an expression or combination of tag names, operators, and/or immediate values.
@@ -37,9 +37,9 @@ public class Argument : ILogixParsable<Argument>
     /// <summary>
     /// Indicates whether the argument is an immediate value, either string literal or atomic value.
     /// </summary>
-    /// <value><c>true</c> if the underlying value is an <see cref="AtomicType"/> or <see cref="string"/> object;
+    /// <value><c>true</c> if the underlying value is an <see cref="AtomicData"/> or <see cref="string"/> object;
     /// Otherwise, <c>false</c>.</value>
-    public bool IsImmediate => _value is AtomicType or string;
+    public bool IsImmediate => _value is AtomicData or string;
 
     /// <summary>
     /// Indicates whether the argument is an tag name reference.
@@ -94,7 +94,7 @@ public class Argument : ILogixParsable<Argument>
     /// <exception cref="ArgumentException"><c>value</c> is null or empty</exception>
     public static Argument Parse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             throw new ArgumentException("Value can not be null or empty to parse.");
 
         //Unknown value - Can be found in TON instructions and probably others.
@@ -104,7 +104,7 @@ public class Argument : ILogixParsable<Argument>
         if (value.StartsWith('\'') && value.EndsWith('\'')) return new Argument(value);
 
         //Immediate atomic value
-        var atomic = AtomicType.TryParse(value);
+        var atomic = AtomicData.TryParse(value);
         if (atomic is not null) return new Argument(atomic);
 
         //TagName or Expression otherwise
@@ -118,7 +118,7 @@ public class Argument : ILogixParsable<Argument>
     /// <returns>An <see cref="Argument"/> representing the parsed value if successful; Otherwise, <see cref="Empty"/>.</returns>
     public static Argument TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value)) return Empty;
+        if (value is null || value.IsEmpty()) return Empty;
         
         //Unknown value - Can be found in TON instructions and probably others.
         if (value == "?") return Unknown;
@@ -127,7 +127,7 @@ public class Argument : ILogixParsable<Argument>
         if (value.StartsWith('\'') && value.EndsWith('\'')) return new Argument(value);
 
         //Immediate atomic value
-        var atomic = AtomicType.TryParse(value);
+        var atomic = AtomicData.TryParse(value);
         if (atomic is not null) return new Argument(atomic);
 
         //TagName or Expression otherwise
@@ -233,11 +233,11 @@ public class Argument : ILogixParsable<Argument>
     public static explicit operator TagName(Argument argument) => (TagName)argument._value;
 
     /// <summary>
-    /// Explicitly converts the provided <see cref="Argument"/> to an <see cref="AtomicType"/>.
+    /// Explicitly converts the provided <see cref="Argument"/> to an <see cref="AtomicData"/>.
     /// </summary>
     /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
-    /// <returns>A <see cref="AtomicType"/> object representing the value of the argument.</returns>
-    public static explicit operator AtomicType(Argument argument) => (AtomicType)argument._value;
+    /// <returns>A <see cref="AtomicData"/> object representing the value of the argument.</returns>
+    public static explicit operator AtomicData(Argument argument) => (AtomicData)argument._value;
 
     /// <summary>
     /// Explicitly converts the provided <see cref="Argument"/> to an <see cref="NeutralText"/>.

@@ -33,9 +33,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(DINT).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Members.Should().HaveCount(32);
+            type.Members.Should().BeEmpty();
             type.Radix.Should().Be(Radix.Decimal);
         }
 
@@ -90,38 +88,31 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new DINT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.DataType == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Member_ValidMember_ShouldNotBeExpectedNameAndValue()
+        public void GetBits_WhenCalled_ShouldHaveExpectedCount()
         {
             var type = new DINT(123);
 
-            var bit = type.Member("1");
+            var bits = type.GetBits();
 
-            bit.Should().NotBeNull();
-            bit?.Name.Should().Be("1");
-            bit?.DataType.Should().BeOfType<BOOL>();
-            bit?.DataType.Should().Be(true);
+            bits.Should().HaveCount(32);
         }
 
         [Test]
-        public void Member_InvalidMember_ShouldBeNull()
+        public void Bit_ValidIndex_ShouldBeExpectedValue()
         {
             var type = new DINT(123);
 
-            var bit = type.Member("100");
+            var bit = type[1];
+            
+            bit.Should().Be(true);
+        }
 
-            bit.Should().BeNull();
+        [Test]
+        public void Bit_InvalidIndex_ShouldBeThrowException()
+        {
+            var type = new DINT(123);
+
+            FluentActions.Invoking(() => type[100]) .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -129,7 +120,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            var atomic = type.As<AtomicType>();
+            var atomic = type.As<AtomicData>();
 
             atomic.Should().NotBeNull();
         }
@@ -139,7 +130,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT();
 
-            FluentActions.Invoking(() => type.As<StructureType>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -221,17 +212,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var xml = type.Serialize().ToString();
 
             return Verify(xml);
-        }
-
-        [Test]
-        public void DataChanged_WhenMemberIsSet_ShouldRaiseEvent()
-        {
-            var type = new DINT();
-            using var monitor = type.Monitor();
-
-            type.Members.First().DataType = true;
-
-            monitor.Should().Raise("DataChanged");
         }
 
         [Test]
@@ -353,7 +333,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             result.Should().Be(expected);
         }
-        
+
         [Test]
         public void ToString_WhenCalled_ShouldBeExpectedValue()
         {
@@ -570,7 +550,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT(1) as IConvertible;
 
-            FluentActions.Invoking(() => type.ToType(typeof(StructureType), CultureInfo.InvariantCulture)).Should()
+            FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
         }
 
@@ -772,7 +752,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             type.Should().Be(123);
         }
-        
+
         [Test]
         [TestCase("123")]
         [TestCase("2#0000_0000_0000_0000_0000_0000_0111_1011")]
@@ -880,27 +860,28 @@ namespace L5Sharp.Tests.Types.Atomics
             var result = range.Where(v => v == new DINT(123)).ToList();
             stopwatch.Stop();
 
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
             result.Count.Should().Be(capacity);
         }
-        
+
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new DINT(1);
             var second = new DINT(1);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new DINT(1);
             var second = new DINT(0);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

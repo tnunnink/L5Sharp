@@ -26,10 +26,10 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent : LogixElement, ILogixReferencable
+public abstract class LogixComponent : LogixObject, ILogixReferencable
 {
     /// <inheritdoc />
-    protected LogixComponent()
+    protected LogixComponent(string name) : base(name)
     {
         Element.SetAttributeValue(L5XName.Name, string.Empty);
     }
@@ -107,7 +107,7 @@ public abstract class LogixComponent : LogixElement, ILogixReferencable
     /// </summary>
     /// <remarks>
     /// This method can be helpful for completely scrubbing a L5X file of the specific component, which means removing
-    /// references to it as well as the component itself. This is on contrast to <see cref="LogixElement.Remove()"/>
+    /// references to it as well as the component itself. This is on contrast to <see cref="LogixObject.Remove()"/>
     /// which will simply remove this element from the parent container. If this component is not attached to an L5X
     /// then it will simply return and not throw any exceptions. Obviously, use this with caution as you will not be able
     /// to undo the process except for the fact that you have reference to component being deleted. 

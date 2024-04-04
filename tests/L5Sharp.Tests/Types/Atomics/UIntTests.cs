@@ -35,7 +35,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_NullRadix_ShouldThrowArgumentException()
         {
-            FluentActions.Invoking(() => new UINT(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => new UINT((Radix)null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -51,9 +51,7 @@ namespace L5Sharp.Tests.Types.Atomics
 
             type.Should().NotBeNull();
             type.Name.Should().Be(nameof(UINT).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Members.Should().HaveCount(16);
+            type.Members.Should().BeEmpty();
             type.Should().Be(0);
         }
 
@@ -63,29 +61,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var type = new UINT(_random);
 
             type.Should().Be(_random);
-        }
-
-        [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new UINT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.DataType.As<BOOL>() == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void ToBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new UINT(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
         }
 
         [Test]
@@ -269,23 +244,23 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new UINT(1);
             var second = new UINT(1);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new UINT(1);
             var second = new UINT(0);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

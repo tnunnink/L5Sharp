@@ -8,7 +8,7 @@ namespace L5Sharp.Tests.Types.Custom
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
-            var type = new MyNestedType();
+            var type = new MyNestedData();
 
             type.Should().NotBeNull();
         }
@@ -16,7 +16,7 @@ namespace L5Sharp.Tests.Types.Custom
         [Test]
         public Task SetSimpleM4_Valid_ShouldBeValid()
         {
-            var type = new MyNestedType();
+            var type = new MyNestedData();
 
             type.Simple.M4 = 5000;
 
@@ -26,35 +26,23 @@ namespace L5Sharp.Tests.Types.Custom
         }
 
         [Test]
-        public void Testing()
-        {
-            var nested = new MyNestedType();
-
-            nested.Simple.M1 = true;
-
-            nested.Tmr.PRE = new DINT(5000);
-
-            nested.Flags[2] = true;
-        }
-
-        [Test]
         public void Members_WhenCalled_ShouldReturnInstantiatedMembers()
         {
-            var type = new MyNestedType();
+            var type = new MyNestedData();
 
             var members = type.Members;
 
             foreach (var member in members)
             {
                 member.Should().NotBeNull();
-                member.DataType.Should().NotBeNull();
+                member.Value.Should().NotBeNull();
             }
         }
 
         [Test]
         public void Flags_AccessIndex_ShouldReturnExpectedValue()
         {
-            var type = new MyNestedType();
+            var type = new MyNestedData();
 
             var flag = type.Flags[4];
 

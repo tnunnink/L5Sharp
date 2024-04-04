@@ -20,10 +20,8 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new MESSAGE();
 
             type.Name.Should().Be(nameof(MESSAGE));
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(13);
-            type.MessageType.Should().BeEquivalentTo("");
+            type.MessageType.Should().Be(MessageType.Unconfigured);
             type.RequestedLength.Should().BeEquivalentTo(0);
             type.ConnectedFlag.Should().BeEquivalentTo(0);
             type.ConnectionPath.Should().BeEquivalentTo("");
@@ -50,7 +48,7 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new MESSAGE(element);
 
             type.Should().NotBeNull();
-            type.MessageType.Should().BeEquivalentTo("CIP Generic");
+            type.MessageType.Should().Be(MessageType.CIPGeneric);
             type.RequestedLength.Should().Be(0);
             type.ConnectedFlag.Should().Be(1);
             type.ConnectionPath.Should().BeEquivalentTo("ETAP");

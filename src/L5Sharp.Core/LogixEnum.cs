@@ -230,11 +230,16 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// </remarks>
     public static TEnum? TryParse(string? value)
     {
-        return value is not null
-            ? NameLookup.Value.TryGetValue(value, out var named)
-                ? named
-                : ValueLookup.Value.GetValueOrDefault(value)
-            : null;
+        if (value is null) return default;
+
+        if (NameLookup.Value.TryGetValue(value, out var named))
+            return named;
+
+        // ReSharper disable once ConvertIfStatementToReturnStatement
+        if (ValueLookup.Value.TryGetValue(value, out var literal))
+            return literal;
+
+        return default;
     }
 
     /// <inheritdoc />

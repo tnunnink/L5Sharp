@@ -15,7 +15,7 @@ public class WatchTag : LogixElement
     /// <summary>
     /// Creates a new <see cref="WatchTag"/> with default values.
     /// </summary>
-    public WatchTag()
+    public WatchTag() : base(L5XName.WatchTag)
     {
         Specifier = TagName.Empty;
         ScopeName = string.Empty;

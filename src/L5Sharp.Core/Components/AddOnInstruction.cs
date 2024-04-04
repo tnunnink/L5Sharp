@@ -22,7 +22,7 @@ public class AddOnInstruction : LogixComponent
     /// <summary>
     /// Creates a new <see cref="AddOnInstruction"/> with default values.
     /// </summary>
-    public AddOnInstruction() : base(new XElement(L5XName.AddOnInstructionDefinition))
+    public AddOnInstruction() : base(L5XName.AddOnInstructionDefinition)
     {
         Revision = new Revision();
         ExecutePreScan = false;
@@ -33,9 +33,9 @@ public class AddOnInstruction : LogixComponent
         EditedDate = DateTime.Now;
         EditedBy = Environment.UserName;
         IsEncrypted = false;
-        Parameters = new LogixContainer<Parameter>();
-        LocalTags = new LogixContainer<Tag>(L5XName.LocalTags, L5XName.LocalTag);
-        Routines = new LogixContainer<Routine>();
+        Parameters = [];
+        LocalTags = new LogixContainer<Tag>(L5XName.LocalTags);
+        Routines = [];
     }
 
     /// <summary>
@@ -273,7 +273,7 @@ public class AddOnInstruction : LogixComponent
         return rungs.Select(r => r.Text)
             .Select(t => mapping.Aggregate(t, (current, pair) =>
             {
-                if (!pair.Argument.IsTag()) return current;
+                if (!TagName.IsTag(pair.Argument)) return current;
                 var replace = $@"(?<=[^.]){pair.Parameter}\b";
                 return Regex.Replace(current, replace, pair.Argument.ToString());
             }))

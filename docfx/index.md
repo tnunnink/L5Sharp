@@ -14,35 +14,41 @@ The following are some high level goals this project aimed to accomplish.
 3. Make it easy and seamless to extend the API to support custom queries or functions.
 4. Support strongly typed mutable tag data, so we can reference complex structures statically at compile time.
 
-## Feedback
-If you like or use this project, leave a star. If you have questions or issues, 
-please post in the [issues](https://github.com/tnunnink/L5Sharp/issues) tab 
-of the project repository. Any feedback is always appreciated. Enjoy!
-
-## Quick Start
-Install package from Nuget.
+## Packages
+You can consume the library via NuGet.
 ```powershell
 Install-Package L5Sharp
 ```
-Load an L5X file using the primary entry point `LogixContent` class.
-```c#
-var content = LogixContent.Load("C:\PathToMyFile\FileName.L5X");
-```
-Get started by querying any type across the L5X using the `Find<T>()` and LINQ extensions.
-```csharp
-var results = content.Find<Tag>()
+>Previously I had two separate libraries but have since consolidated to a single package to avoid confusion and since
+> I think most people would want all functionality anyway. `L5Sharp.Extensions` is no longer maintained.
+
+## Quick Start
+1. Install package from Nuget.
+    ```powershell
+    Install-Package L5Sharp
+    ```
+2. Load an L5X file using the `L5X` class static factory methods.
+    ```c#
+    var content = L5X.Load("C:\PathToMyFile\FileName.L5X");
+    ```
+3. Get started by querying elements across the L5X using the `Query()` methods and LINQ extensions.
+   The following query gets all tags and their nested tag members of type TIMER and returns the TagName,
+   Description, and Preset value in a flat list ordered by TagName.
+    ```csharp
+    var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
                 .Where(t => t.DataType == "TIMER")
-                .Select(t => new { t.TagName, t.Comment, t.Value.As<TIMER>().PRE })
+                .Select(t => new {t.TagName, t.Description, Preset = t["PRE"].Value})
+                .OrderBy(v => v.TagName)
                 .ToList();
-```
+    ```
+
+   >`Query<T>()` returns an `IEnumerable<T>`, allowing for complex queries
+   > using LINQ and the strongly typed objects in the library.
+   > Since `Query<T>()` queries the entire L5X for the specified type, the above query
+   > will return all **Tag** components found, including controller and program tags.
 The above query gets all tags and their nested tag members of type TIMER and returns the TagName,
 Comment, and Preset value in a flat list.
->[!NOTE]
->`Find<T>()` returns an `IEnumerable<T>`, allowing for complex queries
-using LINQ and the strongly typed objects in the library. 
-> Since `Find<T>()` queries the entire L5X for the specified type, the above query
-> will return all **Tag** components found, including controller and program tags.
 
 ## Usage
 The `LogixContent` class contains `LogixContainer` collections for all L5X components, 

@@ -78,7 +78,7 @@ public class Block : DiagramElement
     /// Represents the Operand property of a generic function block element. This can be the backing tag name,
     /// reference name, connector name, or routine name depending on the block type.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown when attempting to set the operand for an unsupported block type.</exception>
+    /// <exception cref="NotSupportedException">Thrown when attempting to set the operand for an unsupported block type.</exception>
     /// <value>An <see cref="Argument"/> object containing the value, which could be a tag name, immediate value, or simple string name.</value>
     /// <remarks>
     /// Since this class models all the different function block types, this proprty has to determine which attribute
@@ -922,7 +922,7 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.X, 0));
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Operand, operand ?? Argument.Empty));
-        element.Add(new XAttribute(L5XName.VisiblePins, string.Join(' ', pins) ?? string.Empty));
+        element.Add(new XAttribute(L5XName.VisiblePins, pins.Combine(' ')));
         return new Block(element);
     }
 
@@ -935,7 +935,7 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Operand, operand ?? Argument.Empty));
 
-        var pins = string.Join(' ', definition.Parameters.Where(p => p.Visible == true).Select(p => p.Name));
+        var pins = definition.Parameters.Where(p => p.Visible == true).Select(p => p.Name).Combine(' ');
         element.Add(new XAttribute(L5XName.VisiblePins, pins));
 
         return new Block(element);
@@ -948,8 +948,8 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.X, 0));
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Routine, routine));
-        element.Add(new XAttribute(L5XName.In, string.Join(' ', inputs ?? Enumerable.Empty<string>())));
-        element.Add(new XAttribute(L5XName.Ret, string.Join(' ', outputs ?? Enumerable.Empty<string>())));
+        element.Add(new XAttribute(L5XName.In, inputs.Combine(' ')));
+        element.Add(new XAttribute(L5XName.Ret, outputs.Combine(' ')));
         return new Block(element);
     }
 
@@ -960,7 +960,7 @@ public class Block : DiagramElement
         element.Add(new XAttribute(L5XName.X, 0));
         element.Add(new XAttribute(L5XName.Y, 0));
         element.Add(new XAttribute(L5XName.Routine, routine));
-        element.Add(new XAttribute(L5XName.VisiblePins, string.Join(' ', parameters) ?? string.Empty));
+        element.Add(new XAttribute(L5XName.VisiblePins, parameters.Combine(' ')));
         return new Block(element);
     }
 

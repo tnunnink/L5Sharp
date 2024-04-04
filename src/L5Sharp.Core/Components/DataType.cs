@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// The Logix <c>DataType</c> component. Contains the properties adn functionality that comprise the L5X DataType element.
+/// The Logix <c>DataType</c> component. Contains the properties and functionality that comprise the L5X DataType element.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -30,11 +30,11 @@ public class DataType : LogixComponent
     /// <summary>
     /// Creates a new <see cref="DataType"/> with default values.
     /// </summary>
-    public DataType()
+    public DataType() : base(L5XName.DataType)
     {
         Family = DataTypeFamily.None;
         Class = DataTypeClass.User;
-        Members = new LogixContainer<DataTypeMember>();
+        Members = [];
     }
 
     /// <summary>

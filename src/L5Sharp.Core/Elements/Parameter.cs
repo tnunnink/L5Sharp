@@ -10,12 +10,12 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Parameter : LogixElement
+public class Parameter : LogixObject
 {
     /// <summary>
     /// Creates a new <see cref="Parameter"/> with default values.
     /// </summary>
-    public Parameter()
+    public Parameter() : base(L5XName.Parameter)
     {
         Name = string.Empty;
         TagType = TagType.Base;
@@ -174,21 +174,11 @@ public class Parameter : LogixElement
     /// <summary>
     /// A default value of the <c>Parameter</c> when instantiated.
     /// </summary>
-    /// <value>An <see cref="AtomicType"/> representing the default value/data. Default is <c>null</c>.</value>
-    public AtomicType? Default
+    /// <value>An <see cref="AtomicData"/> representing the default value/data. Default is <c>null</c>.</value>
+    public AtomicData? Default
     {
-        get => LogixData.Deserialize(Element).As<AtomicType>();
-        set
-        {
-            if (value is null)
-            {
-                Element.Element(L5XName.DefaultData)?.Remove();
-                return;
-            }
-                
-            var element = new XElement(L5XName.DefaultData, value.Serialize());
-            Element.Add(element);
-        }
+        get => GetData().As<AtomicData>();
+        set => SetData(value);
     }
 
     /// <summary>

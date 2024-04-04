@@ -1,2 +1,4 @@
 - name: Introduction
   href: intro.md
+- name: Release Notes 2.0
+  href: Release Notes v2.0.md

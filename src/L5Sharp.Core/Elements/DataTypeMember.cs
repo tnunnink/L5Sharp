@@ -11,12 +11,12 @@ namespace L5Sharp.Core;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.Member, L5XName.Members)]
-public class DataTypeMember : LogixElement
+public class DataTypeMember : LogixObject
 {
     /// <summary>
     /// Creates a new <see cref="DataTypeMember"/> with default values.
     /// </summary>
-    public DataTypeMember()
+    public DataTypeMember() : base(L5XName.Member)
     {
         Name = string.Empty;
         DataType = string.Empty;

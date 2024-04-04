@@ -126,7 +126,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
     public static Dimensions Empty => new();
 
     /// <summary>
-    /// Returns the dimension of a specified array type.
+    /// Determines the <see cref="Dimensions"/> of a provided array object.
     /// </summary>
     /// <param name="array">The array instance for which to determine the dimensions.</param>
     /// <returns></returns>
@@ -215,6 +215,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
         if (value.IsEmpty()) return Empty;
 
         var numbers = Regex.Matches(value, @"\d+")
+            .Cast<Match>()
             .Select(m => ushort.Parse(m.Value))
             .ToList();
 
@@ -241,6 +242,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
             return null;
 
         var numbers = Regex.Matches(value, @"\d+")
+            .Cast<Match>()
             .Select(m => ushort.Parse(m.Value))
             .ToList();
 

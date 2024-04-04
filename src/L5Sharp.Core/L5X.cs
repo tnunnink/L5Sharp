@@ -45,8 +45,8 @@ public class L5X : ILogixSerializable
     /// The list of top level component containers for a L5X content or controller element in order of which
     /// they should appear in the L5X file.
     /// </summary>
-    private static readonly List<string> Containers = new()
-    {
+    private static readonly List<string> Containers =
+    [
         L5XName.DataTypes,
         L5XName.Modules,
         L5XName.AddOnInstructionDefinitions,
@@ -56,7 +56,7 @@ public class L5X : ILogixSerializable
         L5XName.ParameterConnections,
         L5XName.Trends,
         L5XName.QuickWatchLists
-    };
+    ];
 
     /// <summary>
     /// Creates a new <see cref="L5X"/> instance wrapping the provided <see cref="XElement"/> content object.
@@ -89,14 +89,14 @@ public class L5X : ILogixSerializable
 
         //This stores L5X object as in-memory object for the root XElement,
         //allowing child elements to retrieve the object locally without creating a new instance and potentially
-        //reindexing of the XML content.This allows them to reference to root L5X for cross referencing or other operations.
+        //reindexing of the XML content. This allows them to reference to root L5X for cross referencing or other operations.
         _content.AddAnnotation(this);
     }
 
     /// <summary>
-    /// The <see cref="L5XInfo"/> representing the L5X content export information.
+    /// The <see cref="LogixInfo"/> representing the L5X content export information.
     /// </summary>
-    public L5XInfo Info => new(_content);
+    public LogixInfo Info => new(_content);
 
     /// <summary>
     /// The root <see cref="Core.Controller"/> component of the L5X file.
@@ -111,7 +111,6 @@ public class L5X : ILogixSerializable
     /// The container collection of <see cref="DataType"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="DataType"/> components.</value>
-    /// <remarks></remarks>
     public LogixContainer<DataType> DataTypes => new(GetContainer(L5XName.DataTypes));
 
     /// <summary>
@@ -177,6 +176,8 @@ public class L5X : ILogixSerializable
     /// </remarks>
     public static L5X Load(string fileName) => new(XElement.Load(fileName));
 
+    //Async overload not supported in .NET Standard 2.0
+#if NET7_0_OR_GREATER
     /// <summary>
     /// 
     /// </summary>
@@ -190,6 +191,7 @@ public class L5X : ILogixSerializable
         var l5X = await TTask.Run(() => new L5X(element), token);
         return l5X;
     }
+#endif
 
     /// <summary>
     /// Creates a new blank <see cref="L5X"/> file with the standard root content and controller elements, and configures them

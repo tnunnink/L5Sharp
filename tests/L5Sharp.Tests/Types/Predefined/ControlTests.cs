@@ -20,8 +20,6 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new CONTROL();
 
             type.Name.Should().Be(nameof(CONTROL));
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Class.Should().Be(DataTypeClass.Predefined);
             type.Members.Should().HaveCount(10);
             type.LEN.Should().Be(0);
             type.POS.Should().Be(0);

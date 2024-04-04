@@ -8,15 +8,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/CodeKey.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed tests and couple bugs. Renamed LogixInfo.cs.">
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docfx/articles/Release Notes v2.0.md" beforeDir="false" afterPath="$PROJECT_DIR$/../docfx/articles/Release Notes v2.0.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docfx/articles/toc.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docfx/articles/toc.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/RungTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/RungTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +38,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="wip/logixobject" />
+        <entry key="$PROJECT_DIR$/.." value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -59,17 +55,29 @@
     <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/String.Comparison.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/String.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/Type.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.Xml.Linq/src/System/Xml/Linq/XName.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Text.RegularExpressions/src/System/Text/RegularExpressions/Capture.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Linq.Expressions/src/System/Linq/Expressions/UnaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/012ca6023c754e6384f20d14e09f256e5789b8/e5/26651ee6/IConvertible.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/518d8a22e5ac4c34b8c4adef9082986b17ac48/6b/f23bf5bf/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7df3d9d25f5b442793953acc1eef7eaded8b0/c5/d069d260/Regex.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/889595c0c9f04f5199bbadadab8ed150b1d8a0/67/188d3af4/IParsable`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/184cf1eefa4e4afbae67a792241fe59398ce0adeb61653986c7917e37d87/GenericCollectionAssertions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9a4197d860b0c9112b40b7831a1728ce4f30d1f68f7444095917bcffbb65def/LogixData.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixComponent.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Enums/Radix.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/L5Sharp.Core/Types/Member.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Types/Atomics/BoolTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Types/Atomics/BoolTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Types/Custom/MyNestedType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/obj/Debug/net7.0/Verify.Attributes.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -92,6 +100,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;00960bea-6e5b-4ffa-a837-6a257d42d429.executor&quot;: &quot;Debug&quot;,
     &quot;Notification.DisplayName-DoNotAsk-Plugin Error&quot;: &quot;Plugins failed to load&quot;,
     &quot;Notification.DoNotAsk-Plugin Error&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -101,7 +110,7 @@
     &quot;a7604713-2340-41ef-8914-9a0e821f9675.executor&quot;: &quot;Debug&quot;,
     &quot;bb4529a5-d289-453a-84c6-89ce8148c18f.executor&quot;: &quot;Debug&quot;,
     &quot;d12b03d6-2507-4b76-a844-25ee3820fc29.executor&quot;: &quot;Debug&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;wip-version-2.0&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -393,6 +402,12 @@
       <workItem from="1710700419465" duration="10352000" />
       <workItem from="1711050419621" duration="1671000" />
       <workItem from="1711122733101" duration="1219000" />
+      <workItem from="1711453109884" duration="39635000" />
+      <workItem from="1711631442637" duration="55765000" />
+      <workItem from="1711998208422" duration="15013000" />
+      <workItem from="1712094961892" duration="15454000" />
+      <workItem from="1712177114522" duration="23212000" />
+      <workItem from="1712262583089" duration="2201000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -737,7 +752,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="330" />
+    <option name="localTasksCounter" value="340" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -747,7 +762,7 @@
     <option name="coveragePercentColumnWidth" value="33" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="345" />
+    <option name="symbolColumnWidth" value="392" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -773,16 +788,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Reorg and documentation of some classes. Finishing primary tasks for new referencing feature. Starting to revisit NeutralText." />
-    <MESSAGE value="Starting updates for Instruction.cs. Added Argument.cs. Attempting to make instruction not a enum type but a common value type with arguments." />
-    <MESSAGE value="FBD refinement. L5X API refinement. Documentations. Bug fixes. Other development" />
-    <MESSAGE value="L5X documentation" />
-    <MESSAGE value="FBD development" />
-    <MESSAGE value="Reworked the FBD model. Moved to single Block.cs class. Added factory methods for creating different elements and blocks." />
-    <MESSAGE value="Finishing updates to instruction and block for now. I know there are limitations with the referencing logic, but am going to kick fixing these down the road in favor of pushing new release to start consuming and finding issues." />
-    <MESSAGE value="Updated README.md" />
-    <MESSAGE value="Fixed bugs and tests to prep for release." />
-    <MESSAGE value="adding verification file" />
     <MESSAGE value="Added tests for LogixElement.cs. Added register method to LogixSerializer.cs. Updates some docs." />
     <MESSAGE value="explicitly set Task using alias in global using file to attempt to change L5Sharp to single namespace." />
     <MESSAGE value="Merged library into single namespace L5Sharp.Core so that going forward reorganizations won't cause breaking changes. Incrementing to v.0.17" />
@@ -798,16 +803,59 @@
     <MESSAGE value="Update version" />
     <MESSAGE value="updated gitignore" />
     <MESSAGE value="Added ComponentClass.cs. Working on adding IParse to components." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added ComponentClass.cs. Working on adding IParse to components." />
+    <MESSAGE value="Reworking of LogixType.cs to derive from LogixElement.cs complete. Now to start fixing tests and verifying performance." />
+    <MESSAGE value="Continued rework and testing" />
+    <MESSAGE value="Made progress finally on LogixType rework. Devised new work around for custom/special types using &quot;virtual&quot; members. Need to continue testing and fixing special types." />
+    <MESSAGE value="Fixed special logix type and testing." />
+    <MESSAGE value="Continued testing and updates." />
+    <MESSAGE value="Reorg. Documentation. Testing. Random updates" />
+    <MESSAGE value="Reorg extensions. Made extensions internal. Fixed tests. Fixed Ascii Radix issue" />
+    <MESSAGE value="Random fixes and updates and reorg" />
+    <MESSAGE value="Renamed LogixType to LogixData to match element name better. Also renamed all derivative classes." />
+    <MESSAGE value="Fixed tests and couple bugs. Renamed LogixInfo.cs." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed tests and couple bugs. Renamed LogixInfo.cs." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp.Core/Types/StringType.cs</url>
-          <line>283</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\Types\StringType.cs" initialLine="282" containingFunctionPresentation="Method 'ToArray'" />
-          <option name="timeStamp" value="6" />
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
+          <line>881</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" initialLine="839" containingFunctionPresentation="Method 'With_NestedComplexType_ShouldHaveUpdatedValue'">
+            <startOffsets>
+              <option value="26076" />
+            </startOffsets>
+            <endOffsets>
+              <option value="26117" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
+          <line>735</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" initialLine="703" containingFunctionPresentation="Method 'Members_TagNameWithMoreThanThreeMembers_ShouldReturnExpectedCount'">
+            <startOffsets>
+              <option value="22463" />
+            </startOffsets>
+            <endOffsets>
+              <option value="22517" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
+          <line>803</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" initialLine="771" containingFunctionPresentation="Method 'TagNames_NestedType_ShouldHaveExpectedCount'">
+            <startOffsets>
+              <option value="24046" />
+            </startOffsets>
+            <endOffsets>
+              <option value="24074" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="83" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -827,6 +875,7 @@
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.LogixContentAgainstTemplateTests.FindReferencesToAnalogTag" memberName="this" />
         <PinnedItemInfo parentTag="Type#L5Sharp.LogixMember" memberName="DataType" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Core.Tests.LogixContentTagTests.References_AgainstKnownTest_ShouldNotBeEmpty" memberName="this" />
+        <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.Types.StringTypeTests.Members_GetValue_ShouldBeExpected" memberName="len" />
         <PinnedItemInfo parentTag="Type#L5Sharp.Types.AtomicType" memberName="Radix" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Tests.Components.RoutineTests.New_RungCollection_ShouldHaveExpectedCount" memberName="this" />
         <PinnedItemInfo parentTag="Frame#L5Sharp.Querying.RungQuery.Flatten" memberName="definition" />

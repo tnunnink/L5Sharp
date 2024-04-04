@@ -8,11 +8,11 @@ namespace L5Sharp.Tests
         [Test]
         public void SampleQuery001()
         {
-            var content = Logix.Load(Known.Test);
+            var content = L5X.Load(Known.Test);
 
             var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
-                .Where(t => t.DataType == "TIMER")
+                .Where(t => t.DataType == "TIMER" && t.Dimensions == Dimensions.Empty)
                 .Select(t => new {t.TagName, t.Description, Preset = t["PRE"].Value})
                 .OrderBy(v => v.TagName)
                 .ToList();
@@ -82,10 +82,10 @@ namespace L5Sharp.Tests
 
             var tags = content.Tags.Get("MultiDimensionalArray");
 
-            var array = tags.Value.As<ArrayType<DINT>>();
+            var array = tags.Value.As<ArrayData>().Cast<DINT>();
 
             array.Should().NotBeNull();
-            array.Should().BeOfType<ArrayType<DINT>>();
+            array.Should().BeOfType<ArrayData<DINT>>();
             array.Members.ToList().Should().NotBeEmpty();
             array[0, 0].Should().NotBeNull();
             array[0, 0].Should().Be(0);
@@ -137,7 +137,7 @@ namespace L5Sharp.Tests
 
             var programTags = allTags.Where(t => t.Scope == Scope.Program);
             var ioTags = allTags.Where(t => t.Name.Contains(':'));
-            var readWriteTags = allTags.Where(t => t.ExternalAccess == ExternalAccess.ReadWrite);
+            var readWriteTags = allTags.Where(t => t.ExternalAccess?.Equals(ExternalAccess.ReadWrite) is true);
             var timerTags = allTags.Where(t => t.DataType == "TIMER");
 
             programTags.Should().NotBeEmpty();

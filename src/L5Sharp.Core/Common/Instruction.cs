@@ -107,7 +107,8 @@ public sealed class Instruction
     {
         get
         {
-            var input = Regex.Match(Signature, SignaturePattern).Value[1..^1];
+            var match = Regex.Match(Signature, SignaturePattern);
+            var input = match.Value.Substring(1, match.Value.Length - 2);
 
             return !string.IsNullOrEmpty(input)
                 ? Regex.Split(input, ArgumentSplitPattern)
@@ -119,7 +120,7 @@ public sealed class Instruction
     /// The <see cref="NeutralText"/> representation of the instruction instance.
     /// </summary>
     /// <value>A <see cref="NeutralText"/> instance that represents the instruction in Logix neutral text format.</value>
-    public NeutralText Text => new($"{Key}({string.Join(',', Arguments.AsEnumerable())})");
+    public NeutralText Text => new($"{Key}({Arguments.Combine(',')})");
 
     /// <summary>
     /// Indicates whether the instruction is conditional or evaluates a certain condition to be true or false, from which
@@ -183,8 +184,9 @@ public sealed class Instruction
         if (!Regex.IsMatch(text, Pattern))
             throw new FormatException("Instruction text must be in the format of 'key(arg1,arg2,...)'.");
 
-        var key = text[..text.IndexOf('(')];
-        var signature = Regex.Match(text, SignaturePattern).Value[1..^1];
+        var key = text.Substring(0, text.IndexOf('('));
+        var match = Regex.Match(text, SignaturePattern);
+        var signature = match.Value.Substring(1, match.Value.Length - 2);
         var arguments = Regex.Split(signature, ArgumentSplitPattern).Select(Argument.TryParse).ToArray();
 
         return _known.TryGetValue(key, out var create)
@@ -1710,7 +1712,7 @@ public sealed class Instruction
     /// </summary>
     private static string DefaultArgs(int number)
     {
-        return string.Join(',', Enumerable.Range(0, number).Select(i => $"arg{i}"));
+        return Enumerable.Range(0, number).Select(i => $"arg{i}").Combine(',');
     }
 
     /// <summary>

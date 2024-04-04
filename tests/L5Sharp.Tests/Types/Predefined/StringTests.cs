@@ -28,23 +28,21 @@ namespace L5Sharp.Tests.Types.Predefined
             var type = new STRING();
 
             type.Name.Should().Be("STRING");
-            type.Class.Should().Be(DataTypeClass.Predefined);
-            type.Family.Should().Be(DataTypeFamily.String);
             type.ToString().Should().BeEmpty();
             type.LEN.Should().NotBeNull();
             type.LEN.Should().BeOfType<DINT>();
             type.DATA.Should().NotBeNull();
-            type.DATA.Should().BeOfType<ArrayType<SINT>>();
+            type.DATA.Should().BeOfType<ArrayData<SINT>>();
             type.Members.Should().HaveCount(2);
 
             var data = type.Members.FirstOrDefault(m => m.Name == "DATA");
             data.Should().NotBeNull();
-            data?.DataType.Should().NotBeNull();
-            data?.DataType.Name.Should().NotBeNull();
+            data?.Value.Should().NotBeNull();
+            data?.Value.Name.Should().NotBeNull();
 
             var len = type.Members.FirstOrDefault(m => m.Name == "LEN");
             len.Should().NotBeNull();
-            len?.DataType.Should().NotBeNull();
+            len?.Value.Should().NotBeNull();
         }
 
         [Test]
@@ -66,8 +64,7 @@ namespace L5Sharp.Tests.Types.Predefined
         [Test]
         public void New_AsciiStringValue_ShouldBeExpectedValue()
         {
-            const string text =
-                "'$0B$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'";
+            const string text = "'$0B$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'";
 
             var type = new STRING(text);
 
@@ -75,14 +72,14 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void SetValue_OutOfRangeString_ShouldThrowArgumentOutOfRangeException()
+        public void SetValue_OutOfRangeString_ShouldBeTruncated()
         {
-            STRING type = "";
+            const string expected =
+                "This is a really long test string to see if the argument out of range exception will work. The string length must be less than eighty two characters in length. Do you think this is long enough?";
 
-            FluentActions.Invoking(() =>
-                    type =
-                        "This is a really long test string to see if the argument out of range exception will work. The string length must be less than eighty two characters in length. Do you think this is long enough?")
-                .Should().Throw<ArgumentOutOfRangeException>();
+            STRING type = expected;
+
+            type.ToString().Length.Should().BeLessThan(expected.Length);
         }
 
         [Test]
@@ -113,7 +110,7 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void TypeEquals_AreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new STRING();
             var second = new STRING();
@@ -124,7 +121,7 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void TypeEquals_AreNotEqual_ShouldBeFalse()
+        public void Equals_AreNotEqual_ShouldBeFalse()
         {
             var first = new STRING("This is first");
             var second = new STRING("This is second");
@@ -135,10 +132,11 @@ namespace L5Sharp.Tests.Types.Predefined
         }
 
         [Test]
-        public void TypeEquals_AreSame_ShouldBeTrue()
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var first = new STRING();
 
+            // ReSharper disable once EqualExpressionComparison
             var result = first.Equals(first);
 
             result.Should().BeTrue();
@@ -146,42 +144,11 @@ namespace L5Sharp.Tests.Types.Predefined
 
 
         [Test]
-        public void TypeEquals_Null_ShouldBeFalse()
+        public void Equals_Null_ShouldBeFalse()
         {
             var first = new STRING();
 
             var result = first.Equals(null);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new STRING();
-            var second = new STRING();
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new STRING();
-
-            var result = first.Equals((object)first);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_Null_ShouldBeFalse()
-        {
-            var first = new STRING();
-
-            var result = first.Equals((object)null);
 
             result.Should().BeFalse();
         }

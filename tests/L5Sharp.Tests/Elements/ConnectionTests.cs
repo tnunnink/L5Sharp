@@ -57,8 +57,8 @@ public class ConnectionTests
             EventId = 1,
             InputTagSuffix = "II",
             OutputTagSuffix = "OO",
-            InputTag = new Tag { Value = ArrayType.New<DINT>(100) },
-            OutputTag = new Tag { Value = ArrayType.New<BOOL>(100) }
+            InputTag = new Tag { Value = ArrayData.New<DINT>(100) },
+            OutputTag = new Tag { Value = ArrayData.New<BOOL>(100) }
         };
 
         connection.Should().NotBeNull();
@@ -101,8 +101,8 @@ public class ConnectionTests
             EventId = 1,
             InputTagSuffix = "II",
             OutputTagSuffix = "OO",
-            InputTag = new Tag { Value = ArrayType.New<DINT>(100) },
-            OutputTag = new Tag { Value = ArrayType.New<BOOL>(100) }
+            InputTag = new Tag { Value = ArrayData.New<DINT>(100) },
+            OutputTag = new Tag { Value = ArrayData.New<BOOL>(100) }
         };
 
         return Verify(connection.Serialize().ToString());

@@ -33,9 +33,7 @@ namespace L5Sharp.Tests.Types.Atomics
             type.Should().NotBeNull();
             type.Should().Be(0);
             type.Name.Should().Be(nameof(INT).ToUpper());
-            type.Class.Should().Be(DataTypeClass.Atomic);
-            type.Family.Should().Be(DataTypeFamily.None);
-            type.Members.Should().HaveCount(16);
+            type.Members.Should().BeEmpty();
             type.Radix.Should().Be(Radix.Decimal);
         }
 
@@ -80,6 +78,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
         {
+            
             FluentActions.Invoking(() => new INT(123, null!)).Should().Throw<ArgumentException>();
         }
 
@@ -90,46 +89,11 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void Members_PositiveValue_ShouldHaveBitsEqualToOne()
-        {
-            var type = new INT(33);
-
-            var members = type.Members.ToList();
-
-            var bitsEqualToOne = members.Where(m => m.DataType == true).ToList();
-
-            bitsEqualToOne.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void Member_ValidMember_ShouldNotBeExpectedNameAndValue()
-        {
-            var type = new INT(123);
-
-            var bit = type.Member("1");
-
-            bit.Should().NotBeNull();
-            bit?.Name.Should().Be("1");
-            bit?.DataType.Should().BeOfType<BOOL>();
-            bit?.DataType.Should().Be(true);
-        }
-
-        [Test]
-        public void Member_InvalidMember_ShouldBeNull()
-        {
-            var type = new INT(123);
-
-            var bit = type.Member("100");
-
-            bit.Should().BeNull();
-        }
-
-        [Test]
         public void As_AtomicType_ShouldNotBeNull()
         {
             var type = new INT();
 
-            var atomic = type.As<AtomicType>();
+            var atomic = type.As<AtomicData>();
 
             atomic.Should().NotBeNull();
         }
@@ -139,7 +103,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            FluentActions.Invoking(() => type.As<StructureType>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -183,17 +147,6 @@ namespace L5Sharp.Tests.Types.Atomics
         }
 
         [Test]
-        public void GetBytes_WhenCalled_ReturnsExpected()
-        {
-            var expected = BitConverter.GetBytes(_random);
-            var type = new INT(_random);
-
-            var bytes = type.GetBytes();
-
-            CollectionAssert.AreEqual(bytes, expected);
-        }
-
-        [Test]
         public Task Serialize_Default_ShouldBeValid()
         {
             var type = new INT();
@@ -221,17 +174,6 @@ namespace L5Sharp.Tests.Types.Atomics
             var xml = type.Serialize().ToString();
 
             return Verify(xml);
-        }
-
-        [Test]
-        public void DataChanged_WhenMemberIsSet_ShouldRaiseEvent()
-        {
-            var type = new INT();
-            using var monitor = type.Monitor();
-
-            type.Members.First().DataType = true;
-
-            monitor.Should().Raise("DataChanged");
         }
 
         [Test]
@@ -570,7 +512,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT(1) as IConvertible;
 
-            FluentActions.Invoking(() => type.ToType(typeof(StructureType), CultureInfo.InvariantCulture)).Should()
+            FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
         }
 
@@ -871,23 +813,23 @@ namespace L5Sharp.Tests.Types.Atomics
         }
         
         [Test]
-        public void IsEquivalent_AreEqual_ShouldBeTrue()
+        public void EquivalentTo_AreEqual_ShouldBeTrue()
         {
             var first = new INT(1);
             var second = new INT(1);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeTrue();
         }
         
         [Test]
-        public void IsEquivalent_AreNotEqual_ShouldBeFalse()
+        public void EquivalentTo_AreNotEqual_ShouldBeFalse()
         {
             var first = new INT(1);
             var second = new INT(0);
 
-            var result = first.IsEquivalent(second);
+            var result = first.EquivalentTo(second);
 
             result.Should().BeFalse();
         }

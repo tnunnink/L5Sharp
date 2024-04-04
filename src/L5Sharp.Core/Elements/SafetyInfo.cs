@@ -12,7 +12,7 @@ public class SafetyInfo : LogixElement
     /// <summary>
     /// Creates a new <see cref="SafetyInfo"/> with default values.
     /// </summary>
-    public SafetyInfo()
+    public SafetyInfo() : base(L5XName.SafetyInfo)
     {
     }
 

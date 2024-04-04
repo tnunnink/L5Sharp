@@ -8,13 +8,6 @@ namespace L5Sharp.Tests;
 [TestFixture]
 public class LogixElementTests
 {
-    [OneTimeSetUp]
-    public void Setup()
-    {
-        LogixSerializer.Register<TestElement>();
-        LogixSerializer.Register<ChildElement>();
-    }
-
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
@@ -966,18 +959,18 @@ public class LogixElementTests
     }*/
 
     [Test]
-    public void IsEquivalent_AreEquivalent_ShouldBeTrue()
+    public void EquivalentTo_AreEquivalent_ShouldBeTrue()
     {
         var first = new TestElement();
         var second = new TestElement();
         
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeTrue();
     }
 
     [Test]
-    public void IsEquivalent_AreEquivalentWithSetProperties_ShouldBeTrue()
+    public void EquivalentTo_AreEquivalentWithSetProperties_ShouldBeTrue()
     {
         var first = new TestElement
         {
@@ -995,13 +988,13 @@ public class LogixElementTests
             Date = new DateTime(2024, 1, 1)
         };
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeTrue();
     }
     
     [Test]
-    public void IsEquivalent_AreNotEquivalentWithOneDifferent_ShouldBeFalse()
+    public void EquivalentTo_AreNotEquivalentWithOneDifferent_ShouldBeFalse()
     {
         var first = new TestElement
         {
@@ -1019,13 +1012,13 @@ public class LogixElementTests
             Date = new DateTime(2024, 1, 1)
         };
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }
     
     [Test]
-    public void IsEquivalent_AreNotEquivalentOneUnsetProperty_ShouldBeFalse()
+    public void EquivalentTo_AreNotEquivalentOneUnsetProperty_ShouldBeFalse()
     {
         var first = new TestElement
         {
@@ -1042,18 +1035,18 @@ public class LogixElementTests
             Date = new DateTime(2024, 1, 1)
         };
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }
 
     [Test]
-    public void IsEquivalent_DifferentType_ShouldBeFalse()
+    public void EquivalentTo_DifferentType_ShouldBeFalse()
     {
         var first = new TestElement();
         var second = new ChildElement();
 
-        var result = first.IsEquivalent(second);
+        var result = first.EquivalentTo(second);
 
         result.Should().BeFalse();
     }
@@ -1061,9 +1054,9 @@ public class LogixElementTests
 
 [L5XType("Test", "Container")]
 [L5XType("Alternate", "Container")]
-public class TestElement : LogixElement
+public class TestElement : LogixObject
 {
-    public TestElement()
+    public TestElement() : base("Test")
     {
     }
 
@@ -1126,9 +1119,9 @@ public class TestElement : LogixElement
     }
 }
 
-public class ChildElement : LogixElement
+public class ChildElement : LogixObject
 {
-    public ChildElement()
+    public ChildElement() : base(nameof(ChildElement))
     {
     }
 

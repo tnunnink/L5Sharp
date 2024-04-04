@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 
 namespace L5Sharp.Core;
 
@@ -14,59 +14,33 @@ namespace L5Sharp.Core;
 /// methods for easily getting and setting data. Implementing classes need to also provide at least a constructor taking
 /// a single <see cref="XElement"/> and pass it to the base constructor to be deserializable by the library.
 /// </summary>
-[PublicAPI]
-public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixElement>
+public abstract class LogixElement : ILogixSerializable
 {
     /// <summary>
-    /// Creates a new default <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
-    /// L5XType name of the element. 
+    /// Creates a new <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
+    /// provided element name.
     /// </summary>
-    protected LogixElement()
+    protected LogixElement(string name)
     {
-        Element = new XElement(GetType().L5XType());
+        Element = new XElement(name);
     }
 
     /// <summary>
     /// Initializes a new <see cref="LogixElement"/> with the provided <see cref="XElement"/>
     /// </summary>
     /// <param name="element">The L5X <see cref="XElement"/> to initialize the entity with.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>element</c> name does not match any configured L5XType for this class
-    /// type. These are defined via the <see cref="L5XTypeAttribute"/> on the derived classes.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="element"/> is null.</exception>
     protected LogixElement(XElement element)
     {
         Element = element ?? throw new ArgumentNullException(nameof(element));
     }
 
     /// <summary>
-    /// The underlying <see cref="XElement"/> representing the backing data for the entity. Use this object to store
-    /// and retrieve data for the component. This property is the basis for serialization and deserialization of
+    /// The underlying <see cref="XElement"/> representing the backing data for the object. Use this to store
+    /// and retrieve data for the object. This property is the basis for serialization and deserialization of
     /// L5X data.
     /// </summary>
     protected readonly XElement Element;
-
-    /// <summary>
-    /// Indicates whether this element is attached to a L5X document.
-    /// </summary>
-    /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
-    /// <remarks>
-    /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
-    /// If so we will assume this element is attached to an overall L5X document.
-    /// </remarks>
-    public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
-
-    /// <summary>
-    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
-    /// </summary>
-    /// <returns>
-    /// If the current element is attached to a L5X document (i.e. has the root content element),
-    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
-    /// </returns>
-    /// <remarks>
-    /// This allows attached logix elements to reach up to the L5X file in order to traverse or retrieve
-    /// other elements in the L5X. This is helpful/used for other extensions and cross referencing functions.
-    /// </remarks>
-    public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
     /// <summary>
     /// Returns the name of the L5XType for this <see cref="LogixElement"/> object.
@@ -80,111 +54,21 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
     /// the object.
     /// </remarks>
     public string L5XType => Element.Name.LocalName;
-
+    
     /// <summary>
-    /// The scope of the element, indicating whether it is a globally scoped controller element,
-    /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
+    /// Determines if the provided element is structurally or deeply equal to another by performing a compare
+    /// of the underlying XML data for the objects. 
     /// </summary>
-    /// <value>A <see cref="Core.Scope"/> option indicating the scope type for the element.</value>
+    /// <param name="other">The other <see cref="LogixElement"/> to compare.</param>
+    /// <returns><c>ture</c> if the objects are equivalent; Otherwise, <c>false</c>.</returns>
     /// <remarks>
-    /// <para>
-    /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
-    /// If the ancestor is a program element first, it is <c>Program</c> scoped.
-    /// If the ancestor is a AddOnInstructionDefinition element first, it is <c>Instruction</c> scoped.
-    /// If the ancestor is a controller element first, it is <c>Controller</c> scoped.
-    /// If no ancestor is found, we assume the component has <c>Null</c> scope, meaning it is not attached to a L5X tree.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify elements within the L5X file, especially
-    /// <c>Tag</c> and <c>Routine</c> components.
-    /// </para>
+    /// This internally compares the underlying XML nodes of the two elements to determine if all their
+    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e. it
+    /// compares the entire XML structure).
     /// </remarks>
-    public Scope Scope => Scope.Type(Element);
-
-    /// <summary>
-    /// The logix name of an ancestral element, indicating the program, instruction, or controller
-    /// for which this element is contained. This is essentially the scope name for a given logix element.
-    /// </summary>
-    /// <value>
-    /// A <see cref="string"/> representing the name of the program, instruction, or controller in which this component
-    /// is contained. If the component has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
-    /// element is not attached to a L5X tree, then this returns an empty string.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify elements within the L5X file, especially scoped components with same name.
-    /// </para>
-    /// </remarks>
-    public string Container => Scope.Container(Element);
-
-    /// <summary>
-    /// Adds a new element of the same type directly after this element in the L5X document.
-    /// </summary>
-    /// <param name="element">The logix element to add.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
-    /// the provided logix element is not the same type or convertable to the type of this logix element.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the component be attached to the <see cref="L5X"/>, as it will
-    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// It will also automatically perform the "type conversion" of the provided element if possible.
-    /// This just means it will attempt to change the element name to match this element name so that the
-    /// underlying element type will have the correct sequence name. This is used primarily for types that support
-    /// multiple elements (i.e. Tags).
-    /// </remarks>
-    public void AddAfter(LogixElement element)
+    public bool EquivalentTo(LogixElement other)
     {
-        if (element is null) throw new ArgumentNullException(nameof(element));
-
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
-
-        if (element.L5XType != L5XType)
-        {
-            element = element.Convert(L5XType);
-        }
-
-        Element.AddAfterSelf(element.Serialize());
-    }
-
-    /// <summary>
-    /// Adds a new element of the same type directly before this element in the L5X document.
-    /// </summary>
-    /// <param name="element">The logix element to add.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
-    /// the provided logix element is not the same type or convertable to the type of this logix element.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the component be attached to the <see cref="L5X"/>, as it will
-    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// It will also automatically perform the "type conversion" of the provided element if possible.
-    /// This just means it will attempt to change the element name to match this element name so that the
-    /// underlying element type will have the correct sequence name. This is used primarily for types that support
-    /// multiple elements (i.e. Tags).
-    /// </remarks>
-    public void AddBefore(LogixElement element)
-    {
-        if (element is null)
-            throw new ArgumentNullException(nameof(element));
-
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
-
-        if (element.L5XType != L5XType)
-        {
-            element = element.Convert(L5XType);
-        }
-
-        Element.AddBeforeSelf(element.Serialize());
+        return XNode.DeepEquals(Serialize(), other.Serialize());
     }
 
     /// <summary>
@@ -194,7 +78,7 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
     /// single <see cref="XElement"/> argument.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public LogixElement Clone() => new XElement(Element).Deserialize();
+    public LogixElement Clone() => new XElement(Serialize()).Deserialize();
 
     /// <summary>
     /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
@@ -205,115 +89,7 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
     /// single <see cref="XElement"/> argument.</exception>
     /// <exception cref="InvalidCastException">The deserialized type can not be cast to the specified generic type parameter.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public TElement Clone<TElement>() where TElement : LogixElement => new XElement(Element).Deserialize<TElement>();
-
-    /// <summary>
-    /// Converts this element to the specified element type name. 
-    /// </summary>
-    /// <param name="typeName">The name of the element type to convert this logix element to.</param>
-    /// <returns>A new <see cref="LogixElement"/> instance with the converted element name.</returns>
-    /// <exception cref="ArgumentException"><c>typeName</c> is null or empty.</exception>
-    /// <exception cref="InvalidOperationException">The specified type name is not supported by this class type.</exception>
-    /// <remarks>
-    /// This simply updates the underlying element name to the provided name if it is a supported type name for this
-    /// logix element class type, which is configured via the <see cref="L5XTypeAttribute"/> for the derived type. This
-    /// is primarily needed so we can ensure adding elements of types that support multiple element names can be updated
-    /// to the correct element name and ensure a proper L5X sequence within the document. For example, adding a <c>Tag</c>
-    /// to a collection of AOI <c>LocalTags</c> needs the underlying element name updated to <c>LocalTag</c> in that case.
-    /// </remarks>
-    public LogixElement Convert(string typeName)
-    {
-        if (string.IsNullOrEmpty(typeName))
-            throw new ArgumentException("Type name can not be null or empty to perform conversion", nameof(typeName));
-
-        if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert element type '{L5XType}' to type '{typeName}'.");
-
-        if (L5XType == typeName) return this;
-
-        Element.Name = typeName;
-        return Element.Deserialize();
-    }
-
-    /// <summary>
-    /// Converts this element to the specified element type name.
-    /// </summary>
-    /// <param name="typeName">The name of the element type to convert this logix element to. This will default to the
-    /// first configured L5XType of the specified logix type parameter, but can optionally be provided if the type
-    /// to convert to is not the default L5XType name.</param>
-    /// <typeparam name="TElement">The <see cref="LogixElement"/> type to convert this element type to.</typeparam>
-    /// <returns>A new <see cref="LogixElement"/> of the specified generic type with the converted element name.</returns>
-    /// <exception cref="InvalidOperationException">The specified type name is not supported by this class type.</exception>
-    /// <remarks>
-    /// This simply updates the underlying element name to the provided name if it is a supported type name for this
-    /// logix element class type, which is configured via the <see cref="L5XTypeAttribute"/> for the derived type. This
-    /// is primarily needed so we can ensure adding elements of types that support multiple element names can be updated
-    /// to the correct element name and ensure a proper L5X sequence within the document. For example, adding a <c>Tag</c>
-    /// to a collection of AOI <c>LocalTags</c> needs the underlying element name updated to <c>LocalTag</c> in that case.
-    /// </remarks>
-    public TElement Convert<TElement>(string? typeName = null) where TElement : LogixElement
-    {
-        typeName ??= typeof(TElement).L5XType();
-
-        if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert element type '{L5XType}' to type '{typeName}'.");
-
-        if (L5XType == typeName) return (TElement)this;
-
-        Element.Name = typeName;
-        return Element.Deserialize<TElement>();
-    }
-
-    /// <summary>
-    /// Removes the element from it's parent container.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
-    /// This could happen if the component was created in memory and not yet added to the L5X.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the element be attached to the <see cref="L5X"/>, or at least have a parent
-    /// containing element as it will access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// </remarks>
-    public void Remove()
-    {
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
-
-        Element.Remove();
-    }
-
-    /// <summary>
-    /// Replaces the element instance with a new instance of the same type.
-    /// </summary>
-    /// <param name="element">The new logix element to replace this element with.</param>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
-    /// the provided logix element is not the same type or convertable to the type of this logix element.
-    /// </exception>
-    /// <remarks>
-    /// This method requires the component be attached to the <see cref="L5X"/>, as it will
-    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
-    /// It will also automatically perform the "type conversion" of the provided element if possible.
-    /// This just means it will attempt to change the element name to match this element name so that the
-    /// underlying element type will have the correct sequence name. This is used primarily for types that support
-    /// multiple elements (i.e. Tags).
-    /// </remarks>
-    public void Replace(LogixElement element)
-    {
-        if (element is null) throw new ArgumentNullException(nameof(element));
-
-        if (Element.Parent is null)
-            throw new InvalidOperationException(
-                "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
-
-        if (element.L5XType != L5XType)
-        {
-            element = element.Convert(L5XType);
-        }
-
-        Element.ReplaceWith(element.Serialize());
-    }
+    public TElement Clone<TElement>() where TElement : LogixElement => new XElement(Serialize()).Deserialize<TElement>();
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
@@ -331,21 +107,6 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
     /// </para>
     /// </remarks>
     public virtual XElement Serialize() => Element;
-    
-    /// <inheritdoc />
-    public static LogixElement Parse(string value)
-    {
-        var element = XElement.Parse(value);
-        return element.Deserialize();
-    }
-
-    /// <inheritdoc />
-    public static LogixElement? TryParse(string? value)
-    {
-        if (string.IsNullOrEmpty(value)) return default;
-        var element = XElement.Parse(value);
-        return element.Deserialize();
-    }
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
@@ -442,6 +203,34 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
         var value = Element.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : throw Element.L5XError(name);
     }
+    
+    /// <summary>
+    /// Gets a collection of values for the specified attribute name parsed as the specified generic type parameter if it exists.
+    /// If the element does not exist, returns an empty collection of the generic type parameter.
+    /// </summary>
+    /// <param name="name">The name of the attribute.</param>
+    /// <param name="separator">The value separator character. Default is ' '.</param>
+    /// <typeparam name="T">The return type of the value.</typeparam>
+    /// <returns>
+    /// If found, all values of the attribute split on the specified separator and parsed as the generic type parameter.
+    /// If not found, returns an empty collection.
+    /// </returns>
+    /// <remarks>
+    /// This method makes getting/setting attributes with collection of values as a single string with a certain separator
+    /// character as concise as possible for derived classes. This method is added here since only types like <see cref="Block"/>
+    /// are using this method overload.
+    /// </remarks>
+    protected IEnumerable<T> GetValues<T>(char separator = ' ', [CallerMemberName] string? name = null)
+    {
+        if (name is null || name.IsEmpty())
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+        
+        var value = Element.Attribute(name)?.Value;
+
+        return value is not null
+            ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
+            : Enumerable.Empty<T>();
+    }
 
     /// <summary>
     /// Gets the value of the specified child element parsed as the specified generic type parameter if it exists.
@@ -495,7 +284,7 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
     /// collection of contained elements.
     /// </summary>
     /// <param name="name">The name of the child container collection (e.g. Members).</param>
-    /// <typeparam name="TChild">The child element type.</typeparam>
+    /// <typeparam name="TObject">The child element type.</typeparam>
     /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
     /// <exception cref="InvalidOperationException">A child element with <c>name</c> does not exist.</exception>
     /// <remarks>
@@ -503,15 +292,15 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected LogixContainer<TChild> GetContainer<TChild>([CallerMemberName] string? name = null)
-        where TChild : LogixElement
+    protected LogixContainer<TObject> GetContainer<TObject>([CallerMemberName] string? name = null)
+        where TObject : LogixObject
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         var container = Element.Element(name);
         if (container is null) throw Element.L5XError(name);
-        return new LogixContainer<TChild>(container);
+        return new LogixContainer<TObject>(container);
     }
 
     /// <summary>
@@ -558,6 +347,28 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
         return attribute is not null
             ? DateTime.ParseExact(attribute.Value, format, CultureInfo.CurrentCulture)
             : null;
+    }
+
+    /// <summary>
+    /// Gets the element's <see cref="LogixData"/> representing the objects data structure. 
+    /// </summary>
+    /// <returns>
+    /// A <see cref="LogixData"/> object representing the simple or complex data structure for the element.
+    /// </returns>
+    /// <remarks>
+    /// This is a specialized helper used to get a tag or parameter <see cref="LogixData"/> data structure.
+    /// This method will get the first data element with a supported data format and deserialize the object as a
+    /// concrete <see cref="LogixData"/> using the logix serializer. This will work for either Data or DefaultData
+    /// elements. This helper is meant for <c>Tag</c> and <c>Parameter</c>.
+    /// </remarks>
+    protected virtual LogixData GetData()
+    {
+        //This assumes the element is a tag or parameter object and has the child Data element with a supported format.
+        var data = Element.Elements().FirstOrDefault(e =>
+            DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
+
+        //Return that or Null of not found.
+        return data is not null ? data.Deserialize<LogixData>() : LogixData.Null;
     }
 
     /// <summary>
@@ -703,7 +514,7 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
 
         element.ReplaceWith(new XElement(name, new XCData(property)));
     }
-    
+
     /// <summary>
     /// Adds, updates, or removes the first child element with the provided value type object.
     /// </summary>
@@ -746,7 +557,6 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
 
         element.ReplaceWith(new XElement(name, new XCData(property)));
     }
-    
 
     /// <summary>
     /// Sets the complex type object of a child element, adds a child element, or removes a child element.
@@ -789,14 +599,14 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
     /// <param name="value">The <see cref="LogixContainer{TComponent}"/> value to set. The child container is removed
     /// if the value is null. Otherwise, the value is serialized and added (or replaces the existing) to underlying parent element.</param>
     /// <param name="name">The name of the child container collection (e.g. Members).</param>
-    /// <typeparam name="TChild">The container type parameter.</typeparam>
+    /// <typeparam name="TObject">The container type parameter.</typeparam>
     /// <remarks>
     /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
     /// </remarks>
-    protected void SetContainer<TChild>(LogixContainer<TChild>? value, [CallerMemberName] string? name = null)
-        where TChild : LogixElement
+    protected void SetContainer<TObject>(LogixContainer<TObject>? value, [CallerMemberName] string? name = null)
+        where TObject : LogixObject
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
@@ -872,5 +682,52 @@ public abstract class LogixElement : ILogixSerializable, ILogixParsable<LogixEle
         }
 
         description.ReplaceWith(new XElement(L5XName.Description, new XCData(value)));
+    }
+
+    /// <summary>
+    /// Add or updates the child formatted data element with the data of the provided <see cref="LogixData"/> object.
+    /// </summary>
+    /// <param name="data">The <see cref="LogixData"/> data to update.</param>
+    /// <remarks>
+    /// This is a specialized helper which will generate the new formatted data element to wrap the provided type element
+    /// if needed. It will also determine which XName to use based on whether this is a tag, local tag, or parameter.
+    /// This is only intended for use with Tag and Parameter and will completely add or replace the existing root data
+    /// element.
+    /// </remarks>
+    protected virtual void SetData(LogixData? data)
+    {
+        //Parameter and LocalTag have the element DefaultData instead of Data.
+        var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
+        //Always use our Null type instead of actual null.
+        data ??= LogixData.Null;
+        
+        var formatted = GenerateDataElement(name, data);
+        
+        //Try to get the existing child data element.
+        var existing = Element.Elements(name).FirstOrDefault(e =>
+            DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
+
+        //If that is null then add the new data.
+        if (existing is null)
+        {
+            Element.Add(formatted);
+            return;
+        }
+
+        //If found then just replace.
+        existing.ReplaceWith(formatted);
+        return;
+
+        //Local function to generate a new formatted data element for the given type.
+        XElement GenerateDataElement(string n, LogixData t)
+        {
+            //First check for string type since there is no child element (Data is the element in this case)
+            if (t is StringData str) return str.Serialize();
+
+            //All other format types are wrapped in a containing data element with a format attribute.
+            var f = new XElement(n, new XAttribute(L5XName.Format, DataFormat.FromData(t)));
+            f.Add(t.Serialize());
+            return f;
+        }
     }
 }

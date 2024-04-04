@@ -1,7 +1,7 @@
-﻿<Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="MyNestedType">
+﻿<Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="MyNestedData">
   <Data Format="Decorated">
-    <Structure DataType="MyNestedType">
-      <DataValueMember Name="Indy" DataType="BOOL" Value="0" />
+    <Structure DataType="MyNestedData">
+      <DataValueMember Name="Indy" DataType="BOOL" Radix="Decimal" Value="0" />
       <StructureMember Name="Str" DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
         <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
@@ -9,12 +9,12 @@
       <StructureMember Name="Tmr" DataType="TIMER">
         <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
         <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="EN" DataType="BOOL" Value="0" />
-        <DataValueMember Name="TT" DataType="BOOL" Value="0" />
-        <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
       </StructureMember>
-      <StructureMember Name="Simple" DataType="MySimpleType">
-        <DataValueMember Name="M1" DataType="BOOL" Value="0" />
+      <StructureMember Name="Simple" DataType="MySimpleData">
+        <DataValueMember Name="M1" DataType="BOOL" Radix="Decimal" Value="0" />
         <DataValueMember Name="M2" DataType="SINT" Radix="Decimal" Value="0" />
         <DataValueMember Name="M3" DataType="INT" Radix="Decimal" Value="0" />
         <DataValueMember Name="M4" DataType="DINT" Radix="Decimal" Value="5000" />
@@ -38,33 +38,33 @@
           <Structure DataType="COUNTER">
             <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
             <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
-            <DataValueMember Name="CU" DataType="BOOL" Value="0" />
-            <DataValueMember Name="CD" DataType="BOOL" Value="0" />
-            <DataValueMember Name="DN" DataType="BOOL" Value="0" />
-            <DataValueMember Name="OV" DataType="BOOL" Value="0" />
-            <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+            <DataValueMember Name="CU" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="CD" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="OV" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="UN" DataType="BOOL" Radix="Decimal" Value="0" />
           </Structure>
         </Element>
         <Element Index="[1]">
           <Structure DataType="COUNTER">
             <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
             <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
-            <DataValueMember Name="CU" DataType="BOOL" Value="0" />
-            <DataValueMember Name="CD" DataType="BOOL" Value="0" />
-            <DataValueMember Name="DN" DataType="BOOL" Value="0" />
-            <DataValueMember Name="OV" DataType="BOOL" Value="0" />
-            <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+            <DataValueMember Name="CU" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="CD" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="OV" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="UN" DataType="BOOL" Radix="Decimal" Value="0" />
           </Structure>
         </Element>
         <Element Index="[2]">
           <Structure DataType="COUNTER">
             <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
             <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
-            <DataValueMember Name="CU" DataType="BOOL" Value="0" />
-            <DataValueMember Name="CD" DataType="BOOL" Value="0" />
-            <DataValueMember Name="DN" DataType="BOOL" Value="0" />
-            <DataValueMember Name="OV" DataType="BOOL" Value="0" />
-            <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+            <DataValueMember Name="CU" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="CD" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="OV" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="UN" DataType="BOOL" Radix="Decimal" Value="0" />
           </Structure>
         </Element>
       </ArrayMember>

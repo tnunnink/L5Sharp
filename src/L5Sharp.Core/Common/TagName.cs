@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+// ReSharper disable ReplaceSubstringWithRangeIndexer we want to keep SubString for NET Standard
 
 namespace L5Sharp.Core;
 
@@ -298,11 +299,11 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
         if (tagName.IsEmpty() || tagName.StartsWith(MemberSeparator)) return string.Empty;
         if (tagName.StartsWith(ArrayOpenSeparator))
         {
-            return tagName[..tagName.IndexOf(ArrayCloseSeparator)];
+            return tagName.Substring(0, tagName.IndexOf(ArrayCloseSeparator));
         }
 
-        var index = tagName.IndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
-        return index > 0 ? tagName[..index] : tagName;
+        var index = tagName.IndexOfAny([MemberSeparator, ArrayOpenSeparator]);
+        return index > 0 ? tagName.Substring(0, index) : tagName;
     }
 
     /// <summary>
@@ -312,7 +313,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// </summary>
     private static string GetMember(string tagName)
     {
-        var index = tagName.LastIndexOfAny(new[] { MemberSeparator, ArrayOpenSeparator });
+        var index = tagName.LastIndexOfAny([MemberSeparator, ArrayOpenSeparator]);
         var length = tagName.Length - index;
         return index >= 0 ? tagName.Substring(index, length).TrimStart(MemberSeparator) : tagName;
     }

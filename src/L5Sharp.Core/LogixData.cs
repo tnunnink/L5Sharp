@@ -1,283 +1,289 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A specialized static factory for deserializing <see cref="LogixType"/> objects from <see cref="XElement"/>.
+/// The base class for all logix type classes, which represent the value or data structure of a logix tag component.
 /// </summary>
 /// <remarks>
-/// This class is built to specifically find and create concrete instances of atomic, predefined, and custom
-/// user defined logix types at runtime. This allows the user to cast a given logix type down to the most specific
-/// type as it is deserialized from the L5X tag data structure.
+/// <para>
+/// <see cref="LogixData"/> is a special type of <see cref="LogixElement"/> which models the tag data structure found
+/// in L5X files. This class contains a <see cref="Name"/> and <see cref="Members"/> which comprise the hierarchy of
+/// data for a given type. This class has built in conversion for implicitly converting .NET primitives and collections
+/// (arrays and dictionaries) to the corresponding <see cref="LogixData"/> derived class.
+/// </para>
+/// <para>
+/// The serialization implemented in the library will always attempt to instantiate the concrete type of a
+/// given <see cref="LogixData"/>. For example, a TIMER L5X data structure is always deserialized as the concrete
+/// <c>TIMER</c> class, so that the user can cast the type and manipulate the structure statically and compile time.
+/// This applies for <see cref="AtomicData"/>, <see cref="ArrayData"/>, and all derived instance of <see cref="StructureData"/>.
+/// </para>
+/// <para>
+/// Is you wish to create in memory complex data structures, use the <see cref="ComplexData"/> class which exposes
+/// methods for adding, removing, replacing, and inserting <see cref="Core.Member"/> objects for the data structure.
+/// </para>
 /// </remarks>
-public static class LogixData
+/// <seealso cref="AtomicData"/>
+/// <seealso cref="StructureData"/>
+/// <seealso cref="ArrayData"/>
+/// <seealso cref="StringData"/>
+/// <seealso cref="NullData"/>
+/// <footer>
+/// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
+/// `Logix 5000 Controllers Import/Export`</a> for more information.
+/// </footer>
+public abstract class LogixData : LogixElement
 {
-    /// <summary>
-    /// A system wide lookup of all <see cref="LogixType"/> objects by L5XType name obtained using reflection. This does
-    /// not include the internal generic types such as StructureType, ComplexType, StringType, ArrayType, or ArrayType{T},
-    /// or NullType, but rather types that can be instantiated (atomic or complex) for which we may need to create a generic
-    /// array of.
-    /// </summary>
-    private static readonly Dictionary<string, Type> Lookup =
-        AppDomain.CurrentDomain.GetAssemblies().SelectMany(FindLogixTypes).ToDictionary(k => k.L5XType(), v => v);
-
-    /// <summary>
-    /// The global cache for all <see cref="StructureType"/> and <see cref="StringType"/> object deserializer
-    /// delegate functions. This is what we are using to create strongly typed logix type objects at runtime.
-    /// </summary>
-    private static readonly Lazy<Dictionary<string, Func<XElement, LogixType>>> Deserializers = new(() =>
-        AppDomain.CurrentDomain.GetAssemblies().Distinct().SelectMany(Introspect)
-            .ToDictionary(k => k.Key, k => k.Value), LazyThreadSafetyMode.ExecutionAndPublication);
-
-    /// <summary>
-    /// Returns the singleton null <see cref="LogixType"/> object.
-    /// </summary>
-    public static LogixType Null => NullType.Instance;
-
-    /// <summary>
-    /// Deserializes an <see cref="XElement"/> into a <see cref="LogixType"/>.
-    /// </summary>
-    /// <param name="element">The element to deserialize.</param>
-    /// <returns>A <see cref="LogixType"/> representing the data value, structure, or array or the provided element.</returns>
-    /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    /// <exception cref="NotSupportedException"><c>element</c> has a name that is not supported for deserialization.</exception>
-    public static LogixType Deserialize(XElement element)
+    /// <inheritdoc />
+    protected LogixData(string name) : base(name)
     {
-        if (element is null) throw new ArgumentNullException(nameof(element));
+    }
 
-        return element.Name.ToString() switch
-        {
-            L5XName.Tag => DeserializeData(element),
-            L5XName.LocalTag => DeserializeData(element),
-            L5XName.Parameter => DeserializeData(element),
-            L5XName.ConfigTag => DeserializeData(element),
-            L5XName.InputTag => DeserializeData(element),
-            L5XName.OutputTag => DeserializeData(element),
-            L5XName.Data => DeserializeFormatted(element),
-            L5XName.DefaultData => DeserializeFormatted(element),
-            L5XName.DataValue => DeserializeAtomic(element),
-            L5XName.DataValueMember => DeserializeAtomic(element),
-            L5XName.Element => DeserializeElement(element),
-            L5XName.Array => DeserializeArray(element),
-            L5XName.ArrayMember => DeserializeArray(element),
-            L5XName.Structure => DeserializeStructure(element),
-            L5XName.StructureMember => DeserializeStructure(element),
-            L5XName.AlarmAnalogParameters => new ALARM_ANALOG(element),
-            L5XName.AlarmDigitalParameters => new ALARM_DIGITAL(element),
-            L5XName.MessageParameters => new MESSAGE(element),
-            _ => throw new NotSupportedException(
-                $"The element name '{element.Name}' is not able to be used to deserialize a logix type.")
-        };
+    /// <inheritdoc />
+    protected LogixData(XElement element) : base(element)
+    {
     }
 
     /// <summary>
-    /// Determines if a type with the specified type name is registered for deserialization.
+    /// The type name of the logix data.
     /// </summary>
-    /// <param name="dataType">The data type name to check.</param>
-    /// <returns><c>true</c> if the type is registered; otherwise, <c>false</c>.</returns>
-    public static bool IsRegistered(string dataType) => Deserializers.Value.ContainsKey(dataType);
+    /// <value>A <see cref="string"/> name identifying the data type of the data object.</value>
+    public virtual string Name => Element.DataType() ?? throw Element.L5XError(L5XName.DataType);
 
     /// <summary>
-    /// Register a custom <see cref="StructureType"/> so that it may be instantiated during deserialization of a L5X.
-    /// The type must implement a constructor accepting a single <see cref="XElement"/> argument.
+    /// The collection of <see cref="Core.Member"/> objects that make up the structure of the data.
     /// </summary>
-    /// <typeparam name="TStructure">The type of the logix type.</typeparam>
-    /// <exception cref="ArgumentException"><c>TStructure</c> is abstract -or- does not have a public constructor
-    /// accepting a single <see cref="XElement"/> object.</exception>
-    /// <exception cref="InvalidOperationException"><c>TStructure</c> is already registered.</exception>
-    public static void Register<TStructure>() where TStructure : StructureType
-    {
-        var type = typeof(TStructure);
-        var key = type.L5XType();
-        var deserializer = type.Deserializer<LogixType>();
-
-        if (!Deserializers.Value.TryAdd(key, deserializer))
-            throw new InvalidOperationException($"The type {key} is already registered.");
-    }
-
-    /// <summary>
-    /// Scans the provided assembly using reflection for public non-abstract types inheriting <see cref="StructureType"/>
-    /// that have the required deserialization constructor and registers the type so that it may be instantiated during
-    /// deserialization of a L5X. 
-    /// </summary>
-    /// <param name="assembly">The assembly to scan.</param>
-    /// <exception cref="InvalidOperationException">A type is already registered.</exception>
+    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Core.Member"/> objects.</value>
     /// <remarks>
-    /// This is to assist with easily registering types within a specific assembly.
+    /// Complex data structures such as <see cref="StructureData"/> and <see cref="ArrayData{TLogixType}"/> will return
+    /// members. <see cref="AtomicData"/> will not return the bit members since they are not present in the underlying
+    /// XML and having them would exponentially increase the number of members a given tags has.
     /// </remarks>
-    public static void Scan(Assembly assembly)
+    public virtual IEnumerable<Member> Members => Enumerable.Empty<Member>();
+
+    /// <summary>
+    /// Casts the <see cref="LogixData"/> to the type of the generic parameter.
+    /// </summary>
+    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
+    /// <exception cref="InvalidCastException">The object can not be casted to the specified type.</exception>
+    /// <returns>The logix type object casted as the specified generic type parameter.</returns>
+    public TLogixType As<TLogixType>() where TLogixType : LogixData => (TLogixType)this;
+
+    /// <summary>
+    /// Gets a <see cref="Core.Member"/> with the specified name if it exists for the <see cref="LogixData"/>;
+    /// Otherwise, returns <c>null</c>.
+    /// </summary>
+    /// <param name="name">The name of the member to get.</param>
+    /// <returns>A <see cref="Core.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <remarks>This performs a case insensitive comparison for the member name.</remarks>
+    public Member? Member(string name) =>
+        Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
     {
-        foreach (var pair in Introspect(assembly).Where(pair => !Deserializers.Value.TryAdd(pair.Key, pair.Value)))
-            throw new InvalidOperationException($"The type {pair.Key} is already registered.");
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not LogixData type) return false;
+        return Name == type.Name;
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => Name.GetHashCode();
+
+    /// <inheritdoc />
+    public override string ToString() => Name;
+
+    /// <summary>
+    /// Returns the singleton null <see cref="LogixData"/> object.
+    /// </summary>
+    public static LogixData Null => NullData.Instance;
+
+    /// <summary>
+    /// Determines whether the <see cref="LogixData"/> values are equal.
+    /// </summary>
+    /// <param name="left">An logix type to compare.</param>
+    /// <param name="right">An logix type to compare.</param>
+    /// <returns><c>true</c> if the objects are equal, otherwise, <c>false</c>.</returns>
+    public static bool operator ==(LogixData left, LogixData right) => Equals(left, right);
+
+    /// <summary>
+    /// Determines whether the <see cref="LogixData"/> values are not equal.
+    /// </summary>
+    /// <param name="left">An logix type to compare.</param>
+    /// <param name="right">An logix type to compare.</param>
+    /// <returns><c>true</c> if the objects are not equal, otherwise, <c>false</c>.</returns>
+    public static bool operator !=(LogixData left, LogixData right) => !Equals(left, right);
+
+    /// <summary>
+    /// Compares two objects and determines if a is greater than b.
+    /// </summary>
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is greater than <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator >(LogixData a, LogixData b)
+    {
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
+
+        return comparable.CompareTo(b) > 0;
     }
 
     /// <summary>
-    /// Handles deserializing the data element of the root tag. This method will forward call down the chain
-    /// based on the format of the data structure.
+    /// Compares two objects and determines if a is less than b.
     /// </summary>
-    private static LogixType DeserializeData(XContainer element)
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is less than <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator <(LogixData a, LogixData b)
     {
-        var data = element.Elements()
-            .FirstOrDefault(e => DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
 
-        return data is not null ? Deserialize(data) : Null;
+        return comparable.CompareTo(b) < 0;
     }
 
     /// <summary>
-    /// Handles deserializing a formatted data element to a logix type. This method will forward call down the chain
-    /// based on the format of the data structure.
+    /// Compares two objects and determines if a is greater or equal to than b.
     /// </summary>
-    private static LogixType DeserializeFormatted(XElement element)
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is greater than or equal to <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator >=(LogixData a, LogixData b)
     {
-        var format = element.Attribute(L5XName.Format)?.Value.TryParse<DataFormat>();
-        if (format is null) return Null;
-        if (format == DataFormat.String) return DeserializeString(element);
-        return element.FirstNode is XElement root ? Deserialize(root) : Null;
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
+
+        return comparable.CompareTo(b) >= 0;
     }
 
     /// <summary>
-    /// Handles deserializing an element to a atomic value type logix type.
-    /// This method will call upon <see cref="AtomicType"/> to generate the known concrete atomic type we need.
-    /// This implementation ignores any specified Radix because we have found cases where the Radix does not match
-    /// the actual format of the value, therefore, we always infer the format, and then parse.
+    /// Compares two objects and determines if a is less than or equal to b.
     /// </summary>
-    private static LogixType DeserializeAtomic(XElement element)
+    /// <param name="a">An logix type to compare.</param>
+    /// <param name="b">An logix type to compare.</param>
+    /// <returns><c>true</c> if <c>a</c> is less than or equal to <c>b</c>, otherwise, <c>false</c>.</returns>
+    public static bool operator <=(LogixData a, LogixData b)
     {
-        var dataType = element.Get(L5XName.DataType);
-        var value = element.Get(L5XName.Value);
-        return AtomicType.Parse(dataType, value);
+        if (a is not IComparable comparable)
+            throw new ArgumentException($"Type {a.GetType()} does not implement {typeof(IComparable)}.");
+
+        return comparable.CompareTo(b) <= 0;
     }
 
     /// <summary>
-    /// Handles deserializing an array element to a <see cref="ArrayType"/>...
+    /// Converts the provided <see cref="bool"/> to a <see cref="LogixData"/>.
     /// </summary>
-    private static LogixType DeserializeArray(XElement element)
-    {
-        var dataType = element.Get(L5XName.DataType);
-
-        //We either know the type (atomic or registered), or we create the generic string or complex type.
-        var type = Lookup.TryGetValue(dataType, out var known) ? known
-            : HasStringStructure(element) ? typeof(StringType)
-            : typeof(ComplexType);
-
-        var arrayType = typeof(ArrayType<>).MakeGenericType(type);
-        var arrayName = arrayType.FullName ??
-                        throw new InvalidOperationException(
-                            $"Could not determine the full name for array of type {arrayType}.");
-
-        if (Deserializers.Value.TryGetValue(arrayName, out var cached))
-            return cached.Invoke(element);
-
-        var deserializer = arrayType.Deserializer<LogixType>();
-        Deserializers.Value.Add(arrayName, deserializer);
-        return deserializer.Invoke(element);
-    }
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(bool value) => new BOOL(value);
 
     /// <summary>
-    /// Handles deserializing an array index element to a logix type, either atomic, string, or structure,
-    /// depending on the state of the element.
+    /// Converts the provided <see cref="sbyte"/> to a <see cref="LogixData"/>.
     /// </summary>
-    private static LogixType DeserializeElement(XElement element)
-    {
-        var dataType = element.Parent?.Get(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
-        var value = element.Attribute(L5XName.Value);
-        var structure = element.Element(L5XName.Structure);
-
-        return value is not null ? AtomicType.Parse(dataType, value.Value)
-            : structure is not null ? DeserializeStructure(structure)
-            : throw element.L5XError(L5XName.Element);
-    }
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(sbyte value) => new SINT(value);
 
     /// <summary>
-    /// Handles deserializing an element to a <see cref="StructureType"/> logix type.
-    /// Will check for registered types to create the concrete type if available.
-    /// Otherwise we resort to a more generic <see cref="StringType"/> of string element structures or
-    /// <see cref="ComplexType"/> for everything else.
+    /// Converts the provided <see cref="short"/> to a <see cref="LogixData"/>.
     /// </summary>
-    private static LogixType DeserializeStructure(XElement element)
-    {
-        var dataType = element.Get(L5XName.DataType);
-        if (IsRegistered(dataType)) return Deserializers.Value[dataType].Invoke(element);
-        return HasStringStructure(element) ? new StringType(element) : new ComplexType(element);
-    }
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(short value) => new INT(value);
 
     /// <summary>
-    /// Handles deserializing an element to a <see cref="StringType"/> logix type.
-    /// Will check for registered type to create the concrete type if available.
-    /// Otherwise we resort to a more generic <see cref="StringType"/> object.
+    /// Converts the provided <see cref="int"/> to a <see cref="LogixData"/>.
     /// </summary>
-    private static LogixType DeserializeString(XElement element)
-    {
-        var dataType = element.Parent?.Get(L5XName.DataType) ?? throw element.L5XError(L5XName.DataType);
-        return IsRegistered(dataType) ? Deserializers.Value[dataType].Invoke(element) : new StringType(element);
-    }
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(int value) => new DINT(value);
 
     /// <summary>
-    /// Determines if the provided element has a structure that represents a <see cref="StringType"/> structure,
-    /// structure member, array, or array member. This is needed to determine if we are deserializing a complex type
-    /// or string type. String structure is unique in that it will have a data value member called DATA with a ASCII
-    /// radix, a non-null element value, and a data type attribute value equal to that of the parent structure element attribute.
+    /// Converts the provided <see cref="long"/> to a <see cref="LogixData"/>.
     /// </summary>
-    private static bool HasStringStructure(XElement? element)
-    {
-        if (element is null) return false;
-
-        //If this is a structure or structure member it could potentially be the string structure.
-        if (element.Name == L5XName.Structure || element.Name == L5XName.StructureMember)
-        {
-            return element.Elements(L5XName.DataValueMember).Any(e =>
-                e.Attribute(L5XName.Name)?.Value == "DATA"
-                && e.Attribute(L5XName.DataType)?.Value == e.Parent?.Attribute(L5XName.DataType)?.Value
-                && e.Attribute(L5XName.Radix)?.Value == "ASCII");
-        }
-
-        //If this is an array or array member, we need to get elements and check if they are all string structure or not.
-        if (element.Name == L5XName.Array || element.Name == L5XName.ArrayMember)
-        {
-            return element.Elements().Select(e => e.Element(L5XName.Structure)).All(HasStringStructure);
-        }
-
-        return false;
-    }
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(long value) => new LINT(value);
 
     /// <summary>
-    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
-    /// inheriting from <see cref="StructureType"/> or <see cref="StringType"/> that have the supported
-    /// deserialization constructor, and returns the <c>L5XType</c> and compiled deserialization delegate pair.
-    /// This is used to initialize the set of concrete deserializer functions for all know predefined and user defined
-    /// logix type objects.
+    /// Converts the provided <see cref="float"/> to a <see cref="LogixData"/>.
     /// </summary>
-    private static IEnumerable<KeyValuePair<string, Func<XElement, LogixType>>> Introspect(Assembly assembly)
-    {
-        var types = assembly.GetTypes().Where(t =>
-            (typeof(StructureType).IsAssignableFrom(t) || typeof(StringType).IsAssignableFrom(t))
-            && t != typeof(ComplexType) && t != typeof(StringType)
-            && t is { IsAbstract: false, IsPublic: true }
-            && t.GetConstructor(new[] { typeof(XElement) }) is not null);
-
-        foreach (var type in types)
-        {
-            var deserializer = type.Deserializer<LogixType>();
-            yield return new KeyValuePair<string, Func<XElement, LogixType>>(type.L5XType(), deserializer);
-        }
-    }
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(float value) => new REAL(value);
 
     /// <summary>
-    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
-    /// inheriting from <see cref="LogixType"/>. 
+    /// Converts the provided <see cref="double"/> to a <see cref="LogixData"/>.
     /// </summary>
-    private static IEnumerable<Type> FindLogixTypes(Assembly assembly)
-    {
-        return assembly.GetTypes().Where(t =>
-            typeof(LogixType).IsAssignableFrom(t)
-            && t is { IsAbstract: false, IsPublic: true }
-            && t != typeof(ComplexType) && t != typeof(StringType)
-            && t != typeof(ArrayType) && t != typeof(ArrayType<>)
-            && t != typeof(NullType));
-    }
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(double value) => new LREAL(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="byte"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(byte value) => new USINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="ushort"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(ushort value) => new UINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="uint"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(uint value) => new UDINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="ulong"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(ulong value) => new ULINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="string"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(string value) => new STRING(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LogixData[] value) => new ArrayData<LogixData>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LogixData[,] value) => new ArrayData<LogixData>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LogixData[,,] value) => new ArrayData<LogixData>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Dictionary{TKey,TValue}"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(Dictionary<string, LogixData> value) =>
+        new ComplexData(nameof(ComplexData), value.Select(m => new Member(m.Key, m.Value)));
 }
