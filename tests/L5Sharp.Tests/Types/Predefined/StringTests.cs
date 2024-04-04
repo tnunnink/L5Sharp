@@ -32,7 +32,7 @@ namespace L5Sharp.Tests.Types.Predefined
             type.LEN.Should().NotBeNull();
             type.LEN.Should().BeOfType<DINT>();
             type.DATA.Should().NotBeNull();
-            type.DATA.Should().BeOfType<ArrayType<SINT>>();
+            type.DATA.Should().BeOfType<ArrayData<SINT>>();
             type.Members.Should().HaveCount(2);
 
             var data = type.Members.FirstOrDefault(m => m.Name == "DATA");

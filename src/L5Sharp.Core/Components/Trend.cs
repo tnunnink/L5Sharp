@@ -116,9 +116,9 @@ public class Trend : LogixComponent
     /// Specify a target value if the <see cref="StartTriggerTargetType1"/> is <c>TargetValue</c>.
     /// </summary>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
-    public AtomicType? StartTriggerTargetValue1
+    public AtomicData? StartTriggerTargetValue1
     {
-        get => GetValue<AtomicType>();
+        get => GetValue<AtomicData>();
         set => SetValue(value);
     }
 
@@ -180,9 +180,9 @@ public class Trend : LogixComponent
     /// Specify a target value if the <see cref="StartTriggerTargetType2"/> is <c>TargetValue</c>.
     /// </summary>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
-    public AtomicType? StartTriggerTargetValue2
+    public AtomicData? StartTriggerTargetValue2
     {
-        get => GetValue<AtomicType>();
+        get => GetValue<AtomicData>();
         set => SetValue(value);
     }
 
@@ -261,9 +261,9 @@ public class Trend : LogixComponent
     /// Specify a target value if the <see cref="StopTriggerTargetType1"/> is <c>TargetValue</c>.
     /// </summary>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
-    public AtomicType? StopTriggerTargetValue1
+    public AtomicData? StopTriggerTargetValue1
     {
-        get => GetValue<AtomicType>();
+        get => GetValue<AtomicData>();
         set => SetValue(value);
     }
 
@@ -325,9 +325,9 @@ public class Trend : LogixComponent
     /// Specify a target value if the <see cref="StopTriggerTargetType2"/> is <c>TargetValue</c>.
     /// </summary>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
-    public AtomicType? StopTriggerTargetValue2
+    public AtomicData? StopTriggerTargetValue2
     {
-        get => GetValue<AtomicType>();
+        get => GetValue<AtomicData>();
         set => SetValue(value);
     }
 

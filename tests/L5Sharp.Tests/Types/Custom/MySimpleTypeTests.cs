@@ -8,7 +8,7 @@ public class MySimpleTypeTests
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
-        var type = new MySimpleType();
+        var type = new MySimpleData();
 
         type.Should().NotBeNull();
     }
@@ -16,7 +16,7 @@ public class MySimpleTypeTests
     [Test]
     public void New_Default_ShouldHaveExpectedValue()
     {
-        var type = new MySimpleType();
+        var type = new MySimpleData();
 
         type.Name.Should().Be("MySimpleType");
         type.M1.Should().Be(0);
@@ -30,7 +30,7 @@ public class MySimpleTypeTests
     [Test]
     public Task Serialize_Default_ShouldBeVerified()
     {
-        var type = new MySimpleType();
+        var type = new MySimpleData();
 
         var xml = type.Serialize().ToString();
 
@@ -40,7 +40,7 @@ public class MySimpleTypeTests
     [Test]
     public Task Serialize_UpdatedMember_ShouldBeVerified()
     {
-        var type = new MySimpleType();
+        var type = new MySimpleData();
 
         type.M1 = true;
         type.M2 = 12;

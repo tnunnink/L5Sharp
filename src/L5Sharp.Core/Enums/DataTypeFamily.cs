@@ -1,7 +1,7 @@
 ﻿namespace L5Sharp.Core;
 
 /// <summary>
-/// An enumeration of all Logix <see cref="DataTypeFamily"/> options for a given <see cref="LogixType"/>.
+/// An enumeration of all Logix <see cref="DataTypeFamily"/> options for a given <see cref="LogixData"/>.
 /// Valid options are None and String.
 /// </summary>
 public sealed class DataTypeFamily : LogixEnum<DataTypeFamily, string>
@@ -12,13 +12,13 @@ public sealed class DataTypeFamily : LogixEnum<DataTypeFamily, string>
 
     /// <summary>
     /// Represents no specific data type family.
-    /// All <see cref="LogixType"/> objects except <see cref="StringType"/> should have this option.
+    /// All <see cref="LogixData"/> objects except <see cref="StringData"/> should have this option.
     /// </summary>
     public static readonly DataTypeFamily None = new(nameof(None), "NoFamily");
         
         
     /// <summary>
-    /// Represents a string family. Only <see cref="StringType"/> objects should have this option.
+    /// Represents a string family. Only <see cref="StringData"/> objects should have this option.
     /// </summary>
     public static readonly DataTypeFamily String = new(nameof(String), "StringFamily");
 }

@@ -174,10 +174,10 @@ public class Parameter : LogixObject
     /// <summary>
     /// A default value of the <c>Parameter</c> when instantiated.
     /// </summary>
-    /// <value>An <see cref="AtomicType"/> representing the default value/data. Default is <c>null</c>.</value>
-    public AtomicType? Default
+    /// <value>An <see cref="AtomicData"/> representing the default value/data. Default is <c>null</c>.</value>
+    public AtomicData? Default
     {
-        get => GetData().As<AtomicType>();
+        get => GetData().As<AtomicData>();
         set => SetData(value);
     }
 

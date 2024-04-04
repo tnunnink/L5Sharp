@@ -42,7 +42,7 @@ public class MemberTests
     {
         const string xml = "<DataValueMember Name=\"Test\" DataType=\"DINT\" Radix=\"Decimal\" Value=\"123\" />";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
@@ -56,7 +56,7 @@ public class MemberTests
     {
         const string xml = "<DataValue DataType=\"DINT\" Radix=\"Decimal\" Value=\"123\" />";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
@@ -76,7 +76,7 @@ public class MemberTests
             <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1"" />
             </Structure>";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
@@ -100,7 +100,7 @@ public class MemberTests
             <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1"" />
             </StructureMember>";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
@@ -124,12 +124,12 @@ public class MemberTests
             <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1"" />
             </StructureMember>";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<ComplexType>();
+        member.Value.Should().BeOfType<ComplexData>();
         member.Value.Name.Should().Be("CustomType");
         member.Value.Member("PRE")!.Value.Should().Be(1000);
         member.Value.Member("ACC")!.Value.Should().Be(2000);
@@ -146,7 +146,7 @@ public class MemberTests
             <DataValueMember Name=""DATA"" DataType=""STRING"" Radix=""ASCII""><![CDATA[This is a string type value]]></DataValueMember>
             </StructureMember>";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
@@ -166,15 +166,15 @@ public class MemberTests
             <Element Index=""[3]"" Value=""4.4"" />
             </ArrayMember>";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.As<ArrayType>()[0].Should().Be(1.1f);
-        member.Value.As<ArrayType>()[1].Should().Be(2.2f);
-        member.Value.As<ArrayType>()[2].Should().Be(3.3f);
-        member.Value.As<ArrayType>()[3].Should().Be(4.4f);
+        member.Value.As<ArrayData>()[0].Should().Be(1.1f);
+        member.Value.As<ArrayData>()[1].Should().Be(2.2f);
+        member.Value.As<ArrayData>()[2].Should().Be(3.3f);
+        member.Value.As<ArrayData>()[3].Should().Be(4.4f);
     }
 
     [Test]
@@ -210,14 +210,14 @@ public class MemberTests
             </Element>
             </ArrayMember>";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.As<ArrayType>()[0].Should().BeOfType<TIMER>();
-        member.Value.As<ArrayType>()[1].Should().BeOfType<TIMER>();
-        member.Value.As<ArrayType>()[2].Should().BeOfType<TIMER>();
+        member.Value.As<ArrayData>()[0].Should().BeOfType<TIMER>();
+        member.Value.As<ArrayData>()[1].Should().BeOfType<TIMER>();
+        member.Value.As<ArrayData>()[2].Should().BeOfType<TIMER>();
     }
 
     [Test]
@@ -244,14 +244,14 @@ public class MemberTests
             </Element>
             </ArrayMember>";
         var element = XElement.Parse(xml);
-        var type = element.Deserialize<LogixType>();
+        var type = element.Deserialize<LogixData>();
 
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.As<ArrayType>()[0].Should().BeOfType<STRING>();
-        member.Value.As<ArrayType>()[1].Should().BeOfType<STRING>();
-        member.Value.As<ArrayType>()[2].Should().BeOfType<STRING>();
+        member.Value.As<ArrayData>()[0].Should().BeOfType<STRING>();
+        member.Value.As<ArrayData>()[1].Should().BeOfType<STRING>();
+        member.Value.As<ArrayData>()[2].Should().BeOfType<STRING>();
     }
 
     [Test]
@@ -286,10 +286,10 @@ public class MemberTests
         var dataType = member.Value;
 
         dataType.Should().NotBeNull();
-        dataType.As<ArrayType>()[0].Should().Be(1);
-        dataType.As<ArrayType>()[1].Should().Be(2);
-        dataType.As<ArrayType>()[2].Should().Be(3);
-        dataType.As<ArrayType>()[3].Should().Be(4);
+        dataType.As<ArrayData>()[0].Should().Be(1);
+        dataType.As<ArrayData>()[1].Should().Be(2);
+        dataType.As<ArrayData>()[2].Should().Be(3);
+        dataType.As<ArrayData>()[3].Should().Be(4);
     }
 
     [Test]
@@ -333,7 +333,7 @@ public class MemberTests
     {
         var member = new Member("Test", 123);
 
-        FluentActions.Invoking(() => member.Value = LogixType.Null).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => member.Value = LogixData.Null).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -495,7 +495,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.Value = new ComplexType("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) });
+        member.Value = new ComplexData("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) });
 
         member.Value.As<TIMER>().PRE.Should().Be(5000);
         member.Value.As<TIMER>().EN.Should().Be(true);
@@ -506,7 +506,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.Value = new Dictionary<string, LogixType>
+        member.Value = new Dictionary<string, LogixData>
         {
             { "PRE", 5000 },
             { "EN", true }
@@ -521,7 +521,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.Value = new Dictionary<string, LogixType>
+        member.Value = new Dictionary<string, LogixData>
         {
             { "Test", 123 },
             { "PRE", 5000 },

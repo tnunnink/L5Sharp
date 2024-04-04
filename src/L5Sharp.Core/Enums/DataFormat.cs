@@ -43,15 +43,15 @@ public class DataFormat : LogixEnum<DataFormat, string>
         { Decorated, String, Alarm, Message };
 
     /// <summary>
-    /// Returns the corresponding <see cref="DataFormat"/> for the provided <see cref="LogixType"/>.
+    /// Returns the corresponding <see cref="DataFormat"/> for the provided <see cref="LogixData"/>.
     /// </summary>
-    /// <param name="data">The <see cref="LogixType"/> to get the data format for.</param>
+    /// <param name="data">The <see cref="LogixData"/> to get the data format for.</param>
     /// <returns>The <see cref="DataFormat"/> option indicating how the type's data is formatted in the L5X.</returns>
-    public static DataFormat FromData(LogixType data)
+    public static DataFormat FromData(LogixData data)
     {
         return data switch
         {
-            StringType => String,
+            StringData => String,
             ALARM_ANALOG => Alarm,
             ALARM_DIGITAL => Alarm,
             MESSAGE => Message,

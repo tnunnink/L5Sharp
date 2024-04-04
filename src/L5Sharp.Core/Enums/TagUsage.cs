@@ -12,12 +12,12 @@ public class TagUsage : LogixEnum<TagUsage, string>
     /// <summary>
     /// Gets the default <see cref="Radix"/> type for the provided data type instance.
     /// </summary>
-    /// <param name="logixType">The data type instance to evaluate.</param>
+    /// <param name="logixData">The data type instance to evaluate.</param>
     /// <returns>
     /// <see cref="Input"/> for atomic types.
     /// <see cref="InOut"/> for complex types.
     /// </returns>
-    public static TagUsage Default(LogixType logixType) => logixType is AtomicType ? Input : InOut;
+    public static TagUsage Default(LogixData logixData) => logixData is AtomicData ? Input : InOut;
 
     /// <summary>
     /// Represents a Null <see cref="TagUsage"/> value.

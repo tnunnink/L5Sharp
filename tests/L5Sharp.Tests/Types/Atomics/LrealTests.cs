@@ -101,7 +101,7 @@ public class LrealTests
         {
             var type = new LREAL();
 
-            var atomic = type.As<AtomicType>();
+            var atomic = type.As<AtomicData>();
 
             atomic.Should().NotBeNull();
         }
@@ -111,7 +111,7 @@ public class LrealTests
         {
             var type = new LREAL();
 
-            FluentActions.Invoking(() => type.As<StructureType>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -496,7 +496,7 @@ public class LrealTests
         {
             var type = new LREAL(1) as IConvertible;
 
-            FluentActions.Invoking(() => type.ToType(typeof(StructureType), CultureInfo.InvariantCulture)).Should()
+            FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
         }
 

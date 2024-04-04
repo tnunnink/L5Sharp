@@ -350,25 +350,25 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets the element's <see cref="LogixType"/> representing the objects data structure. 
+    /// Gets the element's <see cref="LogixData"/> representing the objects data structure. 
     /// </summary>
     /// <returns>
-    /// A <see cref="LogixType"/> object representing the simple or complex data structure for the element.
+    /// A <see cref="LogixData"/> object representing the simple or complex data structure for the element.
     /// </returns>
     /// <remarks>
-    /// This is a specialized helper used to get a tag or parameter <see cref="LogixType"/> data structure.
+    /// This is a specialized helper used to get a tag or parameter <see cref="LogixData"/> data structure.
     /// This method will get the first data element with a supported data format and deserialize the object as a
-    /// concrete <see cref="LogixType"/> using the logix serializer. This will work for either Data or DefaultData
+    /// concrete <see cref="LogixData"/> using the logix serializer. This will work for either Data or DefaultData
     /// elements. This helper is meant for <c>Tag</c> and <c>Parameter</c>.
     /// </remarks>
-    protected virtual LogixType GetData()
+    protected virtual LogixData GetData()
     {
         //This assumes the element is a tag or parameter object and has the child Data element with a supported format.
         var data = Element.Elements().FirstOrDefault(e =>
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
         //Return that or Null of not found.
-        return data is not null ? data.Deserialize<LogixType>() : LogixType.Null;
+        return data is not null ? data.Deserialize<LogixData>() : LogixData.Null;
     }
 
     /// <summary>
@@ -685,21 +685,21 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Add or updates the child formatted data element with the data of the provided <see cref="LogixType"/> object.
+    /// Add or updates the child formatted data element with the data of the provided <see cref="LogixData"/> object.
     /// </summary>
-    /// <param name="data">The <see cref="LogixType"/> data to update.</param>
+    /// <param name="data">The <see cref="LogixData"/> data to update.</param>
     /// <remarks>
     /// This is a specialized helper which will generate the new formatted data element to wrap the provided type element
     /// if needed. It will also determine which XName to use based on whether this is a tag, local tag, or parameter.
     /// This is only intended for use with Tag and Parameter and will completely add or replace the existing root data
     /// element.
     /// </remarks>
-    protected virtual void SetData(LogixType? data)
+    protected virtual void SetData(LogixData? data)
     {
         //Parameter and LocalTag have the element DefaultData instead of Data.
         var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
         //Always use our Null type instead of actual null.
-        data ??= LogixType.Null;
+        data ??= LogixData.Null;
         
         var formatted = GenerateDataElement(name, data);
         
@@ -719,10 +719,10 @@ public abstract class LogixElement : ILogixSerializable
         return;
 
         //Local function to generate a new formatted data element for the given type.
-        XElement GenerateDataElement(string n, LogixType t)
+        XElement GenerateDataElement(string n, LogixData t)
         {
             //First check for string type since there is no child element (Data is the element in this case)
-            if (t is StringType str) return str.Serialize();
+            if (t is StringData str) return str.Serialize();
 
             //All other format types are wrapped in a containing data element with a format attribute.
             var f = new XElement(n, new XAttribute(L5XName.Format, DataFormat.FromData(t)));

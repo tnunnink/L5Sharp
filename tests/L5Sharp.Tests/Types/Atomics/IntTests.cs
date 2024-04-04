@@ -93,7 +93,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            var atomic = type.As<AtomicType>();
+            var atomic = type.As<AtomicData>();
 
             atomic.Should().NotBeNull();
         }
@@ -103,7 +103,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT();
 
-            FluentActions.Invoking(() => type.As<StructureType>()).Should().Throw<InvalidCastException>();
+            FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
         }
 
         [Test]
@@ -512,7 +512,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new INT(1) as IConvertible;
 
-            FluentActions.Invoking(() => type.ToType(typeof(StructureType), CultureInfo.InvariantCulture)).Should()
+            FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
                 .Throw<InvalidCastException>();
         }
 
