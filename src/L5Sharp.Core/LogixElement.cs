@@ -54,7 +54,7 @@ public abstract class LogixElement : ILogixSerializable
     /// the object.
     /// </remarks>
     public string L5XType => Element.Name.LocalName;
-    
+
     /// <summary>
     /// Determines if the provided element is structurally or deeply equal to another by performing a compare
     /// of the underlying XML data for the objects. 
@@ -89,7 +89,8 @@ public abstract class LogixElement : ILogixSerializable
     /// single <see cref="XElement"/> argument.</exception>
     /// <exception cref="InvalidCastException">The deserialized type can not be cast to the specified generic type parameter.</exception>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public TElement Clone<TElement>() where TElement : LogixElement => new XElement(Serialize()).Deserialize<TElement>();
+    public TElement Clone<TElement>() where TElement : LogixElement =>
+        new XElement(Serialize()).Deserialize<TElement>();
 
     /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
@@ -203,7 +204,7 @@ public abstract class LogixElement : ILogixSerializable
         var value = Element.Attribute(name)?.Value;
         return value is not null ? value.Parse<T>() : throw Element.L5XError(name);
     }
-    
+
     /// <summary>
     /// Gets a collection of values for the specified attribute name parsed as the specified generic type parameter if it exists.
     /// If the element does not exist, returns an empty collection of the generic type parameter.
@@ -224,7 +225,7 @@ public abstract class LogixElement : ILogixSerializable
     {
         if (name is null || name.IsEmpty())
             throw new ArgumentException("Name can not be null or empty", nameof(name));
-        
+
         var value = Element.Attribute(name)?.Value;
 
         return value is not null
@@ -559,6 +560,53 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
+    /// Adds, updates, or removes the child element with the provided value type object. Then will perform a sort of the
+    /// sibling elements contained by the parent to ensure the proper element order.
+    /// </summary>
+    /// <param name="value">The value to assign to the child element. The child element is removed if the value is null.
+    /// Otherwise, the value is converted to its string representation, wrapped in a <see cref="XCData"/> object,
+    /// and assigned to the Value property of the child element.</param>
+    /// <param name="order">A collection of strings indicating the order child elements should appear.</param>
+    /// <param name="name">The name of the property element to add, update, or remove.</param>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <remarks>
+    /// <para>
+    /// Some elements require a specific order, so this method provides a common way for various elements or components
+    /// to add/update or "set" a property element and then order the element with the provided order list.
+    /// </para>
+    /// <para>
+    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
+    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
+    /// </para>
+    /// </remarks>
+    protected void SetPropertyAndOrder<T>(T value, IEnumerable<string> order, [CallerMemberName] string? name = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        var property = value?.ToString();
+        var element = Element.Element(name);
+
+        if (property is null)
+        {
+            element?.Remove();
+            return;
+        }
+
+        if (element is not null)
+        {
+            element.ReplaceWith(new XElement(name, new XCData(property)));
+            return;
+        }
+
+        //We should only need to reorder when we add the element for the first time.
+        Element.Add(new XElement(name, new XCData(property)));
+        var ordered = order.Join(Element.Elements(), s => s, e => e.Name.LocalName, (_, e) => e).ToList();
+        Element.ReplaceNodes(ordered);
+    }
+
+    /// <summary>
     /// Sets the complex type object of a child element, adds a child element, or removes a child element.
     /// </summary>
     /// <param name="name">The name of the element to set.</param>
@@ -700,9 +748,9 @@ public abstract class LogixElement : ILogixSerializable
         var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
         //Always use our Null type instead of actual null.
         data ??= LogixData.Null;
-        
+
         var formatted = GenerateDataElement(name, data);
-        
+
         //Try to get the existing child data element.
         var existing = Element.Elements(name).FirstOrDefault(e =>
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));

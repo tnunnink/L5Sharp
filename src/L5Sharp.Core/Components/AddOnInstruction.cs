@@ -19,6 +19,24 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.AddOnInstructionDefinition)]
 public class AddOnInstruction : LogixComponent
 {
+    private const string DateFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
+    
+    /// <summary>
+    /// The order of child elements in an AddOnInstructionDefinition. This is required because the use could add
+    /// elements in any order and Logix requires a specific order to be imported successfully. 
+    /// </summary>
+    private static readonly List<string> ElementOrder = 
+    [
+        L5XName.Description,
+        L5XName.RevisionNote,
+        L5XName.SignatureHistory,
+        L5XName.AdditionalHelpText,
+        L5XName.Parameters,
+        L5XName.LocalTags,
+        L5XName.Routines,
+        L5XName.Dependencies,
+    ];
+    
     /// <summary>
     /// Creates a new <see cref="AddOnInstruction"/> with default values.
     /// </summary>
@@ -32,7 +50,6 @@ public class AddOnInstruction : LogixComponent
         CreatedBy = Environment.UserName;
         EditedDate = DateTime.Now;
         EditedBy = Environment.UserName;
-        IsEncrypted = false;
         Parameters = [];
         LocalTags = new LogixContainer<Tag>(L5XName.LocalTags);
         Routines = [];
@@ -92,7 +109,7 @@ public class AddOnInstruction : LogixComponent
     public string? RevisionNote
     {
         get => GetProperty<string>();
-        set => SetProperty(value);
+        set => SetPropertyAndOrder(value, ElementOrder);
     }
 
     /// <summary>
@@ -141,8 +158,8 @@ public class AddOnInstruction : LogixComponent
     /// <value>A <see cref="DateTime"/> representing the creation date and time.</value>
     public DateTime? CreatedDate
     {
-        get => GetDateTime();
-        set => SetDateTime(value);
+        get => GetDateTime(DateFormat);
+        set => SetDateTime(value, DateFormat);
     }
 
     /// <summary>
@@ -161,8 +178,8 @@ public class AddOnInstruction : LogixComponent
     /// <value>A <see cref="DateTime"/> representing the edit date and time.</value>
     public DateTime? EditedDate
     {
-        get => GetDateTime();
-        set => SetDateTime(value);
+        get => GetDateTime(DateFormat);
+        set => SetDateTime(value, DateFormat);
     }
 
     /// <summary>
@@ -193,14 +210,14 @@ public class AddOnInstruction : LogixComponent
     public string? AdditionalHelpText
     {
         get => GetProperty<string>();
-        set => SetProperty(value);
+        set => SetPropertyAndOrder(value, ElementOrder);
     }
 
     /// <summary>
     /// Indicates whether the Add-On Instruction is protected with license-based Source Protection and locked
     /// </summary>
     /// <value><c>true</c> if the instruction is encrypted; otherwise, <c>false</c>.</value>
-    public bool IsEncrypted
+    public bool? IsEncrypted
     {
         get => GetValue<bool>();
         set => SetValue(value);

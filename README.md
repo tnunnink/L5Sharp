@@ -47,11 +47,7 @@ Description, and Preset value in a flat list ordered by TagName.
    > using LINQ and the strongly typed objects in the library. 
    > Since `Query<T>()` queries the entire L5X for the specified type, the above query 
    > will return all **Tag** components found, including controller and program tags.
-
-## Releases Notes
-   - [Version 2.0](https://tnunnink.github.io/L5Sharp/articles/Release%20Notes%202.0.html)
-
-
+   
 ## Usage
 The following is some basic examples of how you can use this library
 to query and modify the L5X content.

@@ -15,6 +15,7 @@ public class Rung : LogixCode
     /// </summary>
     public Rung() : base(L5XName.Rung)
     {
+        Element.Add(new XAttribute(L5XName.Number, 0));
         Type = RungType.Normal;
         Text = NeutralText.Empty;
     }

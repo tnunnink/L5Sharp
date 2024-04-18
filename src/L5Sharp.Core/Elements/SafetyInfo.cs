@@ -14,6 +14,7 @@ public class SafetyInfo : LogixElement
     /// </summary>
     public SafetyInfo() : base(L5XName.SafetyInfo)
     {
+        SafetyTagMap = new SafetyTagMap();
     }
 
     /// <summary>
@@ -85,5 +86,15 @@ public class SafetyInfo : LogixElement
     {
         get => GetValue<bool>();
         set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The <see cref="SafetyTagMap"/> configuration for the object.
+    /// </summary>
+    /// <value>A <see cref="SafetyTagMap"/> which is a collection of TagNames configured for the element.</value>
+    public SafetyTagMap? SafetyTagMap
+    {
+        get => GetComplex<SafetyTagMap>();
+        set => SetComplex(value);
     }
 }

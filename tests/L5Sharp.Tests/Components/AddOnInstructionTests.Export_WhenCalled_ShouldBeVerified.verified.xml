@@ -1,0 +1,19 @@
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="" TargetType="AddOnInstructionDefinition" ContainsContext="true" Owner="tnunnink" ExportDate="DateTime_1">
+  <Controller Use="Context">
+    <DataTypes />
+    <Modules />
+    <AddOnInstructionDefinitions>
+      <AddOnInstructionDefinition Name="" Revision="1.0" ExecutePreScan="false" ExecutePostScan="false" ExecuteEnableInFalse="false" CreatedDate="DateTimeOffset_1" CreatedBy="tnunnink" EditedDate="DateTimeOffset_2" EditedBy="tnunnink" Use="Target">
+        <Parameters />
+        <LocalTags />
+        <Routines />
+      </AddOnInstructionDefinition>
+    </AddOnInstructionDefinitions>
+    <Tags />
+    <Programs />
+    <Tasks />
+    <ParameterConnections />
+    <Trends />
+    <QuickWatchLists />
+  </Controller>
+</RSLogix5000Content>

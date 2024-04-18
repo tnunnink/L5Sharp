@@ -43,9 +43,10 @@ public abstract class LogixCode : LogixObject, ILogixReferencable
     /// The zero based number indicating the position of the code within the containing <c>Routine</c>.
     /// </summary>
     /// <value>A <see cref="int"/> representing the zero-based order.</value>
-    /// <remarks>Logix ignores the these number identifiers upon importing, and only considers the order within the
-    /// containing <c>Routine</c>. This makes the property somewhat useless, but is here all the same as it is
-    /// inherent to the underlying XMl, and can help identify code elements from deserialized L5X documents.</remarks>
+    /// <remarks>
+    /// Logix ignores the these number identifiers upon importing for routines contained in <c>Program</c> components,
+    /// but is required for routines in an <c>AddOnInstruction</c>. 
+    /// </remarks>
     public virtual int Number
     {
         get => GetValue<int>();

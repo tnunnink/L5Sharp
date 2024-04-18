@@ -46,14 +46,31 @@ public class ProofTesting
 
         method.Should().NotBeNull();
     }
-    
+
     private static bool IsParseFunctionFor(Type type, MethodInfo info)
     {
         var parameters = info.GetParameters();
 
         return info.Name.Equals("Parse")
-               && info.ReturnType.IsAssignableFrom(type) 
+               && info.ReturnType.IsAssignableFrom(type)
                && parameters.Length == 1
                && parameters[0].ParameterType == typeof(string);
+    }
+
+    [Test]
+    public void CreateAoiToImport()
+    {
+        var aoi = new AddOnInstruction
+        {
+            Name = "MyAoiTest",
+            Description = "this is a test aoi generated from L5Sharp",
+            Revision = new Revision(2, 13),
+            RevisionNote = "This is a note on this revision",
+            AdditionalHelpText = "Here is the help text to prove that this also works."
+        };
+
+        var content = aoi.Export();
+
+        content.Save(@"C:\Users\tnunnink\Desktop\AoiTest.L5X");
     }
 }

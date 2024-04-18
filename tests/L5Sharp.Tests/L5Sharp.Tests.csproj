@@ -311,6 +311,18 @@
       <None Update="Components\TagTests.SetValue_AnalogAlarm_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
+      <None Update="Components\AddOnInstructionTests.New_Default_ShouldBeValid.verified.xml">
+        <DependentUpon>AddOnInstructionTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml">
+        <DependentUpon>AddOnInstructionTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SafetyTagMapTests.New_WithTags_ShouldBeVerified.verified.xml">
+        <DependentUpon>SafetyTagMapTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SafetyInfoTests.New_Overriden_ShouldBeVerified.verified.xml">
+        <DependentUpon>SafetyInfoTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

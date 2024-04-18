@@ -1,0 +1,3 @@
+﻿<SafetyInfo SafetyLocked="true" SafetySignature="!@#$ASDF123" SignatureRunModeProtect="true" ConfigureSafetyIOAlways="true" SafetyLockPassword="Test" SafetyUnlockPassword="Test">
+  <SafetyTagMap>Test_Tag_01,Test_Tag_02,Test_Tag_03</SafetyTagMap>
+</SafetyInfo>
