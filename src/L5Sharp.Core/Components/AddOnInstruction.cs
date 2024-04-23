@@ -20,11 +20,8 @@ public class AddOnInstruction : LogixComponent
 {
     private const string DateFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
 
-    /// <summary>
-    /// The order of child elements in an AddOnInstructionDefinition. This is required because the use could add
-    /// elements in any order and Logix requires a specific order to be imported successfully. 
-    /// </summary>
-    private static readonly List<string> ElementOrder =
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
     [
         L5XName.Description,
         L5XName.RevisionNote,
@@ -35,6 +32,7 @@ public class AddOnInstruction : LogixComponent
         L5XName.Routines,
         L5XName.Dependencies,
     ];
+
 
     /// <summary>
     /// Creates a new <see cref="AddOnInstruction"/> with default values.
@@ -131,7 +129,7 @@ public class AddOnInstruction : LogixComponent
     public string? RevisionNote
     {
         get => GetProperty<string>();
-        set => SetPropertyAndOrder(value, ElementOrder);
+        set => SetProperty(value);
     }
 
     /// <summary>
@@ -232,7 +230,7 @@ public class AddOnInstruction : LogixComponent
     public string? AdditionalHelpText
     {
         get => GetProperty<string>();
-        set => SetPropertyAndOrder(value, ElementOrder);
+        set => SetProperty(value);
     }
 
     /// <summary>

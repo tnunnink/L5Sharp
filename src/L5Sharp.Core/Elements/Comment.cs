@@ -9,22 +9,15 @@ namespace L5Sharp.Core;
 /// <remarks>A comment contains the <see cref="Operand"/> representing the nested tag member the comment is associated with,
 /// as well as the actual comment <see cref="Value"/>.
 /// </remarks>
-public class Comment : LogixElement
+public class Comment : LogixObject
 {
-    /// <summary>
-    /// Creates a new default <see cref="Comment"/> element.
-    /// </summary>
-    public Comment() : base(L5XName.Comment)
-    {
-    }
-
     /// <summary>
     /// Creates a new <see cref="Comment"/> element with the provided operand tag and comment text.
     /// </summary>
-    public Comment(TagName operand, string value) : this()
+    public Comment(TagName operand, string? value = default) : base(L5XName.Comment)
     {
         Operand = operand;
-        Value = value;
+        Value = value ?? string.Empty;
     }
 
     /// <summary>

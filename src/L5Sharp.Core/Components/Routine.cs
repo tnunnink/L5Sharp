@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 
@@ -14,6 +15,16 @@ namespace L5Sharp.Core;
 /// </footer>
 public class Routine : LogixComponent
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.RLLContent,
+        L5XName.STContent,
+        L5XName.FBDContent,
+        L5XName.SFCContent,
+    ];
+    
     /// <summary>
     /// Creates a new <see cref="Routine"/> with default values.
     /// </summary>

@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
@@ -15,6 +16,14 @@ namespace L5Sharp.Core;
 /// </footer>
 public class Trend : LogixComponent
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.Template,
+        L5XName.Pens
+    ];
+    
     /// <inheritdoc />
     public Trend() : base(L5XName.Trend)
     {

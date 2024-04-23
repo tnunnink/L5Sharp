@@ -23,6 +23,22 @@ public class Tag : LogixComponent
     /// The underlying member object containing the tag's value. All tags and nested tags wrap a simple member instance.
     /// </summary>
     private readonly Member _member;
+    
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.ConsumeInfo,
+        L5XName.ProduceInfo,
+        L5XName.Description,
+        L5XName.Comments,
+        L5XName.EngineeringUnits,
+        L5XName.Mins,
+        L5XName.Maxes,
+        L5XName.State0s,
+        L5XName.State1s,
+        L5XName.Data,
+        L5XName.ForceData
+    ];
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> with default values.

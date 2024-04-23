@@ -32,6 +32,25 @@ namespace L5Sharp.Core;
 public class Sheet : Diagram
 {
     private static readonly HashSet<string> BlockTypes = [..typeof(Block).L5XTypes()];
+    
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.IRef,
+        L5XName.ORef,
+        L5XName.ICon,
+        L5XName.OCon,
+        L5XName.Block,
+        L5XName.Function,
+        L5XName.AddOnInstruction,
+        L5XName.JSR,
+        L5XName.SBR,
+        L5XName.Ret,
+        L5XName.Wire,
+        L5XName.FeedbackWire,
+        L5XName.TextBox,
+        L5XName.Attachment
+    ];
 
     /// <summary>
     /// Creates a new <see cref="Sheet"/> with default values.
@@ -81,7 +100,7 @@ public class Sheet : Diagram
 
         AssignId(element);
         Element.Add(element);
-        SortBlocks();
+        EnsureOrder();
         return block.ID;
     }
 
@@ -112,7 +131,7 @@ public class Sheet : Diagram
 
         AssignId(element);
         Element.Add(element);
-        SortBlocks();
+        EnsureOrder();
         return block.ID;
     }
 
@@ -129,7 +148,7 @@ public class Sheet : Diagram
         var element = wire.Serialize();
 
         Element.Add(element);
-        SortBlocks();
+        EnsureOrder();
     }
 
     /// <summary>
@@ -223,26 +242,4 @@ public class Sheet : Diagram
 
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References() => Blocks().SelectMany(r => r.References());
-
-    /// <inheritdoc />
-    protected override IEnumerable<string> Ordering()
-    {
-        return new List<string>
-        {
-            L5XName.IRef,
-            L5XName.ORef,
-            L5XName.ICon,
-            L5XName.OCon,
-            L5XName.Block,
-            L5XName.Function,
-            L5XName.AddOnInstruction,
-            L5XName.JSR,
-            L5XName.SBR,
-            L5XName.Ret,
-            L5XName.Wire,
-            L5XName.FeedbackWire,
-            L5XName.TextBox,
-            L5XName.Attachment
-        };
-    }
 }

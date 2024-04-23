@@ -24,8 +24,15 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class DataType : LogixComponent
+public sealed class DataType : LogixComponent
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.Members
+    ];
+    
     /// <summary>
     /// Creates a new <see cref="DataType"/> with default values.
     /// </summary>
@@ -52,8 +59,7 @@ public class DataType : LogixComponent
     /// <exception cref="ArgumentNullException"><c>name</c> is null.</exception>
     public DataType(string name) : this()
     {
-        if (name is null) throw new ArgumentNullException(nameof(name));
-        SetValue(L5XName.Name, name);
+        Name = name;
     }
 
     /// <summary>

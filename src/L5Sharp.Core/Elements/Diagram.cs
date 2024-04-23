@@ -14,12 +14,6 @@ namespace L5Sharp.Core;
 public abstract class Diagram : LogixCode
 {
     /// <summary>
-    /// The defined order of all child diagram elements. This is required so we can add elements in the correct position.
-    /// </summary>
-    /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> of <see cref="string"/> element name.</returns>
-    protected abstract IEnumerable<string> Ordering();
-
-    /// <summary>
     /// Creates a new <see cref="Diagram"/> with default values.
     /// </summary>
     protected Diagram(string name) : base(name)
@@ -56,7 +50,7 @@ public abstract class Diagram : LogixCode
         }
         
         Element.Add(element);
-        SortBlocks();
+        EnsureOrder();
         return id;
     }
 
@@ -83,7 +77,7 @@ public abstract class Diagram : LogixCode
         }
         
         Element.Add(element);
-        SortBlocks();
+        EnsureOrder();
         return id;
     }
 
@@ -98,17 +92,6 @@ public abstract class Diagram : LogixCode
     public IEnumerable<LogixElement> Elements()
     {
         return Element.Elements().Select(e => e.Deserialize());
-    }
-    
-    /// <summary>
-    /// Joins the defined ordered set of element names with the child elements of the diagram, and replaces all current
-    /// nodes with the same set of order nodes. This maintains the order of the diagram elements base on the derived
-    /// classes order requirements.
-    /// </summary>
-    protected void SortBlocks()
-    {
-        var ordered = Ordering().Join(Element.Elements(), s => s, e => e.Name.LocalName, (_, e) => e).ToList();
-        Element.ReplaceNodes(ordered);
     }
 
     /// <summary>

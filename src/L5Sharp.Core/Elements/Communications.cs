@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -8,6 +9,13 @@ namespace L5Sharp.Core;
 /// </summary>
 public class Communications : LogixElement
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.ConfigTag,
+        L5XName.Connections
+    ];
+    
     /// <summary>
     /// Creates a new <see cref="Communications"/> with default values.
     /// </summary>

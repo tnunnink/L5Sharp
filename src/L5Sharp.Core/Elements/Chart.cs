@@ -12,6 +12,20 @@ namespace L5Sharp.Core;
 /// </summary>
 public class Chart : Diagram
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Step,
+        L5XName.Transition,
+        L5XName.Condition,
+        L5XName.SbrRet,
+        L5XName.Stop,
+        L5XName.Branch,
+        L5XName.DirectedLink,
+        L5XName.TextBox,
+        L5XName.Attachment
+    ];
+
     /// <summary>
     /// Creates a new <see cref="Chart"/> with default values.
     /// </summary>
@@ -33,21 +47,4 @@ public class Chart : Diagram
 
     /// <inheritdoc />
     public override IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
-
-    /// <inheritdoc />
-    protected override IEnumerable<string> Ordering()
-    {
-        return new List<string>
-        {
-            L5XName.Step,
-            L5XName.Transition,
-            L5XName.Condition,
-            L5XName.SbrRet,
-            L5XName.Stop,
-            L5XName.Branch,
-            L5XName.DirectedLink,
-            L5XName.TextBox,
-            L5XName.Attachment
-        };
-    }
 }

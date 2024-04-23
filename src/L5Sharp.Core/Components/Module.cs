@@ -14,8 +14,18 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Module : LogixComponent
+public sealed class Module : LogixComponent
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.EKey,
+        L5XName.Ports,
+        L5XName.Communications,
+        L5XName.ExtendedProperties
+    ];
+    
     /// <inheritdoc />
     public Module() : base(L5XName.Module)
     {
@@ -33,11 +43,23 @@ public class Module : LogixComponent
         Ports = [];
         Communications = new Communications();
     }
-
     
     /// <inheritdoc />
     public Module(XElement element) : base(element)
     {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Module"/> initialized with the provided name and optional parameters.
+    /// </summary>
+    /// <param name="name">The name of the Module.</param>
+    /// <param name="catalogNumber">The optional catalog number for the Module. Will default to empty string.</param>
+    /// <param name="revision">The optional <see cref="Revision"/> number for the Module. Will default to 1.0.</param>
+    public Module(string name, string? catalogNumber = default, Revision? revision = default) : this()
+    {
+        Name = name;
+        CatalogNumber = catalogNumber ?? string.Empty;
+        Revision = revision ?? new Revision();
     }
 
     /// <inheritdoc />

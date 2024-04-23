@@ -21,8 +21,16 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Task : LogixComponent
+public sealed class Task : LogixComponent
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.EventInfo,
+        L5XName.ScheduledPrograms,
+    ];
+    
     /// <summary>
     /// Creates a new <see cref="Task"/> with default values.
     /// </summary>
@@ -45,6 +53,17 @@ public class Task : LogixComponent
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Task(XElement element) : base(element)
     {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Task"/> initialized with the provided name and optional type.
+    /// </summary>
+    /// <param name="name">The name of the Task.</param>
+    /// <param name="type">The <see cref="TaskType"/> of the Task.</param>
+    public Task(string name, TaskType? type = default) : this()
+    {
+        Name = name;
+        Type = type ?? TaskType.Periodic;
     }
 
     /// <summary>

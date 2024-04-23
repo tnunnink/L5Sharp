@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -14,6 +15,13 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.LocalTag)]
 public sealed class LocalTag : Tag
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.DefaultData,
+    ];
+    
     /// <summary>
     /// Creates a new <see cref="LocalTag"/> with default values.
     /// </summary>

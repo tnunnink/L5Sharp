@@ -13,8 +13,17 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Program : LogixComponent
+public sealed class Program : LogixComponent
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.Tags,
+        L5XName.Routines,
+        L5XName.ChildPrograms
+    ];
+    
     /// <summary>
     /// Creates a new <see cref="Program"/> with default values.
     /// </summary>
@@ -37,6 +46,17 @@ public class Program : LogixComponent
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Program(XElement element) : base(element)
     {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Program"/> initialized with the provided name and optional type.
+    /// </summary>
+    /// <param name="name">The name of the Program.</param>
+    /// <param name="type">The <see cref="ProgramType"/> of the Program.</param>
+    public Program(string name, ProgramType? type = default) : this()
+    {
+        Name = name;
+        Type = type ?? ProgramType.Normal;
     }
 
     /// <summary>

@@ -77,6 +77,15 @@ public class RoutineTests
         routine.Type.Should().Be(RoutineType.RLL);
     }
 
+    [Test]
+    public void New_NameAndType_ShouldBeExpected()
+    {
+        var routine = new Routine("Test", RoutineType.ST);
+
+        routine.Name.Should().Be("Test");
+        routine.Type.Should().Be(RoutineType.ST);
+    }
+
     #region FBDTests
 
     [Test]

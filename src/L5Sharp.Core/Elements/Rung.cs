@@ -10,6 +10,13 @@ namespace L5Sharp.Core;
 /// </summary>
 public class Rung : LogixCode
 {
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Comment,
+        L5XName.Text
+    ];
+
     /// <summary>
     /// Creates a new <see cref="Rung"/> with default values.
     /// </summary>
@@ -70,7 +77,7 @@ public class Rung : LogixCode
     public string? Comment
     {
         get => GetProperty<string>();
-        set => SetFirstProperty(value);
+        set => SetProperty(value);
     }
     
     /// <summary>

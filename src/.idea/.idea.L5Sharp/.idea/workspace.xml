@@ -8,7 +8,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Removed JetBrains.Annotations.&#10;Removed ContainerName from L5XTypeAttribute.cs.&#10;Reworked logix container and AddOnInstruction.cs to&#10;make Local tags serialize correctly. Created LocalTag.cs&#10;as derivative of Tag that will be specific to AOIs. Updated&#10;docs. Started to add Comment.cs and Comments.cs to work on additional interface for updating comments on tags." />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed tests and updated version">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/CommentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/LocalTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/LocalTag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Chart.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Chart.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Comment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Comment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Communications.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Communications.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Diagram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Diagram.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Sheet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Sheet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/GlobalUsing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/GlobalUsing.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -448,7 +471,7 @@
       <workItem from="1713538945926" duration="9289000" />
       <workItem from="1713635158038" duration="4435000" />
       <workItem from="1713808811258" duration="4431000" />
-      <workItem from="1713819944421" duration="7429000" />
+      <workItem from="1713819944421" duration="13240000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -793,7 +816,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="343" />
+    <option name="localTasksCounter" value="344" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -829,7 +852,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="removed old content" />
     <MESSAGE value="Renamed WatchTag Scope to ScopeName to avoid conflicting property names." />
     <MESSAGE value="Updated some docs. Added new LogixEnum.cs base class so that we can have a set of methods for retrieving enumeration options by just providing a Type instance and not using generic type definitions. This simplifies patter matching and gives us a nicer base for all enums. Added and fixed tests." />
     <MESSAGE value="Added Produce/Consume info for Tag component. Incremented version." />
@@ -854,7 +876,8 @@
     <MESSAGE value="Update README with version 2.0 release notes&#10;&#10;The README document has been updated with the release notes for version 2.0. These notes detail the highlights of this release, including updates to .NET standard support, structure changes, and renaming to maintain consistency with the L5X naming convention. Also, the section on documentation has been updated to reflect its current state." />
     <MESSAGE value="Add SafetyTagMap class and update RungTests XMLs&#10;&#10;SafetyTagMap class has been added to manage the list of tags configured for safety tag map. Additionally, adjustments were made to add a number attribute on rung elements in RungTests XMLs. Other minor changes include some modification and fixes in pre-existing code and test structures." />
     <MESSAGE value="Removed JetBrains.Annotations.&#10;Removed ContainerName from L5XTypeAttribute.cs.&#10;Reworked logix container and AddOnInstruction.cs to&#10;make Local tags serialize correctly. Created LocalTag.cs&#10;as derivative of Tag that will be specific to AOIs. Updated&#10;docs. Started to add Comment.cs and Comments.cs to work on additional interface for updating comments on tags." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed JetBrains.Annotations.&#10;Removed ContainerName from L5XTypeAttribute.cs.&#10;Reworked logix container and AddOnInstruction.cs to&#10;make Local tags serialize correctly. Created LocalTag.cs&#10;as derivative of Tag that will be specific to AOIs. Updated&#10;docs. Started to add Comment.cs and Comments.cs to work on additional interface for updating comments on tags." />
+    <MESSAGE value="Fixed tests and updated version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed tests and updated version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

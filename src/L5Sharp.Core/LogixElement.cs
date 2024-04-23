@@ -41,6 +41,14 @@ public abstract class LogixElement : ILogixSerializable
     /// L5X data.
     /// </summary>
     protected readonly XElement Element;
+    
+    /// <summary>
+    /// A list containing the order of any child elements for the current logix element.
+    /// By default this is empty collection but derived classes can override this. When this collection contians names,
+    /// any adds of properties, containers, or complex types will then use this list to sort the order of the elements
+    /// in the underlying parent element. 
+    /// </summary>
+    protected virtual List<string> ElementOrder { get; } = [];
 
     /// <summary>
     /// Returns the name of the L5XType for this <see cref="LogixElement"/> object.
@@ -449,13 +457,16 @@ public abstract class LogixElement : ILogixSerializable
         }
 
         var element = Element.Element(child);
-        if (element is null)
+        
+        if (element is not null)
         {
-            element = new XElement(child);
-            Element.Add(element);
+            element.SetAttributeValue(name, value);
+            return;
         }
 
-        element.SetAttributeValue(name, value);
+        element = new XElement(child, new XAttribute(name, value));
+        Element.Add(element);
+        EnsureOrder();
     }
 
     /// <summary>
@@ -510,103 +521,14 @@ public abstract class LogixElement : ILogixSerializable
 
         var property = value.ToString() ?? throw new ArgumentException("Property value can not be null", nameof(value));
 
-        if (element is null)
-        {
-            Element.Add(new XElement(name, new XCData(property)));
-            return;
-        }
-
-        element.ReplaceWith(new XElement(name, new XCData(property)));
-    }
-
-    /// <summary>
-    /// Adds, updates, or removes the first child element with the provided value type object.
-    /// </summary>
-    /// <param name="name">The name of the property element to add, update, or remove.</param>
-    /// <param name="value">The value to assign to the child element. The child element is removed if the value is null.
-    /// Otherwise, the value is converted to its string representation, wrapped in a <see cref="XCData"/> object,
-    /// and assigned to the Value property of the child element.</param>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <remarks>
-    /// <para>
-    /// This method will always set the first child element directly under the element for which it is called. This is
-    /// important for various element types as they need to ensure the the order of child elements or properties to
-    /// be correctly imported.
-    /// </para>
-    /// <para>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
-    /// </para>
-    /// </remarks>
-    protected void SetFirstProperty<T>(T value, [CallerMemberName] string? name = null)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty", nameof(name));
-
-        var property = value?.ToString();
-        var element = Element.Element(name);
-
-        if (property is null)
-        {
-            element?.Remove();
-            return;
-        }
-
-        if (element is null)
-        {
-            Element.AddFirst(new XElement(name, new XCData(property)));
-            return;
-        }
-
-        element.ReplaceWith(new XElement(name, new XCData(property)));
-    }
-
-    /// <summary>
-    /// Adds, updates, or removes the child element with the provided value type object. Then will perform a sort of the
-    /// sibling elements contained by the parent to ensure the proper element order.
-    /// </summary>
-    /// <param name="value">The value to assign to the child element. The child element is removed if the value is null.
-    /// Otherwise, the value is converted to its string representation, wrapped in a <see cref="XCData"/> object,
-    /// and assigned to the Value property of the child element.</param>
-    /// <param name="order">A collection of strings indicating the order child elements should appear.</param>
-    /// <param name="name">The name of the property element to add, update, or remove.</param>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <remarks>
-    /// <para>
-    /// Some elements require a specific order, so this method provides a common way for various elements or components
-    /// to add/update or "set" a property element and then order the element with the provided order list.
-    /// </para>
-    /// <para>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
-    /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
-    /// classes don't have to specify the property name (assuming its the name matches the underlying element property).
-    /// </para>
-    /// </remarks>
-    protected void SetPropertyAndOrder<T>(T value, IEnumerable<string> order, [CallerMemberName] string? name = null)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty", nameof(name));
-
-        var property = value?.ToString();
-        var element = Element.Element(name);
-
-        if (property is null)
-        {
-            element?.Remove();
-            return;
-        }
-
         if (element is not null)
         {
             element.ReplaceWith(new XElement(name, new XCData(property)));
             return;
         }
 
-        //We should only need to reorder when we add the element for the first time.
         Element.Add(new XElement(name, new XCData(property)));
-        var ordered = order.Join(Element.Elements(), s => s, e => e.Name.LocalName, (_, e) => e).ToList();
-        Element.ReplaceNodes(ordered);
+        EnsureOrder();
     }
 
     /// <summary>
@@ -635,13 +557,14 @@ public abstract class LogixElement : ILogixSerializable
             return;
         }
 
-        if (element is null)
+        if (element is not null)
         {
-            Element.Add(value.Serialize());
+            element.ReplaceWith(value.Serialize());
             return;
         }
 
-        element.ReplaceWith(value.Serialize());
+        Element.Add(value.Serialize());
+        EnsureOrder();
     }
 
     /// <summary>
@@ -670,13 +593,14 @@ public abstract class LogixElement : ILogixSerializable
             return;
         }
 
-        if (element is null)
+        if (element is not null)
         {
-            Element.Add(value.Serialize());
+            element.ReplaceWith(value.Serialize());
             return;
         }
 
-        element.ReplaceWith(value.Serialize());
+        Element.Add(value.Serialize());
+        EnsureOrder();
     }
 
     /// <summary>
@@ -780,5 +704,17 @@ public abstract class LogixElement : ILogixSerializable
             f.Add(t.Serialize());
             return f;
         }
+    }
+    
+    /// <summary>
+    /// Orders the child elements using the configured <see cref="ElementOrder"/> list. If no elements are found, this
+    /// will simply return. If a derived classes has overriden this collection then we will join the ordered names
+    /// with the current elements and then replace all child nodes with the ordered set.
+    /// </summary>
+    protected void EnsureOrder()
+    {
+        if (ElementOrder.Count == 0) return;
+        var ordered = ElementOrder.Join(Element.Elements(), n => n, e => e.Name.LocalName, (_, e) => e).ToList();
+        Element.ReplaceNodes(ordered);
     }
 }

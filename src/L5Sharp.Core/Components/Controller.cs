@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 
@@ -30,6 +31,25 @@ namespace L5Sharp.Core;
 public class Controller : LogixComponent
 {
     private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
+
+    /// <inheritdoc />
+    protected override List<string> ElementOrder =>
+    [
+        L5XName.Description,
+        L5XName.RedundancyInfo,
+        L5XName.Security,
+        L5XName.SafetyInfo,
+        L5XName.DataTypes,
+        L5XName.Modules,
+        L5XName.AddOnInstructionDefinitions,
+        L5XName.Tags,
+        L5XName.Programs,
+        L5XName.Tasks,
+        L5XName.ParameterConnections,
+        L5XName.Trends,
+        L5XName.QuickWatchLists
+    ];
+
 
     /// <summary>
     /// Creates a new <see cref="Controller"/> with default values.
@@ -90,7 +110,7 @@ public class Controller : LogixComponent
     /// Name of the program to be executed when a major fault occurs.
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the program.</value>
-    public string? MajorFaultProgram 
+    public string? MajorFaultProgram
     {
         get => GetValue<string>();
         set => SetValue(value);
@@ -101,7 +121,7 @@ public class Controller : LogixComponent
     /// controller (\Backplane\1). This is exported only if you select manual configuration of the 
     /// communication path in RSLinx® software.
     /// </summary>
-    public string? CommPath 
+    public string? CommPath
     {
         get => GetValue<string>();
         set => SetValue(value);
@@ -308,7 +328,7 @@ public class Controller : LogixComponent
         get => GetComplex<RedundancyInfo>();
         set => SetComplex(value);
     }
-    
+
     /// <summary>
     /// The <see cref="Core.Security"/> object that specifies the security configuration of the controller.
     /// </summary>
@@ -317,7 +337,7 @@ public class Controller : LogixComponent
         get => GetComplex<Security>();
         set => SetComplex(value);
     }
-    
+
     /// <summary>
     /// The <see cref="Core.SafetyInfo"/> object that specifies the safety configuration of the controller.
     /// </summary>
