@@ -8,45 +8,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/LocalTag.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Comment.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Comments.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Serialize_WithRungsAndTag_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/CrossReference.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/CrossReference.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/TagName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Block.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Block.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Diagram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Diagram.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Sheet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Sheet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Wire.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Wire.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj.DotSettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixContainer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XTypeAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/L5XTypeAttribute.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.New_Default_ShouldBeValid.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.New_Default_ShouldBeValid.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixElementTests.cs" afterDir="false" />
-    </list>
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Removed JetBrains.Annotations.&#10;Removed ContainerName from L5XTypeAttribute.cs.&#10;Reworked logix container and AddOnInstruction.cs to&#10;make Local tags serialize correctly. Created LocalTag.cs&#10;as derivative of Tag that will be specific to AOIs. Updated&#10;docs. Started to add Comment.cs and Comments.cs to work on additional interface for updating comments on tags." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -115,6 +77,33 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4192c016ac87865a13f36155d8104b1ccc818c55593b451cc2168ac54b76f6f/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Common/CrossReference.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Common/Instruction.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Common/TagName.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Controller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/DataType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Routine.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Tag.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Data/AtomicData.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Block.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Diagram.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Rung.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Sheet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Wire.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixContainer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixElement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Utilities/L5XExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Utilities/L5XTypeAttribute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Components/RoutineTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/LogixElementTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/obj/Debug/net481/L5Sharp.Tests.GlobalUsings.g.cs" root0="SKIP_HIGHLIGHTING" />
@@ -459,7 +448,7 @@
       <workItem from="1713538945926" duration="9289000" />
       <workItem from="1713635158038" duration="4435000" />
       <workItem from="1713808811258" duration="4431000" />
-      <workItem from="1713819944421" duration="6801000" />
+      <workItem from="1713819944421" duration="7429000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -804,7 +793,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="342" />
+    <option name="localTasksCounter" value="343" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -840,7 +829,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Merged library into single namespace L5Sharp.Core so that going forward reorganizations won't cause breaking changes. Incrementing to v.0.17" />
     <MESSAGE value="removed old content" />
     <MESSAGE value="Renamed WatchTag Scope to ScopeName to avoid conflicting property names." />
     <MESSAGE value="Updated some docs. Added new LogixEnum.cs base class so that we can have a set of methods for retrieving enumeration options by just providing a Type instance and not using generic type definitions. This simplifies patter matching and gives us a nicer base for all enums. Added and fixed tests." />
@@ -865,7 +853,8 @@
     <MESSAGE value="Fixed tests and couple bugs. Renamed LogixInfo.cs." />
     <MESSAGE value="Update README with version 2.0 release notes&#10;&#10;The README document has been updated with the release notes for version 2.0. These notes detail the highlights of this release, including updates to .NET standard support, structure changes, and renaming to maintain consistency with the L5X naming convention. Also, the section on documentation has been updated to reflect its current state." />
     <MESSAGE value="Add SafetyTagMap class and update RungTests XMLs&#10;&#10;SafetyTagMap class has been added to manage the list of tags configured for safety tag map. Additionally, adjustments were made to add a number attribute on rung elements in RungTests XMLs. Other minor changes include some modification and fixes in pre-existing code and test structures." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add SafetyTagMap class and update RungTests XMLs&#10;&#10;SafetyTagMap class has been added to manage the list of tags configured for safety tag map. Additionally, adjustments were made to add a number attribute on rung elements in RungTests XMLs. Other minor changes include some modification and fixes in pre-existing code and test structures." />
+    <MESSAGE value="Removed JetBrains.Annotations.&#10;Removed ContainerName from L5XTypeAttribute.cs.&#10;Reworked logix container and AddOnInstruction.cs to&#10;make Local tags serialize correctly. Created LocalTag.cs&#10;as derivative of Tag that will be specific to AOIs. Updated&#10;docs. Started to add Comment.cs and Comments.cs to work on additional interface for updating comments on tags." />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed JetBrains.Annotations.&#10;Removed ContainerName from L5XTypeAttribute.cs.&#10;Reworked logix container and AddOnInstruction.cs to&#10;make Local tags serialize correctly. Created LocalTag.cs&#10;as derivative of Tag that will be specific to AOIs. Updated&#10;docs. Started to add Comment.cs and Comments.cs to work on additional interface for updating comments on tags." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -908,6 +897,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="83" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs</url>
+          <line>127</line>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\LogixSerializer.cs" containingFunctionPresentation="Method 'Introspect'">
+            <startOffsets>
+              <option value="6296" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6354" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="84" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

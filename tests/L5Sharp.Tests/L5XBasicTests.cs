@@ -289,12 +289,10 @@ public class L5XBasicTests
     [Test]
     public Task Serialize_WhenCalled_ShouldBeValid()
     {
-        VerifierSettings.AddExtraDatetimeFormat(L5X.DateTimeFormat);
-        
         var content = L5X.Load(Known.Empty);
 
         var result = content.Serialize().ToString();
 
-        return VerifyXml(result).ScrubMember("ExportDate");
+        return VerifyXml(result).IgnoreMember("ExportDate");
     }
 }

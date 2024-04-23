@@ -1,3 +1,3 @@
-﻿<Rung Type="N">
+﻿<Rung Number="0" Type="N">
   <Text>XIC(MyTag)[OTE(SomeOutput)TMR(TimerTag,?,?)];</Text>
 </Rung>

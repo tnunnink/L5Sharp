@@ -68,7 +68,6 @@ public class L5XExtensionTests
 
         types.Should().NotBeEmpty();
         types.Should().ContainSingle(s => s == "Tag");
-        types.Should().ContainSingle(s => s == "LocalTag");
         types.Should().ContainSingle(s => s == "ConfigTag");
         types.Should().ContainSingle(s => s == "InputTag");
         types.Should().ContainSingle(s => s == "OutputTag");
