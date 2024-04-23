@@ -203,7 +203,7 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
         for (var i = 0; i < bits.Length; i++)
         {
             var index = i;
-            yield return new Member(index.ToString(), () => bits[index], 
+            yield return new Member(index.ToString(), () => bits[index],
                 _ => throw new NotSupportedException("Can do this."));
         }
     }

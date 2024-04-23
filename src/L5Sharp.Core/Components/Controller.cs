@@ -57,6 +57,9 @@ public class Controller : LogixComponent
     public Controller() : base(L5XName.Controller)
     {
         Use = Use.Context;
+        Revision = new Revision();
+        ProjectCreationDate = DateTime.Now;
+        LastModifiedDate = DateTime.Now;
     }
 
     /// <summary>
@@ -92,7 +95,7 @@ public class Controller : LogixComponent
     /// </summary>
     public bool? ShareUnusedTimeSlice
     {
-        get => GetValue<bool>();
+        get => GetValue<bool?>();
         set => SetValue(value);
     }
 
@@ -225,7 +228,7 @@ public class Controller : LogixComponent
     /// </summary>
     public bool? MatchProjectToController
     {
-        get => GetValue<string?>() is not null ? GetValue<string?>() == "Yes" : default;
+        get => GetValue<string>() is not null ? GetValue<string>() == "Yes" : null;
         set => SetValue(value is true ? "Yes" : "No");
     }
 
@@ -234,7 +237,7 @@ public class Controller : LogixComponent
     /// </summary>
     public bool? InhibitAutomaticFirmwareUpdate
     {
-        get => GetValue<int?>() is not null ? GetValue<int?>() == 1 : default;
+        get => GetValue<int?>() is not null ? GetValue<int?>() == 1 : null;
         set => SetValue(value is true ? 1 : 0);
     }
 
@@ -271,7 +274,7 @@ public class Controller : LogixComponent
     /// </summary>
     public bool? CanUseRPIFromProducer
     {
-        get => GetValue<bool>();
+        get => GetValue<bool?>();
         set => SetValue(value);
     }
 
@@ -290,7 +293,7 @@ public class Controller : LogixComponent
     /// </summary>
     public bool? DownloadProjectDocumentationAndExtendedProperties
     {
-        get => GetValue<bool>();
+        get => GetValue<bool?>();
         set => SetValue(value);
     }
 
@@ -305,7 +308,7 @@ public class Controller : LogixComponent
     /// </remarks>
     public bool? DownloadCustomProperties
     {
-        get => GetValue<bool>();
+        get => GetValue<bool?>();
         set => SetValue(value);
     }
 
@@ -316,7 +319,7 @@ public class Controller : LogixComponent
     /// </summary>
     public string? EtherNetIPMode
     {
-        get => GetValue<string>();
+        get => GetValue<string?>();
         set => SetValue(value);
     }
 

@@ -326,6 +326,9 @@
       <None Update="Components\TagTests.Comments_ValidCollection_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
+      <None Update="Components\ControllerTests.Serialize_Overriden_ShouldBeVerified.verified.xml">
+        <DependentUpon>ControllerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

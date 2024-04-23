@@ -8,35 +8,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed tests and updated version">
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/CommentTests.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added Comment.cs and Unit.cs elements. Added logic container properties to Tag for Comments and Units. Updated underlying methods for mutating internal comment and element collections. This simply adds ability to add comments to members as needed. Previous functionality still same. Adding tests and docs for updates.">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/LocalTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/LocalTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Chart.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Chart.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Comment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Comment.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Communications.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Communications.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Diagram.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Diagram.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Rung.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Sheet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Sheet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/GlobalUsing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/GlobalUsing.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager" show_ignored="true" />
   <component name="DisabledMethodsStorage">
     <option name="disabledMethods">
       <set>
@@ -113,6 +96,8 @@
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Data/AtomicData.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Block.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Comment.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Comments.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Diagram.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Rung.cs" root0="SKIP_HIGHLIGHTING" />
@@ -471,7 +456,7 @@
       <workItem from="1713538945926" duration="9289000" />
       <workItem from="1713635158038" duration="4435000" />
       <workItem from="1713808811258" duration="4431000" />
-      <workItem from="1713819944421" duration="13240000" />
+      <workItem from="1713819944421" duration="25887000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -816,7 +801,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="344" />
+    <option name="localTasksCounter" value="347" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -852,9 +837,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Renamed WatchTag Scope to ScopeName to avoid conflicting property names." />
-    <MESSAGE value="Updated some docs. Added new LogixEnum.cs base class so that we can have a set of methods for retrieving enumeration options by just providing a Type instance and not using generic type definitions. This simplifies patter matching and gives us a nicer base for all enums. Added and fixed tests." />
-    <MESSAGE value="Added Produce/Consume info for Tag component. Incremented version." />
     <MESSAGE value="Upgraded to .NET7. Reworked LogixParser.cs. Added new ILogixParsable.cs. Fixed tests and documentation." />
     <MESSAGE value="Slight alteration to the types LogixParser.cs returns. Needed it to return private Radix classes as well so I can parse those to the runtime type. Also added IsParsable extension to allow callers to determine if a given type is supported by my LogixParser.cs extensions." />
     <MESSAGE value="Added IsEquivalent method to both LogixElement.cs and LogixType.cs to allow check of the underlying XML structure between two objects. Also some other clean up, documenting, and testing" />
@@ -877,24 +859,14 @@
     <MESSAGE value="Add SafetyTagMap class and update RungTests XMLs&#10;&#10;SafetyTagMap class has been added to manage the list of tags configured for safety tag map. Additionally, adjustments were made to add a number attribute on rung elements in RungTests XMLs. Other minor changes include some modification and fixes in pre-existing code and test structures." />
     <MESSAGE value="Removed JetBrains.Annotations.&#10;Removed ContainerName from L5XTypeAttribute.cs.&#10;Reworked logix container and AddOnInstruction.cs to&#10;make Local tags serialize correctly. Created LocalTag.cs&#10;as derivative of Tag that will be specific to AOIs. Updated&#10;docs. Started to add Comment.cs and Comments.cs to work on additional interface for updating comments on tags." />
     <MESSAGE value="Fixed tests and updated version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed tests and updated version" />
+    <MESSAGE value="Added new ElementOrder protected virtual property for derived classes to specify their child element order. Added method to EnsureOrder of the child elements. Added ordering to all components and elements as found in Rockwell documentation. Removed now obsolete SetFirstProperty and SetPropertyAndOrder methods on LogixElement.cs since they are no longer needed. Added some basic name and type constructors to most components. Added some tests." />
+    <MESSAGE value="Updated test verification and added sample file." />
+    <MESSAGE value="Added Comment.cs and Unit.cs elements. Added logic container properties to Tag for Comments and Units. Updated underlying methods for mutating internal comment and element collections. This simply adds ability to add comments to members as needed. Previous functionality still same. Adding tests and docs for updates." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Comment.cs and Unit.cs elements. Added logic container properties to Tag for Comments and Units. Updated underlying methods for mutating internal comment and element collections. This simply adds ability to add comments to members as needed. Previous functionality still same. Adding tests and docs for updates." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
-          <line>876</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" containingFunctionPresentation="Method 'With_NestedComplexType_ShouldHaveUpdatedValue'">
-            <startOffsets>
-              <option value="26164" />
-            </startOffsets>
-            <endOffsets>
-              <option value="26205" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="79" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
           <line>721</line>
@@ -920,19 +892,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="83" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs</url>
-          <line>127</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\src\L5Sharp.Core\LogixSerializer.cs" containingFunctionPresentation="Method 'Introspect'">
-            <startOffsets>
-              <option value="6296" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6354" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="84" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
