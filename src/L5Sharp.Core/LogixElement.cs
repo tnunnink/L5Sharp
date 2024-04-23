@@ -314,6 +314,29 @@ public abstract class LogixElement : ILogixSerializable
         
         return new LogixContainer<TObject>(container);
     }
+    
+    /// <summary>
+    /// Tries to gets a child <see cref="LogixContainer{TEntity}"/> with the specified element name, representing
+    /// the root of a collection of contained elements. Returns null if not found (instead of throwing an exception).
+    /// </summary>
+    /// <param name="name">The name of the child container collection (e.g. Members).</param>
+    /// <typeparam name="TObject">The child element type.</typeparam>
+    /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
+    /// <remarks>
+    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
+    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
+    /// the property name (assuming its the name matches the underlying element property).
+    /// </remarks>
+    protected LogixContainer<TObject>? TryGetContainer<TObject>([CallerMemberName] string? name = null)
+        where TObject : LogixObject
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        var container = Element.Element(name);
+        
+        return container is not null ? new LogixContainer<TObject>(container) : default;
+    }
 
     /// <summary>
     /// Gets the first parent element of the current underlying element object with the specified name, and returns the

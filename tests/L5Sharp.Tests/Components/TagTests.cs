@@ -841,6 +841,42 @@ public class TagTests
 
     #endregion
 
+    #region CommentsTests
+
+    [Test]
+    public void Comments_ValidCollection_ShouldHaveExpectedCount()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var tag = new Tag("Test", 100);
+
+        tag.Comments = new LogixContainer<Comment>
+        {
+            new(".1", "This is the comment"),
+            new(".2", "this is another comment")
+        };
+
+        tag.Comments.Should().HaveCount(2);
+    }
+    
+    [Test]
+    public Task Comments_ValidCollection_ShouldBeVerified()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var tag = new Tag("Test", 100, "This is a test tag");
+
+        tag.Comments = new LogixContainer<Comment>
+        {
+            new(".1", "This is the comment"),
+            new(".2", "this is another comment")
+        };
+
+        var xml = tag.Serialize().ToString();
+
+        return Verify(xml);
+    }
+
+    #endregion
+
     [Test]
     public void ToString_WhenCalled_ShouldReturnTagName()
     {

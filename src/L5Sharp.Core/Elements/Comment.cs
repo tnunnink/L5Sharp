@@ -6,9 +6,11 @@ namespace L5Sharp.Core;
 /// <summary>
 /// An element wrapping the Logix <c>Comment</c> element and providing access to its attributes and values.
 /// </summary>
-/// <remarks>A comment contains the <see cref="Operand"/> representing the nested tag member the comment is associated with,
+/// <remarks>
+/// A comment contains the <see cref="Operand"/> representing the nested tag member the comment is associated with,
 /// as well as the actual comment <see cref="Value"/>.
 /// </remarks>
+[L5XType(L5XName.Comment)]
 public class Comment : LogixObject
 {
     /// <summary>
@@ -33,7 +35,7 @@ public class Comment : LogixObject
     /// The operand tag name that identifies which member tag this comment is attached to. 
     /// </summary>
     /// <value>
-    /// A <see cref="TagName"/> that starts with the '.' and contains the full dot down path to the nested tag mamber
+    /// A <see cref="TagName"/> that starts with the '.' and contains the full dot down path to the nested tag member
     /// for which this comment is associated with.
     /// </value>
     public TagName Operand

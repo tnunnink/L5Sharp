@@ -193,28 +193,6 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     public static TagName Combine(IEnumerable<string> members) => new(ConcatenateMembers(members));
 
     /// <summary>
-    /// Converts a <see cref="TagName"/> to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="tagName">The <see cref="TagName"/> value to convert.</param>
-    /// <returns>A new <see cref="string"/> value representing the value of the tag name.</returns>
-    public static implicit operator string(TagName? tagName) => tagName is not null ? tagName._tagName : string.Empty;
-
-    /// <summary>
-    /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
-    /// </summary>
-    /// <param name="tagName">The <see cref="string"/> value to convert.</param>
-    /// <returns>A new <see cref="TagName"/> value representing the value of the tag name.</returns>
-    public static implicit operator TagName(string? tagName) => tagName is not null ? new TagName(tagName) : Empty;
-
-    /// <inheritdoc />
-    public int CompareTo(TagName? other)
-    {
-        return ReferenceEquals(this, other) ? 0
-            : ReferenceEquals(null, other) ? 1
-            : StringComparer.OrdinalIgnoreCase.Compare(_tagName, other._tagName);
-    }
-
-    /// <summary>
     /// Determines if the provided tagName is contained within the current value.
     /// </summary>
     /// <param name="tagName">The tag name to evaluate as a sub path or contained tag name path.</param>
@@ -227,6 +205,75 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
 
         return _tagName.Contains(tagName);
     }
+
+    /// <summary>
+    /// Determines whether the provided <paramref name="tagName"/> value is equivalent to the <see cref="Root"/> of
+    /// the current instance.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to compare the Root with.</param>
+    /// <returns>
+    /// <c>true</c> if the root of the current instance is equivalent to the value of <paramref name="tagName"/>;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>
+    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// current Root value to the full value of the provided tag name.
+    /// </remarks>
+    public bool HasRoot(TagName tagName) => Root.IsEquivalent(tagName);
+
+    /// <summary>
+    /// Determines whether the provided <paramref name="tagName"/> value is equivalent to the <see cref="Operand"/> of
+    /// the current instance.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to compare the Operand with.</param>
+    /// <returns>
+    /// <c>true</c> if the operand of the current instance is equivalent to the value of <paramref name="tagName"/>;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>
+    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// current Operand value to the full value of the provided tag name.
+    /// </remarks>
+    public bool HasOperand(TagName tagName) => Operand.IsEquivalent(tagName);
+
+    /// <summary>
+    /// Determines whether the provided <paramref name="tagName"/> value is equivalent to the <see cref="Path"/> of
+    /// the current instance.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to compare the Path with.</param>
+    /// <returns>
+    /// <c>true</c> if the Path of the current instance is equivalent to the value of <paramref name="tagName"/>;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>
+    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// current Path value to the full value of the provided tag name.
+    /// </remarks>
+    public bool HasPath(TagName tagName) => Path.IsEquivalent(tagName);
+
+    /// <summary>
+    /// Determines whether the provided <paramref name="tagName"/> value is equivalent to the <see cref="Member"/> of
+    /// the current instance.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to compare the Member with.</param>
+    /// <returns>
+    /// <c>true</c> if the Member of the current instance is equivalent to the value of <paramref name="tagName"/>;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>
+    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// current Member value to the full value of the provided tag name.
+    /// </remarks>
+    public bool HasMember(TagName tagName) => Member.IsEquivalent(tagName);
+    
+    /// <summary>
+    /// Returns a new tag name with the root <see cref="Root"/> value replaced with the provided string tag.
+    /// </summary>
+    /// <param name="tag">The new root tag name value to replace.</param>
+    /// <returns>A new <see cref="TagName"/> with the new root tag value.</returns>
+    /// <remarks>Note that this doesn't change the current tag name value, rather, returns a new object with the changed
+    /// value. This ensures the immutability of <see cref="TagName"/>.</remarks>
+    public TagName Rename(string tag) => Combine(tag, Operand);
 
     /// <summary>
     /// Determines whether the specified <see cref="TagName"/> objects are equal using the specified <see cref="IEqualityComparer{T}"/>.
@@ -259,15 +306,14 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
 
     /// <inheritdoc />
     public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
-
-    /// <summary>
-    /// Returns a new tag name with the root <see cref="Root"/> value replaced with the provided string tag.
-    /// </summary>
-    /// <param name="tag">The new root tag name value to replace.</param>
-    /// <returns>A new <see cref="TagName"/> with the new root tag value.</returns>
-    /// <remarks>Note that this doesn't change the current tag name value, rather, returns a new object with the changed
-    /// value. This ensures the immutability of <see cref="TagName"/>.</remarks>
-    public TagName Rename(string tag) => Combine(tag, Operand);
+    
+    /// <inheritdoc />
+    public int CompareTo(TagName? other)
+    {
+        return ReferenceEquals(this, other) ? 0
+            : ReferenceEquals(null, other) ? 1
+            : StringComparer.OrdinalIgnoreCase.Compare(_tagName, other._tagName);
+    }
 
     /// <inheritdoc />
     public override string ToString() => _tagName;
@@ -287,6 +333,20 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// <param name="right">An object to compare.</param>
     /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
     public static bool operator !=(TagName? left, TagName? right) => !Equals(left, right);
+
+    /// <summary>
+    /// Converts a <see cref="TagName"/> to a <see cref="string"/> value.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> value to convert.</param>
+    /// <returns>A new <see cref="string"/> value representing the value of the tag name.</returns>
+    public static implicit operator string(TagName? tagName) => tagName is not null ? tagName._tagName : string.Empty;
+
+    /// <summary>
+    /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
+    /// </summary>
+    /// <param name="tagName">The <see cref="string"/> value to convert.</param>
+    /// <returns>A new <see cref="TagName"/> value representing the value of the tag name.</returns>
+    public static implicit operator TagName(string? tagName) => tagName is not null ? new TagName(tagName) : Empty;
 
     /// <summary>
     /// Gets the first member of the tag name, or the portion of the string up to the first/next member separator.

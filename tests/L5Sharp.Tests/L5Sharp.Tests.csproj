@@ -320,6 +320,12 @@
       <None Update="Components\AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml">
         <DependentUpon>AddOnInstructionTests.cs</DependentUpon>
       </None>
+      <None Update="Elements\CommentTests.SetValue_ValidValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>CommentTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Comments_ValidCollection_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

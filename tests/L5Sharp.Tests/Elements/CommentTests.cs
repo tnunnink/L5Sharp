@@ -36,4 +36,27 @@ public class CommentTests
         comment.Operand.Should().Be("Test");
         comment.Value.Should().Be("This is the comment value.");
     }
+
+    [Test]
+    public void SetValue_ValidValue_ShouldBeExpected()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var comment = new Comment("Test");
+
+        comment.Value = "this is a test value";
+
+        comment.Value.Should().Be("this is a test value");
+    }
+
+    [Test]
+    public Task SetValue_ValidValue_ShouldBeVerified()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var comment = new Comment("Test");
+        comment.Value = "this is the comment";
+
+        var xml = comment.Serialize().ToString();
+
+        return Verify(xml);
+    }
 }

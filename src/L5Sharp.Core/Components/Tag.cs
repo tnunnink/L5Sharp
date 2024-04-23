@@ -23,7 +23,7 @@ public class Tag : LogixComponent
     /// The underlying member object containing the tag's value. All tags and nested tags wrap a simple member instance.
     /// </summary>
     private readonly Member _member;
-    
+
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
     [
@@ -354,6 +354,48 @@ public class Tag : LogixComponent
     public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
 
     /// <summary>
+    /// The collection of <see cref="Comment"/> configured for this tag.
+    /// </summary>
+    /// <value>A <see cref="LogixContainer{TObject}"/> wrapping the root collection of tag units.</value>
+    /// <remarks>
+    /// <para>
+    /// This will always operate over the root Comments element, regardless from which tag member object
+    /// this is called from. The caller is responsible for ensuring proper configuration of the comment collection.
+    /// </para>
+    /// <para>
+    /// Note that setting <see cref="Description"/> from a given tag or nested tag member will update this collection
+    /// using that tag's operand value, which simplifies updating this collection, as you don't need to specify the
+    /// operand, you can instead simply set the value.
+    /// </para>
+    /// </remarks>
+    public LogixContainer<Comment>? Comments
+    {
+        get => TryGetContainer<Comment>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="Unit"/> configured for this tag.
+    /// </summary>
+    /// <value>A <see cref="LogixContainer{TObject}"/> wrapping the root collection of tag units.</value>
+    /// <remarks>
+    /// <para>
+    /// This will always operate over the root EngineeringUnits element, regardless from which tag member object
+    /// this is called from. The caller is responsible for ensuring proper configuration of the units collection.
+    /// </para>
+    /// <para>
+    /// Note that setting <see cref="Unit"/> from a given tag or nested tag member will update this collection
+    /// using that tag's operand value. This simplifies updating the collection.
+    /// </para>
+    /// </remarks>
+    public LogixContainer<Unit>? Units
+    {
+        // ReSharper disable once ExplicitCallerInfoArgument would like Units instead of EngineeringUnits
+        get => TryGetContainer<Unit>(L5XName.EngineeringUnits);
+        set => SetContainer(value);
+    }
+
+    /// <summary>
     /// Gets the tag member having the provided tag name value. The tag name can represent either an immediate member
     /// or a nested member in the tag hierarchy.
     /// </summary>
@@ -671,9 +713,7 @@ public class Tag : LogixComponent
     {
         if (Parent is null) return Element.Element(L5XName.Description)?.Value;
 
-        var comment = Element.Descendants(L5XName.Comment)
-            .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
-                StringComparison.OrdinalIgnoreCase));
+        var comment = Comments?.FirstOrDefault(c => TagName.HasOperand(c.Operand));
 
         //logix descriptions propagates to their children when not overriden. This mimics that.
         return comment is not null ? comment.Value : Parent.Description;
@@ -695,35 +735,19 @@ public class Tag : LogixComponent
         //Child descriptions are set in the comments element of a tag.
         if (value is null || value.IsEmpty())
         {
-            Element.Descendants(L5XName.Comment)
-                .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
-                    StringComparison.OrdinalIgnoreCase))?.Remove();
+            Comments?.RemoveAll(c => TagName.HasOperand(c.Operand));
+            return;
+        }
+        
+        Comments ??= [];
+
+        if (Comments!.Any(c => TagName.HasOperand(c.Operand)))
+        {
+            Comments!.Update(c => c.Value = value, c => TagName.HasOperand(c.Operand));
             return;
         }
 
-        var comments = Element.Element(L5XName.Comments);
-        if (comments is null)
-        {
-            comments = new XElement(L5XName.Comments);
-
-            //This is to place comments right after description if it exists, otherwise as the first element.
-            if (Element.FirstNode is XElement element && element.Name == L5XName.Description)
-                Element.FirstNode.AddAfterSelf(comments);
-            else
-                Element.AddFirst(comments);
-        }
-
-        var comment = comments.Elements(L5XName.Comment)
-            .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
-                StringComparison.OrdinalIgnoreCase));
-
-        if (comment is not null)
-        {
-            comment.Value = value;
-            return;
-        }
-
-        comments.Add(GenerateDescriptor(value, L5XName.Comment));
+        Comments!.Add(new Comment(TagName.Operand, value));
     }
 
     /// <summary>
@@ -731,9 +755,7 @@ public class Tag : LogixComponent
     /// </summary>
     private string? GetUnit()
     {
-        return Element.Descendants(L5XName.EngineeringUnit)
-            .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
-                StringComparison.OrdinalIgnoreCase))?.Value;
+        return Units?.FirstOrDefault(x => TagName.HasOperand(x.Operand))?.Value;
     }
 
     /// <summary>
@@ -743,41 +765,19 @@ public class Tag : LogixComponent
     {
         if (value is null || value.IsEmpty())
         {
-            Element.Descendants(L5XName.EngineeringUnit)
-                .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
-                    StringComparison.OrdinalIgnoreCase))?.Remove();
+            Units?.RemoveAll(x => TagName.HasOperand(x.Operand));
             return;
         }
 
-        var units = Element.Element(L5XName.EngineeringUnits);
-        if (units is null)
-        {
-            units = new XElement(L5XName.EngineeringUnits);
-            Element.Add(units);
-        }
+        Units ??= [];
 
-        var unit = units.Elements(L5XName.EngineeringUnit)
-            .FirstOrDefault(e => string.Equals(e.Attribute(L5XName.Operand)?.Value, TagName.Operand,
-                StringComparison.OrdinalIgnoreCase));
-
-        if (unit is not null)
+        if (Units!.Any(c => TagName.HasOperand(c.Operand)))
         {
-            unit.Value = value;
+            Units!.Update(c => c.Value = value, c => TagName.HasOperand(c.Operand));
             return;
         }
 
-        units.Add(GenerateDescriptor(value, L5XName.EngineeringUnit));
-    }
-
-    /// <summary>
-    /// Generates a new comment/unit descriptor element with the provided value and name.
-    /// </summary>
-    private XElement GenerateDescriptor(string value, string name)
-    {
-        var element = new XElement(name);
-        element.Add(new XAttribute(L5XName.Operand, TagName.Operand.ToUpper()));
-        element.Add(new XCData(value));
-        return element;
+        Units!.Add(new Unit(TagName.Operand, value));
     }
 
     #endregion

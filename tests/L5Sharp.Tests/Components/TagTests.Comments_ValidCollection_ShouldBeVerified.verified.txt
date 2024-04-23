@@ -1,0 +1,10 @@
+﻿<Tag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="DINT" Radix="Decimal">
+  <Description><![CDATA[This is a test tag]]></Description>
+  <Comments>
+    <Comment Operand=".1"><![CDATA[This is the comment]]></Comment>
+    <Comment Operand=".2"><![CDATA[this is another comment]]></Comment>
+  </Comments>
+  <Data Format="Decorated">
+    <DataValue DataType="DINT" Radix="Decimal" Value="100" />
+  </Data>
+</Tag>
