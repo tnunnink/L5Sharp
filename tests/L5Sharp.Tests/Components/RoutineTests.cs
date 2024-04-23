@@ -21,6 +21,9 @@ public class RoutineTests
         routine.Name.Should().BeEmpty();
         routine.Description.Should().BeNull();
         routine.Type.Should().Be(RoutineType.RLL);
+        routine.SheetOrientation.Should().BeNull();
+        routine.SheetSize.Should().BeNull();
+        routine.OnlineEditType.Should().BeNull();
         routine.Content<Rung>().Should().NotBeNull();
     }
 
@@ -63,6 +66,15 @@ public class RoutineTests
         routine.Content<Rung>().AddRange(rungs);
 
         routine.Content<Rung>().Count().Should().Be(3);
+    }
+
+    [Test]
+    public void New_Name_ShouldBeExpected()
+    {
+        var routine = new Routine("Test");
+
+        routine.Name.Should().Be("Test");
+        routine.Type.Should().Be(RoutineType.RLL);
     }
 
     #region FBDTests

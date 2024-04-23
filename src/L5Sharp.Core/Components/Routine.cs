@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+
 
 namespace L5Sharp.Core;
 
@@ -12,7 +12,6 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[PublicAPI]
 public class Routine : LogixComponent
 {
     /// <summary>
@@ -26,7 +25,7 @@ public class Routine : LogixComponent
     {
         UpdateContent(RoutineType.RLL);
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="Routine"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
@@ -44,6 +43,17 @@ public class Routine : LogixComponent
     public Routine(RoutineType type) : base(L5XName.Routine)
     {
         UpdateContent(type);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Routine"/> with the provided name and optional <see cref="RoutineType"/>
+    /// </summary>
+    /// <param name="name">The name of the routine.</param>
+    /// <param name="type">The <see cref="RoutineType"/> of the routine. If null will default to <c>RLL</c>.</param>
+    public Routine(string name, RoutineType? type = default) : base(L5XName.Routine)
+    {
+        Element.SetAttributeValue(L5XName.Name, name);
+        UpdateContent(type ?? RoutineType.RLL);
     }
 
     /// <summary>

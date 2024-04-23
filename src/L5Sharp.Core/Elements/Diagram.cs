@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+
 
 namespace L5Sharp.Core;
 
@@ -11,7 +11,6 @@ namespace L5Sharp.Core;
 /// collection of child elements of different types. This abstraction defines the common interface for adding,
 /// removing, and accessing child block types from the <c>Diagram</c>.
 /// </summary>
-[PublicAPI]
 public abstract class Diagram : LogixCode
 {
     /// <summary>

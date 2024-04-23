@@ -23,16 +23,16 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.IRef, L5XName.Sheet)]
-[L5XType(L5XName.ORef, L5XName.Sheet)]
-[L5XType(L5XName.ICon, L5XName.Sheet)]
-[L5XType(L5XName.OCon, L5XName.Sheet)]
-[L5XType(L5XName.Block, L5XName.Sheet)]
-[L5XType(L5XName.Function, L5XName.Sheet)]
-[L5XType(L5XName.AddOnInstruction, L5XName.Sheet)]
-[L5XType(L5XName.JSR, L5XName.Sheet)]
-[L5XType(L5XName.SBR, L5XName.Sheet)]
-[L5XType(L5XName.RET, L5XName.Sheet)]
+[L5XType(L5XName.IRef)]
+[L5XType(L5XName.ORef)]
+[L5XType(L5XName.ICon)]
+[L5XType(L5XName.OCon)]
+[L5XType(L5XName.Block)]
+[L5XType(L5XName.Function)]
+[L5XType(L5XName.AddOnInstruction)]
+[L5XType(L5XName.JSR)]
+[L5XType(L5XName.SBR)]
+[L5XType(L5XName.RET)]
 public class Block : DiagramElement
 {
     /// <summary>

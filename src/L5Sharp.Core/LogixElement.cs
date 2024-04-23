@@ -53,7 +53,7 @@ public abstract class LogixElement : ILogixSerializable
     /// This property will indicate the actual type of the underlying element as opposed to the actual class type of
     /// the object.
     /// </remarks>
-    public string L5XType => Element.Name.LocalName;
+    public virtual string L5XType => Element.Name.LocalName;
 
     /// <summary>
     /// Determines if the provided element is structurally or deeply equal to another by performing a compare
@@ -300,7 +300,10 @@ public abstract class LogixElement : ILogixSerializable
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         var container = Element.Element(name);
-        if (container is null) throw Element.L5XError(name);
+        
+        if (container is null) 
+            throw Element.L5XError(name);
+        
         return new LogixContainer<TObject>(container);
     }
 

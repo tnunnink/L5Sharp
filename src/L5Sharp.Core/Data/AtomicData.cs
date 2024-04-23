@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -190,5 +191,20 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
         element.Add(new XAttribute(L5XName.Radix, Radix));
         element.Add(new XAttribute(L5XName.Value, this));
         return element;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    private IEnumerable<Member> GenerateBitMembers()
+    {
+        var bits = new BitArray(GetBytes());
+        
+        for (var i = 0; i < bits.Length; i++)
+        {
+            var index = i;
+            yield return new Member(index.ToString(), () => bits[index], 
+                _ => throw new NotSupportedException("Can do this."));
+        }
     }
 }

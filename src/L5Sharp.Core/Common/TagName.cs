@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+
 // ReSharper disable ReplaceSubstringWithRangeIndexer we want to keep SubString for NET Standard
 
 namespace L5Sharp.Core;
@@ -196,16 +197,14 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// </summary>
     /// <param name="tagName">The <see cref="TagName"/> value to convert.</param>
     /// <returns>A new <see cref="string"/> value representing the value of the tag name.</returns>
-    public static implicit operator string(TagName tagName) => tagName is not null
-        ? tagName._tagName
-        : throw new ArgumentNullException(nameof(tagName));
+    public static implicit operator string(TagName? tagName) => tagName is not null ? tagName._tagName : string.Empty;
 
     /// <summary>
     /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
     /// </summary>
     /// <param name="tagName">The <see cref="string"/> value to convert.</param>
     /// <returns>A new <see cref="TagName"/> value representing the value of the tag name.</returns>
-    public static implicit operator TagName(string tagName) => new(tagName);
+    public static implicit operator TagName(string? tagName) => tagName is not null ? new TagName(tagName) : Empty;
 
     /// <inheritdoc />
     public int CompareTo(TagName? other)

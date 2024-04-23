@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+
 
 namespace L5Sharp.Core;
 
@@ -13,14 +13,15 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[PublicAPI]
 [L5XType(L5XName.Tag)]
-[L5XType(L5XName.LocalTag)]
 [L5XType(L5XName.ConfigTag)]
 [L5XType(L5XName.InputTag)]
 [L5XType(L5XName.OutputTag)]
-public sealed class Tag : LogixComponent
+public class Tag : LogixComponent
 {
+    /// <summary>
+    /// The underlying member object containing the tag's value. All tags and nested tags wrap a simple member instance.
+    /// </summary>
     private readonly Member _member;
 
     /// <summary>
@@ -30,23 +31,10 @@ public sealed class Tag : LogixComponent
     {
         //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
-
         Root = this;
         TagType = TagType.Base;
         ExternalAccess = ExternalAccess.ReadWrite;
         Constant = false;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="Tag"/> initialized with the provided name and value.
-    /// </summary>
-    /// <param name="name">The name of the Tag.</param>
-    /// <param name="value">The <see cref="LogixData"/> value of the Tag.</param>
-    /// <param name="description">the optional description of the tag.</param>
-    public Tag(string name, LogixData value, string? description = default) : this()
-    {
-        Name = name;
-        Value = value;
     }
 
     /// <summary>
@@ -58,8 +46,34 @@ public sealed class Tag : LogixComponent
     {
         //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
-
         Root = this;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> initialized with the provided name and value.
+    /// </summary>
+    /// <param name="name">The name of the Tag.</param>
+    /// <param name="value">The <see cref="LogixData"/> value of the Tag.</param>
+    /// <param name="description">the optional description of the tag.</param>
+    public Tag(string name, LogixData value, string? description = default) : this()
+    {
+        Element.SetAttributeValue(L5XName.Name, name);
+        Value = value;
+        SetDescription(description);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> initialized with default value and having an element with the provided name.
+    /// </summary>
+    /// <param name="element">the name of the tag element.</param>
+    protected Tag(string element) : base(element)
+    {
+        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        _member = new Member(Element.LogixName(), GetData, SetData);
+        Root = this;
+        TagType = TagType.Base;
+        ExternalAccess = ExternalAccess.ReadWrite;
+        Constant = false;
     }
 
     /// <summary>
@@ -598,7 +612,7 @@ public sealed class Tag : LogixComponent
             return;
         }
 
-        //If there is not data then we want to add it using the base implementation.
+        //If there is no data then we want to add it using the base implementation.
         base.SetData(value);
         UpdateDataAttributes(value);
     }

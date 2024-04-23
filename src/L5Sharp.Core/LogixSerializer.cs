@@ -24,8 +24,12 @@ public static class LogixSerializer
     /// </summary>
     private static readonly List<Type> Exclusions =
     [
-        typeof(LogixContainer<>), typeof(LogixInfo),
-        typeof(ComplexData), typeof(StringData), typeof(ArrayData<>), typeof(NullData)
+        typeof(LogixContainer<>),
+        typeof(LogixInfo),
+        typeof(ComplexData),
+        typeof(StringData),
+        typeof(ArrayData<>),
+        typeof(NullData)
     ];
 
     /// <summary>
@@ -70,6 +74,7 @@ public static class LogixSerializer
         {
             if (Deserializers.Value.TryGetValue(element.L5XType(), out var deserializer))
                 return deserializer.Invoke(element);
+            
             element = element.Parent ??
                       throw new InvalidOperationException(
                           $"Could not find deserializable type for element {element.Name}.");
@@ -140,8 +145,8 @@ public static class LogixSerializer
         return typeof(LogixElement).IsAssignableFrom(type) &&
                !Exclusions.Contains(type) &&
                type is { IsAbstract: false, IsPublic: true } &&
-               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, [typeof(XElement)], null) is not
-                   null;
+               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, [typeof(XElement)], null) 
+                   is not null;
     }
 
     /// <summary>
@@ -181,7 +186,8 @@ public static class LogixSerializer
     /// </remarks>
     private static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)    
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        if (type is null) 
+            throw new ArgumentNullException(nameof(type));
 
         if (type.IsAbstract)
             throw new ArgumentException($"Can not build deserializer expression for abstract type '{type.Name}'.");

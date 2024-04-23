@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
+
 
 // ReSharper disable StringLiteralTypo
 // ReSharper disable IdentifierTypo
@@ -16,7 +16,6 @@ namespace L5Sharp.Core;
 /// <summary>
 /// 
 /// </summary>
-[PublicAPI]
 public sealed class Instruction
 {
     /// <summary>

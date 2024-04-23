@@ -1052,8 +1052,8 @@ public class LogixElementTests
     }
 }
 
-[L5XType("Test", "Container")]
-[L5XType("Alternate", "Container")]
+[L5XType("Test")]
+[L5XType("Alternate")]
 public class TestElement : LogixObject
 {
     public TestElement() : base("Test")

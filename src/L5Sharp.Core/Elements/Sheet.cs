@@ -28,7 +28,7 @@ namespace L5Sharp.Core;
 ///         have a unique id number within that sheet.<br/>
 /// </para>
 /// </remarks>
-[L5XType(L5XName.Sheet, L5XName.FBDContent)]
+[L5XType(L5XName.Sheet)]
 public class Sheet : Diagram
 {
     private static readonly HashSet<string> BlockTypes = [..typeof(Block).L5XTypes()];

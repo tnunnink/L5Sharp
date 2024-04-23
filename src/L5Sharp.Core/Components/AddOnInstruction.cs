@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+
 
 namespace L5Sharp.Core;
 
@@ -15,17 +15,16 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[PublicAPI]
 [L5XType(L5XName.AddOnInstructionDefinition)]
 public class AddOnInstruction : LogixComponent
 {
     private const string DateFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
-    
+
     /// <summary>
     /// The order of child elements in an AddOnInstructionDefinition. This is required because the use could add
     /// elements in any order and Logix requires a specific order to be imported successfully. 
     /// </summary>
-    private static readonly List<string> ElementOrder = 
+    private static readonly List<string> ElementOrder =
     [
         L5XName.Description,
         L5XName.RevisionNote,
@@ -36,7 +35,7 @@ public class AddOnInstruction : LogixComponent
         L5XName.Routines,
         L5XName.Dependencies,
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="AddOnInstruction"/> with default values.
     /// </summary>
@@ -50,9 +49,9 @@ public class AddOnInstruction : LogixComponent
         CreatedBy = Environment.UserName;
         EditedDate = DateTime.Now;
         EditedBy = Environment.UserName;
-        Parameters = [];
-        LocalTags = new LogixContainer<Tag>(L5XName.LocalTags);
-        Routines = [];
+        Parameters = [EnableIn(), EnableOut()];
+        LocalTags = [];
+        Routines = [new Routine("Logic")];
     }
 
     /// <summary>
@@ -63,7 +62,30 @@ public class AddOnInstruction : LogixComponent
     public AddOnInstruction(XElement element) : base(element)
     {
     }
-    
+
+    /// <summary>
+    /// Creates a new <see cref="AddOnInstruction"/> initialized with the provided name and option type and revision.
+    /// </summary>
+    /// <param name="name">The name of the instruction.</param>
+    /// <param name="type">The <see cref="RoutineType"/> for the logic of the instruction.</param>
+    /// <param name="revision">The optional revision of the instruction.</param>
+    public AddOnInstruction(string name, RoutineType? type = default, Revision? revision = default) :
+        base(L5XName.AddOnInstructionDefinition)
+    {
+        Element.SetAttributeValue(L5XName.Name, name);
+        Revision = revision ?? new Revision();
+        ExecutePreScan = false;
+        ExecutePostScan = false;
+        ExecuteEnableInFalse = false;
+        CreatedDate = DateTime.Now;
+        CreatedBy = Environment.UserName;
+        EditedDate = DateTime.Now;
+        EditedBy = Environment.UserName;
+        Parameters = [EnableIn(), EnableOut()];
+        LocalTags = [];
+        Routines = [new Routine("Logic", type)];
+    }
+
     /// <summary>
     /// The <see cref="ComponentClass"/> value indicating whether this component is a standard or safety type component.
     /// </summary>
@@ -235,9 +257,9 @@ public class AddOnInstruction : LogixComponent
     /// <summary>
     /// The collection of local <see cref="Tag"/> objects used within the AoiBlock logic.
     /// </summary>
-    public LogixContainer<Tag> LocalTags
+    public LogixContainer<LocalTag> LocalTags
     {
-        get => GetContainer<Tag>();
+        get => GetContainer<LocalTag>();
         set => SetContainer(value);
     }
 
@@ -250,7 +272,15 @@ public class AddOnInstruction : LogixComponent
         set => SetContainer(value);
     }
 
-    #region Extensions
+    /// <summary>
+    /// Gets the required Logic <see cref="Routine"/> containing the code for the instruction. 
+    /// </summary>
+    /// <remarks>
+    /// This is an extension to make accessing the code for the instruction easier. All instructions have at
+    /// least a single routine called Logic which contains the code for the instruction.
+    /// </remarks>
+    public Routine Logic => Routines.SingleOrDefault(r => r.Name == nameof(Logic)) ??
+                            throw new InvalidOperationException("No Logic routine is defined for AOI.");
 
     /// <summary>
     /// Returns the AoiBlock instruction logic with the parameters tag names replaced with the argument tag names of the
@@ -284,7 +314,7 @@ public class AddOnInstruction : LogixComponent
         var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToList();
 
         //Generate a mapping of the provided instructions arguments to instruction parameters.
-        var mapping = arguments.Zip(parameters, (a, p) => new {Argument = a, Parameter = p}).ToList();
+        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
 
         //Replace all parameter names with argument names in the instruction logic text, and return the results.
         return rungs.Select(r => r.Text)
@@ -297,5 +327,41 @@ public class AddOnInstruction : LogixComponent
             .ToList();
     }
 
-    #endregion
+    /// <summary>
+    /// Returns the default built in EnableIn parameter.
+    /// </summary>
+    private static Parameter EnableIn()
+    {
+        return new Parameter
+        {
+            Name = "EnableIn",
+            Description = "Enable Input - System Defined Parameter",
+            DataType = "BOOL",
+            TagType = TagType.Base,
+            Usage = TagUsage.Input,
+            Radix = Radix.Decimal,
+            Required = false,
+            Visible = false,
+            ExternalAccess = ExternalAccess.ReadOnly
+        };
+    }
+
+    /// <summary>
+    /// Returns the default built in EnableOut parameter.
+    /// </summary>
+    private static Parameter EnableOut()
+    {
+        return new Parameter
+        {
+            Name = "EnableOut",
+            Description = "Enable Output - System Defined Parameter",
+            DataType = "BOOL",
+            TagType = TagType.Base,
+            Usage = TagUsage.Output,
+            Radix = Radix.Decimal,
+            Required = false,
+            Visible = false,
+            ExternalAccess = ExternalAccess.ReadOnly
+        };
+    }
 }

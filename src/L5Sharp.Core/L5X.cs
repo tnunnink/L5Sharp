@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+
 using TTask = System.Threading.Tasks.Task;
 
 
@@ -17,7 +17,6 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// </remarks>
-[PublicAPI]
 public class L5X : ILogixSerializable
 {
     /// <summary>

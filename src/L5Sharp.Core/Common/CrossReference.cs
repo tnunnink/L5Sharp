@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+
 
 namespace L5Sharp.Core;
 
@@ -11,7 +11,6 @@ namespace L5Sharp.Core;
 /// however, code references have some additional information that is useful for further identifying the target or
 /// location of the reference.
 /// </summary>
-[PublicAPI]
 public class CrossReference
 {
     private readonly XElement _element;

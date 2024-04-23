@@ -32,25 +32,6 @@ internal static class L5XExtensions
         StringComparer.OrdinalIgnoreCase.Equals(value, other);
 
     /// <summary>
-    /// Gets the L5X element name of the type's containing element. 
-    /// </summary>
-    /// <param name="type">The type to get the L5X element name for.</param>
-    /// <returns>
-    /// A <see cref="string"/> representing the name of the parent element that corresponds to the type's container.
-    /// </returns>
-    /// <remarks>
-    /// All this does is look for the first <see cref="L5XTypeAttribute"/> to use as the explicitly configured container
-    /// name, and if not found, returns the <see cref="Type"/> name with an 's' appended as the default element container
-    /// name, as most type's element container is just the plural type name. This is unsophisticated pluralization,
-    /// but it works for all cases in the L5X.
-    /// </remarks>
-    internal static string L5XContainer(this Type type)
-    {
-        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault();
-        return attribute is not null ? attribute.ContainerName : $"{type.Name}s";
-    }
-
-    /// <summary>
     /// Creates and configures a <see cref="InvalidOperationException"/> to be thrown for required properties of complex
     /// types that do not exist for the current element object.
     /// </summary>
@@ -101,7 +82,7 @@ internal static class L5XExtensions
     /// </remarks>
     internal static string L5XType(this Type type)
     {
-        var attribute = type.GetCustomAttributes<L5XTypeAttribute>().FirstOrDefault();
+        var attribute = type.GetCustomAttributes<L5XTypeAttribute>(false).FirstOrDefault();
         return attribute is not null ? attribute.TypeName : type.Name;
     }
 
@@ -117,8 +98,27 @@ internal static class L5XExtensions
     /// </remarks>
     internal static IEnumerable<string> L5XTypes(this Type type)
     {
-        var attributes = type.GetCustomAttributes<L5XTypeAttribute>().ToList();
+        var attributes = type.GetCustomAttributes<L5XTypeAttribute>(false).ToList();
         return attributes.Any() ? attributes.Select(attribute => attribute.TypeName) : new[] { type.Name };
+    }
+
+    /// <summary>
+    /// Gets the L5X element name of the type's containing element. 
+    /// </summary>
+    /// <param name="type">The type to get the L5X element name for.</param>
+    /// <returns>
+    /// A <see cref="string"/> representing the name of the parent element that corresponds to the type's container.
+    /// </returns>
+    /// <remarks>
+    /// All this does is look for the first <see cref="L5XTypeAttribute"/> to use as the explicitly configured container
+    /// name, and if not found, returns the <see cref="Type"/> name with an 's' appended as the default element container
+    /// name, as most type's element container is just the plural type name. This is unsophisticated pluralization,
+    /// but it works for all cases in the L5X.
+    /// </remarks>
+    internal static string L5XContainer(this Type type)
+    {
+        var attribute = type.GetCustomAttributes<L5XTypeAttribute>(false).FirstOrDefault();
+        return attribute is not null ? $"{attribute.TypeName}s" : $"{type.Name}s";
     }
 
     /// <summary>

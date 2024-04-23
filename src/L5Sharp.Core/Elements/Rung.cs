@@ -38,9 +38,8 @@ public class Rung : LogixCode
     /// When importing, Logix ignores the rung number and imports Rung's in order of the container sequence,
     /// meaning, its really only necessary to specify valid text, which is why this constructor is available,
     /// allowing concise construction of a <c>Rung</c> object.</remarks>
-    public Rung(NeutralText text, string? comment = null) : base(L5XName.Rung)
+    public Rung(NeutralText text, string? comment = null) : this()
     {
-        Type = RungType.Normal;
         Text = text;
         Comment = comment;
     }

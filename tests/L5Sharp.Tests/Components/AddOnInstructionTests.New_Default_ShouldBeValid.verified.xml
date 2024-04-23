@@ -1,5 +1,16 @@
-﻿<AddOnInstructionDefinition Name="" Revision="1.0" ExecutePreScan="false" ExecutePostScan="false" ExecuteEnableInFalse="false" CreatedDate="DateTimeOffset_1" CreatedBy="tnunnink" EditedDate="DateTimeOffset_1" EditedBy="tnunnink">
-  <Parameters />
+﻿<AddOnInstructionDefinition Name="" Revision="1.0" ExecutePreScan="false" ExecutePostScan="false" ExecuteEnableInFalse="false" CreatedBy="tnunnink" EditedBy="tnunnink">
+  <Parameters>
+    <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Dimension="0" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
+      <Description>Enable Input - System Defined Parameter</Description>
+    </Parameter>
+    <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Dimension="0" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
+      <Description>Enable Output - System Defined Parameter</Description>
+    </Parameter>
+  </Parameters>
   <LocalTags />
-  <Routines />
+  <Routines>
+    <Routine Name="Logic" Type="RLL">
+      <RLLContent />
+    </Routine>
+  </Routines>
 </AddOnInstructionDefinition>

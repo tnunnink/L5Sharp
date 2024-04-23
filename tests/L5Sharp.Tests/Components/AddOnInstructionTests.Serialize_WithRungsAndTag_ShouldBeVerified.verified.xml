@@ -1,0 +1,35 @@
+﻿<AddOnInstructionDefinition Name="Test" Revision="1.0" ExecutePreScan="false" ExecutePostScan="false" ExecuteEnableInFalse="false" CreatedBy="tnunnink" EditedBy="tnunnink">
+  <Parameters>
+    <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Dimension="0" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
+      <Description>Enable Input - System Defined Parameter</Description>
+    </Parameter>
+    <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Dimension="0" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
+      <Description>Enable Output - System Defined Parameter</Description>
+    </Parameter>
+  </Parameters>
+  <LocalTags>
+    <LocalTag Name="Test" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="BOOL" Radix="Decimal">
+      <DefaultData Format="Decorated">
+        <DataValue DataType="BOOL" Radix="Decimal" Value="1" />
+      </DefaultData>
+    </LocalTag>
+  </LocalTags>
+  <Routines>
+    <Routine Name="Logic" Type="RLL">
+      <RLLContent>
+        <Rung Number="0" Type="N">
+          <Text>XIC(Test)OTL(Test);</Text>
+        </Rung>
+        <Rung Number="0" Type="N">
+          <Text>XIC(Test)OTL(Test);</Text>
+        </Rung>
+        <Rung Number="0" Type="N">
+          <Text>XIC(Test)OTL(Test);</Text>
+        </Rung>
+        <Rung Number="0" Type="N">
+          <Text>XIC(Test)OTL(Test);</Text>
+        </Rung>
+      </RLLContent>
+    </Routine>
+  </Routines>
+</AddOnInstructionDefinition>
