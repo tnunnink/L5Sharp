@@ -1,0 +1,24 @@
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="Test" TargetType="Controller" ContainsContext="false" Owner="tnunn">
+  <Controller Name="Test" ProcessorType="1756-L84E">
+    <DataTypes />
+    <Modules />
+    <AddOnInstructionDefinitions />
+    <Tags />
+    <Programs>
+      <Program Name="Program1" Type="Normal" TestEdits="false" Disabled="false" UseAsFolder="false">
+        <Tags />
+        <Routines />
+      </Program>
+    </Programs>
+    <Tasks>
+      <Task Name="Test" Type="PERIODIC" Priority="10" Rate="10" Watchdog="500" InhibitTask="false" DisableUpdateOutputs="false">
+        <ScheduledPrograms>
+          <ScheduledProgram Name="Program1" />
+        </ScheduledPrograms>
+      </Task>
+    </Tasks>
+    <ParameterConnections />
+    <Trends />
+    <QuickWatchLists />
+  </Controller>
+</RSLogix5000Content>

@@ -246,4 +246,18 @@ public sealed class Task : LogixComponent
         if (!scheduled.Elements().Any())
             scheduled.Remove();
     }
+
+    /// <summary>
+    /// Adds the provided <see cref="Program"/> to the underlying L5X document and schedules the program to this Task
+    /// instance. 
+    /// </summary>
+    /// <param name="program">The program to add to this Task.</param>
+    public void AddProgram(Program program)
+    {
+        if (program is null) throw new ArgumentNullException(nameof(program));
+        if (!IsAttached) throw new InvalidOperationException("Can not add program to detached Task component.");
+        
+        L5X?.Programs.Add(program);
+        Schedule(program.Name);
+    }
 }

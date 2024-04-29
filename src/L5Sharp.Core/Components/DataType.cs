@@ -24,7 +24,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public sealed class DataType : LogixComponent
+public class DataType : LogixComponent
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -59,7 +59,7 @@ public sealed class DataType : LogixComponent
     /// <exception cref="ArgumentNullException"><c>name</c> is null.</exception>
     public DataType(string name) : this()
     {
-        Name = name;
+        Element.SetAttributeValue(L5XName.Name, name);
     }
 
     /// <summary>

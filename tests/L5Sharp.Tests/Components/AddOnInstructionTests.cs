@@ -89,22 +89,26 @@ public class AddOnInstructionTests
         var xml = instruction.Serialize().ToString();
 
         return VerifyXml(xml)
-            .IgnoreMember("CreatedDate")
-            .IgnoreMember("EditedDate");
+            .ScrubMember("CreatedDate")
+            .ScrubMember("CreatedBy")
+            .ScrubMember("EditedDate")
+            .ScrubMember("EditedBy");
     }
 
     [Test]
     public Task Export_WhenCalled_ShouldBeVerified()
     {
-        VerifierSettings.AddExtraDatetimeFormat(L5X.DateTimeFormat);
-
         var instruction = new AddOnInstruction();
 
         var content = instruction.Export();
 
         return VerifyXml(content.Serialize().ToString())
-            .IgnoreMember("CreatedDate")
-            .IgnoreMember("EditedDate");
+            .ScrubMember("CreatedDate")
+            .ScrubMember("CreatedBy")
+            .ScrubMember("EditedDate")
+            .ScrubMember("EditedBy")
+            .ScrubMember("ExportDate")
+            .ScrubMember("Owner");
     }
 
     [Test]
@@ -118,11 +122,11 @@ public class AddOnInstructionTests
         aoi.LocalTags.Add(new LocalTag { Name = "Test", Value = true });
 
         var xml = aoi.Serialize().ToString();
-
-        File.WriteAllText(@"C:\Users\tnunnink\Desktop\Temp.L5X", xml);
         
         return VerifyXml(xml)
-            .IgnoreMember("CreatedDate")
-            .IgnoreMember("EditedDate");
+            .ScrubMember("CreatedDate")
+            .ScrubMember("CreatedBy")
+            .ScrubMember("EditedDate")
+            .ScrubMember("EditedBy");
     }
 }

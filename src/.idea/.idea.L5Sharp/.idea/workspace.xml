@@ -8,11 +8,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added Comment.cs and Unit.cs elements. Added logic container properties to Tag for Comments and Units. Updated underlying methods for mutating internal comment and element collections. This simply adds ability to add comments to members as needed. Previous functionality still same. Adding tests and docs for updates.">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Fixed some tests. Removed sealed modifer and updated Name constructor to directly set Element to avoid compiler warning.">
+      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.AddProgram_ValidProgram_ShouldBeVerified.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/shelf/Uncommitted_changes_before_Checkout_at_3_27_2024_1_03_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/shelf/Uncommitted_changes_before_Checkout_at_3_27_2024_1_03_PM__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/LocalTag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/LocalTag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Trend.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Trend.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Known.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Samples/Known.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.New_Default_ShouldBeValid.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.New_Default_ShouldBeValid.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Serialize_WithRungsAndTag_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Serialize_WithRungsAndTag_ShouldBeVerified.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.AddSheet_ValidSheetObject_ShouldWork.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.AddSheet_ValidSheetObject_ShouldWork.verified.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/RoutineTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidComponent_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidComponent_ShouldBeVerified.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidValues_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidValues_ShouldBeVerified.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Serialize_WhenCalled_ShouldBeValid.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.Serialize_WhenCalled_ShouldBeValid.verified.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/ProofTesting.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,57 +82,14 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="b45856d9-66ec-4f7c-9be3-bec7259222a7" />
-  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/tnunnink/L5Sharp.git&quot;,
-    &quot;accountId&quot;: &quot;b45856d9-66ec-4f7c-9be3-bec7259222a7&quot;
+    &quot;accountId&quot;: &quot;44eadc35-9d54-442c-b32c-a90545d57e74&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/Dictionary.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/String.Comparison.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/String.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.CoreLib/src/System/Type.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Private.Xml.Linq/src/System/Xml/Linq/XName.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Text.RegularExpressions/src/System/Text/RegularExpressions/Capture.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Linq.Expressions/src/System/Linq/Expressions/UnaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4192c016ac87865a13f36155d8104b1ccc818c55593b451cc2168ac54b76f6f/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Common/CrossReference.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Common/Instruction.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Common/TagName.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Controller.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/DataType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Program.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Routine.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Tag.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Components/Task.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Data/AtomicData.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Block.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Comment.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Comments.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Diagram.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Rung.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Sheet.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Elements/Wire.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixContainer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixElement.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Utilities/L5XExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.Core/Utilities/L5XTypeAttribute.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/Components/RoutineTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunnink/Documents/GitHub/L5Sharp/tests/L5Sharp.Tests/LogixElementTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/obj/Debug/net481/L5Sharp.Tests.GlobalUsings.g.cs" root0="SKIP_HIGHLIGHTING" />
@@ -135,43 +113,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;00960bea-6e5b-4ffa-a837-6a257d42d429.executor&quot;: &quot;Debug&quot;,
-    &quot;0e18d2ed-03e9-40cf-ac8e-fa663b72efe6.executor&quot;: &quot;Debug&quot;,
-    &quot;28598961-6f71-4268-830b-aa8ee7bac48f.executor&quot;: &quot;Debug&quot;,
-    &quot;729a71ab-7fa7-474b-b157-892ceceebcfa.executor&quot;: &quot;Debug&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-Plugin Error&quot;: &quot;Plugins failed to load&quot;,
-    &quot;Notification.DoNotAsk-Plugin Error&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;a7604713-2340-41ef-8914-9a0e821f9675.executor&quot;: &quot;Debug&quot;,
-    &quot;bb4529a5-d289-453a-84c6-89ce8148c18f.executor&quot;: &quot;Debug&quot;,
-    &quot;d12b03d6-2507-4b76-a844-25ee3820fc29.executor&quot;: &quot;Debug&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "00960bea-6e5b-4ffa-a837-6a257d42d429.executor": "Debug",
+    "0e18d2ed-03e9-40cf-ac8e-fa663b72efe6.executor": "Debug",
+    "28598961-6f71-4268-830b-aa8ee7bac48f.executor": "Debug",
+    "729a71ab-7fa7-474b-b157-892ceceebcfa.executor": "Debug",
+    "Notification.DisplayName-DoNotAsk-Plugin Error": "Plugins failed to load",
+    "Notification.DoNotAsk-Plugin Error": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "TODO_SCOPE": "All Places",
+    "WebServerToolWindowFactoryState": "false",
+    "a7604713-2340-41ef-8914-9a0e821f9675.executor": "Debug",
+    "bb4529a5-d289-453a-84c6-89ce8148c18f.executor": "Debug",
+    "d12b03d6-2507-4b76-a844-25ee3820fc29.executor": "Debug",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;C#&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "C#"
     ],
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\tnunnink\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\tnunnink\\AppData\\Local\\Symbols\\src&quot;
+    "rider.external.source.directories": [
+      "C:\\Users\\tnunn\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\tnunn\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\tnunn\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration>C:\Users\tnunnink\AppData\Roaming\Subversion</configuration>
@@ -457,6 +435,8 @@
       <workItem from="1713635158038" duration="4435000" />
       <workItem from="1713808811258" duration="4431000" />
       <workItem from="1713819944421" duration="25887000" />
+      <workItem from="1713982310167" duration="11561000" />
+      <workItem from="1714420323654" duration="964000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -837,7 +817,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Upgraded to .NET7. Reworked LogixParser.cs. Added new ILogixParsable.cs. Fixed tests and documentation." />
     <MESSAGE value="Slight alteration to the types LogixParser.cs returns. Needed it to return private Radix classes as well so I can parse those to the runtime type. Also added IsParsable extension to allow callers to determine if a given type is supported by my LogixParser.cs extensions." />
     <MESSAGE value="Added IsEquivalent method to both LogixElement.cs and LogixType.cs to allow check of the underlying XML structure between two objects. Also some other clean up, documenting, and testing" />
     <MESSAGE value="Updated project version" />
@@ -862,7 +841,8 @@
     <MESSAGE value="Added new ElementOrder protected virtual property for derived classes to specify their child element order. Added method to EnsureOrder of the child elements. Added ordering to all components and elements as found in Rockwell documentation. Removed now obsolete SetFirstProperty and SetPropertyAndOrder methods on LogixElement.cs since they are no longer needed. Added some basic name and type constructors to most components. Added some tests." />
     <MESSAGE value="Updated test verification and added sample file." />
     <MESSAGE value="Added Comment.cs and Unit.cs elements. Added logic container properties to Tag for Comments and Units. Updated underlying methods for mutating internal comment and element collections. This simply adds ability to add comments to members as needed. Previous functionality still same. Adding tests and docs for updates." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Comment.cs and Unit.cs elements. Added logic container properties to Tag for Comments and Units. Updated underlying methods for mutating internal comment and element collections. This simply adds ability to add comments to members as needed. Previous functionality still same. Adding tests and docs for updates." />
+    <MESSAGE value="Fixed some tests. Removed sealed modifer and updated Name constructor to directly set Element to avoid compiler warning." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed some tests. Removed sealed modifer and updated Name constructor to directly set Element to avoid compiler warning." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -870,27 +850,13 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
           <line>721</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" containingFunctionPresentation="Method 'Members_TagNameWithMoreThanThreeMembers_ShouldReturnExpectedCount'">
-            <startOffsets>
-              <option value="22463" />
-            </startOffsets>
-            <endOffsets>
-              <option value="22517" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" containingFunctionPresentation="Method 'Members_TagNameWithMoreThanThreeMembers_ShouldReturnExpectedCount'" />
           <option name="timeStamp" value="80" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs</url>
           <line>789</line>
-          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" containingFunctionPresentation="Method 'TagNames_NestedType_ShouldHaveExpectedCount'">
-            <startOffsets>
-              <option value="24046" />
-            </startOffsets>
-            <endOffsets>
-              <option value="24074" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\tnunnink\Documents\GitHub\L5Sharp\tests\L5Sharp.Tests\Components\TagTests.cs" containingFunctionPresentation="Method 'TagNames_NestedType_ShouldHaveExpectedCount'" />
           <option name="timeStamp" value="83" />
         </line-breakpoint>
       </breakpoints>

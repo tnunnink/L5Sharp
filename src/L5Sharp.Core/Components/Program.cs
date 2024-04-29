@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public sealed class Program : LogixComponent
+public class Program : LogixComponent
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -55,7 +55,7 @@ public sealed class Program : LogixComponent
     /// <param name="type">The <see cref="ProgramType"/> of the Program.</param>
     public Program(string name, ProgramType? type = default) : this()
     {
-        Name = name;
+        Element.SetAttributeValue(L5XName.Name, name);
         Type = type ?? ProgramType.Normal;
     }
 

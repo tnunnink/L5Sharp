@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// deriving a new specific class.
 /// </remarks>
 [L5XType(L5XName.LocalTag)]
-public sealed class LocalTag : Tag
+public class LocalTag : Tag
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>

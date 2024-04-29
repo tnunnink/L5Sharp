@@ -51,7 +51,11 @@ public class L5XBasicTests
     {
         var content = L5X.New("ControllerName", "1756-L83E");
 
-        return VerifyXml(content.Serialize().ToString()).ScrubMember("ExportDate");
+        return VerifyXml(content.Serialize().ToString())
+            .ScrubMember("ExportDate")
+            .ScrubMember("Owner")
+            .ScrubMember("ProjectCreationDate")
+            .ScrubMember("LastModifiedDate");;
     }
 
     [Test]
@@ -77,13 +81,27 @@ public class L5XBasicTests
 
         var content = L5X.New(component);
 
-        return VerifyXml(content.Serialize().ToString()).ScrubMember("ExportDate");
+        return VerifyXml(content.Serialize().ToString())
+            .ScrubMember("ExportDate")
+            .ScrubMember("Owner")
+            .ScrubMember("ProjectCreationDate")
+            .ScrubMember("LastModifiedDate");;
     }
 
     [Test]
     public void New_NullComponent_shouldThrowException()
     {
         FluentActions.Invoking(() => L5X.New(null!)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Empty_NoOverride_ShouldBeExpected()
+    {
+        var content = L5X.Empty();
+
+        content.Should().NotBeNull();
+        content.Info.TargetName.Should().BeEmpty();
+        content.Info.TargetType.Should().Be("Controller");
     }
 
     [Test]
@@ -293,6 +311,10 @@ public class L5XBasicTests
 
         var result = content.Serialize().ToString();
 
-        return VerifyXml(result).IgnoreMember("ExportDate");
+        return VerifyXml(result)
+            .ScrubMember("ExportDate")
+            .ScrubMember("Owner")
+            .ScrubMember("ProjectCreationDate")
+            .ScrubMember("LastModifiedDate");
     }
 }

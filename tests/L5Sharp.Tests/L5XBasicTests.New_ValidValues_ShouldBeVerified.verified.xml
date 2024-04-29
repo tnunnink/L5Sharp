@@ -1,4 +1,4 @@
-﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="ControllerName" TargetType="Controller" ContainsContext="false" Owner="tnunnink" ExportDate="Scrubbed">
+﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="ControllerName" TargetType="Controller" ContainsContext="false" Owner="Scrubbed" ExportDate="Scrubbed">
   <Controller Name="ControllerName" ProcessorType="1756-L83E">
     <DataTypes />
     <Modules />

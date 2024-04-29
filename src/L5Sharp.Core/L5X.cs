@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
 using TTask = System.Threading.Tasks.Task;
 
 
@@ -22,7 +21,7 @@ public class L5X : ILogixSerializable
     /// <summary>
     /// The date/time format for the L5X content.
     /// </summary>
-    public const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
+    private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
 
     /// <summary>
     /// The underlying root RSLogix5000Content element of the L5X file.
@@ -246,6 +245,17 @@ public class L5X : ILogixSerializable
     /// XElement.
     /// </remarks>
     public static L5X Parse(string text) => new(XElement.Parse(text));
+
+    /// <summary>
+    /// Creates a new instance of <see cref="L5X"/> with an empty content.
+    /// </summary>
+    /// <param name="targetName">The optional target name for the new L5X content. Will default to empty string.</param>
+    /// <param name="targetType">The optional target type for the new L5X content. Will default to Controller.</param>
+    /// <returns>A new <see cref="L5X"/> instance with an empty content.</returns>
+    public static L5X Empty(string? targetName = default, string? targetType = default)
+    {
+        return new L5X(NewContent(targetName ?? string.Empty, targetType ?? L5XName.Controller, new Revision()));
+    }
 
     /// <summary>
     /// Finds element across the entire L5X with the provided type as a flat collection of object. 
@@ -1035,8 +1045,8 @@ public class L5X : ILogixSerializable
     /// <returns>A collection of all <see cref="CrossReference"/> objects found in the L5X.</returns>
     /// <remarks>
     /// <para>
-    /// A cross reference object contains information about the element and location of the object that has a reference
-    /// to a given component. This library has a built in mechanism for parsing and indexing both tag and logic references
+    /// A cross-reference object contains information about the element and location of the object that has a reference
+    /// to a given component. This library has a built-in mechanism for parsing and indexing both tag and logic references
     /// to various components for efficient lookup. This can allow the caller to find references for many objects at a time
     /// without having to iterate the L5X multiple times.
     /// </para>
@@ -1051,8 +1061,8 @@ public class L5X : ILogixSerializable
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="component"/> is null.</exception>
     /// <remarks>
     /// <para>
-    /// A cross reference object contains information about the element and location of the object that has a reference
-    /// to a given component. This library has a built in mechanism for parsing and indexing both tag and logic references
+    /// A cross-reference object contains information about the element and location of the object that has a reference
+    /// to a given component. This library has a built-in mechanism for parsing and indexing both tag and logic references
     /// to various components for efficient lookup. This can allow the caller to find references for many objects at a time
     /// without having to iterate the L5X multiple times.
     /// </para>
@@ -1076,8 +1086,8 @@ public class L5X : ILogixSerializable
     /// <exception cref="ArgumentException">Throw if <paramref name="name"/> is null or empty.</exception>
     /// <remarks>
     /// <para>
-    /// A cross reference object contains information about the element and location of the object that has a reference
-    /// to a given component. This library has a built in mechanism for parsing and indexing both tag and logic references
+    /// A cross-reference object contains information about the element and location of the object that has a reference
+    /// to a given component. This library has a built-in mechanism for parsing and indexing both tag and logic references
     /// to various components for efficient lookup. This can allow the caller to find references for many objects at a time
     /// without having to iterate the L5X multiple times.
     /// </para>
@@ -1133,30 +1143,37 @@ public class L5X : ILogixSerializable
     #region Internal
 
     /// <summary>
+    /// Gets the root controller element of the L5X file. We expect this to always exist if the L5X is constructed
+    /// due to the normalization process. 
+    /// </summary>
+    private XElement GetController()
+    {
+        return _content.Element(L5XName.Controller) ?? throw _content.L5XError(L5XName.Controller);
+    }
+
+    /// <summary>
     /// Gets a top level container element from the root controller element of the L5X.
     /// </summary>
     /// <param name="name">The name of the container to retrieve.</param>
     /// <returns>A <see cref="XElement"/> representing the container with the provided name.</returns>
     /// <exception cref="InvalidOperationException">The element does not exist.</exception>
-    private XElement GetContainer(string name) => GetController().Element(name) ?? throw _content.L5XError(name);
+    private XElement GetContainer(string name)
+    {
+        return _content.Element(L5XName.Controller)?.Element(name) ?? throw _content.L5XError(name);
+    }
 
     /// <summary>
     /// Gets all primary/top level L5X component containers in the current L5X file.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="XElement"/> representing the L5X component containers.</returns>
-    private IEnumerable<XElement> GetContainers() => Containers.Select(name => GetController().Element(name)).ToList();
-
-    /// <summary>
-    /// Gets the root controller element of the L5X file. We expect this to always exist if the L5X is constructed
-    /// due to the normalization process. 
-    /// </summary>
-    private XElement GetController() =>
-        _content.Element(L5XName.Controller) ?? throw _content.L5XError(L5XName.Controller);
-
-    /// <summary>
-    /// Gets the name of the controller element of the L5X file. Will default to empty string if not found. 
-    /// </summary>
-    private string GetControllerName() => GetController().LogixName();
+    private IEnumerable<XElement> GetContainers()
+    {
+        return Containers
+            .Select(name => _content.Element(L5XName.Controller)?.Element(name))
+            .Where(e => e is not null)
+            .Cast<XElement>()
+            .ToList();
+    }
 
     /// <summary>
     /// Merges all top level containers and their immediate child elements between the current L5X content and the
@@ -1229,11 +1246,10 @@ public class L5X : ILogixSerializable
 
         var controller = _content.Element(L5XName.Controller)!;
 
-        foreach (var container in from container in Containers
-                 let existing = controller.Element(container)
-                 where existing is null
-                 select container)
+        foreach (var container in Containers)
         {
+            var existing = controller.Element(container);
+            if (existing is not null) continue;
             controller.Add(new XElement(container));
         }
     }

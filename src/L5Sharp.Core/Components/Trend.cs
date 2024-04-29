@@ -37,6 +37,15 @@ public class Trend : LogixComponent
     }
 
     /// <summary>
+    /// Creates a new <see cref="Trend"/> with the provided name.
+    /// </summary>
+    /// <param name="name">The name of the routine.</param>
+    public Trend(string name) : this()
+    {
+        Element.SetAttributeValue(L5XName.Name, name);
+    }
+
+    /// <summary>
     /// Specify how often trending tags are collected in milliseconds (1 msec...30 minutes).
     /// </summary>
     public int SamplePeriod

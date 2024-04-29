@@ -329,6 +329,9 @@
       <None Update="Components\ControllerTests.Serialize_Overriden_ShouldBeVerified.verified.xml">
         <DependentUpon>ControllerTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TaskTests.AddProgram_ValidProgram_ShouldBeVerified.verified.xml">
+        <DependentUpon>TaskTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

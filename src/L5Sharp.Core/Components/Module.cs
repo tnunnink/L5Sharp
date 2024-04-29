@@ -14,7 +14,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public sealed class Module : LogixComponent
+public class Module : LogixComponent
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -57,7 +57,7 @@ public sealed class Module : LogixComponent
     /// <param name="revision">The optional <see cref="Revision"/> number for the Module. Will default to 1.0.</param>
     public Module(string name, string? catalogNumber = default, Revision? revision = default) : this()
     {
-        Name = name;
+        Element.SetAttributeValue(L5XName.Name, name);
         CatalogNumber = catalogNumber ?? string.Empty;
         Revision = revision ?? new Revision();
     }
