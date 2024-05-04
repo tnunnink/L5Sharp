@@ -169,7 +169,7 @@ public class ComplexDataTests
         {
             new("Atomic", 123),
             new("String", "Test Value"),
-            new("Structure", new TIMER { PRE = 2000 }),
+            new("Structure", new TIMER { PRE = 2000 })
         };
         var type = new ComplexData();
 

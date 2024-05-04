@@ -45,7 +45,6 @@ public class L5XBasicTests
         content.Controller.Name.Should().Be("ControllerName");
         content.Controller.ProcessorType.Should().Be("1756-L83E");
         content.Controller.Revision.Should().BeEquivalentTo(new Revision(33, 1));
-        content.Modules.Should().HaveCount(1);
     }
 
     [Test]

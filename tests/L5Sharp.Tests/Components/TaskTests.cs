@@ -159,6 +159,8 @@ namespace L5Sharp.Tests.Components
             var xml = content.Serialize().ToString();
 
             return VerifyXml(xml)
+                .IgnoreMember("ProjectCreationDate")
+                .IgnoreMember("LastModifiedDate")
                 .IgnoreMember("ExportDate");
         }
     }

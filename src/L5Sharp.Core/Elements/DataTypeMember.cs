@@ -168,7 +168,7 @@ public class DataTypeMember : LogixObject
     /// not attached or the L5X does not container the data type reference, this will return a default component with the
     /// name specified by this member.
     /// </remarks>
-    public DataType Definition => GetDefinition(); //todo we need to handle atomic types
+    public DataType Definition => GetDefinition();
 
     /// <summary>
     /// Converts the current instance of <see cref="DataTypeMember"/> to a <see cref="Member"/>.

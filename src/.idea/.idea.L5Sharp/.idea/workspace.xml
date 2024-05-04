@@ -8,142 +8,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/L5Sharp.Fluent/L5Sharp.Fluent.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.ToTag_ComplexType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.ToTag_SimpleType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.Serialize_ArrayOfNull_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/LogixDataTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/ParameterTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/AddOnInstruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/ArrayData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/ArrayData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/AtomicData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/BOOL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/BOOL.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/DINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/DINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/INT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/INT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/REAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/REAL.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/SINT.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/Atomics/SINT.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/Member.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/Member.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/NullData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/NullData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Data/StringData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Data/StringData.cs" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added new static factory method to LogixData.cs to create instance of type given a name.&#10;&#10;Added new constructors to ArrayData.cs to allow instance to be created via name and dimensions or type and dimensions.&#10;&#10;Added new methods to DataType.cs and AddOnInstruction.cs to allow them to generate a Tag instance from its configuration. Also added methods for generating LogixData instance which they require.&#10;&#10;Added ToMember methods for DataTypeMember.cs and Parameter.cs&#10;&#10;Added new constructor to allow Member.cs to be created by name and data type name which rely on factory method. Also, then added similar constructor to Tag.&#10;&#10;Added and fixed tests and documentation. Renamed some test folder and namespaces.">
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/DataTypeMember.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/DataTypeMember.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Port.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Port.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixEnum.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Export_WhenCalled_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.New_Default_ShouldBeValid.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.New_Default_ShouldBeValid.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Serialize_WithRungsAndTag_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.Serialize_WithRungsAndTag_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/AddOnInstructionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TagTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/TaskTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidValues_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.New_ValidValues_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.Serialize_ArrayOfNull_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.Serialize_Parameterized_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.Serialize_EmptyArray_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.Serialize_EmptyArray_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.Serialize_SimpleOneDimensional_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.Serialize_SimpleOneDimensional_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.Serialize_SimpleThreeDimensional_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.Serialize_SimpleThreeDimensional_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.Serialize_SimpleTwoDimensional_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.Serialize_SimpleTwoDimensional_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.Serialize_StringTypeArray_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.Serialize_StringTypeArray_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.Serialize_StructureTypeArray_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ArrayDataTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ArrayDataTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/AtomicDataTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/AtomicDataTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/BoolTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/BoolTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/BoolTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/BoolTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/BoolTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/BoolTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/BoolTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/BoolTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/DintTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/DintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/DintTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/DintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/DintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/IntTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/IntTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/IntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/IntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/IntTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/IntTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/IntTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/IntTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LintTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LintTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LrealTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LrealTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LrealTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LrealTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LrealTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LrealTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/LrealTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/LrealTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/RealTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/RealTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/RealTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/RealTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/RealTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/RealTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/RealTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/RealTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/SintTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/SintTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/SintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/SintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/SintTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/SintTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/SintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/SintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UDintTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UDintTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UDintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UDintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UDintTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UDintTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UDintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UDintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UIntTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UIntTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UIntTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/UIntTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/UIntTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/ULintTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/ULintTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/ULintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/ULintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/ULintTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/ULintTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/ULintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/ULintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/USintTests.Serialize_Default_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/USintTests.Serialize_Default_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/USintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/USintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/USintTests.Serialize_Value_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/USintTests.Serialize_Value_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Atomics/USintTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Atomics/USintTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexDataTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ComplexDataTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexDataTests.Serialize_Test_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ComplexDataTests.Serialize_Test_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/ComplexDataTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/ComplexDataTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MyNestedData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Custom/MyNestedData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MyNestedTypeTests.SetSimpleM4_Valid_ShouldBeValid.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Custom/MyNestedTypeTests.SetSimpleM4_Valid_ShouldBeValid.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MyNestedTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Custom/MyNestedTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MySimpleData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Custom/MySimpleData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MySimpleTypeTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Custom/MySimpleTypeTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MySimpleTypeTests.Serialize_UpdatedMember_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Custom/MySimpleTypeTests.Serialize_UpdatedMember_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Custom/MySimpleTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Custom/MySimpleTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.Serialize_ArrayOfAtomicDataType_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/MemberTests.Serialize_ArrayOfAtomicDataType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.Serialize_ArrayOfStringDataType_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/MemberTests.Serialize_ArrayOfStringDataType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.Serialize_ArrayOfStructureDataType_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/MemberTests.Serialize_ArrayOfStructureDataType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/MemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.Serialize_StringDataType_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/MemberTests.Serialize_StringDataType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.Serialize_StructureDataType_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/MemberTests.Serialize_StructureDataType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/MemberTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/MemberTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/NullDataTests.SerializeShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/NullDataTests.SerializeShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/NullDataTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/NullDataTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmAnalogTest.Serialize_WhenCalled_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/AlarmAnalogTest.Serialize_WhenCalled_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmAnalogTest.SetMember_ValidType_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/AlarmAnalogTest.SetMember_ValidType_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmAnalogTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/AlarmAnalogTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmDigitalTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/AlarmDigitalTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmDigitalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/AlarmDigitalTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/AlarmTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/AlarmTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/AlarmTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/ControlTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/ControlTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/ControlTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/ControlTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/CounterTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/CounterTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/CounterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/CounterTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/MessageTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/MessageTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/MessageTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/MessageTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/StringTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/StringTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/TimerTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/TimerTests.Serialize_Overload_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/Predefined/TimerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/Predefined/TimerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringDataTests.SerializeStructure_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/StringDataTests.SerializeStructure_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringDataTests.SerializeStructure_WithValues_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/StringDataTests.SerializeStructure_WithValues_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringDataTests.Serialize_Default_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/StringDataTests.Serialize_Default_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringDataTests.Serialize_WithValues_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/StringDataTests.Serialize_WithValues_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Types/StringDataTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Data/StringDataTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,47 +65,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/544c7e6eb3d5525c6f85341f51217d81d7c8ed80/src/coreclr/System.Private.CoreLib/src/System/Runtime/CompilerServices/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/AddOnInstruction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/obj/Debug/net481/L5Sharp.Tests.GlobalUsings.g.cs" root0="SKIP_HIGHLIGHTING" />
@@ -592,7 +420,7 @@
       <workItem from="1714420323654" duration="1923000" />
       <workItem from="1714591275215" duration="12997000" />
       <workItem from="1714757753219" duration="11371000" />
-      <workItem from="1714784524238" duration="6194000" />
+      <workItem from="1714784524238" duration="7707000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -937,7 +765,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="348" />
+    <option name="localTasksCounter" value="349" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -973,7 +801,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Slight alteration to the types LogixParser.cs returns. Needed it to return private Radix classes as well so I can parse those to the runtime type. Also added IsParsable extension to allow callers to determine if a given type is supported by my LogixParser.cs extensions." />
     <MESSAGE value="Added IsEquivalent method to both LogixElement.cs and LogixType.cs to allow check of the underlying XML structure between two objects. Also some other clean up, documenting, and testing" />
     <MESSAGE value="Updated project version" />
     <MESSAGE value="Fix the LogixParser.cs TryParse to return null instead of throwing exceptions for primitive types or unknown types." />
@@ -998,7 +825,8 @@
     <MESSAGE value="Updated test verification and added sample file." />
     <MESSAGE value="Added Comment.cs and Unit.cs elements. Added logic container properties to Tag for Comments and Units. Updated underlying methods for mutating internal comment and element collections. This simply adds ability to add comments to members as needed. Previous functionality still same. Adding tests and docs for updates." />
     <MESSAGE value="Fixed some tests. Removed sealed modifer and updated Name constructor to directly set Element to avoid compiler warning." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed some tests. Removed sealed modifer and updated Name constructor to directly set Element to avoid compiler warning." />
+    <MESSAGE value="Added new static factory method to LogixData.cs to create instance of type given a name.&#10;&#10;Added new constructors to ArrayData.cs to allow instance to be created via name and dimensions or type and dimensions.&#10;&#10;Added new methods to DataType.cs and AddOnInstruction.cs to allow them to generate a Tag instance from its configuration. Also added methods for generating LogixData instance which they require.&#10;&#10;Added ToMember methods for DataTypeMember.cs and Parameter.cs&#10;&#10;Added new constructor to allow Member.cs to be created by name and data type name which rely on factory method. Also, then added similar constructor to Tag.&#10;&#10;Added and fixed tests and documentation. Renamed some test folder and namespaces." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new static factory method to LogixData.cs to create instance of type given a name.&#10;&#10;Added new constructors to ArrayData.cs to allow instance to be created via name and dimensions or type and dimensions.&#10;&#10;Added new methods to DataType.cs and AddOnInstruction.cs to allow them to generate a Tag instance from its configuration. Also added methods for generating LogixData instance which they require.&#10;&#10;Added ToMember methods for DataTypeMember.cs and Parameter.cs&#10;&#10;Added new constructor to allow Member.cs to be created by name and data type name which rely on factory method. Also, then added similar constructor to Tag.&#10;&#10;Added and fixed tests and documentation. Renamed some test folder and namespaces." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

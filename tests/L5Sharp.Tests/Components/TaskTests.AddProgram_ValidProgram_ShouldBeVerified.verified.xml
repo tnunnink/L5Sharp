@@ -1,5 +1,5 @@
-﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="Test" TargetType="Controller" ContainsContext="false" Owner="tnunn">
-  <Controller Name="Test" ProcessorType="1756-L84E">
+﻿<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="33.1" TargetName="Test" TargetType="Controller" ContainsContext="false" Owner="tnunn">
+  <Controller Name="Test" Use="Target" MajorRev="33" MinorRev="1" ProcessorType="1756-L84E">
     <DataTypes />
     <Modules />
     <AddOnInstructionDefinitions />

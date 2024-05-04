@@ -22,7 +22,7 @@ public class ModuleTests
         module.Description.Should().BeNull();
         module.CatalogNumber.Should().BeEmpty();
         module.Revision.Should().Be("1.0");
-        module.Vendor.Should().Be(Vendor.Unknown);
+        module.Vendor.Should().Be(Vendor.Rockwell);
         module.ProductType.Should().Be(ProductType.Unknown);
         module.ProductCode.Should().Be(0);
         module.ParentModule.Should().BeEmpty();

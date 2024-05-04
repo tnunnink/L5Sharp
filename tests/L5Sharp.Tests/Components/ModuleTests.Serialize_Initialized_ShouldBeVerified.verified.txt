@@ -1,11 +1,7 @@
-﻿<Module Name="Test" CatalogNumber="ABCD-1234" Vendor="1" ProductType="10" ProductCode="1" Major="1" Minor="3" ParentModule="Local" ParentModPortId="1" Inhibited="true" MajorFault="true" SafetyEnabled="true">
+﻿<Module Name="Test" CatalogNumber="ABCD-1234" Major="1" Minor="3" Vendor="1" ProductType="10" ParentModule="Local" ParentModPortId="1" Inhibited="true" MajorFault="true" SafetyEnabled="true" ProductCode="1">
   <Description><![CDATA[This is a test module]]></Description>
   <EKey State="Disabled" />
   <Ports>
     <Port Id="1" Type="ICP" Address="1" Upstream="true" />
   </Ports>
-  <Communications>
-    <ConfigTag />
-    <Connections />
-  </Communications>
 </Module>

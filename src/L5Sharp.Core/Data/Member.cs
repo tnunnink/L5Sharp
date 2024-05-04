@@ -51,20 +51,6 @@ public sealed class Member : LogixElement
     {
     }
 
-    /// <summary>
-    /// Creates a new <see cref="Member"/> object with the provided name and data type name.
-    /// </summary>
-    /// <param name="name">The name of the member.</param>
-    /// <param name="dataType">The name of the data type for the member.</param>
-    /// <remarks>
-    /// This constructor will use the <see cref="LogixData.Create(string)"/> factory method to instantiate a new instance
-    /// of the specified type. If <paramref name="dataType"/> represents a complex type that is not statically defined,
-    /// it will defualt to creating a <see cref="ComplexData"/> instance having the provided name.
-    /// </remarks>
-    public Member(string name, string dataType) : base(CreateMember(name, LogixData.Create(dataType)))
-    {
-    }
-
     /// <inheritdoc />
     /// <remarks>
     /// Internal will make <see cref="Member"/> not something that is deserializable since we only look for public
@@ -168,8 +154,6 @@ public sealed class Member : LogixElement
         //Otherwise this is a normal decorated data element, and we need to handle the set based on the current value.
         switch (Value)
         {
-            case NullData: //todo perhaps make a decision on if this should or should not be here.
-                throw new InvalidOperationException("The member data is null and can not be... ");
             case AtomicData:
                 var atomicType = (AtomicData)data;
                 SetAtomic(atomicType);

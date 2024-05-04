@@ -31,6 +31,8 @@ public class Module : LogixComponent
     {
         CatalogNumber = string.Empty;
         Revision = new Revision();
+        Vendor = Vendor.Rockwell;
+        ProductType = ProductType.Unknown;
         ParentModule = string.Empty;
         ParentModPortId = default;
         Inhibited = false;
