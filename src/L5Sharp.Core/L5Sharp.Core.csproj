@@ -18,9 +18,10 @@
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
-            Added the SafetyTagMap to SafetyInfo.
-            Added Number initializer to Rung element.
-            Fixed bugs in AddOnInstruction component.
+            Added LogixData.Create to create instance by name.
+            Added ToTag and ToMember for DataType/AOI components and DataTypeMember/Parameter elements.
+            Added new Array and other component constructors.
+            Added Module.Local to generate a new controller module instance given a processor name.
         </PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -8,6 +8,7 @@
 /local/
 /tests/L5Sharp.Context.Tests/TestFiles/Template.xml
 /tests/L5Sharp.AcdTest/*
+.idea/workspace.xml
 
 # User-specific files
 *.rsuser
