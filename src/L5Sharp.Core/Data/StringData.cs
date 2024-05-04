@@ -14,13 +14,13 @@ namespace L5Sharp.Core;
 /// <para>
 /// A logix string type has predefined members <see cref="LEN"/> and <see cref="DATA"/>, which contain the
 /// current string length and set of ASCII characters representing the string value, respectively.
-/// This class is inherited by <see cref="STRING"/>, which is Rockwell's built in base string type.
+/// This class is inherited by <see cref="STRING"/>, which is Rockwell's built-in base string type.
 /// </para>
 /// <para>
-/// A <see cref="StringData"/> will not pass the provided element to the base class but rather extract
+/// <see cref="StringData"/> will not pass the provided element to the base class but rather extract
 /// the data type name and string value and act as a wrapper over that data. The element will be reconstructed
 /// when <see cref="Serialize"/> or <see cref="SerializeStructure"/> is called. We need to do all this due to how
-/// strings are serialized in an L5X which is in a special format. Also we want to treat strings similar to atomics
+/// strings are serialized in an L5X which is in a special format. Also, we want to treat strings similar to atomics
 /// as if they are immutable values types.
 /// </para>
 /// </remarks>
@@ -87,7 +87,7 @@ public class StringData : StructureData, IEnumerable<char>
     /// The maximum length of characters the <see cref="StringData"/> derivative can hold in <see cref="DATA"/>.
     /// </summary>
     /// <remarks>
-    /// By default this will be '0' since we can't know the max length for some arbitrary string type. The code internally
+    /// By default, this will be '0' since we can't know the max length for some arbitrary string type. The code internally
     /// will construct the array to the size of the incoming string value if set to <c>0</c>. If greater than zero then
     /// <see cref="DATA"/> will be initialized to that length and filled with the incoming value array.
     /// </remarks>
@@ -234,11 +234,11 @@ public class StringData : StructureData, IEnumerable<char>
     {
         var result = new List<SINT>();
         
-        //Logix encloses strings in single quotes so we need to remove those if the are present.
+        //Logix encloses strings in single quotes, so we need to remove those if they are present.
         value = value.TrimStart('\'').TrimEnd('\'');
 
         //If we get a null or empty string then return an empty array.
-        if (string.IsNullOrEmpty(value)) return Array.Empty<SINT>();
+        if (string.IsNullOrEmpty(value)) return [];
 
         //Breaks apart the string into single ASCII characters to be parsed.
         var matches = LogixAsciiPattern.Matches(value);

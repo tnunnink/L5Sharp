@@ -236,6 +236,7 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
             return named;
 
         // ReSharper disable once ConvertIfStatementToReturnStatement
+        // ReSharper disable once CanSimplifyDictionaryTryGetValueWithGetValueOrDefault
         if (ValueLookup.Value.TryGetValue(value, out var literal))
             return literal;
 

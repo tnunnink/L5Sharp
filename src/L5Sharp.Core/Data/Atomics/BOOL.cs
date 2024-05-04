@@ -6,6 +6,8 @@ namespace L5Sharp.Core;
 /// Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <see cref="bool"/>. This object is meant
 /// to wrap the DataValue or DataValueMember data for the L5X tag data structure.
 /// </summary>
+[L5XType(nameof(BOOL))]
+[L5XType("BIT")] //Logix DataTypeMembers specify BIT instead of BOOL for some reason.
 public sealed class BOOL : AtomicData, IComparable, IConvertible, ILogixParsable<BOOL>
 {
     /// <summary>

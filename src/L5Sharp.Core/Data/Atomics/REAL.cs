@@ -5,7 +5,6 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>REAL</b> Logix atomic data type, or a type analogous to a <see cref="float"/>.
 /// </summary>
-[L5XType(nameof(REAL))]
 public sealed class REAL : AtomicData, IComparable, IConvertible, ILogixParsable<REAL>
 {
     /// <summary>

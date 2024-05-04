@@ -668,7 +668,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void Conversion_FromString_ShouldBeExpectedValue()
         {
-            DINT value = "1";
+            INT value = "1";
 
             value.Should().Be(1);
         }

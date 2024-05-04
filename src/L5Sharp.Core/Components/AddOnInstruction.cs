@@ -326,6 +326,49 @@ public class AddOnInstruction : LogixComponent
     }
 
     /// <summary>
+    /// Creates a new <see cref="Tag"/> instance with data configured from this <see cref="AddOnInstruction"/> component. 
+    /// </summary>
+    /// <param name="name">The name of the tag to create.</param>
+    /// <returns>
+    /// A <see cref="Tag"/> component with the provided name and set of data based on the configuration of
+    /// this instruction.
+    /// </returns>
+    /// <remarks>This is a helper to allow callers to quickly generate in memory tag instances from a configured instruction.</remarks>
+    public Tag ToTag(string name) => new(name, ToData());
+
+    /// <summary>
+    /// Creates a new <see cref="LogixData"/> object given the current AOI configuration.
+    /// </summary>
+    /// <returns>
+    /// An <see cref="ComplexData"/> instance having the name of the current instruction and members generated
+    /// from the configured <see cref="Parameters"/>.
+    /// </returns>
+    /// <remarks>
+    /// This is a helper that allows us to easily generate a complex data structure from a given AOI instance. This allows
+    /// us to (more) easily instantiate an instance of a Tag having the data of the configured AOI. 
+    /// </remarks>
+    public LogixData ToData()
+    {
+        if (string.IsNullOrEmpty(Name))
+            throw new InvalidOperationException("Can not create data with null or empty data type name");
+        
+        //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
+        var data = LogixData.Create(Name);
+
+        //If it is not a complex data (meaning more derived) then it was defined, and we can return it.
+        if (data is not ComplexData complexData) return data;
+        
+        //Generate the members from the parameters that are configured as input/output parameters.
+        //These are the only members that are used as members of an AOI tag structure.
+        var members = Parameters
+            .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Output)
+            .Select(p => p.ToMember());
+
+        complexData.AddRange(members.ToList());
+        return complexData;
+    }
+
+    /// <summary>
     /// Returns the default built in EnableIn parameter.
     /// </summary>
     private static Parameter EnableIn()
@@ -340,7 +383,8 @@ public class AddOnInstruction : LogixComponent
             Radix = Radix.Decimal,
             Required = false,
             Visible = false,
-            ExternalAccess = ExternalAccess.ReadOnly
+            ExternalAccess = ExternalAccess.ReadOnly,
+            Default = new BOOL()
         };
     }
 
@@ -359,7 +403,8 @@ public class AddOnInstruction : LogixComponent
             Radix = Radix.Decimal,
             Required = false,
             Visible = false,
-            ExternalAccess = ExternalAccess.ReadOnly
+            ExternalAccess = ExternalAccess.ReadOnly,
+            Default = new BOOL()
         };
     }
 }

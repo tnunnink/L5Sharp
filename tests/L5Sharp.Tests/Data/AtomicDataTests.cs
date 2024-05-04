@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace L5Sharp.Tests.Types;
+namespace L5Sharp.Tests.Data;
 
 [TestFixture]
 public class AtomicDataTests
@@ -33,5 +33,33 @@ public class AtomicDataTests
 
         result.Should().BeOfType<DINT>();
         result.As<DINT>().Should().Be(123456);
+    }
+
+    [Test]
+    [TestCase("BOOL")]
+    [TestCase("BIT")]
+    [TestCase("SINT")]
+    [TestCase("INT")]
+    [TestCase("DINT")]
+    [TestCase("LINT")]
+    [TestCase("REAL")]
+    [TestCase("USINT")]
+    [TestCase("UINT")]
+    [TestCase("UDINT")]
+    [TestCase("ULINT")]
+    [TestCase("LREAL")]
+    public void IsAtomic_ValidNames_ShouldBeTrue(string name)
+    {
+        var result = AtomicData.IsAtomic(name);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsAtomic_InvalidName_ShouldBeFalse()
+    {
+        var result = AtomicData.IsAtomic("Test");
+
+        result.Should().BeFalse();
     }
 }

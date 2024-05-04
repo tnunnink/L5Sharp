@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace L5Sharp.Tests.Types.Custom;
+namespace L5Sharp.Tests.Data.Custom;
 
 public class MySimpleData : ComplexData
 {

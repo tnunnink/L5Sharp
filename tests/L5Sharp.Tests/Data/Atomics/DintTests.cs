@@ -706,7 +706,7 @@ namespace L5Sharp.Tests.Types.Atomics
         [Test]
         public void Conversion_FromString_ShouldBeExpectedValue()
         {
-            DINT value = "1";
+            var value = (DINT)"1";
 
             value.Should().Be(1);
         }
@@ -716,7 +716,7 @@ namespace L5Sharp.Tests.Types.Atomics
         {
             var type = new DINT(1);
 
-            string value = type;
+            var value = (string)type;
 
             value.Should().Be("1");
         }

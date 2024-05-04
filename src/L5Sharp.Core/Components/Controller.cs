@@ -72,6 +72,19 @@ public class Controller : LogixComponent
     }
 
     /// <summary>
+    /// Created a new <see cref="Controller"/> initialized with the provided name, processor type, and revision.
+    /// </summary>
+    /// <param name="name">The name of the controller.</param>
+    /// <param name="processor">The catalog number specifying the processor type.</param>
+    /// <param name="revision">AThe <see cref="Core.Revision"/> of the controller.</param>
+    public Controller(string name, string processor, Revision revision) : this()
+    {
+        Element.SetAttributeValue(L5XName.Name, name);
+        ProcessorType = processor;
+        Revision = revision;
+    }
+
+    /// <summary>
     /// The catalog number representing the processor of the controller component.
     /// </summary>
     /// <value>A <see cref="string"/> representing the alpha numeric catalog number.</value>

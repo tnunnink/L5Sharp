@@ -150,7 +150,7 @@ namespace L5Sharp.Tests.Components
         [Test]
         public Task AddProgram_ValidProgram_ShouldBeVerified()
         {
-            var content = L5X.New("Test", "1756-L84E");
+            var content = L5X.New("Test", "1756-L84E", new Revision(33, 1));
             var task = new LTask("Test");
             content.Tasks.Add(task);
             var program = new Program("Program1");

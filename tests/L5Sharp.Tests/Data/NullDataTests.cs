@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace L5Sharp.Tests.Types;
+namespace L5Sharp.Tests.Data;
 
 [TestFixture]
 public class NullDataTests

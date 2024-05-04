@@ -84,7 +84,7 @@ public static class LogixSerializer
     /// <summary>
     /// Creates our global deserialization collection to initialize our dictionary lookup. This will add custom data
     /// deserializer functions defined in this file, as well as scan this and all loaded assemblies for deserializable
-    /// types the are defined in this an other libraries in order to make our <see cref="LogixSerializer"/> implementation
+    /// types they are defined in this another libraries in order to make our <see cref="LogixSerializer"/> implementation
     /// aware of the types it can create.
     /// </summary>
     private static IEnumerable<KeyValuePair<string, Func<XElement, LogixElement>>> Scan()
@@ -107,7 +107,7 @@ public static class LogixSerializer
     }
 
     /// <summary>
-    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non abstract types
+    /// Performs reflection scanning of provided <see cref="Assembly"/> to get all public non-abstract types
     /// inheriting from <see cref="LogixElement"/> that have the supported deserialization constructor,
     /// and returns the <c>L5XType</c> and compiled deserialization delegate pair. This is used to initialize the
     /// set of concrete deserializer functions for all known logix element objects.
@@ -124,7 +124,7 @@ public static class LogixSerializer
 
             //We have to differentiate a "DataType" element and any other element since in theory you could create a
             //data type with the name of a component or element, and we don't want our serializer to confuse the two types.
-            //Therefore we prepend all LogixType types with our internal known prefix and will use that when lookup occurs.
+            //Therefore, we prepend all LogixType types with our internal known prefix and will use that when lookup occurs.
             var isDataType = typeof(LogixData).IsAssignableFrom(type);
             var names = type.L5XTypes().Select(n => isDataType ? $"{DataTypePrefix}{n}" : $"{n}");
             var functions = names.Select(n => new KeyValuePair<string, Func<XElement, LogixElement>>(n, deserializer));
@@ -184,7 +184,7 @@ public static class LogixSerializer
     /// constructor info obtained via reflection. This method makes all the necessary checks on the current type, ensuring the
     /// returned deserializer delegate will execute without exception.
     /// </remarks>
-    private static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)    
+    private static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)
     {
         if (type is null) 
             throw new ArgumentNullException(nameof(type));
@@ -282,7 +282,7 @@ public static class LogixSerializer
 
     /// <summary>
     /// Handles deserializing an element to a <see cref="StructureData"/> logix type. Will check for registered types
-    /// to create the concrete type if available. Otherwise we resort to a more generic <see cref="StringData"/>
+    /// to create the concrete type if available. Otherwise, we resort to a more generic <see cref="StringData"/>
     /// for string element structures or <see cref="ComplexData"/> for everything else.
     /// </summary>
     private static LogixElement DeserializeStructure(XElement element)
@@ -298,7 +298,7 @@ public static class LogixSerializer
 
     /// <summary>
     /// Handles deserializing an element to a <see cref="StringData"/> logix type. Will check for registered types to
-    /// create the concrete type if available. Otherwise we resort to a more generic <see cref="StringData"/> object.
+    /// create the concrete type if available. Otherwise, we resort to a more generic <see cref="StringData"/> object.
     /// </summary>
     private static LogixElement DeserializeString(XElement element)
     {

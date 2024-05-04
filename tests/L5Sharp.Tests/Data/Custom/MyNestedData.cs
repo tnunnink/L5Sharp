@@ -4,7 +4,7 @@
 
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
-namespace L5Sharp.Tests.Types.Custom
+namespace L5Sharp.Tests.Data.Custom
 {
     /// <summary>
     /// A test type used to test nested complex data structure code

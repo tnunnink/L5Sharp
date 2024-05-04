@@ -68,13 +68,31 @@ public class Tag : LogixComponent
     /// <summary>
     /// Creates a new <see cref="Tag"/> initialized with the provided name and value.
     /// </summary>
-    /// <param name="name">The name of the Tag.</param>
-    /// <param name="value">The <see cref="LogixData"/> value of the Tag.</param>
-    /// <param name="description">the optional description of the tag.</param>
+    /// <param name="name">The name of the tag.</param>
+    /// <param name="value">The <see cref="LogixData"/> value of the tag.</param>
+    /// <param name="description">The optional description of the tag.</param>
     public Tag(string name, LogixData value, string? description = default) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Value = value;
+        SetDescription(description);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> initialized with the provided name, data type, and optional description.
+    /// </summary>
+    /// <param name="name">The name of the tag.</param>
+    /// <param name="dataType">The name of the data type of the tag.</param>
+    /// <param name="description">The optional description of the tag.</param>
+    /// <remarks>
+    /// This constructor will use the <see cref="LogixData.Create(string)"/> factory method to instantiate the <see cref="Value"/>
+    /// data for the tag. If <paramref name="dataType"/> represents a complex type that is not statically defined,
+    /// it will defualt to creating a <see cref="ComplexData"/> instance having the provided name.
+    /// </remarks>
+    public Tag(string name, string dataType, string? description = default) : this()
+    {
+        Element.SetAttributeValue(L5XName.Name, name);
+        Value = LogixData.Create(dataType);
         SetDescription(description);
     }
 

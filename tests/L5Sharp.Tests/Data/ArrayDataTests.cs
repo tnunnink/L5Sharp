@@ -4,7 +4,7 @@ using FluentAssertions;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 
-namespace L5Sharp.Tests.Types
+namespace L5Sharp.Tests.Data
 {
     [TestFixture]
     public class ArrayDataTests
@@ -135,6 +135,30 @@ namespace L5Sharp.Tests.Types
             var type = new ArrayData<DINT>(array);
 
             type.Dimensions.Length.Should().Be(12);
+        }
+
+        [Test]
+        public void Constructor_NameAndDimensions_ShouldBeValid()
+        {
+            var array = new ArrayData<DINT>("DINT", new Dimensions(100));
+
+            array.Should().NotBeNull();
+            array.Name.Should().Be("DINT");
+            array.Dimensions.Length.Should().Be(100);
+            array.Members.Should().HaveCount(100);
+            array.Members.Should().AllSatisfy(m => m.Value.Should().BeOfType<DINT>());
+        }
+        
+        [Test]
+        public void Constructor_DataAndDimensions_ShouldBeValid()
+        {
+            var array = new ArrayData<DINT>(new DINT(), new Dimensions(100));
+
+            array.Should().NotBeNull();
+            array.Name.Should().Be("DINT");
+            array.Dimensions.Length.Should().Be(100);
+            array.Members.Should().HaveCount(100);
+            array.Members.Should().AllSatisfy(m => m.Value.Should().BeOfType<DINT>());
         }
 
         [Test]

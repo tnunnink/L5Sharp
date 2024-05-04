@@ -58,7 +58,7 @@ public class AddOnInstructionTests
             LocalTags = new LogixContainer<LocalTag>(),
             Routines = new LogixContainer<Routine>()
         };
-        
+
         instruction.Name.Should().Be("Test");
         instruction.Description.Should().Be("This is another test");
         instruction.Class.Should().Be(ComponentClass.Standard);
@@ -122,11 +122,57 @@ public class AddOnInstructionTests
         aoi.LocalTags.Add(new LocalTag { Name = "Test", Value = true });
 
         var xml = aoi.Serialize().ToString();
-        
+
         return VerifyXml(xml)
             .ScrubMember("CreatedDate")
             .ScrubMember("CreatedBy")
             .ScrubMember("EditedDate")
             .ScrubMember("EditedBy");
     }
+
+    [Test]
+    public void ToTag_InstructionWithValidParameters_ShouldBeExpected()
+    {
+        var content = L5X.New("Test", "1756-L83E", new Revision(33, 1));
+        
+        var aoi = new AddOnInstruction("MyAoi");
+        aoi.Parameters.Add(new Parameter("Param01", new DINT(123)));
+        aoi.Parameters.Add(new Parameter("Param02", new BOOL(true)));
+        aoi.Parameters.Add(new Parameter("Param02", new REAL(1.23f)));
+
+        var tag = aoi.ToTag("MyAoiTag");
+
+        var referenceTags = aoi.Parameters
+            .Where(p => p.Usage == TagUsage.InOut)
+            .Select(p => new Tag(p.Name, new ComplexData(p.DataType!)));
+        
+        content.Tags.Add(tag);
+        content.Tags.AddRange(referenceTags);
+        
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("MyAoiTag");
+        tag.Value.Should().BeOfType<ComplexData>();
+        tag.Value.Name.Should().Be("MyAoi");
+        tag.Members().ToList().Should().HaveCount(6);
+    }
+
+    /*[Test]
+    public void Example()
+    {
+        var content = L5X.Load("PathToFile");
+
+        var aoi = content.Instructions.Get("AOI_OB16_Mapping");
+
+        var aoiTag = aoi.ToTag("AOI_OB16_Mapping_Tag");
+
+        var aoiInOutTags = aoi.Parameters
+            .Where(p => p.Usage == TagUsage.InOut)
+            .Select(p => new Tag(p.Name, new ComplexData(p.DataType!)));
+
+        content.Tags.Add(aoiTag);
+        content.Tags.AddRange(aoiInOutTags);
+
+        content.Save("PathToFile");
+    }*/
 }

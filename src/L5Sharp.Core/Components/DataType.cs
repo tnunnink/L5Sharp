@@ -32,7 +32,7 @@ public class DataType : LogixComponent
         L5XName.Description,
         L5XName.Members
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="DataType"/> with default values.
     /// </summary>
@@ -96,7 +96,7 @@ public class DataType : LogixComponent
         get => GetContainer<DataTypeMember>();
         set => SetContainer(value);
     }
-    
+
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
@@ -113,5 +113,47 @@ public class DataType : LogixComponent
         }
 
         return dependencies.Distinct();
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> instance by converting this <see cref="DataType"/> definition into a
+    /// <see cref="LogixData"/> instance and using that along with the provided tag name to create the component.
+    /// </summary>
+    /// <param name="tagName">The name of the tag.</param>
+    /// <returns>A <see cref="Tag"/> with the provided name and populated data structure using this data type definition.</returns>
+    /// <remarks>
+    /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
+    /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
+    /// are not able to be resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// as there is no way to know the structure. 
+    /// </remarks>
+    public Tag ToTag(string tagName) => new(tagName, ToData());
+
+    /// <summary>
+    /// Converts the <see cref="DataType"/> component into a <see cref="LogixData"/> object using the configured
+    /// name and members.
+    /// </summary>
+    /// <returns>A <see cref="LogixData"/> object populated with the members defined by this data type configuration.</returns>
+    /// <remarks>
+    /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
+    /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
+    /// are not able to be resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// as there is no way to know the structure. 
+    /// </remarks>
+    public LogixData ToData()
+    {
+        if (string.IsNullOrEmpty(Name))
+            throw new InvalidOperationException("Can not create data with null or empty data type name");
+
+        //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
+        var data = LogixData.Create(Name);
+
+        //If it is not a complex data then it was defined, and we can return it.
+        if (data is not ComplexData complexData) return data;
+
+        //Otherwise, we need to build the members using the configured Members collection.
+        var members = Members.Where(m => m.Hidden is not true).Select(m => m.ToMember()).ToList();
+        complexData.AddRange(members);
+        return complexData;
     }
 }

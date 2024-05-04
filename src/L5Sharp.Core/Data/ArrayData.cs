@@ -20,6 +20,35 @@ namespace L5Sharp.Core;
 public abstract class ArrayData : LogixData, IEnumerable
 {
     /// <summary>
+    /// Creates a new array data instance with the specified dimensions and data type name.
+    /// </summary>
+    /// <param name="dataType">The name of the data type for the array.</param>
+    /// <param name="dimensions">The <see cref="Core.Dimensions"/> of the array.</param>
+    /// <remarks>
+    /// This constructor will use the <see cref="LogixData.Create(string)"/> factory to instantiate default
+    /// data objects to fill the array at the specified dimensions. If the provided data type name is not a statically
+    /// defined type in this or another assembly, then a default <see cref="ComplexData"/> object will be used.
+    /// </remarks>
+    protected internal ArrayData(string dataType, Dimensions dimensions)
+        : base(CreateArray(Create(dataType), dimensions))
+    {
+    }
+
+    /// <summary>
+    /// Creates a new array data instance with the specified dimensions and seed data object.
+    /// </summary>
+    /// <param name="dataType">A <see cref="LogixData"/> object to use as a seed to create the array elements.</param>
+    /// <param name="dimensions">The <see cref="Core.Dimensions"/> of the array.</param>
+    /// <remarks>
+    /// This constructor will use the provided <paramref name="dataType"/> as the seed to fill the array. It will just
+    /// call serialize to generate the data elments of the array at the specified dimension length.
+    /// </remarks>
+    protected internal ArrayData(LogixData dataType, Dimensions dimensions)
+        : base(CreateArray(dataType, dimensions))
+    {
+    }
+
+    /// <summary>
     /// Creates a new array type from the provided array object.
     /// </summary>
     /// <param name="array">An array of logix types. Array can not be empty, contain null items,
@@ -46,15 +75,14 @@ public abstract class ArrayData : LogixData, IEnumerable
     /// <inheritdoc />
     public override IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
 
-
     /// <summary>
-    /// The dimensions of the the array, which define the length and rank of the array's elements.
+    /// The dimensions of the array, which define the length and rank of the array's elements.
     /// </summary>
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions.</value>
     public Dimensions Dimensions => GetRequiredValue<Dimensions>();
 
     /// <summary>
-    /// Gets the radix format of the the array type elements.
+    /// Gets the radix format of the array type elements.
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> format if the array is an atomic type array;
     /// otherwise, the radix <see cref="L5Sharp.Core.Radix.Null"/> format.</value>
@@ -149,7 +177,7 @@ public abstract class ArrayData : LogixData, IEnumerable
 
     /// <inheritdoc />
     public override string ToString() => $"{Name}{Dimensions.ToIndex()}";
-    
+
     /// <summary>
     /// Handles getting the logix type at the specified index of the current array from the underlying member collection. 
     /// </summary>
@@ -191,8 +219,32 @@ public abstract class ArrayData : LogixData, IEnumerable
     IEnumerator IEnumerable.GetEnumerator() => Members.Select(m => m.Value).GetEnumerator();
 
     /// <summary>
+    /// Cretaes a new array data element with the provided data type name and dimensions. This method will use the base
+    /// static factory to create a seed <see cref="LogixData"/> instance, and use that alond with the dimensions to
+    /// generate a default array element. 
+    /// </summary>
+    private static XElement CreateArray(LogixData dataType, Dimensions dimensions)
+    {
+        if (dataType is null)
+            throw new ArgumentException("Can not create array with null or empty data type name");
+
+        if (dimensions is null || dimensions.IsEmpty)
+            throw new ArgumentException("Can not create array with null or empty dimensions");
+
+        var element = new XElement(L5XName.Array);
+        element.Add(new XAttribute(L5XName.DataType, dataType.Name));
+        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
+        if (dataType is AtomicData atomic) element.Add(new XAttribute(L5XName.Radix, atomic.Radix));
+
+        var elements = dimensions.Indices().Select(i => CreateArrayElement(i, dataType));
+        element.Add(elements);
+
+        return element;
+    }
+
+    /// <summary>
     /// Creates a new array data structure element with the provided array object. This method will
-    /// determine the dimensions from the provided array. It will also used the first item in the array
+    /// determine the dimensions from the provided array. It will also use the first item in the array
     /// to seed the data type name and radix if available. If this collection contains no items we will resort
     /// to the type name of the array element type.
     /// </summary>
@@ -257,6 +309,16 @@ public sealed class ArrayData<TData> : ArrayData, IEnumerable<TData> where TData
 {
     /// <inheritdoc />
     public ArrayData(XElement element) : base(element)
+    {
+    }
+
+    /// <inheritdoc />
+    public ArrayData(string dataType, Dimensions dimensions) : base(dataType, dimensions)
+    {
+    }
+
+    /// <inheritdoc />
+    public ArrayData(LogixData dataType, Dimensions dimensions) : base(dataType, dimensions)
     {
     }
 

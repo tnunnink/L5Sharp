@@ -77,6 +77,49 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     public BOOL this[int bit] => new BitArray(GetBytes())[bit];
 
     /// <summary>
+    /// Determines if the provided data type name represents an <see cref="AtomicData"/> type which is defined in this
+    /// assembly.
+    /// </summary>
+    /// <param name="dataType">The name of the data type to check.</param>
+    /// <returns><c>true</c> if the data type name represents an atomic data type; otherwise, <c>false</c>.</returns>
+    public static bool IsAtomic(string dataType)
+    {
+        return dataType is 
+            nameof(BOOL) or nameof(SINT) or nameof(INT) or nameof(DINT) or nameof(LINT) or nameof(REAL) 
+            or "BIT" or nameof(USINT) or nameof(UINT) or nameof(UDINT) or nameof(ULINT) or nameof(LREAL);
+    }
+
+    /// <summary>
+    /// Creates a new default <see cref="AtomicData"/> instance using the provided atomic type name (e.g., DINT, dint).
+    /// </summary>
+    /// <param name="dataType">The name of the atomic type to instantiate.</param>
+    /// <returns>A new <see cref="AtomicData"/> instnace of the specified type name with default data.</returns>
+    /// <exception cref="ArgumentException"><paramref name="dataType"/> is not a valid atomic type.</exception>
+    public static AtomicData Default(string dataType)
+    {
+        //In case lower or camel is passed in we can accept that.
+        dataType = dataType.ToUpper();
+
+        return dataType switch
+        {
+            nameof(BOOL) => new BOOL(),
+            "BIT" => new BOOL(),
+            nameof(SINT) => new SINT(),
+            nameof(INT) => new INT(),
+            nameof(DINT) => new DINT(),
+            nameof(LINT) => new LINT(),
+            nameof(REAL) => new REAL(),
+            nameof(USINT) => new USINT(),
+            nameof(UINT) => new UINT(),
+            nameof(UDINT) => new UDINT(),
+            nameof(ULINT) => new ULINT(),
+            nameof(LREAL) => new LREAL(),
+            _ => throw new ArgumentException(
+                $"The name '{dataType}' does not represent a known {typeof(AtomicData)} type.")
+        };
+    }
+
+    /// <summary>
     /// Parses the provided string value into the atomic type value specified by name.
     /// </summary>
     /// <param name="name">The name of the atomic type.</param>
@@ -100,7 +143,7 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
             nameof(UDINT) => UDINT.Parse(value),
             nameof(ULINT) => ULINT.Parse(value),
             nameof(LREAL) => LREAL.Parse(value),
-            _ => throw new ArgumentException($"The type name '{name}' is not a valid {typeof(AtomicData)}")
+            _ => throw new ArgumentException($"The name '{name}' does not represent a known {typeof(AtomicData)} type.")
         };
     }
 
@@ -192,14 +235,14 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
         element.Add(new XAttribute(L5XName.Value, this));
         return element;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
     private IEnumerable<Member> GenerateBitMembers()
     {
         var bits = new BitArray(GetBytes());
-        
+
         for (var i = 0; i < bits.Length; i++)
         {
             var index = i;

@@ -39,35 +39,43 @@ public class L5XBasicTests
     [Test]
     public void New_WithControllerAndProcessorNames_ShouldNotBeNullAndExpectedValues()
     {
-        var content = L5X.New("ControllerName", "1756-L83E");
+        var content = L5X.New("ControllerName", "1756-L83E", new Revision(33, 1));
 
         content.Should().NotBeNull();
         content.Controller.Name.Should().Be("ControllerName");
         content.Controller.ProcessorType.Should().Be("1756-L83E");
+        content.Controller.Revision.Should().BeEquivalentTo(new Revision(33, 1));
+        content.Modules.Should().HaveCount(1);
     }
 
     [Test]
     public Task New_ValidValues_ShouldBeVerified()
     {
-        var content = L5X.New("ControllerName", "1756-L83E");
+        var content = L5X.New("ControllerName", "1756-L83E", new Revision("34.11"));
 
         return VerifyXml(content.Serialize().ToString())
             .ScrubMember("ExportDate")
             .ScrubMember("Owner")
             .ScrubMember("ProjectCreationDate")
-            .ScrubMember("LastModifiedDate");;
+            .ScrubMember("LastModifiedDate");
     }
 
     [Test]
     public void New_NullName_ShouldThrowException()
     {
-        FluentActions.Invoking(() => L5X.New(null!, "Test")).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => L5X.New(null!, "Test", new Revision())).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void New_NullProcessor_ShouldThrowException()
     {
-        FluentActions.Invoking(() => L5X.New("Test", null!)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => L5X.New("Test", null!, new Revision())).Should().Throw<ArgumentException>();
+    }
+    
+    [Test]
+    public void New_NullRevision_ShouldThrowException()
+    {
+        FluentActions.Invoking(() => L5X.New("Test", "1756-L83E", null!)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -85,7 +93,7 @@ public class L5XBasicTests
             .ScrubMember("ExportDate")
             .ScrubMember("Owner")
             .ScrubMember("ProjectCreationDate")
-            .ScrubMember("LastModifiedDate");;
+            .ScrubMember("LastModifiedDate");
     }
 
     [Test]

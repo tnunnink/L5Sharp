@@ -51,12 +51,26 @@ public sealed class Member : LogixElement
     {
     }
 
+    /// <summary>
+    /// Creates a new <see cref="Member"/> object with the provided name and data type name.
+    /// </summary>
+    /// <param name="name">The name of the member.</param>
+    /// <param name="dataType">The name of the data type for the member.</param>
+    /// <remarks>
+    /// This constructor will use the <see cref="LogixData.Create(string)"/> factory method to instantiate a new instance
+    /// of the specified type. If <paramref name="dataType"/> represents a complex type that is not statically defined,
+    /// it will defualt to creating a <see cref="ComplexData"/> instance having the provided name.
+    /// </remarks>
+    public Member(string name, string dataType) : base(CreateMember(name, LogixData.Create(dataType)))
+    {
+    }
+
     /// <inheritdoc />
     /// <remarks>
     /// Internal will make <see cref="Member"/> not something that is deserializable since we only look for public
     /// constructors. This library should handle all complex data structure deserialization internally so this is fine.
-    /// This is also a class that is the basis for how Tag traverses it's hierarchy. Also this would not work in our
-    /// LogixSerializer implementation since there is not mappings of the elements to it that are not already used for
+    /// This is also a class that is the basis for how Tag traverses its hierarchy. Also, this would not work in our
+    /// LogixSerializer implementation since there is no mappings of the elements to it that are not already used for
     /// other types. Meaning, even data value, structure, and array members should be deserialized to the
     /// <see cref="LogixData"/> class and not the <see cref="Member"/>. So this is kind of a special internal class
     /// that helps build the logix data structure.
@@ -104,7 +118,7 @@ public sealed class Member : LogixElement
     /// structure to replace members using a <see cref="ComplexData"/> for custom types.
     /// </para>
     /// <para>
-    /// Also note that you must set the value with the the correct corresponding logix type
+    /// Also note that you must set the value with the correct corresponding logix type
     /// (e.g. AtomicType = AtomicType, StringType = StringType, ArrayType = ArrayType).
     /// Arrays and structures will join provided value structure on the member name and forward the call down the
     /// hierarchy in order to set complex object values.
@@ -121,9 +135,9 @@ public sealed class Member : LogixElement
     /// <inheritdoc />
     /// <remarks>
     /// For member elements we want to just call deserialize of the current element, which should represent a data
-    /// element (value, array, structure, etc.). However we also provided custom getter to allow special classes to
-    /// specify how to retrieve the underlying data, so we will call that if provided. This is a work around for special
-    /// data formats (Alarm, Message, etc.) as well as root Tag tag component.
+    /// element (value, array, structure, etc.). However, we also provided custom getter to allow special classes to
+    /// specify how to retrieve the underlying data, so we will call that if provided. This is a workaround for special
+    /// data formats (Alarm, Message, etc.) as well as root tag component.
     /// </remarks>
     protected override LogixData GetData()
     {
@@ -143,15 +157,15 @@ public sealed class Member : LogixElement
         //Never allow null data.
         if (data is null or NullData)
             throw new ArgumentNullException(nameof(data), "Can not set member with null data.");
-        
+
         //Always use the custom setter if provided.
         if (_setter is not null)
         {
             _setter.Invoke(data);
             return;
         }
-        
-        //Otherwise this is a normal decorated data element and we need to handle the set based on the current value.
+
+        //Otherwise this is a normal decorated data element, and we need to handle the set based on the current value.
         switch (Value)
         {
             case NullData: //todo perhaps make a decision on if this should or should not be here.
@@ -227,8 +241,8 @@ public sealed class Member : LogixElement
 
     /// <summary>
     /// Creates a new member element to contain the underlying member data for this object using the provided name
-    /// and <see cref="LogixData"/> data. Members are really only different from the base decorated data in that the
-    /// element names append "Member" and the have the <c>Name</c> attribute.
+    /// and <see cref="LogixData"/> instance. Members are really only different from the base decorated data in that the
+    /// element names append "Member" and they have the <c>Name</c> attribute.
     /// So we can build them more dynamically this way and not have to have a method to construct each type manually.
     /// </summary>
     // ReSharper disable once SuggestBaseTypeForParameter no this should always be a LogixType derivative

@@ -33,7 +33,22 @@ public class Port : LogixObject
     public Port(XElement element) : base(element)
     {
     }
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="address"></param>
+    /// <param name="type"></param>
+    /// <param name="upstream"></param>
+    public Port(int id, Address address, string type, bool upstream = false) : this()
+    {
+        Id = id;
+        Address = address;
+        Type = type;
+        Upstream = upstream;
+    }
+
     /// <summary>
     /// Gets the Id of the <see cref="Port"/>.
     /// </summary>
@@ -105,15 +120,41 @@ public class Port : LogixObject
                 Element.Element(L5XName.Bus)?.Remove();
                 return;
             }
-            
+
             var bus = Element.Element(L5XName.Bus);
             if (bus is null)
             {
                 bus = new XElement(L5XName.Bus);
                 Element.Add(bus);
             }
-            
+
             bus.SetAttributeValue(L5XName.Size, value);
         }
+    }
+
+    /// <summary>
+    /// Creates a new ICP <see cref="Port"/> with the optional id and address.
+    /// </summary>
+    /// <param name="id">The identifier of the port. If not provided, the default value is 1.</param>
+    /// <param name="address">The slot address of the device. If not provided, the default value is 0.</param>
+    /// <returns>A new instance of <see cref="Port"/> representing an ICP port.</returns>
+    public static Port Icp(int? id = default, Address? address = default)
+    {
+        var portId = id ?? 1;
+        address ??= Address.Slot();
+        return new Port(portId, address, "ICP");
+    }
+
+    /// <summary>
+    /// Creates a new Ethernet <see cref="Port"/> with the optional id and address.
+    /// </summary>
+    /// <param name="id">The identifier of the port. If not provided, the default value is 1.</param>
+    /// <param name="address">The network address (IP) of the device. If not provided, the default IP address is "192.168.0.1".</param>
+    /// <returns>A new instance of <see cref="Port"/> representing an Ethernet port.</returns>
+    public static Port Ethernet(int? id = default, Address? address = default)
+    {
+        var portId = id ?? 1;
+        address ??= Address.IP();
+        return new Port(portId, address, "Ethernet");
     }
 }

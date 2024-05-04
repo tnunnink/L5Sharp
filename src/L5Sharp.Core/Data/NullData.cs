@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents a null <see cref="LogixData"/> implementation, or a type that is neither atomic, structure, array,
-/// or string.
+/// nor string.
 /// </summary>
 /// <remarks>This would be the default for any tag that has no data type defined.</remarks>
 public sealed class NullData : LogixData

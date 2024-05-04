@@ -1,0 +1,74 @@
+﻿<Tag Name="MyComplexTag" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="ComplexType">
+  <Data Format="Decorated">
+    <Structure DataType="ComplexType">
+      <StructureMember Name="SimpleMember" DataType="SimpleType">
+        <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+      </StructureMember>
+      <StructureMember Name="CounterMember" DataType="COUNTER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="CU" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="CD" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="OV" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="UN" DataType="BOOL" Radix="Decimal" Value="0" />
+      </StructureMember>
+      <StructureMember Name="TimeMember" DataType="TIMER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+      </StructureMember>
+      <StructureMember Name="AlarmMember" DataType="ALARM">
+        <DataValueMember Name="EnableIn" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="EnableOut" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="HHAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="HAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="LAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="LLAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0" />
+        <DataValueMember Name="Status" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="InstructFault" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DeadbandInv" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Radix="Decimal" Value="0" />
+      </StructureMember>
+      <StructureMember Name="AOIType" DataType="aoi_Test" />
+      <StructureMember Name="SimplArray" DataType="SimpleType">
+        <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+      </StructureMember>
+      <DataValueMember Name="NewMember" DataType="BOOL" Radix="Decimal" Value="0" />
+      <StructureMember Name="StringMember" DataType="STRING">
+        <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"><![CDATA['']]></DataValueMember>
+      </StructureMember>
+      <StructureMember Name="MyStringMember" DataType="MyStringType">
+        <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DATA" DataType="SINT" Radix="Decimal" Value="0" />
+      </StructureMember>
+    </Structure>
+  </Data>
+</Tag>

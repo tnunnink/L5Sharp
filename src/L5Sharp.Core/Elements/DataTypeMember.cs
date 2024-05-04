@@ -154,9 +154,60 @@ public class DataTypeMember : LogixObject
     }
 
     /// <summary>
-    /// Gets the parent <see cref="Core.DataType"/> component that this <c>Member</c> is contained by. If this
-    /// <c>Member</c> is not contained or attached to a <c>L5X</c> document, this returns <c>null</c>.
+    /// Gets the parent <see cref="Core.DataType"/> component that this member is contained by. If this
+    /// member is not contained or attached to a L5X document, this returns null.
     /// </summary>
-    /// <value>A <see cref="Core.DataType"/> representing the parent type for this <c>Member</c>.</value>
+    /// <value>A <see cref="Core.DataType"/> representing the parent type for this member.</value>
     public DataType? Parent => GetAncestor<DataType>();
+
+    /// <summary>
+    /// Gets the <see cref="Core.DataType"/> component that defines the structure of this <see cref="DataTypeMember"/>.
+    /// </summary>
+    /// <remarks>
+    /// This uses the attached L5X to retrieve the data type component this member references by name. If this member is
+    /// not attached or the L5X does not container the data type reference, this will return a default component with the
+    /// name specified by this member.
+    /// </remarks>
+    public DataType Definition => GetDefinition(); //todo we need to handle atomic types
+
+    /// <summary>
+    /// Converts the current instance of <see cref="DataTypeMember"/> to a <see cref="Member"/>.
+    /// </summary>
+    /// <returns>A new instance of <see cref="Member"/> based on the properties of the <see cref="DataTypeMember"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the Name or DataType is null or empty.</exception>
+    public Member ToMember()
+    {
+        var isArray = Dimension is not null && Dimension.Length > 0;
+
+        //Create the data type using the static factory method.
+        var data = LogixData.Create(DataType);
+
+        //If it's a known type (i.e. not ComplexData) we can just return that.
+        if (data is not ComplexData)
+        {
+            var value = !isArray ? data : new ArrayData<LogixData>(data, Dimension!);
+            return new Member(Name, value);
+        }
+
+        //If not, we can try to get the data type definition from the l5X if attached,
+        //and use that to recusively build up the complex type.
+        var definition = GetDefinition();
+        var structure = !isArray ? definition.ToData() : new ArrayData<LogixData>(definition.ToData(), Dimension!);
+        return new Member(Name, structure);
+    }
+
+    /// <summary>
+    /// Attempts to get the <see cref="Core.DataType"/> object that represents this member's type definition.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private DataType GetDefinition()
+    {
+        //Just going to return a dummy DataType here since it is atomic or not able to be retrieved.
+        if (AtomicData.IsAtomic(DataType) || L5X is null)
+            return new DataType(DataType);
+
+        var defintion = L5X.DataTypes.Find(DataType);
+        return defintion ?? new DataType(DataType);
+    }
 }

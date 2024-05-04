@@ -332,6 +332,15 @@
       <None Update="Components\TaskTests.AddProgram_ValidProgram_ShouldBeVerified.verified.xml">
         <DependentUpon>TaskTests.cs</DependentUpon>
       </None>
+      <None Update="Components\DataTypeTests.Serialize_Parameterized_ShouldBeVerified.verified.txt">
+        <DependentUpon>DataTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\DataTypeTests.ToTag_SimpleType_ShouldBeVerified.verified.txt">
+        <DependentUpon>DataTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\DataTypeTests.ToTag_ComplexType_ShouldBeVerified.verified.txt">
+        <DependentUpon>DataTypeTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,0 +1,8 @@
+﻿<DataType Name="Test" Family="StringFamily" Class="Predefined">
+  <Description><![CDATA[This is a test type]]></Description>
+  <Members>
+    <Member Name="Member01" DataType="" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="false" />
+    <Member Name="Member02" DataType="" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="false" />
+    <Member Name="Member03" DataType="" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="false" />
+  </Members>
+</DataType>

@@ -25,25 +25,21 @@ public class Module : LogixComponent
         L5XName.Communications,
         L5XName.ExtendedProperties
     ];
-    
+
     /// <inheritdoc />
     public Module() : base(L5XName.Module)
     {
         CatalogNumber = string.Empty;
-        Vendor = Vendor.Unknown;
-        ProductType = ProductType.Unknown;
-        ProductCode = default;
         Revision = new Revision();
         ParentModule = string.Empty;
         ParentModPortId = default;
-        Inhibited = default;
-        MajorFault = default;
-        SafetyEnabled = default;
+        Inhibited = false;
+        MajorFault = false;
+        SafetyEnabled = false;
         Keying = ElectronicKeying.CompatibleModule;
         Ports = [];
-        Communications = new Communications();
     }
-    
+
     /// <inheritdoc />
     public Module(XElement element) : base(element)
     {
@@ -176,7 +172,7 @@ public class Module : LogixComponent
     }
 
     /// <summary>
-    /// An indication of whether the module the module will cause a major fault when faulted.
+    /// An indication of whether the module will cause a major fault when faulted.
     /// </summary>
     public bool MajorFault
     {
@@ -185,7 +181,7 @@ public class Module : LogixComponent
     }
 
     /// <summary>
-    /// An indication of whether whether the module has safety features enabled.
+    /// An indication of whether the module has safety features enabled.
     /// </summary>
     public bool SafetyEnabled
     {
@@ -243,6 +239,7 @@ public class Module : LogixComponent
     }
 
     //Properties or methods extending the functionality of a Module component.
+
     #region Extensions
 
     /// <summary>
@@ -264,7 +261,7 @@ public class Module : LogixComponent
     /// This property looks for an Ethernet type <see cref="Port"/> with a valid IPv4 address.
     /// </remarks>
     public IPAddress? IP =>
-        Ports.FirstOrDefault(p => p is {Type: "Ethernet", Address.IsIPv4: true})?.Address.ToIPAddress();
+        Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address.ToIPAddress();
 
     /// <summary>
     /// Gets the parent module of this module component defined in the current L5X document.
@@ -375,7 +372,7 @@ public class Module : LogixComponent
         if (parentPort.Address.IsSlot && IsAttached && address is null) address = NextSlot();
         address ??= Address.Slot();
 
-        var childPort = new Port {Id = 1, Type = parentPort.Type, Address = address, Upstream = true};
+        var childPort = new Port { Id = 1, Type = parentPort.Type, Address = address, Upstream = true };
 
         child.ParentModule = Name;
         child.ParentModPortId = parentPort.Id;
@@ -394,7 +391,7 @@ public class Module : LogixComponent
     /// </summary>
     /// <param name="name">The name of the module</param>
     /// <param name="catalogNumber">The catalog number to lookup a catalog entry for.</param>
-    /// <param name="address"></param>
+    /// <param name="address">The optional <see cref="Address"/> defining the slot or IP address of the device.</param>
     /// <returns>A new <see cref="Module"/> object initialized with data return by the catalog service.</returns>
     /// <exception cref="InvalidOperationException">The module catalog service could not load the installed catalog
     /// database file -or- catalog number does not exist in the catalog database.</exception>
@@ -403,7 +400,7 @@ public class Module : LogixComponent
     /// This factory method uses the <see cref="ModuleCatalog"/> service to lookup info for the specified
     /// catalog number. If RSLogix is not installed on the current environment, this will throw an exception.
     /// </remarks>
-    public static Module New(string name, string catalogNumber, Address? address = null)
+    public static Module Create(string name, string catalogNumber, Address? address = null)
     {
         var catalog = new ModuleCatalog();
         var entry = catalog.Lookup(catalogNumber);
@@ -425,6 +422,41 @@ public class Module : LogixComponent
                     Upstream = !p.DownstreamOnly
                 }).ToList()),
             Description = entry.Description
+        };
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Module"/> instance that represents the local controller module for a project.
+    /// </summary>
+    /// <param name="processor">The processor catalog number for the module.</param>
+    /// <param name="revision">The software revision of the controller.</param>
+    /// <returns>A new <see cref="Module"/> representing a default local controller module instance.</returns>
+    public static Module Local(string processor, Revision? revision = default)
+    {
+        var catalog = new ModuleCatalog();
+        
+        var entry = catalog.Lookup(processor);
+
+        return new Module
+        {
+            Name = "Local",
+            CatalogNumber = entry.CatalogNumber,
+            Vendor = entry.Vendor,
+            ProductType = entry.ProductType,
+            ProductCode = entry.ProductCode,
+            Revision = revision ?? entry.Revisions.Max(),
+            ParentModule = "Local",
+            ParentModPortId = 1,
+            MajorFault = true,
+            Keying = ElectronicKeying.Disabled,
+            Ports = new LogixContainer<Port>(
+                entry.Ports.Select(p => new Port
+                {
+                    Id = p.Number,
+                    Type = p.Type,
+                    Address = p.Type == "Ethernet" ? Address.IP() : Address.Slot(),
+                    Upstream = !p.DownstreamOnly
+                }).ToList()),
         };
     }
 
@@ -460,6 +492,6 @@ public static class ModuleExtensions
     /// </summary>
     /// <param name="modules">A collection of modules.</param>
     /// <returns>A single <see cref="Module"/> which is named local if found; Otherwise, <c>null</c>.</returns>
-    /// <remarks>This is a helper to concisely get the controller or root local module from the modules collection.</remarks>
+    /// <remarks>This is a helper to concisely get the controller or root local module from the module collection.</remarks>
     public static Module? Local(this IEnumerable<Module> modules) => modules.SingleOrDefault(m => m.Name == "Local");
 }

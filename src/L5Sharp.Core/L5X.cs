@@ -87,7 +87,7 @@ public class L5X : ILogixSerializable
 
         //This stores L5X object as in-memory object for the root XElement,
         //allowing child elements to retrieve the object locally without creating a new instance and potentially
-        //reindexing of the XML content. This allows them to reference to root L5X for cross referencing or other operations.
+        //reindexing of the XML content. This allows them to reference to root L5X for cross-referencing or other operations.
         _content.AddAnnotation(this);
     }
 
@@ -101,7 +101,7 @@ public class L5X : ILogixSerializable
     /// </summary>
     /// <value>A <see cref="Core.Controller"/> component object.</value>
     /// <remarks>If the L5X does not <c>ContainContext</c>, meaning it is a project export, this will contain all the
-    /// relevant controller properties and configurations. Otherwise most data will be null as the controller serves as
+    /// relevant controller properties and configurations. Otherwise, most data will be null as the controller serves as
     /// just a root container for other component objects.</remarks>
     public Controller Controller => new(GetController());
 
@@ -192,27 +192,25 @@ public class L5X : ILogixSerializable
 #endif
 
     /// <summary>
-    /// Creates a new blank <see cref="L5X"/> file with the standard root content and controller elements, and configures them
-    /// with the provided controller name, processor, and revision. 
+    /// Creates a new blank <see cref="L5X"/> file with the standard root content and controller elements,
+    /// and configures them with the provided controller name, processor, and revision. Also adds the Local controller
+    /// Module component as Studio does so that module scan be added in memory. 
     /// </summary>
     /// <param name="name">The name of the controller.</param>
     /// <param name="processor">The processor type of the controller.</param>
     /// <param name="revision">The optional software revision of the processor.</param>
     /// <returns>A new <see cref="L5X"/> instance with the specified controller properties.</returns>
     /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="processor"/> is null or empty.</exception>
-    public static L5X New(string name, string processor, Revision? revision = null)
+    public static L5X New(string name, string processor, Revision revision)
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.");
-        if (string.IsNullOrEmpty(processor)) throw new ArgumentException("Name can not be null or empty.");
+        if (string.IsNullOrEmpty(processor)) throw new ArgumentException("Processor can not be null or empty.");
+        if (revision is null) throw new ArgumentException("Revision can not be null.");
 
         var content = NewContent(name, nameof(Controller), revision);
+        var controller = new Controller(name, processor, revision) { Use = Use.Target };
+        content.Add(controller.Serialize());
 
-        var controller = new XElement(L5XName.Controller,
-            new XAttribute(L5XName.Name, name),
-            new XAttribute(L5XName.ProcessorType, processor)
-        );
-
-        content.Add(controller);
         return new L5X(content);
     }
 
@@ -226,10 +224,14 @@ public class L5X : ILogixSerializable
     /// <exception cref="ArgumentNullException"><paramref name="component"/> is null.</exception>
     public static L5X New(LogixComponent component, Revision? revision = null)
     {
-        if (component is null) throw new ArgumentNullException(nameof(component));
+        if (component is null)
+            throw new ArgumentNullException(nameof(component));
+
         var content = NewContent(component.Name, component.L5XType, revision);
+
         var file = new L5X(content);
         file.Add(component);
+
         return file;
     }
 
@@ -265,7 +267,7 @@ public class L5X : ILogixSerializable
     /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
     /// <remarks>
     /// <para>
-    /// This methods provides a flexible and simple way to query the entire L5X for a specific type. This method is allows
+    /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
     /// specifying the type at runtime as opposed the generic type but sacrifices the strong type querying of the
     /// generic counterpart. This method does not make use of any optimized searching, so if you want to find items quickly,
     /// see &lt;c&gt;FindComponent&lt;/c&gt; or &lt;c&gt;FindTag&lt;/c&gt; method.
@@ -293,7 +295,7 @@ public class L5X : ILogixSerializable
     /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
     /// <remarks>
     /// <para>
-    /// This methods provides a flexible and simple way to query the entire L5X for a specific type. This method is allows
+    /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
     /// specifying the type at runtime as opposed the generic type but sacrifices the strong type querying of the
     /// generic counterpart. This method does not make use of any optimized searching, so if you want to find items quickly,
     /// see &lt;c&gt;FindComponent&lt;/c&gt; or &lt;c&gt;FindTag&lt;/c&gt; method.
@@ -323,8 +325,8 @@ public class L5X : ILogixSerializable
     /// <typeparam name="TElement">The element type to find.</typeparam>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects of the specified type.</returns>
     /// <remarks>
-    /// This methods provides a flexible and simple way to query the entire L5X for a specific type. Since
-    /// it returns an <see cref="IEnumerable{T}"/>, you can make use of LINQ and the strongly typed objects to build
+    /// This method provides a flexible and simple way to query the entire L5X for a specific type. Since
+    /// it returns <see cref="IEnumerable{T}"/>, you can make use of LINQ and the strongly typed objects to build
     /// more complex queries.
     /// </remarks>
     public IEnumerable<TElement> Query<TElement>() where TElement : LogixElement
@@ -343,7 +345,7 @@ public class L5X : ILogixSerializable
     /// <remarks>
     /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top level
     /// container, it will work for most types. However, note that this only adds to the first container found of the specific type.
-    /// If you are adding scoped components such as <see cref="Tag"/> or <see cref="Routine"/> you should be doing so in the context
+    /// If you are adding scoped components such as, <see cref="Tag"/> or <see cref="Routine"/> you should be doing so in the context
     /// of a specific <see cref="Program"/> component, or use the overload accepting a specific container.
     /// </remarks>
     /// <seealso cref="Add(LogixComponent,string)"/>
@@ -362,7 +364,7 @@ public class L5X : ILogixSerializable
     /// <exception cref="InvalidOperationException">No container was found in the L5X for the specified type and container name.</exception>
     /// <remarks>
     /// This provides a more dynamic way to add content to an L5X file. This method will look for a container element
-    /// within the specified container/scope name. Therefore it is important to be sure you specify the correct type and
+    /// within the specified container/scope name. Therefore, it is important to be sure you specify the correct type and
     /// container name. For example, if you try to add a Module to a Program, this will fail even if a program with the
     /// container name exists, because there is no Modules container in a Program component.
     /// </remarks>

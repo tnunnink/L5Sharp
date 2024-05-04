@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Tests.Data.Custom;
 
 namespace L5Sharp.Tests.Types.Custom;
 

@@ -5,7 +5,6 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>SINT</b> Logix atomic data type, or a type analogous to <see cref="sbyte"/>.
 /// </summary>
-[L5XType(nameof(SINT))]
 public sealed class SINT : AtomicData, IComparable, IConvertible, ILogixParsable<SINT>
 {
     /// <summary>

@@ -17,9 +17,9 @@ public class Parameter : LogixObject
     protected override List<string> ElementOrder =>
     [
         L5XName.Description,
-        L5XName.DefaultData,
+        L5XName.DefaultData
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="Parameter"/> with default values.
     /// </summary>
@@ -27,10 +27,10 @@ public class Parameter : LogixObject
     {
         Name = string.Empty;
         TagType = TagType.Base;
-        DataType = string.Empty;
+        DataType = nameof(DINT);
         Dimension = Dimensions.Empty;
         Usage = TagUsage.Input;
-        Radix = Radix.Null;
+        Radix = Radix.Decimal;
         Required = false;
         Visible = false;
         ExternalAccess = ExternalAccess.ReadWrite;
@@ -45,7 +45,26 @@ public class Parameter : LogixObject
     public Parameter(XElement element) : base(element)
     {
     }
-    
+
+    /// <summary>
+    /// Creates a new <see cref="Parameter"/> with the provided name, default atomic value, and optional usage.
+    /// </summary>
+    /// <param name="name">The name of the parameter.</param>
+    /// <param name="value">The default <see cref="AtomicData"/> of the parameter.</param>
+    /// <param name="usage">The <see cref="TagUsage"/> type of the parameter (this should be Input or Output).</param>
+    /// <remarks>
+    /// This constructor if meant to create simple atomic Input/Output parameters which can be used as members
+    /// of the complex tag data structure for an AOI component.
+    /// </remarks>
+    public Parameter(string name, AtomicData value, TagUsage? usage = default) : this()
+    {
+        Element.SetAttributeValue(L5XName.Name, name);
+        DataType = value.Name;
+        Radix = value.Radix;
+        Default = value;
+        Usage = usage ?? TagUsage.Input;
+    }
+
     /// <summary>
     /// The unique name of the <c>Parameter</c>.
     /// </summary>
@@ -100,7 +119,7 @@ public class Parameter : LogixObject
     /// <value>
     /// A <see cref="Core.Radix"/> representing the value type format of the <c>Parameter</c>.
     /// Default is <see cref="L5Sharp.Core.Radix.Null"/>.
-    /// Should be <see cref="L5Sharp.Core.Radix.Null"/> for all non atomic types.
+    /// Should be <see cref="L5Sharp.Core.Radix.Null"/> for all non-atomic types.
     /// </value>
     public Radix? Radix
     {
@@ -120,7 +139,7 @@ public class Parameter : LogixObject
         get => GetValue<ExternalAccess>();
         set => SetValue(value);
     }
-        
+
     /// <summary>
     /// A type indicating whether the current <c>Parameter</c> is a base tag, or alias for another tag instance.
     /// </summary>
@@ -133,7 +152,7 @@ public class Parameter : LogixObject
         get => GetValue<TagType>();
         set => SetValue(value);
     }
-        
+
     /// <summary>
     /// The usage option indicating the scope in which the <c>Parameter</c> is visible or usable from.
     /// </summary>
@@ -147,7 +166,7 @@ public class Parameter : LogixObject
         get => GetRequiredValue<TagUsage>();
         set => SetRequiredValue(value);
     }
-        
+
     /// <summary>
     /// Indicates whether the <c>Parameter</c> is required form the instruction code clock.
     /// </summary>
@@ -158,17 +177,17 @@ public class Parameter : LogixObject
         get => GetValue<bool>();
         set => SetValue(value);
     }
-        
+
     /// <summary>
     /// Indicates whether the <c>Parameter</c> is visible from the instruction code block.
     /// </summary>
     /// <value><c>true</c> if the <c>Parameter</c> is visible; otherwise, false. Default is <c>false</c>.</value>
-    public bool? Visible 
+    public bool? Visible
     {
         get => GetValue<bool>();
         set => SetValue(value);
     }
-        
+
     /// <summary>
     /// The tag name of the tag that is the alias of the current <c>Parameter</c>.
     /// </summary>
@@ -198,5 +217,51 @@ public class Parameter : LogixObject
     {
         get => GetValue<bool>();
         set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> instance from this <see cref="Parameter"/> configuration.
+    /// </summary>
+    /// <param name="tagName">The name of the tag.</param>
+    /// <returns>A <see cref="Tag"/> instance with the specified name and value populated using this parameter's configuration.</returns>
+    /// <exception cref="InvalidOperationException"><see cref="DataType"/> is null or emprty.</exception>
+    /// <remarks>
+    /// This is a helper to allow us to generate default tag instance from a parameter element. This will internally
+    /// generate a default <see cref="LogixData"/> instance using the configured data typ name of the parameter.
+    /// </remarks>
+    public Tag ToTag(string tagName)
+    {
+        if (string.IsNullOrEmpty(DataType))
+            throw new InvalidOperationException("Can not generate Tag with null or empty DataType name.");
+
+        var isArray = Dimension is not null && Dimension.Length > 0;
+        var data = Default ?? LogixData.Create(DataType);
+        var value = !isArray ? data.As<LogixData>() : new ArrayData<LogixData>(data, Dimension!);
+        return new Tag(tagName, value);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Member"/> from the given <see cref="Parameter"/> configuration, which uses the
+    /// <see cref="DataType"/> <see cref="Default"/> and <see cref="Name"/> in order to generate a new member instance.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"><see cref="DataType"/> is null or empty -or- <see cref="Usage"/>
+    /// is not configured as Input or Output.</exception>
+    /// <returns>A <see cref="Member"/> instance with the name and default value of the current parameter.</returns>
+    /// <remarks>
+    /// This is helper to allow us to generate default tag members from a given parameter, so that we
+    /// can easily build up an in memory instance of an AOI tag component. Note that this method is intended to only be
+    /// called on Input or Output parameters which Logix requires to be atomic type parameters. these are the only parameter
+    /// types that are available on a AOI tag instance.
+    /// </remarks>
+    public Member ToMember()
+    {
+        if (string.IsNullOrEmpty(DataType))
+            throw new InvalidOperationException("Can not generate Member with null or empty DataType name.");
+
+        if (Usage != TagUsage.Input && Usage != TagUsage.Output)
+            throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
+
+        var value = Default ?? AtomicData.Default(DataType);
+        return new Member(Name, value);
     }
 }

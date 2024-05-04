@@ -143,14 +143,14 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, ILogixParsable
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="DINT"/> value.</returns>
-    public static implicit operator DINT(string value) => Parse(value);
+    public static explicit operator DINT(string value) => Parse(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="DINT"/> to a <see cref="string"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="string"/> value.</returns>
-    public static implicit operator string(DINT value) => value.ToString();
+    public static explicit operator string(DINT value) => value.ToString();
 
     #endregion
 
