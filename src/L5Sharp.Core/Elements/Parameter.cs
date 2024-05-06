@@ -202,9 +202,9 @@ public class Parameter : LogixObject
     /// A default value of the <c>Parameter</c> when instantiated.
     /// </summary>
     /// <value>An <see cref="AtomicData"/> representing the default value/data. Default is <c>null</c>.</value>
-    public AtomicData? Default
+    public LogixData Default
     {
-        get => GetData().As<AtomicData>();
+        get => GetData();
         set => SetData(value);
     }
 
@@ -235,7 +235,7 @@ public class Parameter : LogixObject
             throw new InvalidOperationException("Can not generate Tag with null or empty DataType name.");
 
         var isArray = Dimension is not null && Dimension.Length > 0;
-        var data = Default ?? LogixData.Create(DataType);
+        var data = Default is not NullData ? Default : LogixData.Create(DataType);
         var value = !isArray ? data.As<LogixData>() : new ArrayData<LogixData>(data, Dimension!);
         return new Tag(tagName, value);
     }
@@ -261,7 +261,7 @@ public class Parameter : LogixObject
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)
             throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
 
-        var value = Default ?? AtomicData.Default(DataType);
+        var value = Default is not NullData ? Default : AtomicData.Default(DataType);
         return new Member(Name, value);
     }
 }

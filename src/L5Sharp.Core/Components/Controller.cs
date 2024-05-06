@@ -109,7 +109,7 @@ public class Controller : LogixComponent
     public bool? ShareUnusedTimeSlice
     {
         get => GetValue<bool?>();
-        set => SetValue(value);
+        set => SetBit(value);
     }
 
     /// <summary>

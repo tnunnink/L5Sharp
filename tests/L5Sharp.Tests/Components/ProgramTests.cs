@@ -29,6 +29,7 @@ public class ProgramTests
         program.UseAsFolder.Should().BeFalse();
         program.Tags.Should().BeEmpty();
         program.Routines.Should().BeEmpty();
+        program.Children.Should().BeEmpty();
     }
 
     [Test]

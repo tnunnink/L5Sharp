@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Xml.Linq;
+using FluentAssertions;
 
 namespace L5Sharp.Tests.Components;
 
@@ -19,7 +20,7 @@ public class ControllerTests
         var controller = new Controller();
 
         controller.Name.Should().BeEmpty();
-        controller.Description.Should().BeNull();;
+        controller.Description.Should().BeNull();
         controller.Revision.Should().Be(new Revision());
         controller.ProcessorType.Should().BeNull();
         controller.TimeSlice.Should().BeNull();
@@ -84,8 +85,7 @@ public class ControllerTests
             },
             Security = new Security
             {
-                SecurityAuthorityID = "TestSecurityAuthorityID" 
-                
+                SecurityAuthorityID = "TestSecurityAuthorityID"
             },
             RedundancyInfo = new RedundancyInfo
             {
@@ -135,6 +135,63 @@ public class ControllerTests
     }
 
     [Test]
+    public void New_Element_ShouldHaveExpectedValues()
+    {
+        const string xml =
+            """
+            <Controller Name="Test" Use="Context" MajorRev="33" MinorRev="12" ProcessorType="TestProcessorType" TimeSlice="TestTimeSlice" ShareUnusedTimeSlice="1" PowerLossProgram="TestPowerLossProgram" MajorFaultProgram="TestMajorFaultProgram" CommPath="TestCommPath" CommDriver="TestCommDriver" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="AutomaticReset" ProjectSN="TestProjectSN" MatchProjectToController="Yes" InhibitAutomaticFirmwareUpdate="1" CurrentProjectLanguage="TestCurrentProjectLanguage" DefaultProjectLanguage="TestDefaultProjectLanguage" ControllerLanguage="TestControllerLanguage" CanUseRPIFromProducer="true" PassThroughConfiguration="Disabled" DownloadProjectDocumentationAndExtendedProperties="true">
+              <Description>This is a test</Description>
+              <RedundancyInfo Enabled="true" DataTablePadPercentage="50" IOMemoryPadPercentage="50" KeepTestEditsOnSwitchOver="true" />
+              <Security SecurityAuthorityID="TestSecurityAuthorityID" />
+              <SafetyInfo SafetyLocked="true" SafetySignature="Test SafetSignature">
+                <SafetyTagMap>TestTag,TestTag</SafetyTagMap>
+              </SafetyInfo>
+            </Controller>
+            """;
+
+        var element = XElement.Parse(xml);
+
+        var controller = new Controller(element);
+
+        controller.Name.Should().Be("Test");
+        controller.Description.Should().Be("This is a test");
+        controller.Revision.Should().Be(new Revision(33, 12));
+        controller.ProcessorType.Should().Be("TestProcessorType");
+        controller.TimeSlice.Should().Be("TestTimeSlice");
+        controller.ShareUnusedTimeSlice.Should().BeTrue();
+        controller.PowerLossProgram.Should().Be("TestPowerLossProgram");
+        controller.MajorFaultProgram.Should().Be("TestMajorFaultProgram");
+        controller.CommPath.Should().Be("TestCommPath");
+        controller.CommDriver.Should().Be("TestCommDriver");
+        controller.ProjectCreationDate.Should().BeWithin(TimeSpan.FromSeconds(1));
+        controller.LastModifiedDate.Should().BeWithin(TimeSpan.FromSeconds(1));
+        controller.SFCExecutionControl.Should().Be(SFCExecutionControl.CurrentActive);
+        controller.SFCRestartPosition.Should().Be(SFCRestartPosition.MostRecent);
+        controller.SFCLastScan.Should().Be(SFCLastScan.AutomaticReset);
+        controller.ProjectSN.Should().Be("TestProjectSN");
+        controller.MatchProjectToController.Should().BeTrue();
+        controller.InhibitAutomaticFirmwareUpdate.Should().BeTrue();
+        controller.CurrentProjectLanguage.Should().Be("TestCurrentProjectLanguage");
+        controller.DefaultProjectLanguage.Should().Be("TestDefaultProjectLanguage");
+        controller.ControllerLanguage.Should().Be("TestControllerLanguage");
+        controller.CanUseRPIFromProducer.Should().BeTrue();
+        controller.PassThroughConfiguration.Should().Be(PassThroughOption.Disabled);
+        controller.DownloadProjectDocumentationAndExtendedProperties.Should().BeTrue();
+        controller.SafetyInfo.Should().NotBeNull();
+        controller.SafetyInfo?.SafetyLocked.Should().BeTrue();
+        controller.SafetyInfo?.SafetySignature.Should().Be("Test SafetSignature");
+        controller.SafetyInfo?.SafetyTagMap.Should().NotBeNull();
+        controller.SafetyInfo?.SafetyTagMap.Should().Contain("TestTag");
+        controller.Security?.Should().NotBeNull();
+        controller.Security?.SecurityAuthorityID.Should().Be("TestSecurityAuthorityID");
+        controller.RedundancyInfo.Should().NotBeNull();
+        controller.RedundancyInfo?.Enabled.Should().BeTrue();
+        controller.RedundancyInfo?.DataTablePadPercentage.Should().Be(50);
+        controller.RedundancyInfo?.IOMemoryPadPercentage.Should().Be(50);
+        controller.RedundancyInfo?.KeepTestEditsOnSwitchOver.Should().BeTrue();
+    }
+
+    [Test]
     public Task Serialize_Overriden_ShouldBeVerified()
     {
         var controller = new Controller
@@ -163,7 +220,7 @@ public class ControllerTests
             CanUseRPIFromProducer = true,
             PassThroughConfiguration = PassThroughOption.Disabled,
             DownloadProjectDocumentationAndExtendedProperties = true,
-            SafetyInfo = new SafetyInfo()
+            SafetyInfo = new SafetyInfo
             {
                 SafetyLocked = true,
                 SafetySignature = "Test SafetSignature",
@@ -171,8 +228,7 @@ public class ControllerTests
             },
             Security = new Security
             {
-                SecurityAuthorityID = "TestSecurityAuthorityID" 
-                
+                SecurityAuthorityID = "TestSecurityAuthorityID"
             },
             RedundancyInfo = new RedundancyInfo
             {
@@ -184,7 +240,7 @@ public class ControllerTests
         };
 
         var xml = controller.Serialize().ToString();
-        
+
         return VerifyXml(xml)
             .IgnoreMember("ProjectCreationDate")
             .IgnoreMember("LastModifiedDate");

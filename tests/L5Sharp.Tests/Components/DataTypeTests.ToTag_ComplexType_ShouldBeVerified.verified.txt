@@ -52,14 +52,58 @@
         <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Radix="Decimal" Value="0" />
       </StructureMember>
       <StructureMember Name="AOIType" DataType="aoi_Test" />
-      <StructureMember Name="SimplArray" DataType="SimpleType">
-        <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
-        <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
-      </StructureMember>
+      <ArrayMember Name="SimplArray" DataType="SimpleType" Dimensions="5">
+        <Element Index="[0]">
+          <Structure DataType="SimpleType">
+            <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+          </Structure>
+        </Element>
+        <Element Index="[1]">
+          <Structure DataType="SimpleType">
+            <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+          </Structure>
+        </Element>
+        <Element Index="[2]">
+          <Structure DataType="SimpleType">
+            <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+          </Structure>
+        </Element>
+        <Element Index="[3]">
+          <Structure DataType="SimpleType">
+            <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+          </Structure>
+        </Element>
+        <Element Index="[4]">
+          <Structure DataType="SimpleType">
+            <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="0" />
+            <DataValueMember Name="SintMember" DataType="SINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="IntMember" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+          </Structure>
+        </Element>
+      </ArrayMember>
       <DataValueMember Name="NewMember" DataType="BOOL" Radix="Decimal" Value="0" />
       <StructureMember Name="StringMember" DataType="STRING">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
@@ -67,7 +111,7 @@
       </StructureMember>
       <StructureMember Name="MyStringMember" DataType="MyStringType">
         <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
-        <DataValueMember Name="DATA" DataType="SINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DATA" DataType="MyStringType" Radix="ASCII"><![CDATA['']]></DataValueMember>
       </StructureMember>
     </Structure>
   </Data>

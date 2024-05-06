@@ -17,7 +17,19 @@ public class ParameterTests
     }
 
     [Test]
-    public void METHOD()
+    public void ToTag_ValidName_ShouldBeExpected()
     {
+        var parameter = new Parameter
+        {
+            Name = "Test",
+            DataType = "MyDataType"
+        };
+
+        var tag = parameter.ToTag("MyParameterTag");
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("MyParameterTag");
+        tag.DataType.Should().Be("MyDataType");
+        tag.Value.Should().BeOfType<ComplexData>();
     }
 }

@@ -105,13 +105,17 @@ public static class LogixParser
     /// <exception cref="InvalidOperationException">Thrown when no parse function has been defined for the specified type.</exception>
     /// <remarks>
     /// Simply looks to the local parser cache and returns one if found for the specified type.
-    /// Otherwise will use the <see cref="TypeDescriptor"/> of the current type and return the ConvertFrom function
+    /// Otherwise, will use the <see cref="TypeDescriptor"/> of the current type and return the ConvertFrom function
     /// if is capable of converting from a string type.
     /// </remarks>
     private static Func<string, object> GetParser(Type type)
     {
         if (Parsers.Value.TryGetValue(type, out var parsers))
             return parsers.Parse;
+
+        //Intercept any .NET bool type because we want to handle 1/0 case as Logix sometimes uses those values instead of true/false.
+        if (type == typeof(bool) || Nullable.GetUnderlyingType(type) == typeof(bool))
+            return s => ParseBool(s);
 
         //The fallback is just seeing if the type has a defined converter which primitive types do.
         var converter = TypeDescriptor.GetConverter(type);
@@ -128,13 +132,17 @@ public static class LogixParser
     /// <returns>The parser function that can attempt to parse a string into an object of the specified type and return default if not..</returns>
     /// <remarks>
     /// Simply looks to the local parser cache and returns one if found for the specified type.
-    /// Otherwise will use the <see cref="TypeDescriptor"/> of the current type and return the ConvertFrom function
+    /// Otherwise, will use the <see cref="TypeDescriptor"/> of the current type and return the ConvertFrom function
     /// if is capable of converting from a string type. If nothing is found then returns a func that always returns <c>null</c>.
     /// </remarks>
     private static Func<string, object?> GetTryParser(Type type)
     {
         if (Parsers.Value.TryGetValue(type, out var parsers))
             return parsers.TryParse;
+        
+        //Intercept any .NET bool type because we want to handle 1/0 case as Logix sometimes uses those values instead of true/false.
+        if (type == typeof(bool) || Nullable.GetUnderlyingType(type) == typeof(bool))
+            return s => TryParseBool(s);
 
         //The fallback is just seeing if the type has a defined converter which primitive types do.
         var converter = TypeDescriptor.GetConverter(type);
@@ -224,11 +232,11 @@ public static class LogixParser
         var parameters = info.GetParameters();
 
         return info.Name.Equals("Parse")
-               && info.ReturnType.IsAssignableFrom(type) 
+               && info.ReturnType.IsAssignableFrom(type)
                && parameters.Length == 1
                && parameters[0].ParameterType == typeof(string);
     }
-    
+
     /// <summary>
     /// Determines if the provided method info represents the <c>TryParse</c> function defined by the
     /// interface <see cref="ILogixParsable{T}"/>.
@@ -238,9 +246,54 @@ public static class LogixParser
         var parameters = info.GetParameters();
 
         return info.Name.Equals("TryParse")
-               && info.ReturnType.IsAssignableFrom(type) 
+               && info.ReturnType.IsAssignableFrom(type)
                && parameters.Length == 1
                && parameters[0].ParameterType == typeof(string);
+    }
+
+    /// <summary>
+    /// Parses a given string input to a boolean value. This is a custom parser for boolean as Logix sometimes uses
+    /// 1/0 instead of true/false. All booleans will be intercepted and use this custom parser instead of the default
+    /// type descriptor function.
+    /// </summary>
+    private static bool ParseBool(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            throw new ArgumentException("Can not parse null or emprty string to boolean");
+
+        input = input.ToLower();
+
+        return input switch
+        {
+            "1" => true,
+            "0" => false,
+            "true" => true,
+            "false" => false,
+            _ => throw new ArgumentOutOfRangeException(
+                $"The input '{input}' could not be parsed to type '{typeof(bool)}'")
+        };
+    }
+
+    /// <summary>
+    /// Tries to parse a given string input to a boolean value. This is a custom parser for boolean as Logix sometimes uses
+    /// 1/0 instead of true/false. All booleans will be intercepted and use this custom parser instead of the default
+    /// type descriptor function.
+    /// </summary>
+    private static bool? TryParseBool(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return null;
+
+        input = input.ToLower();
+
+        return input switch
+        {
+            "1" => true,
+            "0" => false,
+            "true" => true,
+            "false" => false,
+            _ => null
+        };
     }
 }
 

@@ -3,7 +3,7 @@
     <PropertyGroup>
         <IsPackable>false</IsPackable>
         <ImplicitUsings>true</ImplicitUsings>
-        <LangVersion>10</LangVersion>
+        <LangVersion>12</LangVersion>
         <Nullable>enable</Nullable>
         <TargetFrameworks>net7.0;net481</TargetFrameworks>
         <OutputType>Library</OutputType>
@@ -347,6 +347,7 @@
       <Compile Remove="Core\OperandTests.cs" />
       <Compile Include="Serialization\AddOnInstructionSerializerTests.cs" />
       <Compile Remove="Serialization\**" />
+      <Compile Remove="Utilities\LogixCatalogTests.cs" />
     </ItemGroup>
 
     <ItemGroup>

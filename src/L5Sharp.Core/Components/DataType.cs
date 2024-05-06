@@ -148,8 +148,11 @@ public class DataType : LogixComponent
         //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
         var data = LogixData.Create(Name);
 
-        //If it is not a complex data then it was defined, and we can return it.
+        //If it is not a complex data then it was defined, and we can return it. //todo actually is this correct?
         if (data is not ComplexData complexData) return data;
+        
+        //We need to handle strings types specifically to match Logix custom format.
+        if (Family is not null && Family == DataTypeFamily.String) return new StringData(Name, string.Empty);
 
         //Otherwise, we need to build the members using the configured Members collection.
         var members = Members.Where(m => m.Hidden is not true).Select(m => m.ToMember()).ToList();

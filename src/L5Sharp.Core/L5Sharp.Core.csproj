@@ -7,9 +7,9 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>2.3.0</Version>
-        <AssemblyVersion>2.3.0</AssemblyVersion>
-        <FileVersion>2.3.0.0</FileVersion>
+        <Version>2.3.1</Version>
+        <AssemblyVersion>2.3.1</AssemblyVersion>
+        <FileVersion>2.3.1.0</FileVersion>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
@@ -18,10 +18,8 @@
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
-            Added LogixData.Create to create instance by name.
-            Added ToTag and ToMember for DataType/AOI components and DataTypeMember/Parameter elements.
-            Added new Array and other component constructors.
-            Added Module.Local to generate a new controller module instance given a processor name.
+            Fixed boolean parsing for properties that require 0/1.
+            Added fix to ToTag for DataType to write StringData correctly.
         </PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
