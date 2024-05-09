@@ -10,18 +10,8 @@
   <component name="ChangeListManager">
     <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/DataType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Parameter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Fluent/L5Sharp.Fluent.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.Serialize_Overriden_ShouldBeVerified.verified.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.Serialize_Overriden_ShouldBeVerified.verified.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.ToTag_ComplexType_ShouldBeVerified.verified.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/DataTypeTests.ToTag_ComplexType_ShouldBeVerified.verified.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ProgramTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ProgramTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/ParameterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Elements/ParameterTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5Sharp.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Routine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +69,8 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/544c7e6eb3d5525c6f85341f51217d81d7c8ed80/src/coreclr/System.Private.CoreLib/src/System/Runtime/CompilerServices/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Controller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Controller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Parameter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Parameter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixParser.cs" root0="SKIP_HIGHLIGHTING" />
@@ -109,47 +101,47 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "00960bea-6e5b-4ffa-a837-6a257d42d429.executor": "Debug",
-    "0e18d2ed-03e9-40cf-ac8e-fa663b72efe6.executor": "Debug",
-    "12ada355-e272-4c10-8ea3-cbf556cdfe4b.executor": "Debug",
-    "28598961-6f71-4268-830b-aa8ee7bac48f.executor": "Debug",
-    "40120c9d-d22e-41bf-9ed7-1b69a1f60c44.executor": "Debug",
-    "5220572b-3cd8-46de-864b-43073f0853dd.executor": "Debug",
-    "729a71ab-7fa7-474b-b157-892ceceebcfa.executor": "Debug",
-    "7ceadf7d-811a-447c-b3e4-7d811dd43de2.executor": "Debug",
-    "Notification.DisplayName-DoNotAsk-Plugin Error": "Plugins failed to load",
-    "Notification.DoNotAsk-Plugin Error": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "TODO_SCOPE": "All Places",
-    "WebServerToolWindowFactoryState": "false",
-    "a7604713-2340-41ef-8914-9a0e821f9675.executor": "Debug",
-    "bb4529a5-d289-453a-84c6-89ce8148c18f.executor": "Debug",
-    "d12b03d6-2507-4b76-a844-25ee3820fc29.executor": "Debug",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "HotReloadSettingsPage",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;00960bea-6e5b-4ffa-a837-6a257d42d429.executor&quot;: &quot;Debug&quot;,
+    &quot;0e18d2ed-03e9-40cf-ac8e-fa663b72efe6.executor&quot;: &quot;Debug&quot;,
+    &quot;12ada355-e272-4c10-8ea3-cbf556cdfe4b.executor&quot;: &quot;Debug&quot;,
+    &quot;28598961-6f71-4268-830b-aa8ee7bac48f.executor&quot;: &quot;Debug&quot;,
+    &quot;40120c9d-d22e-41bf-9ed7-1b69a1f60c44.executor&quot;: &quot;Debug&quot;,
+    &quot;5220572b-3cd8-46de-864b-43073f0853dd.executor&quot;: &quot;Debug&quot;,
+    &quot;729a71ab-7fa7-474b-b157-892ceceebcfa.executor&quot;: &quot;Debug&quot;,
+    &quot;7ceadf7d-811a-447c-b3e4-7d811dd43de2.executor&quot;: &quot;Debug&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Plugin Error&quot;: &quot;Plugins failed to load&quot;,
+    &quot;Notification.DoNotAsk-Plugin Error&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;a7604713-2340-41ef-8914-9a0e821f9675.executor&quot;: &quot;Debug&quot;,
+    &quot;bb4529a5-d289-453a-84c6-89ce8148c18f.executor&quot;: &quot;Debug&quot;,
+    &quot;d12b03d6-2507-4b76-a844-25ee3820fc29.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/tnunnink/Documents/GitHub/L5Sharp/src/L5Sharp.sln&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;HotReloadSettingsPage&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "C#"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;C#&quot;
     ],
-    "rider.external.source.directories": [
-      "C:\\Users\\tnunn\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
-      "C:\\Users\\tnunn\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
-      "C:\\Users\\tnunn\\AppData\\Local\\Symbols\\src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\tnunn\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\tnunn\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\tnunn\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration>C:\Users\tnunnink\AppData\Roaming\Subversion</configuration>
@@ -440,7 +432,9 @@
       <workItem from="1714591275215" duration="12997000" />
       <workItem from="1714757753219" duration="11371000" />
       <workItem from="1714784524238" duration="10551000" />
-      <workItem from="1714998628869" duration="5098000" />
+      <workItem from="1714998628869" duration="5407000" />
+      <workItem from="1715096721221" duration="8000" />
+      <workItem from="1715287987855" duration="620000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -785,7 +779,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="351" />
+    <option name="localTasksCounter" value="352" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -821,7 +815,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fix the LogixParser.cs TryParse to return null instead of throwing exceptions for primitive types or unknown types." />
     <MESSAGE value="Update version" />
     <MESSAGE value="updated gitignore" />
     <MESSAGE value="Added ComponentClass.cs. Working on adding IParse to components." />
@@ -846,7 +839,8 @@
     <MESSAGE value="Added new static factory method to LogixData.cs to create instance of type given a name.&#10;&#10;Added new constructors to ArrayData.cs to allow instance to be created via name and dimensions or type and dimensions.&#10;&#10;Added new methods to DataType.cs and AddOnInstruction.cs to allow them to generate a Tag instance from its configuration. Also added methods for generating LogixData instance which they require.&#10;&#10;Added ToMember methods for DataTypeMember.cs and Parameter.cs&#10;&#10;Added new constructor to allow Member.cs to be created by name and data type name which rely on factory method. Also, then added similar constructor to Tag.&#10;&#10;Added and fixed tests and documentation. Renamed some test folder and namespaces." />
     <MESSAGE value="Removed member constructor since it was causing a bunch of errors and it was not really needed. Fixed tests." />
     <MESSAGE value="Updated release notes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated release notes" />
+    <MESSAGE value="Added new ParseBool functions to LogixParser.cs in order to read booleans 0/1 correctly. Added new SetBit method to LogixElement.cs to allow derived classes to set booleans as 0/1. Updated ShareUnusedTimeSlice to use new bit overload. updated documentation. Added fix to DataType.cs ToTag method to write StringData correctly. Fixed/added tests. Updated version." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new ParseBool functions to LogixParser.cs in order to read booleans 0/1 correctly. Added new SetBit method to LogixElement.cs to allow derived classes to set booleans as 0/1. Updated ShareUnusedTimeSlice to use new bit overload. updated documentation. Added fix to DataType.cs ToTag method to write StringData correctly. Fixed/added tests. Updated version." />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

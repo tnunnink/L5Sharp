@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Xml.Linq;
+using FluentAssertions;
 
 namespace L5Sharp.Tests.Components;
 
@@ -49,6 +50,21 @@ public class RoutineTests
         routine.Type.Should().Be(RoutineType.FBD);
         routine.Content<Sheet>().Should().NotBeNull();
         routine.Content<Sheet>().Should().BeEmpty();
+    }
+
+    [Test]
+    public void New_EmptyRoutineElement_ShouldNotBeNullAndAccessingContentShouldWork()
+    {
+        var element = XElement.Parse("<Routine Use=\"Target\" Name=\"Empty\" Type=\"RLL\"/>");
+        var routine = new Routine(element);
+
+        routine.Should().NotBeNull();
+        routine.Name.Should().Be("Empty");
+        routine.Type.Should().Be(RoutineType.RLL);
+        routine.Content<Rung>().Should().NotBeNull();
+        
+        routine.Content<Rung>().Add(new Rung("XIC(Test);"));
+        routine.Content<Rung>().Should().HaveCount(1);
     }
 
     [Test]

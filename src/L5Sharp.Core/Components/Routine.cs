@@ -133,13 +133,25 @@ public class Routine : LogixComponent
     /// </remarks>
     public LogixContainer<TCode> Content<TCode>() where TCode : LogixCode
     {
+        EnsureContentAdded();
+        
         var content = Element.Element(Type.ContentName);
 
         return content is not null
             ? new LogixContainer<TCode>(content)
             : throw Element.L5XError(Type.ContentName);
     }
-    
+
+    /// <summary>
+    /// Ensures that the expected content element is added to this routine element. This prevents emprty routines from
+    /// throwing exceptions when the caller accesses <see cref="Content{TCode}"/>.
+    /// </summary>
+    private void EnsureContentAdded()
+    {
+        if (Element.Element(Type.ContentName) is not null) return;
+        UpdateContent(Type);
+    }
+
     /// <summary>
     /// Updates the current routine's content by setting the required Type attribute and adding or replacing the
     /// child content element with a new element having the name of the provided <see cref="RoutineType"/> content.
