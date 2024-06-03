@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Types;
+namespace L5Sharp.Tests.Data;
 
 [TestFixture]
 public class ComplexDataTests
@@ -105,7 +105,7 @@ public class ComplexDataTests
             new("Member5", new TIMER())
         });
 
-        var clone = type.Clone<ComplexData>();
+        var clone = type.Clone().As<ComplexData>();
 
         clone.Should().BeOfType<ComplexData>();
         clone.Should().NotBeSameAs(type);

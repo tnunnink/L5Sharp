@@ -77,7 +77,7 @@ namespace L5Sharp.Tests.Components
         {
             var task = new LTask { Name = "Test" };
 
-            var clone = task.Clone<LTask>();
+            var clone = task.Clone();
 
             clone.Should().NotBeSameAs(task);
             clone.Name.Should().Be(task.Name);

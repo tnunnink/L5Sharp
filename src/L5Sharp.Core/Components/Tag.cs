@@ -17,7 +17,7 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.ConfigTag)]
 [L5XType(L5XName.InputTag)]
 [L5XType(L5XName.OutputTag)]
-public class Tag : LogixComponent
+public class Tag : LogixComponent<Tag>
 {
     /// <summary>
     /// The underlying member object containing the tag's value. All tags and nested tags wrap a simple member instance.

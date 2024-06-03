@@ -157,6 +157,14 @@ public class AddOnInstructionTests
         tag.Members().ToList().Should().HaveCount(6);
     }
 
+    [Test]
+    public void ToText_ValidArguments_ShouldBeExpected()
+    {
+        var aoi = new AddOnInstruction("TestAOI");
+        var text = aoi.ToText("TestAoiTag", "Param1", "Param2", 123, 0);
+        text.Should().Be("TestAOI(TestAoiTag,Param1,Param2,123,0)");
+    }
+
     /*[Test]
     public void Example()
     {

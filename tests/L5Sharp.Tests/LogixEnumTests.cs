@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace L5Sharp.Tests.Enums;
+namespace L5Sharp.Tests;
 
 [TestFixture]
 public class LogixEnumTests
@@ -75,5 +75,13 @@ public class LogixEnumTests
         options.Should().Contain(ExternalAccess.None);
         options.Should().Contain(ExternalAccess.ReadOnly);
         options.Should().Contain(ExternalAccess.ReadWrite);
+    }
+
+    [Test]
+    public void Options_WhenCalled_ShouldNotBeEmpty()
+    {
+        var options = LogixEnum.Options().ToList();
+
+        options.Should().NotBeEmpty();
     }
 }

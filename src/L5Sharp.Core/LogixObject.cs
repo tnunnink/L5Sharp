@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A class implementing <see cref="LogixElement"/> that adds common properties and methods shared by most elements or
 /// components. These features include reference to the containing <see cref="L5X"/> document, the <see cref="Scope"/>
-/// and <see cref="Container"/> to identify where in the document they exists, and methods <see cref="AddBefore"/>,
+/// and <see cref="Container"/> to identify where in the document they exist, and methods <see cref="AddBefore"/>,
 /// <see cref="AddBefore"/>, <see cref="Remove"/>, and <see cref="Replace"/> which allow easy way to mutate the object
 /// or collection of objects.
 /// </summary>
@@ -42,7 +42,7 @@ public abstract class LogixObject : LogixElement
     /// </returns>
     /// <remarks>
     /// This allows attached logix elements to reach up to the L5X file in order to traverse or retrieve
-    /// other elements in the L5X. This is helpful/used for other extensions and cross referencing functions.
+    /// other elements in the L5X. This is helpful/used for other extensions and cross-referencing functions.
     /// </remarks>
     public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
@@ -77,7 +77,7 @@ public abstract class LogixObject : LogixElement
     /// </value>
     /// <remarks>
     /// <para>
-    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exists, meaning this
+    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exist, meaning this
     /// element is not attached to a L5X tree, then this returns an empty string.
     /// </para>
     /// <para>
@@ -96,7 +96,7 @@ public abstract class LogixObject : LogixElement
     /// the provided logix element is not the same type or convertable to the type of this logix element.
     /// </exception>
     /// <remarks>
-    /// This method requires the component be attached to the <see cref="L5X"/>, as it will
+    /// This method requires the component be attached to the <see cref="L5X"/> as it will
     /// access the parent of the underlying <see cref="XElement"/> to perform the function.
     /// It will also automatically perform the "type conversion" of the provided element if possible.
     /// This just means it will attempt to change the element name to match this element name so that the
@@ -128,7 +128,7 @@ public abstract class LogixObject : LogixElement
     /// the provided logix element is not the same type or convertable to the type of this logix element.
     /// </exception>
     /// <remarks>
-    /// This method requires the component be attached to the <see cref="L5X"/>, as it will
+    /// This method requires the component be attached to an <see cref="L5X"/>, as it will
     /// access the parent of the underlying <see cref="XElement"/> to perform the function.
     /// It will also automatically perform the "type conversion" of the provided element if possible.
     /// This just means it will attempt to change the element name to match this element name so that the
@@ -258,5 +258,81 @@ public abstract class LogixObject : LogixElement
         }
 
         Element.ReplaceWith(element.Serialize());
+    }
+}
+
+/// <summary>
+/// A generic abstract <see cref="LogixObject"/> that implements the <see cref="ILogixParsable{T}"/> interface.
+/// This generic type class allow us to specify the strong return types for methods <see cref="Parse"/>,
+/// <see cref="TryParse"/> and <see cref="Clone"/>. This means we don't have to implement these methods for every
+/// derivative type, and allows these types to be used with the <see cref="LogixParser"/> in a dynamic fashion.
+/// </summary>
+/// <typeparam name="TObject">The type implementing <see cref="LogixObject"/></typeparam>
+public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject>
+    where TObject : LogixObject, ILogixParsable<TObject>
+{
+    /// <inheritdoc />
+    protected LogixObject(string name) : base(name)
+    {
+    }
+
+    /// <inheritdoc />
+    protected LogixObject(XElement element) : base(element)
+    {
+    }
+
+    /// <summary>
+    /// Returns a new deep cloned instance of this object.
+    /// </summary>
+    /// <returns>A new object instance of the same type with the same property values.</returns>
+    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
+    public new TObject Clone() => new XElement(Serialize()).Deserialize<TObject>();
+
+    /// <summary>
+    /// Parses the provided string as the specified generic <see cref="LogixObject{TObject}"/>.
+    /// </summary>
+    /// <param name="value">The XML string value to parse.</param>
+    /// <returns>A new <see cref="LogixObject"/> instance that represents the parsed value.</returns>
+    /// <remarks>
+    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// Also note that since this uses internal XElement and casts the type, this method can throw exceptions for invalid
+    /// XML or XML that is parsed to an different type thatn the one specified here.
+    /// </remarks>
+    public static TObject Parse(string value)
+    {
+        var element = XElement.Parse(value);
+        return element.Deserialize<TObject>();
+    }
+
+    /// <summary>
+    /// Attempts to parse the provided string and returned the strongly typed object. If unsuccesful, then this method
+    /// returns <c>null </c>.
+    /// </summary>
+    /// <param name="value">The XML string value to parse.</param>
+    /// <returns>A new <see cref="LogixObject"/> instance that represents the parsed value if successful, otherwise, <c>null</c>.</returns>
+    /// <remarks>
+    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// Note that this method will just return null if any exception is caught. This could be for invalid XML formats
+    /// of invalid type casts.
+    /// </remarks>
+    public static TObject? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return default;
+
+        var trimmed = value.Trim();
+        if (trimmed.Length == 0 || trimmed[0] != '<') return default;
+
+        try
+        {
+            var element = XElement.Parse(trimmed);
+            return element.Deserialize<TObject>();
+        }
+        catch (Exception)
+        {
+            return default;
+        }
     }
 }

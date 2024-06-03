@@ -16,7 +16,7 @@ namespace L5Sharp.Core;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [L5XType(L5XName.AddOnInstructionDefinition)]
-public class AddOnInstruction : LogixComponent
+public class AddOnInstruction : LogixComponent<AddOnInstruction>
 {
     private const string DateFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
 
@@ -281,49 +281,25 @@ public class AddOnInstruction : LogixComponent
                             throw new InvalidOperationException("No Logic routine is defined for AOI.");
 
     /// <summary>
-    /// Returns the AoiBlock instruction logic with the parameters tag names replaced with the argument tag names of the
-    /// provided instruction instance.
+    /// Creates a new <see cref="Instruction"/> instance using the provided tagname and optional arguments.
     /// </summary>
-    /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
-    /// <returns>
-    /// A <see cref="IEnumerable{T}"/> containing <see cref="NeutralText"/> representing all the instruction's
-    /// logic, with each instruction parameter tag name replaced with the arguments from the provided text.
-    /// </returns>
-    /// <remarks>
-    /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic we can
-    /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
-    /// content or code type.
-    /// </remarks>
-    public IEnumerable<NeutralText> LogicFor(Instruction instruction)
+    /// <param name="tagName">The tag name of the AOI instance.</param>
+    /// <param name="arguments">The optional arguments to supply the instruction signatrue with.</param>
+    /// <returns>A <see cref="Instruction"/> having this AOI's key and provided arguments.</returns>
+    public Instruction ToInstruction(TagName tagName, params Argument[] arguments)
     {
-        if (instruction is null)
-            throw new ArgumentNullException(nameof(instruction));
-
-        // All instructions primary logic is contained in the routine named 'Logic'
-        var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
-
-        var rungs = logic?.Content<Rung>();
-        if (rungs is null) return Enumerable.Empty<NeutralText>();
-
-        //Skip first operand as it is always the AoiBlock tag, which does not have corresponding parameter within the logic.
-        var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToList();
-
-        //Only required parameters are part of the instruction signature
-        var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToList();
-
-        //Generate a mapping of the provided instructions arguments to instruction parameters.
-        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
-
-        //Replace all parameter names with argument names in the instruction logic text, and return the results.
-        return rungs.Select(r => r.Text)
-            .Select(t => mapping.Aggregate(t, (current, pair) =>
-            {
-                if (!TagName.IsTag(pair.Argument)) return current;
-                var replace = $@"(?<=[^.]){pair.Parameter}\b";
-                return Regex.Replace(current, replace, pair.Argument.ToString());
-            }))
-            .ToList();
+        var args = new List<Argument> { tagName };
+        args.AddRange(arguments);
+        return Instruction.New(Name, args.ToArray());
     }
+    
+    /// <summary>
+    /// Creates a new <see cref="NeutralText"/> instance using the provided tagname and optional arguments.
+    /// </summary>
+    /// <param name="tagName">The tag name of the AOI instance.</param>
+    /// <param name="arguments">The optional arguments to supply the instruction signatrue with.</param>
+    /// <returns>A <see cref="NeutralText"/> having this AOI's key and provided arguments.</returns>
+    public NeutralText ToText(TagName tagName, params Argument[] arguments) => ToInstruction(tagName, arguments).Text;
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> instance with data configured from this <see cref="AddOnInstruction"/> component. 
@@ -366,6 +342,51 @@ public class AddOnInstruction : LogixComponent
 
         complexData.AddRange(members.ToList());
         return complexData;
+    }
+
+    /// <summary>
+    /// Returns the AoiBlock instruction logic with the parameters tag names replaced with the argument tag names of the
+    /// provided instruction instance.
+    /// </summary>
+    /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
+    /// <returns>
+    /// A <see cref="IEnumerable{T}"/> containing <see cref="NeutralText"/> representing all the instruction's
+    /// logic, with each instruction parameter tag name replaced with the arguments from the provided text.
+    /// </returns>
+    /// <remarks>
+    /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic we can
+    /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
+    /// content or code type.
+    /// </remarks>
+    public IEnumerable<NeutralText> LogicFor(Instruction instruction)
+    {
+        if (instruction is null)
+            throw new ArgumentNullException(nameof(instruction));
+
+        // All instructions primary logic is contained in the routine named 'Logic'
+        var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
+
+        var rungs = logic?.Content<Rung>();
+        if (rungs is null) return Enumerable.Empty<NeutralText>();
+
+        //Skip first operand as it is always the AoiBlock tag, which does not have corresponding parameter within the logic.
+        var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToList();
+
+        //Only required parameters are part of the instruction signature
+        var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToList();
+
+        //Generate a mapping of the provided instructions arguments to instruction parameters.
+        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
+
+        //Replace all parameter names with argument names in the instruction logic text, and return the results.
+        return rungs.Select(r => r.Text)
+            .Select(t => mapping.Aggregate(t, (current, pair) =>
+            {
+                if (!TagName.IsTag(pair.Argument)) return current;
+                var replace = $@"(?<=[^.]){pair.Parameter}\b";
+                return Regex.Replace(current, replace, pair.Argument.ToString());
+            }))
+            .ToList();
     }
 
     /// <summary>

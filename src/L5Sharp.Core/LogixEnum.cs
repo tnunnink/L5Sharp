@@ -75,6 +75,18 @@ public abstract class LogixEnum
     {
         return Enums.Value[typeof(TEnum)].Select(e => e.Name);
     }
+    
+    /// <summary>
+    /// Retrieves all <see cref="LogixEnum"/> options for each enum type in this library. 
+    /// </summary>
+    /// <returns>
+    /// A collection of key value pairs where the key is the <see cref="Type"/> of the enum and the value
+    /// is the collection of <see cref="LogixEnum"/> for the type.
+    /// </returns>
+    public static IEnumerable<KeyValuePair<Type, IEnumerable<LogixEnum>>> Options()
+    {
+        return Enums.Value.Select(x => new KeyValuePair<Type, IEnumerable<LogixEnum>>(x.Key, x.Value));
+    }
 
     /// <summary>
     /// Retrieves all <see cref="LogixEnum"/> options for the provided enumeration type.

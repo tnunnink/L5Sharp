@@ -89,18 +89,6 @@ public abstract class LogixElement : ILogixSerializable
     public LogixElement Clone() => new XElement(Serialize()).Deserialize();
 
     /// <summary>
-    /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
-    /// </summary>
-    /// <typeparam name="TElement">The <see cref="LogixElement"/> type to cast to.</typeparam>
-    /// <returns>A new instance of the specified element type with the same property values.</returns>
-    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
-    /// single <see cref="XElement"/> argument.</exception>
-    /// <exception cref="InvalidCastException">The deserialized type can not be cast to the specified generic type parameter.</exception>
-    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public TElement Clone<TElement>() where TElement : LogixElement =>
-        new XElement(Serialize()).Deserialize<TElement>();
-
-    /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
     /// </summary>
     /// <returns>A <see cref="XElement"/> representing the serialized logix element.</returns>

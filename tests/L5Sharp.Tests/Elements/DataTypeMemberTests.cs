@@ -63,7 +63,7 @@ public class DataTypeMemberTests
             BitNumber = 12
         };
 
-        var clone = member.Clone<DataTypeMember>();
+        var clone = member.Clone();
 
         clone.Should().BeOfType<DataTypeMember>();
         clone.Should().NotBeSameAs(member);

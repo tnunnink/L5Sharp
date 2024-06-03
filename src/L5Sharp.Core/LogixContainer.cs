@@ -20,11 +20,11 @@ namespace L5Sharp.Core;
 /// </para>
 /// <para>
 /// The class is designed to only offer very basic operations, allowing it to be applicable to all container type elements,
-/// However, the user can extended the API for any container type using extension methods.
+/// However, the user can extend the API for any container type using extension methods.
 /// See <see cref="ContainerExtensions"/> for examples demonstrating extensions for containers of type <see cref="LogixComponent"/>.
 /// </para>
 /// </remarks>
-public sealed class LogixContainer<TObject> : LogixElement, IEnumerable<TObject> where TObject : LogixObject
+public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICollection where TObject : LogixObject
 {
     /// <summary>
     /// Creates a empty <see cref="LogixContainer{TObject}"/> with the default type name.
@@ -70,6 +70,12 @@ public sealed class LogixContainer<TObject> : LogixElement, IEnumerable<TObject>
     /// The type name of the child elements contained within this <see cref="LogixContainer{TObject}"/> collection. 
     /// </summary>
     public override string L5XType { get; }
+
+    /// <summary>
+    /// Gets the number of elements contained in the collection.
+    /// </summary>
+    /// <returns>A <see cref="int"/> representing the number of elements in the collection.</returns>
+    public int Count => Element.Elements(L5XType).Count();
 
     /// <summary>
     /// Accesses a single element at the specified index of the container collection.
@@ -122,6 +128,35 @@ public sealed class LogixContainer<TObject> : LogixElement, IEnumerable<TObject>
     }
 
     /// <summary>
+    /// Clears all elements in the container collection.
+    /// </summary>
+    public void Clear()
+    {
+        Element.Elements(L5XType).Remove();
+    }
+
+    /// <summary>
+    /// Determines whether a sequence contains a specified element by using the default equality comparer.
+    /// </summary>
+    /// <param name="element">The element to locate in the sequence.</param>
+    /// <returns><c>true</c> if the source sequence contains an element that has the specified value; otherwise,<c>false</c></returns>
+    public bool Contains(TObject element)
+    {
+        return Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).Contains(element);
+    }
+
+    /// <summary>
+    /// Copies the entire <see cref="LogixContainer{TObject}"/> to a compatible one-dimensional array,
+    /// starting at the specified index of the target array.
+    /// </summary>
+    /// <inheritdoc />
+    public void CopyTo(TObject[] array, int arrayIndex)
+    {
+        var list = Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).ToList();
+        list.CopyTo(array, arrayIndex);
+    }
+
+    /// <summary>
     /// Adds the provided elements to the logix container at the end of the collection.
     /// </summary>
     /// <param name="elements">The collection of elements to add.</param>
@@ -153,10 +188,25 @@ public sealed class LogixContainer<TObject> : LogixElement, IEnumerable<TObject>
     }
 
     /// <summary>
-    /// Gets the number of elements in the collection.
+    /// Determines the index of a specific item in the container collection.
     /// </summary>
-    /// <returns>A <see cref="int"/> representing the number of elements in the collection.</returns>
-    public int Count() => Element.Elements(L5XType).Count();
+    /// <param name="element">The <see cref="LogixObject"/> to locate the index of.</param>
+    /// <inheritdoc />
+    public int IndexOf(TObject element)
+    {
+        var index = 0;
+        foreach (var item in this)
+        {
+            if (item.Equals(element))
+            {
+                return index;
+            }
+
+            index++;
+        }
+
+        return -1;
+    }
 
     /// <summary>
     /// Inserts the provided element at the specified index of the container collection.
@@ -179,11 +229,6 @@ public sealed class LogixContainer<TObject> : LogixElement, IEnumerable<TObject>
     }
 
     /// <summary>
-    /// Removes all elements in the container collection.
-    /// </summary>
-    public void RemoveAll() => Element.Elements(L5XType).Remove();
-
-    /// <summary>
     /// Removes all elements that satisfy the provided condition predicate.
     /// </summary>
     /// <param name="condition">The condition for which to remove elements.</param>
@@ -203,6 +248,26 @@ public sealed class LogixContainer<TObject> : LogixElement, IEnumerable<TObject>
     public void RemoveAt(int index)
     {
         Element.Elements(L5XType).ElementAt(index).Remove();
+    }
+
+    /// <summary>
+    /// Removes the first occurrence of a specific object from the <see cref="LogixContainer{TObject}"/>.
+    /// </summary>
+    /// <param name="element">The <see cref="LogixObject"/> to remove from the collection.</param>
+    /// <returns>
+    /// <c>true</c> if item was successfully removed from the collection; otherwise, <c>false</c>.
+    /// This method also returns <c>false</c> if item is not found in the original collection.
+    /// </returns>
+    public bool Remove(TObject element)
+    {
+        foreach (var item in this)
+        {
+            if (!item.Equals(element)) continue;
+            item.Remove();
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -244,8 +309,17 @@ public sealed class LogixContainer<TObject> : LogixElement, IEnumerable<TObject>
     /// <inheritdoc />
     public IEnumerator<TObject> GetEnumerator() =>
         Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).GetEnumerator();
+    
+    void ICollection.CopyTo(Array array, int index)
+    {
+        var source = Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).ToArray();
+        Array.Copy(source, 0, array, index, source.Length);
+    }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    bool ICollection<TObject>.IsReadOnly => false;
+    bool ICollection.IsSynchronized => true;
+    object ICollection.SyncRoot => Element;
 }
 
 /// <summary>

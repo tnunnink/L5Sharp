@@ -170,9 +170,9 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
         if (string.IsNullOrEmpty(right)) return left;
 
         if (right[0] == ArrayOpenSeparator || right[0] == MemberSeparator)
-            return new TagName($"{left}{right}");
+            return new TagName(left + right);
 
-        return new TagName($"{left}{MemberSeparator}{right}");
+        return new TagName(left + MemberSeparator + right);
     }
 
     /// <summary>

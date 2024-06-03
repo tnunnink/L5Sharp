@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -115,14 +116,14 @@ public abstract class LogixComponent : LogixObject, ILogixReferencable
     public virtual void Delete()
     {
         if (Element.Parent is null || !IsAttached) return;
-        
+
         var references = References();
 
         foreach (var reference in references)
         {
             reference.Element.Remove();
         }
-        
+
         Element.Remove();
     }
 
@@ -176,4 +177,79 @@ public abstract class LogixComponent : LogixObject, ILogixReferencable
 
     /// <inheritdoc />
     public override int GetHashCode() => Key.GetHashCode();
+}
+
+/// <summary>
+/// A generic abstract <see cref="LogixComponent"/> that implements the <see cref="ILogixParsable{T}"/> interface.
+/// This generic type class allow us to specify the strong return types for methods <see cref="Parse"/>,
+/// <see cref="TryParse"/> and <see cref="Clone"/>. This means we don't have to implement these methods for every
+/// derivative type, and allows these types to be used with the <see cref="LogixParser"/> in a dynamic fashion.
+/// </summary>
+/// <typeparam name="TComponent">The type implementing <see cref="LogixComponent"/></typeparam>
+public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsable<TComponent>
+    where TComponent : LogixComponent, ILogixParsable<TComponent>
+{
+    /// <inheritdoc />
+    protected LogixComponent(string name) : base(name)
+    {
+    }
+
+    /// <inheritdoc />
+    protected LogixComponent(XElement element) : base(element)
+    {
+    }
+
+    /// <summary>
+    /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
+    /// </summary>
+    /// <returns>A new instance of the specified element type with the same property values.</returns>
+    public new TComponent Clone() => new XElement(Serialize()).Deserialize<TComponent>();
+
+    /// <summary>
+    /// Parses the provided string and returned the strongly typed component object.
+    /// </summary>
+    /// <param name="value">The XML string value to parse.</param>
+    /// <returns>A new <see cref="LogixComponent"/> instance that represents the parsed value.</returns>
+    /// <remarks>
+    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// Also note that since this uses internal XElement and casts the type, this method can throw exceptions for invalid
+    /// XML or XML that is parsed to an different type thatn the one specified here.
+    /// </remarks>
+    public static TComponent Parse(string value)
+    {
+        var element = XElement.Parse(value);
+        return element.Deserialize<TComponent>();
+    }
+
+    /// <summary>
+    /// Attempts to parse the provided string and returned the strongly typed component object.
+    /// If unsuccesful, then this method returns <c>null</c>.
+    /// </summary>
+    /// <param name="value">The XML string value to parse.</param>
+    /// <returns>A new <see cref="LogixComponent"/> instance that represents the parsed value if successful, otherwise, <c>null</c>.</returns>
+    /// <remarks>
+    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// Note that this method will just return null if any exception is caught. This could be for invalid XML formats
+    /// of invalid type casts.
+    /// </remarks>
+    public static TComponent? TryParse(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return default;
+
+        var trimmed = value.Trim();
+        if (trimmed.Length == 0 || trimmed[0] != '<') return default;
+
+        try
+        {
+            var element = XElement.Parse(trimmed);
+            return element.Deserialize<TComponent>();
+        }
+        catch (Exception)
+        {
+            return default;
+        }
+    }
 }

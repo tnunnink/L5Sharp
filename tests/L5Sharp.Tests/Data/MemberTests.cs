@@ -3,7 +3,7 @@ using FluentAssertions;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 
-namespace L5Sharp.Tests.Types;
+namespace L5Sharp.Tests.Data;
 
 [TestFixture]
 public class MemberTests

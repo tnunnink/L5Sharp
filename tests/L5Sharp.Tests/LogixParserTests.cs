@@ -19,7 +19,7 @@ public class LogixParserTests
     {
         type.IsParsable().Should().BeTrue();
     }
-    
+
     [Test]
     [TestCase(typeof(TagName))]
     [TestCase(typeof(Dimensions))]
@@ -33,7 +33,7 @@ public class LogixParserTests
     {
         type.IsParsable().Should().BeTrue();
     }
-    
+
     [Test]
     [TestCase("true", true, typeof(bool))]
     [TestCase("123", 123, typeof(int))]
@@ -82,7 +82,7 @@ public class LogixParserTests
         result.Should().NotBeNull();
         result.Should().Be(Radix.Octal);
     }
-    
+
     [Test]
     public void Parse_RadixTypeFromDerivedEnumValue_ToEnsureThatThisAlsoParsedToOtherRadixTypes()
     {
@@ -179,7 +179,38 @@ public class LogixParserTests
 
         result.Should().NotBeNull();
     }
-    
+
+    [Test]
+    public void Parse_TagElement_ShouldBeExpected()
+    {
+        const string xml =
+            @"<Tag Name=""Test"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""Read/Write"" />";
+
+        var tag = xml.Parse<Tag>();
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("Test");
+        tag.TagType.Should().Be(TagType.Base);
+        tag.Constant.Should().BeFalse();
+        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+    }
+
+    [Test]
+    public void Parse_ComplexTagElement_ShouldBeExpected()
+    {
+        var xml = Sample.TagElement.TestTimerTag();
+
+        var tag = xml.Parse<Tag>();
+
+        tag.Should().NotBeNull();
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("TestTimer");
+        tag.DataType.Should().Be("TIMER");
+        tag.Value.Should().BeOfType<TIMER>();
+        tag["PRE"].Value.Should().Be(1000);
+        tag["PRE"].Description.Should().Be("Test Timer PRE");
+    }
+
     [Test]
     public void IsItPossibleToFilterByWhatIsParsableToAGivenType()
     {
@@ -190,7 +221,7 @@ public class LogixParserTests
         var stopwatch = Stopwatch.StartNew();
 
         var typed = values.Where(v => v.TryParse(typeof(int)) is not null).ToList();
-        
+
         stopwatch.Stop();
         Console.WriteLine(stopwatch.ElapsedMilliseconds);
 

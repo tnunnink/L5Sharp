@@ -7,9 +7,9 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>2.3.2</Version>
-        <AssemblyVersion>2.3.2</AssemblyVersion>
-        <FileVersion>2.3.2.0</FileVersion>
+        <Version>3.0.0</Version>
+        <AssemblyVersion>3.0.0</AssemblyVersion>
+        <FileVersion>3.0.0.0</FileVersion>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
@@ -18,7 +18,10 @@
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
-            Fixed bug with Routine Content for emprty routines.
+            LogixContainer now implements IList{T} and ICollection, slightly changes the API.
+            LogixObject{T}, LogixComponent{T} created and add ILogixParsable{T} making all components and some elements able to be parsed dynamically using LogixParser extensions.
+            Update TagName Concat() to reduce memory consumption.
+            Added methods to AddOnInstruction for generating NeutralText and Instruction instances.
         </PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>

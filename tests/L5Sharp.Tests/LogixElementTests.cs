@@ -105,17 +105,6 @@ public class LogixElementTests
     }
 
     [Test]
-    public void Clone_ValidGenericParameter_ShouldNotBeNullAndOfSpecifiedType()
-    {
-        var element = new TestElement();
-
-        var clone = element.Clone<TestElement>();
-
-        clone.Should().NotBeNull();
-        clone.Should().BeOfType<TestElement>();
-    }
-
-    [Test]
     public void GetValue_HasValue_ShouldHaveExpectedValue()
     {
         var xml = new XElement("Test", new XAttribute("OptionalValue", "Value"));
@@ -509,7 +498,7 @@ public class LogixElementTests
         var xml = new XElement("Test");
         var element = new TestElement(xml);
 
-        element.ChildElements = new LogixContainer<ChildElement>();
+        element.ChildElements = [];
 
         return Verify(element.Serialize().ToString());
     }
@@ -520,12 +509,12 @@ public class LogixElementTests
         var xml = new XElement("Test");
         var element = new TestElement(xml);
 
-        element.ChildElements = new LogixContainer<ChildElement>
-        {
-            new() { SomeValue = "Child_1" },
-            new() { SomeValue = "Child_2" },
-            new() { SomeValue = "Child_3" }
-        };
+        element.ChildElements =
+        [
+            new ChildElement { SomeValue = "Child_1" },
+            new ChildElement { SomeValue = "Child_2" },
+            new ChildElement { SomeValue = "Child_3" }
+        ];
 
         return Verify(element.Serialize().ToString());
     }
@@ -541,12 +530,12 @@ public class LogixElementTests
             ));
         var element = new TestElement(xml);
 
-        element.ChildElements = new LogixContainer<ChildElement>
-        {
-            new() { SomeValue = "Child_3" },
-            new() { SomeValue = "Child_2" },
-            new() { SomeValue = "Child_1" }
-        };
+        element.ChildElements =
+        [
+            new ChildElement { SomeValue = "Child_3" },
+            new ChildElement { SomeValue = "Child_2" },
+            new ChildElement { SomeValue = "Child_1" }
+        ];
 
         return Verify(element.Serialize().ToString());
     }
@@ -1054,7 +1043,7 @@ public class LogixElementTests
 
 [L5XType("Test")]
 [L5XType("Alternate")]
-public class TestElement : LogixObject
+public class TestElement : LogixObject<TestElement>
 {
     public TestElement() : base("Test")
     {

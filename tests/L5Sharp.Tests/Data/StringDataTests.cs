@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Types;
+namespace L5Sharp.Tests.Data;
 
 [TestFixture]
 public class StringDataTests
