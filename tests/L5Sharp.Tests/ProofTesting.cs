@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel;
+using System.Reflection;
 using FluentAssertions;
 
 
@@ -45,6 +46,14 @@ public class ProofTesting
         var method = type.GetMethods(flags).FirstOrDefault(m => IsParseFunctionFor(type, m));
 
         method.Should().NotBeNull();
+    }
+
+    [Test]
+    public void ParseString()
+    {
+        var result = "this is a test".Parse<string>();
+        
+        result.Should().Be("this is a test");
     }
 
     private static bool IsParseFunctionFor(Type type, MethodInfo info)

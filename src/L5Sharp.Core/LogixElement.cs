@@ -49,6 +49,29 @@ public abstract class LogixElement : ILogixSerializable
     /// in the underlying parent element. 
     /// </summary>
     protected virtual List<string> ElementOrder { get; } = [];
+    
+    /// <summary>
+    /// Indicates whether this element is attached to an L5X document.
+    /// </summary>
+    /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
+    /// <remarks>
+    /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
+    /// If so we will assume this element is attached to an L5X document.
+    /// </remarks>
+    public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
+
+    /// <summary>
+    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
+    /// </summary>
+    /// <returns>
+    /// If the current element is attached to a L5X document (i.e. has the root content element),
+    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
+    /// </returns>
+    /// <remarks>
+    /// This allows attached logix elements to reach up to the L5X root in order to traverse or retrieve
+    /// other elements in the L5X. This is helpful/used for other extensions and cross-referencing functions.
+    /// </remarks>
+    public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
     /// <summary>
     /// Returns the name of the L5XType for this <see cref="LogixElement"/> object.
@@ -622,11 +645,14 @@ public abstract class LogixElement : ILogixSerializable
     /// <param name="value">The value to set true/false, which will be converted to 0/1.</param>
     /// <param name="name">The name of the bit attribute.</param>
     /// <remarks>
-    /// This is a specialized helper since Logix uses 0/1 instead of true/false for some properties/attributes. Properties
-    /// that need to write a 0/1 to correctly import L5X content should use this method.
+    /// This is a specialized helper since Logix uses 0/1 instead of true/false for some properties/attributes.
+    /// Properties that need to write a 0/1 to correctly import L5X content should use this method.
     /// </remarks>
     protected void SetBit(bool? value, [CallerMemberName] string? name = null)
     {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+        
         if (value is null)
         {
             Element.Attribute(name)?.Remove();

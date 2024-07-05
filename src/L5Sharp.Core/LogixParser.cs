@@ -110,8 +110,8 @@ public static class LogixParser
     /// </remarks>
     private static Func<string, object> GetParser(Type type)
     {
-        if (Parsers.Value.TryGetValue(type, out var parsers))
-            return parsers.Parse;
+        if (Parsers.Value.TryGetValue(type, out var parser))
+            return parser.Parse;
 
         //Intercept any .NET bool type because we want to handle 1/0 case as Logix sometimes uses those values instead of true/false.
         if (type == typeof(bool) || Nullable.GetUnderlyingType(type) == typeof(bool))
