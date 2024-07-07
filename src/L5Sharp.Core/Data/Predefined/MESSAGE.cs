@@ -45,100 +45,100 @@ public sealed class MESSAGE : StructureData
     /// <summary>
     /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> data object.
     /// </summary>
-    public MessageType MessageType
+    public MessageType? MessageType
     {
-        get => GetRequiredValue<MessageType>();
-        set => SetRequiredValue(value);
+        get => GetValue<MessageType>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="RequestedLength"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT RequestedLength
+    public INT? RequestedLength
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ConnectedFlag"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT ConnectedFlag
+    public INT? ConnectedFlag
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ConnectionPath"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public STRING ConnectionPath
+    public STRING? ConnectionPath
     {
-        get => GetRequiredValue<STRING>();
-        set => SetRequiredValue(value);
+        get => GetValue<STRING>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="CommTypeCode"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT CommTypeCode
+    public INT? CommTypeCode
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ServiceCode"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT ServiceCode
+    public INT? ServiceCode
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ObjectType"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT ObjectType
+    public INT? ObjectType
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="TargetObject"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT TargetObject
+    public INT? TargetObject
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="AttributeNumber"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT AttributeNumber
+    public INT? AttributeNumber
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="LocalIndex"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT LocalIndex
+    public INT? LocalIndex
     {
-        get => GetRequiredValue<INT>();
-        set => SetRequiredValue(value);
+        get => GetValue<INT>();
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="DestinationTag"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public STRING DestinationTag
+    public STRING? DestinationTag
     {
-        get => GetRequiredValue<STRING>();
-        set => SetRequiredValue(value);
+        get => GetValue<STRING>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -161,11 +161,18 @@ public sealed class MESSAGE : StructureData
 
     private IEnumerable<Member> GenerateVirtualMembers()
     {
-        yield return new Member(nameof(MessageType), () => new STRING(MessageType.Value),
+        yield return new Member(nameof(MessageType), 
+            () => new STRING(MessageType?.Value ?? string.Empty),
             t => { MessageType = MessageType.Parse(t.ToString()); });
-        yield return new Member(nameof(RequestedLength), () => RequestedLength, t => { RequestedLength = (INT)t; });
-        yield return new Member(nameof(ConnectionPath), () => ConnectionPath,
+        
+        yield return new Member(nameof(RequestedLength),
+            () => RequestedLength,
+            t => { RequestedLength = (INT)t; });
+        
+        yield return new Member(nameof(ConnectionPath),
+            () => ConnectionPath,
             t => { ConnectionPath = t.As<STRING>(); });
+        
         yield return new Member(nameof(ConnectedFlag), () => ConnectedFlag, t => { ConnectedFlag = (INT)t; });
         yield return new Member(nameof(CommTypeCode), () => CommTypeCode, t => { CommTypeCode = (INT)t; });
         yield return new Member(nameof(ServiceCode), () => ServiceCode, t => { ServiceCode = (INT)t; });

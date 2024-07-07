@@ -33,7 +33,7 @@ public sealed class Member : LogixElement
     /// The custom getter function for a "virtual" member. If not null this will always be used in place of the normal
     /// getter methods.
     /// </summary>
-    private readonly Func<LogixData>? _getter;
+    private readonly Func<LogixData?>? _getter;
 
     /// <summary>
     /// The custom setter function for a "virtual" member. If not null this will always be used in place of the normal
@@ -75,7 +75,7 @@ public sealed class Member : LogixElement
     /// <param name="name">The name of the member.</param>
     /// <param name="getter">The function that get the logix type value for this member.</param>
     /// <param name="setter">The function that sets the underlying L5X data for this member.</param>
-    internal Member(string name, Func<LogixData> getter, Action<LogixData> setter) : base(new XElement(L5XName.Data))
+    internal Member(string name, Func<LogixData?> getter, Action<LogixData> setter) : base(new XElement(L5XName.Data))
     {
         _name = name;
         _getter = getter;
@@ -127,7 +127,7 @@ public sealed class Member : LogixElement
     /// </remarks>
     protected override LogixData GetData()
     {
-        return _getter is not null ? _getter() : Element.Deserialize<LogixData>();
+        return _getter is not null ? _getter() ?? LogixData.Null : Element.Deserialize<LogixData>();
     }
 
     /// <inheritdoc />
