@@ -25,6 +25,7 @@ public class LogixParserTests
     [TestCase(typeof(Dimensions))]
     [TestCase(typeof(Radix))]
     [TestCase(typeof(ExternalAccess))]
+    [TestCase(typeof(OpcUAAccess))]
     [TestCase(typeof(DINT))]
     [TestCase(typeof(REAL))]
     [TestCase(typeof(AtomicData))]
@@ -193,6 +194,22 @@ public class LogixParserTests
         tag.TagType.Should().Be(TagType.Base);
         tag.Constant.Should().BeFalse();
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+    }
+
+    [Test]
+    public void Parse_TagElementWithOPCUA_ShouldBeExpected()
+    {
+        const string xml =
+            @"<Tag Name=""Test"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""Read/Write"" OpcUAAccess=""Read/Write"" />";
+
+        var tag = xml.Parse<Tag>();
+
+        tag.Should().NotBeNull();
+        tag.Name.Should().Be("Test");
+        tag.TagType.Should().Be(TagType.Base);
+        tag.Constant.Should().BeFalse();
+        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.OpcUAAccess.Should().Be(OpcUAAccess.ReadWrite);
     }
 
     [Test]
