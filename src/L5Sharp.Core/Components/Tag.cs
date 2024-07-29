@@ -235,6 +235,16 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
+    /// The external access option indicating the read/write access of the tag from OPC UA.
+    /// </summary>
+    /// <value>A <see cref="Core.OpcUAAccess"/> option representing read/write access of the tag from OPC UA.</value>
+    public OpcUAAccess? OpcUAAccess
+    {
+        get => GetValue<OpcUAAccess>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
     /// The <see cref="ComponentClass"/> value indicating whether this component is a standard or safety type component.
     /// </summary>
     /// <value>A <see cref="Core.ComponentClass"/> option representing class of the component.</value>
