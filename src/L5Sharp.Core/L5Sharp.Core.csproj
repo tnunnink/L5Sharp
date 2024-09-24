@@ -7,9 +7,9 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>3.3.0</Version>
-        <AssemblyVersion>3.3.0</AssemblyVersion>
-        <FileVersion>3.3.0.0</FileVersion>
+        <Version>3.3.1</Version>
+        <AssemblyVersion>3.3.1</AssemblyVersion>
+        <FileVersion>3.3.1.0</FileVersion>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
@@ -18,7 +18,7 @@
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
-            Made all MESSAGE type properties nullable/no required since I found examples of L5X not having certain attributes.
+            Added tests to ensure no memory issues.
         </PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
