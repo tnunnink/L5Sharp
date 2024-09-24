@@ -16,7 +16,7 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// </remarks>
-public class L5X : ILogixSerializable
+public sealed class L5X : ILogixSerializable
 {
     /// <summary>
     /// The date/time format for the L5X content.

@@ -1,5 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using System.Globalization;
+using System.Xml.Linq;
 using FluentAssertions;
+using JetBrains.dotMemoryUnit;
 
 namespace L5Sharp.Tests;
 
@@ -70,7 +72,7 @@ public class L5XBasicTests
     {
         FluentActions.Invoking(() => L5X.New("Test", null!, new Revision())).Should().Throw<ArgumentException>();
     }
-    
+
     [Test]
     public void New_NullRevision_ShouldThrowException()
     {
@@ -183,7 +185,7 @@ public class L5XBasicTests
 
         FluentActions.Invoking(() => content.All<Tag>(null!)).Should().Throw<ArgumentException>();
     }
-    
+
     [Test]
     public void All_ValidTypeAndEmptyName_ShouldThrowException()
     {
@@ -230,18 +232,18 @@ public class L5XBasicTests
         var content = L5X.Load(Known.Test);
 
         var component = content.Find(new ComponentKey("DataType", Known.DataType));
-        
+
         component.Should().NotBeNull();
         component?.Name.Should().Be(Known.DataType);
     }
-    
+
     [Test]
     public void Find_ValidKeyAndContainer_ShouldBeExpectedTypeAndName()
     {
         var content = L5X.Load(Known.Test);
 
         var component = content.Find(new ComponentKey("Tag", Known.Tag));
-        
+
         component.Should().NotBeNull();
         component?.Name.Should().Be(Known.Tag);
     }
@@ -256,7 +258,7 @@ public class L5XBasicTests
         component.Should().NotBeNull();
         component?.Name.Should().Be(Known.DataType);
     }
-    
+
     [Test]
     public void Find_ValidTagName_ShouldNotBeNull()
     {
@@ -323,5 +325,30 @@ public class L5XBasicTests
             .ScrubMember("Owner")
             .ScrubMember("ProjectCreationDate")
             .ScrubMember("LastModifiedDate");
+    }
+
+    [DotMemoryUnit(FailIfRunWithoutSupport = false)]
+    [Test]
+    public void CheckForMemoryLeaksTest()
+    {
+        var isolator = new Action(() =>
+        {
+            // ReSharper disable once RedundantAssignment
+            var content = L5X.Load(Known.Example);
+
+            var tags = content.Query<Tag>().Where(t => t.TagName.Contains("Test"));
+            tags.Should().NotBeEmpty();
+            
+            content = null;
+            content.Should().BeNull();
+        });
+
+        isolator();
+
+        GC.Collect();
+        GC.WaitForFullGCComplete();
+
+        // Assert L5X is removed from memory
+        dotMemory.Check(memory => memory.GetObjects(where => where.Type.Is<L5X>()).ObjectsCount.Should().Be(0));
     }
 }
