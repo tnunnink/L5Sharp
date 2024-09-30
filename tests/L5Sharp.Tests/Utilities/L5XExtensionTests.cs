@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Xml.Linq;
+using FluentAssertions;
 
 namespace L5Sharp.Tests.Utilities;
 
@@ -79,5 +80,48 @@ public class L5XExtensionTests
         var type = typeof(Tag).L5XContainer();
 
         type.Should().Be("Tags");
+    }
+    
+    [Test]
+    public void TagName_NoRootTag_ShouldBeEmpty()
+    {
+        var content = XElement.Parse(Sample.DataTypeElement.SimpleType());
+
+        var tagName = content.TagName();
+
+        tagName.Should().Be(TagName.Empty);
+    }
+    
+    [Test]
+    public void TagName_TestComplexTagRoot_ShouldBeExpectedValue()
+    {
+        var content = XElement.Parse(Sample.TagElement.TestComplexTag());
+
+        var tagName = content.TagName();
+
+        tagName.Should().Be("TestComplexTag");
+    }
+
+    [Test]
+    public void TagName_TestComplexTagNestedMember_ShouldBeExpectedValue()
+    {
+        var content = XElement.Parse(Sample.TagElement.TestComplexTag());
+        var element = content.Descendants("DataValueMember").FirstOrDefault(e => e.MemberName() == "DintMember");
+
+        var tagName = element?.TagName();
+
+        tagName.Should().Be("TestComplexTag.SimpleMember.DintMember");
+    }
+    
+    [Test]
+    public void TagName_TestComplexTagNestedArray_ShouldBeExpectedValue()
+    {
+        var content = XElement.Parse(Sample.TagElement.TestComplexTag());
+        var element = content.Descendants("ArrayMember").FirstOrDefault()?
+            .Descendants("DataValueMember").FirstOrDefault(e => e.MemberName() == "DintMember");
+
+        var tagName = element?.TagName();
+
+        tagName.Should().Be("TestComplexTag.SimplArray[0].DintMember");
     }
 }

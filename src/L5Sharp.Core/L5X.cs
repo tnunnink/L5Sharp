@@ -371,7 +371,7 @@ public sealed class L5X : ILogixSerializable
     public void Add(LogixComponent component, string container)
     {
         var type = component.GetType().L5XContainer();
-        var target = _content.Descendants(type).FirstOrDefault(e => Scope.Container(e) == container);
+        var target = _content.Descendants(type).FirstOrDefault(e => ScopeLevel.Container(e) == container);
         if (target is null)
             throw new InvalidOperationException($"Not container with name '{container}' was found in the L5X.");
         target.Add(component.Serialize());

@@ -39,7 +39,7 @@ public class TagTests
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
         tag.TagName.Should().Be(TagName.Empty);
-        tag.Scope.Should().Be(Scope.Null);
+        tag.Scope.Should().Be(ScopeLevel.Null);
         tag.IsAttached.Should().BeFalse();
     }
 
@@ -298,7 +298,7 @@ public class TagTests
     [Test]
     public void New_TestStringType_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.TagElement.TestStringType());
+        var element = XElement.Parse(Sample.TagElement.TestStringTag());
 
         var tag = new Tag(element);
 
@@ -327,7 +327,7 @@ public class TagTests
     [Test]
     public void New_TestSimpleType_ShouldHaveExpectedValues()
     {
-        var element = XElement.Parse(Sample.TagElement.TestSimpleType());
+        var element = XElement.Parse(Sample.TagElement.TestSimpleTag());
 
         var tag = new Tag(element);
 
@@ -348,7 +348,7 @@ public class TagTests
     [Test]
     public void New_TestComplexType_ShouldHaveExpectedValue()
     {
-        var element = XElement.Parse(Sample.TagElement.TestComplexType());
+        var element = XElement.Parse(Sample.TagElement.TestComplexTag());
 
         var tag = new Tag(element);
 

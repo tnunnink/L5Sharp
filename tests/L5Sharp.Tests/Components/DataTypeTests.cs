@@ -25,8 +25,8 @@ namespace L5Sharp.Tests.Components
             dataType.Class.Should().Be(DataTypeClass.User);
             dataType.Members.Should().BeEmpty();
             dataType.Use.Should().BeNull();
-            dataType.Container.Should().BeEmpty();
-            dataType.Scope.Should().Be(Scope.Null);
+            dataType.Scope.Container.Should().BeEmpty();
+            dataType.Scope.Level.Should().Be(ScopeLevel.Null);
         }
 
         [Test]

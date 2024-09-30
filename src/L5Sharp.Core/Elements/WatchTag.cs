@@ -51,7 +51,7 @@ public class WatchTag : LogixElement
     /// </remarks>
     public string ScopeName
     {
-        get => GetRequiredValue<string>(nameof(Scope));
-        set => SetRequiredValue(value, nameof(Scope));
+        get => GetRequiredValue<string>(nameof(ScopeLevel));
+        set => SetRequiredValue(value, nameof(ScopeLevel));
     }
 }

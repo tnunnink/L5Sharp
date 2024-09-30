@@ -4,7 +4,7 @@ public static class Sample
 {
     public static class TagElement
     {
-        public static string TestComplexType()
+        public static string TestComplexTag()
         {
             return
                 @"<Tag Name=""TestComplexTag"" TagType=""Base"" DataType=""ComplexType"" Constant=""false"" ExternalAccess=""None"">
@@ -159,7 +159,7 @@ public static class Sample
             </Tag>";
         }
 
-        public static string TestSimpleType()
+        public static string TestSimpleTag()
         {
             return
                 @"<Tag Name=""TestSimpleTag"" TagType=""Base"" DataType=""SimpleType"" Constant=""false"" ExternalAccess=""Read Only"">
@@ -179,7 +179,7 @@ public static class Sample
             </Tag>";
         }
 
-        public static string TestStringType()
+        public static string TestStringTag()
         {
             return
                 @"<Tag Name=""TestStringTag"" TagType=""Base"" DataType=""MyStringType"" Constant=""false"" ExternalAccess=""None"">
@@ -309,6 +309,14 @@ public static class Sample
             <DataValue DataType=""SINT"" Radix=""Hex"" Value=""16#0c""/>
             </Data>
             </Tag>";
+        }
+    }
+    
+    public static class DataTypeElement
+    {
+        public static string SimpleType()
+        {
+            return @"";
         }
     }
 }

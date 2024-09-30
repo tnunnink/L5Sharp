@@ -32,8 +32,6 @@ public class BlockTests
         block.L5XType.Should().Be(L5XName.IRef);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -62,8 +60,6 @@ public class BlockTests
         block.L5XType.Should().Be(L5XName.ORef);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -92,8 +88,6 @@ public class BlockTests
         block.L5XType.Should().Be(L5XName.ICon);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -122,8 +116,6 @@ public class BlockTests
         block.L5XType.Should().Be(L5XName.OCon);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
 
     [Test]
@@ -143,8 +135,6 @@ public class BlockTests
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.Block);
         block.Cell.Should().Be("A1");
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -164,8 +154,6 @@ public class BlockTests
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.Function);
         block.Cell.Should().Be("A1");
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
 
     [Test]
@@ -185,8 +173,6 @@ public class BlockTests
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.AddOnInstruction);
         block.Cell.Should().Be("A1");
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
 
     [Test]

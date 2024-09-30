@@ -95,13 +95,13 @@ public class CrossReference
     /// This could potentially be helpful for analyzing references to tags that are used across multiple
     /// Task components.
     /// </remarks>
-    public string Task => Scope.Task(_element);
+    public string Task => ScopeLevel.Task(_element);
 
     /// <summary>
-    /// The <see cref="Core.Scope"/> type that the reference is contained within.
+    /// The <see cref="ScopeLevel"/> type that the reference is contained within.
     /// </summary>
-    /// <value>A <see cref="Core.Scope"/> indicating scope of the reference.</value>
-    public Scope Scope => Scope.Type(_element);
+    /// <value>A <see cref="ScopeLevel"/> indicating scope of the reference.</value>
+    public ScopeLevel Scope => ScopeLevel.Type(_element);
 
     /// <summary>
     /// The name of the scoped program, instruction, or controller that the reference is contained within.
@@ -110,7 +110,7 @@ public class CrossReference
     /// A <see cref="string"/> representing the name of program, controller, or instruction the reference
     /// is contained within.
     /// </value>
-    public string Container => Scope.Container(_element);
+    public string Container => ScopeLevel.Container(_element);
 
     /// <summary>
     /// The name of the <c>Routine</c> that the reference is contained within, it is a <see cref="LogixCode"/>

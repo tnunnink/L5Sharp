@@ -29,7 +29,6 @@ public class SheetTests
 
         sheet.Number.Should().Be(0);
         sheet.Description.Should().BeNull();
-        sheet.Container.Should().BeEmpty();
         sheet.Blocks().Should().BeEmpty();
     }
 

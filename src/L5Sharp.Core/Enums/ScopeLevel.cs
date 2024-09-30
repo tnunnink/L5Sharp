@@ -4,24 +4,24 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents an enumeration of all Logix <see cref="Scope"/> options.
+/// Represents an enumeration of all Logix <see cref="ScopeLevel"/> options.
 /// </summary>
-public class Scope : LogixEnum<Scope, string>
+public class ScopeLevel : LogixEnum<ScopeLevel, string>
 {
-    private Scope(string name, string value) : base(name, value)
+    private ScopeLevel(string name, string value) : base(name, value)
     {
     }
 
     /// <summary>
-    /// Determines the <see cref="Scope"/> of the provided <see cref="XElement"/> by looking up the ancestral chain.
+    /// Determines the <see cref="ScopeLevel"/> of the provided <see cref="XElement"/> by looking up the ancestral chain.
     /// </summary>
     /// <param name="element">The element for which to determine the scope of.</param>
     /// <returns><see cref="Program"/> if the element has a <c>Program</c> element ancestor,
     /// <see cref="Controller"/> if the element has a <c>Controller</c> element ancestor,
-    /// <see cref="Instruction"/> if the element has a <c>AddOnInstructionDefinition</c> element ancestor,
+    /// <see cref="Routine"/> if the element has a <c>AddOnInstructionDefinition</c> element ancestor,
     /// <see cref="Null"/> otherwise.
     /// </returns>
-    public static Scope Type(XElement element)
+    public static ScopeLevel Type(XElement element)
     {
         var ancestor = FindContainer(element)?.Name.LocalName;
 
@@ -29,7 +29,7 @@ public class Scope : LogixEnum<Scope, string>
         {
             L5XName.Controller => Controller,
             L5XName.Program => Program,
-            L5XName.AddOnInstructionDefinition => Instruction,
+            L5XName.AddOnInstructionDefinition => Routine,
             _ => Null
         };
     }
@@ -53,25 +53,25 @@ public class Scope : LogixEnum<Scope, string>
     public static string Task(XElement element) => FindTask(element)?.LogixName() ?? string.Empty;
 
     /// <summary>
-    /// Represents a Null <see cref="Scope"/> value.
+    /// Represents a Null <see cref="ScopeLevel"/> value.
     /// </summary>
     /// <remarks>A <c>Null</c> scope will occur on elements objects that have not been added to a container.</remarks>
-    public static readonly Scope Null = new(nameof(Null), "NullScope");
+    public static readonly ScopeLevel Null = new(nameof(Null), "NullScope");
 
     /// <summary>
-    /// Represents a Controller <see cref="Scope"/> value.
+    /// Represents a Controller <see cref="ScopeLevel"/> value.
     /// </summary>
-    public static readonly Scope Controller = new(nameof(Controller), "ControllerScope");
+    public static readonly ScopeLevel Controller = new(nameof(Controller), "ControllerScope");
 
     /// <summary>
-    /// Represents a Program <see cref="Scope"/> value.
+    /// Represents a Program <see cref="ScopeLevel"/> value.
     /// </summary>
-    public static readonly Scope Program = new(nameof(Program), "ProgramScope");
+    public static readonly ScopeLevel Program = new(nameof(Program), "ProgramScope");
 
     /// <summary>
-    /// Represents a Program <see cref="Scope"/> value.
+    /// Represents a Program <see cref="ScopeLevel"/> value.
     /// </summary>
-    public static readonly Scope Instruction = new(nameof(Instruction), "InstructionScope");
+    public static readonly ScopeLevel Routine = new(nameof(Routine), "RoutineScope");
 
     /// <summary>
     /// Finds the first ancestor element that is either a <c>Program</c>, <c>Controller</c>, or

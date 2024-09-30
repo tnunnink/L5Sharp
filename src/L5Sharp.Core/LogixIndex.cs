@@ -46,7 +46,7 @@ internal class LogixIndex
     private void AddComponent(XElement element)
     {
         var key = new ComponentKey(element.L5XType(), element.LogixName());
-        var container = Scope.Container(element);
+        var container = ScopeLevel.Container(element);
 
         if (Components.TryAdd(key, new Dictionary<string, XElement> { { container, element } })) return;
         Components[key].TryAdd(container, element);
@@ -335,7 +335,7 @@ internal class LogixIndex
     private void RemoveComponent(XElement element)
     {
         var key = new ComponentKey(element.Name.LocalName, element.LogixName());
-        var scope = Scope.Container(element);
+        var scope = ScopeLevel.Container(element);
 
         if (!Components.TryGetValue(key, out var components)) return;
 
