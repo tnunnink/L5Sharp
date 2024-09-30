@@ -25,12 +25,6 @@ public sealed class Instruction
     /// </summary>
     public const string Pattern = @"[A-Za-z_]\w{1,39}\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
 
-    /*/// <summary>
-    /// Pattern finds all text prior to opening parentheses, which is the instruction name or key that identifies
-    /// the instruction.
-    /// </summary>
-    private const string KeyPattern = @"[A-Za-z_]\w{1,39}(?=\()";*/
-
     /// <summary>
     /// Captures all content within parentheses, including outer parentheses and nested parentheses, assuming they
     /// are balanced (number of opening equals number of closing).
@@ -38,23 +32,16 @@ public sealed class Instruction
     private const string SignaturePattern = @"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
 
     /// <summary>
-    /// The regex pattern for Logix tag names without starting and ending anchors.
-    /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e. instruction keys)
-    /// Use this pattern for tag names within text, such as longer
-    /// </summary>
-    private const string TagNamePattern =
-        @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?";
-
-    /// <summary>
     /// A regex pattern that finds all commas not contained in array brackets so that we can split the arguments
     /// of an instruction signature into separate parsable values.
     /// </summary>
     private const string ArgumentSplitPattern = ",(?![^[]*])";
-    
+
     /// <summary>
     /// Lazy list of all known instructions and their corresponding factory method function.
     /// </summary>
-    private static Dictionary<string, Func<Instruction>> _known = Factories().ToDictionary(x => x.Key, x => x.Value);
+    private static readonly Dictionary<string, Func<Instruction>> _known =
+        Factories().ToDictionary(x => x.Key, x => x.Value);
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided string key and regex signature pattern.
@@ -127,8 +114,16 @@ public sealed class Instruction
     /// </summary>
     /// <value><c>true</c> if the instruction is conditional; Otherwise, <c>false</c>.</value>
     /// <remarks>An example of a condition instruction is an <see cref="XIC"/>.</remarks>
-    public bool IsConditional => Key is nameof(CMP) or nameof(EQU) or nameof(GEQ) or nameof(GRT) or nameof(LEQ)
-        or nameof(LES) or nameof(LIM) or nameof(MEQ) or nameof(NEQ) or nameof(XIC) or nameof(XIO);
+    public bool IsConditional => Key is nameof(CMP)
+        or nameof(EQU) or nameof(EQ)
+        or nameof(GEQ) or nameof(GE)
+        or nameof(GRT) or nameof(GT)
+        or nameof(LEQ) or nameof(LE)
+        or nameof(LES) or nameof(LT)
+        or nameof(LIM) or nameof(LIMIT)
+        or nameof(MEQ)
+        or nameof(NEQ) or nameof(NE)
+        or nameof(XIC) or nameof(XIO);
 
     /// <summary>
     /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Task</c> component by name.
@@ -211,7 +206,7 @@ public sealed class Instruction
         var index = Operands.ToList().IndexOf(operand);
         return index >= 0 ? Arguments.ElementAt(index) : default;
     }
-    
+
     /// <summary>
     /// Retrieves teh argument for a specified operand name from the instruction.
     /// </summary>
@@ -229,7 +224,7 @@ public sealed class Instruction
     public IEnumerable<TagName> Tags()
     {
         var tags = new List<TagName>();
-        
+
         foreach (var argument in Arguments)
         {
             if (argument.IsTag) tags.Add((TagName)argument);
@@ -316,16 +311,24 @@ public sealed class Instruction
     /// <summary>
     /// Gets the <c>ACL</c> instruction definition instance.
     /// </summary>
-    public static Instruction
-        ACL(Argument channel, Argument clear_serial_port_read, Argument clear_serial_port_write) => new(nameof(ACL),
-        "ACL(channel,clear_serial_port_read,clear_serial_port_write)", channel, clear_serial_port_read,
-        clear_serial_port_write);
+    public static Instruction ACL(Argument channel, Argument clear_serial_port_read, Argument clear_serial_port_write)
+        => new(nameof(ACL),
+            "ACL(channel,clear_serial_port_read,clear_serial_port_write)",
+            channel,
+            clear_serial_port_read,
+            clear_serial_port_write);
 
     /// <summary>
     /// Gets the <c>ACS</c> instruction definition instance.
     /// </summary>
     public static Instruction ACS(Argument source, Argument destination) =>
         new(nameof(ACS), "ACS(source,destination)", source, destination);
+
+    /// <summary>
+    /// Gets the <c>ACOS</c> instruction definition instance.
+    /// </summary>
+    public static Instruction ACOS(Argument source, Argument destination) =>
+        new(nameof(ACOS), "ACOS(source,destination)", source, destination);
 
     /// <summary>
     /// Gets the <c>ADD</c> instruction definition instance.
@@ -391,10 +394,22 @@ public sealed class Instruction
         new(nameof(ASN), "ASN(source,destination)", source, destination);
 
     /// <summary>
+    /// Gets the <c>ASIN</c> instruction definition instance.
+    /// </summary>
+    public static Instruction ASIN(Argument source, Argument destination) =>
+        new(nameof(ASIN), "ASIN(source,destination)", source, destination);
+
+    /// <summary>
     /// Gets the <c>ATN</c> instruction definition instance.
     /// </summary>
     public static Instruction ATN(Argument source, Argument destination) =>
         new(nameof(ATN), "ATN(source,destination)", source, destination);
+
+    /// <summary>
+    /// Gets the <c>ATAN</c> instruction definition instance.
+    /// </summary>
+    public static Instruction ATAN(Argument source, Argument destination) =>
+        new(nameof(ATAN), "ATAN(source,destination)", source, destination);
 
     /// <summary>
     /// Gets the <c>AVC</c> instruction definition instance.
@@ -704,6 +719,12 @@ public sealed class Instruction
         new(nameof(EQU), "EQU(source_A,source_B)", source_A, source_B);
 
     /// <summary>
+    /// Gets the <c>EQ</c> instruction definition instance.
+    /// </summary>
+    public static Instruction EQ(Argument source_A, Argument source_B) =>
+        new(nameof(EQ), "EQ(source_A,source_B)", source_A, source_B);
+
+    /// <summary>
     /// Gets the <c>ESTOP</c> instruction definition instance.
     /// </summary>
     public static Instruction ESTOP(Argument estop_tag, Argument reset_type, Argument channel_A, Argument channel_B,
@@ -783,6 +804,12 @@ public sealed class Instruction
         new(nameof(FRD), "FRD(source,destination)", source, destination);
 
     /// <summary>
+    /// Gets the <c>BCD_TO</c> instruction definition instance.
+    /// </summary>
+    public static Instruction BCD_TO(Argument source, Argument destination) =>
+        new(nameof(BCD_TO), "BCD_TO(source,destination)", source, destination);
+
+    /// <summary>
     /// Gets the <c>FSBM</c> instruction definition instance.
     /// </summary>
     public static Instruction FSBM(Argument fsbm_tag, Argument restart_type, Argument S1_S2_time, Argument S2_LC_time,
@@ -809,10 +836,22 @@ public sealed class Instruction
         new(nameof(GEQ), "GEQ(source_A,source_B)", source_A, source_B);
 
     /// <summary>
+    /// Gets the <c>GE</c> instruction definition instance.
+    /// </summary>
+    public static Instruction GE(Argument source_A, Argument source_B) =>
+        new(nameof(GE), "GE(source_A,source_B)", source_A, source_B);
+
+    /// <summary>
     /// Gets the <c>GRT</c> instruction definition instance.
     /// </summary>
     public static Instruction GRT(Argument source_A, Argument source_B) =>
         new(nameof(GRT), "GRT(source_A,source_B)", source_A, source_B);
+
+    /// <summary>
+    /// Gets the <c>GT</c> instruction definition instance.
+    /// </summary>
+    public static Instruction GT(Argument source_A, Argument source_B) =>
+        new(nameof(GT), "GT(source_A,source_B)", source_A, source_B);
 
     /// <summary>
     /// Gets the <c>GSV</c> instruction definition instance.
@@ -876,10 +915,22 @@ public sealed class Instruction
         new(nameof(LEQ), "LEQ(source_A,source_B)", source_A, source_B);
 
     /// <summary>
+    /// Gets the <c>LE</c> instruction definition instance.
+    /// </summary>
+    public static Instruction LE(Argument source_A, Argument source_B) =>
+        new(nameof(LE), "LE(source_A,source_B)", source_A, source_B);
+
+    /// <summary>
     /// Gets the <c>LES</c> instruction definition instance.
     /// </summary>
     public static Instruction LES(Argument source_A, Argument source_B) =>
         new(nameof(LES), "LES(source_A,source_B)", source_A, source_B);
+
+    /// <summary>
+    /// Gets the <c>LT</c> instruction definition instance.
+    /// </summary>
+    public static Instruction LT(Argument source_A, Argument source_B) =>
+        new(nameof(LT), "LT(source_A,source_B)", source_A, source_B);
 
     /// <summary>
     /// Gets the <c>LFL</c> instruction definition instance.
@@ -901,6 +952,12 @@ public sealed class Instruction
     /// </summary>
     public static Instruction LIM(Argument low_limit, Argument test, Argument high_limit) => new(nameof(LIM),
         "LIM(low_limit,test,high_limit)", low_limit, test, high_limit);
+
+    /// <summary>
+    /// Gets the <c>LIMIT</c> instruction definition instance.
+    /// </summary>
+    public static Instruction LIMIT(Argument low_limit, Argument test, Argument high_limit) => new(nameof(LIMIT),
+        "LIMIT(low_limit,test,high_limit)", low_limit, test, high_limit);
 
     /// <summary>
     /// Gets the <c>LN</c> instruction definition instance.
@@ -1239,6 +1296,12 @@ public sealed class Instruction
         new(nameof(MOV), "MOV(source,destination)", source, destination);
 
     /// <summary>
+    /// Gets the <c>MOVE</c> instruction definition instance.
+    /// </summary>
+    public static Instruction MOVE(Argument source, Argument destination) =>
+        new(nameof(MOVE), "MOVE(source,destination)", source, destination);
+
+    /// <summary>
     /// Gets the <c>MRAT</c> instruction definition instance.
     /// </summary>
     public static Instruction MRAT(Argument axis, Argument motion_control) =>
@@ -1309,6 +1372,12 @@ public sealed class Instruction
     /// </summary>
     public static Instruction NEQ(Argument source_A, Argument source_B) =>
         new(nameof(NEQ), "NEQ(source_A,source_B)", source_A, source_B);
+
+    /// <summary>
+    /// Gets the <c>NE</c> instruction definition instance.
+    /// </summary>
+    public static Instruction NE(Argument source_A, Argument source_B) =>
+        new(nameof(NE), "NE(source_A,source_B)", source_A, source_B);
 
     /// <summary>
     /// Gets the <c>NOP</c> instruction definition instance.
@@ -1531,6 +1600,12 @@ public sealed class Instruction
     /// </summary>
     public static Instruction SQR(Argument source, Argument destination) =>
         new(nameof(SQR), "SQR(source,destination)", source, destination);
+    
+    /// <summary>
+    /// Gets the <c>SQRT</c> instruction definition instance.
+    /// </summary>
+    public static Instruction SQRT(Argument source, Argument destination) =>
+        new(nameof(SQRT), "SQRT(source,destination)", source, destination);
 
     /// <summary>
     /// Gets the <c>SRT</c> instruction definition instance.
@@ -1631,10 +1706,22 @@ public sealed class Instruction
         new(nameof(TON), "TON(timer,preset,accum)", timer, preset, accum);
 
     /// <summary>
+    /// Gets the <c>TO_BCD</c> instruction definition instance.
+    /// </summary>
+    public static Instruction TO_BCD(Argument timer, Argument preset, Argument accum) =>
+        new(nameof(TO_BCD), "TO_BCD(timer,preset,accum)", timer, preset, accum);
+
+    /// <summary>
     /// Gets the <c>TRN</c> instruction definition instance.
     /// </summary>
     public static Instruction TRN(Argument source, Argument destination) =>
         new(nameof(TRN), "TRN(source,destination)", source, destination);
+    
+    /// <summary>
+    /// Gets the <c>TRUNC</c> instruction definition instance.
+    /// </summary>
+    public static Instruction TRUNC(Argument source, Argument destination) =>
+        new(nameof(TRUNC), "TRUNC(source,destination)", source, destination);
 
     /// <summary>
     /// Gets the <c>TSAM</c> instruction definition instance.
@@ -1703,6 +1790,12 @@ public sealed class Instruction
     /// </summary>
     public static Instruction XPY(Argument source_A, Argument source_B, Argument destination) =>
         new(nameof(XPY), "XPY(source_A,source_B,destination)", source_A, source_B, destination);
+    
+    /// <summary>
+    /// Gets the <c>EXPT</c> instruction definition instance.
+    /// </summary>
+    public static Instruction EXPT(Argument source_A, Argument source_B, Argument destination) =>
+        new(nameof(EXPT), "EXPT(source_A,source_B,destination)", source_A, source_B, destination);
 
     #endregion
 
