@@ -216,10 +216,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
         return IsNull(target as TObject, out element);
     }
 
-    public IEnumerable<CrossReference> References(TagName name)
-    {
-        throw new NotImplementedException();
-    }
+    public IEnumerable<CrossReference> References(TagName name) => [];
 
     #endregion
 
