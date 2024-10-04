@@ -25,7 +25,7 @@
         <PackageId>L5Sharp</PackageId>
         <PackageProjectUrl>https://github.com/tnunnink/L5Sharp</PackageProjectUrl>
         <NeutralLanguage>en-US</NeutralLanguage>
-        <TargetFrameworks>net7.0;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
