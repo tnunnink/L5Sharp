@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -44,7 +43,4 @@ public class Chart : Diagram
 
     /// <inheritdoc />
     public override int Number => 0;
-
-    /// <inheritdoc />
-    public override IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
 }
