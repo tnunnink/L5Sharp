@@ -100,14 +100,13 @@ public class DataType : LogixComponent<DataType>
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (L5X is null) return Enumerable.Empty<LogixComponent>();
+        if (L5X is null) return [];
 
         var dependencies = new List<LogixComponent>();
 
         foreach (var member in Members)
         {
-            var dataType = L5X.Find<DataType>(member.DataType);
-            if (dataType is null) continue;
+            if (!L5X.TryGet<DataType>(member.DataType, out var dataType)) continue;
             dependencies.Add(dataType);
             dependencies.AddRange(dataType.Dependencies());
         }
