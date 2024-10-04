@@ -121,9 +121,10 @@ public abstract class LogixComponent : LogixObject
 
         foreach (var reference in references)
         {
-            //todo fix this
-            var element = L5X?.Get(reference.Scope);
-            element?.Remove();
+            if (L5X?.TryGet(reference.Scope, out var element) is true)
+            {
+                element.Remove();
+            };
         }
 
         Element.Remove();
