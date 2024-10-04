@@ -371,7 +371,7 @@ public class Module : LogixComponent<Module>
                 $"The module '{Name}' does not have a port for downstream module connections.");
 
         if (parentPort.Type == "Ethernet" && address is null) address = Address.IP();
-        if (parentPort.Address.IsSlot && IsAttached && address is null) address = NextSlot();
+        if (parentPort.Address.IsSlot && address is null) address = NextSlot();
         address ??= Address.Slot();
 
         var childPort = new Port { Id = 1, Type = parentPort.Type, Address = address, Upstream = true };
