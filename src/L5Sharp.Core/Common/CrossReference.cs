@@ -95,7 +95,7 @@ public class CrossReference
         return [new CrossReference(scope, type)];
     }
 
-    private static IEnumerable<CrossReference> GetRungReferences(XElement element)
+    private static List<CrossReference> GetRungReferences(XElement element)
     {
         var text = element.Element(L5XName.Text)?.Value.Parse<NeutralText>();
         if (text is null) return [];
@@ -111,7 +111,7 @@ public class CrossReference
         return references;
     }
 
-    private static IEnumerable<CrossReference> GetLineReferences(XElement element)
+    private static List<CrossReference> GetLineReferences(XElement element)
     {
         var text = element.Value.Parse<NeutralText>();
 

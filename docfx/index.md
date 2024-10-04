@@ -52,7 +52,7 @@ Comment, and Preset value in a flat list.
 
 ## Usage
 The `LogixContent` class contains `LogixContainer` collections for all L5X components, 
-such as [Tag](xref:L5Sharp.Components.Tag), [DataType](xref:L5Sharp.Components.DataType),
+such as [Tag](xref:L5Sharp.Core.Tag), [DataType](xref:L5Sharp.Core.DataType),
 [Moulde](xref:L5Sharp.Components.Module), and more. 
 These classes expose methods for querying and modifying the collections and components within the collections.
 The following set of examples demonstrate some of these features using the `Tags` container.
