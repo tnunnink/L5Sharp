@@ -149,45 +149,6 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="element"></param>
-    /// <returns></returns>
-    internal static TagName TagName(this XElement element)
-    {
-        //Don't want to use reflection (L5XTypes()) in case this is called in loops.
-        HashSet<string> tagElements =
-        [
-            L5XName.Tag,
-            L5XName.LocalTag,
-            L5XName.InputTag,
-            L5XName.OutputTag,
-            L5XName.ConfigTag
-        ];
-
-        //Ensures we are or in a tag element. If not return empty.
-        var root = element.AncestorsAndSelf().FirstOrDefault(e => tagElements.Contains(e.Name.LocalName));
-        if (root is null) return Core.TagName.Empty;
-
-        var tagName = new TagName(root.LogixName());
-
-        //Gets anscestors from here up to right before the root tag element.
-        //If this is the tag element then should not perform iteration and we return what we have.
-        var ancestors = element.AncestorsAndSelf()
-            .Where(e => !e.MemberName().IsEmpty())
-            .TakeWhile(e => !tagElements.Contains(e.Name.LocalName))
-            .ToList();
-
-        for (var i = ancestors.Count - 1; i >= 0; i--)
-        {
-            var member = ancestors[i].MemberName();
-            tagName = Core.TagName.Concat(tagName, member);
-        }
-
-        return tagName;
-    }
-
-    /// <summary>
     /// Gets the <c>DataType</c> attribute value for the provided element or it's parent element, which ever value is
     /// found first.
     /// </summary>
@@ -207,6 +168,55 @@ internal static class L5XExtensions
         //then check the parent element and return if found.
         var parent = element.Parent?.Attribute(L5XName.DataType)?.Value;
         return parent ?? null;
+    }
+
+    /// <summary>
+    /// Gets the full <see cref="TagName"/> path for the provided element. 
+    /// </summary>
+    /// <param name="element">The element for which to determine the tag name.
+    /// This can be a tag element or nested data member element.</param>
+    /// <returns>A <see cref="TagName"/> that represents the full path to the element.</returns>
+    /// <remarks>
+    /// This is handy since it will determine the "TagName" for any deeply nested data member. This also
+    /// supports the LocalTag and Module tag elements.
+    /// </remarks>
+    internal static TagName TagName(this XElement element)
+    {
+        //Don't want to use reflection (L5XTypes()) in case this is called in loops.
+        HashSet<string> tagElements =
+        [
+            L5XName.Tag,
+            L5XName.LocalTag,
+            L5XName.InputTag,
+            L5XName.OutputTag,
+            L5XName.ConfigTag
+        ];
+
+        //Ensures we are or in a tag element. If not return empty.
+        var root = element.AncestorsAndSelf().FirstOrDefault(e => tagElements.Contains(e.Name.LocalName));
+        if (root is null)
+            return Core.TagName.Empty;
+
+        //Handles special case module tag elements which need to use the parent module names.
+        if (root.L5XType() is L5XName.InputTag or L5XName.OutputTag or L5XName.ConfigTag)
+            return root.ModuleTagName();
+
+        var tagName = new TagName(root.LogixName());
+
+        //Gets anscestors from here up to right before the root tag element.
+        //If this is the tag element then should not perform iteration, and we return what we have.
+        var memebers = element.AncestorsAndSelf()
+            .Where(e => !e.MemberName().IsEmpty())
+            .TakeWhile(e => !tagElements.Contains(e.Name.LocalName))
+            .ToList();
+
+        for (var i = memebers.Count - 1; i >= 0; i--)
+        {
+            var member = memebers[i].MemberName();
+            tagName = Core.TagName.Concat(tagName, member);
+        }
+
+        return tagName;
     }
 
     /// <summary>
