@@ -16,12 +16,12 @@ namespace L5Sharp.Core;
 /// can query from the content of a given routine type.
 /// </para>
 /// <para>
-/// This class overrides the default equality implementation to determine code equality by it's location within the L5X tree.
+/// This class overrides the default equality implementation to determine code equality by its location within the L5X tree.
 /// In other words, two instances of code are equal if they are in the same program/instruction, routine, and have the
 /// same number.
 /// </para>
 /// </remarks>
-public abstract class LogixCode : LogixObject, ILogixReferencable
+public abstract class LogixCode : LogixObject
 {
     /// <summary>
     /// Creates a new <see cref="LogixCode"/> instance with default values.
@@ -60,7 +60,7 @@ public abstract class LogixCode : LogixObject, ILogixReferencable
     public string Location => $"{L5XType} {Number}".Trim();
 
     /// <summary>
-    /// The the parent <see cref="Core.Routine"/> component for the current <c>LogixCode</c> element.
+    /// The parent <see cref="Core.Routine"/> component for the current <c>LogixCode</c> element.
     /// </summary>
     /// <value>A <see cref="Routine"/> element if found; Otherwise, and <c>null</c>.</value>
     public Routine? Routine
@@ -76,5 +76,5 @@ public abstract class LogixCode : LogixObject, ILogixReferencable
     /// Returns a collection of <see cref="CrossReference"/> objects found within this code element.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CrossReference"/> values contained by this code.</returns>
-    public abstract IEnumerable<CrossReference> References();
+    public IEnumerable<CrossReference> References() => CrossReference.In(Element);
 }
