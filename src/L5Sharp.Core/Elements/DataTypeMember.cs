@@ -210,4 +210,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
         var defintion = L5X.DataTypes.Find(DataType);
         return defintion ?? new DataType(DataType);
     }
+
+    /// <inheritdoc />
+    public override string ToString() => Name;
 }
