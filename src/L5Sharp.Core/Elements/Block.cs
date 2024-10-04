@@ -183,19 +183,6 @@ public class Block : DiagramElement
         }
     }
 
-    /// <inheritdoc />
-    public override IEnumerable<CrossReference> References()
-    {
-        var references = new List<CrossReference> { new(Element, L5XName.Instruction, Type) };
-
-        if (Operand is null || !Operand.IsTag)
-            return references;
-
-        references.Add(new CrossReference(Element, L5XName.Tag, Operand.ToString(), Type));
-        references.AddRange(Tags.Select(t => new CrossReference(Element, L5XName.Tag, t, Type)));
-        return references;
-    }
-
     #region Elements
 
     /// <summary>

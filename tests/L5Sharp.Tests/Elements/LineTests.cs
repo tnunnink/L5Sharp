@@ -18,8 +18,7 @@ public class LineTests
     public void New_Default_ShouldNotBeAttached()
     {
         var sheet = new Line();
-
-        sheet.IsAttached.Should().BeFalse();
+        
         sheet.L5X.Should().BeNull();
     }
 

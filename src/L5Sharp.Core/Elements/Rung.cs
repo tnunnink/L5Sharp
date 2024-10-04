@@ -114,43 +114,6 @@ public class Rung : LogixCode
     }
 
     /// <inheritdoc />
-    public override IEnumerable<CrossReference> References()
-    {
-        var references = new List<CrossReference>();
-
-        var instructions = Text.Instructions().ToList();
-        
-        foreach (var instruction in instructions)
-        {
-            references.Add(new CrossReference(Element, L5XName.Instruction, instruction.Key));
-            
-            if (instruction.IsRoutineCall)
-            {
-                var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
-                references.Add(new CrossReference(Element, L5XName.Routine, routine, instruction.Key));
-                
-                var parameters = instruction.Arguments.Skip(1).Where(a => a.IsTag).Select(t => t.ToString());
-                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p, instruction.Key)));
-                continue;
-            }
-
-            if (instruction.IsTaskCall)
-            {
-                var task = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
-                references.Add(new CrossReference(Element, L5XName.Task, task, instruction.Key));
-                continue;
-            }
-            
-            //todo other instructions like GSV SSV
-
-            references.AddRange(instruction.Tags()
-                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString(), instruction.Key)));
-        }
-
-        return references;
-    }
-
-    /// <inheritdoc />
     public override string ToString() => Text;
 
     /// <summary>

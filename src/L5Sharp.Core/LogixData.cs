@@ -65,15 +65,7 @@ public abstract class LogixData : LogixElement
     /// members. <see cref="AtomicData"/> will not return the bit members since they are not present in the underlying
     /// XML and having them would exponentially increase the number of members a given tags has.
     /// </remarks>
-    public virtual IEnumerable<Member> Members => Enumerable.Empty<Member>();
-
-    /// <summary>
-    /// Casts the <see cref="LogixData"/> to the type of the generic parameter.
-    /// </summary>
-    /// <typeparam name="TLogixType">The logix type to cast to.</typeparam>
-    /// <exception cref="InvalidCastException">The object can not be casted to the specified type.</exception>
-    /// <returns>The logix type object cast as the specified generic type parameter.</returns>
-    public TLogixType As<TLogixType>() where TLogixType : LogixData => (TLogixType)this;
+    public virtual IEnumerable<Member> Members => [];
 
     /// <summary>
     /// Gets a <see cref="Core.Member"/> with the specified name if it exists for the <see cref="LogixData"/>;
@@ -348,7 +340,7 @@ public abstract class LogixData : LogixElement
     private static IEnumerable<KeyValuePair<string, Func<LogixData>>> Scan(Assembly assembly)
     {
         var factories = new List<KeyValuePair<string, Func<LogixData>>>();
-        
+
         var logixTypes = assembly.GetTypes().Where(IsLogixDataType).ToList();
 
         foreach (var logixType in logixTypes)

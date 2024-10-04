@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -11,7 +9,7 @@ namespace L5Sharp.Core;
 public sealed class Line : LogixCode
 {
     private NeutralText Text => new(Element.Value);
-    
+
     /// <summary>
     /// Creates a new <see cref="Line"/> with default values.
     /// </summary>
@@ -28,7 +26,7 @@ public sealed class Line : LogixCode
     public Line(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="Line"/> initialized with the provided <see cref="NeutralText"/>.
     /// </summary>
@@ -40,43 +38,6 @@ public sealed class Line : LogixCode
     public Line(NeutralText text) : base(L5XName.Line)
     {
         Element.ReplaceNodes(new XCData(text));
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<CrossReference> References()
-    {
-        var references = new List<CrossReference>();
-
-        var instructions = Text.Instructions().ToList();
-        
-        foreach (var instruction in instructions)
-        {
-            references.Add(new CrossReference(Element, L5XName.Instruction, instruction.Key));
-            
-            if (instruction.IsRoutineCall)
-            {
-                var routine = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
-                references.Add(new CrossReference(Element, L5XName.Routine, routine, instruction.Key));
-                
-                var parameters = instruction.Arguments.Skip(1).Where(a => a.IsTag).Select(t => t.ToString());
-                references.AddRange(parameters.Select(p => new CrossReference(Element, L5XName.Tag, p, instruction.Key)));
-                continue;
-            }
-
-            if (instruction.IsTaskCall)
-            {
-                var task = instruction.Arguments.FirstOrDefault()?.ToString() ?? string.Empty;
-                references.Add(new CrossReference(Element, L5XName.Task, task, instruction.Key));
-                continue;
-            }
-            
-            //todo other instructions like GSV SSV
-
-            references.AddRange(instruction.Tags()
-                .Select(t => new CrossReference(Element, L5XName.Tag, t.ToString(), instruction.Key)));
-        }
-
-        return references;
     }
 
     /// <inheritdoc />
