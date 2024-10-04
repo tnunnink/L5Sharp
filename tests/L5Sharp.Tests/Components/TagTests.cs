@@ -39,8 +39,8 @@ public class TagTests
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
         tag.TagName.Should().Be(TagName.Empty);
-        tag.Scope.Should().Be(ScopeLevel.Null);
-        tag.IsAttached.Should().BeFalse();
+        tag.Scope.Level.Should().Be(ScopeLevel.Null);
+        tag.Scope.IsScoped.Should().BeFalse();
     }
 
     [Test]
@@ -112,7 +112,7 @@ public class TagTests
     public void New_Array_ShouldHaveExpectedValue()
     {
         var tag = new Tag { Name = "Test", Value = new DINT[] { 0, 1, 2, 3, 4 } };
-        
+
         tag.Dimensions.Should().Be(new Dimensions(5));
         tag.Value.As<ArrayData>()[0].Should().Be(0);
         tag.Value.As<ArrayData>()[1].Should().Be(1);
@@ -170,7 +170,7 @@ public class TagTests
     public void New_NamedComplexType_ShouldHaveExpectedDataTypeAndMembers()
     {
         var tag = new Tag { Name = "Test", Value = new ComplexData("MyCustomType") };
-        
+
         tag.Add("Member01", new DINT(100));
         tag.Add("Member02", new TIMER { PRE = 3000 });
         tag.Add("Member03", new ComplexData("SubType"));
@@ -461,7 +461,7 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new DINT[] { 1, 2, 3, 4 } };
 
         tag.Value = new DINT[] { 4, 3, 2, 1 };
-        
+
         tag.Value.As<ArrayData>()[0].Should().Be(4);
         tag.Value.As<ArrayData>()[1].Should().Be(3);
         tag.Value.As<ArrayData>()[2].Should().Be(2);
@@ -475,7 +475,7 @@ public class TagTests
 
         //array length does not matter. indices will be join on what is available.
         tag.Value = new TIMER[] { new() { PRE = 100 }, new() { PRE = 200 }, new() { PRE = 300 } };
-        
+
         tag.Value.As<ArrayData>()[0].As<TIMER>().PRE.Should().Be(100);
         tag.Value.As<ArrayData>()[1].As<TIMER>().PRE.Should().Be(200);
         tag.Value.As<ArrayData>()[2].As<TIMER>().PRE.Should().Be(300);
@@ -528,7 +528,7 @@ public class TagTests
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(true);
     }
-    
+
     [Test]
     public Task SetValue_AnalogAlarm_ShouldBeVerified()
     {
@@ -639,7 +639,7 @@ public class TagTests
         members.Should().Contain(t => t.TagName == "Test.ACC");
         members.Should().Contain(t => t.TagName == "Test.PRE");
     }
-    
+
     [Test]
     public void Members_StringType_ShouldHaveExpectedCount()
     {
@@ -858,7 +858,7 @@ public class TagTests
 
         tag.Comments.Should().HaveCount(2);
     }
-    
+
     [Test]
     public Task Comments_ValidCollection_ShouldBeVerified()
     {
@@ -894,7 +894,7 @@ public class TagTests
         tag.Name.Should().Be("MyTimer");
         tag.Value.Should().BeOfType<TIMER>();
     }
-    
+
     [Test]
     public void With_RootTagValidValue_ShouldUpdateValue()
     {
