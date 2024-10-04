@@ -10,12 +10,18 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// An object that contains scope information which identifies where in an L5X file an element exists. Elements can be
-/// globally scoped (Controller), or locally scoped (Program/Routine). Scope also includes the <see cref="Type"/> and
-/// <see cref="Name"/> of a given target element, therefore it can be viewed as a sort of Uri or resource identifier
-/// for any given component/code element in a file.
+/// An object that contains scope information which identifies the location of an element in an L5X.
 /// </summary>
 /// <remarks>
+/// <para>
+/// Elements can be globally scoped (Controller), or locally scoped (Program/Routine).
+/// Scope also includes the <see cref="Type"/> and <see cref="Name"/> of a given target element, therefore it can be
+/// viewed as a sort of Uri or resource identifier for any given component/code element in a file.
+/// </para>
+/// <para>
+/// Ultimately scope is defined by <see cref="Path"/> which resembles a Uri. Each part of the path is separated by a
+/// '/' character. Paths can be absolute or relative (start with '/').
+/// </para>
 /// </remarks>
 public sealed class Scope
 {
@@ -34,21 +40,17 @@ public sealed class Scope
     private Scope(string path)
     {
         if (string.IsNullOrEmpty(path))
-            throw new ArgumentException("Path can not be null or empty.");
+            throw new ArgumentException("Scope path can not be null or empty.");
 
         var parts = path.Split(PathSeparator);
 
-        if (parts.Length is < 3 or > 5)
-            throw new ArgumentOutOfRangeException(
-                $"The provided scope {Path} has an invalid length. Expecting between 3 and 5 segments.");
-
-        Controller = ParseController(parts);
-        Program = ParseProgram(parts);
+        Controller = DetermineController(parts);
+        Program = DetermineProgram(parts);
         Routine = ParseRoutine(parts);
-        Type = ParseElement(parts);
-        Name = ParseName(parts);
+        Type = DetermineType(parts);
+        Name = DetermineName(parts);
         Path = DeterminePath();
-        Level = DetermineType();
+        Level = DetermineLevel();
         Container = DetermineContainer();
     }
 
@@ -63,53 +65,71 @@ public sealed class Scope
         Controller = GetScopedController(element);
         Program = GetScopedProgram(element);
         Routine = GetScopedRoutine(element);
-        Type = element.Name.LocalName;
+        Type = GetScopedType(element);
         Name = GetScopedName(element);
-        Task = GetScopedTask(element);
         Path = DeterminePath();
-        Level = DetermineType();
+        Level = DetermineLevel();
         Container = DetermineContainer();
     }
 
     /// <summary>
-    /// The full path that identifies the scope of the element.
+    /// The full path that uniquely identifies the scope of the element, or where in the L5X tree the element is found.
     /// </summary>
+    /// <remarks>
+    /// Path is esstentiall the "value" of any given scope and is used for equality checks. Path is built like a Uri
+    /// using '/' characters to separate th segments of the path. Each part should reprent the name of the containing
+    /// element, element type, or element name. Paths can be absolute or relative. Relative paths start with a '/'.
+    /// </remarks>
     public string Path { get; } = string.Empty;
 
     /// <summary>
-    /// The <see cref="ScopeLevel"/> value indicates whether this scope is a controller, program, or instruction scoped
-    /// element.
+    /// The <see cref="ScopeLevel"/> indicating whether this is a controller, program, or routine scoped element.
     /// </summary>
+    /// <remarks>
+    /// You can also check the scope level by using the Is properties to more susinctly determine what "type"
+    /// of scope this object represents.
+    /// </remarks>
+    /// <seealso cref="IsScoped"/>     
+    /// <seealso cref="IsGlobal"/>
+    /// <seealso cref="IsLocal"/>
+    /// <seealso cref="IsProgram"/>
+    /// <seealso cref="IsRoutine"/>
     public ScopeLevel Level { get; } = ScopeLevel.Null;
 
     /// <summary>
-    /// The name of the controller, program, or routine that represents the scope or immediate parent container
-    /// of the element. 
+    /// The name of the controller, program, or routine that represents the immediate parent container of the element.
     /// </summary>
+    /// <remarks>
+    /// This value will be the same as <see cref="Controller"/>, <see cref="Program"/>, or <see cref="Routine"/>
+    /// depending on what the <see cref="Level"/> is. This property is helpful for instances where you don't care about
+    /// the level and just need to know the parent container scope name.
+    /// </remarks>
     public string Container { get; } = string.Empty;
 
     /// <summary>
-    /// Gets the scoped controller name of this element.
+    /// Gets the name of the parent controller element for this scope instance.
+    /// If no parent exists, then an empty string is returned.
     /// </summary>
     /// <remarks>
-    /// Controller is the root portion of a scope path. If a scope path contains any text, the first segment is
-    /// considered the controller name.
-    /// This may be the same as <see cref="Container"/> if the element is controller scoped. Sometimes it may be
-    /// helpful to easily retrieve this value specifically to identify objects across L5X files.
+    /// Controller is the root portion of a scope path.
+    /// For absolute paths, the first segment is considered the controller name.
+    /// For relative paths (paths that start with '/') the controller name will be empty.
     /// </remarks>
     public string Controller { get; } = string.Empty;
 
     /// <summary>
-    /// Gets the scoped program name of this element.
+    /// Gets the name of the parent program element for this scope instance.
+    /// If no parent exists, then an empty string is returned.
     /// </summary>
     /// <remarks>
-    /// This may be the same as <see cref="Container"/> if the element is program scoped. Sometimes it may be
-    /// helpful to easily retrieve both the program name and controller name to identify objects across L5X files.
+    /// Program represents the second portion of the scope path when there are more than 3 segments.
+    /// Program should only be set for elements contained directly in a program, such as Tag or Routine.
     /// </remarks>
     public string Program { get; } = string.Empty;
 
     /// <summary>
-    /// Gets the scoped routine name of this element.
+    /// Gets the name of the parent routine element for this scope instance.
+    /// If no parent exists, then an empty string is returned.
     /// </summary>
     /// <remarks>
     /// Routine will only be set for elements contained in routines, such as Rung, Line, or Sheet. This is because only
@@ -118,50 +138,68 @@ public sealed class Scope
     public string Routine { get; } = string.Empty;
 
     /// <summary>
-    /// 
+    /// Gets the <see cref="ScopeType"/> of the component or code element that identifies this scope.
     /// </summary>
-    public string Type { get; } = string.Empty;
+    public ScopeType Type { get; } = ScopeType.Empty;
 
     /// <summary>
-    /// The name of the component or code that further identifies this element. 
+    /// Gets the name of the component or code element that identifies this scope. 
     /// </summary>
-    public string Name { get; } = string.Empty;
+    public TagName Name { get; } = TagName.Empty;
 
     /// <summary>
-    /// Gets the task name that this element is schedule in.
+    /// Indicates whether this scope path is relative, meaning it starts with a '/' path separator character.
+    /// If the path is not relative, then it is considered absolute (starts with the controller name).
     /// </summary>
-    public string Task { get; } = string.Empty;
+    public bool IsRelative => Path.StartsWith(PathSeparator);
 
     /// <summary>
     /// Indicates whether this element is scoped to an L5X container, meaning it is attached to an L5X document, or if
     /// it is an orphaned element. Basically, if the <see cref="ScopeLevel"/> is <c>Null</c> or not.
     /// </summary>
+    /// <remarks>
+    /// This is a helper so that we don't always need to write the full equality check.
+    /// </remarks>
     public bool IsScoped => Level != ScopeLevel.Null;
 
     /// <summary>
     /// Indicates whether this is a global (Controller) scoped instance.
     /// This is in constrast to <see cref="IsLocal"/>.
     /// </summary>
+    /// <remarks>
+    /// This is a helper so that we don't always need to write the full equality check.
+    /// </remarks>
     public bool IsGlobal => Level == ScopeLevel.Controller;
 
     /// <summary>
     /// Indicates whether this is a local (Program or Routine) scoped instance.
     /// This is in constrast to <see cref="IsGlobal"/>.
     /// </summary>
+    /// <remarks>
+    /// This is a helper so that we don't always need to write the full equality check.
+    /// </remarks>
     public bool IsLocal => Level == ScopeLevel.Program || Level == ScopeLevel.Routine;
 
     /// <summary>
     /// Indicates whether this is a Program scoped instance (i.e. Level == Program).
     /// </summary>
+    /// <remarks>
+    /// This is a helper so that we don't always need to write the full equality check.
+    /// Note that a scope can be ISLocal and IsProgram.
+    /// </remarks>
     public bool IsProgram => Level == ScopeLevel.Program;
-    
+
     /// <summary>
-    /// Indicates whether this is a Program scoped instance (i.e. Level == Routine).
+    /// Indicates whether this is a Routine scoped instance (i.e. Level == Routine).
     /// </summary>
+    /// <remarks>
+    /// This is a helper so that we don't always need to write the full equality check.
+    /// Note that a scope can be IsLocal and IsRoutine.
+    /// </remarks>
     public bool IsRoutine => Level == ScopeLevel.Routine;
 
     /// <summary>
-    /// Creates default empty/null scope instance.
+    /// Creates default empty scope instance.
     /// </summary>
     public static Scope Empty => new();
 
@@ -175,18 +213,19 @@ public sealed class Scope
     /// <summary>
     /// Creates and returns a new <see cref="IScopeBuilder"/> that allows fluent configuration of a <c>Scope</c> instance. 
     /// </summary>
-    /// <param name="controller">The name of the root controller element.</param>
-    /// <returns>A <see cref="IScopeBuilder"/> containing the current scope config.</returns>
-    public static IScopeBuilder Build(string controller)
+    /// <param name="controller">The optional name of the root controller element.
+    /// If not provided, then the resulting scope will represent a relative path.</param>
+    /// <returns>A <see cref="IScopeBuilder"/> fluent interface for building the scope instance.</returns>
+    public static IScopeBuilder Build(string? controller = default)
     {
-        return new ScopeBuider(controller);
+        return new ScopeBuider(controller ?? string.Empty);
     }
 
     /// <summary>
-    /// 
+    /// Creates a scope instance based on the provided LogixElement.
     /// </summary>
-    /// <param name="element"></param>
-    /// <returns></returns>
+    /// <param name="element">The LogixElement used to create the scope.</param>
+    /// <returns>The created scope instance.</returns>
     public static Scope Of(LogixElement element)
     {
         if (element is null)
@@ -196,16 +235,42 @@ public sealed class Scope
     }
 
     /// <summary>
-    /// 
+    /// Creates a <see cref="Scope"/> instance based on the provided <see cref="XElement"/> element.
     /// </summary>
-    /// <param name="element"></param>
-    /// <returns></returns>
-    internal static Scope Of(XElement element)
+    /// <param name="element">The <see cref="XElement"/> element representing the scope.</param>
+    /// <returns>A <see cref="Scope"/> instance.</returns>
+    public static Scope Of(XElement element)
     {
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
         return new Scope(element);
+    }
+
+    /// <summary>
+    /// Appends the specified <see cref="Scope"/> to the current scope.
+    /// </summary>
+    /// <param name="scope">The scope to be appended.</param>
+    /// <returns>A new <see cref="Scope"/> instance with the concatenated path.</returns>
+    public Scope Append(Scope scope)
+    {
+        var left = Path.TrimEnd(PathSeparator);
+        var right = scope.Path.TrimStart(PathSeparator);
+        return new Scope(string.Concat(left, PathSeparator, right));
+    }
+
+    /// <summary>
+    /// Determines if this scope has the provided container name as part of its path.
+    /// </summary>
+    /// <param name="container">The name of the container to check.</param>
+    /// <returns><c>true</c> if this scope contains the provided container name; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This is just checking that the <see cref="Path"/> continas the provided string, so this could be the controller,
+    /// program, or routine name. This could also be a combination of containers such as "ProgramName/RoutineName/".
+    /// </remarks>
+    public bool Contains(string container)
+    {
+        return Path.Contains(container);
     }
 
     /// <summary>
@@ -231,12 +296,12 @@ public sealed class Scope
             path.Append($"/Routines/Routine[@Name='{Routine}']");
         }
 
-        if (!Type.IsEmpty() && ComponentType.All().Any(x => x.Value == Type))
+        if (!IsRoutine)
         {
             path.Append($"/{Type}s/{Type}[@Name='{Name}']");
         }
 
-        if (!Type.IsEmpty() && Type is L5XName.Rung or L5XName.Line or L5XName.Sheet)
+        if (IsRoutine)
         {
             path.Append($"/{Type}s/{Type}[@Number='{Name}']");
         }
@@ -245,45 +310,91 @@ public sealed class Scope
     }
 
     /// <inheritdoc />
-    public override string ToString() => Path;
-
-    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj switch
         {
-            Scope other => Path.IsEquivalent(other.Path) && Level == other.Level,
-            string path => Equals(this, To(path)),
+            Scope other => Path.IsEquivalent(other.Path),
+            string path => Path.IsEquivalent(path),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        return Name.GetHashCode() ^ Level.GetHashCode();
-    }
+    public override int GetHashCode() => Path.GetHashCode();
 
+    /// <inheritdoc />
+    public override string ToString() => Path;
 
-    //
+    /// <summary>
+    /// Implicit conversion from a string to a Scope instance.
+    /// </summary>
+    /// <param name="path">The string representing the path to be converted into a Scope instance.</param>
+    /// <returns>A new Scope instance represented by the provided string path.</returns>
+    public static implicit operator Scope(string path) => new(path);
+
+    /// <summary>
+    /// Implicit conversion from a TagName to a Scope instance.
+    /// </summary>
+    /// <param name="tagName">The TagName representing the path to be converted into a Scope instance.</param>
+    /// <returns>A new Scope instance represented by the provided string path.</returns>
+    public static implicit operator Scope(TagName tagName) => new(tagName);
+
+    /// <summary>
+    /// Implicit conversion from a Scope to a string.
+    /// </summary>
+    /// <param name="scope">The scope to be converted into a string value.</param>
+    /// <returns>A <see cref="string"/> containing the path of the scope instance.</returns>
+    public static implicit operator string(Scope scope) => scope.Path;
+
 
     #region Internal
 
-    private static string ParseController(string[] parts)
+    // --------------------------------------
+    // Absolute
+    // --------------------------------------
+    //     Controller/Type/Name
+    //     Controller/Program/Type/Name
+    //     Controller/Program/Routine/Type/Name
+    // --------------------------------------
+    // Relative
+    // --------------------------------------
+    //     /Name
+    //     /Type/Name
+    //     /Program/Type/Name
+    //     /Routine/Type/Name
+    //     /Program/Routine/Type/Name
+    // --------------------------------------
+    // Special
+    // --------------------------------------
+    //     Name
+    //     Type/Name
+    // --------------------------------------
+
+
+    /// <summary>
+    /// Determines the controller name from the array of parts.
+    /// When 3 or more parts are present, we consider the first item the controller name.
+    /// This includes relative paths, since the first element will be an empty string.
+    /// See examples above.
+    /// </summary>
+    private static string DetermineController(string[] parts)
     {
         return parts.Length switch
         {
-            0 => string.Empty,
-            _ => parts[0]
+            >= 3 => parts[0],
+            _ => string.Empty
         };
     }
 
-    private static string ParseProgram(string[] parts)
+    /// <summary>
+    /// Determines the program name from the array of parts.
+    /// When 4 or more parts are present, we consider the second item the program name.
+    /// For relative paths, we have to check whether the thrid item is a program element or not to differentiate from routine.
+    /// See examples above. 
+    /// </summary>
+    private static string DetermineProgram(string[] parts)
     {
-        // Controller/Program/Type/Name = 4
-        // Controller/Program/Routine/Type/Name = 5
-        // /Program/Routine/Type/Name = 5
-        // /Program/Type/Name = 4
         return parts.Length switch
         {
             4 when parts[0].IsEmpty() && parts[2].IsProgramElement() => parts[1],
@@ -293,33 +404,48 @@ public sealed class Scope
         };
     }
 
+    /// <summary>
+    /// Determines the routine name from the array of parts.
+    /// When more than 4 parts are present, we consider the third item the routine name.
+    /// For relative paths with length of 4, we also check the "type" part and see if it's a routine type.
+    /// See examples above. 
+    /// </summary>
     private static string ParseRoutine(string[] parts)
     {
-        // Controller/Program/Routine/Type/Name = 5
-        // /Program/Routine/Type/Name = 5
-        // /Routine/Type/Name = 4
         return parts.Length switch
         {
-            0 => string.Empty,
             4 when parts[0].IsEmpty() && parts[2].IsCodeElement() => parts[1],
-            _ => parts.Length > 4 ? parts[2] : string.Empty
+            > 4 => parts[2],
+            _ => string.Empty
         };
     }
 
-    private static string ParseElement(string[] parts)
+    /// <summary>
+    /// Determines the scope type of the provided path array.
+    /// The type is always considered the second to last part of the array as long as there are at least 2 parts.
+    /// If an invalid ScopeType is entered we will throw a parse exception to let the user know it's not a valid scope.
+    /// See examples above.  
+    /// </summary>
+    private static ScopeType DetermineType(string[] parts)
     {
-        return parts.Length >= 3 ? parts[parts.Length - 2] : string.Empty;
-    }
-
-    private static string ParseName(string[] parts)
-    {
-        return parts.Length >= 2 ? parts[parts.Length - 1] : string.Empty;
+        var type = parts.Length >= 2 ? parts[parts.Length - 2] : string.Empty;
+        return ScopeType.Parse(type);
     }
 
     /// <summary>
-    /// 
+    /// Parses the name of the provided path array.
+    /// The last part of the array is considered the name part.
+    /// This includes the array containing a single item.
     /// </summary>
-    private ScopeLevel DetermineType()
+    private static string DetermineName(string[] parts)
+    {
+        return parts.Length > 0 ? parts[parts.Length - 1] : string.Empty;
+    }
+
+    /// <summary>
+    /// Determines the <see cref="ScopeLevel"/> of this instance based on the configured scope names.
+    /// </summary>
+    private ScopeLevel DetermineLevel()
     {
         if (!string.IsNullOrEmpty(Routine)) return ScopeLevel.Routine;
         if (!string.IsNullOrEmpty(Program)) return ScopeLevel.Program;
@@ -328,7 +454,7 @@ public sealed class Scope
     }
 
     /// <summary>
-    /// 
+    /// Determines the container of this instance based on the configured scope names.
     /// </summary>
     private string DetermineContainer()
     {
@@ -343,9 +469,20 @@ public sealed class Scope
     /// </summary>
     private string DeterminePath()
     {
-        var parts = new[] { Controller, Program, Routine, Type, Name }.Where(part => !part.IsEmpty());
-        var path = parts.Combine(PathSeparator);
-        return !Controller.IsEmpty() ? path : string.Concat(PathSeparator, path);
+        var builder = new StringBuilder();
+
+        builder.Append(Controller);
+
+        if (!Program.IsEmpty())
+            builder.Append(PathSeparator).Append(Program);
+
+        if (!Routine.IsEmpty())
+            builder.Append(PathSeparator).Append(Routine);
+
+        builder.Append(PathSeparator).Append(Type);
+        builder.Append(PathSeparator).Append(Name);
+
+        return builder.ToString();
     }
 
     /// <summary>
@@ -364,7 +501,7 @@ public sealed class Scope
     {
         var element = node.Ancestors()
             .FirstOrDefault(e => e.L5XType() is L5XName.Program or L5XName.AddOnInstructionDefinition);
-        
+
         return element?.LogixName() ?? string.Empty;
     }
 
@@ -378,7 +515,15 @@ public sealed class Scope
     }
 
     /// <summary>
-    /// Gets the name of the containing routine element from the provided element.
+    /// 
+    /// </summary>
+    private static ScopeType GetScopedType(XElement element)
+    {
+        return ScopeType.TryParse(element.L5XType()) ?? ScopeType.Empty;
+    }
+
+    /// <summary>
+    /// Gets the name or number of the current element depending on which attribute exists.
     /// </summary>
     private static string GetScopedName(XElement node)
     {
@@ -390,273 +535,5 @@ public sealed class Scope
             : string.Empty;
     }
 
-    /// <summary>
-    /// Gets the name of the scheduled task element from the provided element.
-    /// </summary>
-    private static string GetScopedTask(XElement node)
-    {
-        var container = node.Ancestors()
-            .FirstOrDefault(e => e.Name.LocalName is L5XName.Routine or L5XName.Program or L5XName.Controller)?
-            .LogixName();
-
-        var element = node.Ancestors(L5XName.RSLogix5000Content)
-            .Descendants(L5XName.Task)
-            .FirstOrDefault(e => e.Descendants(L5XName.ScheduledProgram)
-                .Any(p => p.LogixName().IsEquivalent(container)));
-
-        return element?.LogixName() ?? string.Empty;
-    }
-
     #endregion
-}
-
-/// <summary>
-/// A fluent API for building up a scope path that identifies a specific location or element in the L5X tree.
-/// </summary>
-public interface IScopeBuilder
-{
-    /// <summary>
-    /// Specifies the name of the program the object is scoped to. 
-    /// </summary>
-    /// <param name="program">The name of the program.</param>
-    /// <returns>The next step in the build fluent interface.</returns>
-    IScopeBuilderProgram In(string program);
-
-    /// <summary>
-    /// Specifies the type name of the element for the scope instance. This can be any component or code name, such
-    /// as Tag, Module, Rung, etc. 
-    /// </summary>
-    /// <param name="type">The element type name.</param>
-    /// <returns>The next step in the build fluent interface.</returns>
-    IScopeBuilderName Type(string type);
-
-    /// <summary>
-    /// Specifies the scope as a path to a data type with the provided name. 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope DataType(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Module(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Aoi(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Tag(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Program(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Task(string name);
-}
-
-/// <summary>
-/// A fluent API for building up a scope path that identifies a specific location or element in the L5X tree.
-/// This interface is scoped to a single program, hence limiting the API to Routine/Tag, or allowing further scoping
-/// into a specific Routine.
-/// </summary>
-public interface IScopeBuilderProgram
-{
-    /// <summary>
-    /// Specifies the name of the program the object is scoped to. 
-    /// </summary>
-    /// <param name="routine">The name of the program.</param>
-    /// <returns>The next step in the build fluent interface.</returns>
-    IScopeBuilderRoutine In(string routine);
-
-    /// <summary>
-    /// Specifies the type name of the element for the scope instance. This can be any component or code name, such
-    /// as Tag, Module, Rung, etc. 
-    /// </summary>
-    /// <param name="type">The element type name.</param>
-    /// <returns>The next step in the build fluent interface.</returns>
-    IScopeBuilderName Type(string type);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Tag(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Routine(string name);
-}
-
-/// <summary>
-/// A fluent API for building up a scope path that identifies a specific location or element in the L5X tree.
-/// </summary>
-public interface IScopeBuilderRoutine
-{
-    /// <summary>
-    /// Specifies the type name of the element for the scope instance. This can be any component or code name, such
-    /// as Tag, Module, Rung, etc. 
-    /// </summary>
-    /// <param name="type">The element type name.</param>
-    /// <returns>The next step in the build fluent interface.</returns>
-    IScopeBuilderName Type(string type);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
-    Scope Rung(int number);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
-    Scope Line(int number);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
-    Scope Sheet(int number);
-}
-
-/// <summary>
-/// A nested builder interface for specifying the target name of the a <see cref="Scope"/> instance.
-/// </summary>
-public interface IScopeBuilderName
-{
-    /// <summary>
-    /// Specifies the element type the object is scoped to. 
-    /// </summary>
-    /// <param name="name">The name of the target.</param>
-    /// <returns>The next step in the build fluent interface.</returns>
-    Scope Named(string name);
-}
-
-/// <summary>
-/// Internal class that implements the builder interface.
-/// </summary>
-file class ScopeBuider(string controller) :
-    IScopeBuilder, IScopeBuilderProgram, IScopeBuilderRoutine, IScopeBuilderName
-{
-    private const char PathSeparator = '/';
-    private string _program = string.Empty;
-    private string _routine = string.Empty;
-    private string _type = string.Empty;
-    private string _name = string.Empty;
-
-    public IScopeBuilderProgram In(string program)
-    {
-        _program = program;
-        return this;
-    }
-
-    IScopeBuilderRoutine IScopeBuilderProgram.In(string routine)
-    {
-        _routine = routine;
-        return this;
-    }
-
-    public IScopeBuilderName Type(string type)
-    {
-        _type = type;
-        return this;
-    }
-
-    public Scope DataType(string name)
-    {
-        _type = L5XName.DataType;
-        _name = name;
-        return Build();
-    }
-
-    public Scope Module(string name)
-    {
-        _type = L5XName.Module;
-        _name = name;
-        return Build();
-    }
-
-    public Scope Aoi(string name)
-    {
-        _type = L5XName.AddOnInstructionDefinition;
-        _name = name;
-        return Build();
-    }
-
-    public Scope Tag(string name)
-    {
-        _type = L5XName.Tag;
-        _name = name;
-        return Build();
-    }
-
-    public Scope Routine(string name)
-    {
-        _type = L5XName.Routine;
-        _name = name;
-        return Build();
-    }
-
-    public Scope Program(string name)
-    {
-        _type = L5XName.Program;
-        _name = name;
-        return Build();
-    }
-
-    public Scope Task(string name)
-    {
-        _type = L5XName.Task;
-        _name = name;
-        return Build();
-    }
-
-    public Scope Rung(int number)
-    {
-        _type = L5XName.Rung;
-        _name = number.ToString();
-        return Build();
-    }
-
-    public Scope Line(int number)
-    {
-        _type = L5XName.Line;
-        _name = number.ToString();
-        return Build();
-    }
-
-    public Scope Sheet(int number)
-    {
-        _type = L5XName.Sheet;
-        _name = number.ToString();
-        return Build();
-    }
-
-    public Scope Named(string name)
-    {
-        _name = name;
-        return Build();
-    }
-
-    private Scope Build()
-    {
-        var parts = new[] { controller, _program, _routine, _type, _name }.Where(part => !part.IsEmpty());
-        var path = parts.Combine(PathSeparator);
-        return Scope.To(path);
-    }
 }

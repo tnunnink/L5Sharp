@@ -16,12 +16,14 @@ public class ScopeTests
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().BeEmpty();
-        scope.Name.Should().BeEmpty();
-        scope.Task.Should().BeEmpty();
+        scope.Type.Should().Be(ScopeType.Empty);
+        scope.Name.Should().Be(TagName.Empty);
+        scope.IsRelative.Should().BeFalse();
         scope.IsScoped.Should().BeFalse();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
     }
 
     [Test]
@@ -37,10 +39,13 @@ public class ScopeTests
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Tag");
+        scope.Type.Should().Be(ScopeType.Tag);
         scope.Name.Should().Be("Test");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
     }
 
     [Test]
@@ -56,10 +61,13 @@ public class ScopeTests
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Rung");
+        scope.Type.Should().Be(ScopeType.Rung);
         scope.Name.Should().Be("0");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
     }
 
     [Test]
@@ -75,15 +83,89 @@ public class ScopeTests
     }
 
     [Test]
-    public void To_Absolute1Parts_ShouldBeExpectedScope()
+    public void To_NoSeparator_ShouldBeExpectedScope()
     {
-        FluentActions.Invoking(() => Scope.To("MyController")).Should().Throw<ArgumentOutOfRangeException>();
+        var scope = Scope.To("Testing");
+
+        scope.Should().NotBeNull();
+        scope.Path.Should().Be("//Testing");
+        scope.Level.Should().Be(ScopeLevel.Null);
+        scope.Container.Should().BeEmpty();
+        scope.Controller.Should().BeEmpty();
+        scope.Program.Should().BeEmpty();
+        scope.Routine.Should().BeEmpty();
+        scope.Type.Should().Be(ScopeType.Empty);
+        scope.Name.Should().Be("Testing");
+        scope.IsRelative.Should().BeTrue();
+        scope.IsScoped.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
     }
 
     [Test]
-    public void To_Absolute2Parts_ShouldThrowException()
+    public void To_SingleSeparatorWithValidTypeName_ShouldBeExpectedScope()
     {
-        FluentActions.Invoking(() => Scope.To("MyController/DataType")).Should().Throw<ArgumentOutOfRangeException>();
+        var scope = Scope.To("Tag/MyTagName");
+
+        scope.Should().NotBeNull();
+        scope.Path.Should().Be("/Tag/MyTagName");
+        scope.Level.Should().Be(ScopeLevel.Null);
+        scope.Container.Should().BeEmpty();
+        scope.Controller.Should().BeEmpty();
+        scope.Program.Should().BeEmpty();
+        scope.Routine.Should().BeEmpty();
+        scope.Type.Should().Be(ScopeType.Tag);
+        scope.Name.Should().Be("MyTagName");
+        scope.IsRelative.Should().BeTrue();
+        scope.IsScoped.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
+    }
+
+    [Test]
+    public void To_SingleSeparatorInvalidTypeName_ShouldBeExpectedScope()
+    {
+        var scope = Scope.To("Fake/MyTagName");
+
+        scope.Should().NotBeNull();
+        scope.Path.Should().Be("//MyTagName");
+        scope.Level.Should().Be(ScopeLevel.Null);
+        scope.Container.Should().BeEmpty();
+        scope.Controller.Should().BeEmpty();
+        scope.Program.Should().BeEmpty();
+        scope.Routine.Should().BeEmpty();
+        scope.Type.Should().Be(ScopeType.Empty);
+        scope.Name.Should().Be("MyTagName");
+        scope.IsRelative.Should().BeTrue();
+        scope.IsScoped.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
+    }
+
+    [Test]
+    public void To_Absolute3PartsDoubleSlash_ShouldBeExpectedScope()
+    {
+        var scope = Scope.To("MyController//");
+
+        scope.Path.Should().Be("MyController//");
+        scope.Level.Should().Be(ScopeLevel.Controller);
+        scope.Container.Should().Be("MyController");
+        scope.Controller.Should().Be("MyController");
+        scope.Program.Should().BeEmpty();
+        scope.Routine.Should().BeEmpty();
+        scope.Type.Should().Be(ScopeType.Empty);
+        scope.Name.Should().Be(TagName.Empty);
+        scope.IsScoped.Should().BeTrue();
+        scope.IsGlobal.Should().BeTrue();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
     }
 
     [Test]
@@ -97,28 +179,28 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Module");
+        scope.Type.Should().Be(ScopeType.Module);
         scope.Name.Should().Be("ModuleName");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
     }
 
     [Test]
     public void To_Absolute4Parts_ShouldBeExpectedScope()
     {
-        var scope = Scope.To("MyController/Something/DontMatter/WhatItIs");
+        var scope = Scope.To("MyController/MyProgram/Tag/TagName.Member.Something");
 
-        scope.Path.Should().Be("MyController/Something/DontMatter/WhatItIs");
+        scope.Path.Should().Be("MyController/MyProgram/Tag/TagName.Member.Something");
         scope.Level.Should().Be(ScopeLevel.Program);
-        scope.Container.Should().Be("Something");
+        scope.Container.Should().Be("MyProgram");
         scope.Controller.Should().Be("MyController");
-        scope.Program.Should().Be("Something");
+        scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("DontMatter");
-        scope.Name.Should().Be("WhatItIs");
-        scope.Task.Should().BeEmpty();
+        scope.Type.Should().Be(ScopeType.Tag);
+        scope.Name.Should().Be("TagName.Member.Something");
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
@@ -127,33 +209,40 @@ public class ScopeTests
     [Test]
     public void To_Absolute5Parts_ShouldBeExpectedScope()
     {
-        var scope = Scope.To("MyController/Something/DontMatter/WhatItIs/Right?");
+        var scope = Scope.To("MyController/MyProgram/MainRoutine/Rung/23");
 
-        scope.Path.Should().Be("MyController/Something/DontMatter/WhatItIs/Right?");
+        scope.Path.Should().Be("MyController/MyProgram/MainRoutine/Rung/23");
         scope.Level.Should().Be(ScopeLevel.Routine);
-        scope.Container.Should().Be("DontMatter");
+        scope.Container.Should().Be("MainRoutine");
         scope.Controller.Should().Be("MyController");
-        scope.Program.Should().Be("Something");
-        scope.Routine.Should().Be("DontMatter");
-        scope.Type.Should().Be("WhatItIs");
-        scope.Name.Should().Be("Right?");
-        scope.Task.Should().BeEmpty();
+        scope.Program.Should().Be("MyProgram");
+        scope.Routine.Should().Be("MainRoutine");
+        scope.Type.Should().Be(ScopeType.Rung);
+        scope.Name.Should().Be("23");
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
     }
 
     [Test]
-    public void To_Absolute6Parts_ShouldThrowException()
+    public void To_Relative3PartsDoubleSlash_ShouldBeExpectedScope()
     {
-        FluentActions.Invoking(() => Scope.To("First/Second/Thrid/Fourth/Fifth/Sixth"))
-            .Should().Throw<ArgumentOutOfRangeException>();
-    }
+        var scope = Scope.To("//Something");
 
-    [Test]
-    public void To_Relative2Parts_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => Scope.To("/Relative")).Should().Throw<ArgumentOutOfRangeException>();
+        scope.Path.Should().Be("//Something");
+        scope.Level.Should().Be(ScopeLevel.Null);
+        scope.Container.Should().BeEmpty();
+        scope.Controller.Should().BeEmpty();
+        scope.Program.Should().BeEmpty();
+        scope.Routine.Should().BeEmpty();
+        scope.Type.Should().Be(ScopeType.Empty);
+        scope.Name.Should().Be("Something");
+        scope.IsRelative.Should().BeTrue();
+        scope.IsScoped.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
     }
 
     [Test]
@@ -167,9 +256,9 @@ public class ScopeTests
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Tag");
+        scope.Type.Should().Be(ScopeType.Tag);
         scope.Name.Should().Be("MyTagName");
-        scope.Task.Should().BeEmpty();
+        scope.IsRelative.Should().BeTrue();
         scope.IsScoped.Should().BeFalse();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeFalse();
@@ -186,9 +275,9 @@ public class ScopeTests
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Tag");
+        scope.Type.Should().Be(ScopeType.Tag);
         scope.Name.Should().Be("SomeTagName");
-        scope.Task.Should().BeEmpty();
+        scope.IsRelative.Should().BeTrue();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
@@ -205,9 +294,9 @@ public class ScopeTests
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Routine");
+        scope.Type.Should().Be(ScopeType.Routine);
         scope.Name.Should().Be("MainRoutine");
-        scope.Task.Should().BeEmpty();
+        scope.IsRelative.Should().BeTrue();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
@@ -216,17 +305,17 @@ public class ScopeTests
     [Test]
     public void To_Relative5Parts_ShouldBeExpectedScope()
     {
-        var scope = Scope.To("/Something/DontMatter/WhatItIs/Right?");
+        var scope = Scope.To("/MyProgram/MainRoutine/Rung/23");
 
-        scope.Path.Should().Be("/Something/DontMatter/WhatItIs/Right?");
+        scope.Path.Should().Be("/MyProgram/MainRoutine/Rung/23");
         scope.Level.Should().Be(ScopeLevel.Routine);
-        scope.Container.Should().Be("DontMatter");
+        scope.Container.Should().Be("MainRoutine");
         scope.Controller.Should().BeEmpty();
-        scope.Program.Should().Be("Something");
-        scope.Routine.Should().Be("DontMatter");
-        scope.Type.Should().Be("WhatItIs");
-        scope.Name.Should().Be("Right?");
-        scope.Task.Should().BeEmpty();
+        scope.Program.Should().Be("MyProgram");
+        scope.Routine.Should().Be("MainRoutine");
+        scope.Type.Should().Be(ScopeType.Rung);
+        scope.Name.Should().Be("23");
+        scope.IsRelative.Should().BeTrue();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
@@ -243,9 +332,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Tag");
+        scope.Type.Should().Be(ScopeType.Tag);
         scope.Name.Should().Be("MyTagName");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
@@ -262,9 +350,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("DataType");
+        scope.Type.Should().Be(ScopeType.DataType);
         scope.Name.Should().Be("MyType");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
@@ -281,9 +368,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("AddOnInstructionDefinition");
+        scope.Type.Should().Be(ScopeType.Instruction);
         scope.Name.Should().Be("MyType");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
@@ -300,9 +386,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Module");
+        scope.Type.Should().Be(ScopeType.Module);
         scope.Name.Should().Be("ModuleName");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
@@ -319,9 +404,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Tag");
+        scope.Type.Should().Be(ScopeType.Tag);
         scope.Name.Should().Be("MyTagName");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
@@ -338,9 +422,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Program");
+        scope.Type.Should().Be(ScopeType.Program);
         scope.Name.Should().Be("MainProgram");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
@@ -357,9 +440,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Task");
+        scope.Type.Should().Be(ScopeType.Task);
         scope.Name.Should().Be("TaskName");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
@@ -376,9 +458,8 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be("Tag");
+        scope.Type.Should().Be(ScopeType.Tag);
         scope.Name.Should().Be("MyTagName");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
@@ -395,12 +476,40 @@ public class ScopeTests
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().Be("MyRoutine");
-        scope.Type.Should().Be("Tag");
+        scope.Type.Should().Be(ScopeType.Tag);
         scope.Name.Should().Be("MyTagName");
-        scope.Task.Should().BeEmpty();
         scope.IsScoped.Should().BeTrue();
         scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
+    }
+
+    [Test]
+    public void Append_ControllerRootAndTypeNamePath_ShouldBeExpectedScope()
+    {
+        var first = Scope.To("Controller//");
+        var second = Scope.To("/Tag/MyTagName");
+
+        var result = first.Append(second);
+
+        result.Path.Should().Be("Controller/Tag/MyTagName");
+        result.Controller.Should().Be("Controller");
+        result.Program.Should().BeEmpty();
+        result.Routine.Should().BeEmpty();
+        result.Type.Should().Be(ScopeType.Tag);
+        result.Name.Should().Be("MyTagName");
+    }
+
+    [Test]
+    public void Append_ChainMultipleNames_ShouldBeExpectedScope()
+    {
+        var result = Scope.To("Root/").Append("Next").Append("Tag").Append("Last");
+
+        result.Path.Should().Be("/Root/Next/Again/Last");
+        result.Controller.Should().Be("Root");
+        result.Program.Should().Be("Next");
+        result.Routine.Should().BeEmpty();
+        result.Type.Should().Be(ScopeType.Empty);
+        result.Name.Should().Be("Last");
     }
 
     [Test]
