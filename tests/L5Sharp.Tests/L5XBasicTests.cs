@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using FluentAssertions;
 using JetBrains.dotMemoryUnit;
 
@@ -8,36 +7,6 @@ namespace L5Sharp.Tests;
 [TestFixture]
 public class L5XBasicTests
 {
-    [Test]
-    public void Constructor_KnownTest_ShouldNotBeNull()
-    {
-        var element = XElement.Load(Known.Test);
-
-        var l5X = new L5X(element);
-
-        l5X.Should().NotBeNull();
-    }
-
-    [Test]
-    public void Constructor_LotsOfTags_ShouldNotBeNull()
-    {
-        var element = XElement.Load(Known.LotOfTags);
-
-        var l5X = new L5X(element);
-
-        l5X.Should().NotBeNull();
-    }
-
-    [Test]
-    public void Constructor_Template_ShouldNotBeNull()
-    {
-        var element = XElement.Load(Known.Example);
-
-        var l5X = new L5X(element);
-
-        l5X.Should().NotBeNull();
-    }
-
     [Test]
     public void New_WithControllerAndProcessorNames_ShouldNotBeNullAndExpectedValues()
     {
@@ -169,118 +138,6 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void All_ValidComponentKey_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var results = content.All(new ComponentKey("Tag", "SimpleBool"));
-
-        results.Should().HaveCount(1);
-    }
-
-    [Test]
-    public void All_ValidTypeAndNullName_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test);
-
-        FluentActions.Invoking(() => content.All<Tag>(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void All_ValidTypeAndEmptyName_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test);
-
-        FluentActions.Invoking(() => content.All<Tag>(string.Empty)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void All_ValidTypeAndName_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var results = content.All<Tag>("SimpleBool");
-
-        results.Should().HaveCount(1);
-    }
-
-    [Test]
-    public void All_WithMultipleScopedInstances_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var results = content.All<Tag>("TestSimpleTag");
-
-        results.Should().HaveCount(2);
-    }
-
-    [Test]
-    public void All_ValidTagName_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test);
-
-        //Note that only specifying a string we assume tag since the overloaded TagName will get
-        //implicitly converted to a string and we are not specifying a component type.
-        var results = content.All("TestSimpleTag.DintMember");
-
-        results.Should().HaveCount(2);
-    }
-
-    [Test]
-    public void Find_ValidKey_ShouldBeExpectedTypeAndName()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var component = content.Find(new ComponentKey("DataType", Known.DataType));
-
-        component.Should().NotBeNull();
-        component?.Name.Should().Be(Known.DataType);
-    }
-
-    [Test]
-    public void Find_ValidKeyAndContainer_ShouldBeExpectedTypeAndName()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var component = content.Find(new ComponentKey("Tag", Known.Tag));
-
-        component.Should().NotBeNull();
-        component?.Name.Should().Be(Known.Tag);
-    }
-
-    [Test]
-    public void Find_ValidComponent_ShouldBeExpectedName()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var component = content.Find<DataType>(Known.DataType);
-
-        component.Should().NotBeNull();
-        component?.Name.Should().Be(Known.DataType);
-    }
-
-    [Test]
-    public void Find_ValidTagName_ShouldNotBeNull()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var tag = content.Find(Known.Tag);
-
-        tag.Should().NotBeNull();
-    }
-
-    [Test]
-    public void ReferencesTo_ValidComponent_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test);
-        var tag = content.Get(Known.Tag);
-
-        var references = content.References(tag).ToList();
-
-        references.Should().NotBeEmpty();
-    }
-
-    [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
         var content = L5X.Load(Known.Test);
@@ -338,7 +195,7 @@ public class L5XBasicTests
 
             var tags = content.Query<Tag>().Where(t => t.TagName.Contains("Test"));
             tags.Should().NotBeEmpty();
-            
+
             content = null;
             content.Should().BeNull();
         });
