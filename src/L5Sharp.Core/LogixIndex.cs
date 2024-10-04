@@ -553,7 +553,7 @@ internal class LogixIndex : ILogixLookup
             return scope;
 
         if (scope.Type != ScopeType.Empty)
-            return Scope.To(_controller).Append(scope);
+            return Scope.To($"{_controller}//").Append(scope);
 
         if (type is null)
             throw new ArgumentException(

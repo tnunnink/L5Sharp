@@ -101,7 +101,7 @@ public abstract class LogixComponent : LogixObject
     /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
     /// at least one property value referencing this component's name.
     /// </returns>
-    public virtual IEnumerable<CrossReference> References() => [];
+    public virtual IEnumerable<CrossReference> References() => L5X?.References(Name) ?? [];
 
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.
@@ -124,7 +124,9 @@ public abstract class LogixComponent : LogixObject
             if (L5X?.TryGet(reference.Scope, out var element) is true)
             {
                 element.Remove();
-            };
+            }
+
+            ;
         }
 
         Element.Remove();

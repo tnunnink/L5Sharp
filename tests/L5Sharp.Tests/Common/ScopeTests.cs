@@ -127,25 +127,9 @@ public class ScopeTests
     }
 
     [Test]
-    public void To_SingleSeparatorInvalidTypeName_ShouldBeExpectedScope()
+    public void To_SingleSeparatorInvalidTypeName_ShouldThrowException()
     {
-        var scope = Scope.To("Fake/MyTagName");
-
-        scope.Should().NotBeNull();
-        scope.Path.Should().Be("//MyTagName");
-        scope.Level.Should().Be(ScopeLevel.Null);
-        scope.Container.Should().BeEmpty();
-        scope.Controller.Should().BeEmpty();
-        scope.Program.Should().BeEmpty();
-        scope.Routine.Should().BeEmpty();
-        scope.Type.Should().Be(ScopeType.Empty);
-        scope.Name.Should().Be("MyTagName");
-        scope.IsRelative.Should().BeTrue();
-        scope.IsScoped.Should().BeFalse();
-        scope.IsGlobal.Should().BeFalse();
-        scope.IsLocal.Should().BeFalse();
-        scope.IsProgram.Should().BeFalse();
-        scope.IsRoutine.Should().BeFalse();
+        FluentActions.Invoking(() => Scope.To("Fake/MyTagName")).Should().Throw<KeyNotFoundException>();
     }
 
     [Test]
@@ -502,14 +486,14 @@ public class ScopeTests
     [Test]
     public void Append_ChainMultipleNames_ShouldBeExpectedScope()
     {
-        var result = Scope.To("Root/").Append("Next").Append("Tag").Append("Last");
+        var result = Scope.To("Root//").Append("/Tag/").Append("MyTagName");
 
-        result.Path.Should().Be("/Root/Next/Again/Last");
+        result.Path.Should().Be("Root/Tag/MyTagName");
         result.Controller.Should().Be("Root");
-        result.Program.Should().Be("Next");
+        result.Program.Should().BeEmpty();
         result.Routine.Should().BeEmpty();
-        result.Type.Should().Be(ScopeType.Empty);
-        result.Name.Should().Be("Last");
+        result.Type.Should().Be(ScopeType.Tag);
+        result.Name.Should().Be("MyTagName");
     }
 
     [Test]

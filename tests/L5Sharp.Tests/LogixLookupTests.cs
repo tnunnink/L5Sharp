@@ -64,6 +64,14 @@ public class LogixLookupTests
     }
 
     [Test]
+    public void Find_KnownElementNoType_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.Find(Known.Tag)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
     public void Find_KnownElementRelativeScope_ShouldHaveExpectedCount()
     {
         var content = L5X.Load(Known.Test);
@@ -87,14 +95,6 @@ public class LogixLookupTests
         var content = L5X.Load(Known.Test);
 
         FluentActions.Invoking(() => content.Find<Tag>(string.Empty)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Find_KnownElementNoType_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test);
-
-        FluentActions.Invoking(() => content.Find(Known.Tag)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -124,12 +124,60 @@ public class LogixLookupTests
 
         var results = content.Find<Tag>("TestSimpleTag.DintMember").ToList();
 
-        results.Should().NotBeEmpty();
+        results.Should().HaveCount(2);
         results.Should().AllSatisfy(t => t.TagName.Should().Be("TestSimpleTag.DintMember"));
     }
 
     [Test]
-    public void Get_KnownElementTypeAndName_ShouldBeExpected()
+    public void Get_ScopeRelative_ShouldBeExpectedElement()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Get($"/Tag/{Known.Tag}");
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Tag>();
+        result.As<Tag>().Name.Should().Be(Known.Tag);
+    }
+
+    [Test]
+    public void Get_ScopeAbsolute_ShouldBeExpectedElement()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Get($"TestController/Tag/{Known.Tag}");
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Tag>();
+        result.As<Tag>().Name.Should().Be(Known.Tag);
+    }
+
+    [Test]
+    public void Get_NonExistingScope_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.Get("/Tag/FakeTag")).Should().Throw<KeyNotFoundException>();
+    }
+
+    [Test]
+    public void Get_NullScope_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.Get((Scope)null!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void Get_EmptyScope_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.Get(string.Empty)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Get_TypeAndName_ShouldBeExpected()
     {
         var content = L5X.Load(Known.Test);
 
@@ -138,6 +186,14 @@ public class LogixLookupTests
         result.Should().NotBeNull();
         result.Should().BeOfType<Tag>();
         result.As<Tag>().Name.Should().Be(Known.Tag);
+    }
+
+    [Test]
+    public void Get_NonExistingName_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.Get<Tag>("FakeTag")).Should().Throw<KeyNotFoundException>();
     }
 
     [Test]
@@ -151,9 +207,77 @@ public class LogixLookupTests
         result.Should().BeOfType<Tag>();
         result.As<Tag>().Name.Should().Be(Known.Tag);
     }
+    
+    [Test]
+    public void Get_BuilderWithProgramTypeNamePath_ShouldBeExpected()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Get(x => x.In("MainProgram").Tag(Known.Tag));
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Tag>();
+        result.As<Tag>().Name.Should().Be(Known.Tag);
+    }
+    
+    [Test]
+    public void Get_TypedBuilderWithTypeNamePath_ShouldBeExpected()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Get<Tag>(x => x.Tag(Known.Tag));
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Tag>();
+        result.Name.Should().Be(Known.Tag);
+    }
+    
+    [Test]
+    public void Get_TypedBuilderWithProgramTypeNamePath_ShouldBeExpected()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Get<Tag>(x => x.In("MainProgram").Tag(Known.Tag));
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Tag>();
+        result.Name.Should().Be(Known.Tag);
+    }
 
     [Test]
-    public void TryGet_ValidKey_ShouldBeExpectedTypeAndName()
+    public void TryGet_KnownNameNoType_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Test);
+
+        FluentActions.Invoking(() => content.TryGet(Known.DataType, out _)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void TryGet_RelativeScope_ShouldBeTrueAndExpectedComponent()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.TryGet($"/DataType/{Known.DataType}", out var component);
+
+        result.Should().BeTrue();
+        component.Should().NotBeNull();
+        component.As<DataType>().Name.Should().Be(Known.DataType);
+    }
+    
+    [Test]
+    public void TryGet_TypedKnownName_ShouldBeTrueAndExpectedComponent()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.TryGet<DataType>(Known.DataType, out var component);
+
+        result.Should().BeTrue();
+        component.Should().NotBeNull();
+        component.Name.Should().Be(Known.DataType);
+    }
+
+    [Test]
+    public void TryGet_BuilderKnownDataTypeElement_ShouldBeExpectedTypeAndName()
     {
         var content = L5X.Load(Known.Test);
 
@@ -163,9 +287,21 @@ public class LogixLookupTests
         component.Should().NotBeNull();
         component.As<DataType>().Name.Should().Be(Known.DataType);
     }
+    
+    [Test]
+    public void TryGet_TypedBuilderKnownDataTypeElement_ShouldBeExpectedTypeAndName()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.TryGet<DataType>(s => s.DataType(Known.DataType), out var component);
+
+        result.Should().BeTrue();
+        component.Should().NotBeNull();
+        component.Name.Should().Be(Known.DataType);
+    }
 
     [Test]
-    public void TryGet_ValidKeyAndContainer_ShouldBeExpectedTypeAndName()
+    public void TryGet_BuilderKnownTagElement_ShouldBeExpectedTypeAndName()
     {
         var content = L5X.Load(Known.Test);
 
@@ -174,38 +310,5 @@ public class LogixLookupTests
         result.Should().BeTrue();
         component.Should().NotBeNull();
         component.As<Tag>().Name.Should().Be(Known.Tag);
-    }
-
-    [Test]
-    public void TryGet_ValidComponent_ShouldBeExpectedName()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var result = content.TryGet(Known.DataType, out var component);
-
-        result.Should().BeTrue();
-        component.Should().NotBeNull();
-        component.As<DataType>().Name.Should().Be(Known.DataType);
-    }
-
-    [Test]
-    public void Find_ValidTagName_ShouldNotBeNull()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var tag = content.Find<Tag>(Known.Tag);
-
-        tag.Should().NotBeNull();
-    }
-
-    [Test]
-    public void ReferencesTo_ValidComponent_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test);
-        var tag = content.Get(Known.Tag).As<Tag>();
-
-        var references = content.References(tag.Name).ToList();
-
-        references.Should().NotBeEmpty();
     }
 }

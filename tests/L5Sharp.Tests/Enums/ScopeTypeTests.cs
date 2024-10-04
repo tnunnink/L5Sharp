@@ -31,7 +31,7 @@ public class ScopeTypeTests
 
         type.Should().NotBeNull();
         type.Name.Should().Be("Instruction");
-        type.Value.Should().Be("Instruction");
+        type.Value.Should().Be("AddOnInstructionDefinition");
     }
 
     [Test]
