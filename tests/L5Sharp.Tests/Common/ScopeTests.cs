@@ -344,7 +344,7 @@ public class ScopeTests
     [Test]
     public void Build_Aoi_ShouldBeExpected()
     {
-        var scope = Scope.Build("MyController").Aoi("MyType");
+        var scope = Scope.Build("MyController").Instruction("MyType");
 
         scope.Path.Should().Be("MyController/AddOnInstructionDefinition/MyType");
         scope.Level.Should().Be(ScopeLevel.Controller);
@@ -519,7 +519,7 @@ public class ScopeTests
     [Test]
     public void ToXPath_ControllerScopedAoi_ShouldBeExpected()
     {
-        var scope = Scope.Build("MyController").Aoi("aoiMyType");
+        var scope = Scope.Build("MyController").Instruction("aoiMyType");
 
         var path = scope.ToXPath();
 

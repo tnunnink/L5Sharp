@@ -64,7 +64,7 @@ public class ScopeType : LogixEnum<ScopeType, string>
     /// Represents a Sheet <see cref="ScopeType"/> value.
     /// </summary>
     public static readonly ScopeType Sheet = new(nameof(Sheet), "Sheet");
-    
+
     /// <summary>
     /// Indicates whether this is a type that is contained in a program scope (i.e., Tag, Routine).
     /// </summary>

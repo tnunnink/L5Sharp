@@ -145,6 +145,10 @@ public sealed class Scope
     /// <summary>
     /// Gets the name of the component or code element that identifies this scope. 
     /// </summary>
+    /// <remarks>
+    /// For components this will be the name, but for code elements (Rung/Line/Sheet) this will be the number.
+    /// The return type is a <see cref="TagName"/> so that we can also parse the name if it represents a nested tag member.
+    /// </remarks>
     public TagName Name { get; } = TagName.Empty;
 
     /// <summary>
@@ -225,7 +229,7 @@ public sealed class Scope
     /// Creates a <see cref="Scope"/> instance based on the provided <see cref="XElement"/> element.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> element representing the scope.</param>
-    /// <returns>A <see cref="Scope"/> instance.</returns>
+    /// <returns>A <see cref="Scope"/> instance configured based on the position of the element in the XML tree.</returns>
     public static Scope Of(XElement element)
     {
         if (element is null)
