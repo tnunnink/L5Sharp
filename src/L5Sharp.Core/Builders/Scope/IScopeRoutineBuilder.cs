@@ -2,6 +2,7 @@
 
 /// <summary>
 /// A fluent API for building up a scope path that identifies a specific location or element in the L5X tree.
+/// This interface is scoped to a single routine, hence limiting the API to Rung/Line/Sheet types.
 /// </summary>
 public interface IScopeRoutineBuilder
 {
@@ -14,20 +15,20 @@ public interface IScopeRoutineBuilder
     IScopeNameBuilder Type(string type);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Rung</c> with the provided name.
     /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
+    /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Rung(int number);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Line</c> with the provided name.
     /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
+    /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Line(int number);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Sheet</c> with the provided name.
     /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
+    /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Sheet(int number);
 }

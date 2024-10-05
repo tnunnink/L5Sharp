@@ -48,7 +48,12 @@ internal class ScopeBuider(string controller) : IScopeBuilder,
 
     public Scope Aoi(string name)
     {
-        _type = L5XName.AddOnInstructionDefinition;
+        throw new System.NotImplementedException();
+    }
+
+    public Scope Instruction(string name)
+    {
+        _type = ScopeType.Instruction.Value;
         _name = name;
         return Build();
     }

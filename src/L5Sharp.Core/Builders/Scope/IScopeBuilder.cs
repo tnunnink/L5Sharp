@@ -8,7 +8,7 @@ public interface IScopeBuilder
     /// <summary>
     /// Specifies the name of the program the object is scoped to. 
     /// </summary>
-    /// <param name="program">The name of the program.</param>
+    /// <param name="program">The name of the program in which the element is contained.</param>
     /// <returns>The next step in the build fluent interface.</returns>
     IScopeProgramBuilder In(string program);
 
@@ -21,37 +21,37 @@ public interface IScopeBuilder
     IScopeNameBuilder Type(string type);
 
     /// <summary>
-    /// Specifies the scope as a path to a data type with the provided name. 
+    /// Specifies the scope as a path to a <c>DataType</c> with the provided name. 
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope DataType(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Module</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Module(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>AddOnInstruction</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Aoi(string name);
+    Scope Instruction(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Tag</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Tag(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Program</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Program(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Task</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Task(string name);

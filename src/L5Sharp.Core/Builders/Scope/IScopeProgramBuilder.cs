@@ -23,13 +23,13 @@ public interface IScopeProgramBuilder
     IScopeNameBuilder Type(string type);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Tag</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Tag(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Routine</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Routine(string name);

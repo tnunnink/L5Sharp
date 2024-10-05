@@ -6,9 +6,9 @@
 public interface IScopeNameBuilder
 {
     /// <summary>
-    /// Specifies the element type the object is scoped to. 
+    /// Specifies the name (or number) of the target element in the scope instance. 
     /// </summary>
-    /// <param name="name">The name of the target.</param>
+    /// <param name="name">The name or number of the target element.</param>
     /// <returns>The next step in the build fluent interface.</returns>
     Scope Named(string name);
 }

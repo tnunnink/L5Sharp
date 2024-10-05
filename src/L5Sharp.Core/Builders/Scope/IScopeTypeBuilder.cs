@@ -1,5 +1,8 @@
 ﻿namespace L5Sharp.Core;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IScopeTypeBuilder
 {
     /// <summary>
@@ -11,62 +14,50 @@ public interface IScopeTypeBuilder
     IScopeNameBuilder Type(string type);
 
     /// <summary>
-    /// Specifies the scope as a path to a data type with the provided name. 
+    /// Specifies the scope as a path to a <c>DataType</c> with the provided name. 
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope DataType(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Module</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Module(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>AddOnInstruction</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Aoi(string name);
+    Scope Instruction(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Tag</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Tag(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Program</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Program(string name);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Rung</c> with the provided name.
     /// </summary>
     /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Routine(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The configured <see cref="Scope"/> instance.</returns>
-    Scope Task(string name);
-
-    /// <summary>
-    /// Specifies ... 
-    /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
     Scope Rung(int number);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Line</c> with the provided name.
     /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
+    /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Line(int number);
 
     /// <summary>
-    /// Specifies ... 
+    /// Specifies the scope as a path to a <c>Sheet</c> with the provided name.
     /// </summary>
-    /// <returns>The next step in the build fluent interface.</returns>
+    /// <returns>The configured <see cref="Scope"/> instance.</returns>
     Scope Sheet(int number);
 }
