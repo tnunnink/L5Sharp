@@ -52,12 +52,21 @@ public abstract class LogixCode : LogixObject
         get => GetValue<int>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
-    /// The location text that identifies the location of the code segment. This is similar to number but just adds the
-    /// L5X type name.
+    /// The scope idetifying where in an L5X file this element exists. This can be a globally scoped controller element,
+    /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
     /// </summary>
-    public string Location => $"{L5XType} {Number}".Trim();
+    /// <value>A <see cref="Scope"/> object with information regarding the scope of the element.</value>
+    /// <remarks>
+    /// <para>
+    /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
+    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify elements within the L5X file, especially elements such as <c>Tag</c>,
+    /// <c>Routine</c>, or <c>Rung</c>.
+    /// </para>
+    /// </remarks>
+    public Scope Scope => Scope.Of(Element);
 
     /// <summary>
     /// The parent <see cref="Core.Routine"/> component for the current <c>LogixCode</c> element.
@@ -77,4 +86,7 @@ public abstract class LogixCode : LogixObject
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CrossReference"/> values contained by this code.</returns>
     public IEnumerable<CrossReference> References() => CrossReference.In(Element);
+
+    /// <inheritdoc />
+    public override string ToString() => $"{L5XType} {Number}".Trim();
 }
