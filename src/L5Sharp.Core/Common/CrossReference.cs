@@ -1,175 +1,133 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a reference to a component within a Logix project. This could be a code reference or a reference
-/// from another component. This class is meant to provide a uniform set of information for all types of references,
-/// however, code references have some additional information that is useful for further identifying the target or
-/// location of the reference.
+/// An object that contains reference information for a given named component element.
+/// A reference is defined by the <see cref="Name"/> of the conpomonet being referenced, and the <see cref="Scope"/>
+/// of the element that references it. Optionally, code references can include a specific <see cref="Instrucion"/>
+/// that contains the reference. This is meant to be somewhat generic so that it works for both code and tag references.  
 /// </summary>
 public class CrossReference
 {
-    private readonly XElement _element;
-
     /// <summary>
-    /// Creates a new <see cref="CrossReference"/> with a referencing element, component name and type, and optional instruction data.
+    /// Creates a new <see cref="CrossReference"/> with the provided parameters.
     /// </summary>
-    /// <param name="element">The referencing <see cref="XElement"/> object.</param>
-    /// <param name="type">The type of the component that is being referenced.</param>
-    /// <param name="reference">The name of the component that is being referenced.</param>
-    /// <param name="instruction">The optional instruction name/key for the reference.
-    /// This is intended for code references as opposed to component references. Will be null if not applicable.</param>
-    /// <param name="operand"></param>
-    /// <exception cref="ArgumentNullException"><c>element</c>, <c>type</c>, or <c>name</c> is <c>null</c>.</exception>
-    public CrossReference(XElement element, string type, string reference, string? instruction = null,
-        string? operand = null)
+    /// <param name="scope">The <see cref="Scope"/> of the element that references the component.</param>
+    /// <param name="name">The <see cref="TagName"/> of the component that is referenced.
+    /// This might be any component type, not just Tag. Using TagName helps break down the parts of the references easier.</param>
+    /// <param name="instrucion">The optional instruction name that contains the reference. Only applies to code
+    /// based references.</param>
+    public CrossReference(Scope scope, TagName name, string? instrucion = null)
     {
-        _element = element ?? throw new ArgumentNullException(nameof(element));
-
-        if (string.IsNullOrEmpty(type))
-            throw new ArgumentException("Type cannot be null or empty.", nameof(type));
-        if (string.IsNullOrEmpty(reference))
-            throw new ArgumentException("Name cannot be null or empty.", nameof(reference));
-
-        Type = type;
-        Reference = reference;
-        Instruction = instruction;
-        Operand = operand;
+        Scope = scope;
+        Name = name;
+        Instrucion = instrucion ?? string.Empty;
     }
 
     /// <summary>
-    /// The corresponding <see cref="ComponentKey"/> of the reference, indicating both the component type and name
-    /// this element is in reference to.
+    /// The name of the component being referenced by <see cref="Scope"/>.
     /// </summary>
-    public ComponentKey Key => new(Type, Reference);
-
-    /// <summary>
-    /// The type of the component the element references.
-    /// </summary>
-    /// <value>A <see cref="string"/> indicating the type of the component.</value>
-    public string Type { get; }
-
-    /// <summary>
-    /// The name of the component or element that is referenced.
-    /// </summary>
-    /// <value>A <see cref="string"/> indicating the name of the component.</value>
-    public string Reference { get; }
-
-    /// <summary>
-    /// The <see cref="LogixElement"/> that is contains the reference to the component.
-    /// </summary>
-    /// <value>The <see cref="LogixElement"/> object that contains the component reference. This may be another
-    /// <c>Component</c>, a <c>Code</c> instance, or even a single <c>DiagramElement</c> object.</value>
-    public LogixObject Element => _element.Deserialize<LogixObject>();
-
-    /// <summary>
-    /// The type of the <c>LogixElement</c> that contains the reference to the component.
-    /// </summary>
-    /// <value>A <see cref="string"/> representing the name of the element type.</value>
-    /// <remarks>This helps further identify the reference element relative to other references.</remarks>
-    public string ElementType => _element.Name.LocalName;
-
-    /// <summary>
-    /// A unique identifier of the <c>LogixElement</c> that contains the reference to the component.
-    /// </summary>
-    /// <value>A <see cref="string"/> containing the name or number identifying the reference element.</value>
     /// <remarks>
-    /// This will ultimately be either the name of the referencing component (for Tag references),
-    /// the number of the referencing rung or line of logic (for RLL and ST code), or the ID of the referencing
-    /// diagram block (for FBD/SFC code). This helps further identify the reference element relative to other references.
+    /// Even though this is a <see cref="TagName"/> object, it doesn't necessarily mean it's a tag component being referenced.
+    /// We are using <see cref="TagName"/> since it allows us to parse the parts of the name.
+    /// For references other than tag, this will be a single "root" name without any member parts.
     /// </remarks>
-    public string ElementId => _element.Attribute(L5XName.ID) is not null ? _element.Attribute(L5XName.ID)!.Value
-        : _element.Attribute(L5XName.Number) is not null ? _element.Attribute(L5XName.Number)!.Value
-        : _element.Attribute(L5XName.Name) is not null ? _element.Attribute(L5XName.Name)!.Value
-        : string.Empty;
+    public TagName Name { get; }
 
     /// <summary>
-    /// The name of the <c>Task</c> that the reference is contained within if applicable.
+    /// The <see cref="Core.Scope"/> of the element containing the component reference.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the containing task if found; Otherwise, an empty string.</value>
     /// <remarks>
-    /// This could potentially be helpful for analyzing references to tags that are used across multiple
-    /// Task components.
+    /// This can really be any element, but in reality should be the code (Rung/Line/Sheet) or component (Tag) that
+    /// contains the reference to <see cref="Name"/>.
     /// </remarks>
-    public string Task => Scope.Task(_element);
+    public Scope Scope { get; }
 
     /// <summary>
-    /// The <see cref="Core.Scope"/> type that the reference is contained within.
+    /// The name of the instruction containing the component reference if found.
     /// </summary>
-    /// <value>A <see cref="Core.Scope"/> indicating scope of the reference.</value>
-    public Scope Scope => Scope.Type(_element);
-
-    /// <summary>
-    /// The name of the scoped program, instruction, or controller that the reference is contained within.
-    /// </summary>
-    /// <value>
-    /// A <see cref="string"/> representing the name of program, controller, or instruction the reference
-    /// is contained within.
-    /// </value>
-    public string Container => Scope.Container(_element);
-
-    /// <summary>
-    /// The name of the <c>Routine</c> that the reference is contained within, it is a <see cref="LogixCode"/>
-    /// type element.
-    /// </summary>
-    /// <value>A <see cref="string"/> representing the containing routine if found; Otherwise, an empty string.</value>
-    public string Routine => _element.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
-
-    /// <summary>
-    /// The instruction object containing the reference to the component if this reference is a logic or code reference. 
-    /// </summary>
-    /// <value>If the reference is a code reference, then the <see cref="Core.Instruction"/> object the reference
-    /// was found; Otherwise, <c>null</c>.</value>
     /// <remarks>
-    /// The helps further identify where in the logix element the reference is located. Having the associated
-    /// instruction can help for searching or filtering references and finding other references sharing the common
-    /// instruction.
+    /// This will only be set for references to code, and not references to tags (i.e. DataType references).
     /// </remarks>
-    public string? Instruction { get; }
+    public string Instrucion { get; }
 
     /// <summary>
-    /// 
+    /// Produces a collection of all references found in the provided <see cref="XElement"/> object.
     /// </summary>
-    public string? Operand { get; }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
+    /// <param name="element">The element in which to find references.</param>
+    /// <returns>A collection of <see cref="CrossReference"/> contained by the provided element.</returns>
+    /// <remarks>
+    /// It's expected that the provided element is a code (Rung/Text/Sheet) or Tag element.
+    /// If not then it shouldn't produce any results.
+    /// This code will basically pull out all the named parts we specifically consider a component reference and return
+    /// a <see cref="CrossReference"/> for each one.
+    /// </remarks>
+    public static IEnumerable<CrossReference> In(XElement element)
     {
-        if (ReferenceEquals(this, obj))
-            return true;
+        if (element.L5XType() is L5XName.Tag)
+            return GetTypeReferences(element);
 
-        if (obj is not CrossReference other)
-            return false;
+        if (element.L5XType() is L5XName.Rung)
+            return GetRungReferences(element);
 
-        return Key == other.Key &&
-               Scope == other.Scope &&
-               Container.IsEquivalent(other.Container) &&
-               Routine.IsEquivalent(other.Routine) &&
-               ElementId.IsEquivalent(other.ElementId) &&
-               ElementType.IsEquivalent(other.ElementType);
+        if (element.L5XType() is L5XName.Line)
+            return GetLineReferences(element);
+
+        if (element.L5XType() is L5XName.Sheet)
+            return GetSheetReferences(element);
+
+        return [];
     }
 
-    /// <inheritdoc />
-    public override int GetHashCode()
+    private static IEnumerable<CrossReference> GetTypeReferences(XElement element)
     {
-        /*return HashCode.Combine(Key, Scope, Container, Routine, ElementId, ElementType);*/
-        unchecked // overflow is fine, the result will just wrap
+        HashSet<string> tags = [L5XName.Tag, L5XName.LocalTag, L5XName.ConfigTag, L5XName.InputTag, L5XName.ConfigTag];
+
+        var type = element.Attribute(L5XName.DataType)?.Value;
+        var tag = element.AncestorsAndSelf().FirstOrDefault(e => tags.Contains(e.L5XType()));
+
+        if (type is null || tag is null) return [];
+
+        var scope = Scope.Of(tag);
+        return [new CrossReference(scope, type)];
+    }
+
+    private static List<CrossReference> GetRungReferences(XElement element)
+    {
+        var text = element.Element(L5XName.Text)?.Value.Parse<NeutralText>();
+        if (text is null) return [];
+
+        var references = new List<CrossReference>();
+        var scope = Scope.Of(element);
+
+        foreach (var instruction in text.Instructions())
         {
-            var hash = 17;
-            hash = hash * 23 + Key.GetHashCode();
-            hash = hash * 23 + Scope.GetHashCode();
-            hash = hash * 23 + Container.GetHashCode();
-            hash = hash * 23 + Routine.GetHashCode();
-            hash = hash * 23 + ElementId.GetHashCode();
-            hash = hash * 23 + ElementType.GetHashCode();
-            return hash;
+            references.AddRange(instruction.Tags().Select(t => new CrossReference(scope, t, instruction.Key)));
         }
+
+        return references;
     }
 
-    /// <inheritdoc />
-    public override string ToString() => Key.ToString();
+    private static List<CrossReference> GetLineReferences(XElement element)
+    {
+        var text = element.Value.Parse<NeutralText>();
+
+        var references = new List<CrossReference>();
+        var scope = Scope.Of(element);
+
+        foreach (var instruction in text.Instructions())
+        {
+            references.AddRange(instruction.Tags().Select(t => new CrossReference(scope, t, instruction.Key)));
+        }
+
+        return references;
+    }
+
+    private static IEnumerable<CrossReference> GetSheetReferences(XElement element)
+    {
+        return [];
+    }
 }

@@ -11,12 +11,7 @@ public class ProofTesting
     [Test]
     public void Scratch()
     {
-        var content = L5X.Load(Known.Test);
-        var sheet = content.Query<Sheet>().First();
-
-        var references = sheet.References().Where(c => c.Type == nameof(Tag)).ToList();
-
-        references.Should().NotBeEmpty();
+        true.Should().BeTrue();
     }
 
     [Test]
@@ -52,7 +47,7 @@ public class ProofTesting
     public void ParseString()
     {
         var result = "this is a test".Parse<string>();
-        
+
         result.Should().Be("this is a test");
     }
 

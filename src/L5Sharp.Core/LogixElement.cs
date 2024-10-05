@@ -49,16 +49,6 @@ public abstract class LogixElement : ILogixSerializable
     /// in the underlying parent element. 
     /// </summary>
     protected virtual List<string> ElementOrder { get; } = [];
-    
-    /// <summary>
-    /// Indicates whether this element is attached to an L5X document.
-    /// </summary>
-    /// <value><c>true</c> if this is an attached element; Otherwise, <c>false</c>.</value>
-    /// <remarks>
-    /// This simply looks to see if the element has a ancestor with the root RSLogix5000Content element or not.
-    /// If so we will assume this element is attached to an L5X document.
-    /// </remarks>
-    public bool IsAttached => Element.Ancestors(L5XName.RSLogix5000Content).Any();
 
     /// <summary>
     /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
@@ -85,6 +75,14 @@ public abstract class LogixElement : ILogixSerializable
     /// the object.
     /// </remarks>
     public virtual string L5XType => Element.Name.LocalName;
+
+    /// <summary>
+    /// Casts this element instance to the specified type TElement.
+    /// </summary>
+    /// <typeparam name="TElement">The type to which you want to cast. This must be a type that derives from LogixElement.</typeparam>
+    /// <returns>The current instance, cast to the specified type.</returns>
+    /// <exception cref="InvalidCastException">Thrown if the cast isn't valid.</exception>    
+    public TElement As<TElement>() where TElement : LogixElement => (TElement)this;
 
     /// <summary>
     /// Determines if the provided element is structurally or deeply equal to another by performing a compare
@@ -652,13 +650,13 @@ public abstract class LogixElement : ILogixSerializable
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
-        
+
         if (value is null)
         {
             Element.Attribute(name)?.Remove();
             return;
         }
-        
+
         var bit = value is true ? "1" : "0";
         Element.SetAttributeValue(name, bit);
     }

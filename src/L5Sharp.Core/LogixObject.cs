@@ -6,10 +6,9 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// A class implementing <see cref="LogixElement"/> that adds common properties and methods shared by most elements or
-/// components. These features include reference to the containing <see cref="L5X"/> document, the <see cref="Scope"/>
-/// and <see cref="Container"/> to identify where in the document they exist, and methods <see cref="AddBefore"/>,
-/// <see cref="AddBefore"/>, <see cref="Remove"/>, and <see cref="Replace"/> which allow easy way to mutate the object
-/// or collection of objects.
+/// components. Features include the <see cref="Scope"/> to identify where in the document they exist,
+/// and methods <see cref="AddBefore"/>, <see cref="AddBefore"/>, <see cref="Remove"/>, and <see cref="Replace"/>
+/// which allow easy interface to mutate the object or collection of objects.
 /// </summary>
 public abstract class LogixObject : LogixElement
 {
@@ -22,47 +21,6 @@ public abstract class LogixObject : LogixElement
     protected LogixObject(XElement element) : base(element)
     {
     }
-
-    /// <summary>
-    /// The scope of the element, indicating whether it is a globally scoped controller element,
-    /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
-    /// </summary>
-    /// <value>A <see cref="Core.Scope"/> option indicating the scope type for the element.</value>
-    /// <remarks>
-    /// <para>
-    /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
-    /// If the ancestor is a program element first, it is <c>Program</c> scoped.
-    /// If the ancestor is a AddOnInstructionDefinition element first, it is <c>Instruction</c> scoped.
-    /// If the ancestor is a controller element first, it is <c>Controller</c> scoped.
-    /// If no ancestor is found, we assume the component has <c>Null</c> scope, meaning it is not attached to a L5X tree.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify elements within the L5X file, especially
-    /// <c>Tag</c>, <c>Routine</c>, and code elements.
-    /// </para>
-    /// </remarks>
-    public Scope Scope => Scope.Type(Element);
-
-    /// <summary>
-    /// The logix name of an ancestral element, indicating the program, instruction, or controller
-    /// for which this element is contained. This is essentially the scope name for a given logix element.
-    /// </summary>
-    /// <value>
-    /// A <see cref="string"/> representing the name of the program, instruction, or controller in which this component
-    /// is contained. If the component has <see cref="Scope.Null"/> scope, then an <see cref="string.Empty"/> string.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This value is retrieved from the ancestors of the underlying element. If no ancestors exist, meaning this
-    /// element is not attached to a L5X tree, then this returns an empty string.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify elements within the L5X file, especially scoped components with same name.
-    /// </para>
-    /// </remarks>
-    public string Container => Scope.Container(Element);
 
     /// <summary>
     /// Adds a new object of the same type directly after this object in the L5X document.
@@ -187,7 +145,7 @@ public abstract class LogixObject : LogixElement
     }
 
     /// <summary>
-    /// Removes the element from it's parent container.
+    /// Removes the element from its parent container.
     /// </summary>
     /// <exception cref="InvalidOperationException">No parent exists for the underlying element.
     /// This could happen if the component was created in memory and not yet added to the L5X.

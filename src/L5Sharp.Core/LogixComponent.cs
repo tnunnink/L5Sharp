@@ -11,7 +11,7 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// <para>
 /// This is the base class for all logix component classes. All components can be identified by a unique name that
-/// is typically subject to the some naming constraints defined by a Rockwell. Logix internally may create
+/// is typically subject to some naming constraints defined by a Rockwell. Logix internally may create
 /// components that do not adhere to the naming constraints, which is why the property is a simple string.
 /// Names should be unique any attempt to create duplicated names should fail.
 /// All components also contain a simple string description and <see cref="Core.Use"/> to identify the
@@ -27,7 +27,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent : LogixObject, ILogixReferencable
+public abstract class LogixComponent : LogixObject
 {
     /// <inheritdoc />
     protected LogixComponent(string name) : base(name)
@@ -82,13 +82,19 @@ public abstract class LogixComponent : LogixObject, ILogixReferencable
     }
 
     /// <summary>
-    /// The global unique identifier <see cref="ComponentKey"/> of the component. 
+    /// The scope idetifying where in an L5X file this element exists. This can be a globally scoped controller element,
+    /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
     /// </summary>
-    /// <value>
-    /// A <see cref="ComponentKey"/> value representing composite set of properties that identify this component
-    /// within an L5X tree.
-    /// </value>
-    public ComponentKey Key => new(GetType().L5XType(), Name);
+    /// <value>A <see cref="Scope"/> object with information regarding the scope of the element.</value>
+    /// <remarks>
+    /// <para>
+    /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
+    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify elements within the L5X file, especially elements such as <c>Tag</c>,
+    /// <c>Routine</c>, or <c>Rung</c>.
+    /// </para>
+    /// </remarks>
+    public Scope Scope => Scope.Of(Element);
 
     /// <summary>
     /// Returns a collection of <see cref="LogixComponent"/> that this component depends on to be valid within a given
@@ -101,7 +107,16 @@ public abstract class LogixComponent : LogixObject, ILogixReferencable
     /// bring along all the other components they would need to be successfully importing into a logix project file.
     /// Each derived component implements this method since the dependencies are different for each type.
     /// </remarks>
-    public virtual IEnumerable<LogixComponent> Dependencies() => Enumerable.Empty<LogixComponent>();
+    public virtual IEnumerable<LogixComponent> Dependencies() => [];
+
+    /// <summary>
+    /// Returns a collection of all <see cref="LogixElement"/> objects that reference this component by name.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
+    /// at least one property value referencing this component's name.
+    /// </returns>
+    public IEnumerable<CrossReference> References() => L5X?.References(Name) ?? [];
 
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.
@@ -115,13 +130,16 @@ public abstract class LogixComponent : LogixObject, ILogixReferencable
     /// </remarks>
     public virtual void Delete()
     {
-        if (Element.Parent is null || !IsAttached) return;
+        if (Element.Parent is null) return;
 
         var references = References();
 
         foreach (var reference in references)
         {
-            reference.Element.Remove();
+            if (L5X?.TryGet(reference.Scope, out var element) is true)
+            {
+                element.Remove();
+            }
         }
 
         Element.Remove();
@@ -149,34 +167,9 @@ public abstract class LogixComponent : LogixObject, ILogixReferencable
         return content;
     }
 
-    /// <summary>
-    /// Returns a collection of all <see cref="LogixElement"/> objects that reference this component by name.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
-    /// at least one property value referencing this component's name.
-    /// </returns>
-    public IEnumerable<CrossReference> References() =>
-        L5X is not null ? L5X.References(this) : Enumerable.Empty<CrossReference>();
-
     /// <inheritdoc />
     /// <remarks>This override returns the component name of the type.</remarks>
     public override string ToString() => Name;
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(this, obj)) return true;
-
-        return obj switch
-        {
-            LogixComponent other => Equals(Key, other.Key),
-            _ => false
-        };
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => Key.GetHashCode();
 }
 
 /// <summary>
@@ -236,7 +229,7 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
     /// </remarks>
     public static TComponent? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty())
             return default;
 
         var trimmed = value.Trim();

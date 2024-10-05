@@ -252,7 +252,7 @@ public static class LogixSerializer
     private static LogixElement DeserializeAtomic(XElement element)
     {
         var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
-        var value = element.Get(L5XName.Value);
+        var value = element.Attribute(L5XName.Value)?.Value ?? throw element.L5XError(L5XName.Value);;
         return AtomicData.Parse(dataType, value);
     }
 

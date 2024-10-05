@@ -17,8 +17,7 @@ public class SheetTests
     public void New_Default_ShouldNotBeAttached()
     {
         var sheet = new Sheet();
-
-        sheet.IsAttached.Should().BeFalse();
+        
         sheet.L5X.Should().BeNull();
     }
 
@@ -29,7 +28,6 @@ public class SheetTests
 
         sheet.Number.Should().Be(0);
         sheet.Description.Should().BeNull();
-        sheet.Container.Should().BeEmpty();
         sheet.Blocks().Should().BeEmpty();
     }
 

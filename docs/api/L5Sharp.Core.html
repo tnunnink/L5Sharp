@@ -2,11 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Namespace L5Sharp.Core
- </title>
+      <title>Namespace L5Sharp.Core </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Namespace L5Sharp.Core
- ">
+      <meta name="title" content="Namespace L5Sharp.Core ">
+      
       
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
@@ -18,19 +17,27 @@
       
       
       
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-
-  <script type="module">
-    import options from './../public/main.js'
-    import { init } from './../public/docfx.min.js'
-    init(options)
-  </script>
-
-  <script>
-    const theme = localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
-
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -66,7 +73,7 @@
 
       <div class="content">
         <div class="actionbar">
-          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
             <i class="bi bi-list"></i>
           </button>
 
@@ -75,8 +82,7 @@
 
         <article data-uid="L5Sharp.Core">
 
-  <h1 id="L5Sharp_Core" data-uid="L5Sharp.Core" class="text-break">Namespace L5Sharp.Core
-</h1>
+  <h1 id="L5Sharp_Core" data-uid="L5Sharp.Core" class="text-break">Namespace L5Sharp.Core</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
@@ -85,8 +91,203 @@
 Classes
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ALARM.html">ALARM</a></dt>
+      <dd><p>A predefined or built in data type in Logix that is a part of the alarm instruction set.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ALARM_ANALOG.html">ALARM_ANALOG</a></dt>
+      <dd><p>A predefined or built in data type in Logix that is a part of the alarm instruction set.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ALARM_DIGITAL.html">ALARM_DIGITAL</a></dt>
+      <dd><p>A predefined or built in data type in Logix that is a part of the alarm instruction set.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.AddOnInstruction.html">AddOnInstruction</a></dt>
+      <dd><p>A logix <code>AddOnInstruction</code> component. Contains the properties that comprise the L5X
+AddOnInstructionDefinition element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.Address.html">Address</a></dt>
       <dd><p>Provides a wrapper around the string port address value to indicate what type of address the value is.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Argument.html">Argument</a></dt>
+      <dd><p>Represents an argument to an instruction, which could be a tag name reference or an immediate atomic value.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ArrayData.html">ArrayData</a></dt>
+      <dd><p>A abstract <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a> that represents an array of other data elements (either atomic or structure).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ArrayData-1.html">ArrayData&lt;TData&gt;</a></dt>
+      <dd><p>A <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a> that represents an array of other logix types (either atomic or structure).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.AtomicData.html">AtomicData</a></dt>
+      <dd><p>A <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a> that represents value type object.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.BOOL.html">BOOL</a></dt>
+      <dd><p>Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>. This object is meant
+to wrap the DataValue or DataValueMember data for the L5X tag data structure.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Block.html">Block</a></dt>
+      <dd><p>A <code>DiagramElement</code> type that defines the properties for nested function block elements in a
+Function Block Diagram (FBD).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.CONTROL.html">CONTROL</a></dt>
+      <dd><p>A predefined or built in data type used with ... instructions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.COUNTER.html">COUNTER</a></dt>
+      <dd><p>A predefined or built in data type used with counter instructions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.CaptureSizeType.html">CaptureSizeType</a></dt>
+      <dd><p>An enumeration of all <a class="xref" href="L5Sharp.Core.CaptureSizeType.html">CaptureSizeType</a> for a Logix <a class="xref" href="L5Sharp.Core.Trend.html">Trend</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.CatalogEntry.html">CatalogEntry</a></dt>
+      <dd><p>A set of properties that defines a catalog entry for a <a class="xref" href="L5Sharp.Core.Module.html">Module</a> component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Chart.html">Chart</a></dt>
+      <dd><p>Represents the containing element for Sequential Function Chart (SFC) block elements. This class inherits
+the common <a class="xref" href="L5Sharp.Core.Diagram.html">Diagram</a> logic and allows easier manipulation for SFC elements
+within a SFC type routine.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Comment.html">Comment</a></dt>
+      <dd><p>An element wrapping the Logix <code>Comment</code> element and providing access to its attributes and values.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Communications.html">Communications</a></dt>
+      <dd><p>A component of a <a class="xref" href="L5Sharp.Core.Module.html">Module</a> that represents the properties and data of the connection to the field device.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ComplexData.html">ComplexData</a></dt>
+      <dd><p>A mutable <a class="xref" href="L5Sharp.Core.StructureData.html">StructureData</a> allowing the user to further extend or transform the structure of a complex
+logix type after instantiation of the object.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ComponentClass.html">ComponentClass</a></dt>
+      <dd><p>An enumeration of all <a class="xref" href="L5Sharp.Core.ComponentClass.html">ComponentClass</a> for a various components.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ComponentType.html">ComponentType</a></dt>
+      <dd><p>Represents a component type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Connection.html">Connection</a></dt>
+      <dd><p>A component of a <a class="xref" href="L5Sharp.Core.Module.html">Module</a> that represents the properties and data of the connection to the field device.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ConnectionPriority.html">ConnectionPriority</a></dt>
+      <dd><p>An enumeration of all <a class="xref" href="L5Sharp.Core.ConnectionPriority.html">ConnectionPriority</a> for a Logix <a class="xref" href="L5Sharp.Core.Connection.html">Connection</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ConnectionType.html">ConnectionType</a></dt>
+      <dd><p>An enumeration of all <a class="xref" href="L5Sharp.Core.ConnectionType.html">ConnectionType</a> values for a given Logix <a class="xref" href="L5Sharp.Core.Connection.html">Connection</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ConsumeInfo.html">ConsumeInfo</a></dt>
+      <dd><p>A sub element of the <a class="xref" href="L5Sharp.Core.Tag.html">Tag</a> component that contains properties or configuration
+consumer tag types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ContainerExtensions.html">ContainerExtensions</a></dt>
+      <dd><p>Extensions methods to the <a class="xref" href="L5Sharp.Core.LogixContainer-1.html">LogixContainer&lt;TObject&gt;</a> class.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Controller.html">Controller</a></dt>
+      <dd><p>A logix <code>Controller</code> component. Contains the properties that comprise the L5X Controller element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.CrossReference.html">CrossReference</a></dt>
+      <dd><p>An object that contains reference information for a given named component element.
+A reference is defined by the <a class="xref" href="L5Sharp.Core.CrossReference.html#L5Sharp_Core_CrossReference_Name">Name</a> of the conpomonet being referenced, and the <a class="xref" href="L5Sharp.Core.CrossReference.html#L5Sharp_Core_CrossReference_Scope">Scope</a>
+of the element that references it. Optionally, code references can include a specific <a class="xref" href="L5Sharp.Core.CrossReference.html#L5Sharp_Core_CrossReference_Instrucion">Instrucion</a>
+that contains the reference. This is meant to be somewhat generic so that it works for both code and tag references.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DINT.html">DINT</a></dt>
+      <dd><p>Represents a <b>DINT</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DataFormat.html">DataFormat</a></dt>
+      <dd><p>Represents the types of data formats produced by a L5X file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DataType.html">DataType</a></dt>
+      <dd><p>The Logix <code>DataType</code> component. Contains the properties and functionality that comprise the L5X DataType element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DataTypeClass.html">DataTypeClass</a></dt>
+      <dd><p>An enumeration of all Logix <a class="xref" href="L5Sharp.Core.DataTypeClass.html">DataTypeClass</a> for a given data type component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DataTypeFamily.html">DataTypeFamily</a></dt>
+      <dd><p>An enumeration of all Logix <a class="xref" href="L5Sharp.Core.DataTypeFamily.html">DataTypeFamily</a> options for a given <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a>.
+Valid options are None and String.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DataTypeMember.html">DataTypeMember</a></dt>
+      <dd><p>An element of the <a class="xref" href="L5Sharp.Core.DataTypeMember.html#L5Sharp_Core_DataTypeMember_DataType">DataType</a> that makes up the structure of the user defined type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Diagram.html">Diagram</a></dt>
+      <dd><p>An abstract class for FBD and SFC routine code elements. Both routine types can be viewed as a container with a
+collection of child elements of different types. This abstraction defines the common interface for adding,
+removing, and accessing child block types from the <code>Diagram</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DiagramElement.html">DiagramElement</a></dt>
+      <dd><p>A base class for all FBD/SFC routine elements within a containing <code>Diagram</code>. This base class simply
+contains some of the common properties and functions that all FBD/SFC elements share,
+such as X and Y coordinates, and ID.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.DiagramType.html">DiagramType</a></dt>
+      <dd><p>An enumeration object containing the possible types of a <code>Diagram</code> element.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -95,18 +296,439 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Direction.html">Direction</a></dt>
+      <dd><p>This is a library construct to help define the direction of a parameter for an instruction of function block.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ElectronicKeying.html">ElectronicKeying</a></dt>
+      <dd><p>An enumeration of all <a class="xref" href="L5Sharp.Core.ElectronicKeying.html">ElectronicKeying</a> values for a given Logix <a class="xref" href="L5Sharp.Core.Module.html">Module</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ExternalAccess.html">ExternalAccess</a></dt>
+      <dd><p>An enumeration of all Logix <a class="xref" href="L5Sharp.Core.ExternalAccess.html">ExternalAccess</a> options.
+<remarks><a class="xref" href="L5Sharp.Core.ExternalAccess.html">ExternalAccess</a> is a Logix setting that determines the ability to read from or write to a given component.
+</remarks></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.INT.html">INT</a></dt>
+      <dd><p>Represents a <b>INT</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int16">short</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Instruction.html">Instruction</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Keyword.html">Keyword</a></dt>
+      <dd><p>An enumeration of known Logix <code>Keywords</code> used for the <code>StructuredText</code> programming language.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.L5X.html">L5X</a></dt>
+      <dd><p>This is the primary entry point for interacting with the L5X file.
+Provides access to query and manipulate logix components, elements, containers, and more.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.L5XName.html">L5XName</a></dt>
+      <dd><p>A static class of L5X element and attribute names that provide string reference to L5X names so to avoid using
+magic string. This class was generated by querying the L5X XSD schema file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.L5XTypeAttribute.html">L5XTypeAttribute</a></dt>
+      <dd><p>A custom attribute that defines the L5X type name for a logic type class in order to match XML
+elements to a given class. This attribute is mostly needed for class types whose names do not match the L5X element type
+found in the L5X, or for classes that support multiple L5X element types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LINT.html">LINT</a></dt>
+      <dd><p>Represents a <b>LINT</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LREAL.html">LREAL</a></dt>
+      <dd><p>Represents a <b>LREAL</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Line.html">Line</a></dt>
+      <dd><p>A Logix <code>Line</code> element containing the properties for a L5X Line component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LocalTag.html">LocalTag</a></dt>
+      <dd><p>A <a class="xref" href="L5Sharp.Core.Tag.html">Tag</a> that is defined locally to an <a class="xref" href="L5Sharp.Core.AddOnInstruction.html">AddOnInstruction</a> component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixCode.html">LogixCode</a></dt>
+      <dd><p>An abstract representation of a segment of Logix code found within the content portion of a logix <code>Routine</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixComponent.html">LogixComponent</a></dt>
+      <dd><p>A common logix element that is able to be identified by name.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixComponent-1.html">LogixComponent&lt;TComponent&gt;</a></dt>
+      <dd><p>A generic abstract <a class="xref" href="L5Sharp.Core.LogixComponent.html">LogixComponent</a> that implements the <a class="xref" href="L5Sharp.Core.ILogixParsable-1.html">ILogixParsable&lt;T&gt;</a> interface.
+This generic type class allow us to specify the strong return types for methods <a class="xref" href="L5Sharp.Core.LogixComponent-1.html#L5Sharp_Core_LogixComponent_1_Parse_System_String_">Parse(string)</a>,
+<a class="xref" href="L5Sharp.Core.LogixComponent-1.html#L5Sharp_Core_LogixComponent_1_TryParse_System_String_">TryParse(string?)</a> and <a class="xref" href="L5Sharp.Core.LogixComponent-1.html#L5Sharp_Core_LogixComponent_1_Clone">Clone()</a>. This means we don't have to implement these methods for every
+derivative type, and allows these types to be used with the <a class="xref" href="L5Sharp.Core.LogixParser.html">LogixParser</a> in a dynamic fashion.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixContainer-1.html">LogixContainer&lt;TObject&gt;</a></dt>
+      <dd><p>A generic collection that provides operations over an underlying <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> container
+of <a class="xref" href="L5Sharp.Core.LogixObject.html">LogixObject</a> types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a></dt>
+      <dd><p>The base class for all logix type classes, which represent the value or data structure of a logix tag component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixElement.html">LogixElement</a></dt>
+      <dd><p>A base class for all types that can be serialized and deserialized from a L5X file. This abstract class enforces
+the <a class="xref" href="L5Sharp.Core.ILogixSerializable.html">ILogixSerializable</a> interface and a constructor taking a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> for initialization
+of and underlying element object. Deriving classes will have access to the underlying element and
+methods for easily getting and setting data. Implementing classes need to also provide at least a constructor taking
+a single <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a> and pass it to the base constructor to be deserializable by the library.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixEnum.html">LogixEnum</a></dt>
+      <dd><p>A base class for all logix enumeration types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixEnum-2.html">LogixEnum&lt;TEnum, TValue&gt;</a></dt>
+      <dd><p>A base class for all logix enumeration types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixInfo.html">LogixInfo</a></dt>
+      <dd><p>A class containing information regarding the L5X export file. This information is found on the root
+RSLogix5000Content element, and is used by the Logix software to determine the context of the L5X file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixObject.html">LogixObject</a></dt>
+      <dd><p>A class implementing <a class="xref" href="L5Sharp.Core.LogixElement.html">LogixElement</a> that adds common properties and methods shared by most elements or
+components. Features include the <a class="xref" href="L5Sharp.Core.LogixObject.html#L5Sharp_Core_LogixObject_Scope">Scope</a> to identify where in the document they exist,
+and methods <a class="xref" href="L5Sharp.Core.LogixObject.html#L5Sharp_Core_LogixObject_AddBefore_L5Sharp_Core_LogixObject_">AddBefore(LogixObject)</a>, <a class="xref" href="L5Sharp.Core.LogixObject.html#L5Sharp_Core_LogixObject_AddBefore_L5Sharp_Core_LogixObject_">AddBefore(LogixObject)</a>, <a class="xref" href="L5Sharp.Core.LogixObject.html#L5Sharp_Core_LogixObject_Remove">Remove()</a>, and <a class="xref" href="L5Sharp.Core.LogixObject.html#L5Sharp_Core_LogixObject_Replace_L5Sharp_Core_LogixObject_">Replace(LogixObject)</a>
+which allow easy interface to mutate the object or collection of objects.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixObject-1.html">LogixObject&lt;TObject&gt;</a></dt>
+      <dd><p>A generic abstract <a class="xref" href="L5Sharp.Core.LogixObject.html">LogixObject</a> that implements the <a class="xref" href="L5Sharp.Core.ILogixParsable-1.html">ILogixParsable&lt;T&gt;</a> interface.
+This generic type class allow us to specify the strong return types for methods <a class="xref" href="L5Sharp.Core.LogixObject-1.html#L5Sharp_Core_LogixObject_1_Parse_System_String_">Parse(string)</a>,
+<a class="xref" href="L5Sharp.Core.LogixObject-1.html#L5Sharp_Core_LogixObject_1_TryParse_System_String_">TryParse(string?)</a> and <a class="xref" href="L5Sharp.Core.LogixObject-1.html#L5Sharp_Core_LogixObject_1_Clone">Clone()</a>. This means we don't have to implement these methods for every
+derivative type, and allows these types to be used with the <a class="xref" href="L5Sharp.Core.LogixParser.html">LogixParser</a> in a dynamic fashion.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixParser.html">LogixParser</a></dt>
+      <dd><p>Static class containing extensions for parsing a given string value into a specified type, either primitive or a type
+defined in this library that implements the <a class="xref" href="L5Sharp.Core.ILogixParsable-1.html">ILogixParsable&lt;T&gt;</a>. This is the means through which we will
+&quot;deserialize&quot; or map string values to strongly typed values.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.LogixSerializer.html">LogixSerializer</a></dt>
+      <dd><p>A static deserialization class for <a class="xref" href="L5Sharp.Core.LogixElement.html">LogixElement</a> objects and their derivatives.
+This class uses a dictionary to cache deserialization functions for types deriving from LogixElement.
+We are using compiled expression functions as they are more performant that invoking constructors via reflection.
+We are also caching them for reuse so we don't have to build them each time we call <a class="xref" href="L5Sharp.Core.LogixSerializer.html#L5Sharp_Core_LogixSerializer_Deserialize_System_Xml_Linq_XElement_">Deserialize(XElement)</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.MESSAGE.html">MESSAGE</a></dt>
+      <dd><p>A predefined or built in data type used with message instructions. Note that the members of this type resemble those
+observed from exported L5X, and not that of the predefined data type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Member.html">Member</a></dt>
+      <dd><p>An element of a <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a> that defines the structure or hierarchy of the data.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.MessageType.html">MessageType</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Module.html">Module</a></dt>
+      <dd><p>A logix <code>Module</code> component. Contains the properties that comprise the L5X Module element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ModuleCatalog.html">ModuleCatalog</a></dt>
+      <dd><p>A service that allows lookups for <a class="xref" href="L5Sharp.Core.CatalogEntry.html">CatalogEntry</a> objects based on catalog numbers.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ModuleCategory.html">ModuleCategory</a></dt>
+      <dd><p>Represents an enumeration of <a class="xref" href="L5Sharp.Core.ModuleCategory.html">ModuleCategory</a> for a given <a class="xref" href="L5Sharp.Core.Module.html">Module</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ModuleExtensions.html">ModuleExtensions</a></dt>
+      <dd><p>Extensions methods for a single <a class="xref" href="L5Sharp.Core.Module.html">Module</a> or collection of <a class="xref" href="L5Sharp.Core.Module.html">Module</a> components.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.NeutralText.html">NeutralText</a></dt>
-      <dd><p>A wrapper class around the textual representation of the ladder logic notation called neutral text.</p>
+      <dd><p>A thin wrapper around the textual representation of logic notation called neutral text. This could represent a
+single instruction signature, a rung of logic (combination of instructions), or a line of structured text. The
+purpose of this class is to provide a way to parse the text into strongly typed objects that are easier to work with.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.NullData.html">NullData</a></dt>
+      <dd><p>Represents a null <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a> implementation, or a type that is neither atomic, structure, array,
+nor string.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.OnlineEditType.html">OnlineEditType</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.OnlineEditType.html">OnlineEditType</a> options for a given <a class="xref" href="L5Sharp.Core.Routine.html">Routine</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.OpcUAAccess.html">OpcUAAccess</a></dt>
+      <dd><p>An enumeration of all Logix <a class="xref" href="L5Sharp.Core.OpcUAAccess.html">OpcUAAccess</a> options.
+<remarks><a class="xref" href="L5Sharp.Core.OpcUAAccess.html">OpcUAAccess</a> is a Logix setting that determines the ability to read from or write to a given component from OPC UA.
+</remarks></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Operator.html">Operator</a></dt>
+      <dd><p>An enumeration of known Logix operators found within the Logix programming languages.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.PHASE.html">PHASE</a></dt>
+      <dd><p>A predefined data type that is built into Logix and used with PID instructions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.PID.html">PID</a></dt>
+      <dd><p>A predefined data type that is built into Logix and used with PID instructions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Parameter.html">Parameter</a></dt>
+      <dd><p>A component of the <a class="xref" href="L5Sharp.Core.AddOnInstruction.html">AddOnInstruction</a> that makes up the structure of the instruction type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ParameterConnection.html">ParameterConnection</a></dt>
+      <dd><p>A logix <code>ParameterConnection</code> element defining the connection between two different program tags.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.PassThroughOption.html">PassThroughOption</a></dt>
+      <dd><p>An enumeration of all <a class="xref" href="L5Sharp.Core.PassThroughOption.html">PassThroughOption</a> for a Logix <a class="xref" href="L5Sharp.Core.Controller.html">Controller</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Pen.html">Pen</a></dt>
+      <dd><p>A component of the <a class="xref" href="L5Sharp.Core.Trend.html">Trend</a> that defines the tags used for the trend</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.PenType.html">PenType</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.PenType.html">PenType</a> options for a given <a class="xref" href="L5Sharp.Core.Pen.html">Pen</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Port.html">Port</a></dt>
+      <dd><p>A component of a <a class="xref" href="L5Sharp.Core.Module.html">Module</a> that represents the means for connecting devices on a network or in a chassis.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.PortInfo.html">PortInfo</a></dt>
+      <dd><p>A entity class representing the data returned from a module catalog entry.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ProduceInfo.html">ProduceInfo</a></dt>
+      <dd><p>A sub element of the <a class="xref" href="L5Sharp.Core.Tag.html">Tag</a> component that contains properties or configuration
+producer tag types.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.ProductType.html">ProductType</a></dt>
-      <dd><p>An entity that represents the type of product of a given <a class="xref" href="L5Sharp.Components.Module.html">Module</a>.</p>
+      <dd><p>An entity that represents the type of product of a given <a class="xref" href="L5Sharp.Core.Module.html">Module</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ProductionTrigger.html">ProductionTrigger</a></dt>
+      <dd><p>An enumeration of all Logix <a class="xref" href="L5Sharp.Core.ProductionTrigger.html">ProductionTrigger</a> options for a given <a class="xref" href="L5Sharp.Core.Connection.html">Connection</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Program.html">Program</a></dt>
+      <dd><p>A logix <code>Program</code> component. Contains the properties that comprise the L5X Program element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ProgramType.html">ProgramType</a></dt>
+      <dd><p>Provides an enumeration of all Logix <a class="xref" href="L5Sharp.Core.ProgramType.html">ProgramType</a> options or a given <a class="xref" href="L5Sharp.Core.Program.html">Program</a> component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.REAL.html">REAL</a></dt>
+      <dd><p>Represents a <b>REAL</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Radix.html">Radix</a></dt>
+      <dd><p>Represents a number base for a given value type or atomic type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.RedundancyInfo.html">RedundancyInfo</a></dt>
+      <dd><p>A sub element of the <a class="xref" href="L5Sharp.Core.Controller.html">Controller</a> component that contains properties or configuration
+related to the controller redundancy.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.Revision.html">Revision</a></dt>
       <dd><p>Represents a revision number that is expressed by as {Major}.{Minor}.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Routine.html">Routine</a></dt>
+      <dd><p>A logix <code>Routine</code> component. Contains the properties for a generic Routine element. This type does not
+include content property. More specific routine types are derived from this base class.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.RoutineType.html">RoutineType</a></dt>
+      <dd><p>An enumeration of all Logix Routine types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Rung.html">Rung</a></dt>
+      <dd><p>A Logix <code>Rung</code> element containing the properties for a L5X Rung component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.RungExtensions.html">RungExtensions</a></dt>
+      <dd><p>Extension methods for a <a class="xref" href="L5Sharp.Core.Rung.html">Rung</a> element or collections or elements.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.RungType.html">RungType</a></dt>
+      <dd><p>An enumeration of all Logix <a class="xref" href="L5Sharp.Core.RungType.html">RungType</a> values for a given Rung.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SFCExecutionControl.html">SFCExecutionControl</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.SFCExecutionControl.html">SFCExecutionControl</a> options for a given <a class="xref" href="L5Sharp.Core.Controller.html">Controller</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SFCLastScan.html">SFCLastScan</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.SFCLastScan.html">SFCLastScan</a> options for a given <a class="xref" href="L5Sharp.Core.Controller.html">Controller</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SFCRestartPosition.html">SFCRestartPosition</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.SFCRestartPosition.html">SFCRestartPosition</a> options for a given <a class="xref" href="L5Sharp.Core.Controller.html">Controller</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SINT.html">SINT</a></dt>
+      <dd><p>Represents a <b>SINT</b> Logix atomic data type, or a type analogous to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">sbyte</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.STRING.html">STRING</a></dt>
+      <dd><p>Represents a predefined String Logix data type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SafetyInfo.html">SafetyInfo</a></dt>
+      <dd><p>A sub element of the <a class="xref" href="L5Sharp.Core.Controller.html">Controller</a> component that contains properties or configuration
+related to the controller safety.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SafetyTagMap.html">SafetyTagMap</a></dt>
+      <dd><p>A component of the <a class="xref" href="L5Sharp.Core.SafetyInfo.html">SafetyInfo</a> element which contains the list of tags configured for the
+safety tag map.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SamplesType.html">SamplesType</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.SamplesType.html">SamplesType</a> options for a given <a class="xref" href="L5Sharp.Core.Trend.html">Trend</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Scope.html">Scope</a></dt>
+      <dd><p>An object that contains scope information which identifies the location of an element in an L5X.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ScopeLevel.html">ScopeLevel</a></dt>
+      <dd><p>Represents an enumeration of all Logix <a class="xref" href="L5Sharp.Core.ScopeLevel.html">ScopeLevel</a> options.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ScopeType.html">ScopeType</a></dt>
+      <dd><p>Represents the scope types in the L5Sharp.Core namespace.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Security.html">Security</a></dt>
+      <dd><p>A sub element of the <a class="xref" href="L5Sharp.Core.Controller.html">Controller</a> component that contains properties or configuration
+related to the controller security.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Sheet.html">Sheet</a></dt>
+      <dd><p>A Logix <code>Sheet</code> block containing the properties for a L5X Sheet or Function Block Diagram (FBD).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SheetOrientation.html">SheetOrientation</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.SheetOrientation.html">SheetOrientation</a> options for a given <a class="xref" href="L5Sharp.Core.Routine.html">Routine</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.SheetSize.html">SheetSize</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.SheetSize.html">SheetSize</a> options for a given <a class="xref" href="L5Sharp.Core.Routine.html">Routine</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.StringData.html">StringData</a></dt>
+      <dd><p>A <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a> that represents a string or collection of ASCII characters.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.StructureData.html">StructureData</a></dt>
+      <dd><p>A <a class="xref" href="L5Sharp.Core.LogixData.html">LogixData</a> that represents a structure containing members of different types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TIMER.html">TIMER</a></dt>
+      <dd><p>A predefined data type that is built into Logix and used with timer instructions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Tag.html">Tag</a></dt>
+      <dd><p>A logix <code>Tag</code> component. Contains the properties that comprise the L5X Tag element.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -120,8 +742,117 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TagType.html">TagType</a></dt>
+      <dd><p>Represents an enumeration of Logix <a class="xref" href="L5Sharp.Core.TagType.html">TagType</a> options for a given <a class="xref" href="L5Sharp.Core.Tag.html">Tag</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TagUsage.html">TagUsage</a></dt>
+      <dd><p>Represents an enumeration of all Logix <a class="xref" href="L5Sharp.Core.TagUsage.html">TagUsage</a> options for a given <a class="xref" href="L5Sharp.Core.Tag.html">Tag</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Task.html">Task</a></dt>
+      <dd><p>A logix <code>Task</code> component. Contains the properties that comprise the L5X Task element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TaskEventTrigger.html">TaskEventTrigger</a></dt>
+      <dd><p>An enumeration of all <a class="xref" href="L5Sharp.Core.TaskEventTrigger.html">TaskEventTrigger</a> options for a given <a class="xref" href="L5Sharp.Core.Task.html">Task</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TaskType.html">TaskType</a></dt>
+      <dd><p>Provides an enumeration of all Logix Task types.
+Value must be <a class="xref" href="L5Sharp.Core.TaskType.html#L5Sharp_Core_TaskType_Continuous">Continuous</a>, <a class="xref" href="L5Sharp.Core.TaskType.html#L5Sharp_Core_TaskType_Periodic">Periodic</a>, or <a class="xref" href="L5Sharp.Core.TaskType.html#L5Sharp_Core_TaskType_Event">Event</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TextBox.html">TextBox</a></dt>
+      <dd><p>A element of a diagram that contains a descriptive section of text. This element can be found on both FBD or SFC
+diagram elements.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TokenType.html">TokenType</a></dt>
+      <dd><p>A set of all known token types for a <code>NeutralText</code> string. This is not an L5X type but an enum that is used
+by the library to parse a <code>NeutralText</code> string into a <a class="xref" href="L5Sharp.Core.TokenType.html">TokenType</a> collection.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TransmissionType.html">TransmissionType</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.TransmissionType.html">TransmissionType</a> options for a given <a class="xref" href="L5Sharp.Core.Connection.html">Connection</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Trend.html">Trend</a></dt>
+      <dd><p>A logix <code>Trend</code> component. Contains the properties that comprise the L5X Trend element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TriggerOperation.html">TriggerOperation</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.TriggerOperation.html">TriggerOperation</a> options for a given <a class="xref" href="L5Sharp.Core.Trend.html">Trend</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TriggerTargetType.html">TriggerTargetType</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.TriggerTargetType.html">TriggerTargetType</a> options for a given <a class="xref" href="L5Sharp.Core.Trend.html">Trend</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.TriggerType.html">TriggerType</a></dt>
+      <dd><p>Represents an enumeration of all <a class="xref" href="L5Sharp.Core.TriggerType.html">TriggerType</a> options for a given <a class="xref" href="L5Sharp.Core.Trend.html">Trend</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.UDINT.html">UDINT</a></dt>
+      <dd><p>Represents a <b>UDINT</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.UINT.html">UINT</a></dt>
+      <dd><p>Represents a <b>UINT</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ULINT.html">ULINT</a></dt>
+      <dd><p>Represents a <b>ULINT</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.USINT.html">USINT</a></dt>
+      <dd><p>Represents a <b>USINT</b> Logix atomic data type, or a type analogous to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Unit.html">Unit</a></dt>
+      <dd><p>An element wrapping the Logix <code>EngineeringUnit</code> element and providing access to its attributes and values.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Use.html">Use</a></dt>
+      <dd><p>An enumeration of options that specify the purpose of use of a L5X.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a></dt>
-      <dd><p>An entity that represents the vendor of a given <a class="xref" href="L5Sharp.Components.Module.html">Module</a>.</p>
+      <dd><p>An entity that represents the vendor of a given <a class="xref" href="L5Sharp.Core.Module.html">Module</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.WatchList.html">WatchList</a></dt>
+      <dd><p>A logix <code>WatchList</code> component. Contains the properties that comprise the L5X QuickWatchList element.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.WatchTag.html">WatchTag</a></dt>
+      <dd><p>A tag element within a <a class="xref" href="L5Sharp.Core.WatchList.html">WatchList</a> component.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.Wire.html">Wire</a></dt>
+      <dd><p>A <code>LogixElement</code> type that defines the properties for a wire connector within a
+Function Block Diagram (FBD).</p>
 </dd>
     </dl>
     <h3 id="structs">
@@ -129,18 +860,71 @@ Structs
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.ScanRate.html">ScanRate</a></dt>
-      <dd><p>A configurable property of a <a class="xref" href="L5Sharp.Components.Task.html">Task</a> that controls the rate at which the task will be evaluated or scanned.</p>
+      <dd><p>A configurable property of a <a class="xref" href="L5Sharp.Core.Task.html">Task</a> that controls the rate at which the task will be evaluated or scanned.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.TaskPriority.html">TaskPriority</a></dt>
-      <dd><p>A configurable property of a <a class="xref" href="L5Sharp.Components.Task.html">Task</a> that controls the order in which the Logix Controller
+      <dd><p>A configurable property of a <a class="xref" href="L5Sharp.Core.Task.html">Task</a> that controls the order in which the Logix Controller
 will scan the given Task.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="L5Sharp.Core.Watchdog.html">Watchdog</a></dt>
-      <dd><p>A configurable property of a <a class="xref" href="L5Sharp.Components.Task.html">Task</a> that specified how long a task can rung before triggering a major fault.</p>
+      <dd><p>A configurable property of a <a class="xref" href="L5Sharp.Core.Task.html">Task</a> that specified how long a task can rung before triggering a major fault.</p>
+</dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ILogixLookup.html">ILogixLookup</a></dt>
+      <dd><p>An interface that defines an API for searching an L5X for <a class="xref" href="L5Sharp.Core.LogixObject.html">LogixObject</a>
+having a specified name or scope.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ILogixParsable-1.html">ILogixParsable&lt;T&gt;</a></dt>
+      <dd><p>Represents an interface that defines methods to parse string values into an object of type T.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.ILogixSerializable.html">ILogixSerializable</a></dt>
+      <dd><p>A interface defining the method for serialization of an object to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.xml.linq.xelement">XElement</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.IScopeBuilder.html">IScopeBuilder</a></dt>
+      <dd><p>A fluent API for building up a scope path that identifies a specific location or element in the L5X tree.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.IScopeNameBuilder.html">IScopeNameBuilder</a></dt>
+      <dd><p>A nested builder interface for specifying the target name of the a <a class="xref" href="L5Sharp.Core.Scope.html">Scope</a> instance.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.IScopeProgramBuilder.html">IScopeProgramBuilder</a></dt>
+      <dd><p>A fluent API for building up a scope path that identifies a specific location or element in the L5X tree.
+This interface is scoped to a single program, hence limiting the API to Routine/Tag, or allowing further scoping
+into a specific Routine.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.IScopeRoutineBuilder.html">IScopeRoutineBuilder</a></dt>
+      <dd><p>A fluent API for building up a scope path that identifies a specific location or element in the L5X tree.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.IScopeTypeBuilder.html">IScopeTypeBuilder</a></dt>
+      <dd></dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="L5Sharp.Core.L5XOptions.html">L5XOptions</a></dt>
+      <dd><p>Enum representing the indexing options when loading the L5X file.</p>
 </dd>
     </dl>
 
@@ -150,7 +934,7 @@ will scan the given Task.</p>
         <div class="contribution d-print-none">
         </div>
 
-        
+
       </div>
 
       <div class="affix">
@@ -159,7 +943,7 @@ will scan the given Task.</p>
     </main>
 
 
-    <footer class="border-top">
+    <footer class="border-top text-secondary">
       <div class="container-xxl">
         <div class="flex-fill">
           <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>

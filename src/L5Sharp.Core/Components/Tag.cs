@@ -367,7 +367,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <value>The <see cref="Tag"/> object that represents the alias if found. If this object is not
     /// attached, or <see cref="AliasFor"/> is not set, then this will return <c>null</c>.</value>
-    public Tag? Alias => AliasFor is not null ? L5X?.Find(AliasFor) : default;
+    public Tag? Alias => AliasFor is not null && L5X?.TryGet<Tag>(AliasFor, out var alias) is true ? alias : default;
 
     /// <summary>
     /// The full tag name path of the <see cref="Tag"/>.
@@ -766,7 +766,7 @@ public class Tag : LogixComponent<Tag>
             Comments?.RemoveAll(c => TagName.HasOperand(c.Operand));
             return;
         }
-        
+
         Comments ??= [];
 
         if (Comments!.Any(c => TagName.HasOperand(c.Operand)))

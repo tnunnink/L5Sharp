@@ -316,36 +316,4 @@ public class L5XDataTypeTests
 
         dependencies.Should().NotBeEmpty();
     }
-    
-    [Test]
-    public void References_WhenCalled_ShouldReturnElementsWithExpectedDataType()
-    {
-        var content = L5X.Load(Known.Test);
-        var dataType = content.DataTypes.Get(Known.DataType);
-
-        var references = dataType.References().ToList();
-
-        references.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void References_AllDataTypes_DoesThatWork()
-    {
-        var content = L5X.Load(Known.Test);
-        
-        var references = content.DataTypes.Select(d => new {d.Name, References = d.References().ToList()}).ToList();
-
-        references.Should().NotBeNull();
-    }
-
-    [Test]
-    public void References_GenericTypeConstraint_ShouldReturnElementsOfExpectedType()
-    {
-        var content = L5X.Load(Known.Test);
-        var dataType = content.DataTypes.Get(Known.DataType);
-
-        var references = dataType.References().ToList();
-        
-        references.Should().NotBeEmpty();
-    }
 }

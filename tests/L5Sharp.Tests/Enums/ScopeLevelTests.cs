@@ -3,12 +3,12 @@
 namespace L5Sharp.Tests.Enums
 {
     [TestFixture]
-    public class ScopeTests
+    public class ScopeLevelTests
     {
         [Test]
         public void New_Controller_ShouldBeExpected()
         {
-            var sut = Scope.Controller;
+            var sut = ScopeLevel.Controller;
 
             sut.Should().NotBeNull();
             sut.Value.Should().Be("ControllerScope");
@@ -17,7 +17,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void New_Program_ShouldBeExpected()
         {
-            var sut = Scope.Program;
+            var sut = ScopeLevel.Program;
 
             sut.Should().NotBeNull();
             sut.Value.Should().Be("ProgramScope");
@@ -26,7 +26,7 @@ namespace L5Sharp.Tests.Enums
         [Test]
         public void New_Null_ShouldBeExpected()
         {
-            var sut = Scope.Null;
+            var sut = ScopeLevel.Null;
 
             sut.Should().NotBeNull();
             sut.Value.Should().Be("NullScope");

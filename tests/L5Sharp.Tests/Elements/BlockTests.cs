@@ -27,13 +27,10 @@ public class BlockTests
         block.HideDesc.Should().BeNull();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.IRef);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -57,13 +54,10 @@ public class BlockTests
         block.HideDesc.Should().BeNull();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.ORef);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -87,13 +81,10 @@ public class BlockTests
         block.HideDesc.Should().BeNull();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.ICon);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -117,13 +108,10 @@ public class BlockTests
         block.HideDesc.Should().BeNull();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.OCon);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
 
     [Test]
@@ -139,12 +127,9 @@ public class BlockTests
         block.HideDesc.Should().BeNull();
         block.Pins.Should().HaveCount(2);
         block.Sheet.Should().BeNull();
-        block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.Block);
         block.Cell.Should().Be("A1");
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
     
     [Test]
@@ -160,12 +145,9 @@ public class BlockTests
         block.HideDesc.Should().BeNull();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.Function);
         block.Cell.Should().Be("A1");
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
 
     [Test]
@@ -181,12 +163,9 @@ public class BlockTests
         block.HideDesc.Should().BeNull();
         block.Pins.Should().HaveCount(3);
         block.Sheet.Should().BeNull();
-        block.IsAttached.Should().BeFalse();
         block.L5X.Should().BeNull();
         block.L5XType.Should().Be(L5XName.AddOnInstruction);
         block.Cell.Should().Be("A1");
-        block.Container.Should().BeEmpty();
-        block.Scope.Should().Be(Scope.Null);
     }
 
     [Test]
@@ -219,15 +198,5 @@ public class BlockTests
         block.Operand.Should().NotBeNull();
         block.Operand.Should().Be(100);
         block.Operand?.IsAtomic.Should().BeTrue();
-    }
-    
-    [Test]
-    public void References_WhenCalled_ShouldHaveExpectedCount()
-    {
-        var block = Block.ABS();
-
-        var references = block.References().ToList();
-
-        references.Should().NotBeEmpty();
     }
 }

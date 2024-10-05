@@ -4,7 +4,7 @@ public static class Sample
 {
     public static class TagElement
     {
-        public static string TestComplexType()
+        public static string TestComplexTag()
         {
             return
                 @"<Tag Name=""TestComplexTag"" TagType=""Base"" DataType=""ComplexType"" Constant=""false"" ExternalAccess=""None"">
@@ -159,7 +159,7 @@ public static class Sample
             </Tag>";
         }
 
-        public static string TestSimpleType()
+        public static string TestSimpleTag()
         {
             return
                 @"<Tag Name=""TestSimpleTag"" TagType=""Base"" DataType=""SimpleType"" Constant=""false"" ExternalAccess=""Read Only"">
@@ -179,7 +179,7 @@ public static class Sample
             </Tag>";
         }
 
-        public static string TestStringType()
+        public static string TestStringTag()
         {
             return
                 @"<Tag Name=""TestStringTag"" TagType=""Base"" DataType=""MyStringType"" Constant=""false"" ExternalAccess=""None"">
@@ -309,6 +309,58 @@ public static class Sample
             <DataValue DataType=""SINT"" Radix=""Hex"" Value=""16#0c""/>
             </Data>
             </Tag>";
+        }
+    }
+
+    public static class DataTypeElement
+    {
+        public static string SimpleType()
+        {
+            return @"<DataType Name=""SimpleType"" Family=""NoFamily"" Class=""User"">
+                <Description>
+                    <![CDATA[This is a test data type that contains simple atomic types with an updated description]]>
+                </Description>
+                <Members>
+                    <Member Name=""ZZZZZZZZZZSimpleType0"" DataType=""SINT"" Dimension=""0"" Radix=""Decimal"" Hidden=""true""
+                            ExternalAccess=""Read/Write""/>
+                    <Member Name=""BoolMember"" DataType=""BIT"" Dimension=""0"" Radix=""Hex"" Hidden=""false""
+                            Target=""ZZZZZZZZZZSimpleType0"" BitNumber=""0"" ExternalAccess=""Read/Write"">
+                        <Description>
+                            <![CDATA[Test Bool]]>
+                        </Description>
+                    </Member>
+                    <Member Name=""SintMember"" DataType=""SINT"" Dimension=""0"" Radix=""Hex"" Hidden=""false""
+                            ExternalAccess=""Read/Write"">
+                        <Description>
+                            <![CDATA[Test Sint]]>
+                        </Description>
+                    </Member>
+                    <Member Name=""IntMember"" DataType=""INT"" Dimension=""0"" Radix=""Octal"" Hidden=""false""
+                            ExternalAccess=""Read/Write"">
+                        <Description>
+                            <![CDATA[Test Int]]>
+                        </Description>
+                    </Member>
+                    <Member Name=""DintMember"" DataType=""DINT"" Dimension=""0"" Radix=""ASCII"" Hidden=""false""
+                            ExternalAccess=""None"">
+                        <Description>
+                            <![CDATA[Test Dint]]>
+                        </Description>
+                    </Member>
+                    <Member Name=""LintMember"" DataType=""LINT"" Dimension=""0"" Radix=""Decimal"" Hidden=""false""
+                            ExternalAccess=""Read/Write"">
+                        <Description>
+                            <![CDATA[Test Lint]]>
+                        </Description>
+                    </Member>
+                    <Member Name=""RealMember"" DataType=""REAL"" Dimension=""0"" Radix=""Float"" Hidden=""false""
+                            ExternalAccess=""Read/Write"">
+                        <Description>
+                            <![CDATA[Test Real]]>
+                        </Description>
+                    </Member>
+                </Members>
+            </DataType>";
         }
     }
 }

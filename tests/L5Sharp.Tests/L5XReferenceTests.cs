@@ -7,31 +7,56 @@ namespace L5Sharp.Tests;
 public class L5XReferenceTests
 {
     [Test]
-    public void FindReferences_ComponentWithKnownReference_ShouldNotBeEmpty()
+    public void References_KnownTagWithReferences_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
-        
-        var references = content.References<Tag>("TestSimpleTag").ToList();
-        
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+
+        var references = content.References(Known.Tag).ToList();
+
         references.Should().NotBeEmpty();
     }
     
     [Test]
-    public void UpdatingTextForKnownRungWithTagReferenceShouldUpdateAndReturnEmptyReferences()
+    public void References_FromKnownTagInstanceWithReferences_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
-        var initialReferences = content.References<Tag>("TestSimpleTag").ToList();
-        initialReferences.Should().NotBeEmpty();
-        var rung = initialReferences.First(r =>
-                r.Container == "MainProgram" && r.Routine == "Main" && r.ElementId == "2")
-            .Element as Rung;
-        rung.Should().NotBeNull();
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var tag = content.Get<Tag>(Known.Tag);
 
-        //once we update the text we have replace the references to it.
-        //It should update the index internally an recalling FindReferences should return an empty collection.
-        rung!.Text = "This is me fucking with the text.";
+        var references = tag.References().ToList();
 
-        var finalReferences = content.References<Tag>("TestSimpleTag").ToList();
-        finalReferences.Should().BeEmpty();
+        references.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void References_AgainstAllTags_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Example, L5XOptions.Index);
+        
+        var tags = content.Query<Tag>().ToList();
+
+        var references = tags.Select(t => new {t.TagName, Refernces = t.References()}).ToList();
+
+        references.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void References_KnownDataType_ShouldReturnElementsWithExpectedDataType()
+    {
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var dataType = content.DataTypes.Get(Known.DataType);
+
+        var references = dataType.References().ToList();
+
+        references.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void References_AllDataTypes_DoesThatWork()
+    {
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+
+        var references = content.DataTypes.Select(d => new { d.Name, References = d.References().ToList() }).ToList();
+
+        references.Should().NotBeNull();
     }
 }

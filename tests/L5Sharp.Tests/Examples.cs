@@ -13,7 +13,7 @@ namespace L5Sharp.Tests
             var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
                 .Where(t => t.DataType == "TIMER" && t.Dimensions == Dimensions.Empty)
-                .Select(t => new {t.TagName, t.Description, Preset = t["PRE"].Value})
+                .Select(t => new { t.TagName, t.Description, Preset = t["PRE"].Value })
                 .OrderBy(v => v.TagName)
                 .ToList();
 
@@ -39,7 +39,7 @@ namespace L5Sharp.Tests
         {
             var content = L5X.Load(Known.Test);
 
-            var results = content.Query<Tag>().Where(t => t.Scope == Scope.Program && t.DataType == "DINT");
+            var results = content.Query<Tag>().Where(t => t.Scope.IsLocal && t.DataType == "DINT");
 
             results.Should().NotBeEmpty();
         }
@@ -132,10 +132,10 @@ namespace L5Sharp.Tests
         public void SomeMoreTagQueriesAcrossTheL5XFile()
         {
             var content = L5X.Load(Known.Test);
-            
+
             var allTags = content.Query<Tag>().ToList();
 
-            var programTags = allTags.Where(t => t.Scope == Scope.Program);
+            var programTags = allTags.Where(t => t.Scope.IsLocal);
             var ioTags = allTags.Where(t => t.Name.Contains(':'));
             var readWriteTags = allTags.Where(t => t.ExternalAccess?.Equals(ExternalAccess.ReadWrite) is true);
             var timerTags = allTags.Where(t => t.DataType == "TIMER");

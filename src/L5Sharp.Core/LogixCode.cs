@@ -16,12 +16,12 @@ namespace L5Sharp.Core;
 /// can query from the content of a given routine type.
 /// </para>
 /// <para>
-/// This class overrides the default equality implementation to determine code equality by it's location within the L5X tree.
+/// This class overrides the default equality implementation to determine code equality by its location within the L5X tree.
 /// In other words, two instances of code are equal if they are in the same program/instruction, routine, and have the
 /// same number.
 /// </para>
 /// </remarks>
-public abstract class LogixCode : LogixObject, ILogixReferencable
+public abstract class LogixCode : LogixObject
 {
     /// <summary>
     /// Creates a new <see cref="LogixCode"/> instance with default values.
@@ -52,15 +52,24 @@ public abstract class LogixCode : LogixObject, ILogixReferencable
         get => GetValue<int>();
         set => SetValue(value);
     }
-    
-    /// <summary>
-    /// The location text that identifies the location of the code segment. This is similar to number but just adds the
-    /// L5X type name.
-    /// </summary>
-    public string Location => $"{L5XType} {Number}".Trim();
 
     /// <summary>
-    /// The the parent <see cref="Core.Routine"/> component for the current <c>LogixCode</c> element.
+    /// The scope idetifying where in an L5X file this element exists. This can be a globally scoped controller element,
+    /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
+    /// </summary>
+    /// <value>A <see cref="Scope"/> object with information regarding the scope of the element.</value>
+    /// <remarks>
+    /// <para>
+    /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
+    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
+    /// value as it helps uniquely identify elements within the L5X file, especially elements such as <c>Tag</c>,
+    /// <c>Routine</c>, or <c>Rung</c>.
+    /// </para>
+    /// </remarks>
+    public Scope Scope => Scope.Of(Element);
+
+    /// <summary>
+    /// The parent <see cref="Core.Routine"/> component for the current <c>LogixCode</c> element.
     /// </summary>
     /// <value>A <see cref="Routine"/> element if found; Otherwise, and <c>null</c>.</value>
     public Routine? Routine
@@ -76,5 +85,8 @@ public abstract class LogixCode : LogixObject, ILogixReferencable
     /// Returns a collection of <see cref="CrossReference"/> objects found within this code element.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CrossReference"/> values contained by this code.</returns>
-    public abstract IEnumerable<CrossReference> References();
+    public IEnumerable<CrossReference> References() => CrossReference.In(Element);
+
+    /// <inheritdoc />
+    public override string ToString() => $"{L5XType} {Number}".Trim();
 }

@@ -264,4 +264,7 @@ public class Parameter : LogixObject<Parameter>
         var value = Default is not NullData ? Default : AtomicData.Default(DataType);
         return new Member(Name, value);
     }
+
+    /// <inheritdoc />
+    public override string ToString() => Name;
 }

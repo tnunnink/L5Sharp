@@ -256,7 +256,7 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     }
 
     /// <inheritdoc />
-    public sealed override string ToString() => Value.ToString()!;
+    public override string ToString() => Value.ToString()!;
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

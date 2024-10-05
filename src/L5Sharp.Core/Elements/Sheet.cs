@@ -32,7 +32,7 @@ namespace L5Sharp.Core;
 public class Sheet : Diagram
 {
     private static readonly HashSet<string> BlockTypes = [..typeof(Block).L5XTypes()];
-    
+
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
     [
@@ -239,7 +239,4 @@ public class Sheet : Diagram
     {
         return Element.Elements(L5XName.Wire).Select(e => e.Deserialize<Wire>());
     }
-
-    /// <inheritdoc />
-    public override IEnumerable<CrossReference> References() => Blocks().SelectMany(r => r.References());
 }

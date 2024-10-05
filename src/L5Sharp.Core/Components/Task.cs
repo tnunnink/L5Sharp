@@ -207,7 +207,7 @@ public sealed class Task : LogixComponent<Task>
     /// <inheritdoc />
     public override void Delete()
     {
-        if (Element.Parent is null || !IsAttached) return;
+        if (Element.Parent is null) return;
 
         foreach (var program in Programs)
         {
@@ -255,9 +255,9 @@ public sealed class Task : LogixComponent<Task>
     public void AddProgram(Program program)
     {
         if (program is null) throw new ArgumentNullException(nameof(program));
-        if (!IsAttached) throw new InvalidOperationException("Can not add program to detached Task component.");
+        if (L5X is null) throw new InvalidOperationException("Can not add program to detached Task component.");
         
-        L5X?.Programs.Add(program);
+        L5X.Programs.Add(program);
         Schedule(program.Name);
     }
 }

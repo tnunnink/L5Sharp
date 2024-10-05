@@ -23,9 +23,6 @@ public class LogixElementTests
 
         element.L5XType.Should().Be("Test");
         element.L5X.Should().BeNull();
-        element.IsAttached.Should().BeFalse();
-        element.Container.Should().BeEmpty();
-        element.Scope.Should().Be(Scope.Null);
     }
 
     [Test]

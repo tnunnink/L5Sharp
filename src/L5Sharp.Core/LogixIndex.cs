@@ -6,10 +6,10 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// The internal implementation that indexes components and references and stores them in the local dictionaries.
+/// The internal implementation that indexes elements and references and stores them in the local dictionaries.
 /// This class is then used by <see cref="L5X"/> to find components, tags, and references quickly.
 /// </summary>
-internal class LogixIndex
+internal class LogixIndex : ILogixLookup
 {
     /// <summary>
     /// The root controller element of the project.
@@ -17,374 +17,550 @@ internal class LogixIndex
     private readonly XElement _content;
 
     /// <summary>
-    /// An index of all logix components in the L5X file for fast lookups.
+    /// The name of the root controller this index is attached to.
     /// </summary>
-    public readonly Dictionary<ComponentKey, Dictionary<string, XElement>> Components = new();
+    private readonly string _controller;
 
     /// <summary>
-    /// An index of all references to a logix component in the L5X file for fast lookups.
+    /// An index of all logix elements (that we care to index) in the L5X file for fast lookups.
     /// </summary>
-    public readonly Dictionary<ComponentKey, List<CrossReference>> References = new();
+    private readonly Dictionary<Scope, XElement> _elements = new();
+
+    /// <summary>
+    /// An index of all named references found in code or tags in the L5X file for fast lookups.
+    /// </summary>
+    private readonly Dictionary<TagName, List<CrossReference>> _references = new();
 
     public LogixIndex(XElement content)
     {
         _content = content;
-
-        //Initialize the dictionaries.
-        IndexComponents();
-        IndexReferences();
-
-        //Detect changes to keep index up to date.
-        _content.Changing += OnContentChanging;
-        _content.Changed += OnContentChanged;
+        _controller = _content.LogixName();
+        Index();
     }
 
-    /// <summary>
-    /// Handles adding a component to the index. This requires the element to be attached to the L5X tree
-    /// for it to determine the scope of the element.
-    /// </summary>
-    private void AddComponent(XElement element)
-    {
-        var key = new ComponentKey(element.L5XType(), element.LogixName());
-        var container = Scope.Container(element);
+    #region API
 
-        if (Components.TryAdd(key, new Dictionary<string, XElement> { { container, element } })) return;
-        Components[key].TryAdd(container, element);
+    public bool Contains(Scope scope)
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        var absolute = GenerateAbsolute(scope);
+
+        return _elements.ContainsKey(absolute);
     }
 
-    /// <summary>
-    /// Handles adding the provided reference to the index. If no reference exists for the provided key, a new
-    /// entry is created, otherwise the reference is added to the existing collection.
-    /// </summary>
-    private void AddReference(CrossReference reference)
+    public bool Contains(Func<IScopeBuilder, Scope> builder)
     {
-        if (!References.TryAdd(reference.Key, [reference]))
-            References[reference.Key].Add(reference);
+        if (builder is null)
+            throw new ArgumentNullException(nameof(builder));
+
+        var root = Scope.Build(_controller);
+        var scope = builder(root);
+
+        return _elements.ContainsKey(scope);
     }
 
-    /// <summary>
-    /// Adds the provided collection of references. This is a convenience method to add multiple references.
-    /// </summary>
-    private void AddReferences(IEnumerable<CrossReference> references)
+    public IEnumerable<LogixObject> Find(Scope scope)
     {
-        foreach (var reference in references)
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        var results = new List<LogixObject>();
+        var scopes = GenerateScopes(scope.Type, scope.Name);
+
+        foreach (var s in scopes)
+            if (_elements.TryGetValue(s, out var element))
+                results.Add(element.Deserialize<LogixObject>());
+
+        return results;
+    }
+
+    public IEnumerable<TObject> Find<TObject>(Scope scope) where TObject : LogixObject
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        var results = new List<TObject>();
+        var type = scope.Type != ScopeType.Empty ? scope.Type : ScopeType.Parse(typeof(TObject).L5XType());
+        var scopes = GenerateScopes(type, scope.Name.Root);
+
+        foreach (var s in scopes)
         {
-            AddReference(reference);
-        }
-    }
-
-    /// <summary>
-    /// Handles adding all references to the index that are associated with the provided element.
-    /// This is a convenience method since we need to parse the element as an <see cref="ILogixReferencable"/> to
-    /// obtain the references to add.
-    /// </summary>
-    private void AddReferences(XElement element)
-    {
-        if (element.Deserialize() is not ILogixReferencable referencable) return;
-        var references = referencable.References().ToList();
-        AddReferences(references);
-    }
-
-    /// <summary>
-    /// Triggered when any content of the L5X is about to change. We need to know if the object changing is an element
-    /// we are maintaining state for in the component or reference index. If so, we need to perform the necessary actions.
-    /// Prior to the object changing and if the change action is a remove or value change, we need to remove the applicable
-    /// components or references from the index. This is because after the object has changed we no longer have access
-    /// to the previous state.
-    /// </summary>
-    private void OnContentChanging(object? sender, XObjectChangeEventArgs e)
-    {
-        if (sender is null) return;
-        
-        if (e.ObjectChange is XObjectChange.Remove)
-        {
-            if (IsComponentElement(sender)) RemoveComponent((XElement)sender);
-            if (IsCodeElement(sender)) RemoveReferences((XElement)sender);
+            if (!_elements.TryGetValue(s, out var value)) continue;
+            var element = value.Deserialize<TObject>();
+            var result = element is Tag tag ? tag.Member(scope.Name.Path) as LogixObject : element;
+            if (result is not TObject typed) continue;
+            results.Add(typed);
         }
 
-        if (e.ObjectChange is not XObjectChange.Value) return;
-
-        if (IsNameProperty(sender)) RemoveComponent(((XAttribute)sender).Parent!);
-        if (IsDataTypeProperty(sender))
-        {
-            var attribute = (XAttribute)sender;
-            var reference = new CrossReference(attribute.Parent!, L5XName.DataType, attribute.Value);
-            RemoveReference(reference);
-        }
-
-        if (IsCodeProperty(sender)) RemoveReferences(((XAttribute)sender).Parent!);
+        return results;
     }
 
-    /// <summary>
-    /// Triggered when any content of the L5X has changed.  We need to know if the object that changed is an element
-    /// we are maintaining state for in the component or reference index. If so, we need to perform the necessary actions.
-    /// Once the object has changed, the sender will hold the new state. If the change action is an add or value change,
-    /// and the element or property value is one that would refer to an indexed object, we will update the state of the index
-    /// to ensure consistency.
-    /// </summary>
-    private void OnContentChanged(object? sender, XObjectChangeEventArgs e)
+    public LogixObject Get(Scope scope)
     {
-        if (sender is null) return;
-        
-        if (e.ObjectChange is XObjectChange.Add)
-        {
-            if (IsComponentElement(sender)) AddComponent((XElement)sender);
-            if (IsCodeElement(sender)) AddReferences((XElement)sender);
-        }
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
 
-        if (e.ObjectChange is not XObjectChange.Value) return;
+        var absolute = GenerateAbsolute(scope);
 
-        if (IsNameProperty(sender)) AddComponent(((XAttribute)sender).Parent!);
-        if (IsDataTypeProperty(sender))
-        {
-            var attribute = (XAttribute)sender;
-            var reference = new CrossReference(attribute.Parent!, L5XName.DataType, attribute.Value);
-            AddReference(reference);
-        }
+        if (!_elements.TryGetValue(absolute, out var value))
+            throw new KeyNotFoundException($"No element with the provided scope was found: {absolute}");
 
-        if (IsCodeProperty(sender)) AddReferences(((XAttribute)sender).Parent!);
+        var result = value.Deserialize<LogixObject>();
+
+        return result is Tag tag ? tag[absolute.Name.Path] : result;
     }
 
-    /// <summary>
-    /// Finds all logix component elements and indexes them into a local dictionary for fast lookups.
-    /// </summary>
-    private void IndexComponents()
+    public TObject Get<TObject>(Scope scope) where TObject : LogixObject
     {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        var absolute = GenerateAbsolute(scope, typeof(TObject));
+
+        if (!_elements.TryGetValue(absolute, out var value))
+            throw new KeyNotFoundException($"No element with the provided scope was found: {absolute}");
+
+        var result = value.Deserialize<TObject>();
+
+        return result is Tag tag ? (TObject)(LogixObject)tag[absolute.Name.Path] : result;
+    }
+
+    public LogixObject Get(Func<IScopeBuilder, Scope> builder)
+    {
+        if (builder is null)
+            throw new ArgumentNullException(nameof(builder));
+
+        var root = Scope.Build(_controller);
+        var scope = builder(root);
+
+        if (!_elements.TryGetValue(scope, out var value))
+            throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
+
+        var element = value.Deserialize<LogixObject>();
+
+        return element is Tag tag ? tag[scope.Name.Path] : element;
+    }
+
+    public TObject Get<TObject>(Func<IScopeBuilder, Scope> builder) where TObject : LogixObject
+    {
+        if (builder is null)
+            throw new ArgumentNullException(nameof(builder));
+
+        var root = Scope.Build(_controller);
+        var scope = builder(root);
+
+        if (!_elements.TryGetValue(scope, out var value))
+            throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
+
+        var element = value.Deserialize<TObject>();
+
+        return element is Tag tag ? (TObject)(LogixObject)tag[scope.Name.Path] : element;
+    }
+
+    public bool TryGet(Scope scope, out LogixObject element)
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        var absolute = GenerateAbsolute(scope);
+
+        if (!_elements.TryGetValue(absolute, out var value))
+        {
+            element = default!;
+            return false;
+        }
+
+        var result = value.Deserialize<LogixObject>();
+        var target = result is Tag tag ? tag.Member(absolute.Name.Path) : result;
+        return IsNull(target, out element);
+    }
+
+    public bool TryGet<TObject>(Scope scope, out TObject element) where TObject : LogixObject
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        var absolute = GenerateAbsolute(scope, typeof(TObject));
+
+        if (!_elements.TryGetValue(absolute, out var value))
+        {
+            element = default!;
+            return false;
+        }
+
+        var result = value.Deserialize<TObject>();
+        var target = result is Tag tag ? tag.Member(absolute.Name.Path)?.As<LogixObject>() : result;
+        return IsNull(target as TObject, out element);
+    }
+
+    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixObject element)
+    {
+        if (builder is null)
+            throw new ArgumentNullException(nameof(builder));
+
+        var root = Scope.Build(_controller);
+        var scope = builder(root);
+
+        if (!_elements.TryGetValue(scope, out var value))
+        {
+            element = default!;
+            return false;
+        }
+
+        var result = value.Deserialize<LogixObject>();
+        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
+        return IsNull(target, out element);
+    }
+
+    public bool TryGet<TObject>(Func<IScopeBuilder, Scope> builder, out TObject element) where TObject : LogixObject
+    {
+        if (builder is null)
+            throw new ArgumentNullException(nameof(builder));
+
+        var root = Scope.Build(_controller);
+        var scope = builder(root);
+
+        if (!_elements.TryGetValue(scope, out var value))
+        {
+            element = default!;
+            return false;
+        }
+
+        var result = value.Deserialize<TObject>();
+        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
+        return IsNull(target as TObject, out element);
+    }
+
+    public IEnumerable<CrossReference> References(TagName name)
+    {
+        if (name is null)
+            throw new ArgumentNullException(nameof(name));
+
+        return _references.TryGetValue(name, out var references) ? references : [];
+    }
+
+    #endregion
+
+    #region Internal
+
+    /// <summary>
+    /// Clears all current data and kicks off indexing of all the elements and references for the L5X. Sets flag to
+    /// false.
+    /// </summary>
+    private void Index()
+    {
+        //Elements
         IndexControllerScopedComponents();
-        IndexProgramScopedComponents();
-        IndexModuleDefinedTagComponents();
+        IndexControllerScopedModuleTags();
+        IndexProgramScopedElements();
+
+        //References
+        IndexTypeReferences();
+        IndexRungReferences();
+        IndexLineReferences();
     }
 
     /// <summary>
-    /// Finds all controller scoped top level components to index. This includes all components except for program tags,
-    /// routines, and module defined IO tags, which are handled separately in the following methods.
+    /// Handles finding and indexing all named component elements in the L5X.
     /// </summary>
     private void IndexControllerScopedComponents()
     {
-        //The scope for all controller scoped components will be the name of the controller.
-        var scope = _content.LogixName();
+        HashSet<string> types =
+        [
+            L5XName.DataType,
+            L5XName.AddOnInstructionDefinition,
+            L5XName.Module,
+            L5XName.Tag,
+            L5XName.Program,
+            L5XName.Task
+        ];
 
-        //Only consider component elements with a valid name attribute. Some components don't have and name and we
-        //can't possibly index them.
-        var components = _content.Elements()
-            .SelectMany(c => c.Elements().Where(e => e.Attribute(L5XName.Name) is not null));
+        var elements = _content.Descendants()
+            .Where(e => types.Contains(e.L5XType()) && e.Attribute(L5XName.Name) is not null);
 
-        foreach (var component in components)
+        foreach (var element in elements)
         {
-            var key = new ComponentKey(component.L5XType(), component.LogixName());
-            if (!Components.TryAdd(key, new Dictionary<string, XElement> { { scope, component } }))
-                Components[key].TryAdd(scope, component);
+            var scope = Scope
+                .Build(_controller)
+                .Type(element.L5XType())
+                .Named(element.LogixName());
+
+            _elements[scope] = element;
         }
     }
 
     /// <summary>
-    /// Handles iterating each program component element in the L5X and indexes each tag and routine
-    /// with the corresponding program scope.
+    /// Handles finding and indexing all module defined tag elements in the L5X.
     /// </summary>
-    private void IndexProgramScopedComponents()
+    private void IndexControllerScopedModuleTags()
     {
-        var programs = _content.Descendants(L5XName.Programs).Elements();
+        HashSet<string> types = [L5XName.ConfigTag, L5XName.InputTag, L5XName.OutputTag];
+
+        var elements = _content.Descendants(L5XName.Module).Where(e => types.Contains(e.L5XType()));
+
+        foreach (var element in elements)
+        {
+            var tagName = element.ModuleTagName();
+            var scope = Scope.Build(_controller).Tag(tagName);
+            _elements[scope] = element;
+        }
+    }
+
+    /// <summary>
+    /// Handles finding and indexing all content in the program scoped elements.
+    /// </summary>
+    private void IndexProgramScopedElements()
+    {
+        var programs = _content.Descendants(L5XName.Program);
 
         foreach (var program in programs)
         {
-            var scope = program.LogixName();
-
-            foreach (var component in program.Descendants()
-                         .Where(d => d.Name.LocalName is L5XName.Tag or L5XName.Routine))
-            {
-                var key = new ComponentKey(component.L5XType(), component.LogixName());
-                if (!Components.TryAdd(key, new Dictionary<string, XElement> { { scope, component } }))
-                    Components[key].TryAdd(scope, component);
-            }
+            IndexProgramScopedTags(program);
+            IndexProgramScopedRoutines(program);
+            IndexProgramScopedRungs(program);
+            IndexProgramScopedLines(program);
+            IndexProgramScopedSheets(program);
         }
     }
 
     /// <summary>
-    /// Handles iterating each module defined tag component element in the L5X and indexes each tag.
+    /// Indexes all the tag component elements in the provided program element.
     /// </summary>
-    private void IndexModuleDefinedTagComponents()
+    private void IndexProgramScopedTags(XElement program)
     {
-        var scope = _content.LogixName();
+        var programName = program.LogixName();
 
-        foreach (var component in _content.Descendants(L5XName.Modules).Descendants().Where(e =>
-                     e.L5XType() is L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag))
+        foreach (var tag in program.Descendants(L5XName.Tag))
         {
-            var key = new ComponentKey(L5XName.Tag, component.ModuleTagName());
-            if (!Components.TryAdd(key, new Dictionary<string, XElement> { { scope, component } }))
-                Components[key].TryAdd(scope, component);
+            var scope = Scope
+                .Build(_controller)
+                .In(programName)
+                .Type(ScopeType.Tag)
+                .Named(tag.LogixName());
+
+            _elements[scope] = tag;
         }
     }
 
     /// <summary>
-    /// Finds all logix reference elements and indexes them into a local dictionary for fast lookups.
+    /// Indexes all the routine component elements in the provided program element.
     /// </summary>
-    private void IndexReferences()
+    private void IndexProgramScopedRoutines(XElement program)
     {
-        IndexDataTypeReferences();
-        IndexCodeReferences();
+        var programName = program.LogixName();
+
+        foreach (var routine in program.Descendants(L5XName.Routine))
+        {
+            var scope = Scope
+                .Build(_controller)
+                .In(programName)
+                .Type(ScopeType.Routine)
+                .Named(routine.LogixName());
+
+            _elements[scope] = routine;
+        }
+    }
+
+    /// <summary>
+    /// Indexes all the rung elements in the provided program element.
+    /// </summary>
+    private void IndexProgramScopedRungs(XElement program)
+    {
+        var programName = program.LogixName();
+        var rungs = program.Descendants(L5XName.Rung).ToList();
+
+        //We won't rely on number but rather the order/index since that is all Studio cares about.
+        for (var i = 0; i < rungs.Count; i++)
+        {
+            var rung = rungs[i];
+            var routineName = rung.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
+
+            var scope = Scope
+                .Build(_controller)
+                .In(programName)
+                .In(routineName)
+                .Type(ScopeType.Rung)
+                .Named(i.ToString());
+
+            _elements[scope] = rung;
+        }
+    }
+
+    /// <summary>
+    /// Indexes all the line elements in the provided program element.
+    /// </summary>
+    private void IndexProgramScopedLines(XElement program)
+    {
+        var programName = program.LogixName();
+        var lines = program.Descendants(L5XName.Line).ToList();
+
+        //We won't rely on number but rather the oder/index since that is all Studio cares about.
+        for (var i = 0; i < lines.Count; i++)
+        {
+            var line = lines[i];
+            var routineName = line.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
+
+            var scope = Scope.Build(_controller)
+                .In(programName)
+                .In(routineName)
+                .Type(ScopeType.Line)
+                .Named(i.ToString());
+
+            _elements[scope] = line;
+        }
+    }
+
+    /// <summary>
+    /// Indexes all the sheet elements in the provided program element.
+    /// </summary>
+    private void IndexProgramScopedSheets(XElement program)
+    {
+        var programName = program.LogixName();
+        var sheets = program.Descendants(L5XName.Sheet).ToList();
+
+        //We won't rely on number but rather the oder/index since that is all Studio cares about.
+        for (var i = 0; i < sheets.Count; i++)
+        {
+            var sheet = sheets[i];
+            var routineName = sheets.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
+
+            var scope = Scope.Build(_controller)
+                .In(programName)
+                .In(routineName)
+                .Type(ScopeType.Sheet)
+                .Named(i.ToString());
+
+            _elements[scope] = sheet;
+        }
     }
 
     /// <summary>
     /// Finds all elements with a data type attribute and indexes them into a local reference index for fast lookup.
     /// This will include technically any type, predefined, atomic, user defined, or add on instruction.
     /// </summary>
-    private void IndexDataTypeReferences()
+    private void IndexTypeReferences()
     {
-        var targets = _content.Descendants().Where(d => d.Attribute(L5XName.DataType) is not null);
-        foreach (var target in targets)
+        var elements = _content.Descendants().Where(d => d.Attribute(L5XName.DataType) is not null);
+
+        foreach (var element in elements)
         {
-            var componentName = target.Attribute(L5XName.DataType)!.Value;
-            var reference = new CrossReference(target, L5XName.DataType, componentName);
-            if (!References.TryAdd(reference.Key, [reference]))
-                References[reference.Key].Add(reference);
+            var tag = element.AncestorsAndSelf().FirstOrDefault(e => e.L5XType() is L5XName.Tag or L5XName.LocalTag);
+            if (tag is null) continue;
+
+            var scope = Scope.Of(tag);
+            var reference = new CrossReference(scope, tag.DataType());
+
+            if (!_references.TryAdd(reference.Name.Root, [reference]))
+                _references[reference.Name.Root].Add(reference);
         }
     }
 
     /// <summary>
-    /// Finds all routine content elements, iterates each "code" element, and delegates the retrieval or references to the
-    /// materialized logix element object. Then adds each set of references to the reference index for fast lookup.
+    /// Handles indexing the tags or component names of for all rungs in the L5X file.
     /// </summary>
-    private void IndexCodeReferences()
+    private void IndexRungReferences()
     {
-        var routines = _content.Descendants(L5XName.Program).SelectMany(p => p.Descendants(L5XName.Routine));
-        
-        foreach (var routine in routines)
-        {
-            var type = routine.Attribute(L5XName.Type)?.Value.Parse<RoutineType>().ContentName;
-            
-            switch (type)
-            {
-                case L5XName.RLLContent:
-                    AddReferences(routine.Descendants(L5XName.Rung).SelectMany(x => new Rung(x).References()));
-                    break;
-                case L5XName.STContent:
-                    AddReferences(routine.Descendants(L5XName.Line).SelectMany(x => new Line(x).References()));
-                    break;
-                case L5XName.FBDContent:
-                    AddReferences(routine.Descendants(L5XName.Sheet).SelectMany(x => new Sheet(x).References()));
-                    break;
-                case L5XName.SFCContent:
-                    AddReferences(new Chart(routine).References());
-                    break;
-            }
-        }
-    }
+        var rungs = _content.Descendants(L5XName.Program).Descendants(L5XName.Rung);
+        var references = rungs.SelectMany(CrossReference.In).ToList();
 
-    /// <summary>
-    /// Determines if the provided object is a component element, for which we need to reindex the component.
-    /// </summary>
-    private static bool IsComponentElement(object sender)
-    {
-        if (sender is not XElement element) return false;
-        var componentTypes = ComponentType.All().Select(c => c.Value).ToList();
-        return componentTypes.Contains(element.Name.LocalName);
-    }
-
-    /// <summary>
-    /// Determines if the provided object is a attribute or property is a component name, for which we need to
-    /// reindex the component.
-    /// </summary>
-    private static bool IsNameProperty(object sender)
-    {
-        if (sender is not XAttribute attribute) return false;
-        if (attribute.Name.LocalName is not L5XName.Name) return false;
-        if (attribute.Parent is null) return false;
-        var componentTypes = ComponentType.All().Select(c => c.Value).ToList();
-        return componentTypes.Contains(attribute.Parent.Name.LocalName);
-    }
-
-    /// <summary>
-    /// Determines if the provided object is a attribute or property is a data type reference, for which we need to
-    /// reindex references.
-    /// </summary>
-    private static bool IsDataTypeProperty(object sender)
-    {
-        if (sender is not XAttribute attribute) return false;
-        if (attribute.Name.LocalName is not L5XName.DataType) return false;
-        if (attribute.Parent is null) return false;
-        var componentTypes = ComponentType.All().Select(c => c.Value).ToList();
-        return componentTypes.Contains(attribute.Parent.Name.LocalName);
-    }
-
-    /// <summary>
-    /// Determines if the provided object is a a logix code element, for which we need to reindex references.
-    /// </summary>
-    private static bool IsCodeElement(object sender)
-    {
-        if (sender is not XElement element) return false;
-        var contentTypes = RoutineType.All().Select(r => r.ContentName).ToList();
-        return element.Ancestors().Any(a => contentTypes.Contains(a.Name.LocalName));
-    }
-
-    /// <summary>
-    /// Determines if the provided object is a attribute or property of a logix code element, for which we need to
-    /// reindex references.
-    /// </summary>
-    private static bool IsCodeProperty(object sender)
-    {
-        if (sender is not XAttribute attribute) return false;
-        if (attribute.Name.LocalName is not
-            (L5XName.Operand or L5XName.Argument or L5XName.Routine or L5XName.Type or L5XName.Name)) return false;
-        return attribute.Parent is not null && IsCodeElement(attribute.Parent);
-    }
-
-    /// <summary>
-    /// Handles removing a component matching the current attached element from the index. This requires the element
-    /// to be attached to the L5X tree for it to determine the scope of the element. 
-    /// </summary>
-    private void RemoveComponent(XElement element)
-    {
-        var key = new ComponentKey(element.Name.LocalName, element.LogixName());
-        var scope = Scope.Container(element);
-
-        if (!Components.TryGetValue(key, out var components)) return;
-
-        if (components.Count == 1)
-        {
-            Components.Remove(key);
-            return;
-        }
-
-        components.Remove(scope);
-    }
-
-    /// <summary>
-    /// Handles removing the provided reference from the index. If only a single reference exists for the provided key,
-    /// the entire reference is removed, otherwise we iterate the references and remove all that match the provided
-    /// reference's location and type.
-    /// </summary>
-    private void RemoveReference(CrossReference reference)
-    {
-        if (!References.TryGetValue(reference.Key, out var results)) return;
-        if (results.Count == 1)
-        {
-            References.Remove(reference.Key);
-            return;
-        }
-
-        results.RemoveAll(r => r.Equals(reference));
-    }
-
-    /// <summary>
-    /// Removes the provided collection of references. This is a convenience method to remove multiple references.
-    /// </summary>
-    private void RemoveReferences(IEnumerable<CrossReference> references)
-    {
         foreach (var reference in references)
         {
-            RemoveReference(reference);
+            if (!_references.TryAdd(reference.Name.Root, [reference]))
+                _references[reference.Name.Root].Add(reference);
         }
     }
 
     /// <summary>
-    /// Handles removing all references from the index that are associated with the provided element.
-    /// This is a convenience method since we need to parse the element as an <see cref="ILogixReferencable"/> to
-    /// obtain the references to remove.
+    /// Handles indexing the tags or component names of for all rungs in the L5X file.
     /// </summary>
-    private void RemoveReferences(XElement element)
+    private void IndexLineReferences()
     {
-        if (element.Deserialize() is not ILogixReferencable referencable) return;
-        var references = referencable.References().ToList();
-        RemoveReferences(references);
+        var elements = _content.Descendants(L5XName.Program).Descendants(L5XName.Line);
+        var references = elements.SelectMany(CrossReference.In).ToList();
+
+        foreach (var reference in references)
+        {
+            if (!_references.TryAdd(reference.Name.Root, [reference]))
+                _references[reference.Name.Root].Add(reference);
+        }
     }
+
+    /// <summary>
+    /// Generates all potential scope paths for the provided type and name so that we can attempt to find all instances
+    /// of an element across alls scopes.
+    /// </summary>
+    private IEnumerable<Scope> GenerateScopes(ScopeType type, string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException(
+                "Unable to resolve scope path without a 'name' specified. Type is required to determine which element to retrieve.");
+
+        if (string.IsNullOrEmpty(type))
+            throw new ArgumentException(
+                "Unable to resolve scope path without a 'type' specified. Type is required to determine which element to retrieve.");
+
+        var scopes = new List<Scope>();
+
+        //Add controller scope only if not a routine or code element.
+        if (type is { InRoutine: false, Name: not L5XName.Routine })
+            scopes.Add(Scope.Build(_controller).Type(type).Named(name));
+
+        //Return early if we are a controller element.
+        if (type.InController) return scopes;
+
+        var programs = _content.Descendants(L5XName.Program);
+
+        foreach (var program in programs)
+        {
+            if (type.InProgram)
+                scopes.Add(Scope.Build(_controller).In(program.LogixName()).Type(type).Named(name));
+
+            if (!type.InRoutine) continue;
+
+            var routines = program.Descendants(L5XName.Routine).Select(r =>
+                Scope.Build(_controller).In(program.LogixName()).In(r.LogixName()).Type(type).Named(name)
+            );
+
+            scopes.AddRange(routines);
+        }
+
+        return scopes;
+    }
+
+    /// <summary>
+    /// Helper for returning the TryGet result and element based on the nullness of the input element.
+    /// </summary>
+    private static bool IsNull<TObject>(TObject? element, out TObject result) where TObject : LogixObject
+    {
+        if (element is null)
+        {
+            result = default!;
+            return false;
+        }
+
+        result = element;
+        return true;
+    }
+
+    /// <summary>
+    /// Generates the full/absolute scope path to be used to find elements in the lookup. 
+    /// </summary>
+    private Scope GenerateAbsolute(Scope scope, Type? type = default)
+    {
+        if (!scope.IsRelative)
+            return scope;
+
+        if (scope.Type != ScopeType.Empty)
+            return Scope.To($"{_controller}//").Append(scope);
+
+        if (type is null)
+            throw new ArgumentException(
+                "Unable to resolve scope path without a 'type' specified. Type is required to determine which element to retrieve.");
+
+        return Scope.To($"{_controller}/{scope.Program}/{scope.Routine}/{type.L5XType()}/{scope.Name}");
+    }
+
+    #endregion
 }

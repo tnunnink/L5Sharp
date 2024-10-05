@@ -28,7 +28,7 @@ internal static class L5XExtensions
     /// equality comparer,. Otherwise <c>false</c>.</returns>
     /// <remarks>This is a simplified way of calling the string comparer equals method since it is a little verbose.
     /// This could be used a lot since Logix naming is case agnostic.</remarks>
-    internal static bool IsEquivalent(this string value, string other) =>
+    internal static bool IsEquivalent(this string value, string? other) =>
         StringComparer.OrdinalIgnoreCase.Equals(value, other);
 
     /// <summary>
@@ -171,6 +171,55 @@ internal static class L5XExtensions
     }
 
     /// <summary>
+    /// Gets the full <see cref="TagName"/> path for the provided element. 
+    /// </summary>
+    /// <param name="element">The element for which to determine the tag name.
+    /// This can be a tag element or nested data member element.</param>
+    /// <returns>A <see cref="TagName"/> that represents the full path to the element.</returns>
+    /// <remarks>
+    /// This is handy since it will determine the "TagName" for any deeply nested data member. This also
+    /// supports the LocalTag and Module tag elements.
+    /// </remarks>
+    internal static TagName TagName(this XElement element)
+    {
+        //Don't want to use reflection (L5XTypes()) in case this is called in loops.
+        HashSet<string> tagElements =
+        [
+            L5XName.Tag,
+            L5XName.LocalTag,
+            L5XName.InputTag,
+            L5XName.OutputTag,
+            L5XName.ConfigTag
+        ];
+
+        //Ensures we are or in a tag element. If not return empty.
+        var root = element.AncestorsAndSelf().FirstOrDefault(e => tagElements.Contains(e.Name.LocalName));
+        if (root is null)
+            return Core.TagName.Empty;
+
+        //Handles special case module tag elements which need to use the parent module names.
+        if (root.L5XType() is L5XName.InputTag or L5XName.OutputTag or L5XName.ConfigTag)
+            return root.ModuleTagName();
+
+        var tagName = new TagName(root.LogixName());
+
+        //Gets anscestors from here up to right before the root tag element.
+        //If this is the tag element then should not perform iteration, and we return what we have.
+        var memebers = element.AncestorsAndSelf()
+            .Where(e => !e.MemberName().IsEmpty())
+            .TakeWhile(e => !tagElements.Contains(e.Name.LocalName))
+            .ToList();
+
+        for (var i = memebers.Count - 1; i >= 0; i--)
+        {
+            var member = memebers[i].MemberName();
+            tagName = Core.TagName.Concat(tagName, member);
+        }
+
+        return tagName;
+    }
+
+    /// <summary>
     /// Determines the tag name for a given <see cref="XElement"/> representing a module IO tag.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> representing the module defined IO tag
@@ -212,14 +261,28 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// A concise method for getting a required attribute value from a XElement object.
+    /// Determines if the specified string is a program element name.
     /// </summary>
-    /// <param name="element">The element containing the attribute to retrieve.</param>
-    /// <param name="name">The name of the attribute value to get.</param>
-    /// <returns>The <see cref="string"/> value of the element's specified attribute.</returns>
-    /// <exception cref="InvalidOperationException">No attribute with <c>name</c> exists for the current element.</exception>
-    public static string Get(this XElement element, XName name) =>
-        element.Attribute(name)?.Value ?? throw element.L5XError(name);
+    /// <param name="name">The string to check.</param>
+    /// <returns>
+    /// <c>true</c> if the string is a program element name; otherwise, <c>false</c>.
+    /// </returns>
+    internal static bool IsProgramElement(this string name)
+    {
+        return name.IsEquivalent(L5XName.Tag) || name.IsEquivalent(L5XName.Routine);
+    }
+
+    /// <summary>
+    /// Determines if the given string is a code element (e.g., Rung, Line, Sheet).
+    /// </summary>
+    /// <param name="name">The string value to check.</param>
+    /// <returns>
+    /// <c>true</c> if the string is a code element. otherwise, <c>false</c>.
+    /// </returns>
+    internal static bool IsCodeElement(this string name)
+    {
+        return name.IsEquivalent(L5XName.Rung) || name.IsEquivalent(L5XName.Line) || name.IsEquivalent(L5XName.Sheet);
+    }
 
     /// <summary>
     /// Returns the string value as a <see cref="XName"/> value object.

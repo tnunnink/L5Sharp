@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 /// contains some of the common properties and functions that all FBD/SFC elements share,
 /// such as X and Y coordinates, and ID.
 /// </summary>
-public abstract class DiagramElement : LogixObject, ILogixReferencable
+public abstract class DiagramElement : LogixObject
 {
     /// <summary>
     /// Creates a new <see cref="DiagramElement"/> with default values and initializes the required \
@@ -128,9 +128,6 @@ public abstract class DiagramElement : LogixObject, ILogixReferencable
         Element.SetAttributeValue(L5XName.X, x);
         Element.SetAttributeValue(L5XName.Y, y);
     }
-
-    /// <inheritdoc />
-    public virtual IEnumerable<CrossReference> References() => Enumerable.Empty<CrossReference>();
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
