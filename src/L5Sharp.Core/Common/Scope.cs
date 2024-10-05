@@ -222,19 +222,6 @@ public sealed class Scope
     }
 
     /// <summary>
-    /// Creates a scope instance based on the provided LogixElement.
-    /// </summary>
-    /// <param name="element">The LogixElement used to create the scope.</param>
-    /// <returns>The created scope instance.</returns>
-    public static Scope Of(LogixElement element)
-    {
-        if (element is null)
-            throw new ArgumentNullException(nameof(element));
-
-        return new Scope(element.Serialize());
-    }
-
-    /// <summary>
     /// Creates a <see cref="Scope"/> instance based on the provided <see cref="XElement"/> element.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> element representing the scope.</param>

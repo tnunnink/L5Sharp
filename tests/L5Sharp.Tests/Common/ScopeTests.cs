@@ -27,11 +27,11 @@ public class ScopeTests
     }
 
     [Test]
-    public void Of_InMemoryComponent_ShouldBeExpected()
+    public void TagScope_InMemeory_ShouldBeExpected()
     {
         var element = new Tag("Test", 100);
 
-        var scope = Scope.Of(element);
+        var scope = element.Scope;
 
         scope.Path.Should().Be("/Tag/Test");
         scope.Level.Should().Be(ScopeLevel.Null);
@@ -49,11 +49,11 @@ public class ScopeTests
     }
 
     [Test]
-    public void Of_InMemoryRun_ShouldBeExpected()
+    public void RungScope_InMemory_ShouldBeExpected()
     {
         var element = new Rung("XIC(MyTag)OTE(OtherTag)");
 
-        var scope = Scope.Of(element);
+        var scope = element.Scope;
 
         scope.Path.Should().Be("/Rung/0");
         scope.Level.Should().Be(ScopeLevel.Null);
