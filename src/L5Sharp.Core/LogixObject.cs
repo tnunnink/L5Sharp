@@ -23,27 +23,6 @@ public abstract class LogixObject : LogixElement
     }
 
     /// <summary>
-    /// The scope idetifying where in an L5X file this element exists. This can be a globally scoped controller element,
-    /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
-    /// </summary>
-    /// <value>A <see cref="Scope"/> object with information regarding the scope of the element.</value>
-    /// <remarks>
-    /// <para>
-    /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
-    /// If the ancestor is a program element first, it is <c>Program</c> scoped.
-    /// If the ancestor is a AddOnInstructionDefinition element first, it is <c>Instruction</c> scoped.
-    /// If the ancestor is a controller element first, it is <c>Controller</c> scoped.
-    /// If no ancestor is found, we assume the component has <c>Null</c> scope, meaning it is not attached to a L5X tree.
-    /// </para>
-    /// <para>
-    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify elements within the L5X file, especially
-    /// <c>Tag</c>, <c>Routine</c>, and code elements like <c>Rung</c>.
-    /// </para>
-    /// </remarks>
-    public Scope Scope => Scope.Of(this);
-
-    /// <summary>
     /// Adds a new object of the same type directly after this object in the L5X document.
     /// </summary>
     /// <param name="item">The logix object to add.</param>

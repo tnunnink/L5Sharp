@@ -23,9 +23,6 @@ public class LogixElementTests
 
         element.L5XType.Should().Be("Test");
         element.L5X.Should().BeNull();
-        element.Scope.IsScoped.Should().BeFalse();
-        element.Scope.Container.Should().BeEmpty();
-        element.Scope.Level.Should().Be(ScopeLevel.Null);
     }
 
     [Test]
