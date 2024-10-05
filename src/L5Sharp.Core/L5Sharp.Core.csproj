@@ -18,7 +18,7 @@
         <!--<PackageIcon>icon.png</PackageIcon>-->
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
-            Added tests to ensure no memory issues.
+            This version primarily focuses on reworking the concept of element Scope and how the Lookup/Index API works.
         </PackageReleaseNotes>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
