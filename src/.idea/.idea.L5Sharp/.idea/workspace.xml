@@ -10,8 +10,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="For now made References return empty. At some point we perhaps can try to have a default implementation not using dictionary.">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Added ToString override to point to Name">
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/CrossReference.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/CrossReference.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,8 +100,10 @@
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Block.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Block.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Chart.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/DataTypeMember.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/DiagramElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Line.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Parameter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Rung.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Sheet.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Enums/ScopeLevel.cs" root0="SKIP_HIGHLIGHTING" />
@@ -200,6 +203,7 @@
     "00960bea-6e5b-4ffa-a837-6a257d42d429.executor": "Debug",
     "0e18d2ed-03e9-40cf-ac8e-fa663b72efe6.executor": "Debug",
     "12ada355-e272-4c10-8ea3-cbf556cdfe4b.executor": "Debug",
+    "1d9136ea-9271-4eee-95d1-ce4c851f12f2.executor": "Debug",
     "28598961-6f71-4268-830b-aa8ee7bac48f.executor": "Debug",
     "40120c9d-d22e-41bf-9ed7-1b69a1f60c44.executor": "Debug",
     "5220572b-3cd8-46de-864b-43073f0853dd.executor": "Debug",
@@ -560,7 +564,7 @@
       <workItem from="1720208888244" duration="23000" />
       <workItem from="1727127762345" duration="1377000" />
       <workItem from="1727138338872" duration="8461000" />
-      <workItem from="1727706661946" duration="109073000" />
+      <workItem from="1727706661946" duration="115674000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -905,7 +909,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="378" />
+    <option name="localTasksCounter" value="381" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -941,9 +945,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Added new ParseBool functions to LogixParser.cs in order to read booleans 0/1 correctly. Added new SetBit method to LogixElement.cs to allow derived classes to set booleans as 0/1. Updated ShareUnusedTimeSlice to use new bit overload. updated documentation. Added fix to DataType.cs ToTag method to write StringData correctly. Fixed/added tests. Updated version." />
-    <MESSAGE value="Fixed Routine Content throwing exception for empty routine exports. Updated version." />
-    <MESSAGE value="- LogixContainer implements IList{T} and ICollection now. This slightly changes the API.&#10;- LogixObject{T}, LogixComponent{T} created and add ILogixParsable{T} making all components and some elements able to be parsed dynamically using LogixParser extensions.&#10;- Update TagName Concat to reduce memory consumption.&#10;- Added methods to AddOnInstruction for generating NeutralText and Instruction instances.&#10;- Docs and tests updates.&#10;- Incrementing version." />
     <MESSAGE value="Moved L5X back up to LogixElement.cs" />
     <MESSAGE value="Scope Changes&#10;&#10;- Scope enum now called ScopeLevel.cs and replaces Instruction scope with Routine scope. This matches actual L5X model and makes more sense for the determining scope of not just component elements but code elements.&#10;- Addition of Scope.cs which is a new complex type containing more information for the scope of any given element in the L5X tree. It includes not just container, but also type and name, so it can be used and a unique Uri or resource/element identifier.&#10;- LogixObject.cs replaced Scope and Container with just Scope using new Scope.cs class.&#10;- Fixed broken tests.&#10;- Fixed some docs.&#10;- Added some new internal extension method helpers.&#10;- Added/renamed some samples in test lib&#10;- Incrementing to v4 since there are breaking changes." />
     <MESSAGE value="v36 Instruction Name Changes&#10;&#10;Added new instruction factory methods for updated v36 instruction names that match ISO standard." />
@@ -966,23 +967,26 @@
     <MESSAGE value="Fixed tests" />
     <MESSAGE value="Fixed Delete, but probably need to think through this function a little more." />
     <MESSAGE value="For now made References return empty. At some point we perhaps can try to have a default implementation not using dictionary." />
-    <option name="LAST_COMMIT_MESSAGE" value="For now made References return empty. At some point we perhaps can try to have a default implementation not using dictionary." />
+    <MESSAGE value="Testing Updates.&#10;&#10;Added more tests for LogixLookup.cs. Fixed other testes. Fixed references for LogixComponent.cs. Fixed Scope tests. All tests are passing just need to continue to add more tests." />
+    <MESSAGE value="Upgraded to .NET 8.0" />
+    <MESSAGE value="Added ToString override to point to Name" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added ToString override to point to Name" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/L5Sharp.Core/LogixLookup.cs</url>
-          <line>16</line>
-          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\src\L5Sharp.Core\LogixLookup.cs" containingFunctionPresentation="Method 'Contains'">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs</url>
+          <line>15</line>
+          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\tests\L5Sharp.Tests\L5XReferenceTests.cs" containingFunctionPresentation="Method 'References_KnownTagWithReferences_ShouldNotBeEmpty'">
             <startOffsets>
-              <option value="335" />
+              <option value="322" />
             </startOffsets>
             <endOffsets>
-              <option value="353" />
+              <option value="355" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="33" />
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

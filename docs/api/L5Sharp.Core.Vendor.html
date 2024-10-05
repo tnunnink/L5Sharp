@@ -2,12 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class Vendor
- </title>
+      <title>Class Vendor </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class Vendor
- ">
+      <meta name="title" content="Class Vendor ">
       
+      <meta name="description" content="An entity that represents the vendor of a given .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -17,20 +16,28 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/main/apiSpec/new?filename=L5Sharp_Core_Vendor.md&amp;value=---%0Auid%3A%20L5Sharp.Core.Vendor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/tnunnink/L5Sharp/new/release/apiSpec/new?filename=L5Sharp_Core_Vendor.md&amp;value=---%0Auid%3A%20L5Sharp.Core.Vendor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-
-  <script type="module">
-    import options from './../public/main.js'
-    import { init } from './../public/docfx.min.js'
-    init(options)
-  </script>
-
-  <script>
-    const theme = localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
-
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -66,7 +73,7 @@
 
       <div class="content">
         <div class="actionbar">
-          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
             <i class="bi bi-list"></i>
           </button>
 
@@ -78,21 +85,20 @@
 
 
   <h1 id="L5Sharp_Core_Vendor" data-uid="L5Sharp.Core.Vendor" class="text-break">
-    Class Vendor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Class Vendor  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L13"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
     <dl><dt>Namespace</dt><dd><a class="xref" href="L5Sharp.html">L5Sharp</a>.<a class="xref" href="L5Sharp.Core.html">Core</a></dd></dl>
-  <dl><dt>Assembly</dt><dd>L5Sharp.dll</dd></dl>
+  <dl><dt>Assembly</dt><dd>L5Sharp.Core.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>An entity that represents the vendor of a given <a class="xref" href="L5Sharp.Components.Module.html">Module</a>.</p>
+  <div class="markdown summary"><p>An entity that represents the vendor of a given <a class="xref" href="L5Sharp.Core.Module.html">Module</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Vendor</code></pre>
+    <pre><code class="lang-csharp hljs">public class Vendor : ILogixParsable&lt;Vendor&gt;</code></pre>
   </div>
 
 
@@ -106,9 +112,15 @@
     </dd>
   </dl>
 
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="L5Sharp.Core.ILogixParsable-1.html">ILogixParsable</a>&lt;<a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a>&gt;</div>
+    </dd>
+  </dl>
 
 
-  <dl class="typelist derived">
+  <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
     <div>
@@ -131,8 +143,7 @@
   <h2 id="L5Sharp_Core_Vendor_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>This object is a simple entity type wrapper that groups the vendor id and name.
 Vendor's are defined by Rockwell and assigned unique Id and name.
-This information is obtained from the L5X or from the <a class="xref" href="L5Sharp.Catalog.ModuleCatalog.html">ModuleCatalog</a> service by lookup of a given
-catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_Vendor_Rockwell">Rockwell</a> as it is the most common vendor for compatible devices.</p>
+Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_Vendor_Rockwell">Rockwell</a> as it is the most common vendor for compatible devices.</p>
 </div>
 
 
@@ -144,7 +155,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor__ctor_System_UInt16_System_String_" data-uid="L5Sharp.Core.Vendor.#ctor(System.UInt16,System.String)">
   Vendor(ushort, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> value with the provided id and name.</p>
@@ -184,7 +195,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_Id" data-uid="L5Sharp.Core.Vendor.Id">
   Id
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value that uniquely identifies the <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a>.</p>
@@ -219,7 +230,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_Name" data-uid="L5Sharp.Core.Vendor.Name">
   Name
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the value that represents the <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> name.</p>
@@ -251,7 +262,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_Rockwell" data-uid="L5Sharp.Core.Vendor.Rockwell">
   Rockwell
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the Rockwell Automation Vendor instance (id=1).</p>
@@ -283,7 +294,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_Unknown" data-uid="L5Sharp.Core.Vendor.Unknown">
   Unknown
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Represents an Unknown <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> with no id or name.</p>
@@ -319,11 +330,10 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_Equals_System_Object_" data-uid="L5Sharp.Core.Vendor.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -333,15 +343,13 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd><p>The object to compare with the current object.</p>
-</dd>
+    <dd></dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the specified object  is equal to the current object; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
-</dd>
+    <dd></dd>
   </dl>
 
 
@@ -358,11 +366,10 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_GetHashCode" data-uid="L5Sharp.Core.Vendor.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L96"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -373,8 +380,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>A hash code for the current object.</p>
-</dd>
+    <dd></dd>
   </dl>
 
 
@@ -391,28 +397,28 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_Parse_System_String_" data-uid="L5Sharp.Core.Vendor.Parse(System.String)">
   Parse(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> using the provided vendor Id.</p>
+  <div class="markdown level1 summary"><p>Parses a string into a <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> value.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Vendor Parse(string vendorId)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Vendor Parse(string value)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>vendorId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The unique valid that identifies the Vendor.</p>
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The string to parse.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a></dt>
-    <dd><p>A new <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> object with the provided Id.</p>
+    <dd><p>The <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> representing the parsed value.</p>
 </dd>
   </dl>
 
@@ -430,11 +436,10 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_ToString" data-uid="L5Sharp.Core.Vendor.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -445,7 +450,46 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>A string that represents the current object.</p>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="L5Sharp_Core_Vendor_TryParse_" data-uid="L5Sharp.Core.Vendor.TryParse*"></a>
+
+  <h3 id="L5Sharp_Core_Vendor_TryParse_System_String_" data-uid="L5Sharp.Core.Vendor.TryParse(System.String)">
+  TryParse(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Tries to parse a string into a <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Vendor TryParse(string? value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The string to parse.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a></dt>
+    <dd><p>A <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> representing the parsed value if successful;
+Otherwise; <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_Vendor_Unknown">Unknown</a>.</p>
 </dd>
   </dl>
 
@@ -467,7 +511,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_op_Equality_L5Sharp_Core_Vendor_L5Sharp_Core_Vendor_" data-uid="L5Sharp.Core.Vendor.op_Equality(L5Sharp.Core.Vendor,L5Sharp.Core.Vendor)">
   operator ==(Vendor?, Vendor?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L104"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines if the provided objects are equal.</p>
@@ -509,7 +553,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_op_Implicit_L5Sharp_Core_Vendor__System_UInt16" data-uid="L5Sharp.Core.Vendor.op_Implicit(L5Sharp.Core.Vendor)~System.UInt16">
   implicit operator ushort(Vendor)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Converts a <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> object to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a> that represents the Id.</p>
@@ -548,7 +592,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_op_Implicit_System_UInt16__L5Sharp_Core_Vendor" data-uid="L5Sharp.Core.Vendor.op_Implicit(System.UInt16)~L5Sharp.Core.Vendor">
   implicit operator Vendor(ushort)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Converts a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a> value to a <a class="xref" href="L5Sharp.Core.Vendor.html">Vendor</a> object that represents the Id.</p>
@@ -587,7 +631,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 
   <h3 id="L5Sharp_Core_Vendor_op_Inequality_L5Sharp_Core_Vendor_L5Sharp_Core_Vendor_" data-uid="L5Sharp.Core.Vendor.op_Inequality(L5Sharp.Core.Vendor,L5Sharp.Core.Vendor)">
   operator !=(Vendor?, Vendor?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines if the provided objects are not equal.</p>
@@ -629,10 +673,10 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/tnunnink/L5Sharp/blob/main/src/Core/Vendor.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/tnunnink/L5Sharp/blob/release/src/L5Sharp.Core/Common/Vendor.cs/#L13" class="edit-link">Edit this page</a>
         </div>
 
-        
+
       </div>
 
       <div class="affix">
@@ -641,7 +685,7 @@ catalog number. Use <a class="xref" href="L5Sharp.Core.Vendor.html#L5Sharp_Core_
     </main>
 
 
-    <footer class="border-top">
+    <footer class="border-top text-secondary">
       <div class="container-xxl">
         <div class="flex-fill">
           <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
