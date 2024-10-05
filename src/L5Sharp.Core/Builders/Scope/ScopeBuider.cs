@@ -46,11 +46,6 @@ internal class ScopeBuider(string controller) : IScopeBuilder,
         return Build();
     }
 
-    public Scope Aoi(string name)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public Scope Instruction(string name)
     {
         _type = ScopeType.Instruction.Value;
