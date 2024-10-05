@@ -686,24 +686,34 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
 }
 
 /// <summary>
-/// Enum representing the indexing options when loading the L5X file.
+/// Enum representing options when loading or parsing an <see cref="L5X"/> instnace.
 /// </summary>
 public enum L5XOptions
 {
     /// <summary>
-    /// 
+    /// No additional options for loading or parsing the L5X file are enabled.
     /// </summary>
+    /// <remarks>
+    /// This means that the L5X file will be loaded or parsed with default behaviour.
+    /// Any call to one of the <see cref="ILogixLookup"/> methods will use XPath lookup for elements.
+    /// If you need fast lookups, consider selecting <see cref="Index"/> to have the content indexed upon load.
+    /// </remarks>
     None,
 
     /// <summary>
-    /// This option enables indexing of the L5X file.
-    /// This will slightly inclrease the load times initially, but it significantly accelerates the performance
-    /// of lookup operations using any <see cref="ILogixLookup"/> API. 
-    /// This option is advantageous when the user plans to execute numerous lookups of elements.
+    /// This option enables indexing of the L5X file, allowing for fast lookups using the <see cref="ILogixLookup"/> API.
     /// </summary>
     /// <remarks>
-    /// Any mutation will not be reflected in the index as it does not track changes.
-    /// Index option is primarily intended for read only operations on the file.
+    /// <para>
+    /// This will slightly inclrease the load time, but it significantly accelerates the performance
+    /// of lookup operations using any <see cref="ILogixLookup"/> API. 
+    /// This option is advantageous when the user plans to execute numerous lookups of elements.
+    /// </para>
+    /// <para>
+    /// Any mutation of scoped elements will not be reflected in the index as it does not track changes.
+    /// The <c>Index</c> option is primarily intended for read-only interaction on the file. If you make changes and need
+    /// to then perform fast lookups, you can load or parse a new instance of an L5X.
+    /// </para> 
     /// </remarks>
     Index
 }
