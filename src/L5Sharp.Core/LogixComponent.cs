@@ -27,7 +27,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent : LogixObject
+public abstract class LogixComponent : LogixScoped
 {
     /// <inheritdoc />
     protected LogixComponent(string name) : base(name)
@@ -80,21 +80,6 @@ public abstract class LogixComponent : LogixObject
         get => GetProperty<string>();
         set => SetDescription(value);
     }
-
-    /// <summary>
-    /// The scope idetifying where in an L5X file this element exists. This can be a globally scoped controller element,
-    /// a locally scoped program or instruction element, or neither (not attached to L5X tree).
-    /// </summary>
-    /// <value>A <see cref="Scope"/> object with information regarding the scope of the element.</value>
-    /// <remarks>
-    /// <para>
-    /// The scope of an element is determined from the ancestors of the underlying <see cref="XElement"/>.
-    /// This property is not inherent in the underlying XML (not serialized), but one that adds a lot of
-    /// value as it helps uniquely identify elements within the L5X file, especially elements such as <c>Tag</c>,
-    /// <c>Routine</c>, or <c>Rung</c>.
-    /// </para>
-    /// </remarks>
-    public Scope Scope => Scope.Of(Element);
 
     /// <summary>
     /// Returns a collection of <see cref="LogixComponent"/> that this component depends on to be valid within a given
