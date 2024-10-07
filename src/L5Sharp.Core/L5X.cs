@@ -86,10 +86,12 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
         //Depending on the options provided, either create a logix index or logix lookup for the ILogixLooup API usage.
         if (options == L5XOptions.Index)
         {
+            //LogixIndex uses dictionaries and is super performant.
             _lookup = new LogixIndex(GetController());
         }
         else
         {
+            //LogixLookup uses XPath with is not terrible but will be slow for many lookups (mostly for tag elements).
             _lookup = new LogixLookup(GetController());
         }
     }
@@ -368,61 +370,61 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <inheritdoc />
-    public IEnumerable<LogixObject> Find(Scope scope)
+    public IEnumerable<LogixScoped> Find(Scope scope)
     {
         return _lookup.Find(scope);
     }
 
     /// <inheritdoc />
-    public IEnumerable<TObject> Find<TObject>(Scope scope) where TObject : LogixObject
+    public IEnumerable<TScoped> Find<TScoped>(Scope scope) where TScoped : LogixScoped
     {
-        return _lookup.Find<TObject>(scope);
+        return _lookup.Find<TScoped>(scope);
     }
 
     /// <inheritdoc />
-    public LogixObject Get(Scope scope)
+    public LogixScoped Get(Scope scope)
     {
         return _lookup.Get(scope);
     }
 
     /// <inheritdoc />
-    public TObject Get<TObject>(Scope scope) where TObject : LogixObject
+    public TScoped Get<TScoped>(Scope scope) where TScoped : LogixScoped
     {
-        return _lookup.Get<TObject>(scope);
+        return _lookup.Get<TScoped>(scope);
     }
 
     /// <inheritdoc />
-    public LogixObject Get(Func<IScopeBuilder, Scope> builder)
+    public LogixScoped Get(Func<IScopeBuilder, Scope> builder)
     {
         return _lookup.Get(builder);
     }
 
     /// <inheritdoc />
-    public TObject Get<TObject>(Func<IScopeBuilder, Scope> builder) where TObject : LogixObject
+    public TScoped Get<TScoped>(Func<IScopeBuilder, Scope> builder) where TScoped : LogixScoped
     {
-        return _lookup.Get<TObject>(builder);
+        return _lookup.Get<TScoped>(builder);
     }
 
     /// <inheritdoc />
-    public bool TryGet(Scope scope, out LogixObject element)
-    {
-        return _lookup.TryGet(scope, out element);
-    }
-
-    /// <inheritdoc />
-    public bool TryGet<TObject>(Scope scope, out TObject element) where TObject : LogixObject
+    public bool TryGet(Scope scope, out LogixScoped element)
     {
         return _lookup.TryGet(scope, out element);
     }
 
     /// <inheritdoc />
-    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixObject element)
+    public bool TryGet<TScoped>(Scope scope, out TScoped element) where TScoped : LogixScoped
+    {
+        return _lookup.TryGet(scope, out element);
+    }
+
+    /// <inheritdoc />
+    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixScoped element)
     {
         return _lookup.TryGet(builder, out element);
     }
 
     /// <inheritdoc />
-    public bool TryGet<TObject>(Func<IScopeBuilder, Scope> builder, out TObject element) where TObject : LogixObject
+    public bool TryGet<TScoped>(Func<IScopeBuilder, Scope> builder, out TScoped element) where TScoped : LogixScoped
     {
         return _lookup.TryGet(builder, out element);
     }

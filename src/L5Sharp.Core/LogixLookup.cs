@@ -35,17 +35,17 @@ internal class LogixLookup(XElement content) : ILogixLookup
         return element is not null;
     }
 
-    public IEnumerable<LogixObject> Find(Scope scope)
+    public IEnumerable<LogixScoped> Find(Scope scope)
     {
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var results = new List<LogixObject>();
+        var results = new List<LogixScoped>();
         var scopes = GenerateScopes(scope.Type, scope.Name);
 
         foreach (var path in scopes)
         {
-            var element = content.XPathSelectElement(path.ToXPath())?.Deserialize<LogixObject>();
+            var element = content.XPathSelectElement(path.ToXPath())?.Deserialize<LogixScoped>();
             var result = element is Tag tag ? tag.Member(scope.Name.Path) : element;
             if (result is null) continue;
             results.Add(result);
@@ -54,27 +54,27 @@ internal class LogixLookup(XElement content) : ILogixLookup
         return results;
     }
 
-    public IEnumerable<TObject> Find<TObject>(Scope scope) where TObject : LogixObject
+    public IEnumerable<TScoped> Find<TScoped>(Scope scope) where TScoped : LogixScoped
     {
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var results = new List<TObject>();
-        var type = scope.Type != ScopeType.Empty ? scope.Type : ScopeType.Parse(typeof(TObject).L5XType());
+        var results = new List<TScoped>();
+        var type = scope.Type != ScopeType.Empty ? scope.Type : ScopeType.Parse(typeof(TScoped).L5XType());
         var scopes = GenerateScopes(type, scope.Name.Root);
 
         foreach (var path in scopes)
         {
-            var element = content.XPathSelectElement(path.ToXPath())?.Deserialize<TObject>();
+            var element = content.XPathSelectElement(path.ToXPath())?.Deserialize<TScoped>();
             var result = element is Tag tag ? tag.Member(scope.Name.Path) as LogixObject : element;
-            if (result is not TObject typed) continue;
+            if (result is not TScoped typed) continue;
             results.Add(typed);
         }
 
         return results;
     }
 
-    public LogixObject Get(Scope scope)
+    public LogixScoped Get(Scope scope)
     {
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
@@ -85,26 +85,26 @@ internal class LogixLookup(XElement content) : ILogixLookup
         if (element is null)
             throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
 
-        var result = element.Deserialize<LogixObject>();
+        var result = element.Deserialize<LogixScoped>();
         return result is Tag tag ? tag[key.Name.Path] : result;
     }
 
-    public TObject Get<TObject>(Scope scope) where TObject : LogixObject
+    public TScoped Get<TScoped>(Scope scope) where TScoped : LogixScoped
     {
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var key = GenerateAbsolute(scope, typeof(TObject));
+        var key = GenerateAbsolute(scope, typeof(TScoped));
         var element = content.XPathSelectElement(key.ToXPath());
 
         if (element is null)
             throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
 
-        var result = element.Deserialize<TObject>();
-        return result is Tag tag ? (TObject)(LogixObject)tag[key.Name.Path] : result;
+        var result = element.Deserialize<TScoped>();
+        return result is Tag tag ? (TScoped)(LogixObject)tag[key.Name.Path] : result;
     }
 
-    public LogixObject Get(Func<IScopeBuilder, Scope> builder)
+    public LogixScoped Get(Func<IScopeBuilder, Scope> builder)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
@@ -117,11 +117,11 @@ internal class LogixLookup(XElement content) : ILogixLookup
         if (element is null)
             throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
 
-        var result = element.Deserialize<LogixObject>();
+        var result = element.Deserialize<LogixScoped>();
         return result is Tag tag ? tag[scope.Name.Path] : result;
     }
 
-    public TObject Get<TObject>(Func<IScopeBuilder, Scope> builder) where TObject : LogixObject
+    public TScoped Get<TScoped>(Func<IScopeBuilder, Scope> builder) where TScoped : LogixScoped
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
@@ -134,18 +134,18 @@ internal class LogixLookup(XElement content) : ILogixLookup
         if (element is null)
             throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
 
-        var result = element.Deserialize<TObject>();
-        return result is Tag tag ? (TObject)(LogixObject)tag[scope.Name.Path] : result;
+        var result = element.Deserialize<TScoped>();
+        return result is Tag tag ? (TScoped)(LogixObject)tag[scope.Name.Path] : result;
     }
 
-    public bool TryGet(Scope scope, out LogixObject element)
+    public bool TryGet(Scope scope, out LogixScoped element)
     {
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
         var key = GenerateAbsolute(scope);
 
-        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<LogixObject>();
+        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<LogixScoped>();
 
         if (result is null)
         {
@@ -157,14 +157,14 @@ internal class LogixLookup(XElement content) : ILogixLookup
         return IsNull(target, out element);
     }
 
-    public bool TryGet<TObject>(Scope scope, out TObject element) where TObject : LogixObject
+    public bool TryGet<TScoped>(Scope scope, out TScoped element) where TScoped : LogixScoped
     {
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var key = GenerateAbsolute(scope, typeof(TObject));
+        var key = GenerateAbsolute(scope, typeof(TScoped));
 
-        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<TObject>();
+        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<TScoped>();
 
         if (result is null)
         {
@@ -173,10 +173,10 @@ internal class LogixLookup(XElement content) : ILogixLookup
         }
 
         var target = result is Tag tag ? tag.Member(key.Name.Path)?.As<LogixObject>() : result;
-        return IsNull(target as TObject, out element);
+        return IsNull(target as TScoped, out element);
     }
 
-    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixObject element)
+    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixScoped element)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
@@ -184,7 +184,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
         var root = Scope.Build(content.LogixName());
         var scope = builder(root);
 
-        var result = content.XPathSelectElement(scope.ToXPath())?.Deserialize<LogixObject>();
+        var result = content.XPathSelectElement(scope.ToXPath())?.Deserialize<LogixScoped>();
 
         if (result is null)
         {
@@ -196,7 +196,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
         return IsNull(target, out element);
     }
 
-    public bool TryGet<TObject>(Func<IScopeBuilder, Scope> builder, out TObject element) where TObject : LogixObject
+    public bool TryGet<TScoped>(Func<IScopeBuilder, Scope> builder, out TScoped element) where TScoped : LogixScoped
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
@@ -204,7 +204,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
         var root = Scope.Build(content.LogixName());
         var scope = builder(root);
 
-        var result = content.XPathSelectElement(scope.ToXPath())?.Deserialize<TObject>();
+        var result = content.XPathSelectElement(scope.ToXPath())?.Deserialize<TScoped>();
 
         if (result is null)
         {
@@ -213,7 +213,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
         }
 
         var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
-        return IsNull(target as TObject, out element);
+        return IsNull(target as TScoped, out element);
     }
 
     public IEnumerable<CrossReference> References(TagName name) => [];
@@ -226,7 +226,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
     /// Generates all potential scope paths for the provided type and name so that we can attempt to find all instances
     /// of an element across alls scopes.
     /// </summary>
-    private IEnumerable<Scope> GenerateScopes(ScopeType type, string name)
+    private List<Scope> GenerateScopes(ScopeType type, string name)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException(
