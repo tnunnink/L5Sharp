@@ -30,5 +30,5 @@ public abstract class LogixScoped : LogixObject
     /// <c>Routine</c>, or <c>Rung</c>.
     /// </para>
     /// </remarks>
-    public Scope Scope => Scope.Of(Element);
+    public virtual Scope Scope => Scope.Of(Element);
 }
