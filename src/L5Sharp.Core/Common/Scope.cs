@@ -510,9 +510,8 @@ public sealed class Scope
     /// </summary>
     private static ScopeType GetScopedType(XElement element)
     {
-        //Intercent knwon tag elements or nested tag data elements
-        if (element.AncestorsAndSelf().Any(e => e.L5XType() 
-                is L5XName.Tag or L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag))
+        //Intercent knwon tag elements types (not sure how else to do this ATM)
+        if (element.L5XType() is L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag)
         {
             return ScopeType.Tag;
         }
@@ -525,9 +524,8 @@ public sealed class Scope
     /// </summary>
     private static string GetScopedName(XElement element)
     {
-        //Intercent knwon tag elements or nested tag data elements
-        if (element.AncestorsAndSelf().Any(e => e.L5XType() 
-                is L5XName.Tag or L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag))
+        //Intercent knwon tag elements types (not sure how else to do this ATM)
+        if (element.L5XType() is L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag)
         {
             return element.TagName();
         }
