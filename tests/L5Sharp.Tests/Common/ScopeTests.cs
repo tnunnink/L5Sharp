@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
+using FluentAssertions;
 
 namespace L5Sharp.Tests.Common;
 
@@ -556,5 +557,40 @@ public class ScopeTests
         var path = scope.ToXPath();
 
         path.Should().Be("/Controller[@Name='MyController']/Tasks/Task[@Name='MainTask']");
+    }
+    
+    [Test]
+    public void PerformanceOfGettingAllTagMemberScopesShouldBeNotTerrible()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var stopwatch = Stopwatch.StartNew();
+        
+        var scopes = content.Query<Tag>()
+            .SelectMany(t => t.Members())
+            .Select(t => t.Scope)
+            .ToList();
+        
+        stopwatch.Stop();
+        
+        
+        scopes.Should().NotBeEmpty();
+        Console.WriteLine(stopwatch.ElapsedMilliseconds);
+    }
+
+    [Test]
+    public void AllTagMembersShouldHaveTypeAndNameScopedProperty()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var scopes = content.Query<Tag>()
+            .SelectMany(t => t.Members())
+            .Select(t => t.Scope)
+            .ToList();
+
+        scopes.Should().NotBeEmpty();
+        scopes.Should().AllSatisfy(s => s.Name.Should().NotBe(TagName.Empty));
+        scopes.Should().AllSatisfy(s => s.Type.Should().Be(ScopeType.Tag));
+        Console.WriteLine(scopes.Count);
     }
 }

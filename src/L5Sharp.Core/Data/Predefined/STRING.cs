@@ -32,10 +32,6 @@ public sealed class STRING : StringData, ILogixParsable<STRING>
     {
     }
 
-    /// <inheritdoc />
-    //This is the length of the predefined STRING type in Logix
-    protected override ushort MaxLength => 82;
-
     /// <summary>
     /// Parses the provided string into a <see cref="STRING"/> value.
     /// </summary>

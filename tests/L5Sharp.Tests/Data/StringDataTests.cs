@@ -7,25 +7,13 @@ namespace L5Sharp.Tests.Data;
 public class StringDataTests
 {
     [Test]
-    public void New_NameAndValueOverload_ShouldHaveExpectedValues()
-    {
-        var type = new StringData("MyStringType", "This is the test value");
-
-        type.Name.Should().Be("MyStringType");
-        type.ToString().Should().Be("This is the test value");
-        type.LEN.Should().Be(22);
-        type.DATA.Should().NotBeEmpty();
-        type.Members.Should().HaveCount(2);
-    }
-    
-    [Test]
     public void New_NullName_NameShouldBeEmpty()
     {
         var type = new StringData(null!, "This is the test value");
 
         type.Name.Should().BeEmpty();
     }
-    
+
     [Test]
     public void New_EmptyName_NameShouldBeEmpty()
     {
@@ -45,32 +33,40 @@ public class StringDataTests
     [Test]
     public void New_EmptyValue_ShouldBeEmpty()
     {
-        var type = new StringData("Test", "");
+        var type = new StringData("Test", string.Empty);
 
         type.ToString().Should().BeEmpty();
     }
 
     [Test]
-    public void New_ValueOverloadEmpty_ShouldBeExpected()
+    public void New_ValueOverload_NameShouldBeExpected()
     {
-        var type = new StringData(string.Empty);
-        
-        type.ToString().Should().BeEmpty();
+        var type = new StringData("MyStringType", "This is the value");
+
+        type.Name.Should().Be("MyStringType");
     }
 
     [Test]
-    public void New_ValueOverloadNonEmpty_ShouldBeExpected()
+    public void New_ValueOverload_ValueShouldBeExpected()
     {
-        var type = new StringData("This is the value");
-        
+        var type = new StringData("MyStringType", "This is the value");
+
         type.ToString().Should().Be("This is the value");
     }
-    
+
+    [Test]
+    public void New_ValueOverload_MembersShouldBeEmpty()
+    {
+        var type = new StringData("MyStringType", "This is the value");
+
+        type.Members.Should().BeEmpty();
+    }
+
     [Test]
     public void New_ValueOverload_ShouldHaveExpectedLength()
     {
-        var type = new StringData("This is the value");
-        
+        var type = new StringData("MyStringType", "This is the value");
+
         type.LEN.Should().Be(17);
         type.DATA.Dimensions.Length.Should().Be(17);
     }
@@ -138,52 +134,33 @@ public class StringDataTests
     [Test]
     public void ToString_Empty_ShouldBeExpected()
     {
-        var type = new StringData(string.Empty);
+        var type = new StringData("Test", string.Empty);
 
         var value = type.ToString();
 
         value.Should().Be("");
     }
-    
+
     [Test]
     public void ToString_ValueNoSpecialCharacters_ShouldBeExpected()
     {
-        var type = new StringData("This is a test");
+        var type = new StringData("Test", "This is a test");
 
         var value = type.ToString();
 
         value.Should().Be("This is a test");
     }
-    
+
     [Test]
     public void ToString_ValueSpecialCharacters_ShouldBeExpected()
     {
-        var type = new StringData("This is a $'special character$' test");
+        var type = new StringData("Test", "This is a $'special character$' test");
 
         var value = type.ToString();
 
         value.Should().Be("This is a $'special character$' test");
     }
 
-    [Test]
-    public void Members_GetValue_ShouldBeExpected()
-    {
-        var type = new StringData("TestType", "This is a test value");
-
-        var member = type.Members.ToList();
-
-        var len = member[0];
-        len.Name.Should().Be("LEN");
-        len.Value.Should().Be(20);
-
-        var data = member[1];
-        data.Name.Should().Be("DATA");
-        data.Value.Should().BeOfType<ArrayData<SINT>>();
-
-        var members = data.Value.Members.ToList();
-        members.Should().NotBeEmpty();
-    }
-    
     [Test]
     public void LEN_GetValueEmpty_ShouldBeExpected()
     {
@@ -203,7 +180,7 @@ public class StringDataTests
 
         len.Should().Be(14);
     }
-    
+
     [Test]
     public void DATA_GetValueEmpty_ShouldBeExpected()
     {
@@ -286,16 +263,6 @@ public class StringDataTests
         var code = type.GetHashCode();
 
         code.Should().Be(expected);
-    }
-
-    [Test]
-    public void Operator_StringType_ShouldBeExpected()
-    {
-        var type = new StringData("MyStringType", "This is a test");
-
-        string value = type;
-
-        value.Should().Be("This is a test");
     }
 
     [Test]
