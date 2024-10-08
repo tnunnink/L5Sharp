@@ -29,20 +29,9 @@ namespace L5Sharp.Tests.Data.Predefined
 
             type.Name.Should().Be("STRING");
             type.ToString().Should().BeEmpty();
-            type.LEN.Should().NotBeNull();
-            type.LEN.Should().BeOfType<DINT>();
-            type.DATA.Should().NotBeNull();
-            type.DATA.Should().BeOfType<ArrayData<SINT>>();
-            type.Members.Should().HaveCount(2);
-
-            var data = type.Members.FirstOrDefault(m => m.Name == "DATA");
-            data.Should().NotBeNull();
-            data?.Value.Should().NotBeNull();
-            data?.Value.Name.Should().NotBeNull();
-
-            var len = type.Members.FirstOrDefault(m => m.Name == "LEN");
-            len.Should().NotBeNull();
-            len?.Value.Should().NotBeNull();
+            type.LEN.Should().Be(0);
+            type.DATA.Should().BeEmpty();
+            type.Members.Should().BeEmpty();
         }
 
         [Test]
@@ -64,22 +53,16 @@ namespace L5Sharp.Tests.Data.Predefined
         [Test]
         public void New_AsciiStringValue_ShouldBeExpectedValue()
         {
+            //Sometimes Studio pads string with zero. Documentation says it does this but in my experience it is not consistent.
+            //I have not done enough testing to figure how/when it decides to do this.
+            //In any case, if we get input text like this I want to strip of the "empty" parts to just return the string value.
+            //The length is not really important to us.
+            //This tests validates the code that parses the string input as expected.
             const string text = "'$0B$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'";
 
             var type = new STRING(text);
 
             type.ToString().Should().Be("$0B");
-        }
-
-        [Test]
-        public void SetValue_OutOfRangeString_ShouldBeTruncated()
-        {
-            const string expected =
-                "This is a really long test string to see if the argument out of range exception will work. The string length must be less than eighty two characters in length. Do you think this is long enough?";
-
-            STRING type = expected;
-
-            type.ToString().Length.Should().BeLessThan(expected.Length);
         }
 
         [Test]

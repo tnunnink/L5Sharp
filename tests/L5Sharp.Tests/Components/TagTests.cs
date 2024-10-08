@@ -641,27 +641,13 @@ public class TagTests
     }
 
     [Test]
-    public void Members_StringType_ShouldHaveExpectedCount()
+    public void Members_StringType_ShouldHaveSingleRootMember()
     {
         var tag = new Tag { Name = "Test", Value = "This is a test value" };
 
         var members = tag.Members().ToList();
 
-        members.Should().HaveCount(85);
-    }
-
-    [Test]
-    public void Members_StringType_ShouldHaveContainExpectedTagNames()
-    {
-        var tag = new Tag { Name = "Test", Value = "This is a test value" };
-
-        var members = tag.Members().ToList();
-
-        members.Should().Contain(t => t.TagName == "Test.LEN");
-        members.Should().Contain(t => t.TagName == "Test.DATA");
-        members.Should().Contain(t => t.TagName == "Test.DATA[0]");
-        members.Should().Contain(t => t.TagName == "Test.DATA[1]");
-        members.Should().Contain(t => t.TagName == "Test.DATA[63]");
+        members.Should().HaveCount(1);
     }
 
     [Test]
@@ -706,9 +692,7 @@ public class TagTests
         members.Should().Contain(t => t.TagName == "Test.Tmr.TT");
         members.Should().Contain(t => t.TagName == "Test.Tmr.ACC");
         members.Should().Contain(t => t.TagName == "Test.Tmr.PRE");
-        members.Should().Contain(t => t.TagName == "Test.Str.LEN");
-        members.Should().Contain(t => t.TagName == "Test.Str.DATA");
-        members.Should().Contain(t => t.TagName == "Test.Str.DATA[0]");
+        members.Should().Contain(t => t.TagName == "Test.Str");
     }
 
     [Test]
@@ -726,7 +710,7 @@ public class TagTests
     }
 
     [Test]
-    public void Members_TagNameWithMoreThanThreeMembers_ShouldReturnExpectedCount()
+    public void Members_TagNameWithMoreThanTwoMembers_ShouldReturnExpectedCount()
     {
         var tag = new Tag
         {
@@ -734,7 +718,7 @@ public class TagTests
             Value = new MyNestedData()
         };
 
-        var members = tag.Members(t => t.Members.Count() > 4);
+        var members = tag.Members(t => t.Members.Count() > 2);
 
         members.Should().NotBeEmpty();
     }
