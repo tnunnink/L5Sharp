@@ -45,7 +45,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     public Tag() : base(L5XName.Tag)
     {
-        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        //The root tag will contain a "virtual" which will simply routine calls to its local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
         Root = this;
         TagType = TagType.Base;
@@ -60,7 +60,7 @@ public class Tag : LogixComponent<Tag>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Tag(XElement element) : base(element)
     {
-        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        //The root tag will contain a "virtual" which will simply routine calls to its local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
         Root = this;
     }
@@ -102,7 +102,7 @@ public class Tag : LogixComponent<Tag>
     /// <param name="element">the name of the tag element.</param>
     protected Tag(string element) : base(element)
     {
-        //The root tag will contain a "virtual" which will simply routine calls to it's local get/set data functions.
+        //The root tag will contain a "virtual" which will simply routine calls to its local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
         Root = this;
         TagType = TagType.Base;
@@ -170,6 +170,9 @@ public class Tag : LogixComponent<Tag>
         set => SetTagDescription(value);
     }
 
+    /// <inheritdoc />
+    public override Scope Scope => Parent is null ? Scope.Of(Element) : Scope.Of(_member.Serialize());
+
     /// <summary>
     /// The name of the data type the tag represents. 
     /// </summary>
@@ -182,7 +185,7 @@ public class Tag : LogixComponent<Tag>
     public string DataType => Value.Name;
 
     /// <summary>
-    /// The dimensions of the tag, indicating the length and dimensions of it's array.
+    /// The dimensions of the tag, indicating the length and dimensions of its array.
     /// </summary>
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions of the tag.</value>
     /// <remarks>
@@ -238,6 +241,7 @@ public class Tag : LogixComponent<Tag>
     /// The external access option indicating the read/write access of the tag from OPC UA.
     /// </summary>
     /// <value>A <see cref="Core.OpcUAAccess"/> option representing read/write access of the tag from OPC UA.</value>
+    // ReSharper disable once InconsistentNaming we need the name to match.
     public OpcUAAccess? OpcUAAccess
     {
         get => GetValue<OpcUAAccess>();
@@ -339,7 +343,7 @@ public class Tag : LogixComponent<Tag>
     /// The parent tag of this <see cref="Tag"/> member.
     /// </summary>
     /// <value>
-    /// A <see cref="Tag"/> representing the immediate parent tag of the this tag member. Will be <c>null</c>
+    /// A <see cref="Tag"/> representing the immediate parent tag of this tag member. Will be <c>null</c>
     /// for all root tag objects.
     /// </value>
     /// <remarks>
@@ -409,7 +413,7 @@ public class Tag : LogixComponent<Tag>
     /// <remarks>
     /// <para>
     /// This will always operate over the root EngineeringUnits element, regardless from which tag member object
-    /// this is called from. The caller is responsible for ensuring proper configuration of the units collection.
+    /// this is called from. The caller is responsible for ensuring proper configuration of the units' collection.
     /// </para>
     /// <para>
     /// Note that setting <see cref="Unit"/> from a given tag or nested tag member will update this collection
@@ -464,7 +468,7 @@ public class Tag : LogixComponent<Tag>
     /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
     /// <remarks>
     /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexData"/> <c>Add</c> method. Therefore this is simply a helper to make mutating tag structures
+    /// <see cref="ComplexData"/> <c>Add</c> method. Therefore, this is simply a helper to make mutating tag structures
     /// more concise.
     /// </remarks>
     public void Add(string name, LogixData value)
@@ -552,7 +556,7 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Gets this and all descendent tag members of the tag data structure that that satisfy the specified tag predicate.
+    /// Gets this and all descendent tag members of the tag data structure that satisfy the specified tag predicate.
     /// </summary>
     /// <param name="predicate">A predicate expression specifying the tag filter.</param>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects that satisfy the predicate.</returns>
@@ -592,7 +596,7 @@ public class Tag : LogixComponent<Tag>
         if (tagName.IsEmpty) return Members();
 
         var member = Value.Member(tagName.Root);
-        if (member is null) return Enumerable.Empty<Tag>();
+        if (member is null) return [];
 
         var tag = new Tag(Root, member, this);
         var remaining = TagName.Combine(tagName.Members.Skip(1));
@@ -615,7 +619,7 @@ public class Tag : LogixComponent<Tag>
     /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
     /// <remarks>
     /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexData"/> <c>Remove</c> method. Therefore this is simply a helper to make mutating tag structures
+    /// <see cref="ComplexData"/> <c>Remove</c> method. Therefore, this is simply a helper to make mutating tag structures
     /// more concise.
     /// </remarks>
     public void Remove(string name)
@@ -631,7 +635,7 @@ public class Tag : LogixComponent<Tag>
     /// this <c>Tag</c>. 
     /// </summary>
     /// <returns>
-    /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the this tag name and all child tag names.
+    /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the tag name and all child tag names.
     /// </returns>
     public IEnumerable<TagName> TagNames() => Members().Select(t => t.TagName);
 
@@ -646,7 +650,7 @@ public class Tag : LogixComponent<Tag>
     /// A <see cref="Tag"/> with the same underlying <see cref="XElement"/> and corresponding properties with
     /// <see cref="Value"/> changed to the provided <see cref="LogixData"/>.
     /// </returns>
-    /// <exception cref="InvalidOperationException">When this tag is a nested tag member and it's parent tag's
+    /// <exception cref="InvalidOperationException">When this tag is a nested tag member, and it's parent tag's
     /// <see cref="Value"/> property is not a <see cref="ComplexData"/> object.</exception>
     /// <remarks>
     /// <para>
