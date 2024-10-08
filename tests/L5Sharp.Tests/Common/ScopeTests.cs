@@ -557,4 +557,17 @@ public class ScopeTests
 
         path.Should().Be("/Controller[@Name='MyController']/Tasks/Task[@Name='MainTask']");
     }
+
+    [Test]
+    public void PerformanceForLotsOfTagsGetAllTagMembers()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var scopes = content.Query<Tag>()
+            .SelectMany(t => t.Members())
+            .ToList();
+
+        scopes.Should().NotBeEmpty();
+        Console.WriteLine(scopes.Count);
+    }
 }
