@@ -510,19 +510,33 @@ public sealed class Scope
     /// </summary>
     private static ScopeType GetScopedType(XElement element)
     {
+        //Intercent knwon tag elements or nested tag data elements
+        if (element.AncestorsAndSelf().Any(e => e.L5XType() 
+                is L5XName.Tag or L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag))
+        {
+            return ScopeType.Tag;
+        }
+        
         return ScopeType.TryParse(element.L5XType()) ?? ScopeType.Empty;
     }
 
     /// <summary>
     /// Gets the name or number of the current element depending on which attribute exists.
     /// </summary>
-    private static string GetScopedName(XElement node)
+    private static string GetScopedName(XElement element)
     {
-        if (node.Attribute(L5XName.Name) is not null)
-            return node.LogixName();
+        //Intercent knwon tag elements or nested tag data elements
+        if (element.AncestorsAndSelf().Any(e => e.L5XType() 
+                is L5XName.Tag or L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag))
+        {
+            return element.TagName();
+        }
+        
+        if (element.Attribute(L5XName.Name) is not null)
+            return element.LogixName();
 
-        return node.Attribute(L5XName.Number) is not null
-            ? node.Attribute(L5XName.Number)?.Value ?? string.Empty
+        return element.Attribute(L5XName.Number) is not null
+            ? element.Attribute(L5XName.Number)?.Value ?? string.Empty
             : string.Empty;
     }
 
