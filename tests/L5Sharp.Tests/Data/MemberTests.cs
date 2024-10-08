@@ -152,8 +152,8 @@ public class MemberTests
 
         member.Name.Should().Be("Test");
         member.Value.Should().BeOfType<STRING>();
-        member.Value.Member("LEN")!.Value.Should().Be(27);
-        member.Value.ToString().Should().Be("This is a string type value");
+        member.Value.As<STRING>().LEN.Should().Be(27);
+        member.Value.As<STRING>().ToString().Should().Be("This is a string type value");
     }
 
     [Test]
