@@ -171,7 +171,13 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <inheritdoc />
-    public override Scope Scope => Parent is null ? Scope.Of(Element) : Scope.Of(_member.Serialize());
+    /// <remarks>
+    /// Tag overrides Scope to ensure nested tag members build the correct scope path that includes
+    /// the full <see cref="TagName"/>.
+    /// </remarks>
+    public override Scope Scope => Parent is null
+        ? Scope.Of(Element)
+        : Scope.To($"{Parent.Scope.Controller}/{Parent.Scope.Program}/{ScopeType.Tag}/{TagName}");
 
     /// <summary>
     /// The name of the data type the tag represents. 
