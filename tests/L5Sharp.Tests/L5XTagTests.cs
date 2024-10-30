@@ -25,4 +25,15 @@ public class L5XTagTests
 
         result.Should().NotBeEmpty();
     }
+
+    [Test]
+    public void References_ForAKnownReferencedTag_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var tag = content.Tags.Get(Known.Tag);
+
+        var references = tag.References();
+
+        references.Should().NotBeEmpty();
+    }
 }
