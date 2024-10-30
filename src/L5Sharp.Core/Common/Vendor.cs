@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// This object is a simple entity type wrapper that groups the vendor id and name.
-/// Vendor's are defined by Rockwell and assigned unique Id and name.
+/// Vendors are defined by Rockwell and assigned unique Id and name.
 /// Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
 /// </remarks>
 public class Vendor : ILogixParsable<Vendor>

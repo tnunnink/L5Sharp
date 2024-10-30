@@ -162,9 +162,9 @@ public class Controller : LogixComponent<Controller>
     {
         get
         {
-            var major = Element.Attribute(L5XName.MajorRev)?.Value;
-            var minor = Element.Attribute(L5XName.MinorRev)?.Value;
-            return major is not null && minor is not null ? new Revision($"{major}.{minor}") : default;
+            var major = Element.Attribute(L5XName.MajorRev)?.Value.Parse<ushort>();
+            var minor = Element.Attribute(L5XName.MinorRev)?.Value.Parse<ushort>();
+            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : default;
         }
         set
         {

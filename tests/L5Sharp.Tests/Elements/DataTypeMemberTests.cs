@@ -16,6 +16,8 @@ public class DataTypeMemberTests
         member.Dimension.Should().BeEquivalentTo(Dimensions.Empty);
         member.Radix.Should().Be(Radix.Null);
         member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        member.Parent.Should().BeNull();
+        member.Definition.Should().NotBeNull();
     }
 
     [Test]

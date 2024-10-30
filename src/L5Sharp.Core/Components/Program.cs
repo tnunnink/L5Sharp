@@ -23,7 +23,7 @@ public class Program : LogixComponent<Program>
         L5XName.Routines,
         L5XName.ChildPrograms
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="Program"/> with default values.
     /// </summary>
@@ -68,7 +68,7 @@ public class Program : LogixComponent<Program>
         get => GetValue<ProgramType>() ?? ProgramType.Normal;
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// The <see cref="ComponentClass"/> value indicating whether this component is a standard or safety type component.
     /// </summary>
@@ -165,12 +165,12 @@ public class Program : LogixComponent<Program>
     /// </para>
     /// <para>
     /// To get access to the actual child
-    /// programs, use <see cref="Programs"/>, which is a built in helper that uses the parent <c>L5X</c>
+    /// programs, use <see cref="Programs"/>, which is a built-in helper that uses the parent <c>L5X</c>
     /// to retrieve the child program components.
     /// </para>
     /// </remarks>
     public IEnumerable<string> Children =>
-        Element.Descendants(L5XName.ChildProgram).Select(e => e.LogixName());
+        Element.Descendants(L5XName.ChildProgram).Select(e => e.LogixName()).ToList();
 
     /// <summary>
     /// Gets a collection of <c>Program</c> components that are children of this <see cref="Program"/> component. 
@@ -179,11 +179,21 @@ public class Program : LogixComponent<Program>
     /// <remarks>
     /// This is a helper to retrieve the other program component objects as children of this <c>Program</c>.
     /// This allows the caller to travers down the logical hierarchy of programs. This requires an attached L5X as
-    /// it reaches back up the document tree and back down to down to find the child programs. If this component is not
+    /// it reaches back up the document tree and back down to find the child programs. If this component is not
     /// attached to an L5X or as no <see cref="Children"/> configured, then this will return an empty collection.
     /// </remarks>
     public IEnumerable<Program> Programs =>
-        L5X?.Programs.Where(p => Children.Any(c => c == p.Name)) ?? Enumerable.Empty<Program>();
+        L5X?.Programs.Where(p => Children.Any(c => c == p.Name)) ?? [];
+
+    /// <summary>
+    /// Gets the parent <see cref="Core.Program"/> in which this program is contained. If this program has no container,
+    /// then this property returns <c>null</c>. 
+    /// </summary>
+    /// <remarks>
+    /// This is a navigation helper to allow easily retrieving the parent program container for a given program component.
+    /// This requires an scoped/attached L5X as it traverses the L5X document tree to find the target component. 
+    /// </remarks>
+    public Program? Parent => L5X?.Programs.FirstOrDefault(p => p.Children.Contains(Name));
 
     /// <summary>
     /// Finds the <see cref="Core.Task"/> in which this <see cref="Program"/> is scheduled.
@@ -192,7 +202,7 @@ public class Program : LogixComponent<Program>
     /// <see cref="Core.Task"/> component instance, Otherwise, null.</value>
     /// <remarks>
     /// This is a helper for retrieving the parent <c>Task</c> for this program.
-    /// This requires an attached L5X as it traverses the L5X document tree to find the target component(s).
+    /// This requires an scoped/attached L5X as it traverses the L5X document tree to find the target component.
     /// </remarks>
     public Task? Task => L5X?.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
 
@@ -205,7 +215,7 @@ public class Program : LogixComponent<Program>
     {
         if (string.IsNullOrEmpty(programName))
             throw new ArgumentException("Can not remove program with null or empty name.", nameof(programName));
-        
+
         var element = new XElement(L5XName.ChildProgram, new XAttribute(L5XName.Name, programName));
 
         if (Element.Element(L5XName.ChildProgram) is null)
