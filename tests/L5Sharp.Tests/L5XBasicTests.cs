@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using JetBrains.dotMemoryUnit;
 
 namespace L5Sharp.Tests;
@@ -21,7 +20,7 @@ public class L5XBasicTests
     [Test]
     public Task New_ValidValues_ShouldBeVerified()
     {
-        var content = L5X.New("ControllerName", "1756-L83E", new Revision("34.11"));
+        var content = L5X.New("ControllerName", "1756-L83E", 34.11);
 
         return VerifyXml(content.Serialize().ToString())
             .ScrubMember("ExportDate")
