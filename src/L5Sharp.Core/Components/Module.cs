@@ -131,9 +131,9 @@ public class Module : LogixComponent<Module>
     {
         get
         {
-            var major = Element.Attribute(L5XName.Major)?.Value;
-            var minor = Element.Attribute(L5XName.Minor)?.Value;
-            return major is not null && minor is not null ? new Revision($"{major}.{minor}") : default;
+            var major = Element.Attribute(L5XName.Major)?.Value.Parse<ushort>();
+            var minor = Element.Attribute(L5XName.Minor)?.Value.Parse<ushort>();
+            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : default;
         }
         set
         {
@@ -436,7 +436,7 @@ public class Module : LogixComponent<Module>
     public static Module Local(string processor, Revision? revision = default)
     {
         var catalog = new ModuleCatalog();
-        
+
         var entry = catalog.Lookup(processor);
 
         return new Module

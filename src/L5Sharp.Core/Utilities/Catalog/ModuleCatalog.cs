@@ -144,12 +144,11 @@ public class ModuleCatalog
         {
             var major = revision.Attribute(Number)?.Value;
             var minor = revision.Attribute(DefaultMinorRev)?.Value;
-
-            yield return new Revision($"{major}.{minor}");
+            yield return Revision.Parse($"{major}.{minor}");
         }
     }
 
-    private static IEnumerable<string> GetCategories(XContainer element) => 
+    private static IEnumerable<string> GetCategories(XContainer element) =>
         element.Descendants(Category).Select(c => c.Attribute(Name)!.Value);
 
     private static IEnumerable<PortInfo> GetPorts(XContainer element)
