@@ -25,6 +25,10 @@ public class RoutineTests
         routine.SheetOrientation.Should().BeNull();
         routine.SheetSize.Should().BeNull();
         routine.OnlineEditType.Should().BeNull();
+        routine.Program.Should().BeNull();
+        routine.Rungs.Should().BeEmpty();
+        routine.Lines.Should().BeEmpty();
+        routine.Sheets.Should().BeEmpty();
         routine.Content<Rung>().Should().NotBeNull();
     }
 
@@ -61,10 +65,10 @@ public class RoutineTests
         routine.Should().NotBeNull();
         routine.Name.Should().Be("Empty");
         routine.Type.Should().Be(RoutineType.RLL);
-        routine.Content<Rung>().Should().NotBeNull();
-        
-        routine.Content<Rung>().Add(new Rung("XIC(Test);"));
-        routine.Content<Rung>().Should().HaveCount(1);
+        routine.Rungs.Should().NotBeNull();
+
+        routine.Rungs.Add(new Rung("XIC(Test);"));
+        routine.Rungs.Should().HaveCount(1);
     }
 
     [Test]
@@ -79,9 +83,8 @@ public class RoutineTests
             new("XIC(SomeTag)OTE(SomeOtherTag);")
         };
 
-        routine.Content<Rung>().AddRange(rungs);
-
-        routine.Content<Rung>().Count().Should().Be(3);
+        routine.Rungs.AddRange(rungs);
+        routine.Rungs.Count.Should().Be(3);
     }
 
     [Test]

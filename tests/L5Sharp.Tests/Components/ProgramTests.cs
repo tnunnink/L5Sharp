@@ -30,6 +30,9 @@ public class ProgramTests
         program.Tags.Should().BeEmpty();
         program.Routines.Should().BeEmpty();
         program.Children.Should().BeEmpty();
+        program.Programs.Should().BeEmpty();
+        program.Parent.Should().BeNull();
+        program.Task.Should().BeNull();
     }
 
     [Test]
@@ -46,8 +49,8 @@ public class ProgramTests
             MainRoutineName = "Main",
             FaultRoutineName = "Fault",
             UseAsFolder = true,
-            Tags = new LogixContainer<Tag> { new() { Name = "Test", Value = true } },
-            Routines = new LogixContainer<Routine>()
+            Tags = [new Tag { Name = "Test", Value = true }],
+            Routines = []
         };
 
         program.Name.Should().Be("Test");

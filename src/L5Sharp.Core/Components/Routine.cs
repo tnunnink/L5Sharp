@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 
@@ -22,14 +23,14 @@ public class Routine : LogixComponent<Routine>
         L5XName.RLLContent,
         L5XName.STContent,
         L5XName.FBDContent,
-        L5XName.SFCContent,
+        L5XName.SFCContent
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="Routine"/> with default values.
     /// </summary>
     /// <remarks>
-    /// By default this will be a RLL routine type.
+    /// By default, this will be a RLL routine type.
     /// To specify a different type, use the <see cref="RoutineType"/> constructor.
     /// </remarks>
     public Routine() : base(L5XName.Routine)
@@ -121,20 +122,60 @@ public class Routine : LogixComponent<Routine>
     }
 
     /// <summary>
+    /// Gets the parent <see cref="Core.Program"/> in which this routine is contained.
+    /// If this routine has no container (meaning it is not scoped), then this property returns <c>null</c>. 
+    /// </summary>
+    /// <remarks>
+    /// This is a navigation helper to allow easily retrieving the parent program for a given routine component.
+    /// This requires an scoped/attached L5X as it traverses the L5X document tree to find the target component. 
+    /// </remarks>
+    public Program? Program => L5X?.Programs.FirstOrDefault(p => p.Routines.Any(r => r.Name.IsEquivalent(Name)));
+
+    /// <summary>
+    /// Returns a <see cref="LogixContainer{TObject}"/> of <see cref="Rung"/> found in this routine component.
+    /// If this routine is not an RLL routine or does not contain rungs, then the resulting collection is empty.
+    /// </summary>
+    /// <remarks>
+    /// This internally just calls <see cref="Content{TCode}"/> and is here mostly as a navigation helper.
+    /// Obviously, if this routine is not an RLL routine, then you shouldn't use this property to add rung objects
+    /// to the underlying XML, as it would result in import errors.
+    /// </remarks>
+    public LogixContainer<Rung> Rungs => Content<Rung>();
+
+    /// <summary>
+    /// Returns a <see cref="LogixContainer{TObject}"/> of <see cref="Line"/> found in this routine component.
+    /// If this routine is not an ST routine or does not contain lines, then the resulting collection is empty.
+    /// </summary>
+    /// <remarks>
+    /// This internally just calls <see cref="Content{TCode}"/> and is here mostly as a navigation helper.
+    /// Obviously, if this routine is not an ST routine, then you shouldn't use this property to add line objects
+    /// to the underlying XML, as it would result in import errors.
+    /// </remarks>
+    public LogixContainer<Line> Lines => Content<Line>();
+
+    /// <summary>
+    /// Returns a <see cref="LogixContainer{TObject}"/> of <see cref="Sheet"/> found in this routine component.
+    /// If this routine is not an FBD routine or does not contain sheets, then the resulting collection is empty.
+    /// </summary>
+    /// <remarks>
+    /// This internally just calls <see cref="Content{TCode}"/> and is here mostly as a navigation helper.
+    /// Obviously, if this routine is not an FBD routine, then you shouldn't use this property to add sheet objects
+    /// to the underlying XML, as it would result in import errors.
+    /// </remarks>
+    public LogixContainer<Line> Sheets => Content<Line>();
+
+    /// <summary>
     /// Gets the routine content as a <see cref="LogixContainer{TElement}"/> containing elements of the specified type.
     /// </summary>
     /// <typeparam name="TCode">The content element type to return.</typeparam>
     /// <returns>A <see cref="LogixContainer{TElement}"/> with access to the root content and specified element types.</returns>
-    /// <exception cref="InvalidOperationException">No content element corresponding to the specified <see cref="Type"/> exists for the
-    /// underlying <see cref="XElement"/>. This can happen if the provided element is not valid.</exception>
     /// <remarks>
-    /// This method offers a dynamic interface for accessing content of any routine type. If the underlying routine
-    /// content does not match the <see cref="Type"/> specified, a L5XException will be thrown.
+    /// This method offers a dynamic interface for accessing content of any routine type.
     /// </remarks>
     public LogixContainer<TCode> Content<TCode>() where TCode : LogixCode
     {
         EnsureContentAdded();
-        
+
         var content = Element.Element(Type.ContentName);
 
         return content is not null
@@ -158,8 +199,9 @@ public class Routine : LogixComponent<Routine>
     /// </summary>
     private void UpdateContent(RoutineType type)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
-        
+        if (type is null)
+            throw new ArgumentNullException(nameof(type));
+
         Element.SetAttributeValue(L5XName.Type, type);
 
         var content = Element.Element(type.ContentName);
@@ -169,7 +211,7 @@ public class Routine : LogixComponent<Routine>
             Element.Add(new XElement(type.ContentName));
             return;
         }
-        
+
         content.ReplaceWith(new XElement(type.ContentName));
     }
 }
