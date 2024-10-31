@@ -325,11 +325,13 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
         if (type is null)
             throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
 
-        var typeNames = type.L5XTypes().ToList();
+        var types = new HashSet<string>(type.L5XTypes());
 
-        return _content.Descendants()
-            .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
-            .Select(e => e.Deserialize());
+        foreach (var descendant in _content.Descendants())
+        {
+            if (!types.Contains(descendant.L5XType())) continue;
+            yield return descendant.Deserialize();
+        }
     }
 
     /// <summary>
