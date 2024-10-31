@@ -254,7 +254,7 @@ public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject
     /// </remarks>
     public static TObject? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
             return default;
 
         var trimmed = value.Trim();

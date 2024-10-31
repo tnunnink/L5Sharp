@@ -231,7 +231,7 @@ public class Parameter : LogixObject<Parameter>
     /// </remarks>
     public Tag ToTag(string tagName)
     {
-        if (string.IsNullOrEmpty(DataType))
+        if (DataType is null || DataType.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
             throw new InvalidOperationException("Can not generate Tag with null or empty DataType name.");
 
         var isArray = Dimension is not null && Dimension.Length > 0;
@@ -255,7 +255,7 @@ public class Parameter : LogixObject<Parameter>
     /// </remarks>
     public Member ToMember()
     {
-        if (string.IsNullOrEmpty(DataType))
+        if (DataType is null || DataType.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
             throw new InvalidOperationException("Can not generate Member with null or empty DataType name.");
 
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)

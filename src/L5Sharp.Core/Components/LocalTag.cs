@@ -21,14 +21,14 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
         L5XName.Description,
         L5XName.DefaultData,
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="LocalTag"/> with default values.
     /// </summary>
     public LocalTag() : base(L5XName.LocalTag)
     {
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="Tag"/> initialized with the provided <see cref="XElement"/>.
     /// </summary>
@@ -37,7 +37,7 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
     public LocalTag(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="LocalTag"/> initialized with the provided name and value.
     /// </summary>
@@ -50,7 +50,7 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
         Value = value;
         SetDescription(description);
     }
-    
+
     /// <summary>
     /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
     /// </summary>
@@ -88,7 +88,7 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
     /// </remarks>
     public new static LocalTag? TryParse(string? value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is null || value.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
             return default;
 
         var trimmed = value.Trim();
