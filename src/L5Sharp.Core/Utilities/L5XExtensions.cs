@@ -127,7 +127,7 @@ internal static class L5XExtensions
     /// <param name="element">The <see cref="XElement"/> instance.</param>
     /// <returns>A <see cref="string"/> representing the name value if found; Otherwise, <c>empty</c>.</returns>
     /// <remarks>
-    /// This is a helper since we access and use the name attribute so often I just wanted to make
+    /// This is a helper since we access and use the name attribute, so often I just wanted to make
     /// the code more concise.
     /// </remarks>
     internal static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
@@ -182,24 +182,13 @@ internal static class L5XExtensions
     /// </remarks>
     internal static TagName TagName(this XElement element)
     {
-        //Don't want to use reflection (L5XTypes()) in case this is called in loops.
-        HashSet<string> tagElements =
-        [
-            L5XName.Tag,
-            L5XName.LocalTag,
-            L5XName.InputTag,
-            L5XName.OutputTag,
-            L5XName.ConfigTag
-        ];
-
         //Ensures we are or in a tag element. If not return empty.
-        var root = element.AncestorsAndSelf().FirstOrDefault(e => tagElements.Contains(e.Name.LocalName));
+        var root = element.AncestorsAndSelf().FirstOrDefault(e => e.IsTagElement());
         if (root is null)
             return Core.TagName.Empty;
 
-        //Handles special case module tag elements which need to use the parent module names.
-        if (root.L5XType() is L5XName.InputTag or L5XName.OutputTag or L5XName.ConfigTag)
-            return root.ModuleTagName();
+        //Handles special case module tag elements which need to be built from parent module names and slot number.
+        if (root.IsModuleTagElement()) return root.ModuleTagName();
 
         var tagName = new TagName(root.LogixName());
 
@@ -207,7 +196,7 @@ internal static class L5XExtensions
         //If this is the tag element then should not perform iteration, and we return what we have.
         var memebers = element.AncestorsAndSelf()
             .Where(e => !e.MemberName().IsEmpty())
-            .TakeWhile(e => !tagElements.Contains(e.Name.LocalName))
+            .TakeWhile(e => !e.IsTagElement())
             .ToList();
 
         for (var i = memebers.Count - 1; i >= 0; i--)
@@ -258,6 +247,30 @@ internal static class L5XExtensions
 
             return "C";
         }
+    }
+
+    /// <summary>
+    /// Determines if the current element represents an element we would deserialize as a <see cref="Tag"/> component.
+    /// </summary>
+    /// <param name="element">The element to check.</param>
+    /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
+    internal static bool IsTagElement(this XElement element)
+    {
+        return element.Name.LocalName is L5XName.Tag
+            or L5XName.LocalTag
+            or L5XName.ConfigTag
+            or L5XName.InputTag
+            or L5XName.OutputTag;
+    }
+
+    /// <summary>
+    /// Determines if the current element represents an element we would deserialize as a <see cref="Tag"/> component.
+    /// </summary>
+    /// <param name="element">The element to check.</param>
+    /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
+    internal static bool IsModuleTagElement(this XElement element)
+    {
+        return element.Name.LocalName is L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag;
     }
 
     /// <summary>
