@@ -363,4 +363,124 @@ public static class Sample
             </DataType>";
         }
     }
+
+    public static class RungElement
+    {
+        public static string MainProgramRung0()
+        {
+            return @" <Rung Number=""0"" Type=""N"">
+                        <Text>
+                            <![CDATA[TON(TestTimer,?,?);]]>
+                        </Text>
+                    </Rung>";
+        }
+
+        public static string MainProgramRung1()
+        {
+            return @"<Rung Number=""1"" Type=""N"">
+                        <Text>
+                            <![CDATA[MOV(16#20,SimpleSint);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung2()
+        {
+            return @"<Rung Number=""2"" Type=""N"">
+                        <Text>
+                            <![CDATA[aoi_Test(aoiTestInstance,TestSimpleTag,SimpleInt,RealArray,0);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung3()
+        {
+            return @"<Rung Number=""3"" Type=""N"">
+                        <Text>
+                            <![CDATA[[XIC(SimpleBool) ,XIC(SimpleBool) ][OTE(SimpleBool) ,OTU(SimpleBool) ];]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung4()
+        {
+            return @"<Rung Number=""4"" Type=""N"">
+                        <Text>
+                            <![CDATA[OTE(TestComplexTag.SimpleMember.BoolMember);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung5()
+        {
+            return @"<Rung Number=""5"" Type=""N"">
+                        <Text>
+                            <![CDATA[MOV(SimpleSint,AsciiTag);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung6()
+        {
+            return @"<Rung Number=""6"" Type=""N"">
+                        <Text>
+                            <![CDATA[XIC(FlexIO:3:I.Pt01.Data)OTE(BufferTag);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung7()
+        {
+            return @"<Rung Number=""7"" Type=""N"">
+                        <Text>
+                            <![CDATA[JSR(FBD,1,InputParameter,OutputParameter);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung8()
+        {
+            return @"<Rung Number=""8"" Type=""N"">
+                        <Text>
+                            <![CDATA[GRT(SimpleInt,100)OTE(SimpleArray[4].0);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung9()
+        {
+            return @"<Rung Number=""9"" Type=""N"">
+                        <Text>
+                            <![CDATA[GRT(SimpleInt,400)XIO(MultiDimensionalArray[1,3].3)CMP(ATN(_Test) > 1.0)[TON(TimerArray[0],?,?) ,OTU(TestComplexTag.SimpleMember.BoolMember) ];]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung10()
+        {
+            return @"<Rung Number=""10"" Type=""N"">
+                        <Text>
+                            <![CDATA[CPT(Computation,I01/(TestSimpleTag.DintMember * 100));]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung11()
+        {
+            return @"<Rung Number=""11"" Type=""N"">
+                        <Text>
+                            <![CDATA[JSR(FBD,2,AlarmActive,AliasTag,SimpleBool,Another,aoi_Test_001);]]>
+                        </Text>
+                    </Rung>";
+        }
+        
+        public static string MainProgramRung12()
+        {
+            return @"<Rung Number=""12"" Type=""N"">
+                        <Text>
+                            <![CDATA[MOV(FlexIO:1:C.Ch00.HHAlarmLimit,AlarmLimit);]]>
+                        </Text>
+                    </Rung>";
+        }
+    }
 }
