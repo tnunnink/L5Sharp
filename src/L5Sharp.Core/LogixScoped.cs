@@ -3,7 +3,8 @@
 namespace L5Sharp.Core;
 
 /// <summary>
-/// 
+/// And logix object that contains a <see cref="Scope"/> property identifiying the location of the component or element
+/// in the L5X tree.
 /// </summary>
 public abstract class LogixScoped : LogixObject
 {
@@ -16,7 +17,7 @@ public abstract class LogixScoped : LogixObject
     protected LogixScoped(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// The scope idetifying where in an L5X file this element exists. This can be a globally scoped controller element,
     /// a locally scoped program or instruction element, or neither (not attached to L5X tree).

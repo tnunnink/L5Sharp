@@ -377,7 +377,7 @@ public abstract class LogixData : LogixElement
     }
 
     /// <summary>
-    /// Creates aand compiles a function expresstion for a given logix data type in order to create new instances efficiently. 
+    /// Creates and compiles a function expresstion for a given logix data type in order to create new instances efficiently. 
     /// </summary>
     /// <param name="type">The type of LogixData to instantiate.</param>
     /// <returns>A Func delegate that can be invoked to create a new instance of the specified type.</returns>

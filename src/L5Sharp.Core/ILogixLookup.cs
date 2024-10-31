@@ -80,10 +80,10 @@ public interface ILogixLookup
     /// If no element with the provided path is found, then this method throws a <see cref="KeyNotFoundException"/>.
     /// </returns>
     /// <exception cref="KeyNotFoundException"> When no element with the specified <paramref name="scope"/> was found.</exception>
-    /// <exception cref="InvalidCastException"> When the element can't be cast to the type specified by <see cref="TScoped"/>.</exception>
+    /// <exception cref="InvalidCastException"> When the element can't be cast to the type specified by <c>TScoped</c>.</exception>
     /// <remarks>
     /// <para>
-    /// If no type is provided as part of the scope, then the type will be infered from <see cref="TScoped"/>.
+    /// If no type is provided as part of the scope, then the type will be infered from <c>TScoped</c>.
     /// </para>
     /// <para>
     /// <c>Get</c> methods imply you know the element at the provided path exists. If this is not the case, use one of the
@@ -119,7 +119,7 @@ public interface ILogixLookup
     /// If no element with the provided path is found, then this method throws a <see cref="KeyNotFoundException"/>.
     /// </returns>
     /// <exception cref="KeyNotFoundException">When no element having the configured scope was found.</exception>
-    /// <exception cref="InvalidCastException">When the element can't be cast to the type specified by <see cref="TScoped"/>.</exception>
+    /// <exception cref="InvalidCastException">When the element can't be cast to the type specified by <c>TScoped</c>.</exception>
     /// <remarks>
     /// <para>
     /// <c>Get</c> methods imply you know the element at the provided path exists. If this is not the case, use one of the
@@ -165,7 +165,7 @@ public interface ILogixLookup
     /// </returns>
     /// <remarks>
     /// <para>
-    /// If no type is provided as part of the scope, then the type will be infered from <see cref="TScoped"/>.
+    /// If no type is provided as part of the scope, then the type will be infered from <c>TScoped</c>.
     /// </para>
     /// <para>
     /// <c>TryGet</c> methods imply you don't know the element at the provided path exists, as it will check and then
