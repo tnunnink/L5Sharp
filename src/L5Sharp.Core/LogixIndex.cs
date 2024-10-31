@@ -257,9 +257,10 @@ internal class LogixIndex : ILogixLookup
         IndexProgramScopedElements();
 
         //References
-        IndexTypeReferences();
+        IndexTagReferences();
         IndexRungReferences();
         IndexLineReferences();
+        IndexSheetReferences();
     }
 
     /// <summary>
@@ -296,13 +297,11 @@ internal class LogixIndex : ILogixLookup
     /// </summary>
     private void IndexControllerScopedModuleTags()
     {
-        HashSet<string> types = [L5XName.ConfigTag, L5XName.InputTag, L5XName.OutputTag];
-
-        var elements = _content.Descendants(L5XName.Module).Where(e => types.Contains(e.L5XType()));
+        var elements = _content.Descendants(L5XName.Module).Where(e => e.IsModuleTagElement());
 
         foreach (var element in elements)
         {
-            var tagName = element.ModuleTagName();
+            var tagName = element.TagName();
             var scope = Scope.Build(_controller).Tag(tagName);
             _elements[scope] = element;
         }
@@ -440,20 +439,15 @@ internal class LogixIndex : ILogixLookup
     /// Finds all elements with a data type attribute and indexes them into a local reference index for fast lookup.
     /// This will include technically any type, predefined, atomic, user defined, or add on instruction.
     /// </summary>
-    private void IndexTypeReferences()
+    private void IndexTagReferences()
     {
-        var elements = _content.Descendants().Where(d => d.Attribute(L5XName.DataType) is not null);
+        var tags = _content.Descendants().Where(d => d.IsTagElement());
+        var references = tags.SelectMany(CrossReference.In).ToList();
 
-        foreach (var element in elements)
+        foreach (var reference in references)
         {
-            var tag = element.AncestorsAndSelf().FirstOrDefault(e => e.L5XType() is L5XName.Tag or L5XName.LocalTag);
-            if (tag is null) continue;
-
-            var scope = Scope.Of(tag);
-            var reference = new CrossReference(scope, tag.DataType());
-
-            if (!_references.TryAdd(reference.Name.Root, [reference]))
-                _references[reference.Name.Root].Add(reference);
+            if (!_references.TryAdd(reference.Reference.Root, [reference]))
+                _references[reference.Reference.Root].Add(reference);
         }
     }
 
@@ -467,8 +461,8 @@ internal class LogixIndex : ILogixLookup
 
         foreach (var reference in references)
         {
-            if (!_references.TryAdd(reference.Name.Root, [reference]))
-                _references[reference.Name.Root].Add(reference);
+            if (!_references.TryAdd(reference.Reference.Root, [reference]))
+                _references[reference.Reference.Root].Add(reference);
         }
     }
 
@@ -482,8 +476,23 @@ internal class LogixIndex : ILogixLookup
 
         foreach (var reference in references)
         {
-            if (!_references.TryAdd(reference.Name.Root, [reference]))
-                _references[reference.Name.Root].Add(reference);
+            if (!_references.TryAdd(reference.Reference.Root, [reference]))
+                _references[reference.Reference.Root].Add(reference);
+        }
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    private void IndexSheetReferences()
+    {
+        var elements = _content.Descendants(L5XName.Program).Descendants(L5XName.Sheet);
+        var references = elements.SelectMany(CrossReference.In).ToList();
+
+        foreach (var reference in references)
+        {
+            if (!_references.TryAdd(reference.Reference.Root, [reference]))
+                _references[reference.Reference.Root].Add(reference);
         }
     }
 
