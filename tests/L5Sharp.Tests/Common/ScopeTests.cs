@@ -36,7 +36,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("/Tag/Test");
         scope.Level.Should().Be(ScopeLevel.Null);
-        scope.Container.Should().BeEmpty();
+        scope.Container.Should().Be("/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -58,7 +58,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("/Rung/0");
         scope.Level.Should().Be(ScopeLevel.Null);
-        scope.Container.Should().BeEmpty();
+        scope.Container.Should().Be("/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -91,7 +91,7 @@ public class ScopeTests
         scope.Should().NotBeNull();
         scope.Path.Should().Be("//Testing");
         scope.Level.Should().Be(ScopeLevel.Null);
-        scope.Container.Should().BeEmpty();
+        scope.Container.Should().Be("/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -113,7 +113,7 @@ public class ScopeTests
         scope.Should().NotBeNull();
         scope.Path.Should().Be("/Tag/MyTagName");
         scope.Level.Should().Be(ScopeLevel.Null);
-        scope.Container.Should().BeEmpty();
+        scope.Container.Should().Be("/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -140,7 +140,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController//");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -160,7 +160,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/Module/ModuleName");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -180,7 +180,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/MyProgram/Tag/TagName.Member.Something");
         scope.Level.Should().Be(ScopeLevel.Program);
-        scope.Container.Should().Be("MyProgram");
+        scope.Container.Should().Be("MyController/MyProgram/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
@@ -198,7 +198,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/MyProgram/MainRoutine/Rung/23");
         scope.Level.Should().Be(ScopeLevel.Routine);
-        scope.Container.Should().Be("MainRoutine");
+        scope.Container.Should().Be("MyController/MyProgram/MainRoutine/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().Be("MainRoutine");
@@ -216,7 +216,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("//Something");
         scope.Level.Should().Be(ScopeLevel.Null);
-        scope.Container.Should().BeEmpty();
+        scope.Container.Should().Be("/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -237,7 +237,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("/Tag/MyTagName");
         scope.Level.Should().Be(ScopeLevel.Null);
-        scope.Container.Should().BeEmpty();
+        scope.Container.Should().Be("/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -256,7 +256,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("/MyProgram/Tag/SomeTagName");
         scope.Level.Should().Be(ScopeLevel.Program);
-        scope.Container.Should().Be("MyProgram");
+        scope.Container.Should().Be("/MyProgram/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
@@ -275,7 +275,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("/MyProgram/Routine/MainRoutine");
         scope.Level.Should().Be(ScopeLevel.Program);
-        scope.Container.Should().Be("MyProgram");
+        scope.Container.Should().Be("/MyProgram/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
@@ -294,7 +294,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("/MyProgram/MainRoutine/Rung/23");
         scope.Level.Should().Be(ScopeLevel.Routine);
-        scope.Container.Should().Be("MainRoutine");
+        scope.Container.Should().Be("/MyProgram/MainRoutine/");
         scope.Controller.Should().BeEmpty();
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().Be("MainRoutine");
@@ -313,7 +313,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/Tag/MyTagName");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -331,7 +331,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/DataType/MyType");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -349,7 +349,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/AddOnInstructionDefinition/MyType");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -367,7 +367,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/Module/ModuleName");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -385,7 +385,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/Tag/MyTagName");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -403,7 +403,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/Program/MainProgram");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -421,7 +421,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/Task/TaskName");
         scope.Level.Should().Be(ScopeLevel.Controller);
-        scope.Container.Should().Be("MyController");
+        scope.Container.Should().Be("MyController/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().BeEmpty();
         scope.Routine.Should().BeEmpty();
@@ -439,7 +439,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/MyProgram/Tag/MyTagName");
         scope.Level.Should().Be(ScopeLevel.Program);
-        scope.Container.Should().Be("MyProgram");
+        scope.Container.Should().Be("MyController/MyProgram/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().BeEmpty();
@@ -457,7 +457,7 @@ public class ScopeTests
 
         scope.Path.Should().Be("MyController/MyProgram/MyRoutine/Tag/MyTagName");
         scope.Level.Should().Be(ScopeLevel.Routine);
-        scope.Container.Should().Be("MyRoutine");
+        scope.Container.Should().Be("MyController/MyProgram/MyRoutine/");
         scope.Controller.Should().Be("MyController");
         scope.Program.Should().Be("MyProgram");
         scope.Routine.Should().Be("MyRoutine");
@@ -558,22 +558,22 @@ public class ScopeTests
 
         path.Should().Be("/Controller[@Name='MyController']/Tasks/Task[@Name='MainTask']");
     }
-    
+
     [Test]
     public void PerformanceOfGettingAllTagMemberScopesShouldBeNotTerrible()
     {
         var content = L5X.Load(Known.Example);
 
         var stopwatch = Stopwatch.StartNew();
-        
+
         var scopes = content.Query<Tag>()
             .SelectMany(t => t.Members())
             .Select(t => t.Scope)
             .ToList();
-        
+
         stopwatch.Stop();
-        
-        
+
+
         scopes.Should().NotBeEmpty();
         Console.WriteLine(stopwatch.ElapsedMilliseconds);
     }

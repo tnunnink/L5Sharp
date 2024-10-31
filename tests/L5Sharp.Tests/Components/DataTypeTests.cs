@@ -25,7 +25,6 @@ namespace L5Sharp.Tests.Components
             dataType.Class.Should().Be(DataTypeClass.User);
             dataType.Members.Should().BeEmpty();
             dataType.Use.Should().BeNull();
-            dataType.Scope.Container.Should().BeEmpty();
             dataType.Scope.Level.Should().Be(ScopeLevel.Null);
         }
 
@@ -71,7 +70,7 @@ namespace L5Sharp.Tests.Components
 
             return Verify(xml);
         }
-        
+
         [Test]
         public Task Serialize_Parameterized_ShouldBeVerified()
         {
@@ -133,7 +132,7 @@ namespace L5Sharp.Tests.Components
 
             return Verify(tag.Serialize().ToString());
         }
-        
+
         [Test]
         public Task ToTag_ComplexType_ShouldBeVerified()
         {

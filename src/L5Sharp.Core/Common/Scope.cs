@@ -316,6 +316,22 @@ public sealed class Scope
 
     /// <inheritdoc />
     public override string ToString() => Path;
+    
+    /// <summary>
+    /// Determines if the provided objects are equal.
+    /// </summary>
+    /// <param name="left">An object to compare.</param>
+    /// <param name="right">An object to compare.</param>
+    /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+    public static bool operator ==(Scope? left, Scope? right) => Equals(left, right);
+
+    /// <summary>
+    /// Determines if the provided objects are not equal.
+    /// </summary>
+    /// <param name="left">An object to compare.</param>
+    /// <param name="right">An object to compare.</param>
+    /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+    public static bool operator !=(Scope? left, Scope? right) => !Equals(left, right);
 
     /// <summary>
     /// Implicit conversion from a string to a Scope instance.
@@ -445,14 +461,21 @@ public sealed class Scope
     }
 
     /// <summary>
-    /// Determines the container of this instance based on the configured scope names.
+    /// Determines the container of this instance based on the configured properties.
     /// </summary>
     private string DetermineContainer()
     {
-        if (Level == ScopeLevel.Routine) return Routine;
-        if (Level == ScopeLevel.Program) return Program;
-        if (Level == ScopeLevel.Controller) return Controller;
-        return string.Empty;
+        var builder = new StringBuilder();
+
+        builder.Append(Controller).Append(PathSeparator);
+
+        if (!Program.IsEmpty())
+            builder.Append(Program).Append(PathSeparator);
+
+        if (!Routine.IsEmpty())
+            builder.Append(Routine).Append(PathSeparator);
+
+        return builder.ToString();
     }
 
     /// <summary>
@@ -511,11 +534,9 @@ public sealed class Scope
     private static ScopeType GetScopedType(XElement element)
     {
         //Intercent knwon tag elements types (not sure how else to do this ATM)
-        if (element.L5XType() is L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag)
-        {
+        if (element.IsTagElement())
             return ScopeType.Tag;
-        }
-        
+
         return ScopeType.TryParse(element.L5XType()) ?? ScopeType.Empty;
     }
 
@@ -525,11 +546,9 @@ public sealed class Scope
     private static string GetScopedName(XElement element)
     {
         //Intercent knwon tag elements types (not sure how else to do this ATM)
-        if (element.L5XType() is L5XName.LocalTag or L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag)
-        {
+        if (element.IsTagElement())
             return element.TagName();
-        }
-        
+
         if (element.Attribute(L5XName.Name) is not null)
             return element.LogixName();
 
