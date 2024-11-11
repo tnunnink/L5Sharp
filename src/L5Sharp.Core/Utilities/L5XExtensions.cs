@@ -16,7 +16,7 @@ internal static class L5XExtensions
     /// Determines if the current string is equal to string.Empty.
     /// </summary>
     /// <param name="value">The string input to analyze.</param>
-    /// <returns>true if the string is empty. Otherwise false.</returns>
+    /// <returns>true if the string is empty. Otherwise, false.</returns>
     internal static bool IsEmpty(this string value) => value.Equals(string.Empty);
 
     /// <summary>
@@ -25,7 +25,7 @@ internal static class L5XExtensions
     /// <param name="value">The string value to compare.</param>
     /// <param name="other">The other string to compare.</param>
     /// <returns><c>true</c> if the strings are equal using the <see cref="StringComparer.OrdinalIgnoreCase"/>
-    /// equality comparer,. Otherwise <c>false</c>.</returns>
+    /// equality comparer, Otherwise <c>false</c>.</returns>
     /// <remarks>This is a simplified way of calling the string comparer equals method since it is a little verbose.
     /// This could be used a lot since Logix naming is case agnostic.</remarks>
     internal static bool IsEquivalent(this string value, string? other) =>
@@ -149,14 +149,14 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Gets the <c>DataType</c> attribute value for the provided element or it's parent element, which ever value is
+    /// Gets the <c>DataType</c> attribute value for the provided element, or it's parent element, which ever value is
     /// found first.
     /// </summary>
     /// <param name="element">The element to retrieve the data type for.</param>
     /// <returns>A <see cref="string"/> indicating the value of the data type property.</returns>
     /// <remarks>
     /// This is a helper for deserializing data structures. Most data elements have the data type we need
-    /// in order to determine which object to construct, but some don't and we need to look at it's parent element
+    /// in order to determine which object to construct, but some don't, and we need to look at its parent element
     /// to find out. Obviously, if we can't find the <c>DataType</c> value then we can't deserialize the type.
     /// </remarks>
     internal static string? DataType(this XElement element)
@@ -271,30 +271,6 @@ internal static class L5XExtensions
     internal static bool IsModuleTagElement(this XElement element)
     {
         return element.Name.LocalName is L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag;
-    }
-
-    /// <summary>
-    /// Determines if the specified string is a program element name.
-    /// </summary>
-    /// <param name="name">The string to check.</param>
-    /// <returns>
-    /// <c>true</c> if the string is a program element name; otherwise, <c>false</c>.
-    /// </returns>
-    internal static bool IsProgramElement(this string name)
-    {
-        return name.IsEquivalent(L5XName.Tag) || name.IsEquivalent(L5XName.Routine);
-    }
-
-    /// <summary>
-    /// Determines if the given string is a code element (e.g., Rung, Line, Sheet).
-    /// </summary>
-    /// <param name="name">The string value to check.</param>
-    /// <returns>
-    /// <c>true</c> if the string is a code element. otherwise, <c>false</c>.
-    /// </returns>
-    internal static bool IsCodeElement(this string name)
-    {
-        return name.IsEquivalent(L5XName.Rung) || name.IsEquivalent(L5XName.Line) || name.IsEquivalent(L5XName.Sheet);
     }
 
     /// <summary>
