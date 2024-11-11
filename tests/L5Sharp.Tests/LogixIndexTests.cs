@@ -5,7 +5,7 @@ namespace L5Sharp.Tests;
 [TestFixture]
 public class LogixIndexTests
 {
-     [Test]
+    [Test]
     public void Contains_KnownElementRelativeScope_ShouldBeTrue()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
@@ -68,7 +68,9 @@ public class LogixIndexTests
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        FluentActions.Invoking(() => content.Find(Known.Tag)).Should().Throw<ArgumentException>();
+        var results = content.Find(Known.Tag);
+
+        results.Should().NotBeEmpty();
     }
 
     [Test]
@@ -207,7 +209,7 @@ public class LogixIndexTests
         result.Should().BeOfType<Tag>();
         result.As<Tag>().Name.Should().Be(Known.Tag);
     }
-    
+
     [Test]
     public void Get_BuilderWithProgramTypeNamePath_ShouldBeExpected()
     {
@@ -219,7 +221,7 @@ public class LogixIndexTests
         result.Should().BeOfType<Tag>();
         result.As<Tag>().Name.Should().Be(Known.Tag);
     }
-    
+
     [Test]
     public void Get_TypedBuilderWithTypeNamePath_ShouldBeExpected()
     {
@@ -231,7 +233,7 @@ public class LogixIndexTests
         result.Should().BeOfType<Tag>();
         result.Name.Should().Be(Known.Tag);
     }
-    
+
     [Test]
     public void Get_TypedBuilderWithProgramTypeNamePath_ShouldBeExpected()
     {
@@ -245,11 +247,14 @@ public class LogixIndexTests
     }
 
     [Test]
-    public void TryGet_KnownNameNoType_ShouldThrowException()
+    public void TryGet_NoTypeSpecified_ShouldBeFalse()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        FluentActions.Invoking(() => content.TryGet(Known.DataType, out _)).Should().Throw<ArgumentException>();
+        var result = content.TryGet(Known.DataType, out var scoped);
+
+        result.Should().BeFalse();
+        scoped.Should().BeNull();
     }
 
     [Test]
@@ -263,7 +268,7 @@ public class LogixIndexTests
         component.Should().NotBeNull();
         component.As<DataType>().Name.Should().Be(Known.DataType);
     }
-    
+
     [Test]
     public void TryGet_TypedKnownName_ShouldBeTrueAndExpectedComponent()
     {
@@ -287,7 +292,7 @@ public class LogixIndexTests
         component.Should().NotBeNull();
         component.As<DataType>().Name.Should().Be(Known.DataType);
     }
-    
+
     [Test]
     public void TryGet_TypedBuilderKnownDataTypeElement_ShouldBeExpectedTypeAndName()
     {

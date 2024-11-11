@@ -64,11 +64,13 @@ public class LogixLookupTests
     }
 
     [Test]
-    public void Find_KnownElementNoType_ShouldThrowException()
+    public void Find_KnownElementNoType_ShouldStillReturnResults()
     {
         var content = L5X.Load(Known.Test);
 
-        FluentActions.Invoking(() => content.Find(Known.Tag)).Should().Throw<ArgumentException>();
+        var results = content.Find(Known.Tag);
+
+        results.Should().NotBeEmpty();
     }
 
     [Test]
@@ -207,7 +209,7 @@ public class LogixLookupTests
         result.Should().BeOfType<Tag>();
         result.As<Tag>().Name.Should().Be(Known.Tag);
     }
-    
+
     [Test]
     public void Get_BuilderWithProgramTypeNamePath_ShouldBeExpected()
     {
@@ -219,7 +221,7 @@ public class LogixLookupTests
         result.Should().BeOfType<Tag>();
         result.As<Tag>().Name.Should().Be(Known.Tag);
     }
-    
+
     [Test]
     public void Get_TypedBuilderWithTypeNamePath_ShouldBeExpected()
     {
@@ -231,7 +233,7 @@ public class LogixLookupTests
         result.Should().BeOfType<Tag>();
         result.Name.Should().Be(Known.Tag);
     }
-    
+
     [Test]
     public void Get_TypedBuilderWithProgramTypeNamePath_ShouldBeExpected()
     {
@@ -245,14 +247,6 @@ public class LogixLookupTests
     }
 
     [Test]
-    public void TryGet_KnownNameNoType_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test);
-
-        FluentActions.Invoking(() => content.TryGet(Known.DataType, out _)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
     public void TryGet_RelativeScope_ShouldBeTrueAndExpectedComponent()
     {
         var content = L5X.Load(Known.Test);
@@ -263,7 +257,7 @@ public class LogixLookupTests
         component.Should().NotBeNull();
         component.As<DataType>().Name.Should().Be(Known.DataType);
     }
-    
+
     [Test]
     public void TryGet_TypedKnownName_ShouldBeTrueAndExpectedComponent()
     {
@@ -287,7 +281,7 @@ public class LogixLookupTests
         component.Should().NotBeNull();
         component.As<DataType>().Name.Should().Be(Known.DataType);
     }
-    
+
     [Test]
     public void TryGet_TypedBuilderKnownDataTypeElement_ShouldBeExpectedTypeAndName()
     {

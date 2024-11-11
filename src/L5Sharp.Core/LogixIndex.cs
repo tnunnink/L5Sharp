@@ -31,10 +31,17 @@ internal class LogixIndex : ILogixLookup
     /// </summary>
     private readonly Dictionary<TagName, List<CrossReference>> _references = new();
 
+    /// <summary>
+    /// The internal scope generator that can generate scope keys to be used in lookup operations.
+    /// </summary>
+    private readonly L5XScopeGenerator _generator;
+
     public LogixIndex(XElement content)
     {
         _content = content;
         _controller = _content.LogixName();
+        _generator = new L5XScopeGenerator(_content);
+
         Index();
     }
 
@@ -45,9 +52,9 @@ internal class LogixIndex : ILogixLookup
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var absolute = GenerateAbsolute(scope);
+        var key = _generator.GenerateSingle(scope);
 
-        return _elements.ContainsKey(absolute);
+        return _elements.ContainsKey(key);
     }
 
     public bool Contains(Func<IScopeBuilder, Scope> builder)
@@ -55,8 +62,8 @@ internal class LogixIndex : ILogixLookup
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
 
-        var root = Scope.Build(_controller);
-        var scope = builder(root);
+        var controller = Scope.Build(_controller);
+        var scope = builder(controller);
 
         return _elements.ContainsKey(scope);
     }
@@ -67,11 +74,17 @@ internal class LogixIndex : ILogixLookup
             throw new ArgumentNullException(nameof(scope));
 
         var results = new List<LogixScoped>();
-        var scopes = GenerateScopes(scope.Type, scope.Name);
 
-        foreach (var s in scopes)
-            if (_elements.TryGetValue(s, out var element))
-                results.Add(element.Deserialize<LogixScoped>());
+        var scopes = _generator.GenerateAll(scope).ToList();
+
+        foreach (var key in scopes)
+        {
+            if (!_elements.TryGetValue(key, out var value)) continue;
+            var element = value.Deserialize<LogixScoped>();
+            var result = element is Tag tag ? tag.Member(scope.Name.Path) : element;
+            if (result is null) continue;
+            results.Add(result);
+        }
 
         return results;
     }
@@ -82,14 +95,14 @@ internal class LogixIndex : ILogixLookup
             throw new ArgumentNullException(nameof(scope));
 
         var results = new List<TScoped>();
-        var type = scope.Type != ScopeType.Empty ? scope.Type : ScopeType.Parse(typeof(TScoped).L5XType());
-        var scopes = GenerateScopes(type, scope.Name.Root);
+
+        var scopes = _generator.GenerateAll(scope, typeof(TScoped)).ToList();
 
         foreach (var s in scopes)
         {
             if (!_elements.TryGetValue(s, out var value)) continue;
             var element = value.Deserialize<TScoped>();
-            var result = element is Tag tag ? tag.Member(scope.Name.Path) as LogixObject : element;
+            var result = element is Tag tag ? tag.Member(scope.Name.Path) as LogixScoped : element;
             if (result is not TScoped typed) continue;
             results.Add(typed);
         }
@@ -102,14 +115,13 @@ internal class LogixIndex : ILogixLookup
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var absolute = GenerateAbsolute(scope);
+        var key = _generator.GenerateSingle(scope);
 
-        if (!_elements.TryGetValue(absolute, out var value))
-            throw new KeyNotFoundException($"No element with the provided scope was found: {absolute}");
+        if (!_elements.TryGetValue(key, out var value))
+            throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
 
         var result = value.Deserialize<LogixScoped>();
-
-        return result is Tag tag ? tag[absolute.Name.Path] : result;
+        return result is Tag tag ? tag[scope.Name.Path] : result;
     }
 
     public TScoped Get<TScoped>(Scope scope) where TScoped : LogixScoped
@@ -117,14 +129,13 @@ internal class LogixIndex : ILogixLookup
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var absolute = GenerateAbsolute(scope, typeof(TScoped));
+        var key = _generator.GenerateSingle(scope, typeof(TScoped));
 
-        if (!_elements.TryGetValue(absolute, out var value))
-            throw new KeyNotFoundException($"No element with the provided scope was found: {absolute}");
+        if (!_elements.TryGetValue(key, out var value))
+            throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
 
         var result = value.Deserialize<TScoped>();
-
-        return result is Tag tag ? (TScoped)(LogixObject)tag[absolute.Name.Path] : result;
+        return result is Tag tag ? (TScoped)(LogixObject)tag[scope.Name.Path] : result;
     }
 
     public LogixScoped Get(Func<IScopeBuilder, Scope> builder)
@@ -134,12 +145,13 @@ internal class LogixIndex : ILogixLookup
 
         var root = Scope.Build(_controller);
         var scope = builder(root);
+        //we still need to use the generator since the scope could be a tag member
+        var key = _generator.GenerateSingle(scope); 
 
-        if (!_elements.TryGetValue(scope, out var value))
+        if (!_elements.TryGetValue(key, out var value))
             throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
 
         var element = value.Deserialize<LogixScoped>();
-
         return element is Tag tag ? tag[scope.Name.Path] : element;
     }
 
@@ -150,12 +162,13 @@ internal class LogixIndex : ILogixLookup
 
         var root = Scope.Build(_controller);
         var scope = builder(root);
+        //we still need to use the generator since the scope could be a tag member
+        var key = _generator.GenerateSingle(scope); 
 
-        if (!_elements.TryGetValue(scope, out var value))
+        if (!_elements.TryGetValue(key, out var value))
             throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
 
         var element = value.Deserialize<TScope>();
-
         return element is Tag tag ? (TScope)(LogixObject)tag[scope.Name.Path] : element;
     }
 
@@ -164,16 +177,16 @@ internal class LogixIndex : ILogixLookup
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var absolute = GenerateAbsolute(scope);
+        var key = _generator.GenerateSingle(scope);
 
-        if (!_elements.TryGetValue(absolute, out var value))
+        if (!_elements.TryGetValue(key, out var value))
         {
             element = default!;
             return false;
         }
 
         var result = value.Deserialize<LogixScoped>();
-        var target = result is Tag tag ? tag.Member(absolute.Name.Path) : result;
+        var target = result is Tag tag ? tag.Member(scope.Name.Path) : result;
         return IsNull(target, out element);
     }
 
@@ -182,16 +195,16 @@ internal class LogixIndex : ILogixLookup
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        var absolute = GenerateAbsolute(scope, typeof(TScoped));
+        var key = _generator.GenerateSingle(scope, typeof(TScoped));
 
-        if (!_elements.TryGetValue(absolute, out var value))
+        if (!_elements.TryGetValue(key, out var value))
         {
             element = default!;
             return false;
         }
 
         var result = value.Deserialize<TScoped>();
-        var target = result is Tag tag ? tag.Member(absolute.Name.Path)?.As<LogixObject>() : result;
+        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
         return IsNull(target as TScoped, out element);
     }
 
@@ -202,8 +215,10 @@ internal class LogixIndex : ILogixLookup
 
         var root = Scope.Build(_controller);
         var scope = builder(root);
+        //we still need to use the generator since the scope could be a tag member
+        var key = _generator.GenerateSingle(scope); 
 
-        if (!_elements.TryGetValue(scope, out var value))
+        if (!_elements.TryGetValue(key, out var value))
         {
             element = default!;
             return false;
@@ -221,8 +236,10 @@ internal class LogixIndex : ILogixLookup
 
         var root = Scope.Build(_controller);
         var scope = builder(root);
+        //we still need to use the generator since the scope could be a tag member
+        var key = _generator.GenerateSingle(scope);
 
-        if (!_elements.TryGetValue(scope, out var value))
+        if (!_elements.TryGetValue(key, out var value))
         {
             element = default!;
             return false;
@@ -480,7 +497,7 @@ internal class LogixIndex : ILogixLookup
                 _references[reference.Reference.Root].Add(reference);
         }
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -497,48 +514,6 @@ internal class LogixIndex : ILogixLookup
     }
 
     /// <summary>
-    /// Generates all potential scope paths for the provided type and name so that we can attempt to find all instances
-    /// of an element across alls scopes.
-    /// </summary>
-    private List<Scope> GenerateScopes(ScopeType type, string name)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException(
-                "Unable to resolve scope path without a 'name' specified. Type is required to determine which element to retrieve.");
-
-        if (string.IsNullOrEmpty(type))
-            throw new ArgumentException(
-                "Unable to resolve scope path without a 'type' specified. Type is required to determine which element to retrieve.");
-
-        var scopes = new List<Scope>();
-
-        //Add controller scope only if not a routine or code element.
-        if (type is { InRoutine: false, Name: not L5XName.Routine })
-            scopes.Add(Scope.Build(_controller).Type(type).Named(name));
-
-        //Return early if we are a controller element.
-        if (type.InController) return scopes;
-
-        var programs = _content.Descendants(L5XName.Program);
-
-        foreach (var program in programs)
-        {
-            if (type.InProgram)
-                scopes.Add(Scope.Build(_controller).In(program.LogixName()).Type(type).Named(name));
-
-            if (!type.InRoutine) continue;
-
-            var routines = program.Descendants(L5XName.Routine).Select(r =>
-                Scope.Build(_controller).In(program.LogixName()).In(r.LogixName()).Type(type).Named(name)
-            );
-
-            scopes.AddRange(routines);
-        }
-
-        return scopes;
-    }
-
-    /// <summary>
     /// Helper for returning the TryGet result and element based on the nullness of the input element.
     /// </summary>
     private static bool IsNull<TObject>(TObject? element, out TObject result) where TObject : LogixObject
@@ -551,24 +526,6 @@ internal class LogixIndex : ILogixLookup
 
         result = element;
         return true;
-    }
-
-    /// <summary>
-    /// Generates the full/absolute scope path to be used to find elements in the lookup. 
-    /// </summary>
-    private Scope GenerateAbsolute(Scope scope, Type? type = default)
-    {
-        if (!scope.IsRelative)
-            return scope;
-
-        if (scope.Type != ScopeType.Empty)
-            return Scope.To($"{_controller}//").Append(scope);
-
-        if (type is null)
-            throw new ArgumentException(
-                "Unable to resolve scope path without a 'type' specified. Type is required to determine which element to retrieve.");
-
-        return Scope.To($"{_controller}/{scope.Program}/{scope.Routine}/{type.L5XType()}/{scope.Name}");
     }
 
     #endregion
