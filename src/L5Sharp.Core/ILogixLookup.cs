@@ -26,7 +26,7 @@ public interface ILogixLookup
     /// <summary>
     /// Finds all elements having the type and name specified by the provided <see cref="Scope"/> path.
     /// </summary>
-    /// <param name="scope">A fluent scope builder function that generates a specific type/name scope to search for.</param>
+    /// <param name="scope">A <see cref="Scope"/> that identifies a path to a particular element in the L5X.</param>
     /// <returns>
     /// A collection of all elements found in the L5X having the specified type and name.
     /// This includes controller, program, and routine scoped elements.
@@ -37,7 +37,7 @@ public interface ILogixLookup
     /// <summary>
     /// Finds all elements having the specified type and name across all scopes.
     /// </summary>
-    /// <param name="scope">The component name or code number that identifies the element to find.</param>
+    /// <param name="scope">A <see cref="Scope"/> that identifies a path to a particular element in the L5X.</param>
     /// <typeparam name="TScoped">The type to find.</typeparam>
     /// <returns>
     /// A collection of all elements found in the L5X having the specified type and name.
