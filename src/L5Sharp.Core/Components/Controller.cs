@@ -84,6 +84,9 @@ public class Controller : LogixComponent<Controller>
         Revision = revision;
     }
 
+    /// <inheritdoc />
+    public override Scope Scope => Scope.Empty;
+
     /// <summary>
     /// The catalog number representing the processor of the controller component.
     /// </summary>
