@@ -150,7 +150,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// Determines if the provided string value is a valid tag name.
     /// </summary>
     /// <param name="value">The <see cref="string"/> to test.</param>
-    /// <returns><c>true</c> if the value is a valid qualified tag name; Otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if the value is a valid and qualified tag name; Otherwise, <c>false</c>.</returns>
     public static bool IsTag(string value) => IsQualifiedTagName(value);
 
     /// <summary>
@@ -216,7 +216,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Root value to the full value of the provided tag name.
     /// </remarks>
     public bool HasRoot(TagName tagName) => Root.IsEquivalent(tagName);
@@ -231,7 +231,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Operand value to the full value of the provided tag name.
     /// </remarks>
     public bool HasOperand(TagName tagName) => Operand.IsEquivalent(tagName);
@@ -246,7 +246,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Path value to the full value of the provided tag name.
     /// </remarks>
     public bool HasPath(TagName tagName) => Path.IsEquivalent(tagName);
@@ -261,11 +261,11 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case insensitive. Note that it is comparing the
+    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Member value to the full value of the provided tag name.
     /// </remarks>
     public bool HasMember(TagName tagName) => Member.IsEquivalent(tagName);
-    
+
     /// <summary>
     /// Returns a new tag name with the root <see cref="Root"/> value replaced with the provided string tag.
     /// </summary>
@@ -281,7 +281,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// <param name="first">A tag name object to compare.</param>
     /// <param name="second">A tag name object to compare.</param>
     /// <param name="comparer">The equality comparer to use for comparison.</param>
-    /// <returns><c>true</c> if the tag name are equal according too the provided comparer; otherwise, false.</returns>
+    /// <returns><c>true</c> if the tag name are equal according to the provided comparer; otherwise, false.</returns>
     /// <remarks>Use the prebuilt <see cref="TagNameComparer"/> class for several predefined comparer objects.</remarks>
     public static bool Equals(TagName first, TagName second, IEqualityComparer<TagName> comparer) =>
         comparer.Equals(first, second);
@@ -306,7 +306,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
 
     /// <inheritdoc />
     public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
-    
+
     /// <inheritdoc />
     public int CompareTo(TagName? other)
     {
