@@ -8,7 +8,7 @@ public class ScopeTypeTests
     [Test]
     public void Empty_WhenCalled_ShouldBeExpected()
     {
-        var type = ScopeType.Empty;
+        var type = ScopeType.Null;
 
         type.Should().NotBeNull();
         type.Value.Should().Be("");
