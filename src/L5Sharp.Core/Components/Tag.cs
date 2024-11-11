@@ -218,8 +218,8 @@ public class Tag : LogixComponent<Tag>
     /// <remarks>
     /// <para>
     /// The <see cref="LogixData"/> is the basis for all tag data types. This property may represent the atomic
-    /// value (bool, integer, float), string, complex structure, or array. <c>LogixType</c> has built in implicit operators
-    /// to convert .NET types to <c>LogixType</c> objects so to make setting <c>Value</c> more concise.
+    /// value (bool, integer, float), string, complex structure, or array. <c>LogixData</c> has built in implicit operators
+    /// to convert .NET types to <c>LogixData</c> objects so to make setting <c>Value</c> more concise.
     /// </para>
     /// <para>
     /// Since the type can not be known at compile time when deserializing, we treat it as the abstract base class.
