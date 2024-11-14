@@ -91,7 +91,6 @@ public class L5XReferenceTests
 
         unused.Should().NotBeEmpty();
     }
-
     
 
     #endregion

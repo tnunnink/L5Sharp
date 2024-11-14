@@ -71,7 +71,7 @@ public readonly struct ScanRate : IEquatable<ScanRate>, ILogixParsable<ScanRate>
         return obj switch
         {
             ScanRate other => _value.Equals(other._value),
-            ValueType value => _value.Equals(value),
+            ValueType other =>  _value.Equals(Convert.ChangeType(other, typeof(float))),
             _ => false
         };
     }

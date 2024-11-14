@@ -79,7 +79,7 @@ public readonly struct Watchdog : IEquatable<Watchdog>, ILogixParsable<Watchdog>
         return obj switch
         {
             Watchdog other => _value.Equals(other._value),
-            ValueType value => _value.Equals(value),
+            ValueType other =>  _value.Equals(Convert.ChangeType(other, typeof(float))),
             _ => false
         };
     }

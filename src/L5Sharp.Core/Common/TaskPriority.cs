@@ -70,7 +70,7 @@ public readonly struct TaskPriority : IEquatable<TaskPriority>, ILogixParsable<T
         return obj switch
         {
             TaskPriority other => _value.Equals(other._value),
-            ValueType value => _value.Equals(value),
+            ValueType other =>  _value.Equals(Convert.ChangeType(other, typeof(byte))),
             _ => false
         };
     }

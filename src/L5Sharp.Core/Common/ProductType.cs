@@ -97,8 +97,8 @@ public class ProductType : ILogixParsable<ProductType>
     {
         return obj switch
         {
-            ProductType other => Id.Equals(other.Id),
-            ValueType other => Id.Equals(other),
+            ProductType other => Id == other.Id,
+            ValueType other =>  Id.Equals(Convert.ChangeType(other, typeof(ushort))),
             _ => false
         };
     }

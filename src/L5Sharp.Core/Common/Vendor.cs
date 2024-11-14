@@ -84,8 +84,8 @@ public class Vendor : ILogixParsable<Vendor>
     {
         return obj switch
         {
-            Vendor other => Id.Equals(other.Id),
-            ValueType other => Id.Equals(other),
+            Vendor other => Id == other.Id,
+            ValueType other =>  Id.Equals(Convert.ChangeType(other, typeof(ushort))),
             _ => false
         };
     }
