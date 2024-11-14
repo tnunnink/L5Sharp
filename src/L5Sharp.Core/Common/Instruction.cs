@@ -197,7 +197,7 @@ public sealed class Instruction
     public static IEnumerable<string> Keys() => _known.Keys.AsEnumerable();
 
     /// <summary>
-    /// Retrieves teh argument for a specified operand name from the instruction.
+    /// Retrieves the argument for a specified operand name from the instruction.
     /// </summary>
     /// <param name="operand">A <see cref="string"/> containing the operand name to search for.</param>
     /// <returns>A <see cref="Argument"/> representing the value passed </returns>

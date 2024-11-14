@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// These dimensions are represented by the properties X, Y, and Z.
 /// This class also provides helpful methods and properties for working with dimensions of an array.
 /// </remarks>
-public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensions>
+public sealed class Dimensions : ILogixParsable<Dimensions>
 {
     private Dimensions()
     {
@@ -29,7 +29,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
     }
 
     /// <summary>
-    /// Creates a two dimensional instance with the provided values. 
+    /// Creates a two-dimensional instance with the provided values. 
     /// </summary>
     /// <param name="x">The length of the first dimensional element</param>
     /// <param name="y">The length of the second dimensional element</param>
@@ -46,7 +46,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
 
 
     /// <summary>
-    /// Creates a three dimensional instance with the provided values. 
+    /// Creates a three-dimensional instance with the provided values. 
     /// </summary>
     /// <param name="x">The length of the first dimensional element</param>
     /// <param name="y">The length of the second dimensional element</param>
@@ -90,7 +90,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
     /// Gets the value of the total length of <see cref="Dimensions"/>. 
     /// </summary>
     /// <value>
-    /// An integer that represents the combined length of all three dimensional parameters.
+    /// An integer that represents the combined length of all three-dimensional parameters.
     /// </value>
     public int Length => Z > 0 ? X * Y * Z : Y > 0 ? X * Y : X;
 
@@ -100,27 +100,27 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
     public bool IsEmpty => Length == 0;
 
     /// <summary>
-    /// Indicates whether <see cref="Dimensions"/> are multi-dimensional.
+    /// Indicates whether <see cref="Dimensions"/> are multidimensional.
     /// </summary>
     /// <remarks>
-    /// Multi-dimensional simply means that the dimensions have a value for Y or Z.
+    /// Multidimensional simply means that the dimensions have a value for Y or Z.
     /// </remarks>
     public bool IsMultiDimensional => Y > 0;
 
     /// <summary>
-    /// Gets the value for the number or parameters or coordinates in the <see cref="Dimensions"/> object.
+    /// Gets the value for the number of parameters or coordinates in the <see cref="Dimensions"/> object.
     /// </summary>
     /// <value>
     /// An integer value 1, 2, or 3 that represents the number of dimensional parameters for the current object. 
     /// </value>
     /// <remarks>
-    /// More plainly, this property indicates whether the current <see cref="Dimensions"/> are one, two, or three
-    /// dimensional based on the values of X, Y, and Z. 
+    /// More plainly, this property indicates whether the current <see cref="Dimensions"/> are one, two, or
+    /// three-dimensional based on the values of X, Y, and Z. 
     /// </remarks>
     public int Rank => Z > 0 ? 3 : Y > 0 ? 2 : X > 0 ? 1 : 0;
 
     /// <summary>
-    /// Represents an empty <see cref="Dimensions"/> object, or object with all three dimensional parameters equal
+    /// Represents an empty <see cref="Dimensions"/> object, or object with all three-dimensional parameters equal
     /// to zero.
     /// </summary>
     public static Dimensions Empty => new();
@@ -143,7 +143,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
         for (var i = 0; i < array.Rank; i++)
         {
             var length = array.GetLength(i);
-                
+
             if (length > ushort.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(array),
                     $"Array length of {array.Length} is out of range. Length must be less than or equal to {ushort.MaxValue}");
@@ -154,10 +154,11 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
             1 => new Dimensions((ushort)array.GetLength(0)),
             2 => new Dimensions((ushort)array.GetLength(0), (ushort)array.GetLength(1)),
             3 => new Dimensions((ushort)array.GetLength(0), (ushort)array.GetLength(1), (ushort)array.GetLength(2)),
-            _ => throw new ArgumentOutOfRangeException($"An array with '{array.Rank} dimensional units is not supported.")
+            _ => throw new ArgumentOutOfRangeException(
+                $"An array with '{array.Rank} dimensional units is not supported.")
         };
     }
-        
+
     /// <summary>
     /// Gets the set of indices for the <see cref="Dimensions"/> object.
     /// </summary>
@@ -215,6 +216,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
         if (value.IsEmpty()) return Empty;
 
         var numbers = Regex.Matches(value, @"\d+")
+            // ReSharper disable once RedundantEnumerableCastCall required for .NET Standard
             .Cast<Match>()
             .Select(m => ushort.Parse(m.Value))
             .ToList();
@@ -242,6 +244,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
             return null;
 
         var numbers = Regex.Matches(value, @"\d+")
+            // ReSharper disable once RedundantEnumerableCastCall required for .NET Standard
             .Cast<Match>()
             .Select(m => ushort.Parse(m.Value))
             .ToList();
@@ -295,15 +298,17 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
     public static implicit operator int(Dimensions dimensions) => dimensions.Length;
 
     /// <inheritdoc />
-    public bool Equals(Dimensions? other)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return X == other.X && Y == other.Y && Z == other.Z;
-    }
+        if (ReferenceEquals(this, obj)) return true;
 
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => Equals(obj as Dimensions);
+        return obj switch
+        {
+            Dimensions other => X == other.X && Y == other.Y && Z == other.Z,
+            string text => text.Equals(ToString()) || text.Equals(ToIndex()),
+            _ => false
+        };
+    }
 
     /// <inheritdoc />
     public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
@@ -323,7 +328,7 @@ public sealed class Dimensions : IEquatable<Dimensions>, ILogixParsable<Dimensio
     /// <param name="right">An object to compare.</param>
     /// <returns>true if the objects are not equal, otherwise, false.</returns>
     public static bool operator !=(Dimensions left, Dimensions right) => !Equals(left, right);
-    
+
     private static string GenerateIndex(ushort x) => $"[{x}]";
 
     private static string GenerateIndex(ushort x, ushort y) => $"[{x},{y}]";

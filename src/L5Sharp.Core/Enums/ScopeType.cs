@@ -66,7 +66,7 @@ public class ScopeType : LogixEnum<ScopeType, string>
     public static readonly ScopeType Sheet = new(nameof(Sheet), "Sheet");
 
     /// <summary>
-    /// Indicates whether this is a type that is contained in a program scope (i.e., Tag, Routine).
+    /// Indicates whether this is a type that is contained in a controller scope.
     /// </summary>
     /// <returns>
     /// <c>true</c> if the current type is a program scope type; otherwise, <c>false</c>.

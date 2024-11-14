@@ -14,19 +14,19 @@ namespace L5Sharp.Core;
 /// </remarks>
 public readonly struct TaskPriority : IEquatable<TaskPriority>, ILogixParsable<TaskPriority>
 {
-    private readonly byte _priority;
+    private readonly byte _value;
 
     /// <summary>
     /// Creates a new instance of <see cref="TaskPriority"/> with the provided value.
     /// </summary>
-    /// <param name="priority">The value of the priority. Must be a value between 1 and 15.</param>
+    /// <param name="value">The value of the priority. Must be a value between 1 and 15.</param>
     /// <exception cref="ArgumentOutOfRangeException">priority is less than 1 -or- greater than 15.</exception>
-    public TaskPriority(byte priority)
+    public TaskPriority(byte value)
     {
-        if (priority is < 1 or > 15)
-            throw new ArgumentOutOfRangeException(nameof(priority), "Priority must be value between 1 and 15");
+        if (value is < 1 or > 15)
+            throw new ArgumentOutOfRangeException(nameof(value), "Priority must be value between 1 and 15");
 
-        _priority = priority;
+        _value = value;
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public readonly struct TaskPriority : IEquatable<TaskPriority>, ILogixParsable<T
     /// </summary>
     /// <param name="priority">The value to convert.</param>
     /// <returns>A <see cref="byte"/> value.</returns>
-    public static implicit operator byte(TaskPriority priority) => priority._priority;
+    public static implicit operator byte(TaskPriority priority) => priority._value;
 
     /// <summary>
     /// Converts a <see cref="byte"/> to a <see cref="TaskPriority"/>.
@@ -59,16 +59,24 @@ public readonly struct TaskPriority : IEquatable<TaskPriority>, ILogixParsable<T
         byte.TryParse(value, out var result) ? new TaskPriority(result) : default;
 
     /// <inheritdoc />
-    public bool Equals(TaskPriority other) => _priority == other._priority;
+    public bool Equals(TaskPriority other) => _value == other._value;
 
     /// <inheritdoc />
-    public override string ToString() => _priority.ToString();
+    public override string ToString() => _value.ToString();
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => obj is TaskPriority other && Equals(other);
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            TaskPriority other => _value.Equals(other._value),
+            ValueType value => _value.Equals(value),
+            _ => false
+        };
+    }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _priority.GetHashCode();
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.

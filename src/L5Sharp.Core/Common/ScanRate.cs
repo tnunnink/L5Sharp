@@ -14,20 +14,20 @@ namespace L5Sharp.Core;
 /// </remarks>
 public readonly struct ScanRate : IEquatable<ScanRate>, ILogixParsable<ScanRate>
 {
-    private readonly float _rate;
+    private readonly float _value;
 
     /// <summary>
     /// Creates a new instance of <see cref="ScanRate"/> with the specified rate value.
     /// </summary>
-    /// <param name="rate">The scan rate value in milliseconds. Valid range is between 0.1 and 2M</param>
+    /// <param name="value">The scan rate value in milliseconds. Valid range is between 0.1 and 2M</param>
     /// <exception cref="ArgumentOutOfRangeException">Throw when the provided rate is outside the specified range</exception>
-    public ScanRate(float rate)
+    public ScanRate(float value)
     {
-        if (rate is < 0.1f or > 2000000.0f)
-            throw new ArgumentOutOfRangeException(nameof(rate),
+        if (value is < 0.1f or > 2000000.0f)
+            throw new ArgumentOutOfRangeException(nameof(value),
                 "Rate must be value between 0.1 and 2,000,000.0 ms");
 
-        _rate = rate;
+        _value = value;
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public readonly struct ScanRate : IEquatable<ScanRate>, ILogixParsable<ScanRate>
     /// </summary>
     /// <param name="rate">The value to convert.</param>
     /// <returns>A <see cref="float"/> value.</returns>
-    public static implicit operator float(ScanRate rate) => rate._rate;
+    public static implicit operator float(ScanRate rate) => rate._value;
 
     /// <summary>
     /// Converts a <see cref="float"/> to a <see cref="ScanRate"/>.
@@ -60,24 +60,24 @@ public readonly struct ScanRate : IEquatable<ScanRate>, ILogixParsable<ScanRate>
         float.TryParse(value, out var result) ? new ScanRate(result) : default;
 
     /// <inheritdoc />
-    public override string ToString() => _rate.ToString(CultureInfo.CurrentCulture);
+    public override string ToString() => _value.ToString(CultureInfo.CurrentCulture);
 
     /// <inheritdoc />
-    public bool Equals(ScanRate other) => _rate.Equals(other._rate);
+    public bool Equals(ScanRate other) => _value.Equals(other._value);
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj switch
         {
-            ScanRate other => _rate.Equals(other._rate),
-            ValueType value => _rate.Equals(value),
+            ScanRate other => _value.Equals(other._value),
+            ValueType value => _value.Equals(value),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _rate.GetHashCode();
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.

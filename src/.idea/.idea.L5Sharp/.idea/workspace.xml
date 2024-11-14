@@ -10,7 +10,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment=" workspace.xml" />
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Updated code to use new scope generator. Fixed tests and bugs.">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/DiagramType.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/Direction.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/ScopeType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Enums/ScopeType.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,29 +79,44 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/0fb6ac59fb1edbe4ed3ad62661df0eb7eacd7903/src/libraries/System.Private.Xml.Linq/src/System/Xml/Linq/XElement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/2aade6beb02ea367fd97c4070a4198802fe61c03/src/libraries/System.Linq/src/System/Linq/Zip.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/544c7e6eb3d5525c6f85341f51217d81d7c8ed80/src/coreclr/System.Private.CoreLib/src/System/Runtime/CompilerServices/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2ce08ee9cd6541948292f97d49460af2526220/04/b49a9dc8/BuildMethod.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9e4992465ee24dc8915fd9be20badb7d281d48/99/1c2b851c/XPathParser.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4192c016ac87865a13f36155d8104b1ccc818c55593b451cc2168ac54b76f6f/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ceb1ac48cf123a13013a5d2bbf953667cf9f0ec664e30b95bf87d9f726c23e1/AssertionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/CrossReference.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/CrossReference.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Dimensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Instruction.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/NeutralText.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/ProductType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/LocalTag.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Parameter.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Enums/DataFormat.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/TagName.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/TagName.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/TagName.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Controller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Tag.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Enums/ScopeType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixData.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixObject.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixScoped.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Utilities/L5XExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Utilities/L5XExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Console/Program.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Samples/Sample.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Common/ScopeTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/DataTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Enums/ScopeTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Enums/ScopeTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XBasicTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixIndexTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixIndexTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixLookupTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/LogixCatalogTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -122,7 +143,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;.NET Project.L5Sharp.Console.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.L5Sharp.Console.executor&quot;: &quot;Debug&quot;,
     &quot;00960bea-6e5b-4ffa-a837-6a257d42d429.executor&quot;: &quot;Debug&quot;,
     &quot;0e18d2ed-03e9-40cf-ac8e-fa663b72efe6.executor&quot;: &quot;Debug&quot;,
     &quot;12ada355-e272-4c10-8ea3-cbf556cdfe4b.executor&quot;: &quot;Debug&quot;,
@@ -151,7 +172,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CodeLensConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -165,7 +186,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected=".NET Project.L5Sharp.Console">
+  <component name="RunManager">
     <configuration name="L5Sharp.Console" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/../tests/L5Sharp.Console/bin/Debug/net7.0/L5Sharp.Console.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -488,7 +509,9 @@
       <workItem from="1727127762345" duration="1377000" />
       <workItem from="1727138338872" duration="8461000" />
       <workItem from="1727706661946" duration="115674000" />
-      <workItem from="1730318608649" duration="20189000" />
+      <workItem from="1730318608649" duration="22885000" />
+      <workItem from="1731069149919" duration="34944000" />
+      <workItem from="1731586452067" duration="682000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -833,7 +856,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="389" />
+    <option name="localTasksCounter" value="400" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -900,14 +923,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Removed the ILogixReferencable implementation." />
-    <MESSAGE value="Fixed the Dependencies method" />
-    <MESSAGE value="Created new lookup API to implement the lookup methods for the library." />
-    <MESSAGE value="Added new folders for builders and disabled the namespace providers." />
-    <MESSAGE value="Added new TagName extension and reordered the methods. Also added IsCodeElement and IsProgram Element for Scope to use but may move these at some point." />
-    <MESSAGE value="Reworked the LogixIndex.cs &#10;&#10;- Implement the new ILogixLookup interface.&#10;- Removed the event changes methods and change handler code.&#10;- Updated the internals to user Scope instead of nested dictionaries.&#10;- Rewrote the indexing methods." />
-    <MESSAGE value="Fixed tests after removal of IsAttached and Scope updates." />
-    <MESSAGE value="Fixed alias property, although it still need some work" />
     <MESSAGE value="Created the LogixLookup.cs &#10;&#10;- Implement the new ILogixLookup interface to use XPath instead of dictionaries. This is the default unless user specifies L5XOptions Index." />
     <MESSAGE value="Fixed tests for time being." />
     <MESSAGE value="API Updates:&#10;&#10;- Implemented the ILogixLookup interface which changes the primary API for lookup methods. We now are using lookup based on the Scope class.&#10;- Added L5XOptions to allow user to specify whether to index the file on load or not.&#10;- Made the constructor private so not only calls through Load and Parse which will take options.&#10;- Reorg and documentation changes." />
@@ -925,9 +940,34 @@
     <MESSAGE value="Added a couple extension helpers for tag elements." />
     <MESSAGE value="Tried to make Query(Type) more efficient and not use the closures to reduce DPA related issues." />
     <MESSAGE value=" workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value=" workspace.xml" />
+    <MESSAGE value="Changed Empty to Null" />
+    <MESSAGE value="Documentation. Moved IsProgramElement and IsCodeElement to Scope since they are only used there." />
+    <MESSAGE value="Incremented version" />
+    <MESSAGE value="Overrode the scope implementation to return Empty scope. Controller is the only component that is not scoped." />
+    <MESSAGE value="Consolidated scope generation into a new utility class called L5XScopeGenerator.cs. Class can build single or all scope paths based on input scope to be used in lookup operations." />
+    <MESSAGE value="Documentation" />
+    <MESSAGE value="Scope updates:Reworked internal implementation to use segment array for determining properties. Everything is based on Path. Cleaned up code. Added" />
+    <MESSAGE value="Updated code to use new scope generator. Fixed tests and bugs." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated code to use new scope generator. Fixed tests and bugs." />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixIndexTests.cs</url>
+          <line>82</line>
+          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\tests\L5Sharp.Tests\LogixIndexTests.cs" containingFunctionPresentation="Method 'Find_KnownElementRelativeScope_ShouldHaveExpectedCount'">
+            <startOffsets>
+              <option value="2045" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2075" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Member" memberName="Target" />
@@ -966,6 +1006,7 @@
         <watch expression="new System.Collections.Generic.IDictionaryDebugView&lt;string, System.Xml.Linq.XElement&gt;(new System.Collections.Generic.IDictionaryDebugView&lt;L5Sharp.Common.ComponentKey, System.Collections.Generic.Dictionary&lt;string, System.Xml.Linq.XElement&gt;&gt;(l5X._componentIndex).Items[743].Value).Items[0]" />
         <watch expression="l5X._referenceIndex" />
         <watch expression="wire" />
+        <watch expression="new System.Collections.Generic.ICollectionDebugView&lt;L5Sharp.Core.Scope&gt;(scopes).Items[5]" />
       </configuration>
     </watches-manager>
   </component>

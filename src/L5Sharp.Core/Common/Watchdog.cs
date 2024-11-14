@@ -14,22 +14,22 @@ namespace L5Sharp.Core;
 /// </remarks>
 public readonly struct Watchdog : IEquatable<Watchdog>, ILogixParsable<Watchdog>
 {
-    private readonly float _watchdog;
+    private readonly float _value;
 
     /// <summary>
     /// Creates a new instance of <c>Watchdog</c> with the specified value.
     /// </summary>
-    /// <param name="watchdog">The value of the watchdog in milliseconds.
+    /// <param name="value">The value of the watchdog in milliseconds.
     /// Must be a value between 0.1 and 2M.</param>
     /// <exception cref="ArgumentOutOfRangeException">Throw when the provided value is not within the
     /// specified range.</exception>
-    public Watchdog(float watchdog)
+    public Watchdog(float value)
     {
-        if (watchdog is < 0.1f or > 2000000.0f)
-            throw new ArgumentOutOfRangeException(nameof(watchdog),
+        if (value is < 0.1f or > 2000000.0f)
+            throw new ArgumentOutOfRangeException(nameof(value),
                 "Watchdog must be value between 0.1 and 2,000,000.0 ms");
 
-        _watchdog = watchdog;
+        _value = value;
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public readonly struct Watchdog : IEquatable<Watchdog>, ILogixParsable<Watchdog>
     /// </summary>
     /// <param name="watchdog">The value to convert.</param>
     /// <returns>A <see cref="float"/> value.</returns>
-    public static implicit operator float(Watchdog watchdog) => watchdog._watchdog;
+    public static implicit operator float(Watchdog watchdog) => watchdog._value;
 
     /// <summary>
     /// Converts a <see cref="float"/> to a <see cref="Watchdog"/>.
@@ -68,16 +68,24 @@ public readonly struct Watchdog : IEquatable<Watchdog>, ILogixParsable<Watchdog>
         float.TryParse(value, out var result) ? new Watchdog(result) : default;
 
     /// <inheritdoc />
-    public override string ToString() => _watchdog.ToString(CultureInfo.CurrentCulture);
+    public override string ToString() => _value.ToString(CultureInfo.CurrentCulture);
 
     /// <inheritdoc />
-    public bool Equals(Watchdog other) => _watchdog.Equals(other._watchdog);
+    public bool Equals(Watchdog other) => _value.Equals(other._value);
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => obj is Watchdog other && Equals(other);
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            Watchdog other => _value.Equals(other._value),
+            ValueType value => _value.Equals(value),
+            _ => false
+        };
+    }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _watchdog.GetHashCode();
+    public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
     /// Determines if the provided objects are equal.
