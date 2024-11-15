@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using NUnit.Framework.Internal;
 
 namespace L5Sharp.Tests.Common;
 
@@ -13,7 +12,7 @@ public class ArgumentTests
 
         argument.Should().Be(string.Empty);
     }
-    
+
     [Test]
     public void Unknown_WhenCalled_ShouldHaveExpectedValue()
     {
@@ -95,7 +94,7 @@ public class ArgumentTests
     }
 
     [Test]
-    public void IsString_TagArgument_ShouldBeTrue()
+    public void IsString_StringArgument_ShouldBeTrue()
     {
         Argument argument = "'Constant'";
 
@@ -161,13 +160,43 @@ public class ArgumentTests
     }
 
     [Test]
-    public void TagNAme_ValidTagName_ShouldHaveExpectedValueAndType()
+    public void TagName_ValidTagName_ShouldHaveExpectedValueAndType()
     {
         var argument = Argument.Parse("MyTagName.Member[1].Active.1");
 
         argument.Should().NotBeNull();
         argument.IsTag.Should().BeTrue();
         argument.Should().Be("MyTagName.Member[1].Active.1");
+    }
+
+    [Test]
+    public void Tags_ArgumentWithSingleTag_ShouldHaveExpectedCount()
+    {
+        var argument = Argument.Parse("MyTagName.Member[1].Active.1");
+
+        var tags = argument.Tags;
+
+        tags.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void Tags_ExpressionArgumentMultipleTags_ShouldHaveExpectedCount()
+    {
+        Argument argument = "CMP(MyTagName.Member[1].Active >= MyConstant)";
+
+        var tags = argument.Tags;
+
+        tags.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void Values_ArgumentSingleAtomic_ShouldHaveExpectedCount()
+    {
+        Argument argument = 100;
+
+        var values = argument.Values;
+
+        values.Should().HaveCount(1);
     }
 
     [Test]

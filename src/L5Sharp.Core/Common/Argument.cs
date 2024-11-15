@@ -28,11 +28,10 @@ public class Argument : ILogixParsable<Argument>
     public bool IsAtomic => _value is AtomicData;
 
     /// <summary>
-    /// Indicates whether the argument is an expression or combination of tag names, operators, and/or immediate values.
+    /// Indicates whether the argument is a literal string value with the single quote identifiers.
     /// </summary>
-    /// <value><c>true</c> if the underlying value is a <see cref="NeutralText"/> instance wrapping a complex expression;
-    /// Otherwise, <c>false</c>.</value>
-    public bool IsExpression => _value is NeutralText;
+    /// <value><c>true</c> if the underlying value is an <see cref="string"/> object; Otherwise, <c>false</c>.</value>
+    public bool IsString => _value is string;
 
     /// <summary>
     /// Indicates whether the argument is an immediate value, either string literal or atomic value.
@@ -48,10 +47,11 @@ public class Argument : ILogixParsable<Argument>
     public bool IsTag => _value is TagName;
 
     /// <summary>
-    /// Indicates whether the argument is a literal string value with the single quote identifiers.
+    /// Indicates whether the argument is an expression or combination of tag names, operators, and/or immediate values.
     /// </summary>
-    /// <value><c>true</c> if the underlying value is an <see cref="string"/> object; Otherwise, <c>false</c>.</value>
-    public bool IsString => _value is string;
+    /// <value><c>true</c> if the underlying value is a <see cref="NeutralText"/> instance wrapping a complex expression;
+    /// Otherwise, <c>false</c>.</value>
+    public bool IsExpression => _value is NeutralText;
 
     /// <summary>
     /// The collection of <see cref="TagName"/> values found in the argument.
@@ -62,11 +62,26 @@ public class Argument : ILogixParsable<Argument>
     /// We need a way to get all tag names from a single argument whether it's a single tag name or expression or
     /// multiple tag names.
     /// </remarks>
-    public IEnumerable<TagName> Tags => _value switch
+    public TagName[] Tags => _value switch
     {
-        TagName tagName => new[] { tagName },
-        NeutralText text => text.Tags(),
-        _ => Enumerable.Empty<TagName>()
+        TagName tagName => [tagName],
+        NeutralText text => text.Tags().ToArray(),
+        _ => []
+    };
+
+    /// <summary>
+    /// The collection of <see cref="TagName"/> values found in the argument.
+    /// </summary>
+    /// <value>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values.</value>
+    /// <remarks>
+    /// Since an argument could represent a complex expression, it may contain more than one tag name value.
+    /// We need a way to get all tag names from a single argument whether it's a single tag name or expression or
+    /// multiple tag names.
+    /// </remarks>
+    public AtomicData[] Values => _value switch
+    {
+        AtomicData aomtic => [aomtic],
+        _ => []
     };
 
     /// <summary>
@@ -119,7 +134,7 @@ public class Argument : ILogixParsable<Argument>
     public static Argument TryParse(string? value)
     {
         if (value is null || value.IsEmpty()) return Empty;
-        
+
         //Unknown value - Can be found in TON instructions and probably others.
         if (value == "?") return Unknown;
 
@@ -142,9 +157,9 @@ public class Argument : ILogixParsable<Argument>
     public static implicit operator Argument(TagName tagName) => new(tagName);
 
     /// <summary>
-    /// Implicitly converts the provided <see cref="TagName"/> to an <see cref="Argument"/>.
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
     /// </summary>
-    /// <param name="value">The <see cref="TagName"/> object to convert.</param>
+    /// <param name="value">The object value to convert.</param>
     /// <returns>A <see cref="Argument"/> object containing the value of the tag name.</returns>
     public static implicit operator Argument(string value) => Parse(value);
 
