@@ -14,12 +14,14 @@ using System.Text.RegularExpressions;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// 
+/// A wrapper around a string of <see cref="NeutralText"/> that represents a single logix instruction instance.
+/// This class provides methods and properties for extracting and analyzing data of the instruction.
+/// This class also includes built-in facotry methods to create new instances of known Rockwell instructions.
 /// </summary>
 public sealed class Instruction
 {
     /// <summary>
-    /// Pattern for identifying any instruction and the contents of it's signature. This expression should
+    /// Pattern for identifying any instruction and the contents of its signature. This expression should
     /// capture everything enclosed or between the instruction parentheses. This includes nested parenthesis.
     /// This works on the assumption that the text has balanced opening/closing parentheses.
     /// </summary>
@@ -44,6 +46,21 @@ public sealed class Instruction
         Factories().ToDictionary(x => x.Key, x => x.Value);
 
     /// <summary>
+    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Task</c> component by name.
+    /// </summary>
+    private bool IsSystemCall => Key is nameof(GSV) or nameof(SSV);
+
+    /// <summary>
+    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Task</c> component by name.
+    /// </summary>
+    private bool IsTaskCall => Key is nameof(EVENT);
+
+    /// <summary>
+    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Routine</c> component by name.
+    /// </summary>
+    private bool IsRoutineCall => Key is nameof(JSR) or nameof(JXR) or nameof(SFR) or nameof(SFP) or nameof(FOR);
+
+    /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided string key and regex signature pattern.
     /// </summary>
     /// <param name="key">The key identifier of the instruction.</param>
@@ -60,47 +77,61 @@ public sealed class Instruction
     }
 
     /// <summary>
-    /// The unique identifier of the instruction type.
+    /// The unique shorthand identifier of the instruction type.
     /// </summary>
     /// <value>
-    /// A <see cref="string"/> containing the short hand instruction key identifier (e.g. XIC/OTE).
+    /// A <see cref="string"/> containing the shorthand instruction key identifier (e.g. XIC/OTE).
     /// For an <c>AddOnInstruction</c> this is the name of the component.
     /// </value>
     public string Key { get; }
 
     /// <summary>
-    /// The signature portion of the instruction instance. This represents the argument (parenthesis included) that are
-    /// supplied to the instruction block instance.
+    /// The string that rerepsents the signatrue of the instruction. The signature is the neutral text representation
+    /// with operand or parameter names instead of the actual argument values.
     /// </summary>
-    /// <value>
-    /// A <see cref="string"/> containing the signature of the <c>Instruction</c>.
-    /// This simply joins the <see cref="Arguments"/> and ecloses them in parenthesis.
-    /// </value>
     public string Signature { get; }
 
     /// <summary>
-    /// The collection of <see cref="Argument"/> values for the instruction instance.
+    /// The collection of <see cref="Core.Argument"/> values the instruction contains.
     /// </summary>
-    /// <value>A of <see cref="Argument"/> value objects. These could represent literal values, tag names, or expressions.</value>
-    /// <remarks></remarks>
-    public IEnumerable<Argument> Arguments { get; }
+    /// <value>
+    /// A collection of  <see cref="Core.Argument"/> value objects.
+    /// These could represent literal values, tag names, or nested expressions.
+    /// </value>
+    public Argument[] Arguments { get; }
 
     /// <summary>
     /// The collection of operand names found in the signature of the instruction.
     /// </summary>
-    /// 
-    public IEnumerable<string> Operands
-    {
-        get
-        {
-            var match = Regex.Match(Signature, SignaturePattern);
-            var input = match.Value.Substring(1, match.Value.Length - 2);
+    /// <remarks>
+    /// Operands are the names of the parameters that define the instruction signature, whereas <see cref="Arguments"/>
+    /// are the actual values that are found in the text representation of the instruction.
+    /// Operands can only be obtained from known instruction signatures, which are configured when using the built-in
+    /// factory methods of this class.
+    /// </remarks>
+    public string[] Operands => ExtractOperands();
 
-            return !string.IsNullOrEmpty(input)
-                ? Regex.Split(input, ArgumentSplitPattern)
-                : Enumerable.Empty<string>().ToArray();
-        }
-    }
+    /// <summary>
+    /// Retrieves all referenced tag name values found in this instruction.
+    /// </summary>
+    /// <returns>A collection of <see cref="TagName"/> values cotnained by the instruction.</returns>
+    public TagName[] Tags => ExtractTags();
+
+    /// <summary>
+    /// Retrieves all immediate atomic type values found in this instruction.
+    /// </summary>
+    /// <returns>A collection of <see cref="AtomicData"/> values cotnained by the instruction.</returns>
+    public AtomicData[] Values => ExtractValues();
+
+    /// <summary>
+    /// Retrieves all component references found in the instruction as a relative <see cref="Scope"/> object.
+    /// </summary>
+    /// <returns>A collection of <see cref="Scope"/> values cotnained by the instruction.</returns>
+    /// <remarks>
+    /// These will not only be tag references, but any other component type including routine, task, module, etc.
+    /// This is determined by the instruction type (e.g. JSR, EVENT, GSV, etc.).
+    /// </remarks>
+    public Scope[] References => ExtractReferences();
 
     /// <summary>
     /// The <see cref="NeutralText"/> representation of the instruction instance.
@@ -126,30 +157,20 @@ public sealed class Instruction
         or nameof(XIC) or nameof(XIO);
 
     /// <summary>
-    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Task</c> component by name.
+    /// Indicates whether the instruction argument count matches the operand count.
     /// </summary>
-    public bool IsTaskCall => Key is nameof(EVENT);
-
-    /// <summary>
-    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Routine</c> component by name.
-    /// </summary>
-    public bool IsRoutineCall => Key is nameof(JSR) or nameof(JXR) or nameof(SFR) or nameof(SFP) or nameof(FOR);
-
-    /// <summary>
-    /// Indicates whether the instruction argument cound matches the operand count.
-    /// </summary>
-    public bool IsValid => Key is nameof(JSR) or nameof(SBR) or nameof(RET) || Operands.Count() == Arguments.Count();
+    public bool IsValid => Key is nameof(JSR) or nameof(SBR) or nameof(RET) || Operands.Length == Arguments.Length;
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided key and optional arguments.
     /// </summary>
     /// <param name="key">A <see cref="string"/> containing the unique name of the instruction.</param>
-    /// <param name="args">A set of <see cref="Argument"/> to initialize the intruction with.</param>
+    /// <param name="args">A set of <see cref="Core.Argument"/> to initialize the intruction with.</param>
     /// <returns>A <see cref="Instruction"/> instance with the provided key and arguments.</returns>
     /// <remarks>
     /// This factory method is the means through which to create unknown or other instruction that are not captured
     /// in this classes static factory methods. If this is a known instruction, use the corresponding instruction
-    /// factory method so it can initialize the known signature.
+    /// factory method, so it can initialize the known signature.
     /// </remarks>
     public static Instruction New(string key, params Argument[] args) => new(key, arguments: args);
 
@@ -159,7 +180,7 @@ public sealed class Instruction
     /// <param name="key">A <see cref="string"/> containing the unique name of the instruction.</param>
     /// <param name="signature">A <see cref="string"/> containing the method signature or format. This should be in the
     /// format 'key(arg1,arg2,...)'.</param>
-    /// <param name="args">A set of <see cref="Argument"/> to initialize the intruction with.</param>
+    /// <param name="args">A set of <see cref="Core.Argument"/> to initialize the intruction with.</param>
     /// <returns>A <see cref="Instruction"/> instance with the provided key, signature, and arguments.</returns>
     public static Instruction New(string key, string? signature = null, params Argument[] args) =>
         new(key, signature, args);
@@ -178,13 +199,14 @@ public sealed class Instruction
         if (!Regex.IsMatch(text, Pattern))
             throw new FormatException("Instruction text must be in the format of 'key(arg1,arg2,...)'.");
 
+        // ReSharper disable once ReplaceSubstringWithRangeIndexer not supported in .NET Standard
         var key = text.Substring(0, text.IndexOf('('));
         var match = Regex.Match(text, SignaturePattern);
         var signature = match.Value.Substring(1, match.Value.Length - 2);
-        var arguments = Regex.Split(signature, ArgumentSplitPattern).Select(Argument.TryParse).ToArray();
+        var arguments = Regex.Split(signature, ArgumentSplitPattern).Select(Core.Argument.TryParse).ToArray();
 
         return _known.TryGetValue(key, out var create)
-            ? create().Of(arguments)
+            ? create().With(arguments)
             : new Instruction(key, arguments: arguments);
     }
 
@@ -197,49 +219,10 @@ public sealed class Instruction
     public static IEnumerable<string> Keys() => _known.Keys.AsEnumerable();
 
     /// <summary>
-    /// Retrieves the argument for a specified operand name from the instruction.
-    /// </summary>
-    /// <param name="operand">A <see cref="string"/> containing the operand name to search for.</param>
-    /// <returns>A <see cref="Argument"/> representing the value passed </returns>
-    public Argument? GetArgument(string operand)
-    {
-        var index = Operands.ToList().IndexOf(operand);
-        return index >= 0 ? Arguments.ElementAt(index) : default;
-    }
-
-    /// <summary>
-    /// Retrieves teh argument for a specified operand name from the instruction.
-    /// </summary>
-    /// <param name="index">A zero based index number at which to retrieve an argument.</param>
-    /// <returns>A <see cref="Argument"/> representing the value passed </returns>
-    public Argument? GetArgument(int index)
-    {
-        return index >= 0 && index < Arguments.Count() ? Arguments.ElementAt(index) : default;
-    }
-
-    /// <summary>
-    /// Retrieves all <see cref="TagName"/> values from this instruction instance's arguments.
-    /// </summary>
-    /// <returns>A collection of <see cref="TagName"/> values cotnained by the instruction.</returns>
-    public IEnumerable<TagName> Tags()
-    {
-        var tags = new List<TagName>();
-
-        foreach (var argument in Arguments)
-        {
-            if (argument.IsTag) tags.Add((TagName)argument);
-            if (!argument.IsExpression) continue;
-            tags.AddRange(((NeutralText)argument).Tags());
-        }
-
-        return tags;
-    }
-
-    /// <summary>
     /// Creates a <see cref="Instruction"/> of the same type with the updated argument values.
     /// </summary>
     /// <param name="arguments">The collection of arguments make up the instruction signature.</param>
-    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
+    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Core.Argument"/> values.</returns>
     public Instruction Append(params Argument[] arguments) =>
         new(Key, Signature, Arguments.Concat(arguments).ToArray());
 
@@ -248,8 +231,19 @@ public sealed class Instruction
     /// Creates a <see cref="Instruction"/> of the same type with the updated argument values.
     /// </summary>
     /// <param name="arguments">The collection of arguments make up the instruction signature.</param>
-    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Argument"/> values.</returns>
-    public Instruction Of(params Argument[] arguments) => new(Key, Signature, arguments);
+    /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Core.Argument"/> values.</returns>
+    public Instruction With(params Argument[] arguments) => new(Key, Signature, arguments);
+
+    /// <summary>
+    /// Retrieves the argument for a specified operand name from the instruction.
+    /// </summary>
+    /// <param name="operand">A <see cref="string"/> containing the operand name to search for.</param>
+    /// <returns>A <see cref="Core.Argument"/> matching the specified operand name.</returns>
+    public Argument? Argument(string operand)
+    {
+        var index = Operands.ToList().IndexOf(operand);
+        return index >= 0 ? Arguments.ElementAt(index) : default;
+    }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
@@ -268,7 +262,7 @@ public sealed class Instruction
     public override int GetHashCode() => Text.GetHashCode();
 
     /// <inheritdoc />
-    public override string ToString() => Text;
+    public override string ToString() => Text.ToString();
 
     /// <summary>
     /// Determines the equality of two <see cref="Instruction"/> instances.
@@ -1600,7 +1594,7 @@ public sealed class Instruction
     /// </summary>
     public static Instruction SQR(Argument source, Argument destination) =>
         new(nameof(SQR), "SQR(source,destination)", source, destination);
-    
+
     /// <summary>
     /// Gets the <c>SQRT</c> instruction definition instance.
     /// </summary>
@@ -1716,7 +1710,7 @@ public sealed class Instruction
     /// </summary>
     public static Instruction TRN(Argument source, Argument destination) =>
         new(nameof(TRN), "TRN(source,destination)", source, destination);
-    
+
     /// <summary>
     /// Gets the <c>TRUNC</c> instruction definition instance.
     /// </summary>
@@ -1769,7 +1763,7 @@ public sealed class Instruction
     /// <returns>A new <see cref="Instruction"/> with initialized key, signature, and arguments.</returns>
     /// <remarks>
     /// Note that this instruction method signature was extracted from the Rockwell L5X documentation.
-    /// Each instruction will take the set of <see cref="Argument"/> matching the instruction signature.
+    /// Each instruction will take the set of <see cref="Core.Argument"/> matching the instruction signature.
     /// It is up to the caller to know whether these can be immediate value arguments or tag name reference arguments.
     ///</remarks>
     public static Instruction XIC(Argument data_bit) => new(nameof(XIC), "XIC(data_bit)", data_bit);
@@ -1790,7 +1784,7 @@ public sealed class Instruction
     /// </summary>
     public static Instruction XPY(Argument source_A, Argument source_B, Argument destination) =>
         new(nameof(XPY), "XPY(source_A,source_B,destination)", source_A, source_B, destination);
-    
+
     /// <summary>
     /// Gets the <c>EXPT</c> instruction definition instance.
     /// </summary>
@@ -1798,6 +1792,81 @@ public sealed class Instruction
         new(nameof(EXPT), "EXPT(source_A,source_B,destination)", source_A, source_B, destination);
 
     #endregion
+
+    /// <summary>
+    /// Extracts operands from the signature of the instruction.
+    /// </summary>
+    private string[] ExtractOperands()
+    {
+        var match = Regex.Match(Signature, SignaturePattern);
+        var input = match.Value.Substring(1, match.Value.Length - 2);
+
+        return !string.IsNullOrEmpty(input)
+            ? Regex.Split(input, ArgumentSplitPattern)
+            : Enumerable.Empty<string>().ToArray();
+    }
+
+    /// <summary>
+    /// Find all tag name arguments in the current instruction and returns them as a flat list of <see cref="TagName"/>.
+    /// </summary>
+    private TagName[] ExtractTags()
+    {
+        //Ingore task calling instructions since they don't refer to a tag name.
+        if (IsTaskCall) return [];
+
+        //For GSV and SSV instruction only the last argument represents an actual tag name reference.
+        if (IsSystemCall) return [Arguments.Last().ToString()];
+
+        //Skip the first argument of a routine instruction as it does not refer to a tag name.
+        var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
+
+        //And then anything else return all tag arguments.
+        return arguments.SelectMany(a => a.Tags).ToArray();
+    }
+
+    /// <summary>
+    /// Find all atomic value arguments in the current instruction and returns them as a flat list of <see cref="AtomicData"/>.
+    /// </summary>
+    private AtomicData[] ExtractValues()
+    {
+        //Ingore any system or task calling instructions since they don't refer to a tag name.
+        if (IsSystemCall || IsTaskCall) return [];
+
+        //Skip the first argument of a routine instruction as it does not refer to a tag name.
+        var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
+
+        return arguments.SelectMany(a => a.Values).ToArray();
+    }
+
+    /// <summary>
+    /// Determines the component references for each argument in the instruction and returns the relative scope
+    /// representation of the component object.
+    /// </summary>
+    private Scope[] ExtractReferences()
+    {
+        switch (Key)
+        {
+            case nameof(GSV) or nameof(SSV) when Arguments.Length >= 2:
+            {
+                var component = Scope.To($"/{Arguments[0]}/{Arguments[1]}");
+                var tag = Scope.To($"/{ScopeType.Tag}/{Arguments.Last()}");
+                return component.Type != ScopeType.Null ? [component, tag] : [tag];
+            }
+            case nameof(EVENT) when Arguments.Length == 1:
+            {
+                var task = Scope.To($"/{ScopeType.Task}/{Arguments[0]}");
+                return [task];
+            }
+            case nameof(JSR) or nameof(JXR) or nameof(SFR) or nameof(SFP) or nameof(FOR) when Arguments.Length >= 1:
+            {
+                var routine = Scope.To($"/{ScopeType.Routine}/{Arguments[0]}");
+                var tags = Arguments.Skip(1).Where(a => a.IsTag).Select(a => Scope.To($"/{ScopeType.Tag}/{a}"));
+                return new[] { routine }.Concat(tags).ToArray();
+            }
+            default:
+                return Arguments.SelectMany(a => a.Tags).Select(a => Scope.To($"/{ScopeType.Tag}/{a}")).ToArray();
+        }
+    }
 
     /// <summary>
     /// Creates some default arg names for a provided number of arguments.
@@ -1810,7 +1879,7 @@ public sealed class Instruction
     /// <summary>
     /// Indexes all instruction factory methods in the class and creates a function returning the instruction 
     /// mathcing the specified key or method name. The method is passed null argumnts and therefore will be a default
-    /// instruction instance. Callers can then use <see cref="Of"/> to pass argument array.
+    /// instruction instance. Callers can then use <see cref="With"/> to pass argument array.
     /// </summary>
     private static IEnumerable<KeyValuePair<string, Func<Instruction>>> Factories()
     {
