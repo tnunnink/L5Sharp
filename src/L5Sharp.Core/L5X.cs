@@ -432,9 +432,9 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <inheritdoc />
-    public IEnumerable<CrossReference> References(TagName name)
+    public IEnumerable<CrossReference> References(LogixComponent component)
     {
-        return _lookup.References(name);
+        return _lookup.References(component);
     }
 
     /// <summary>

@@ -101,7 +101,7 @@ public abstract class LogixComponent : LogixScoped
     /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
     /// at least one property value referencing this component's name.
     /// </returns>
-    public IEnumerable<CrossReference> References() => L5X?.References(Name) ?? [];
+    public IEnumerable<CrossReference> References() => L5X?.References(this) ?? [];
 
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.

@@ -29,7 +29,7 @@ internal class LogixIndex : ILogixLookup
     /// <summary>
     /// An index of all named references found in code or tags in the L5X file for fast lookups.
     /// </summary>
-    private readonly Dictionary<TagName, List<CrossReference>> _references = new();
+    private readonly Dictionary<string, List<CrossReference>> _references = new();
 
     /// <summary>
     /// The internal scope generator that can generate scope keys to be used in lookup operations.
@@ -146,7 +146,7 @@ internal class LogixIndex : ILogixLookup
         var root = Scope.Build(_controller);
         var scope = builder(root);
         //we still need to use the generator since the scope could be a tag member
-        var key = _generator.GenerateSingle(scope); 
+        var key = _generator.GenerateSingle(scope);
 
         if (!_elements.TryGetValue(key, out var value))
             throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
@@ -163,7 +163,7 @@ internal class LogixIndex : ILogixLookup
         var root = Scope.Build(_controller);
         var scope = builder(root);
         //we still need to use the generator since the scope could be a tag member
-        var key = _generator.GenerateSingle(scope); 
+        var key = _generator.GenerateSingle(scope);
 
         if (!_elements.TryGetValue(key, out var value))
             throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
@@ -216,7 +216,7 @@ internal class LogixIndex : ILogixLookup
         var root = Scope.Build(_controller);
         var scope = builder(root);
         //we still need to use the generator since the scope could be a tag member
-        var key = _generator.GenerateSingle(scope); 
+        var key = _generator.GenerateSingle(scope);
 
         if (!_elements.TryGetValue(key, out var value))
         {
@@ -250,12 +250,17 @@ internal class LogixIndex : ILogixLookup
         return IsNull(target as TScoped, out element);
     }
 
-    public IEnumerable<CrossReference> References(TagName name)
+    public IEnumerable<CrossReference> References(LogixComponent component)
     {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
+        if (component is null)
+            throw new ArgumentNullException(nameof(component));
+        
+        var key = $"{component.L5XType}:{component.Name}";
 
-        return _references.TryGetValue(name, out var references) ? references : [];
+        if (!_references.TryGetValue(key, out var references))
+            return [];
+
+        return references.Where(r => component.Scope.IsVisibleTo(r.Scope));
     }
 
     #endregion
@@ -275,6 +280,7 @@ internal class LogixIndex : ILogixLookup
 
         //References
         IndexTagReferences();
+        IndexRoutineReferences();
         IndexRungReferences();
         IndexLineReferences();
         IndexSheetReferences();
@@ -462,10 +468,19 @@ internal class LogixIndex : ILogixLookup
         var references = tags.SelectMany(CrossReference.In).ToList();
 
         foreach (var reference in references)
-        {
-            if (!_references.TryAdd(reference.Reference.Root, [reference]))
-                _references[reference.Reference.Root].Add(reference);
-        }
+            AddReference(reference);
+    }
+
+    /// <summary>
+    /// Finds all program elements and indexes the referenced routine names found in the program attributes.
+    /// </summary>
+    private void IndexRoutineReferences()
+    {
+        var programs = _content.Descendants(L5XName.Program);
+        var references = programs.SelectMany(CrossReference.In).ToList();
+
+        foreach (var reference in references)
+            AddReference(reference);
     }
 
     /// <summary>
@@ -477,10 +492,7 @@ internal class LogixIndex : ILogixLookup
         var references = rungs.SelectMany(CrossReference.In).ToList();
 
         foreach (var reference in references)
-        {
-            if (!_references.TryAdd(reference.Reference.Root, [reference]))
-                _references[reference.Reference.Root].Add(reference);
-        }
+            AddReference(reference);
     }
 
     /// <summary>
@@ -492,10 +504,7 @@ internal class LogixIndex : ILogixLookup
         var references = elements.SelectMany(CrossReference.In).ToList();
 
         foreach (var reference in references)
-        {
-            if (!_references.TryAdd(reference.Reference.Root, [reference]))
-                _references[reference.Reference.Root].Add(reference);
-        }
+            AddReference(reference);
     }
 
     /// <summary>
@@ -507,10 +516,18 @@ internal class LogixIndex : ILogixLookup
         var references = elements.SelectMany(CrossReference.In).ToList();
 
         foreach (var reference in references)
-        {
-            if (!_references.TryAdd(reference.Reference.Root, [reference]))
-                _references[reference.Reference.Root].Add(reference);
-        }
+            AddReference(reference);
+    }
+
+    /// <summary>
+    /// Creates the reference key and sdds the cross-reference to the internal dictionary.
+    /// </summary>
+    private void AddReference(CrossReference reference)
+    {
+        var key = $"{reference.Type.Name}:{reference.Reference.Root}";
+
+        if (!_references.TryAdd(key, [reference]))
+            _references[key].Add(reference);
     }
 
     /// <summary>

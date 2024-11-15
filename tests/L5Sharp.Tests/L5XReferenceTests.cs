@@ -7,16 +7,6 @@ namespace L5Sharp.Tests;
 public class L5XReferenceTests
 {
     #region TestFile
-    
-    [Test]
-    public void References_KnownTagWithReferences_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var references = content.References(Known.Tag).ToList();
-
-        references.Should().NotBeEmpty();
-    }
 
     [Test]
     public void References_FromKnownTagInstanceWithReferences_ShouldNotBeEmpty()
@@ -25,18 +15,6 @@ public class L5XReferenceTests
         var tag = content.Get<Tag>(Known.Tag);
 
         var references = tag.References().ToList();
-
-        references.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void References_AgainstAllTags_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Example, L5XOptions.Index);
-
-        var tags = content.Query<Tag>().ToList();
-
-        var references = tags.Select(t => new { t.TagName, Refernces = t.References() }).ToList();
 
         references.Should().NotBeEmpty();
     }
@@ -56,13 +34,11 @@ public class L5XReferenceTests
     public void References_KnownInstruction_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
-        
         var instruction = content.Get<AddOnInstruction>(Known.AddOnInstruction);
 
         var references = instruction.References().ToList();
 
         references.Should().NotBeEmpty();
-        
     }
 
     [Test]
@@ -71,6 +47,29 @@ public class L5XReferenceTests
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
         var references = content.DataTypes.Select(d => new { d.Name, References = d.References().ToList() }).ToList();
+
+        references.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void References_AllTags_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Example, L5XOptions.Index);
+
+        var references = content.Query<Tag>().Select(t => new { t.TagName, Refernces = t.References().ToList() })
+            .ToList();
+
+        references.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void References_AllRoutines_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Example, L5XOptions.Index);
+
+        var references = content.Query<Routine>()
+            .Where(r => r.Program is not null)
+            .Select(r => new { r.Scope, Refernces = r.References().ToList() }).ToList();
 
         references.Should().NotBeEmpty();
     }
@@ -91,7 +90,18 @@ public class L5XReferenceTests
 
         unused.Should().NotBeEmpty();
     }
-    
+
+    [Test]
+    public void References_ExampleAgainstAllTags_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Example, L5XOptions.Index);
+
+        var tags = content.Query<Tag>().ToList();
+
+        var references = tags.Select(t => new { t.TagName, Refernces = t.References() }).ToList();
+
+        references.Should().NotBeEmpty();
+    }
 
     #endregion
 }

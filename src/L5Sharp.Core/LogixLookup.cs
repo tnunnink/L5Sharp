@@ -220,7 +220,11 @@ internal class LogixLookup(XElement content) : ILogixLookup
         return IsNull(target as TScoped, out element);
     }
 
-    public IEnumerable<CrossReference> References(TagName name) => [];
+    public IEnumerable<CrossReference> References(LogixComponent component)
+    {
+        throw new NotSupportedException(
+            "Retrieving references is only supported for L5X instances that are created with the L5XOptions.Index specified.");
+    }
 
     #endregion
 
