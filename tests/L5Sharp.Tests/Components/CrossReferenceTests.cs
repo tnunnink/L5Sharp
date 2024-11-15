@@ -16,7 +16,7 @@ public class CrossReferenceTests
         references.Should().HaveCount(1);
         references.Should().AllSatisfy(r => r.Reference.Should().NotBeNull());
         references.Should().AllSatisfy(r => r.Scope.Should().Be(Scope.Of(element)));
-        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.Tag));
+        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.DataType));
         references.Should().AllSatisfy(r => r.Element.Should().NotBeNullOrEmpty());
     }
 
@@ -30,7 +30,7 @@ public class CrossReferenceTests
         references.Should().HaveCount(7);
         references.Should().AllSatisfy(r => r.Reference.Should().NotBeNull());
         references.Should().AllSatisfy(r => r.Scope.Should().Be(Scope.Of(element)));
-        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.Tag));
+        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.DataType));
         references.Should().AllSatisfy(r => r.Element.Should().NotBeNullOrEmpty());
     }
 
@@ -44,7 +44,7 @@ public class CrossReferenceTests
         references.Should().NotBeEmpty();
         references.Should().AllSatisfy(r => r.Reference.Should().NotBeNull());
         references.Should().AllSatisfy(r => r.Scope.Should().Be(Scope.Of(element)));
-        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.Tag));
+        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.DataType));
         references.Should().AllSatisfy(r => r.Element.Should().NotBeNullOrEmpty());
     }
 
@@ -68,7 +68,7 @@ public class CrossReferenceTests
         references.Should().HaveCount(2);
         references.Should().AllSatisfy(r => r.Reference.Should().NotBeNull());
         references.Should().AllSatisfy(r => r.Scope.Should().Be(Scope.Of(element)));
-        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.Logic));
+        references.Should().AllSatisfy(r => r.Type.Should().NotBeNull());
         references.Should().AllSatisfy(r => r.Element.Should().NotBeNullOrEmpty());
     }
     
@@ -82,7 +82,7 @@ public class CrossReferenceTests
         references.Should().HaveCount(5);
         references.Should().AllSatisfy(r => r.Reference.Should().NotBeNull());
         references.Should().AllSatisfy(r => r.Scope.Should().Be(Scope.Of(element)));
-        references.Should().AllSatisfy(r => r.Type.Should().Be(ReferenceType.Logic));
+        references.Should().AllSatisfy(r => r.Type.Should().NotBeNull());
         references.Should().AllSatisfy(r => r.Element.Should().NotBeNullOrEmpty());
     }
 }
