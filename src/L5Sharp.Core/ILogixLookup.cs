@@ -212,9 +212,9 @@ public interface ILogixLookup
     /// <summary>
     /// Retrieves a collection of <see cref="CrossReference"/> objects that reference the specified component name.
     /// </summary>
-    /// <param name="name">The name of the component to retrieve references for.</param>
-    /// <returns>A collection of <see cref="CrossReference"/> objects that reference the specified <paramref name="name"/>.</returns>
-    /// <exception cref="ArgumentException">Throw if <paramref name="name"/> is null or empty.</exception>
+    /// <param name="component">The component instance to retrieve references for.</param>
+    /// <returns>A collection of <see cref="CrossReference"/> objects that reference the specified provided component.</returns>
+    /// <exception cref="ArgumentException">Throw if <paramref name="component"/> is null.</exception>
     /// <remarks>
     /// <para>
     /// A cross-reference object contains information about the type and location of the object that has a reference
@@ -222,5 +222,5 @@ public interface ILogixLookup
     /// to various components for efficient lookup.
     /// </para>
     /// </remarks>
-    IEnumerable<CrossReference> References(TagName name);
+    IEnumerable<CrossReference> References(LogixComponent component);
 }
