@@ -70,11 +70,11 @@ public sealed class NeutralText : ILogixParsable<NeutralText>
     /// Returns a value indicating whether a specified instruction key occurs within this neutral text.
     /// </summary>
     /// <param name="value">The instruction name to seek.</param>
-    /// <returns><c>true</c> if this text contains the instruction key; otherwise, false..</returns>
+    /// <returns><c>true</c> if this text contains the instruction key; otherwise, false.</returns>
     public bool Contains(string value) => _text.Contains(value);
 
     /// <summary>
-    /// Runs the provided regex pattern against the neutral text and indicates whether the patterns is matched.
+    /// Runs the provided regex pattern against the neutral text and indicates whether the patterns are matched.
     /// </summary>
     /// <param name="regex">The regex pattern to test against.</param>
     /// <returns><c>true</c> if <c>regex</c> is a match against this neutral text value.</returns>
@@ -84,8 +84,11 @@ public sealed class NeutralText : ILogixParsable<NeutralText>
     /// Returns a collection of <see cref="Instruction"/> objects that were found in the current neutral text value.
     /// </summary>
     /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="Instruction"/> objects found in the text.</returns>
-    public IEnumerable<Instruction> Instructions() =>
-        Regex.Matches(_text, Instruction.Pattern).Cast<Match>().Select(m => Instruction.Parse(m.Value));
+    public IEnumerable<Instruction> Instructions()
+    {
+        // ReSharper disable once RedundantEnumerableCastCall required for .NET Standard
+        return Regex.Matches(_text, Instruction.Pattern).Cast<Match>().Select(m => Instruction.Parse(m.Value));
+    }
 
     /// <summary>
     /// 
