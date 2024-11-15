@@ -254,8 +254,8 @@ internal class LogixIndex : ILogixLookup
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
-        
-        var key = $"{component.L5XType}:{component.Name}";
+
+        var key = $"{ReferenceType.FromComponent(component)}:{component.Name}";
 
         if (!_references.TryGetValue(key, out var references))
             return [];
