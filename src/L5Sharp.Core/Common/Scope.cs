@@ -202,6 +202,28 @@ public sealed class Scope
     public static IScopeBuilder Build(string? controller = default) => new ScopeBuider(controller ?? string.Empty);
 
     /// <summary>
+    /// Determines whether the current scope is shared with another scope by comparing the controller and program names.
+    /// </summary>
+    /// <param name="other">The other scope to compare with.</param>
+    /// <returns>Returns true if the controller and program names of both scopes are the same; otherwise, false.</returns>
+    public bool Shares(Scope other)
+    {
+        return Controller == other.Controller && Program == other.Program;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <returns></returns>
+    public bool IsVisibleTo(Scope scope)
+    {
+        if (Controller != scope.Controller) return false;
+        if (IsGlobal || scope.IsGlobal) return true;
+        return Program == scope.Program;
+    }
+
+    /// <summary>
     /// Appends the provided <see cref="Scope"/> to the current scope by concatenating the two scope paths,
     /// and removing any redundant '/' separator.
     /// </summary>
