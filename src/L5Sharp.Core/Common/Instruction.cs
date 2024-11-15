@@ -98,7 +98,7 @@ public sealed class Instruction
     /// A collection of  <see cref="Core.Argument"/> value objects.
     /// These could represent literal values, tag names, or nested expressions.
     /// </value>
-    public Argument[] Arguments { get; }
+    public IReadOnlyList<Argument> Arguments { get; }
 
     /// <summary>
     /// The collection of operand names found in the signature of the instruction.
@@ -109,19 +109,19 @@ public sealed class Instruction
     /// Operands can only be obtained from known instruction signatures, which are configured when using the built-in
     /// factory methods of this class.
     /// </remarks>
-    public string[] Operands => ExtractOperands();
+    public IReadOnlyList<string> Operands => ExtractOperands();
 
     /// <summary>
     /// Retrieves all referenced tag name values found in this instruction.
     /// </summary>
     /// <returns>A collection of <see cref="TagName"/> values cotnained by the instruction.</returns>
-    public TagName[] Tags => ExtractTags();
+    public IReadOnlyList<TagName> Tags => ExtractTags();
 
     /// <summary>
     /// Retrieves all immediate atomic type values found in this instruction.
     /// </summary>
     /// <returns>A collection of <see cref="AtomicData"/> values cotnained by the instruction.</returns>
-    public AtomicData[] Values => ExtractValues();
+    public IReadOnlyList<AtomicData> Values => ExtractValues();
 
     /// <summary>
     /// Retrieves all component references found in the instruction as a relative <see cref="Scope"/> object.
@@ -159,7 +159,7 @@ public sealed class Instruction
     /// <summary>
     /// Indicates whether the instruction argument count matches the operand count.
     /// </summary>
-    public bool IsValid => Key is nameof(JSR) or nameof(SBR) or nameof(RET) || Operands.Length == Arguments.Length;
+    public bool IsValid => Key is nameof(JSR) or nameof(SBR) or nameof(RET) || Operands.Count == Arguments.Count;
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided key and optional arguments.
@@ -1846,18 +1846,18 @@ public sealed class Instruction
     {
         switch (Key)
         {
-            case nameof(GSV) or nameof(SSV) when Arguments.Length >= 2:
+            case nameof(GSV) or nameof(SSV) when Arguments.Count >= 2:
             {
                 var component = Scope.To($"/{Arguments[0]}/{Arguments[1]}");
                 var tag = Scope.To($"/{ScopeType.Tag}/{Arguments.Last()}");
                 return component.Type != ScopeType.Null ? [component, tag] : [tag];
             }
-            case nameof(EVENT) when Arguments.Length == 1:
+            case nameof(EVENT) when Arguments.Count == 1:
             {
                 var task = Scope.To($"/{ScopeType.Task}/{Arguments[0]}");
                 return [task];
             }
-            case nameof(JSR) or nameof(JXR) or nameof(SFR) or nameof(SFP) or nameof(FOR) when Arguments.Length >= 1:
+            case nameof(JSR) or nameof(JXR) or nameof(SFR) or nameof(SFP) or nameof(FOR) when Arguments.Count >= 1:
             {
                 var routine = Scope.To($"/{ScopeType.Routine}/{Arguments[0]}");
                 var tags = Arguments.Skip(1).Where(a => a.IsTag).Select(a => Scope.To($"/{ScopeType.Tag}/{a}"));

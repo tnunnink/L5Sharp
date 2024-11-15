@@ -62,7 +62,7 @@ public class Argument : ILogixParsable<Argument>
     /// We need a way to get all tag names from a single argument whether it's a single tag name or expression or
     /// multiple tag names.
     /// </remarks>
-    public TagName[] Tags => _value switch
+    public IReadOnlyList<TagName> Tags => _value switch
     {
         TagName tagName => [tagName],
         NeutralText text => text.Tags().ToArray(),
@@ -78,7 +78,7 @@ public class Argument : ILogixParsable<Argument>
     /// We need a way to get all tag names from a single argument whether it's a single tag name or expression or
     /// multiple tag names.
     /// </remarks>
-    public AtomicData[] Values => _value switch
+    public IReadOnlyList<AtomicData> Values => _value switch
     {
         AtomicData aomtic => [aomtic],
         _ => []

@@ -7,9 +7,9 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>4.7.0</Version>
-        <AssemblyVersion>4.7.0</AssemblyVersion>
-        <FileVersion>4.7.0.0</FileVersion>
+        <Version>4.7.1</Version>
+        <AssemblyVersion>4.7.1</AssemblyVersion>
+        <FileVersion>4.7.1.0</FileVersion>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
@@ -37,7 +37,7 @@
     <ItemGroup>
         <None Remove="L5Sharp.sln.DotSettings"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
             <_Parameter1>L5Sharp.Tests</_Parameter1>
