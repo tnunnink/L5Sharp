@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Xml.Linq;
+using FluentAssertions;
 using JetBrains.dotMemoryUnit;
 
 namespace L5Sharp.Tests;
@@ -82,6 +83,23 @@ public class L5XBasicTests
     }
 
     [Test]
+    public void Parse_ValidContent_ShouldNotBeNull()
+    {
+        var xml = XDocument.Load(Known.Test).ToString();
+        
+        var content = L5X.Parse(xml);
+
+        content.Info.Should().NotBeNull();
+        content.Info.SchemaRevision.Should().Be("1.0");
+        content.Info.SoftwareRevision.Should().Be("32.02");
+        content.Info.TargetName.Should().Be("TestController");
+        content.Info.TargetType.Should().Be("Controller");
+        content.Info.ContainsContext.Should().Be(false);
+        content.Info.Owner.Should().Be("tnunnink, EN Engineering");
+        content.Info.ExportDate.Should().NotBeNull();
+    }
+
+    [Test]
     public void Info_ValidContent_ShouldHaveExpectedValues()
     {
         var content = L5X.Load(Known.Test);
@@ -137,15 +155,26 @@ public class L5XBasicTests
     }
 
     [Test]
+    public void Query_PreidcateOverload_ShouldReturnExpected()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var results = content.Query<Tag>(t => t.DataType == "TIMER").ToList();
+
+        results.Should().NotBeEmpty();
+        results.Should().AllSatisfy(t => t.DataType.Should().Be("TIMER"));
+    }
+
+    [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
         var content = L5X.Load(Known.Test);
-        var count = content.DataTypes.Count();
+        var count = content.DataTypes.Count;
         var dataType = new DataType { Name = "TestAdd" };
 
         content.Add(dataType);
 
-        content.DataTypes.Count().Should().Be(count + 1);
+        content.DataTypes.Count.Should().Be(count + 1);
     }
 
     [Test]
@@ -157,6 +186,26 @@ public class L5XBasicTests
         content.Add(dataType);
 
         return VerifyXml(content.DataTypes.Serialize().ToString()).ScrubMember("ExportDate");
+    }
+
+    [Test]
+    public void Remove_ExistingComponent_ShouldNotExist()
+    {
+        var content = L5X.Load(Known.Test);
+        
+        content.Remove<Tag>(Known.Tag);
+
+        content.TryGet<Tag>(Known.Tag, out _).Should().BeFalse();
+    }
+
+    [Test]
+    public void Remove_ScopeBuilder_ShouldNotExist()
+    {
+        var content = L5X.Load(Known.Test);
+        
+        content.Remove(s => s.Tag(Known.Tag));
+        
+        content.TryGet<Tag>(Known.Tag, out _).Should().BeFalse();
     }
 
     [Test]

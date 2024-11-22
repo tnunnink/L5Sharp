@@ -337,7 +337,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// <summary>
     /// Finds elements of the specified type across the entire L5X as a flat collection of objects.
     /// </summary>
-    /// <typeparam name="TElement">The element type to find.</typeparam>
+    /// <typeparam name="TObject">The element type to find.</typeparam>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects of the specified type.</returns>
     /// <remarks>
     /// <para>
@@ -350,13 +350,40 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
     /// </para>
     /// </remarks>
-    public IEnumerable<TElement> Query<TElement>() where TElement : LogixElement
+    public IEnumerable<TObject> Query<TObject>() where TObject : LogixObject, new()
     {
-        var typeNames = typeof(TElement).L5XTypes().ToList();
+        var typeNames = typeof(TObject).L5XTypes().ToList();
 
         return _content.Descendants()
             .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
-            .Select(e => e.Deserialize<TElement>());
+            .Select(e => e.Deserialize<TObject>());
+    }
+
+    /// <summary>
+    /// Executes a query on the content of the L5X file, filtering elements based on the provided predicate.
+    /// </summary>
+    /// <param name="predicate">A function that defines the criteria for the elements to be included in the result.</param>
+    /// <typeparam name="TObject">The type of LogixElement to query for.</typeparam>
+    /// <returns>An enumerable collection of elements of type TElement that satisfy the predicate.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method provides a flexible and simple way to query the entire L5X for a specific type. Since
+    /// it returns <see cref="IEnumerable{T}"/>, you can make use of LINQ and the strongly typed objects to build
+    /// more complex queries.
+    ///</para>
+    /// <para>
+    /// This method does not make use of any optimized searching. If you want efficient lookup,
+    /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
+    /// </para>
+    /// </remarks>
+    public IEnumerable<TObject> Query<TObject>(Func<TObject, bool> predicate) where TObject : LogixObject, new()
+    {
+        var typeNames = typeof(TObject).L5XTypes().ToList();
+
+        return _content.Descendants()
+            .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
+            .Select(e => e.Deserialize<TObject>())
+            .Where(predicate);
     }
 
     /// <inheritdoc />
@@ -437,6 +464,12 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
         return _lookup.References(component);
     }
 
+    /// <inheritdoc />
+    public IEnumerable<Scope> Scopes()
+    {
+        return _lookup.Scopes();
+    }
+
     /// <summary>
     /// Adds the provided <see cref="LogixComponent"/> to the first found container within the L5X file. 
     /// </summary>
@@ -479,10 +512,10 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <summary>
-    /// 
+    /// Removes the element returned by the provided <see cref="IScopeBuilder"/> function.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <param name="builder">A function that takes an <see cref="IScopeBuilder"/> and returns an <see cref="Scope"/> element to remove.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="builder"/> function is null.</exception>
     public void Remove(Func<IScopeBuilder, Scope> builder)
     {
         if (builder is null) throw new ArgumentNullException(nameof(builder));
@@ -514,7 +547,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var scope = Scope.Build(Controller.Name).Type(typeof(TComponent).L5XType()).Named(name);
-        var element = _lookup.Get(_ => scope);
+        var element = _lookup.Get(scope);
         element.Remove();
     }
 
@@ -582,7 +615,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// Gets all primary/top level L5X component containers in the current L5X file.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="XElement"/> representing the L5X component containers.</returns>
-    private IEnumerable<XElement> GetContainers()
+    private List<XElement> GetContainers()
     {
         return Containers
             .Select(name => _content.Element(L5XName.Controller)?.Element(name))
