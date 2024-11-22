@@ -10,23 +10,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Made arrays IReadOnlyLists in Instruction.cs and Argument.cs">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Argument.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Argument.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/CrossReference.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/CrossReference.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Instruction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/NeutralText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/NeutralText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Scope.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Enums/ComponentType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Enums/ReferenceType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Port.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Port.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/ILogixLookup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/ILogixLookup.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixComponent.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixIndex.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixIndex.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixLookup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixLookup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/ArgumentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/ArgumentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/InstructionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Common/InstructionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixObject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/CatalogEntry.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/CatalogEntry.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixIndexTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixIndexTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixLookupTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixLookupTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixParserTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixParserTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,15 +101,70 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9e4992465ee24dc8915fd9be20badb7d281d48/99/1c2b851c/XPathParser.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4192c016ac87865a13f36155d8104b1ccc818c55593b451cc2168ac54b76f6f/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ceb1ac48cf123a13013a5d2bbf953667cf9f0ec664e30b95bf87d9f726c23e1/AssertionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/OneDrive/Desktop/L5Sharp.AcdTest/AcdTesting.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/CrossReference.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/CrossReference.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/CrossReference.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Instruction.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Instruction.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/NeutralText.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/NeutralText.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Routine.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixComponent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixComponent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixComponent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixObject.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixObject.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Console/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Common/ArgumentTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Common/ArgumentTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Common/InstructionTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XBasicTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XBasicTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XDataTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XDataTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixIndexTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixIndexTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixLookupTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixLookupTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixParserTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixParserTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/DataTypeMemberSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Utilities/LogixCatalogTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -502,7 +561,7 @@
       <workItem from="1731069149919" duration="34944000" />
       <workItem from="1731586452067" duration="682000" />
       <workItem from="1731607792703" duration="3631000" />
-      <workItem from="1731617462243" duration="22724000" />
+      <workItem from="1731617462243" duration="42283000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -847,7 +906,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="404" />
+    <option name="localTasksCounter" value="417" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -914,16 +973,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fixed tests" />
-    <MESSAGE value="Fixed Delete, but probably need to think through this function a little more." />
-    <MESSAGE value="For now made References return empty. At some point we perhaps can try to have a default implementation not using dictionary." />
-    <MESSAGE value="Testing Updates.&#10;&#10;Added more tests for LogixLookup.cs. Fixed other testes. Fixed references for LogixComponent.cs. Fixed Scope tests. All tests are passing just need to continue to add more tests." />
-    <MESSAGE value="Upgraded to .NET 8.0" />
-    <MESSAGE value="Added ToString override to point to Name" />
-    <MESSAGE value="Scope: Container is now Controller/Program/Routine/ and not just parent component name." />
-    <MESSAGE value="Added Rung samples for testing references." />
-    <MESSAGE value="Updated null condition to suppress compiler warnings." />
-    <MESSAGE value="doc updates" />
     <MESSAGE value="CrossReference.cs updates:&#10;&#10;- Changed Name to Reference&#10;- Changed Instruction to Element.&#10;- Added ReferenceType enum.&#10;- Reworked how we get references from tag elements (datatypes).&#10;- Added instruction key as additional logic type reference.&#10;- Added tests. &#10;- Updated internal LogixIndex.cs to support new reference indexing changes." />
     <MESSAGE value="Added a couple extension helpers for tag elements." />
     <MESSAGE value="Tried to make Query(Type) more efficient and not use the closures to reduce DPA related issues." />
@@ -932,56 +981,40 @@
     <MESSAGE value="Documentation. Moved IsProgramElement and IsCodeElement to Scope since they are only used there." />
     <MESSAGE value="Overrode the scope implementation to return Empty scope. Controller is the only component that is not scoped." />
     <MESSAGE value="Consolidated scope generation into a new utility class called L5XScopeGenerator.cs. Class can build single or all scope paths based on input scope to be used in lookup operations." />
-    <MESSAGE value="Documentation" />
     <MESSAGE value="Scope updates:Reworked internal implementation to use segment array for determining properties. Everything is based on Path. Cleaned up code. Added" />
     <MESSAGE value="Updated code to use new scope generator. Fixed tests and bugs." />
     <MESSAGE value="Updated equality logic for certain value types to ensure they can be compared to .NET primitive value types and return correct result. Typo fixes. Removed unused enumerations." />
-    <MESSAGE value="Incremented version" />
     <MESSAGE value="Updated equality logic for certain value types to ensure they can be compared to .NET primitive value types and return correct result." />
     <MESSAGE value="Fixed parse and load async not passing options to constructor." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed parse and load async not passing options to constructor." />
+    <MESSAGE value="Reorg. Made Tags and Values array properties to allow indexing. Added tests." />
+    <MESSAGE value="- Made properties read only arrays instead of IEnumerable.&#10;- Documentation. &#10;- Added References to allow extraction of referenced components based on the instruction type.&#10;- Made unused call properties private.&#10;- Changed Of to With and GetArgument to Argument.&#10;- Added more tests to verify functionality." />
+    <MESSAGE value="Changed ComponentType.cs to ReferenceType.cs since ComponentType.cs was not used, and we needed something in CrossReference.cs to indicate what is being referenced." />
+    <MESSAGE value="- Updated Reference type to logix enumerations.&#10;- Added Instruction and IsTag and IsLogic properties to help.&#10;- Added methods for getting routine references from program attributes.&#10;- Reworked the Rung and Line methods to use new instruction references property which is more correct for identifying the component type.&#10;- Fixed tests&#10;- Documentation" />
+    <MESSAGE value="Documentation" />
+    <MESSAGE value="Made ComponentType.cs to ReferenceType.cs" />
+    <MESSAGE value="Added Shares and IsVisibleTo for determining if two scopes are the same level/program and if one can &quot;see&quot; another." />
+    <MESSAGE value="Made the lookup API References method tag component instead of tag name since all references are to components, and we can use the scope and type to narrow the search space and return valid matching references. Also make LogixLookup.cs throw not supported exception" />
+    <MESSAGE value="not sure" />
+    <MESSAGE value="Incremented version" />
+    <MESSAGE value="Fixed the References implementation to get the reference type based on component." />
+    <MESSAGE value="Made arrays IReadOnlyLists in Instruction.cs and Argument.cs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made arrays IReadOnlyLists in Instruction.cs and Argument.cs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixIndexTests.cs</url>
-          <line>82</line>
-          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\tests\L5Sharp.Tests\LogixIndexTests.cs" containingFunctionPresentation="Method 'Find_KnownElementRelativeScope_ShouldHaveExpectedCount'">
+          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs</url>
+          <line>113</line>
+          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\tests\L5Sharp.Tests\Components\ModuleTests.cs" containingFunctionPresentation="Method 'IP_SetValue_ShouldBeUpdated'">
             <startOffsets>
-              <option value="2045" />
+              <option value="3584" />
             </startOffsets>
             <endOffsets>
-              <option value="2075" />
+              <option value="3615" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs</url>
-          <line>18</line>
-          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\tests\L5Sharp.Tests\L5XReferenceTests.cs" containingFunctionPresentation="Method 'References_FromKnownTagInstanceWithReferences_ShouldNotBeEmpty'">
-            <startOffsets>
-              <option value="390" />
-            </startOffsets>
-            <endOffsets>
-              <option value="423" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XReferenceTests.cs</url>
-          <line>50</line>
-          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\tests\L5Sharp.Tests\L5XReferenceTests.cs" containingFunctionPresentation="Method 'References_AllDataTypes_DoesThatWork'">
-            <startOffsets>
-              <option value="1361" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1394" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="28" />
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
