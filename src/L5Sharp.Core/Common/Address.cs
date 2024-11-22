@@ -40,7 +40,7 @@ public class Address : ILogixParsable<Address>
     /// </summary>
     /// <returns>true if the address value is a valid host name address; otherwise, false.</returns>
     /// <remarks>
-    /// A host name must start with a letter, contain only alpha-numeric characters or special characters '.' and '-',
+    /// A host name must start with a letter, contain only alphanumeric characters or special characters '.' and '-',
     /// and have a maximum length of 64 characters.
     /// </remarks>
     public bool IsHostName => HostNamePattern.IsMatch(_value);
@@ -66,7 +66,7 @@ public class Address : ILogixParsable<Address>
     /// </summary>
     /// <param name="slot">The slot number to create. If not provided will default to 0.</param>
     /// <returns>A <see cref="Address"/> representing a slot number within a chassis.</returns>
-    public static Address Slot(byte slot = 0) => new($"{slot}");
+    public static Address Slot(byte slot = 0) => new(slot.ToString());
 
     /// <summary>
     /// Parses a string into a <see cref="Address"/> value.
@@ -87,18 +87,26 @@ public class Address : ILogixParsable<Address>
     /// </summary>
     /// <returns>An <see cref="IPAddress"/> object representing the address.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the address value is not a valid IP address.</exception>
-    public IPAddress ToIPAddress() => IsIPv4
-        ? IPAddress.Parse(_value)
-        : throw new InvalidOperationException($"The current address '{_value}' is not a valid IP address");
+    public IPAddress ToIPAddress()
+    {
+        if (!IPAddress.TryParse(_value, out var ip))
+            throw new InvalidOperationException($"The current address '{_value}' is not a valid IP address");
+
+        return ip;
+    }
 
     /// <summary>
     /// Converts the current address to a slot number.
     /// </summary>
     /// <returns>The slot number of the address.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the address is not a valid slot number.</exception>
-    public byte ToSlot() => IsSlot
-        ? byte.Parse(_value)
-        : throw new InvalidOperationException($"The current address '{_value}' is not a valid slot number");
+    public byte ToSlot()
+    {
+        if (!byte.TryParse(_value, out var slot))
+            throw new InvalidOperationException($"The current address '{_value}' is not a valid slot number");
+
+        return slot;
+    }
 
     /// <inheritdoc />
     public override string ToString() => _value;
