@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// This service will attempt to load the Rockwell Catalog service file into memory in order to query for data.
 /// The catalog service file's existence and content will be system dependant. If this code is run on a machine that
-/// does not have Rockwell's Studio 5000 installed, instantiating this class will fail with <see cref="InvalidOperationException"/>.
+/// does not have Rockwell's Studio 5000 installed, calling this service will fail.
 /// </remarks>
 public class ModuleCatalog
 {
@@ -86,6 +86,8 @@ public class ModuleCatalog
         return device is not null ? MaterializeDefinition(device) : null;
     }
 
+    #region Internal
+
     private static CatalogEntry MaterializeDefinition(XContainer element)
     {
         var catalogNumber = GetCatalogNumber(element);
@@ -133,8 +135,10 @@ public class ModuleCatalog
         return new ProductType(id, name);
     }
 
-    private static ushort GetProductCode(XContainer element) =>
-        ushort.Parse(element.Descendants(ProductCode).First().Value);
+    private static ushort GetProductCode(XContainer element)
+    {
+        return ushort.Parse(element.Descendants(ProductCode).First().Value);
+    }
 
     private static IEnumerable<Revision> GetRevisions(XContainer element)
     {
@@ -148,8 +152,10 @@ public class ModuleCatalog
         }
     }
 
-    private static IEnumerable<string> GetCategories(XContainer element) =>
-        element.Descendants(Category).Select(c => c.Attribute(Name)!.Value);
+    private static IEnumerable<string> GetCategories(XContainer element)
+    {
+        return element.Descendants(Category).Select(c => c.Attribute(Name)!.Value);
+    }
 
     private static IEnumerable<PortInfo> GetPorts(XContainer element)
     {
@@ -170,8 +176,10 @@ public class ModuleCatalog
         }
     }
 
-    private static string GetDescription(XContainer element) =>
-        element.Descendants(Description).First().Value;
+    private static string GetDescription(XContainer element)
+    {
+        return element.Descendants(Description).First().Value;
+    }
 
     private static XDocument GetLocalCatalog()
     {
@@ -182,10 +190,12 @@ public class ModuleCatalog
 
         if (!info.Exists)
             throw new InvalidOperationException(
-                $"The catalog service file {serviceFile} does not exist in the current environment.");
+                "The catalog service file does not exist in the current environment. Ensure Logix5000 is installed.");
 
         var document = XDocument.Load(info.FullName);
 
         return document;
     }
+
+    #endregion
 }

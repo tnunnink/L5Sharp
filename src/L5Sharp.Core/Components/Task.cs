@@ -30,7 +30,7 @@ public sealed class Task : LogixComponent<Task>
         L5XName.EventInfo,
         L5XName.ScheduledPrograms,
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="Task"/> with default values.
     /// </summary>
@@ -183,11 +183,10 @@ public sealed class Task : LogixComponent<Task>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Program"/> component objects schedule to this task.</value>
     /// <remarks>
     /// This is an extension to the type and uses the attached L5X file to retrieve the program components.
-    /// Therefore if this task is not attached it will return and empty collection. Also if no program exists with the
+    /// Therefore, if this task is not attached it will return and empty collection. Also, if no program exists with the
     /// scheduled name, this will return an empty collection.
     /// </remarks>
-    public IEnumerable<Program> Programs =>
-        L5X?.Programs.Where(p => Scheduled.Any(s => s == p.Name)) ?? Enumerable.Empty<Program>();
+    public IEnumerable<Program> Programs => L5X?.Programs.Where(p => Scheduled.Any(s => s == p.Name)) ?? [];
 
     /// <summary>
     /// The collection of program names that are scheduled to the task.
@@ -195,8 +194,7 @@ public sealed class Task : LogixComponent<Task>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
     /// <remarks>This member just returns the read only list of scheduled programs. To modify the list, use
     /// the methods <see cref="Schedule"/> or <see cref="Cancel"/>.</remarks>
-    public IEnumerable<string> Scheduled =>
-        Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
+    public IEnumerable<string> Scheduled => Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
 
     /// <inheritdoc />
     public override L5X Export(Revision? softwareRevision = null)
@@ -256,7 +254,7 @@ public sealed class Task : LogixComponent<Task>
     {
         if (program is null) throw new ArgumentNullException(nameof(program));
         if (L5X is null) throw new InvalidOperationException("Can not add program to detached Task component.");
-        
+
         L5X.Programs.Add(program);
         Schedule(program.Name);
     }

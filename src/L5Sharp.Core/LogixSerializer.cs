@@ -48,8 +48,10 @@ public static class LogixSerializer
     /// The return object must specify a public constructor accepting a <see cref="XElement"/> parameter for
     /// deserialization to work.
     /// </remarks>
-    public static TElement Deserialize<TElement>(this XElement element)
-        where TElement : LogixElement => (TElement)Deserialize(element);
+    public static TElement Deserialize<TElement>(this XElement element) where TElement : LogixElement
+    {
+        return (TElement)Deserialize(element);
+    }
 
     /// <summary>
     /// Deserializes a <see cref="XElement"/> into the first matching <see cref="LogixElement"/> type found in the
@@ -249,10 +251,10 @@ public static class LogixSerializer
     /// Handles deserializing an element to a atomic value type. This will get the data type name and value and use
     /// our predefined parse function on AtomicType to instantiate the data 
     /// </summary>
-    private static LogixElement DeserializeAtomic(XElement element)
+    private static AtomicData DeserializeAtomic(XElement element)
     {
         var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
-        var value = element.Attribute(L5XName.Value)?.Value ?? throw element.L5XError(L5XName.Value);;
+        var value = element.Attribute(L5XName.Value)?.Value ?? throw element.L5XError(L5XName.Value);
         return AtomicData.Parse(dataType, value);
     }
 
@@ -262,7 +264,7 @@ public static class LogixSerializer
     /// do is return a generic ArrayType wrapping the element. The DeserializeElement will ultimately get elements
     /// that are concrete typed.
     /// </summary>
-    private static LogixElement DeserializeArray(XElement element)
+    private static ArrayData<LogixData> DeserializeArray(XElement element)
     {
         return new ArrayData<LogixData>(element);
     }

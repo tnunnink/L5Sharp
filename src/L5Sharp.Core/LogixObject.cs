@@ -242,7 +242,7 @@ public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject
 
     /// <summary>
     /// Attempts to parse the provided string and returned the strongly typed object. If unsuccesful, then this method
-    /// returns <c>null </c>.
+    /// returns <c>null</c>.
     /// </summary>
     /// <param name="value">The XML string value to parse.</param>
     /// <returns>A new <see cref="LogixObject"/> instance that represents the parsed value if successful, otherwise, <c>null</c>.</returns>

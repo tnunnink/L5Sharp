@@ -185,7 +185,9 @@ public class LogixParserTests
     public void Parse_TagElement_ShouldBeExpected()
     {
         const string xml =
-            @"<Tag Name=""Test"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""Read/Write"" />";
+            """
+            <Tag Name="Test" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write" />
+            """;
 
         var tag = xml.Parse<Tag>();
 
@@ -200,7 +202,9 @@ public class LogixParserTests
     public void Parse_TagElementWithOPCUA_ShouldBeExpected()
     {
         const string xml =
-            @"<Tag Name=""Test"" TagType=""Base"" DataType=""DINT"" Radix=""Decimal"" Constant=""false"" ExternalAccess=""Read/Write"" OpcUAAccess=""Read/Write"" />";
+            """
+            <Tag Name="Test" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write" OpcUAAccess="Read/Write" />
+            """;
 
         var tag = xml.Parse<Tag>();
 
@@ -226,46 +230,5 @@ public class LogixParserTests
         tag.Value.Should().BeOfType<TIMER>();
         tag["PRE"].Value.Should().Be(1000);
         tag["PRE"].Description.Should().Be("Test Timer PRE");
-    }
-
-    [Test]
-    public void IsItPossibleToFilterByWhatIsParsableToAGivenType()
-    {
-        var test = L5X.Load(Known.Example);
-
-        var values = GetDistinctValues(test).ToList();
-
-        var stopwatch = Stopwatch.StartNew();
-
-        var typed = values.Where(v => v.TryParse(typeof(int)) is not null).ToList();
-
-        stopwatch.Stop();
-        Console.WriteLine(stopwatch.ElapsedMilliseconds);
-
-        foreach (var type in typed)
-        {
-            Console.WriteLine(type);
-        }
-    }
-
-    private static IEnumerable<string> GetDistinctValues(ILogixSerializable content)
-    {
-        var values = new HashSet<string>();
-
-        foreach (var element in content.Serialize().DescendantsAndSelf())
-        {
-            var value = element.Value.Trim().Trim(';');
-            if (string.IsNullOrEmpty(value)) continue;
-            values.Add(element.Value);
-        }
-
-        foreach (var attribute in content.Serialize().DescendantsAndSelf().Attributes())
-        {
-            var value = attribute.Value.Trim();
-            if (string.IsNullOrEmpty(value)) continue;
-            values.Add(attribute.Value);
-        }
-
-        return values;
     }
 }

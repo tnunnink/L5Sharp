@@ -114,12 +114,12 @@ public class L5XDataTypeTests
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].AddAfter(component);
