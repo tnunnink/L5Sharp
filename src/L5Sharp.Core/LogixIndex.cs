@@ -263,6 +263,11 @@ internal class LogixIndex : ILogixLookup
         return references.Where(r => component.Scope.IsVisibleTo(r.Scope));
     }
 
+    public IEnumerable<Scope> Scopes()
+    {
+        return _elements.Keys;
+    }
+
     #endregion
 
     #region Internal

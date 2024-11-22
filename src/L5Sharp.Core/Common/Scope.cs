@@ -275,7 +275,7 @@ public sealed class Scope
     {
         var path = new StringBuilder();
 
-        if (!string.IsNullOrEmpty(Controller))
+        if (!Controller.IsEmpty())
             path.Append($"/Controller[@Name='{Controller}']");
 
         if (!Program.IsEmpty())
@@ -284,9 +284,11 @@ public sealed class Scope
         if (!Routine.IsEmpty())
             path.Append($"/Routines/Routine[@Name='{Routine}']");
 
-        path.Append(Level != ScopeLevel.Routine
-            ? $"/{Type}s/{Type}[@Name='{Name}']"
-            : $"/{Type}s/{Type}[@Number='{Name}']");
+        if (Type != ScopeType.Null)
+            path.Append($"/{Type}s");
+
+        if (Name != TagName.Empty)
+            path.Append(Level != ScopeLevel.Routine ? $"/{Type}[@Name='{Name}']" : $"/{Type}[@Number='{Name}']");
 
         return path.ToString();
     }

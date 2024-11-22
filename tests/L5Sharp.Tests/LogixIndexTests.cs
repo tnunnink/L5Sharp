@@ -62,6 +62,16 @@ public class LogixIndexTests
 
         FluentActions.Invoking(() => content.Find(null!)).Should().Throw<ArgumentNullException>();
     }
+    
+    [Test]
+    public void Find_ContainerTypeScope_ShouldNotSure()
+    {
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+
+        var results = content.Query("Tag").ToList();
+
+        results.Should().NotBeEmpty();
+    }
 
     [Test]
     public void Find_KnownElementNoType_ShouldThrowException()
@@ -315,5 +325,15 @@ public class LogixIndexTests
         result.Should().BeTrue();
         component.Should().NotBeNull();
         component.As<Tag>().Name.Should().Be(Known.Tag);
+    }
+
+    [Test]
+    public void Scopes_WhenCalled_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+
+        var scopes = content.Scopes().ToList();
+
+        scopes.Should().NotBeEmpty();
     }
 }

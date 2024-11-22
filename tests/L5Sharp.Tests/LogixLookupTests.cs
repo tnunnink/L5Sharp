@@ -305,4 +305,14 @@ public class LogixLookupTests
         component.Should().NotBeNull();
         component.As<Tag>().Name.Should().Be(Known.Tag);
     }
+
+    [Test]
+    public void Scopes_WhenCalled_ShouldNotBeEmpty()
+    {
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+
+        var scopes = content.Scopes().ToList();
+
+        scopes.Should().NotBeEmpty();
+    }
 }

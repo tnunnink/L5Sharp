@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -44,7 +45,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
             throw new ArgumentNullException(nameof(scope));
 
         var results = new List<LogixScoped>();
-        var scopes = _generator.GenerateAll(scope);
+        var scopes = _generator.GenerateAll(scope).ToList();
 
         foreach (var key in scopes)
         {
@@ -224,6 +225,13 @@ internal class LogixLookup(XElement content) : ILogixLookup
     {
         throw new NotSupportedException(
             "Retrieving references is only supported for L5X instances that are created with the L5XOptions.Index specified.");
+    }
+
+    public IEnumerable<Scope> Scopes()
+    {
+        var types = new HashSet<string>(ScopeType.All().Select(s => s.Value));
+        var elements = content.Descendants().Where(d => types.Contains(d.L5XType()));
+        return elements.Select(Scope.Of);
     }
 
     #endregion

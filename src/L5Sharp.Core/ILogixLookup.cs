@@ -223,4 +223,14 @@ public interface ILogixLookup
     /// </para>
     /// </remarks>
     IEnumerable<CrossReference> References(LogixComponent component);
+
+    /// <summary>
+    /// Returns a list of all scope objects that identify the elements contained in the L5X file.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="Scope"/> for each scoped element in the L5X.</returns>
+    /// <remarks>
+    /// This allows the caller to obtain a list of each component and code element that can found in using the
+    /// <see cref="ILogixLookup"/> API.
+    /// </remarks>
+    IEnumerable<Scope> Scopes();
 }
