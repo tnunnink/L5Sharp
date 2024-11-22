@@ -9,7 +9,7 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// A Port is a component that helps define the structure of the IO tree.
 /// Each port may contain the slot on the chassis or backplane where the <see cref="Module"/> resides,
-/// or the the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
+/// or the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
 /// Each port is identifiable by the <see cref="Id"/> property. 
 /// </remarks>
 public class Port : LogixObject
@@ -35,12 +35,12 @@ public class Port : LogixObject
     }
 
     /// <summary>
-    /// 
+    /// Creates a new <see cref="Port"/> initialized with the provided parameters.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="address"></param>
-    /// <param name="type"></param>
-    /// <param name="upstream"></param>
+    /// <param name="id">The unique id number of the port.</param>
+    /// <param name="address">The <see cref="Core.Address"/> representing the IP or slot number of the port.</param>
+    /// <param name="type">The port type.</param>
+    /// <param name="upstream">Whether this port is one that connects to an "upstream" parent module.</param>
     public Port(int id, Address address, string type, bool upstream = false) : this()
     {
         Id = id;
@@ -66,7 +66,7 @@ public class Port : LogixObject
     /// Gets the value that represents the <see cref="Port"/> type.
     /// </summary>
     /// <remarks>
-    /// This value appears to be specific to the product. Ports with IP will have 'Network' for their type. This
+    /// This value appears to be specific to the product. Ports with IP will have 'Ethernet' for their type. This
     /// property is required for importing a <see cref="Module"/> correctly.
     /// </remarks>
     public string? Type
@@ -133,28 +133,11 @@ public class Port : LogixObject
     }
 
     /// <summary>
-    /// Creates a new ICP <see cref="Port"/> with the optional id and address.
+    /// Gets whether the <see cref="Port"/> is an Ethernet port based on the Type property.
     /// </summary>
-    /// <param name="id">The identifier of the port. If not provided, the default value is 1.</param>
-    /// <param name="address">The slot address of the device. If not provided, the default value is 0.</param>
-    /// <returns>A new instance of <see cref="Port"/> representing an ICP port.</returns>
-    public static Port Icp(int? id = default, Address? address = default)
-    {
-        var portId = id ?? 1;
-        address ??= Address.Slot();
-        return new Port(portId, address, "ICP");
-    }
-
-    /// <summary>
-    /// Creates a new Ethernet <see cref="Port"/> with the optional id and address.
-    /// </summary>
-    /// <param name="id">The identifier of the port. If not provided, the default value is 1.</param>
-    /// <param name="address">The network address (IP) of the device. If not provided, the default IP address is "192.168.0.1".</param>
-    /// <returns>A new instance of <see cref="Port"/> representing an Ethernet port.</returns>
-    public static Port Ethernet(int? id = default, Address? address = default)
-    {
-        var portId = id ?? 1;
-        address ??= Address.IP();
-        return new Port(portId, address, "Ethernet");
-    }
+    /// <remarks>
+    /// This property determines if the Port represents an Ethernet connection.
+    /// The IsEthernet property is true if the Type property of the Port is set to "Ethernet".
+    /// </remarks>
+    public bool IsEthernet => Type == "Ethernet";
 }
