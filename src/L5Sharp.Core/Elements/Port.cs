@@ -35,21 +35,6 @@ public class Port : LogixObject
     }
 
     /// <summary>
-    /// Creates a new <see cref="Port"/> initialized with the provided parameters.
-    /// </summary>
-    /// <param name="id">The unique id number of the port.</param>
-    /// <param name="address">The <see cref="Core.Address"/> representing the IP or slot number of the port.</param>
-    /// <param name="type">The port type.</param>
-    /// <param name="upstream">Whether this port is one that connects to an "upstream" parent module.</param>
-    public Port(int id, Address address, string type, bool upstream = false) : this()
-    {
-        Id = id;
-        Address = address;
-        Type = type;
-        Upstream = upstream;
-    }
-
-    /// <summary>
     /// Gets the Id of the <see cref="Port"/>.
     /// </summary>
     /// <remarks>
