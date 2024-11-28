@@ -10,27 +10,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="Made arrays IReadOnlyLists in Instruction.cs and Argument.cs">
+    <list default="true" id="752cc344-96c2-4c02-b648-9fe9aa3d66f8" name="Changes" comment="mapping">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.L5Sharp/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Address.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Common/Scope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Common/Scope.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Module.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Components/Task.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Elements/Port.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Elements/Port.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/ILogixLookup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/ILogixLookup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5X.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixIndex.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixIndex.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixLookup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixLookup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixObject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/L5Sharp.Core.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/LogixSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/CatalogEntry.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/CatalogEntry.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XBasicTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/L5XDataTypeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixIndexTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixIndexTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixLookupTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixLookupTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixParserTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/L5Sharp.Tests/LogixParserTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,6 +88,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4192c016ac87865a13f36155d8104b1ccc818c55593b451cc2168ac54b76f6f/LateBoundTestFramework.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ceb1ac48cf123a13013a5d2bbf953667cf9f0ec664e30b95bf87d9f726c23e1/AssertionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/OneDrive/Desktop/L5Sharp.AcdTest/AcdTesting.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Address.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Argument.cs" root0="SKIP_HIGHLIGHTING" />
@@ -114,17 +101,31 @@
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Instruction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/NeutralText.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/NeutralText.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Common/Scope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Module.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Routine.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Components/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Port.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Port.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Port.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Elements/Port.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/ILogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/L5X.cs" root0="SKIP_HIGHLIGHTING" />
@@ -136,14 +137,22 @@
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixIndex.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixLookup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixObject.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixObject.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixObject.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/LogixSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Utilities/Catalog/CatalogEntry.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/src/L5Sharp.Core/Utilities/Catalog/ModuleCatalog.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Console/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Common/ArgumentTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -152,8 +161,13 @@
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/CrossReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/ModuleTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/ModuleTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/Components/ModuleTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XBasicTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XBasicTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XBasicTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XDataTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XDataTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XDataTypeTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -161,8 +175,11 @@
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/L5XReferenceTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixIndexTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixIndexTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixIndexTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixLookupTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixLookupTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixLookupTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixParserTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixParserTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/tnunn/Projects/L5Sharp/tests/L5Sharp.Tests/LogixParserTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Serialization/AddOnInstructionSerializerTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -561,7 +578,7 @@
       <workItem from="1731069149919" duration="34944000" />
       <workItem from="1731586452067" duration="682000" />
       <workItem from="1731607792703" duration="3631000" />
-      <workItem from="1731617462243" duration="42283000" />
+      <workItem from="1731617462243" duration="50489000" />
     </task>
     <task id="LOCAL-00199" summary="cleared warnings. preping to merge changes.">
       <created>1677621948966</created>
@@ -906,7 +923,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687451515386</updated>
     </task>
-    <option name="localTasksCounter" value="417" />
+    <option name="localTasksCounter" value="423" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -916,40 +933,9 @@
     <option name="coveragePercentColumnWidth" value="30" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="337" />
+    <option name="symbolColumnWidth" value="428" />
     <coverage-tree-state>
-      <expand>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 1% 33411/33446" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 1% 33411/33446" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp.Core 1% 18828/18843" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 1% 33411/33446" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp.Core 1% 18828/18843" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(4.3.0.0, net8.0) 1% 9401/9416" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 1% 33411/33446" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp.Core 1% 18828/18843" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(4.3.0.0, net8.0) 1% 9401/9416" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp.Core 1% 9401/9416" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 1% 33411/33446" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp.Core 1% 18828/18843" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="(4.3.0.0, net8.0) 1% 9401/9416" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="L5Sharp.Core 1% 9401/9416" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Revision 14% 84/98" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-      </expand>
+      <expand />
       <select />
     </coverage-tree-state>
   </component>
@@ -973,11 +959,6 @@
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="CrossReference.cs updates:&#10;&#10;- Changed Name to Reference&#10;- Changed Instruction to Element.&#10;- Added ReferenceType enum.&#10;- Reworked how we get references from tag elements (datatypes).&#10;- Added instruction key as additional logic type reference.&#10;- Added tests. &#10;- Updated internal LogixIndex.cs to support new reference indexing changes." />
-    <MESSAGE value="Added a couple extension helpers for tag elements." />
-    <MESSAGE value="Tried to make Query(Type) more efficient and not use the closures to reduce DPA related issues." />
-    <MESSAGE value=" workspace.xml" />
-    <MESSAGE value="Changed Empty to Null" />
     <MESSAGE value="Documentation. Moved IsProgramElement and IsCodeElement to Scope since they are only used there." />
     <MESSAGE value="Overrode the scope implementation to return Empty scope. Controller is the only component that is not scoped." />
     <MESSAGE value="Consolidated scope generation into a new utility class called L5XScopeGenerator.cs. Class can build single or all scope paths based on input scope to be used in lookup operations." />
@@ -998,26 +979,14 @@
     <MESSAGE value="Incremented version" />
     <MESSAGE value="Fixed the References implementation to get the reference type based on component." />
     <MESSAGE value="Made arrays IReadOnlyLists in Instruction.cs and Argument.cs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Made arrays IReadOnlyLists in Instruction.cs and Argument.cs" />
+    <MESSAGE value="Documentation. Minor refactor. Minor reformatting." />
+    <MESSAGE value="Added Scopes method to the ILogixLookup.cs API to return all found scopes in file." />
+    <MESSAGE value="- Added addition Query method that takes predicate to shorten common query code.&#10;- Added more basic tests.&#10;- Documentation updates." />
+    <MESSAGE value="- Removed unused Icp and Ethernet static factories.&#10;- Added IsEthernet helper property.&#10;- Documentation" />
+    <MESSAGE value="mapping" />
+    <option name="LAST_COMMIT_MESSAGE" value="mapping" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/../tests/L5Sharp.Tests/Components/ModuleTests.cs</url>
-          <line>113</line>
-          <properties documentPath="C:\Users\tnunn\Projects\L5Sharp\tests\L5Sharp.Tests\Components\ModuleTests.cs" containingFunctionPresentation="Method 'IP_SetValue_ShouldBeUpdated'">
-            <startOffsets>
-              <option value="3584" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3615" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#L5Sharp.Core.Member" memberName="Target" />

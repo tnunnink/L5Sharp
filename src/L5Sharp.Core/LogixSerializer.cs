@@ -58,8 +58,12 @@ public static class LogixSerializer
     /// element hierarchy.
     /// </summary>
     /// <param name="element">The XML element to deserialize.</param>
-    /// <returns>If the element is or has a parent of a known deserializable type, then a new <see cref="LogixElement"/>
-    /// of the first found type in the XML tree; Otherwise, <c>null</c>.</returns>
+    /// <returns>
+    /// If the element is or has a parent of a known deserializable type, then a new <see cref="LogixElement"/>
+    /// of the first found type in the XML tree.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="element"/> is <c>null</c>.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when <paramref name="element"/> is is not a known deserializable XML segment.</exception>
     /// <remarks>
     /// This method will traverse the XML tree until it reaches a <c>XElement</c> with a name matching
     /// a known deserializable logic element type. Once it finds that type/element pair, it will deserialize it as that
@@ -76,7 +80,7 @@ public static class LogixSerializer
         {
             if (Deserializers.Value.TryGetValue(element.L5XType(), out var deserializer))
                 return deserializer.Invoke(element);
-            
+
             element = element.Parent ??
                       throw new InvalidOperationException(
                           $"Could not find deserializable type for element {element.Name}.");
@@ -147,7 +151,7 @@ public static class LogixSerializer
         return typeof(LogixElement).IsAssignableFrom(type) &&
                !Exclusions.Contains(type) &&
                type is { IsAbstract: false, IsPublic: true } &&
-               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, [typeof(XElement)], null) 
+               type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, [typeof(XElement)], null)
                    is not null;
     }
 
@@ -172,7 +176,7 @@ public static class LogixSerializer
 
         return deserializers;
     }
-    
+
     /// <summary>
     /// Builds a deserialization expression delegate which returns the specified type using the current type information.
     /// </summary>
@@ -188,7 +192,7 @@ public static class LogixSerializer
     /// </remarks>
     private static Func<XElement, TReturn> Deserializer<TReturn>(this Type type)
     {
-        if (type is null) 
+        if (type is null)
             throw new ArgumentNullException(nameof(type));
 
         if (type.IsAbstract)

@@ -255,15 +255,30 @@ public class Module : LogixComponent<Module>
     public byte? Slot => Ports.FirstOrDefault(p => p is { Upstream: true, Address.IsSlot: true })?.Address.ToSlot();
 
     /// <summary>
-    /// Gets the IP address of the current module if one exists. If the module does not have an IP, returns null.
+    /// Gets or sets the IP address of this module if one exists. If the module does not have an IP, returns null.
     /// </summary>
     /// <value>An <see cref="IPAddress"/> representing the IP of the module.</value>
     /// <remarks>
     /// This property is not directly part of the L5X structure, but is a helper to make accessing the IP simple.
     /// This property looks for an Ethernet type <see cref="Port"/> with a valid IPv4 address.
     /// </remarks>
-    public IPAddress? IP =>
-        Ports.FirstOrDefault(p => p is { Type: "Ethernet", Address.IsIPv4: true })?.Address.ToIPAddress();
+    public IPAddress? IP
+    {
+        get
+        {
+            var port = Ports.FirstOrDefault(p => p is { IsEthernet: true });
+            return port?.Address.ToIPAddress();
+        }
+        set
+        {
+            var port = Ports.FirstOrDefault(p => p is { IsEthernet: true });
+
+            if (port is null)
+                throw new InvalidOperationException("No Ethernet type port is configured for this Module.");
+
+            port.Address = Address.IP(value?.ToString());
+        }
+    }
 
     /// <summary>
     /// Gets the parent module of this module component defined in the current L5X document.
@@ -301,10 +316,9 @@ public class Module : LogixComponent<Module>
     {
         get
         {
-            return Element.Parent?.Elements()
-                       .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
+            return Element.Parent?.Elements().Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
                        .Select(e => new Module(e))
-                   ?? Enumerable.Empty<Module>();
+                   ?? [];
         }
     }
 
@@ -359,20 +373,22 @@ public class Module : LogixComponent<Module>
     /// child modules.</exception>
     /// <remarks>
     /// This extension gives us an easy way to add modules hierarchically to the underlying L5X content.
-    /// If the parent module is attached to a L5X content file, this will add child module. Otherwise, this method only
-    /// 
+    /// If the parent module is attached to a L5X content file, this will add child module.
     /// </remarks>
     public void Add(Module child, Address? address = default)
     {
-        var parentPort = Ports.FirstOrDefault(p => p.Upstream is false);
+        var parentPort = Ports.FirstOrDefault(p => !p.Upstream);
 
         if (parentPort is null)
             throw new InvalidOperationException(
                 $"The module '{Name}' does not have a port for downstream module connections.");
 
-        if (parentPort.Type == "Ethernet" && address is null) address = Address.IP();
-        if (parentPort.Address.IsSlot && address is null) address = NextSlot();
-        address ??= Address.Slot();
+        address = parentPort.IsEthernet switch
+        {
+            true when address is null => Address.IP(),
+            false when address is null => NextSlot(),
+            _ => address
+        };
 
         var childPort = new Port { Id = 1, Type = parentPort.Type, Address = address, Upstream = true };
 
@@ -392,7 +408,7 @@ public class Module : LogixComponent<Module>
     /// Creates a new <see cref="Module"/> with the provided name and catalog number.
     /// </summary>
     /// <param name="name">The name of the module</param>
-    /// <param name="catalogNumber">The catalog number to lookup a catalog entry for.</param>
+    /// <param name="catalogNumber">The catalog number to look up a catalog entry for.</param>
     /// <param name="address">The optional <see cref="Address"/> defining the slot or IP address of the device.</param>
     /// <returns>A new <see cref="Module"/> object initialized with data return by the catalog service.</returns>
     /// <exception cref="InvalidOperationException">The module catalog service could not load the installed catalog
@@ -407,7 +423,14 @@ public class Module : LogixComponent<Module>
         var catalog = new ModuleCatalog();
         var entry = catalog.Lookup(catalogNumber);
 
-        return new Module
+        var ports = entry.Ports.Select(p => new Port
+        {
+            Id = p.Number,
+            Type = p.Type,
+            Upstream = !p.DownstreamOnly
+        });
+
+        var module = new Module
         {
             Name = name,
             CatalogNumber = entry.CatalogNumber,
@@ -415,16 +438,15 @@ public class Module : LogixComponent<Module>
             Vendor = entry.Vendor,
             ProductType = entry.ProductType,
             ProductCode = entry.ProductCode,
-            Ports = new LogixContainer<Port>(
-                entry.Ports.Select(p => new Port
-                {
-                    Id = p.Number,
-                    Type = p.Type,
-                    Address = p.Type == "Ethernet" ? Address.IP() : Address.Slot(),
-                    Upstream = !p.DownstreamOnly
-                }).ToList()),
-            Description = entry.Description
+            Ports = new LogixContainer<Port>(ports),
+            Description = entry.Description,
+            SafetyEnabled = entry.Categories.Contains("Safety")
         };
+
+        if (address is not null)
+            module.SetAddress(address);
+
+        return module;
     }
 
     /// <summary>
@@ -436,8 +458,15 @@ public class Module : LogixComponent<Module>
     public static Module Local(string processor, Revision? revision = default)
     {
         var catalog = new ModuleCatalog();
-
         var entry = catalog.Lookup(processor);
+
+        var ports = entry.Ports.Select(p => new Port
+        {
+            Id = p.Number,
+            Type = p.Type,
+            Address = p.Type == "Ethernet" ? Address.IP() : Address.Slot(),
+            Upstream = !p.DownstreamOnly
+        });
 
         return new Module
         {
@@ -451,20 +480,14 @@ public class Module : LogixComponent<Module>
             ParentModPortId = 1,
             MajorFault = true,
             Keying = ElectronicKeying.Disabled,
-            Ports = new LogixContainer<Port>(
-                entry.Ports.Select(p => new Port
-                {
-                    Id = p.Number,
-                    Type = p.Type,
-                    Address = p.Type == "Ethernet" ? Address.IP() : Address.Slot(),
-                    Upstream = !p.DownstreamOnly
-                }).ToList()),
+            Ports = new LogixContainer<Port>(ports),
+            SafetyEnabled = entry.Categories.Contains("Safety")
         };
     }
 
     /// <summary>
-    /// Gets the next largest slot number for the current module by introspecting the slot numbers of all other
-    /// child modules of this parent module. 
+    /// Gets the next largest slot number for the current module based on the slot numbers of all other
+    /// child modules with ths same parent module. 
     /// </summary>
     private Address NextSlot()
     {
@@ -479,6 +502,27 @@ public class Module : LogixComponent<Module>
             .FirstOrDefault();
 
         return next.HasValue ? Address.Slot(next.Value) : Address.Slot();
+    }
+
+    /// <summary>
+    /// Sets the address (slot or IP) of the <see cref="Module"/> instance to the provided value.
+    /// </summary>
+    /// <param name="address">The <see cref="Address"/> to configure this module with.</param>
+    /// <remarks>
+    /// The address in this case can be either a slot number or IP address. This helper method will find the first
+    /// matching upstream port and set the address property if found. If not found, this method will throw an exception.
+    /// </remarks>
+    private void SetAddress(Address address)
+    {
+        if (address is null)
+            throw new ArgumentNullException(nameof(address));
+
+        var port = Ports.Where(p => p.Upstream).FirstOrDefault(p => p.IsEthernet == address.IsIPv4);
+
+        if (port is null)
+            throw new InvalidOperationException("Failed to set address. No matching upstream port is configured.");
+
+        port.Address = address;
     }
 
     #endregion

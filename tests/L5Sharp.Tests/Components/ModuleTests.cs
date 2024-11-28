@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
+// ReSharper disable UseObjectOrCollectionInitializer
 
 namespace L5Sharp.Tests.Components;
 
@@ -53,7 +55,7 @@ public class ModuleTests
             SafetyEnabled = true,
             MajorFault = true,
             Keying = ElectronicKeying.Disabled,
-            Ports = new LogixContainer<Port> { new() { Id = 1, Type = "ICP", Address = "1", Upstream = true } },
+            Ports = [new Port { Id = 1, Type = "ICP", Address = "1", Upstream = true }],
         };
 
         module.Should().NotBeNull();
@@ -72,6 +74,48 @@ public class ModuleTests
         module.Keying.Should().Be(ElectronicKeying.Disabled);
     }
 
+    /*[Test]
+    public Task Create_ValidNameAndCatalogNumber_ShouldBeVerified()
+    {
+        var module = Module.Create("Test", "1756-EN2T", "10.10.10.10");
+
+        var xml = module.Serialize().ToString();
+
+        return Verify(xml);
+    }
+
+    [Test]
+    public Task Local_ValidCatalogNumber_SholdBeVerified()
+    {
+        var module = Module.Local("Test", "1756-L83E");
+
+        var xml = module.Serialize().ToString();
+
+        return Verify(xml);
+    }*/
+
+    [Test]
+    public void IP_SetValue_ShouldBeUpdated()
+    {
+        var module = new Module
+        {
+            Name = "Test",
+            Description = "This is a test module",
+            CatalogNumber = "1756-EN2T",
+            Revision = 11.3,
+            Vendor = Vendor.Rockwell,
+            ProductType = ProductType.Communications,
+            ProductCode = 1,
+            ParentModule = "Local",
+            ParentModPortId = 1,
+            Ports = [new Port { Id = 1, Type = "Ethernet", Upstream = true }]
+        };
+        
+        module.IP = IPAddress.Loopback;
+
+        module.IP.ToString().Should().Be("127.0.0.1");
+    }
+
     [Test]
     public Task Serialize_Default_ShouldBeVerified()
     {
@@ -81,7 +125,7 @@ public class ModuleTests
 
         return Verify(xml);
     }
-    
+
     [Test]
     public Task Serialize_Initialized_ShouldBeVerified()
     {
