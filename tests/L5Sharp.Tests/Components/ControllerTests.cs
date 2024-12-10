@@ -46,6 +46,15 @@ public class ControllerTests
         controller.SafetyInfo.Should().BeNull();
         controller.Security.Should().BeNull();
         controller.RedundancyInfo.Should().BeNull();
+        controller.DataTypes.Should().BeEmpty();
+        controller.Instructions.Should().BeEmpty();
+        controller.Modules.Should().BeEmpty();
+        controller.Tags.Should().BeEmpty();
+        controller.Programs.Should().BeEmpty();
+        controller.Tasks.Should().BeEmpty();
+        controller.ParameterConnections.Should().BeEmpty();
+        controller.Trends.Should().BeEmpty();
+        controller.WatchLists.Should().BeEmpty();
     }
 
     [Test]

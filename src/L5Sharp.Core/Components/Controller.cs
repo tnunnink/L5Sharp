@@ -9,7 +9,7 @@ namespace L5Sharp.Core;
 /// A logix <c>Controller</c> component. Contains the properties that comprise the L5X Controller element.
 /// </summary>
 /// <remarks>
-/// <para>A controller component may or may not contains various properties depending on if the exported L5X file
+/// <para>A controller component may or may not contain various properties depending on if the exported L5X file
 /// was a full project file or just a component export file. This is indicated in the <see cref="L5X"/> by the property
 /// <c>ContainsContext</c>, which if true, means the controller element exists simply to contain other components that
 /// are needed by the <c>TargetName</c> for successful re-imports of the content, and therefore will typically only have
@@ -46,8 +46,13 @@ public class Controller : LogixComponent<Controller>
         L5XName.Programs,
         L5XName.Tasks,
         L5XName.ParameterConnections,
+        L5XName.CST,
+        L5XName.WallClockTime,
         L5XName.Trends,
-        L5XName.QuickWatchLists
+        L5XName.DataLogs,
+        L5XName.QuickWatchLists,
+        L5XName.TimeSynchronize,
+        L5XName.EthernetPorts,
     ];
 
 
@@ -60,6 +65,16 @@ public class Controller : LogixComponent<Controller>
         Revision = new Revision();
         ProjectCreationDate = DateTime.Now;
         LastModifiedDate = DateTime.Now;
+
+        DataTypes = [];
+        Instructions = [];
+        Modules = [];
+        Tags = [];
+        Programs = [];
+        Tasks = [];
+        ParameterConnections = [];
+        Trends = [];
+        WatchLists = [];
     }
 
     /// <summary>
@@ -90,7 +105,7 @@ public class Controller : LogixComponent<Controller>
     /// <summary>
     /// The catalog number representing the processor of the controller component.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the alpha numeric catalog number.</value>
+    /// <value>A <see cref="string"/> representing the alphanumeric catalog number.</value>
     public string? ProcessorType
     {
         get => GetValue<string>();
@@ -364,5 +379,90 @@ public class Controller : LogixComponent<Controller>
     {
         get => GetComplex<SafetyInfo>();
         set => SetComplex(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="DataType"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<DataType> DataTypes
+    {
+        get => GetContainer<DataType>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="AddOnInstruction"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<AddOnInstruction> Instructions
+    {
+        // ReSharper disable once ExplicitCallerInfoArgument
+        get => GetContainer<AddOnInstruction>(L5XName.AddOnInstructionDefinitions);
+        // ReSharper disable once ExplicitCallerInfoArgument
+        set => SetContainer(value, L5XName.AddOnInstructionDefinitions);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="Module"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<Module> Modules
+    {
+        get => GetContainer<Module>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="Tag"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<Tag> Tags
+    {
+        get => GetContainer<Tag>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="Program"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<Program> Programs
+    {
+        get => GetContainer<Program>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="Task"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<Task> Tasks
+    {
+        get => GetContainer<Task>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="ParameterConnection"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<ParameterConnection> ParameterConnections
+    {
+        get => GetContainer<ParameterConnection>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="Trend"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<Trend> Trends
+    {
+        get => GetContainer<Trend>();
+        set => SetContainer(value);
+    }
+
+    /// <summary>
+    /// The collection of <see cref="WatchList"/> objects defined for the controller component.
+    /// </summary>
+    public LogixContainer<WatchList> WatchLists
+    {
+        // ReSharper disable once ExplicitCallerInfoArgument
+        get => GetContainer<WatchList>(L5XName.QuickWatchLists);
+        // ReSharper disable once ExplicitCallerInfoArgument
+        set => SetContainer(value, L5XName.QuickWatchLists);
     }
 }

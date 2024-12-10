@@ -5,4 +5,13 @@
   <SafetyInfo SafetyLocked="true" SafetySignature="Test SafetSignature">
     <SafetyTagMap>TestTag,TestTag</SafetyTagMap>
   </SafetyInfo>
+  <DataTypes />
+  <Modules />
+  <AddOnInstructionDefinitions />
+  <Tags />
+  <Programs />
+  <Tasks />
+  <ParameterConnections />
+  <Trends />
+  <QuickWatchLists />
 </Controller>
