@@ -25,6 +25,9 @@ namespace L5Sharp.Core;
 /// </remarks>
 public sealed class Scope
 {
+    /// <summary>
+    /// The character that separates the segments of the path.
+    /// </summary>
     private const char PathSeparator = '/';
 
     /// <summary>
@@ -94,6 +97,12 @@ public sealed class Scope
     /// the level and just need to know the parent container scope name.
     /// </remarks>
     public string Container => DetermineContainer();
+
+    /// <summary>
+    /// Gets the local path of the scope object. This is just the <see cref="Path"/> without the
+    /// <c>Controller</c> potion. (i.e. relative path).
+    /// </summary>
+    public string LocalPath => DetermineLocalPath();
 
     /// <summary>
     /// The name of the controller the element is scoped to.
@@ -479,6 +488,15 @@ public sealed class Scope
             > 1 => Path.Substring(0, Path.LastIndexOf(PathSeparator) + 1),
             _ => string.Empty
         };
+    }
+
+    /// <summary>
+    /// Determines the local path based on the current scope Path.
+    /// </summary>
+    private string DetermineLocalPath()
+    {
+        var index = Path.IndexOf(PathSeparator);
+        return index > -1 ? Path.Substring(index, Path.Length - index) : Path;
     }
 
     /// <summary>
