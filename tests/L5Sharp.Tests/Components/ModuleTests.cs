@@ -74,7 +74,7 @@ public class ModuleTests
         module.Keying.Should().Be(ElectronicKeying.Disabled);
     }
 
-    /*[Test]
+    [Test]
     public Task Create_ValidNameAndCatalogNumber_ShouldBeVerified()
     {
         var module = Module.Create("Test", "1756-EN2T", "10.10.10.10");
@@ -85,14 +85,14 @@ public class ModuleTests
     }
 
     [Test]
-    public Task Local_ValidCatalogNumber_SholdBeVerified()
+    public Task Local_ValidCatalogNumber_ShouldBeVerified()
     {
         var module = Module.Local("Test", "1756-L83E");
 
         var xml = module.Serialize().ToString();
 
         return Verify(xml);
-    }*/
+    }
 
     [Test]
     public void IP_SetValue_ShouldBeUpdated()

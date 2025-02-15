@@ -1,0 +1,8 @@
+﻿<Module Name="Test" CatalogNumber="1756-EN2T" Major="11" Minor="1" Vendor="1" ProductType="12" ParentModule="" ParentModPortId="0" Inhibited="false" MajorFault="false" SafetyEnabled="false" ProductCode="166">
+  <Description><![CDATA[1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media]]></Description>
+  <EKey State="CompatibleModule" />
+  <Ports>
+    <Port Id="1" Type="ICP" Address="" Upstream="true" />
+    <Port Id="2" Type="Ethernet" Address="10.10.10.10" Upstream="true" />
+  </Ports>
+</Module>
