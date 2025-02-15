@@ -14,7 +14,7 @@ public static class ACD
     /// <param name="token">A token that can be used to request cancellation of the asynchronous operation.</param>
     /// <returns>A new <see cref="L5X"/> containing the contents of the specified file.</returns>
     /// <remarks>
-    /// This method uses the new Logix Designer SDK to load the ACD project and convert it to an L5X instance.
+    /// This method uses the new Logix Designer SDK to load the ACD project and convert it to an L5X file.
     /// Note that this code requires access to the SDK software which is not included in this library so to not
     /// violate Rockwell EULA. Also note that this conversion take around 30 seconds to complete depending on the
     /// project size.
