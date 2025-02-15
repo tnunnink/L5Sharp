@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TTask = System.Threading.Tasks.Task;
 
-
 namespace L5Sharp.Core;
 
 /// <summary>
@@ -30,7 +29,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
 
     /// <summary>
     /// The <see cref="ILogixLookup"/> implementation used to quickly find objects in the file.
-    /// The actaul implementation that is instantiated is determined by the <see cref="L5XOptions"/> provided to the constuctor.
+    /// The actual implementation that is instantiated is determined by the <see cref="L5XOptions"/> provided to the constructor.
     /// </summary>
     private readonly ILogixLookup _lookup;
 
@@ -83,7 +82,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
         //This allows them to reference to root L5X for cross-referencing or other lookup based operations.
         _content.AddAnnotation(this);
 
-        //Depending on the options provided, either create a logix index or logix lookup for the ILogixLooup API usage.
+        //Depending on the options provided, either create a logix index or logix lookup for the ILogixLoop API usage.
         if (options == L5XOptions.Index)
         {
             //LogixIndex uses dictionaries and is super performant.
@@ -190,17 +189,21 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// Asynchronously loads te specified file path and returns the contents as a new <see cref="L5X"/> instance.
     /// </summary>
     /// <param name="fileName">A URI string referencing the file to load.</param>
-    /// <param name="token">A token that can be used to request cancellation of the asynchronous operation.</param>
     /// <param name="options">The <see cref="L5XOptions"/> that control how the L5X is initialized.
     /// The default is none, meaning no extra initialization steps are performed.</param>
+    /// <param name="token">A token that can be used to request cancellation of the asynchronous operation.</param>
     /// <returns>A new <see cref="L5X"/> containing the contents of the specified file.</returns>
-    public static async Task<L5X> LoadAsync(string fileName, CancellationToken token,
-        L5XOptions options = L5XOptions.None)
+    /// <remarks>This method can support opening either</remarks>
+    public static async Task<L5X> LoadAsync(string fileName, L5XOptions options = L5XOptions.None,
+        CancellationToken token = default)
     {
+        if (string.IsNullOrEmpty(fileName))
+            throw new ArgumentException("File name can not be null or empty.", nameof(fileName));
+
         await using var stream = new FileStream(fileName, FileMode.Open);
         var element = await XElement.LoadAsync(stream, LoadOptions.SetLineInfo, token);
-        var l5X = await TTask.Run(() => new L5X(element, options), token);
-        return l5X;
+        var file = await TTask.Run(() => new L5X(element, options), token);
+        return file;
     }
 #endif
 
@@ -225,7 +228,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// <param name="targetName">The optional target name for the new L5X content. Will default to empty string.</param>
     /// <param name="targetType">The optional target type for the new L5X content. Will default to Controller.</param>
     /// <returns>A new <see cref="L5X"/> instance with an empty content.</returns>
-    public static L5X Empty(string? targetName = default, string? targetType = default)
+    public static L5X Empty(string? targetName = null, string? targetType = null)
     {
         return new L5X(NewContent(targetName ?? string.Empty, targetType ?? L5XName.Controller, new Revision()));
     }
@@ -742,7 +745,7 @@ public enum L5XOptions
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This will slightly inclrease the load time, but it significantly accelerates the performance
+    /// This will slightly increase the load time, but it significantly accelerates the performance
     /// of lookup operations using any <see cref="ILogixLookup"/> API. 
     /// This option is advantageous when the user plans to execute numerous lookups of elements.
     /// </para>
