@@ -342,6 +342,9 @@
       <None Update="Components\DataTypeTests.ToTag_ComplexType_ShouldBeVerified.verified.txt">
         <DependentUpon>DataTypeTests.cs</DependentUpon>
       </None>
+      <None Update="Components\ModuleTests.Create_ValidNameAndCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
