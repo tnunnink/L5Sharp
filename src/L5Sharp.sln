@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{337B58B2-5647-4088-8CB3-50B3752B04D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests", "..\tests\L5Sharp.Tests\L5Sharp.Tests.csproj", "{FED5FACA-5568-4A3F-94C0-536D9E36CA26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests.Core", "..\tests\L5Sharp.Tests.Core\L5Sharp.Tests.Core.csproj", "{FED5FACA-5568-4A3F-94C0-536D9E36CA26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Samples", "..\tests\L5Sharp.Samples\L5Sharp.Samples.csproj", "{EBD410F5-C4E8-4D12-86B4-08B190B50B63}"
 EndProject
