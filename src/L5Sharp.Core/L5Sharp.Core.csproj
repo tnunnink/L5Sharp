@@ -41,7 +41,7 @@
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-            <_Parameter1>L5Sharp.Tests</_Parameter1>
+            <_Parameter1>L5Sharp.Tests.Core</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
 </Project>
