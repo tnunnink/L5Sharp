@@ -337,7 +337,7 @@ public class Controller : LogixComponent<Controller>
     /// testing to improve download speeds during commissioning testing. It should be set to true
     /// for the normal operating state of a system.
     /// </remarks>
-    public bool? DownloadCustomProperties
+    public bool? DownloadProjectCustomProperties
     {
         get => GetValue<bool?>();
         set => SetValue(value);
