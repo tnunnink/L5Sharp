@@ -87,7 +87,7 @@ public class ModuleTests
     [Test]
     public Task Local_ValidCatalogNumber_ShouldBeVerified()
     {
-        var module = Module.Local("Test", "1756-L83E");
+        var module = Module.Local("1756-L83E", "33.12");
 
         var xml = module.Serialize().ToString();
 

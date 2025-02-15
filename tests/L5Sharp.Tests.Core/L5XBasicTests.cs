@@ -239,7 +239,7 @@ public class L5XBasicTests
         var isolator = new Action(() =>
         {
             // ReSharper disable once RedundantAssignment
-            var content = L5X.Load(Known.Example);
+            var content = L5X.Load(Known.Test);
 
             var tags = content.Query<Tag>().Where(t => t.TagName.Contains("Test"));
             tags.Should().NotBeEmpty();

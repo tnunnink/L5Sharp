@@ -455,7 +455,7 @@ public class Module : LogixComponent<Module>
     /// <param name="processor">The processor catalog number for the module.</param>
     /// <param name="revision">The software revision of the controller.</param>
     /// <returns>A new <see cref="Module"/> representing a default local controller module instance.</returns>
-    public static Module Local(string processor, Revision? revision = default)
+    public static Module Local(string processor, Revision? revision = null)
     {
         var catalog = new ModuleCatalog();
         var entry = catalog.Lookup(processor);

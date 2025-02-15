@@ -728,7 +728,7 @@ public class ScopeTests
     [Test]
     public void PerformanceOfGettingAllTagMemberScopesShouldBeNotTerrible()
     {
-        var content = L5X.Load(Known.Example);
+        var content = L5X.Load(Known.Test);
 
         var stopwatch = Stopwatch.StartNew();
 
@@ -747,7 +747,7 @@ public class ScopeTests
     [Test]
     public void AllTagMembersShouldHaveTypeAndNameScopedProperty()
     {
-        var content = L5X.Load(Known.Example);
+        var content = L5X.Load(Known.Test);
 
         var scopes = content.Query<Tag>()
             .SelectMany(t => t.Members())

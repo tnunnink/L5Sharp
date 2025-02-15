@@ -345,6 +345,9 @@
       <None Update="Components\ModuleTests.Create_ValidNameAndCatalogNumber_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
+      <None Update="Components\ModuleTests.Local_ValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

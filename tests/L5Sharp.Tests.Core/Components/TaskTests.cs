@@ -161,7 +161,8 @@ namespace L5Sharp.Tests.Core.Components
             return VerifyXml(xml)
                 .IgnoreMember("ProjectCreationDate")
                 .IgnoreMember("LastModifiedDate")
-                .IgnoreMember("ExportDate");
+                .IgnoreMember("ExportDate")
+                .IgnoreMember("Owner");
         }
     }
 }
