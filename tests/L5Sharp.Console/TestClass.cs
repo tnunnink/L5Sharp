@@ -8,7 +8,7 @@ public class TestClass
 {
     public async Task RunExample()
     {
-        var content = await L5X.LoadAsync(Known.Example, CancellationToken.None);
+        var content = await L5X.LoadAsync(Known.Example);
 
         var tags = content.Query<Tag>().Where(t => t.TagName.Contains("Test"));
 
