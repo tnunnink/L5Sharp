@@ -3,7 +3,7 @@ using System.Globalization;
 using AutoFixture;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Types.Atomics;
+namespace L5Sharp.Tests.Core.Data.Atomics;
 
 [TestFixture]
 public class LrealTests
