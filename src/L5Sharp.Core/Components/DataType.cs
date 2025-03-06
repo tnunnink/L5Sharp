@@ -123,7 +123,7 @@ public class DataType : LogixComponent<DataType>
     /// <remarks>
     /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
     /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
-    /// are not able to be resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// are not resolved, it will default to creating <see cref="ComplexData"/> objects with no members
     /// as there is no way to know the structure. 
     /// </remarks>
     public Tag ToTag(string tagName) => new(tagName, ToData());
@@ -136,22 +136,22 @@ public class DataType : LogixComponent<DataType>
     /// <remarks>
     /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
     /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
-    /// are not able to be resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// are not resolved, it will default to creating <see cref="ComplexData"/> objects with no members
     /// as there is no way to know the structure. 
     /// </remarks>
     public LogixData ToData()
     {
         if (string.IsNullOrEmpty(Name))
             throw new InvalidOperationException("Can not create data with null or empty data type name");
-
-        //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
-        var data = LogixData.Create(Name);
-
-        //If it is not a complex data then it was defined, and we can return it. //todo actually is this correct?
-        if (data is not ComplexData complexData) return data;
         
         //We need to handle strings types specifically to match Logix custom format.
         if (Family is not null && Family == DataTypeFamily.String) return new StringData(Name, string.Empty);
+
+        //This will be some predefined type or a complex data instance, depending on whether it is statically defined.
+        var data = LogixData.Create(Name);
+
+        //If it is not a complex data then it was defined, and we can return it.
+        if (data is not ComplexData complexData) return data;
 
         //Otherwise, we need to build the members using the configured Members collection.
         var members = Members.Where(m => m.Hidden is not true).Select(m => m.ToMember()).ToList();
