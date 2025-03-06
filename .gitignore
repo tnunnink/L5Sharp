@@ -8,7 +8,6 @@
 /local/
 /tests/L5Sharp.Context.Tests/TestFiles/Template.xml
 /tests/L5Sharp.AcdTest/*
-.idea/workspace.xml
 
 # User-specific files
 *.rsuser
@@ -41,6 +40,7 @@ bld/
 # Covers JetBrains IDEs:
 # User-specific stuff
 .idea/**/workspace.xml
+*.idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
