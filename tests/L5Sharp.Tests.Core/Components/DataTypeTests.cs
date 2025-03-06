@@ -37,12 +37,12 @@ namespace L5Sharp.Tests.Core.Components
                 Description = "This is a test type",
                 Family = DataTypeFamily.String,
                 Class = DataTypeClass.Predefined,
-                Members = new LogixContainer<DataTypeMember>
-                {
-                    new() { Name = "Member01" },
-                    new() { Name = "Member02" },
-                    new() { Name = "Member03" }
-                }
+                Members =
+                [
+                    new DataTypeMember { Name = "Member01" },
+                    new DataTypeMember { Name = "Member02" },
+                    new DataTypeMember { Name = "Member03" }
+                ]
             };
 
             dataType.Name.Should().Be("Test");
