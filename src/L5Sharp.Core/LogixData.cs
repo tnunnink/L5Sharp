@@ -19,13 +19,13 @@ namespace L5Sharp.Core;
 /// (arrays and dictionaries) to the corresponding <see cref="LogixData"/> derived class.
 /// </para>
 /// <para>
-/// The serialization implemented in the library will always attempt to instantiate the concrete type of a
+/// The serialization implemented in the library will always attempt to instantiate the concrete type of
 /// given <see cref="LogixData"/>. For example, a TIMER L5X data structure is always deserialized as the concrete
 /// <c>TIMER</c> class, so that the user can cast the type and manipulate the structure statically and compile time.
 /// This applies for <see cref="AtomicData"/>, <see cref="ArrayData"/>, and all derived instance of <see cref="StructureData"/>.
 /// </para>
 /// <para>
-/// Is you wish to create in memory complex data structures, use the <see cref="ComplexData"/> class which exposes
+/// If you wish to create in memory complex data structures, use the <see cref="ComplexData"/> class which exposes
 /// methods for adding, removing, replacing, and inserting <see cref="Core.Member"/> objects for the data structure.
 /// </para>
 /// </remarks>
@@ -117,30 +117,30 @@ public abstract class LogixData : LogixElement
     /// </remarks>
     public static LogixData Create(string dataType)
     {
-        return Facotries.Value.TryGetValue(dataType, out var factory) ? factory() : new ComplexData(dataType);
+        return Factories.Value.TryGetValue(dataType, out var factory) ? factory() : new ComplexData(dataType);
     }
 
     /// <summary>
     /// Determines whether the <see cref="LogixData"/> values are equal.
     /// </summary>
-    /// <param name="left">An logix type to compare.</param>
-    /// <param name="right">An logix type to compare.</param>
+    /// <param name="left">The logix type to compare.</param>
+    /// <param name="right">The logix type to compare.</param>
     /// <returns><c>true</c> if the objects are equal, otherwise, <c>false</c>.</returns>
     public static bool operator ==(LogixData left, LogixData right) => Equals(left, right);
 
     /// <summary>
     /// Determines whether the <see cref="LogixData"/> values are not equal.
     /// </summary>
-    /// <param name="left">An logix type to compare.</param>
-    /// <param name="right">An logix type to compare.</param>
+    /// <param name="left">The logix type to compare.</param>
+    /// <param name="right">The logix type to compare.</param>
     /// <returns><c>true</c> if the objects are not equal, otherwise, <c>false</c>.</returns>
     public static bool operator !=(LogixData left, LogixData right) => !Equals(left, right);
 
     /// <summary>
-    /// Compares two objects and determines if a is greater than b.
+    /// Compares two objects and determines if 'a' is greater than 'b'.
     /// </summary>
-    /// <param name="a">An logix type to compare.</param>
-    /// <param name="b">An logix type to compare.</param>
+    /// <param name="a">The logix type to compare.</param>
+    /// <param name="b">The logix type to compare.</param>
     /// <returns><c>true</c> if <c>a</c> is greater than <c>b</c>, otherwise, <c>false</c>.</returns>
     public static bool operator >(LogixData a, LogixData b)
     {
@@ -151,10 +151,10 @@ public abstract class LogixData : LogixElement
     }
 
     /// <summary>
-    /// Compares two objects and determines if a is less than b.
+    /// Compares two objects and determines if 'a' is less than 'b'.
     /// </summary>
-    /// <param name="a">An logix type to compare.</param>
-    /// <param name="b">An logix type to compare.</param>
+    /// <param name="a">The logix type to compare.</param>
+    /// <param name="b">The logix type to compare.</param>
     /// <returns><c>true</c> if <c>a</c> is less than <c>b</c>, otherwise, <c>false</c>.</returns>
     public static bool operator <(LogixData a, LogixData b)
     {
@@ -165,10 +165,10 @@ public abstract class LogixData : LogixElement
     }
 
     /// <summary>
-    /// Compares two objects and determines if a is greater or equal to than b.
+    /// Compares two objects and determines if <paramref name="a"/> is greater or equal to than <paramref name="b"/>.
     /// </summary>
-    /// <param name="a">An logix type to compare.</param>
-    /// <param name="b">An logix type to compare.</param>
+    /// <param name="a">The logix type to compare.</param>
+    /// <param name="b">The logix type to compare.</param>
     /// <returns><c>true</c> if <c>a</c> is greater than or equal to <c>b</c>, otherwise, <c>false</c>.</returns>
     public static bool operator >=(LogixData a, LogixData b)
     {
@@ -179,10 +179,10 @@ public abstract class LogixData : LogixElement
     }
 
     /// <summary>
-    /// Compares two objects and determines if a is less than or equal to b.
+    /// Compares two objects and determines if <paramref name="a"/> is less than or equal to <paramref name="b"/>.
     /// </summary>
-    /// <param name="a">An logix type to compare.</param>
-    /// <param name="b">An logix type to compare.</param>
+    /// <param name="a">The logix type to compare.</param>
+    /// <param name="b">The logix type to compare.</param>
     /// <returns><c>true</c> if <c>a</c> is less than or equal to <c>b</c>, otherwise, <c>false</c>.</returns>
     public static bool operator <=(LogixData a, LogixData b)
     {
@@ -308,7 +308,7 @@ public abstract class LogixData : LogixElement
     /// <summary>
     /// The global cache for all <see cref="LogixData"/> object factory delegate functions.
     /// </summary>
-    private static readonly Lazy<Dictionary<string, Func<LogixData>>> Facotries = new(DataFactories,
+    private static readonly Lazy<Dictionary<string, Func<LogixData>>> Factories = new(DataFactories,
         LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
@@ -332,7 +332,7 @@ public abstract class LogixData : LogixElement
     }
 
     /// <summary>
-    /// Scans the provided assemble for types safisfying the LogixData factory condition and creates a collection of
+    /// Scans the provided assemble for types satisfying the LogixData factory condition and creates a collection of
     /// key value pairs where the key is a name of the type and the value is a function that instantiates the type.
     /// </summary>
     /// <param name="assembly">The assembly to scan.</param>
@@ -345,7 +345,7 @@ public abstract class LogixData : LogixElement
 
         foreach (var logixType in logixTypes)
         {
-            var factory = Instantiator(logixType);
+            var factory = BuildFactory(logixType);
             var names = logixType.L5XTypes().ToList();
             var functions = names.Select(n => new KeyValuePair<string, Func<LogixData>>(n, factory));
             factories.AddRange(functions);
@@ -362,7 +362,7 @@ public abstract class LogixData : LogixElement
     /// <returns>Returns true if the type is a LogixDataType; otherwise, false.</returns>
     private static bool IsLogixDataType(Type type)
     {
-        HashSet<Type> exlucde =
+        HashSet<Type> exclude =
         [
             typeof(ComplexData),
             typeof(StringData),
@@ -371,17 +371,17 @@ public abstract class LogixData : LogixElement
         ];
 
         return typeof(LogixData).IsAssignableFrom(type) &&
-               !exlucde.Contains(type) &&
+               !exclude.Contains(type) &&
                type is { IsAbstract: false, IsPublic: true } &&
                type.GetConstructor(Type.EmptyTypes) is not null;
     }
 
     /// <summary>
-    /// Creates and compiles a function expresstion for a given logix data type in order to create new instances efficiently. 
+    /// Creates and compiles a function expression for a given logix data type in order to create new instances efficiently. 
     /// </summary>
     /// <param name="type">The type of LogixData to instantiate.</param>
     /// <returns>A Func delegate that can be invoked to create a new instance of the specified type.</returns>
-    private static Func<LogixData> Instantiator(Type type)
+    private static Func<LogixData> BuildFactory(Type type)
     {
         var constructor = type.GetConstructor(Type.EmptyTypes)!;
         var expression = Expression.New(constructor);

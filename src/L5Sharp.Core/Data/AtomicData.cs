@@ -30,7 +30,7 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// <inheritdoc />
     /// <remarks>
     /// We are passing a dummy XElement to the base class. Atomics are seen as in memory immutable value types. In order
-    /// to be performant, we need to just wrap simple .NET primitive types. Therefore atomics are unique in that they
+    /// to be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
     /// don't use the backing element, but will create it when the Serialize is called.
     /// </remarks>
     protected internal AtomicData() : base(new XElement(L5XName.DataValue))
@@ -41,7 +41,7 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// <inheritdoc />
     /// <remarks>
     /// We are passing a dummy XElement to the base class. Atomics are seen as in memory immutable value types. In order
-    /// to be performant, we need to just wrap simple .NET primitive types. Therefore atomics are unique in that they
+    /// to be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
     /// don't use the backing element, but will create it when the Serialize is called.
     /// </remarks>
     protected internal AtomicData(Radix radix) : base(new XElement(L5XName.DataValue))
@@ -60,7 +60,7 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> representing the format of the atomic type value.</value>
     /// <remarks>
-    /// This value is ont actually read from the underlying XML element but instead inferred from the value
+    /// This value is not actually read from the underlying XML element but instead inferred from the value
     /// of the underlying data element. This is because some elements were observed to show the incorrect format
     /// which could cause runtime errors when trying to parse the string value. The Radix will however be written to the
     /// element upon creation of an <see cref="AtomicData"/> and should never be changed. Radix and Value are immutable
@@ -170,10 +170,10 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// <returns>An <see cref="AtomicData"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
     public static AtomicData? TryParse(string? value)
     {
-        if (value is null || value.IsEmpty()) return default;
+        if (value is null || value.IsEmpty()) return null;
         if (value.IsEquivalent("true")) return new BOOL(true);
         if (value.IsEquivalent("false")) return new BOOL(false);
-        return Radix.TryInfer(value, out var radix) ? radix.ParseValue(value) : default;
+        return Radix.TryInfer(value, out var radix) ? radix.ParseValue(value) : null;
     }
 
     /// <summary>

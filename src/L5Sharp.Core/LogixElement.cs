@@ -44,7 +44,7 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// A list containing the order of any child elements for the current logix element.
-    /// By default, this is empty collection but derived classes can override this. When this collection contians names,
+    /// By default, this is empty collection but derived classes can override this. When this collection contains names,
     /// any adds of properties, containers, or complex types will then use this list to sort the order of the elements
     /// in the underlying parent element. 
     /// </summary>
@@ -117,7 +117,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <para>
     /// All logix elements are backed by an underlying <see cref="XElement"/> through which derived classes
     /// get and set properties. This means all classes in this library can be viewed as wrapper around an
-    /// <see cref="XElement"/> or segment of XMl, and use deferred execution for retrieving and setting data.
+    /// <see cref="XElement"/> or segment of XML, and use deferred execution for retrieving and setting data.
     /// </para>
     /// <para>
     /// This method exposes the underlying element for extension and serialization purposes.

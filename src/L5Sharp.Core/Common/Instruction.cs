@@ -46,7 +46,7 @@ public sealed class Instruction
         Factories().ToDictionary(x => x.Key, x => x.Value);
 
     /// <summary>
-    /// Indicates whether this <c>Instruction</c> is one that calls or references a <c>Task</c> component by name.
+    /// Indicates whether this <c>Instruction</c> is one that calls or references a logix component by name.
     /// </summary>
     private bool IsSystemCall => Key is nameof(GSV) or nameof(SSV);
 
