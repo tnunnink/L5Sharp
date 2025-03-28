@@ -65,12 +65,12 @@ public class CrossReference
     public string Element { get; }
 
     /// <summary>
-    /// The <see cref="Core.Instruction"/> that contains this reference. This will only be availble for
+    /// The <see cref="Core.Instruction"/> that contains this reference. This will only be available for
     /// references that are found in rung or line elements. 
     /// </summary>
     public Instruction? Instruction => Scope.Type == ScopeType.Rung || Scope.Type == ScopeType.Line
         ? Instruction.Parse(Element)
-        : default;
+        : null;
 
     /// <summary>
     /// Indicates that element containing the reference is a tag type component.
@@ -81,6 +81,9 @@ public class CrossReference
     /// Indicates that element containing the reference is a logic (Rung, Line, Sheet) type component.
     /// </summary>
     public bool IsLogic => Scope.Type.InRoutine;
+
+    /// <inheritdoc />
+    public override string ToString() => Scope.Path;
 
     /// <summary>
     /// Produces a collection of all references found in the provided <see cref="XElement"/> object.

@@ -70,8 +70,8 @@ public sealed class Scope
     /// The full path that uniquely identifies the scope of the element, or where in the L5X tree the element is found.
     /// </summary>
     /// <remarks>
-    /// Path is esstentiall the "value" of any given scope and is used for equality checks. Path is built like a Uri
-    /// using '/' characters to separate th segments of the path. Each part should reprent the name of the containing
+    /// Path is essentially the "value" of any given scope and is used for equality checks. Path is built like a Uri
+    /// using '/' characters to separate th segments of the path. Each part should represent the name of the containing
     /// element, element type, or element name. Paths can be absolute or relative. Relative paths start with a '/'.
     /// </remarks>
     public string Path { get; } = string.Empty;
@@ -80,7 +80,7 @@ public sealed class Scope
     /// The <see cref="ScopeLevel"/> indicating whether this is a controller, program, or routine scoped element.
     /// </summary>
     /// <remarks>
-    /// You can also check the scope level by using the Is properties to more susinctly determine what "type"
+    /// You can also check the scope level by using the Is properties to more succinctly determine what "type"
     /// of scope this object represents.
     /// </remarks>
     /// <seealso cref="IsScoped"/>     
@@ -167,7 +167,7 @@ public sealed class Scope
 
     /// <summary>
     /// Indicates whether this is a global (Controller) scoped instance.
-    /// This is in constrast to <see cref="IsLocal"/>.
+    /// This is in contrast to <see cref="IsLocal"/>.
     /// </summary>
     /// <remarks>
     /// This is a helper so that we don't always need to write the full equality check.
@@ -176,7 +176,7 @@ public sealed class Scope
 
     /// <summary>
     /// Indicates whether this is a local (Program or Routine) scoped instance.
-    /// This is in constrast to <see cref="IsGlobal"/>.
+    /// This is in contrast to <see cref="IsGlobal"/>.
     /// </summary>
     /// <remarks>
     /// This is a helper so that we don't always need to write the full equality check.
@@ -208,7 +208,7 @@ public sealed class Scope
     /// <param name="controller">The optional name of the root controller element.
     /// If not provided, then the resulting scope will represent a relative path.</param>
     /// <returns>A <see cref="IScopeBuilder"/> fluent interface for building the scope instance.</returns>
-    public static IScopeBuilder Build(string? controller = default) => new ScopeBuider(controller ?? string.Empty);
+    public static IScopeBuilder Build(string? controller = null) => new ScopeBuilder(controller ?? string.Empty);
 
     /// <summary>
     /// Determines whether the current scope is shared with another scope by comparing the controller and program names.
@@ -407,7 +407,7 @@ public sealed class Scope
 
     /// <summary>
     /// Determines the program name based on the number of segments and current Type.
-    /// If present, the program is always the sevond value of the segment array.
+    /// If present, the program is always the second value of the segment array.
     /// Program is only assumed in a scope with 4 or more segments.
     /// When we have exactly 4 segments and the type is a routine type, we assume no program name.
     /// </summary>
@@ -457,7 +457,7 @@ public sealed class Scope
     /// <summary>
     /// Determines the name of the path based on the number of segments.
     /// If present, the name is the last segment of the array.
-    /// This could technically be an empy string for cases like "/Program/Type/"
+    /// This could technically be an empty string for cases like "/Program/Type/"
     /// If we only get single string with no separator then it will be considered the name.
     /// </summary>
     private string DetermineName()

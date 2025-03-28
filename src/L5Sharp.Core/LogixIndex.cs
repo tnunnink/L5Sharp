@@ -181,7 +181,7 @@ internal class LogixIndex : ILogixLookup
 
         if (!_elements.TryGetValue(key, out var value))
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -199,7 +199,7 @@ internal class LogixIndex : ILogixLookup
 
         if (!_elements.TryGetValue(key, out var value))
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -220,7 +220,7 @@ internal class LogixIndex : ILogixLookup
 
         if (!_elements.TryGetValue(key, out var value))
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -241,7 +241,7 @@ internal class LogixIndex : ILogixLookup
 
         if (!_elements.TryGetValue(key, out var value))
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -257,10 +257,9 @@ internal class LogixIndex : ILogixLookup
 
         var key = $"{ReferenceType.FromComponent(component)}:{component.Name}";
 
-        if (!_references.TryGetValue(key, out var references))
-            return [];
-
-        return references.Where(r => component.Scope.IsVisibleTo(r.Scope));
+        return _references.TryGetValue(key, out var references)
+            ? references.Where(r => component.Scope.IsVisibleTo(r.Scope))
+            : [];
     }
 
     public IEnumerable<Scope> Scopes()
@@ -307,7 +306,7 @@ internal class LogixIndex : ILogixLookup
         ];
 
         var elements = _content.Descendants()
-            .Where(e => types.Contains(e.L5XType()) && e.Attribute(L5XName.Name) is not null);
+            .Where(e => types.Contains(e.L5XType()) && !string.IsNullOrEmpty(e.Attribute(L5XName.Name)?.Value));
 
         foreach (var element in elements)
         {
@@ -349,6 +348,19 @@ internal class LogixIndex : ILogixLookup
             IndexProgramScopedRungs(program);
             IndexProgramScopedLines(program);
             IndexProgramScopedSheets(program);
+        }
+    }
+    
+    /// <summary>
+    /// Handles finding and indexing all content in the AOI scoped elements.
+    /// </summary>
+    private void IndexInstructionScopedElements()
+    {
+        var instructions = _content.Descendants(L5XName.AddOnInstructionDefinition);
+
+        foreach (var instruction in instructions)
+        {
+            
         }
     }
 
@@ -525,7 +537,7 @@ internal class LogixIndex : ILogixLookup
     }
 
     /// <summary>
-    /// Creates the reference key and sdds the cross-reference to the internal dictionary.
+    /// Creates the reference key and adds the cross-reference to the internal dictionary.
     /// </summary>
     private void AddReference(CrossReference reference)
     {
@@ -536,13 +548,13 @@ internal class LogixIndex : ILogixLookup
     }
 
     /// <summary>
-    /// Helper for returning the TryGet result and element based on the nullness of the input element.
+    /// Helper for returning the TryGet result and element based on whether the input element is null.
     /// </summary>
     private static bool IsNull<TObject>(TObject? element, out TObject result) where TObject : LogixObject
     {
         if (element is null)
         {
-            result = default!;
+            result = null!;
             return false;
         }
 

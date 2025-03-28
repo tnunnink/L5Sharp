@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Internal class that implements the builder interface.
 /// </summary>
-internal class ScopeBuider(string controller) : IScopeBuilder,
+internal class ScopeBuilder(string controller) : IScopeBuilder,
     IScopeProgramBuilder, IScopeRoutineBuilder, IScopeNameBuilder, IScopeTypeBuilder
 {
     private const char PathSeparator = '/';
@@ -110,7 +110,7 @@ internal class ScopeBuider(string controller) : IScopeBuilder,
 
     private Scope Build()
     {
-        var parts = new[] { controller, _program, _routine, _type, _name }.Where(part => !L5XExtensions.IsEmpty(part));
+        var parts = new[] { controller, _program, _routine, _type, _name }.Where(part => !part.IsEmpty());
         var path = parts.Combine(PathSeparator);
         return Scope.To(path);
     }

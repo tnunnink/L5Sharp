@@ -153,7 +153,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
 
         if (result is null)
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -171,7 +171,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
 
         if (result is null)
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -192,7 +192,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
 
         if (result is null)
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -213,7 +213,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
 
         if (result is null)
         {
-            element = default!;
+            element = null!;
             return false;
         }
 
@@ -229,9 +229,8 @@ internal class LogixLookup(XElement content) : ILogixLookup
 
     public IEnumerable<Scope> Scopes()
     {
-        var types = new HashSet<string>(ScopeType.All().Select(s => s.Value));
-        var elements = content.Descendants().Where(d => types.Contains(d.L5XType()));
-        return elements.Select(Scope.Of);
+        throw new NotSupportedException(
+            "Retrieving scopes is only supported for L5X instances that are created with the L5XOptions.Index specified.");
     }
 
     #endregion
@@ -245,7 +244,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
     {
         if (element is null)
         {
-            result = default!;
+            result = null!;
             return false;
         }
 

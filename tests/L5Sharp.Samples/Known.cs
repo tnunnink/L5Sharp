@@ -11,7 +11,7 @@ namespace L5Sharp.Samples
         public static readonly string TestAcd = Path.Combine(Directory, "Test.ACD");
         public static readonly string Empty = Path.Combine(Directory, "Empty.xml");
         public static readonly string LotOfTags = Path.Combine(Directory, "LotOfTags.xml");
-        public const string Example = @"C:\Users\tnunn\Documents\L5X\Example.L5X";
+        public const string Example = @"C:\Users\tnunnink\Documents\Rockwell\Example.L5X";
 
         public const string DataType = "SimpleType";
         public const string AddOnInstruction = "aoi_Test";

@@ -192,16 +192,16 @@ internal static class L5XExtensions
 
         var tagName = new TagName(root.LogixName());
 
-        //Gets anscestors from here up to right before the root tag element.
+        //Gets ancestors from here up to right before the root tag element.
         //If this is the tag element then should not perform iteration, and we return what we have.
-        var memebers = element.AncestorsAndSelf()
+        var members = element.AncestorsAndSelf()
             .Where(e => !e.MemberName().IsEmpty())
             .TakeWhile(e => !e.IsTagElement())
             .ToList();
 
-        for (var i = memebers.Count - 1; i >= 0; i--)
+        for (var i = members.Count - 1; i >= 0; i--)
         {
-            var member = memebers[i].MemberName();
+            var member = members[i].MemberName();
             tagName = Core.TagName.Concat(tagName, member);
         }
 
@@ -271,6 +271,29 @@ internal static class L5XExtensions
     internal static bool IsModuleTagElement(this XElement element)
     {
         return element.Name.LocalName is L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the data format from the specified XML element.
+    /// </summary>
+    /// <param name="element">The XML element from which to extract the data format.</param>
+    /// <param name="format">The output parameter that, on success, will contain the retrieved data format.</param>
+    /// <returns>true if a valid data format is found; otherwise, false.</returns>
+    internal static bool TryGetDataFormat(this XElement element, out DataFormat format)
+    {
+        var value = element
+            .Elements(L5XName.Data)
+            .FirstOrDefault(x => x.Attribute(L5XName.Format)?.Value != DataFormat.L5K.Name)?
+            .Attribute(L5XName.Format)?.Value;
+
+        if (value is null)
+        {
+            format = null!;
+            return false;
+        }
+
+        format = value.Parse<DataFormat>();
+        return true;
     }
 
     /// <summary>
