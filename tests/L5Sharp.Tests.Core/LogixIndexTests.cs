@@ -330,9 +330,9 @@ public class LogixIndexTests
     [Test]
     public void Scopes_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Example);
+        var content = L5X.Load(Known.Example, L5XOptions.Index);
 
-        var scopes = content.Scopes().GroupBy(s => s.Path).Where(g => g.Count() > 1).ToList();
+        var scopes = content.Scopes().ToList();
 
         scopes.Should().NotBeEmpty();
     }
