@@ -25,7 +25,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
 
     /// <summary>
     /// A regex pattern for a Logix tag name with starting and ending anchors.
-    /// Use this pattern to match a string and ensure it is only a tag name an nothing else.
+    /// Use this pattern to match a string and ensure it is only a tag name and nothing else.
     /// </summary>
     public const string AnchorPattern =
         @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
@@ -216,7 +216,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
+    /// This equivalency check uses an ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Root value to the full value of the provided tag name.
     /// </remarks>
     public bool HasRoot(TagName tagName) => Root.IsEquivalent(tagName);
@@ -231,7 +231,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
+    /// This equivalency check uses an ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Operand value to the full value of the provided tag name.
     /// </remarks>
     public bool HasOperand(TagName tagName) => Operand.IsEquivalent(tagName);
@@ -246,7 +246,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
+    /// This equivalency check uses an ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Path value to the full value of the provided tag name.
     /// </remarks>
     public bool HasPath(TagName tagName) => Path.IsEquivalent(tagName);
@@ -261,7 +261,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This equivalency check uses a ordinal comparer and is case-insensitive. Note that it is comparing the
+    /// This equivalency check uses an ordinal comparer and is case-insensitive. Note that it is comparing the
     /// current Member value to the full value of the provided tag name.
     /// </remarks>
     public bool HasMember(TagName tagName) => Member.IsEquivalent(tagName);
@@ -415,14 +415,17 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
         if (value.IsEmpty()) return false;
 
         var normalized = NormalizeDelimiter(value);
-        var members = normalized.Split(MemberSeparator).ToList();
+        var members = normalized.Split(MemberSeparator, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         for (var i = 0; i < members.Count; i++)
         {
+            var member = members[i];
+
             switch (i)
             {
-                case 0 when !IsValidRoot(members[i]):
-                case > 0 when members[i].StartsWith(ArrayOpenSeparator) && !IsValidIndex(members[i]):
+                case 0 when !IsValidRoot(member):
+                case > 0 when member.StartsWith(ArrayOpenSeparator) &&
+                              !(IsValidNumericIndex(member) || IsValidReferenceIndex(member)):
                 case > 0 when char.IsLetter(members[i][0]) && !IsValidMember(members[i]):
                     return false;
             }
@@ -436,7 +439,9 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
 
         bool IsValidMember(string member) => Regex.IsMatch(member, @"^[A-Za-a_][\w]{0,39}$");
 
-        bool IsValidIndex(string member) => Regex.IsMatch(member, @"^\[[0-9]+(?:\,[0-9]+)?(?:\,[0-9]+)?\]$");
+        bool IsValidReferenceIndex(string member) => Regex.IsMatch(member, @"^\[[A-Za-a_][\w:]{0,39}\]$");
+
+        bool IsValidNumericIndex(string member) => Regex.IsMatch(member, @"^\[[0-9]+(?:\,[0-9]+)?(?:\,[0-9]+)?\]$");
 
         bool IsValidBit(string member) =>
             member.All(char.IsDigit) && int.TryParse(member, out var bit) && bit is >= 0 and <= 63;

@@ -11,14 +11,7 @@ namespace L5Sharp.Tests.Core.Common
 
         private const string Test02 =
             "GRT(SimpleInt,400)XIO(MultiDimensionalArray[1,3].3)CMP(ATN(_Test) > 1.0)[TON(TimerArray[0],?,?),OTU(TestComplexTag.SimpleMember.BoolMember)];";
-        
 
-        [Test]
-        public void Method_Scenario_ExpectedBehavior()
-        {
-           
-        }
-        
         [Test]
         public void New_NullText_ShouldThrowArgumentNullException()
         {
@@ -50,15 +43,15 @@ namespace L5Sharp.Tests.Core.Common
 
             text.Should().NotBeNull();
         }
-        
+
         [Test]
         public void IsBalanced_ValidText_ShouldBeTrue()
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
-            
+
             text.IsBalanced.Should().BeTrue();
         }
-        
+
         [Test]
         public void IsBalanced_Unbalanced_ShouldBeFalse()
         {
@@ -66,7 +59,7 @@ namespace L5Sharp.Tests.Core.Common
 
             text.IsBalanced.Should().BeFalse();
         }
-        
+
         [Test]
         public void IsBalanced_TestText_ShouldBeTrue()
         {
@@ -114,7 +107,7 @@ namespace L5Sharp.Tests.Core.Common
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void Instructions_Empty_ShouldBeEmpty()
         {
@@ -124,7 +117,7 @@ namespace L5Sharp.Tests.Core.Common
 
             result.Should().BeEmpty();
         }
-        
+
         [Test]
         public void Instructions_SimpleTextWithMultipleInstruction_ShouldHaveExpectedCount()
         {
@@ -165,7 +158,7 @@ namespace L5Sharp.Tests.Core.Common
 
             result.First().Text.Should().Be(text);
         }
-        
+
         [Test]
         public void InstructionsBy_WithExistingInstructionPresent_ShouldContainExpectedText()
         {
@@ -188,14 +181,14 @@ namespace L5Sharp.Tests.Core.Common
 
             result.Should().HaveCount(1);
         }
-        
+
         [Test]
         public void Keywords_TextWithKeywords_ShouldHaveExpectedCount()
         {
             var text = new NeutralText("if Tag >= 10 then");
-            
+
             var keywords = text.Keywords().ToList();
-            
+
             keywords.Should().HaveCount(2);
         }
 
@@ -203,9 +196,9 @@ namespace L5Sharp.Tests.Core.Common
         public void Keywords_TextWithNoKeywords_ShouldBeEmpty()
         {
             var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
-            
+
             var keywords = text.Keywords().ToList();
-            
+
             keywords.Should().BeEmpty();
         }
 
@@ -228,7 +221,7 @@ namespace L5Sharp.Tests.Core.Common
 
             tagNames.Should().HaveCount(1);
         }
-        
+
         [Test]
         public void StructuredText_New_ShouldNotBeNull()
         {
@@ -236,7 +229,7 @@ namespace L5Sharp.Tests.Core.Common
 
             text.Should().NotBeNull();
         }
-        
+
         [Test]
         public void StructuredText_ShouldHaveExpected()
         {
@@ -246,6 +239,18 @@ namespace L5Sharp.Tests.Core.Common
             text.IsBalanced.Should().BeTrue();
             text.Instructions().Should().BeEmpty();
             text.Tags().Should().HaveCount(2);
+        }
+
+        [Test]
+        [Description("GitHub Issue #52: A tag with a bit index reference tag should parse correctly")]
+        public void Instructions_BitReferenceIndexTag_ShouldReturnExpectedInstruction()
+        {
+            var text = new NeutralText("XIC(DintTest.[Offset]);");
+
+            var instructions = text.Instructions().ToList();
+
+            instructions.Should().HaveCount(1);
+            instructions[0].Tags.Should().Contain("DintTest.[Offset]");
         }
     }
 }
