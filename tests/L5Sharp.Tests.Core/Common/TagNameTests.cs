@@ -100,6 +100,17 @@ namespace L5Sharp.Tests.Core.Common
             
             result.Should().BeFalse();
         }
+        
+        [Test]
+        [Description("GitHub Issue #52: A tag with a bit index reference tag should be qualified")]
+        public void IsQualified_BitIndexAddressing_ShouldBeFalse()
+        {
+            var tagName = new TagName("DintTest.[Offset]");
+            
+            var result = tagName.IsQualified;
+            
+            result.Should().BeTrue();
+        }
 
         [Test]
         public void Root_WhenCalledManyTimes_ShouldBeEfficient()
