@@ -8,7 +8,7 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>4.8.1</Version>
+        <Version>4.8.2</Version>
         <AssemblyVersion>4.8.2</AssemblyVersion>
         <FileVersion>4.8.2.0</FileVersion>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
