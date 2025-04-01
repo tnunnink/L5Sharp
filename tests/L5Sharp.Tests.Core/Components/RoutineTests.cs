@@ -105,6 +105,41 @@ public class RoutineTests
         routine.Type.Should().Be(RoutineType.ST);
     }
 
+    #region L5XTest
+
+    [Test]
+    public void ListAllRoutinesInProjectShouldReturnNoneEmptyCollection()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var routines = content.Query<Routine>().ToList();
+
+        routines.Should().NotBeEmpty();
+    }
+    
+    [Test]
+    public void ListAllRoutinesInProjectWithRoutinesOfSameNameShouldReturnNoneEmptyCollection()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var routines = content.Query<Routine>().ToList();
+
+        routines.Should().NotBeEmpty();
+    }
+    
+    [Test]
+    [Description("GitHub Issue #54: All routines should get correct parent program reference")]
+    public void AllRoutinesParentProgramShouldMatchScopeProgramName()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var results = content.Query<Routine>().ToList();
+
+        results.Should().AllSatisfy(r => r.Program?.Name.Should().Be(r.Scope.Program));
+    }
+
+    #endregion
+
     #region FBDTests
 
     [Test]

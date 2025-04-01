@@ -127,9 +127,9 @@ public class Routine : LogixComponent<Routine>
     /// </summary>
     /// <remarks>
     /// This is a navigation helper to allow easily retrieving the parent program for a given routine component.
-    /// This requires an scoped/attached L5X as it traverses the L5X document tree to find the target component. 
+    /// This requires a scoped/attached L5X as it traverses the L5X document tree to find the target component. 
     /// </remarks>
-    public Program? Program => L5X?.Programs.FirstOrDefault(p => p.Routines.Any(r => r.Name.IsEquivalent(Name)));
+    public Program? Program => Element.Ancestors(L5XName.Program).FirstOrDefault()?.Deserialize<Program>();
 
     /// <summary>
     /// Returns a <see cref="LogixContainer{TObject}"/> of <see cref="Rung"/> found in this routine component.
