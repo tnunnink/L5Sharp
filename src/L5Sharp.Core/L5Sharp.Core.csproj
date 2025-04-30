@@ -8,9 +8,9 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Title>L5Sharp</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>4.8.3</Version>
-        <AssemblyVersion>4.8.3</AssemblyVersion>
-        <FileVersion>4.8.3.0</FileVersion>
+        <Version>4.8.4</Version>
+        <AssemblyVersion>4.8.4</AssemblyVersion>
+        <FileVersion>4.8.4.0</FileVersion>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>

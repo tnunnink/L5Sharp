@@ -36,4 +36,14 @@ public class L5XTagTests
 
         references.Should().NotBeEmpty();
     }
+
+    [Test]
+    public void Scope_AllNestedTagMembers_ShouldNotHaveDoubleSlash()
+    {
+        var content = L5X.Load(Known.Test);
+        
+        var scopes = content.Query<Tag>().SelectMany(t => t.Members()).Select(t => t.Scope).ToList();
+        
+        scopes.Should().AllSatisfy(s => s.Path.Should().NotContain("//"));
+    }
 }

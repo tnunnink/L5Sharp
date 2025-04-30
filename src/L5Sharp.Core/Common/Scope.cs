@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 // ReSharper disable InvertIf
 // ReSharper disable UseIndexFromEndExpression
@@ -51,6 +52,7 @@ public sealed class Scope
             throw new ArgumentException("Scope path can not be null or empty.");
 
         Path = path;
+
         _segments = Path.Split(PathSeparator).ToArray();
     }
 
@@ -63,6 +65,7 @@ public sealed class Scope
             throw new ArgumentNullException(nameof(element));
 
         Path = DeterminePath(element);
+
         _segments = Path.Split(PathSeparator).ToArray();
     }
 
@@ -240,9 +243,12 @@ public sealed class Scope
     /// <returns>A new <see cref="Scope"/> instance with the concatenated path.</returns>
     public Scope Append(Scope scope)
     {
-        if (scope is null) throw new ArgumentNullException(nameof(scope));
+        if (scope is null) 
+            throw new ArgumentNullException(nameof(scope));
+        
         var left = Path.TrimEnd(PathSeparator);
         var right = scope.Path.TrimStart(PathSeparator);
+        
         return new Scope(string.Concat(left, PathSeparator, right));
     }
 
@@ -504,20 +510,16 @@ public sealed class Scope
     /// </summary>
     private static string DeterminePath(XElement node)
     {
-        var controller = node.Ancestors(L5XName.Controller).FirstOrDefault()?.LogixName() ?? string.Empty;
-        var program = node.Ancestors().FirstOrDefault(IsProgram)?.LogixName() ?? string.Empty;
-        var routine = node.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
+        var ancestors = node.Ancestors().ToDictionary(x => x.Name.LocalName);
+
+        var controller = ancestors.TryGetValue(L5XName.Controller, out var c) ? c.LogixName() : string.Empty;
+        var program = ancestors.TryGetValue(L5XName.Program, out var p) ? p.LogixName() : null;
+        var aoi = ancestors.TryGetValue(L5XName.AddOnInstructionDefinition, out var i) ? i.LogixName() : null;
+        var routine = ancestors.TryGetValue(L5XName.Routine, out var r) ? r.LogixName() : string.Empty;
         var type = node.IsTagElement() ? ScopeType.Tag : ScopeType.Parse(node.Name.LocalName);
-        var name = IsCode(node)
-            ? node.Attribute(L5XName.Number)?.Value ?? string.Empty
-            : node.IsTagElement()
-                ? node.TagName()
-                : node.LogixName();
+        var name = node.Identifier();
 
-        return BuildPath(controller, program, routine, type, name);
-
-        bool IsProgram(XElement element) => element.Name.LocalName is L5XName.Program or L5XName.AddOnInstruction;
-        bool IsCode(XElement element) => element.Name.LocalName is L5XName.Rung or L5XName.Line or L5XName.Sheet;
+        return BuildPath(controller, program ?? aoi ?? string.Empty, routine, type, name);
     }
 
     /// <summary>

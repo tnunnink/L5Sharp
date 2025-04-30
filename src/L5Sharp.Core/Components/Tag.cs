@@ -17,6 +17,8 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.ConfigTag)]
 [L5XType(L5XName.InputTag)]
 [L5XType(L5XName.OutputTag)]
+[L5XType(L5XName.InAliasTag)]
+[L5XType(L5XName.OutAliasTag)]
 public class Tag : LogixComponent<Tag>
 {
     /// <summary>
@@ -71,7 +73,7 @@ public class Tag : LogixComponent<Tag>
     /// <param name="name">The name of the tag.</param>
     /// <param name="value">The <see cref="LogixData"/> value of the tag.</param>
     /// <param name="description">The optional description of the tag.</param>
-    public Tag(string name, LogixData value, string? description = default) : this()
+    public Tag(string name, LogixData value, string? description = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Value = value;
@@ -87,9 +89,9 @@ public class Tag : LogixComponent<Tag>
     /// <remarks>
     /// This constructor will use the <see cref="LogixData.Create(string)"/> factory method to instantiate the <see cref="Value"/>
     /// data for the tag. If <paramref name="dataType"/> represents a complex type that is not statically defined,
-    /// it will defualt to creating a <see cref="ComplexData"/> instance having the provided name.
+    /// it will default to creating a <see cref="ComplexData"/> instance having the provided name.
     /// </remarks>
-    public Tag(string name, string dataType, string? description = default) : this()
+    public Tag(string name, string dataType, string? description = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Value = LogixData.Create(dataType);
@@ -170,14 +172,24 @@ public class Tag : LogixComponent<Tag>
         set => SetTagDescription(value);
     }
 
+    /// <summary>
+    /// The full tag name path of the <see cref="Tag"/>.
+    /// </summary>
+    /// <value>A <see cref="Core.TagName"/> containing the full dot-down path of the tag member name.</value>
+    /// <remarks>
+    /// <para>
+    /// This property will always represent the fully qualified tag name path, which includes nested tag
+    /// member object. This property is determined using the hierarchical structure of the tag component.
+    /// </para>
+    /// </remarks>
+    public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
+
     /// <inheritdoc />
     /// <remarks>
     /// Tag overrides Scope to ensure nested tag members build the correct scope path that includes
     /// the full <see cref="TagName"/>.
     /// </remarks>
-    public override Scope Scope => Parent is null
-        ? Scope.Of(Element)
-        : Scope.To($"{Parent.Scope.Controller}/{Parent.Scope.Program}/{ScopeType.Tag}/{TagName}");
+    public override Scope Scope => Parent is null ? Scope.Of(Element) : Root.Scope.Container + TagName;
 
     /// <summary>
     /// The name of the data type the tag represents. 
@@ -377,19 +389,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <value>The <see cref="Tag"/> object that represents the alias if found. If this object is not
     /// attached, or <see cref="AliasFor"/> is not set, then this will return <c>null</c>.</value>
-    public Tag? Alias => AliasFor is not null && L5X?.TryGet<Tag>(AliasFor, out var alias) is true ? alias : default;
-
-    /// <summary>
-    /// The full tag name path of the <see cref="Tag"/>.
-    /// </summary>
-    /// <value>A <see cref="Core.TagName"/> containing the full dot-down path of the tag member name.</value>
-    /// <remarks>
-    /// <para>
-    /// This property will always represent the fully qualified tag name path, which includes nested tag
-    /// member object. This property is determined using the hierarchical structure of the tag component.
-    /// </para>
-    /// </remarks>
-    public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
+    public Tag? Alias => AliasFor is not null && L5X?.TryGet<Tag>(AliasFor, out var alias) is true ? alias : null;
 
     /// <summary>
     /// The collection of <see cref="Comment"/> configured for this tag.
@@ -504,7 +504,7 @@ public class Tag : LogixComponent<Tag>
         if (tagName.IsEmpty) return this;
 
         var member = Value.Member(tagName.Root);
-        if (member is null) return default;
+        if (member is null) return null;
 
         var tag = new Tag(Root, member, this);
         var remaining = TagName.Combine(tagName.Members.Skip(1));

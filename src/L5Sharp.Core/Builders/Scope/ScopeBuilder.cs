@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text;
 
 namespace L5Sharp.Core;
 
@@ -110,8 +111,14 @@ internal class ScopeBuilder(string controller) : IScopeBuilder,
 
     private Scope Build()
     {
-        var parts = new[] { controller, _program, _routine, _type, _name }.Where(part => !part.IsEmpty());
-        var path = parts.Combine(PathSeparator);
-        return Scope.To(path);
+        var builder = new StringBuilder();
+
+        builder.Append(controller);
+        if (!_program.IsEmpty()) builder.Append(PathSeparator).Append(_program);
+        if (!_routine.IsEmpty()) builder.Append(PathSeparator).Append(_routine);
+        if (_type != ScopeType.Null) builder.Append(PathSeparator).Append(_type);
+        if (!_name.IsEmpty()) builder.Append(PathSeparator).Append(_name);
+
+        return builder.ToString();
     }
 }

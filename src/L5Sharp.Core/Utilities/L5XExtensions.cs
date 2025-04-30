@@ -99,7 +99,7 @@ internal static class L5XExtensions
     internal static IEnumerable<string> L5XTypes(this Type type)
     {
         var attributes = type.GetCustomAttributes<L5XTypeAttribute>(false).ToList();
-        return attributes.Any() ? attributes.Select(attribute => attribute.TypeName) : new[] { type.Name };
+        return attributes.Count != 0 ? attributes.Select(a => a.TypeName) : [type.Name];
     }
 
     /// <summary>
@@ -130,7 +130,10 @@ internal static class L5XExtensions
     /// This is a helper since we access and use the name attribute, so often I just wanted to make
     /// the code more concise.
     /// </remarks>
-    internal static string LogixName(this XElement element) => element.Attribute(L5XName.Name)?.Value ?? string.Empty;
+    internal static string LogixName(this XElement element)
+    {
+        return element.Attribute(L5XName.Name)?.Value ?? string.Empty;
+    }
 
     /// <summary>
     /// Gets the name value of the current member <see cref="XElement"/> object. This can be either the <c>Name</c> or
@@ -188,7 +191,10 @@ internal static class L5XExtensions
             return Core.TagName.Empty;
 
         //Handles special case module tag elements which need to be built from parent module names and slot number.
-        if (root.IsModuleTagElement()) return root.ModuleTagName();
+        if (root.IsModuleTagElement())
+        {
+            return root.ModuleTagName();
+        }
 
         var tagName = new TagName(root.LogixName());
 
@@ -212,14 +218,14 @@ internal static class L5XExtensions
     /// Determines the tag name for a given <see cref="XElement"/> representing a module IO tag.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> representing the module defined IO tag
-    /// (InputTag, OutputTag, or ConfigTag).</param>
+    /// (InputTag, OutputTag, or ConfigTag, InAliasTag, or OutAliasTag).</param>
     /// <returns>A <see cref="TagName"/> representing the name of the module IO tag.</returns>
     /// <remarks>
     /// This is a helper extension since the logic is somewhat complex and used in more than one class.
     /// We look up the L5X tree for module name and parent name, as well as back down to find the potential slot of the module.
     /// All this info along with the corresponding tag suffix make up the tag name for a module tag,
     /// which is not inherent in the L5X element itself, but one that is important to us as it allows us to
-    /// find or reference these tags by name (just as you would find in Studio 5k).
+    /// find or reference these tags by name just as you would find in Studio 5k.
     /// </remarks>
     internal static TagName ModuleTagName(this XElement element)
     {
@@ -239,14 +245,26 @@ internal static class L5XExtensions
 
         string DetermineModuleSuffix(XElement el)
         {
-            if (el.Name == L5XName.InputTag)
-                return el.Parent?.Attribute(L5XName.InputTagSuffix)?.Value ?? "I";
-
-            if (el.Name == L5XName.OutputTag)
-                return el.Parent?.Attribute(L5XName.OutputTagSuffix)?.Value ?? "O";
-
-            return "C";
+            return el.Name.LocalName switch
+            {
+                L5XName.InputTag or L5XName.InAliasTag => el.Parent?.Attribute(L5XName.InputTagSuffix)?.Value ?? "I",
+                L5XName.OutputTag or L5XName.OutAliasTag => el.Parent?.Attribute(L5XName.OutputTagSuffix)?.Value ?? "O",
+                L5XName.ConfigTag => "C",
+                _ => throw new NotSupportedException($"Module tag element not supported for {el.Name.LocalName}")
+            };
         }
+    }
+
+    /// <summary>
+    /// Retrieves the identifier for the specified XML element based on its type or attributes.
+    /// </summary>
+    /// <param name="element">The XML element from which to retrieve the identifier.</param>
+    /// <returns>A string representing the identifier of the XML element.</returns>
+    internal static string Identifier(this XElement element)
+    {
+        if (element.IsCodeElement()) return element.Attribute(L5XName.Number)?.Value ?? string.Empty;
+        if (element.IsTagElement() || element.IsDataMemberElement()) return element.TagName();
+        return element.LogixName();
     }
 
     /// <summary>
@@ -256,11 +274,14 @@ internal static class L5XExtensions
     /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
     internal static bool IsTagElement(this XElement element)
     {
-        return element.Name.LocalName is L5XName.Tag
+        return element.Name.LocalName
+            is L5XName.Tag
             or L5XName.LocalTag
             or L5XName.ConfigTag
             or L5XName.InputTag
-            or L5XName.OutputTag;
+            or L5XName.OutputTag
+            or L5XName.InAliasTag
+            or L5XName.OutAliasTag;
     }
 
     /// <summary>
@@ -270,7 +291,38 @@ internal static class L5XExtensions
     /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
     internal static bool IsModuleTagElement(this XElement element)
     {
-        return element.Name.LocalName is L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag;
+        return element.Name.LocalName
+            is L5XName.ConfigTag
+            or L5XName.InputTag
+            or L5XName.OutputTag
+            or L5XName.InAliasTag
+            or L5XName.OutAliasTag;
+    }
+
+    /// <summary>
+    /// Determines if the current element represents an element we would deserialize as a <see cref="Tag"/> component.
+    /// </summary>
+    /// <param name="element">The element to check.</param>
+    /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
+    internal static bool IsDataMemberElement(this XElement element)
+    {
+        return element.Name.LocalName
+            is L5XName.DataValueMember
+            or L5XName.ArrayMember
+            or L5XName.StructureMember;
+    }
+
+    /// <summary>
+    /// Determines if the specified XML element represents a code element such as a Rung, Line, or Sheet.
+    /// </summary>
+    /// <param name="element">The XML element to evaluate.</param>
+    /// <returns>true if the element is a code element. Otherwise, false.</returns>
+    internal static bool IsCodeElement(this XElement element)
+    {
+        return element.Name.LocalName
+            is L5XName.Rung
+            or L5XName.Line
+            or L5XName.Sheet;
     }
 
     /// <summary>
