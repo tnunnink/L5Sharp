@@ -35,10 +35,10 @@ public class Port : LogixObject
     }
 
     /// <summary>
-    /// Gets the Id of the <see cref="Port"/>.
+    /// Gets the ID of the <see cref="Port"/>.
     /// </summary>
     /// <remarks>
-    /// All Modules have at least one port. Each is identified by the Id property. Typically Modules will have one
+    /// All Modules have at least one port. Each is identified by the ID property. Typically, Modules will have one
     /// or two ports with Ids '1' and '2', respectively.
     /// </remarks>
     public int Id
@@ -74,7 +74,7 @@ public class Port : LogixObject
     }
 
     /// <summary>
-    /// Gets the value indicating whether the there are devices upstream of the current <see cref="Port"/>.
+    /// Gets the value indicating whether there are devices upstream of the current <see cref="Port"/>.
     /// </summary>
     /// <remarks>
     /// From examining the L5X examples, the upstream flag seems to indicate that the port is one connected to a

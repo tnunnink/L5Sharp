@@ -34,7 +34,7 @@ public class Module : LogixComponent<Module>
         Vendor = Vendor.Rockwell;
         ProductType = ProductType.Unknown;
         ParentModule = string.Empty;
-        ParentModPortId = default;
+        ParentModPortId = 0;
         Inhibited = false;
         MajorFault = false;
         SafetyEnabled = false;
@@ -43,6 +43,7 @@ public class Module : LogixComponent<Module>
     }
 
     /// <inheritdoc />
+    // ReSharper disable once MemberCanBePrivate.Global - Deserialization constructor.
     public Module(XElement element) : base(element)
     {
     }
@@ -53,7 +54,7 @@ public class Module : LogixComponent<Module>
     /// <param name="name">The name of the Module.</param>
     /// <param name="catalogNumber">The optional catalog number for the Module. Will default to empty string.</param>
     /// <param name="revision">The optional <see cref="Revision"/> number for the Module. Will default to 1.0.</param>
-    public Module(string name, string? catalogNumber = default, Revision? revision = default) : this()
+    public Module(string name, string? catalogNumber = null, Revision? revision = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         CatalogNumber = catalogNumber ?? string.Empty;
@@ -62,7 +63,7 @@ public class Module : LogixComponent<Module>
 
     /// <inheritdoc />
     /// <remarks>
-    /// Module components don't all have a name attribute (e.g. VFD peripheral modules). For this reason,
+    /// Module components don't all have a name attribute (e.g., VFD peripheral modules). For this reason,
     /// the name property is overriden to not be a required field for this component type. If the name is not found,
     /// this property returns an empty string.
     /// </remarks>
@@ -73,7 +74,7 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// Specify the catalog number that uniquely identifies the module. This is a rockwell defined convention,
+    /// Specify the catalog number that uniquely identifies the module. This is a rockwell defined convention
     /// and represents the identity of the module type.
     /// </summary>
     /// <value>A <see cref="string"/> value containing the catalog number.</value>
@@ -133,7 +134,7 @@ public class Module : LogixComponent<Module>
         {
             var major = Element.Attribute(L5XName.Major)?.Value.Parse<ushort>();
             var minor = Element.Attribute(L5XName.Minor)?.Value.Parse<ushort>();
-            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : default;
+            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : null;
         }
         set
         {
@@ -221,8 +222,8 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <value>A <see cref="LogixContainer{TElement}"/> of <see cref="Port"/> objects.</value>
     /// <remarks>
-    /// Ports define how a module's peripherals are connected to other module's, forming the network or tree of
-    /// devices used to communicated with a controller and field equipment. Ports must have a unique id, a type,
+    /// Ports define how a module's peripherals are connected to other modules, forming the network or tree of
+    /// devices used to communicate with a controller and field equipment. Ports must have a unique id, a type,
     /// and address.
     /// </remarks>
     public LogixContainer<Port> Ports
@@ -245,21 +246,21 @@ public class Module : LogixComponent<Module>
     #region Extensions
 
     /// <summary>
-    /// Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.
+    /// Gets the slot number of the current module if one exists. If the module does not have a slot, it returns null.
     /// </summary>
     /// <value>An <see cref="byte"/> representing the slot number of the module.</value>
     /// <remarks>
-    /// This property is not directly part of the L5X structure, but is a helper to make accessing the slot number simple.
+    /// This property is not directly part of the L5X structure but is a helper to make accessing the slot number simple.
     /// This property looks for an upstream <see cref="Port"/> with a valid slot byte number.
     /// </remarks>
     public byte? Slot => Ports.FirstOrDefault(p => p is { Upstream: true, Address.IsSlot: true })?.Address.ToSlot();
 
     /// <summary>
-    /// Gets or sets the IP address of this module if one exists. If the module does not have an IP, returns null.
+    /// Gets or sets the IP address of this module if one exists. If the module does not have an IP, it returns null.
     /// </summary>
     /// <value>An <see cref="IPAddress"/> representing the IP of the module.</value>
     /// <remarks>
-    /// This property is not directly part of the L5X structure, but is a helper to make accessing the IP simple.
+    /// This property is not directly part of the L5X structure but is a helper to make accessing the IP simple.
     /// This property looks for an Ethernet type <see cref="Port"/> with a valid IPv4 address.
     /// </remarks>
     public IPAddress? IP
@@ -295,7 +296,7 @@ public class Module : LogixComponent<Module>
         get
         {
             var parent = Element.Parent?.Elements().FirstOrDefault(m => m.LogixName() == ParentModule);
-            return parent is not null ? new Module(parent) : default;
+            return parent is not null ? new Module(parent) : null;
         }
     }
 
@@ -316,9 +317,9 @@ public class Module : LogixComponent<Module>
     {
         get
         {
-            return Element.Parent?.Elements().Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
-                       .Select(e => new Module(e))
-                   ?? [];
+            return Element.Parent?.Elements()
+                .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
+                .Select(e => new Module(e)) ?? [];
         }
     }
 
@@ -328,7 +329,7 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <value>An <see cref="IEnumerable{T}"/> containing the base tags for the Module.</value>
     /// <remarks>
-    /// Since module tags are nested within different layers of complex types, it can be difficult to just
+    /// Since module tags are nested within different layers of complex types, it can be challenging to just
     /// get a single list of all module tags. This extension makes that easy by sifting through the object and returning
     /// a flat list containing all non-null config, input, and output tags defined for the <see cref="Module"/> component.
     /// </remarks>
@@ -373,9 +374,9 @@ public class Module : LogixComponent<Module>
     /// child modules.</exception>
     /// <remarks>
     /// This extension gives us an easy way to add modules hierarchically to the underlying L5X content.
-    /// If the parent module is attached to a L5X content file, this will add child module.
+    /// If the parent module is attached to a L5X content file, this will add a child module.
     /// </remarks>
-    public void Add(Module child, Address? address = default)
+    public void Add(Module child, Address? address = null)
     {
         var parentPort = Ports.FirstOrDefault(p => !p.Upstream);
 
@@ -415,7 +416,7 @@ public class Module : LogixComponent<Module>
     /// database file -or- catalog number does not exist in the catalog database.</exception>
     /// <exception cref="ArgumentException"><c>catalogNumber</c> is null or empty.</exception>
     /// <remarks>
-    /// This factory method uses the <see cref="ModuleCatalog"/> service to lookup info for the specified
+    /// This factory method uses the <see cref="ModuleCatalog"/> service to look up info for the specified
     /// catalog number. If RSLogix is not installed on the current environment, this will throw an exception.
     /// </remarks>
     public static Module Create(string name, string catalogNumber, Address? address = null)
@@ -487,7 +488,7 @@ public class Module : LogixComponent<Module>
 
     /// <summary>
     /// Gets the next largest slot number for the current module based on the slot numbers of all other
-    /// child modules with ths same parent module. 
+    /// child modules with this same parent module. 
     /// </summary>
     private Address NextSlot()
     {
@@ -509,7 +510,7 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <param name="address">The <see cref="Address"/> to configure this module with.</param>
     /// <remarks>
-    /// The address in this case can be either a slot number or IP address. This helper method will find the first
+    /// The address in this case can be either a slot number or an IP address. This helper method will find the first
     /// matching upstream port and set the address property if found. If not found, this method will throw an exception.
     /// </remarks>
     private void SetAddress(Address address)

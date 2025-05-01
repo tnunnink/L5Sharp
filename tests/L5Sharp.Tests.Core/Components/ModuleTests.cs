@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using FluentAssertions;
+
 // ReSharper disable UseObjectOrCollectionInitializer
 
 namespace L5Sharp.Tests.Core.Components;
@@ -110,7 +111,7 @@ public class ModuleTests
             ParentModPortId = 1,
             Ports = [new Port { Id = 1, Type = "Ethernet", Upstream = true }]
         };
-        
+
         module.IP = IPAddress.Loopback;
 
         module.IP.ToString().Should().Be("127.0.0.1");
@@ -144,7 +145,7 @@ public class ModuleTests
             SafetyEnabled = true,
             MajorFault = true,
             Keying = ElectronicKeying.Disabled,
-            Ports = new LogixContainer<Port> { new() { Id = 1, Type = "ICP", Address = "1", Upstream = true } }
+            Ports = [new Port { Id = 1, Type = "ICP", Address = "1", Upstream = true }]
         };
 
         var xml = module.Serialize().ToString();

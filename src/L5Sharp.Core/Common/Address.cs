@@ -51,7 +51,7 @@ public class Address : ILogixParsable<Address>
     public bool IsEmpty => _value.IsEmpty();
 
     /// <summary>
-    /// Represents no address value, or an empty string.
+    /// Represents no address value or an empty string.
     /// </summary>
     public static Address None => new(string.Empty);
 
@@ -59,7 +59,7 @@ public class Address : ILogixParsable<Address>
     /// Creates a new <see cref="Address"/> with the optional IP address value.
     /// </summary>
     /// <returns>A <see cref="Address"/> with the default IP value.</returns>
-    public static Address IP(string? ip = default) => ip is not null ? new Address(ip) : new Address("192.168.0.1");
+    public static Address IP(string? ip = null) => ip is not null ? new Address(ip) : new Address("192.168.0.1");
 
     /// <summary>
     /// Creates a new <see cref="Address"/> with the optional slot number.
