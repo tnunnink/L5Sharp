@@ -178,7 +178,7 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
     }
 
     /// <summary>
-    /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
+    /// Returns a new deep-cloned instance as the specified <see cref="LogixElement"/> type.
     /// </summary>
     /// <returns>A new instance of the specified element type with the same property values.</returns>
     public new TComponent Clone() => new XElement(Serialize()).Deserialize<TComponent>();
@@ -190,9 +190,9 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
     /// <returns>A new <see cref="LogixComponent"/> instance that represents the parsed value.</returns>
     /// <remarks>
     /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
     /// Also note that since this uses internal XElement and casts the type, this method can throw exceptions for invalid
-    /// XML or XML that is parsed to an different type thatn the one specified here.
+    /// XML or XML that is parsed to a different type than the one specified here.
     /// </remarks>
     public static TComponent Parse(string value)
     {

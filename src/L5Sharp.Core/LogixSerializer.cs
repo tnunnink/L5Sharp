@@ -11,7 +11,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A static deserialization class for <see cref="LogixElement"/> objects and their derivatives.
 /// This class uses a dictionary to cache deserialization functions for types deriving from LogixElement.
-/// We are using compiled expression functions as they are more performant that invoking constructors via reflection.
+/// We are using compiled expression functions as they are more performant than invoking constructors via reflection.
 /// We are also caching them for reuse so we don't have to build them each time we call <see cref="Deserialize"/>.
 /// </summary>
 public static class LogixSerializer
@@ -68,7 +68,7 @@ public static class LogixSerializer
     /// This method will traverse the XML tree until it reaches a <c>XElement</c> with a name matching
     /// a known deserializable logic element type. Once it finds that type/element pair, it will deserialize it as that
     /// type and return the result. This is important for any feature that would require deserialization of
-    /// logix elements when the type is not known at compile type or perhaps returns a collection of different element
+    /// logix elements when the type is not known at a compiler type or perhaps returns a collection of different element
     /// types. It is up to the caller to infer or cast the resulting element type appropriately. 
     /// </remarks>
     public static LogixElement Deserialize(this XElement element)
@@ -90,7 +90,7 @@ public static class LogixSerializer
     /// <summary>
     /// Creates our global deserialization collection to initialize our dictionary lookup. This will add custom data
     /// deserializer functions defined in this file, as well as scan this and all loaded assemblies for deserializable
-    /// types they are defined in this another libraries in order to make our <see cref="LogixSerializer"/> implementation
+    /// types they are defined in this another library to make our <see cref="LogixSerializer"/> implementation
     /// aware of the types it can create.
     /// </summary>
     private static IEnumerable<KeyValuePair<string, Func<XElement, LogixElement>>> Scan()
@@ -104,7 +104,7 @@ public static class LogixSerializer
         var sharp = typeof(LogixSerializer).Assembly;
         deserializers.AddRange(Introspect(sharp));
 
-        //Scan other loaded assemblies for use defined types.
+        //Scan other loaded assemblies for use-defined types.
         var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a != sharp);
         foreach (var assembly in assemblies)
             deserializers.AddRange(Introspect(assembly));
@@ -186,7 +186,7 @@ public static class LogixSerializer
     /// return type.</returns>
     /// <remarks>
     /// This extension is the basis for how we build the deserialization functions using reflection and
-    /// expression trees. Using compiled expression trees is much more efficient that calling the invoke method for a type's
+    /// expression trees. Using compiled expression trees is much more efficient than calling the invoke method for a type's
     /// constructor info obtained via reflection. This method makes all the necessary checks on the current type, ensuring the
     /// returned deserializer delegate will execute without exception.
     /// </remarks>
@@ -232,7 +232,7 @@ public static class LogixSerializer
         if (element.FirstNode is not XElement data)
             return LogixData.Null;
 
-        //We could just call deserialize again, but we risk infinite loops if the child is not registered or recognizable.
+        //We could just call deserializing again, but we risk infinite loops if the child is not registered or recognizable.
         //Probably not going to happen, but we can stop and throw an exception if it is not the expected element, which is probably better.
         return data.Name.LocalName switch
         {
@@ -252,7 +252,7 @@ public static class LogixSerializer
     }
 
     /// <summary>
-    /// Handles deserializing an element to a atomic value type. This will get the data type name and value and use
+    /// Handles deserializing an element to an atomic value type. This will get the data type name and value and use
     /// our predefined parse function on AtomicType to instantiate the data 
     /// </summary>
     private static AtomicData DeserializeAtomic(XElement element)
@@ -266,7 +266,7 @@ public static class LogixSerializer
     /// Handles deserializing an array to an array type logix element. Since the user can still case a generic
     /// <see cref="ArrayData{TLogixType}"/> down to a more specific type using the Cast function, all we really need to
     /// do is return a generic ArrayType wrapping the element. The DeserializeElement will ultimately get elements
-    /// that are concrete typed.
+    /// that are concretely typed.
     /// </summary>
     private static ArrayData<LogixData> DeserializeArray(XElement element)
     {
@@ -324,9 +324,9 @@ public static class LogixSerializer
     /// <returns><c>true</c> if the element has the string type structure, otherwise <c>false</c>.</returns>
     /// <remarks>
     /// This is needed to determine if we are deserializing a complex type or string type. String structure is unique
-    /// in that it will have a data value member called DATA with a ASCII radix, a non-null element value, and a
+    /// in that it will have a data value member called DATA with an ASCII radix, a non-null element value, and a
     /// data type attribute value equal to that of the parent structure element attribute. If we don't intercept this
-    /// structure prior to deserializing it, we will encounter exceptions because it doesn't conform to the normal
+    /// structure before deserializing it, we will encounter exceptions because it doesn't conform to the normal
     /// convention that data value members should represent and atomic structure. My thought is Logix did this to conserve
     /// space in the L5X, but not sure.
     /// </remarks>
@@ -334,7 +334,7 @@ public static class LogixSerializer
     {
         if (element is null) return false;
 
-        //If this is a structure or structure member it could potentially be the string structure.
+        //If this is a structure or structure member, it could potentially be the string structure.
         if (element.Name.LocalName is L5XName.Structure or L5XName.StructureMember)
         {
             return element.Elements(L5XName.DataValueMember).Any(e =>
