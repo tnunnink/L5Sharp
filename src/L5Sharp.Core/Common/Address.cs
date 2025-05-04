@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core;
@@ -10,17 +10,20 @@ namespace L5Sharp.Core;
 /// </summary>
 public class Address : ILogixParsable<Address>
 {
-    private readonly string _value;
     private static readonly Regex HostNamePattern = new("^[A-Za-z][A-Za-z0-9.-]{1,63}$");
+    private readonly string _value;
 
     /// <summary>
     /// Creates a new <see cref="Address"/> with the provided string value.
     /// </summary>
     /// <param name="address"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public Address(string address)
+    public Address(string? address)
     {
-        _value = address ?? throw new ArgumentNullException(nameof(address));
+        if (address is null || address.IsEmpty())
+            throw new ArgumentException("Can not create address from null or empty value.");
+
+        _value = address;
     }
 
     /// <summary>
@@ -30,43 +33,23 @@ public class Address : ILogixParsable<Address>
     public bool IsSlot => byte.TryParse(_value, out _);
 
     /// <summary>
-    /// Indicates whether the current <see cref="Address"/> is a IPv4 address.
+    /// Indicates whether the current <see cref="Address"/> represents a network address, such as an IPv4 or hostname address.
     /// </summary>
-    /// <returns>true if the address value is a valid IPv4 address; otherwise, false.</returns>
-    public bool IsIPv4 => _value.Count(c => c == '.') == 3 && IPAddress.TryParse(_value, out _);
-
-    /// <summary>
-    /// Indicates whether the current <see cref="Address"/> is a host name address.
-    /// </summary>
-    /// <returns>true if the address value is a valid host name address; otherwise, false.</returns>
-    /// <remarks>
-    /// A host name must start with a letter, contain only alphanumeric characters or special characters '.' and '-',
-    /// and have a maximum length of 64 characters.
-    /// </remarks>
-    public bool IsHostName => HostNamePattern.IsMatch(_value);
-
-    /// <summary>
-    /// Indicates that the address value is an empty string.
-    /// </summary>
-    public bool IsEmpty => _value.IsEmpty();
-
-    /// <summary>
-    /// Represents no address value or an empty string.
-    /// </summary>
-    public static Address None => new(string.Empty);
+    /// <returns>true if the address value is either a valid IPv4 or matches a host name pattern; otherwise, false.</returns>
+    public bool IsNetwork => IsIPv4(_value) || IsHostName(_value);
 
     /// <summary>
     /// Creates a new <see cref="Address"/> with the optional IP address value.
     /// </summary>
     /// <returns>A <see cref="Address"/> with the default IP value.</returns>
-    public static Address IP(string? ip = null) => ip is not null ? new Address(ip) : new Address("192.168.0.1");
+    public static Address NewIP(string? ip = null) => ip is not null ? new Address(ip) : new Address("192.168.0.1");
 
     /// <summary>
     /// Creates a new <see cref="Address"/> with the optional slot number.
     /// </summary>
     /// <param name="slot">The slot number to create. If not provided will default to 0.</param>
     /// <returns>A <see cref="Address"/> representing a slot number within a chassis.</returns>
-    public static Address Slot(byte slot = 0) => new(slot.ToString());
+    public static Address NewSlot(byte slot = 0) => new(slot.ToString());
 
     /// <summary>
     /// Parses a string into a <see cref="Address"/> value.
@@ -79,8 +62,8 @@ public class Address : ILogixParsable<Address>
     /// Tries to parse a string into a <see cref="Address"/> value.
     /// </summary>
     /// <param name="value">The string to parse.</param>
-    /// <returns>An <see cref="Address"/> representing the parsed value if successful; Otherwise, <see cref="None"/>.</returns>
-    public static Address TryParse(string? value) => value is null || value.IsEmpty() ? None : new Address(value);
+    /// <returns>An <see cref="Address"/> representing the parsed value if successful; Otherwise, null.</returns>
+    public static Address? TryParse(string? value) => value is null || value.IsEmpty() ? null : new Address(value);
 
     /// <summary>
     /// Converts the address value to an IPAddress object.
@@ -128,6 +111,22 @@ public class Address : ILogixParsable<Address>
     public override int GetHashCode() => _value.GetHashCode();
 
     /// <summary>
+    /// Determines if the provided string represents a valid IPv4 address.
+    /// </summary>
+    private static bool IsIPv4(string value)
+    {
+        return IPAddress.TryParse(value, out var ip) && ip.AddressFamily == AddressFamily.InterNetwork;
+    }
+
+    /// <summary>
+    /// Determines if the provided string value is a valid host name.
+    /// </summary>
+    private static bool IsHostName(string value)
+    {
+        return HostNamePattern.IsMatch(value);
+    }
+
+    /// <summary>
     /// Determines if the provided objects are equal.
     /// </summary>
     /// <param name="left">An object to compare.</param>
@@ -170,4 +169,11 @@ public class Address : ILogixParsable<Address>
     /// <param name="address">The value to convert.</param>
     /// <returns>A <see cref="string"/> representing the address value.</returns>
     public static implicit operator byte(Address address) => byte.Parse(address._value);
+    
+    /// <summary>
+    /// Converts the current <see cref="IPAddress"/> to a <see cref="Address"/> value.
+    /// </summary>
+    /// <param name="address">The value to convert.</param>
+    /// <returns>A <see cref="Address"/> representing the address value.</returns>
+    public static implicit operator Address(IPAddress address) => new(address.ToString());
 }
