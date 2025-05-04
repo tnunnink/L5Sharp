@@ -101,7 +101,7 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Returns a new deep cloned instance of the current type.
+    /// Returns a new deep-cloned instance of the current type.
     /// </summary>
     /// <returns>A new <see cref="LogixElement"/> type with the same property values.</returns>
     /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a

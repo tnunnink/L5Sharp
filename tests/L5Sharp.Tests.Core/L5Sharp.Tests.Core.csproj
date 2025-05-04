@@ -219,13 +219,7 @@
       <None Update="Elements\SheetTests.Add_BlocksOutOfOrder_ShouldBeVerified.verified.txt">
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
-      <None Update="Elements\ReferenceBlockTests.New_IRefOverloaded_ShouldBeVerified.verified.txt">
-        <DependentUpon>BlockTests.cs</DependentUpon>
-      </None>
       <None Update="Elements\BlockTests.New_Overriden_ShouldBeVerified.verified.txt">
-        <DependentUpon>BlockTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\ReferenceBlockTests.New_ORefOverloaded_ShouldBeVerified.verified.txt">
         <DependentUpon>BlockTests.cs</DependentUpon>
       </None>
       <None Update="Elements\SheetTests.Wire_ValidOperands_ShouldBeVerified.verified.txt">
@@ -346,6 +340,18 @@
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
       <None Update="Components\ModuleTests.Local_ValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ModuleTests.Configure_ExistingValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixRegistryTests.CreateModule_ValidExistingCatalog_ShouldNotBeExpected.verified.txt">
+        <DependentUpon>LogixRegistryTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ModuleTests.Create_ExistingValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ModuleTests.Create_CatalogNumberAndConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
     </ItemGroup>

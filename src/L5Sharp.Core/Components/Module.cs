@@ -34,7 +34,7 @@ public class Module : LogixComponent<Module>
         Vendor = Vendor.Rockwell;
         ProductType = ProductType.Unknown;
         ParentModule = string.Empty;
-        ParentModPortId = default;
+        ParentModPortId = 0;
         Inhibited = false;
         MajorFault = false;
         SafetyEnabled = false;
@@ -43,6 +43,7 @@ public class Module : LogixComponent<Module>
     }
 
     /// <inheritdoc />
+    // ReSharper disable once MemberCanBePrivate.Global - Deserialization constructor.
     public Module(XElement element) : base(element)
     {
     }
@@ -53,7 +54,7 @@ public class Module : LogixComponent<Module>
     /// <param name="name">The name of the Module.</param>
     /// <param name="catalogNumber">The optional catalog number for the Module. Will default to empty string.</param>
     /// <param name="revision">The optional <see cref="Revision"/> number for the Module. Will default to 1.0.</param>
-    public Module(string name, string? catalogNumber = default, Revision? revision = default) : this()
+    public Module(string name, string? catalogNumber = null, Revision? revision = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         CatalogNumber = catalogNumber ?? string.Empty;
@@ -62,7 +63,7 @@ public class Module : LogixComponent<Module>
 
     /// <inheritdoc />
     /// <remarks>
-    /// Module components don't all have a name attribute (e.g. VFD peripheral modules). For this reason,
+    /// Module components don't all have a name attribute (e.g., VFD peripheral modules). For this reason,
     /// the name property is overriden to not be a required field for this component type. If the name is not found,
     /// this property returns an empty string.
     /// </remarks>
@@ -73,7 +74,7 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// Specify the catalog number that uniquely identifies the module. This is a rockwell defined convention,
+    /// Specify the catalog number that uniquely identifies the module. This is a rockwell defined convention
     /// and represents the identity of the module type.
     /// </summary>
     /// <value>A <see cref="string"/> value containing the catalog number.</value>
@@ -133,7 +134,7 @@ public class Module : LogixComponent<Module>
         {
             var major = Element.Attribute(L5XName.Major)?.Value.Parse<ushort>();
             var minor = Element.Attribute(L5XName.Minor)?.Value.Parse<ushort>();
-            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : default;
+            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : null;
         }
         set
         {
@@ -221,8 +222,8 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <value>A <see cref="LogixContainer{TElement}"/> of <see cref="Port"/> objects.</value>
     /// <remarks>
-    /// Ports define how a module's peripherals are connected to other module's, forming the network or tree of
-    /// devices used to communicated with a controller and field equipment. Ports must have a unique id, a type,
+    /// Ports define how a module's peripherals are connected to other modules, forming the network or tree of
+    /// devices used to communicate with a controller and field equipment. Ports must have a unique id, a type,
     /// and address.
     /// </remarks>
     public LogixContainer<Port> Ports
@@ -240,44 +241,33 @@ public class Module : LogixComponent<Module>
         set => SetComplex(value);
     }
 
-    //Properties or methods extending the functionality of a Module component.
-
-    #region Extensions
-
     /// <summary>
-    /// Gets the slot number of the current module if one exists. If the module does not have an slot, returns null.
+    /// Gets the slot number of the current module if one exists. If the module does not have a slot, it returns null.
     /// </summary>
     /// <value>An <see cref="byte"/> representing the slot number of the module.</value>
     /// <remarks>
-    /// This property is not directly part of the L5X structure, but is a helper to make accessing the slot number simple.
+    /// This property is not directly part of the L5X structure but is a helper to make accessing the slot number simple.
     /// This property looks for an upstream <see cref="Port"/> with a valid slot byte number.
     /// </remarks>
-    public byte? Slot => Ports.FirstOrDefault(p => p is { Upstream: true, Address.IsSlot: true })?.Address.ToSlot();
+    public byte? Slot
+    {
+        get => Ports.FirstOrDefault(p => p is { IsEthernet: false })?.Address?.ToSlot();
+        set => SetAddress(value?.ToString());
+    }
 
     /// <summary>
-    /// Gets or sets the IP address of this module if one exists. If the module does not have an IP, returns null.
+    /// Gets or sets the IP address of this module if an ethernet type port exists.
+    /// If the module does not have an ethernet type port, then it returns null or will throw an exception.
     /// </summary>
     /// <value>An <see cref="IPAddress"/> representing the IP of the module.</value>
     /// <remarks>
-    /// This property is not directly part of the L5X structure, but is a helper to make accessing the IP simple.
+    /// This property is not directly part of the L5X structure but is a helper to make accessing the IP simple.
     /// This property looks for an Ethernet type <see cref="Port"/> with a valid IPv4 address.
     /// </remarks>
     public IPAddress? IP
     {
-        get
-        {
-            var port = Ports.FirstOrDefault(p => p is { IsEthernet: true });
-            return port?.Address.ToIPAddress();
-        }
-        set
-        {
-            var port = Ports.FirstOrDefault(p => p is { IsEthernet: true });
-
-            if (port is null)
-                throw new InvalidOperationException("No Ethernet type port is configured for this Module.");
-
-            port.Address = Address.IP(value?.ToString());
-        }
+        get => Ports.FirstOrDefault(p => p is { IsEthernet: true })?.Address?.ToIPAddress();
+        set => SetAddress(value?.ToString(), true);
     }
 
     /// <summary>
@@ -290,14 +280,7 @@ public class Module : LogixComponent<Module>
     /// hence the reason for this extension. Of course, this requires the module is attached to the L5X content.
     /// In-memory created modules will inherently return a null object, as there is no L5X structure to introspect.
     /// </remarks>
-    public Module? Parent
-    {
-        get
-        {
-            var parent = Element.Parent?.Elements().FirstOrDefault(m => m.LogixName() == ParentModule);
-            return parent is not null ? new Module(parent) : default;
-        }
-    }
+    public Module? Parent => GetParent();
 
     /// <summary>
     /// Gets the child modules of this module component defined in the current L5X content. 
@@ -307,18 +290,18 @@ public class Module : LogixComponent<Module>
     /// configured as the name of this module.
     /// </returns>
     /// <remarks>
-    /// The L5X structure serializes modules in a flat list with each element having properties (ParentModule, ParentModPortId)
-    /// defining the parent/child IO tree relationship. It would be nice to navigate this hierarchy programatically,
-    /// hence the reason for this extension method. Of course, this requires the module is attached to the L5X content.
-    /// In-memory created modules will inherently return an empty collection, as there is no L5X structure to introspect.
+    /// The L5X structure serializes modules in a flat list with each element having properties
+    /// (ParentModule, ParentModPortId) defining the parent/child IO tree relationship. This requires the module
+    /// is attached to the L5X content. In-memory created modules will inherently return an empty collection,
+    /// as there is no L5X structure to introspect.
     /// </remarks>
     public IEnumerable<Module> Modules
     {
         get
         {
-            return Element.Parent?.Elements().Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
-                       .Select(e => new Module(e))
-                   ?? [];
+            return Element.Parent?.Elements()
+                .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
+                .Select(e => new Module(e)) ?? [];
         }
     }
 
@@ -328,7 +311,7 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <value>An <see cref="IEnumerable{T}"/> containing the base tags for the Module.</value>
     /// <remarks>
-    /// Since module tags are nested within different layers of complex types, it can be difficult to just
+    /// Since module tags are nested within different layers of complex types, it can be challenging to just
     /// get a single list of all module tags. This extension makes that easy by sifting through the object and returning
     /// a flat list containing all non-null config, input, and output tags defined for the <see cref="Module"/> component.
     /// </remarks>
@@ -364,62 +347,257 @@ public class Module : LogixComponent<Module>
     public Tag? Config => Communications?.ConfigTag;
 
     /// <summary>
-    /// Adds a child module to the current module object by updating the parent module properties, configuring the
-    /// child module upstream port, and adding the component to the underlying L5X content.
+    /// Connects the provided child module to the current module and tries to add it to the underlying L5X if possible.
     /// </summary>
-    /// <param name="child">The module to add.</param>
-    /// <param name="address">The optional <see cref="Address"/> (slot or IP) of the module to add.</param>
-    /// <exception cref="InvalidOperationException"><c>parent</c> does not have a downstream port for which to connect
-    /// child modules.</exception>
+    /// <param name="child">The child module to connect.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the child module is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this module contains no downstream port with a type that
+    /// matches a port of the provided child -OR- when multiple matching downstream ports are found.</exception>
     /// <remarks>
-    /// This extension gives us an easy way to add modules hierarchically to the underlying L5X content.
-    /// If the parent module is attached to a L5X content file, this will add child module.
+    /// The intention of this method is to help with setting the parent and port properties of a child module
+    /// so that it will be imported correctly into Studio 5K. To do this, it will try to find a downstream port of the current
+    /// module that has a type matching one of the child ports. If the match is successful, then the child module
+    /// is configured using the current module as the parent. This method will also attempt to add the serialized child
+    /// to the underlying L5X content if possible.
     /// </remarks>
-    public void Add(Module child, Address? address = default)
+    public void Connect(Module child)
     {
-        var parentPort = Ports.FirstOrDefault(p => !p.Upstream);
+        if (child is null)
+            throw new ArgumentNullException(nameof(child));
 
-        if (parentPort is null)
-            throw new InvalidOperationException(
-                $"The module '{Name}' does not have a port for downstream module connections.");
-
-        address = parentPort.IsEthernet switch
-        {
-            true when address is null => Address.IP(),
-            false when address is null => NextSlot(),
-            _ => address
-        };
-
-        var childPort = new Port { Id = 1, Type = parentPort.Type, Address = address, Upstream = true };
-
-        child.ParentModule = Name;
-        child.ParentModPortId = parentPort.Id;
-        child.Ports.Add(childPort);
-
-        var container = Element.Parent;
-
-        if (container is null)
-            throw new InvalidOperationException($"The module '{Name}' is not attached to and L5X content file.");
-
-        container.Add(child.Serialize());
+        ConnectModule(child);
+        TryAddModule(child);
     }
 
     /// <summary>
-    /// Creates a new <see cref="Module"/> with the provided name and catalog number.
+    /// Creates and connects a child module to the current module using the specified catalog number and configuration action.
+    /// Also tries to add the child to the underlying L5X if possible
     /// </summary>
-    /// <param name="name">The name of the module</param>
-    /// <param name="catalogNumber">The catalog number to look up a catalog entry for.</param>
-    /// <param name="address">The optional <see cref="Address"/> defining the slot or IP address of the device.</param>
-    /// <returns>A new <see cref="Module"/> object initialized with data return by the catalog service.</returns>
-    /// <exception cref="InvalidOperationException">The module catalog service could not load the installed catalog
-    /// database file -or- catalog number does not exist in the catalog database.</exception>
-    /// <exception cref="ArgumentException"><c>catalogNumber</c> is null or empty.</exception>
+    /// <param name="catalogNumber">The catalog number of the child module to be created and connected.</param>
+    /// <param name="config">An action to configure the child module after it is connected.</param>
+    /// <returns>A new configured <see cref="Module"/> instnace "connected" to this parent module.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the child module is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this module contains no downstream port with a type that
+    /// matches a port of the provided child -OR- when multiple matching downstream ports are found.</exception>
     /// <remarks>
-    /// This factory method uses the <see cref="ModuleCatalog"/> service to lookup info for the specified
-    /// catalog number. If RSLogix is not installed on the current environment, this will throw an exception.
+    /// The intention of this method is to help with both generating and configuring the parent and port properties of
+    /// a child module so that it will be imported correctly into Studio 5K. This method uses the internal
+    /// <see cref="ModuleCatalog"/> to generate the child instance. Then it will try to find a downstream port of the current
+    /// module that has a type matching one of the child ports. If the match is successful, then the child module
+    /// is configured using the current module as the parent. This method will also attempt to add the serialized child
+    /// to the underlying L5X content if possible.
     /// </remarks>
-    public static Module Create(string name, string catalogNumber, Address? address = null)
+    public Module Connect(string catalogNumber, Action<Module> config)
     {
+        if (config is null) throw new ArgumentNullException(nameof(config));
+        var child = CreateFromCatalog(string.Empty, catalogNumber);
+        ConnectModule(child);
+        config.Invoke(child);
+        TryAddModule(child);
+        return child;
+    }
+
+    /// <summary>
+    /// Creates and connects a child module to the current module using the provided L5X template file, catalog number,
+    /// and configuration action. Also tries to add the child to the underlying L5X if possible
+    /// </summary>
+    /// <param name="filePath">The path to the L5X which contains the module to create.</param>
+    /// <param name="catalogNumber">The catalog number of the child module to be created and connected.</param>
+    /// <param name="config">An action to configure the child module after it is connected.</param>
+    /// <returns>A new configured <see cref="Module"/> instnace "connected" to this parent module.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="filePath"/>,
+    /// <paramref name="catalogNumber"/>, or <paramref name="config"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this module contains no downstream port with a type that
+    /// matches a port of the provided child -OR- when multiple matching downstream ports are found.</exception>
+    /// <remarks>
+    /// The intention of this method is to help with both generating and configuring the parent and port properties of
+    /// a child module so that it will be imported correctly into Studio 5K. This method uses the provided L5X
+    /// to generate the child instance. Then it will try to find a downstream port of the current
+    /// module that has a type matching one of the child ports. If the match is successful, then the child module
+    /// is configured using the current module as the parent. This method will also attempt to add the serialized child
+    /// to the underlying L5X content if possible.
+    /// </remarks>
+    public Module Connect(string filePath, string catalogNumber, Action<Module> config)
+    {
+        if (config is null) throw new ArgumentNullException(nameof(config));
+        var child = CreateFromFile(filePath, catalogNumber);
+        ConnectModule(child);
+        config.Invoke(child);
+        TryAddModule(child);
+        return child;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Module"/> instance using the specified name and catalog number.
+    /// </summary>
+    /// <param name="name">The name of the module to create.</param>
+    /// <param name="catalogNumber">The catalog number of the module to create.</param>
+    /// <returns>A new configured <see cref="Module"/> instance.</returns>
+    /// <remarks>
+    /// This factory method uses the <see cref="ModuleCatalog"/> to find the specified catalog number.
+    /// If the machine does not have Studio 5K installed or the specified module was not found, then this factory method
+    /// will throw an exception. If found, then the module is generated using the catalog data and the provided module name.
+    /// This method is for generating modules without needing to know the exact product type, code, vendor, revision,
+    /// and port configurations. This will not generate any connection or tag data for the module,
+    /// but in most cases that should be built when imported.
+    /// </remarks>
+    public static Module Create(string name, string catalogNumber)
+    {
+        var module = CreateFromCatalog(name, catalogNumber);
+        return module;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Module"/> instance using the specified catalog number and configuration delegate.
+    /// </summary>
+    /// <param name="catalogNumber">The catalog number of the module to create.</param>
+    /// <param name="config">An action to configure the properties of the created module.</param>
+    /// <returns>A new configured <see cref="Module"/> instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="catalogNumber"/> or <paramref name="config"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if no module with the specified catalog number is found in the module catalog.</exception>
+    /// <remarks>
+    /// This factory method uses the <see cref="ModuleCatalog"/> to find the specified catalog number.
+    /// If the machine does not have Studio 5K installed or the specified module was not found, then this factory method
+    /// will throw an exception. If found, then the module is generated using the catalog data and the provided config
+    /// delegate. This method is for generating and configuring modules without needing to know the exact
+    /// product type, code, vendor, revision, and port configurations. This will not generate any connection or
+    /// tag data for the module, but in most cases that should be built when imported.
+    /// </remarks>
+    public static Module Create(string catalogNumber, Action<Module> config)
+    {
+        if (config is null) throw new ArgumentNullException(nameof(config));
+
+        var module = CreateFromCatalog(string.Empty, catalogNumber);
+        config.Invoke(module);
+        return module;
+    }
+
+    /// <summary>
+    /// Creates and configures a <see cref="Module"/> instance by cloning an existing module from the given file
+    /// and applying the specified configuration.
+    /// </summary>
+    /// <param name="filePath">The path to the L5X file containing the module to be cloned.</param>
+    /// <param name="catalogNumber">The catalog number of the module to be cloned.</param>
+    /// <param name="config">An action delegate that applies configurations to the cloned module.</param>
+    /// <returns>A new <see cref="Module"/> instance configured based on the provided action delegate.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="filePath"/>, <paramref name="catalogNumber"/>, or <paramref name="config"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if no module with the specified catalog number is found in the provided file.</exception>
+    /// <remarks>
+    /// This factory method exists to assist with creating new module instances from existing L5X content.
+    /// There are some module types that we can't generate all the required XML content for using the
+    /// <see cref="ModuleCatalog"/>), specifically safety enabled modules that have the 'SafetyScript' element.
+    /// This method encapsulates a common workflow of copying modules from existing known content. 
+    /// </remarks>
+    public static Module Create(string filePath, string catalogNumber, Action<Module> config)
+    {
+        if (config is null) throw new ArgumentNullException(nameof(config));
+
+        var module = CreateFromFile(filePath, catalogNumber);
+        config.Invoke(module);
+        return module;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Module"/> instance that represents the local controller module for a project.
+    /// </summary>
+    /// <param name="processor">The processor catalog number for the module.</param>
+    /// <param name="revision">The software revision of the controller.</param>
+    /// <returns>A new <see cref="Module"/> representing a default local controller module instance.</returns>
+    public static Module Local(string processor, Revision? revision = null)
+    {
+        var module = CreateFromCatalog(nameof(Local), processor);
+
+        //These are the default self-referential properties for the local controller module instance.
+        module.ParentModule = nameof(Local);
+        module.ParentModPortId = 1;
+
+        if (revision is not null)
+        {
+            module.Revision = revision;
+        }
+
+        return module;
+    }
+
+    #region Internals
+
+    /// <summary>
+    /// Gets the parent module to this module using the current Element to traverse the XML structure. 
+    /// </summary>
+    private Module? GetParent()
+    {
+        return Element.Parent?.Elements(L5XName.Module)
+            .FirstOrDefault(m => m.LogixName() == ParentModule)
+            ?.Deserialize<Module>();
+    }
+
+    /// <summary>
+    /// Connects a child <see cref="Module"/> to its parent by matching ports.
+    /// </summary>
+    private void ConnectModule(Module child)
+    {
+        var ports = Ports.Where(p => !p.Upstream && child.Ports.Any(c => c.Type == p.Type)).ToArray();
+
+        switch (ports.Length)
+        {
+            case 0:
+                throw new InvalidOperationException(
+                    $"No matching downstream port type is available for '{Name}'.");
+            case > 1:
+                throw new InvalidOperationException(
+                    $"Multiple matching downstream ports types are available for on '{Name}'.");
+            default:
+                child.ConfigureParent(this, ports[0]);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Configures the properties of this module to form a connection to the provided parent module and port.
+    /// </summary>
+    /// <param name="parent">The parent module for which to form a connection.</param>
+    /// <param name="port">The parent port for which to form a connection.</param>
+    private void ConfigureParent(Module parent, Port port)
+    {
+        ParentModule = parent.Name;
+        ParentModPortId = port.Id;
+
+        var match = Ports.FirstOrDefault(p => p.Type == port.Type);
+
+        if (match is not null)
+        {
+            match.Address = match.IsEthernet ? match.Address : parent.NextSlot();
+            match.Upstream = true;
+            return;
+        }
+
+        Ports.Add(new Port
+        {
+            Id = Ports.Count + 1,
+            Type = port.Type,
+            Address = port.IsEthernet ? Address.NewIP() : parent.NextSlot(),
+            Upstream = true
+        });
+    }
+
+    /// <summary>
+    /// Attempts to add the specified child module to the parent element in the hierarchy.
+    /// If this module has no parent element, then we will return without error.
+    /// </summary>
+    private void TryAddModule(Module child)
+    {
+        Element.Parent?.Add(child.Serialize());
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Module"/> instance from the built in <see cref="ModuleCatalog"/> service utility
+    /// using the provided name and catalog number.
+    /// </summary>
+    private static Module CreateFromCatalog(string name, string catalogNumber)
+    {
+        if (name is null) throw new ArgumentNullException(nameof(name));
+        if (catalogNumber is null) throw new ArgumentNullException(nameof(catalogNumber));
+
         var catalog = new ModuleCatalog();
         var entry = catalog.Lookup(catalogNumber);
 
@@ -427,7 +605,7 @@ public class Module : LogixComponent<Module>
         {
             Id = p.Number,
             Type = p.Type,
-            Upstream = !p.DownstreamOnly
+            Address = p.Type == "Ethernet" ? Address.NewIP() : Address.NewSlot(),
         });
 
         var module = new Module
@@ -443,51 +621,32 @@ public class Module : LogixComponent<Module>
             SafetyEnabled = entry.Categories.Contains("Safety")
         };
 
-        if (address is not null)
-            module.SetAddress(address);
-
         return module;
     }
 
     /// <summary>
-    /// Creates a new <see cref="Module"/> instance that represents the local controller module for a project.
+    /// Creates a new <see cref="Module"/> instance from a provided L5X file and catalog number.
     /// </summary>
-    /// <param name="processor">The processor catalog number for the module.</param>
-    /// <param name="revision">The software revision of the controller.</param>
-    /// <returns>A new <see cref="Module"/> representing a default local controller module instance.</returns>
-    public static Module Local(string processor, Revision? revision = null)
+    private static Module CreateFromFile(string fileName, string catalogNumber)
     {
-        var catalog = new ModuleCatalog();
-        var entry = catalog.Lookup(processor);
+        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        if (catalogNumber is null) throw new ArgumentNullException(nameof(catalogNumber));
 
-        var ports = entry.Ports.Select(p => new Port
-        {
-            Id = p.Number,
-            Type = p.Type,
-            Address = p.Type == "Ethernet" ? Address.IP() : Address.Slot(),
-            Upstream = !p.DownstreamOnly
-        });
+        var file = L5X.Load(fileName);
+        var template = file.Query<Module>().FirstOrDefault(m => m.CatalogNumber == catalogNumber);
 
-        return new Module
+        if (template is null)
         {
-            Name = "Local",
-            CatalogNumber = entry.CatalogNumber,
-            Vendor = entry.Vendor,
-            ProductType = entry.ProductType,
-            ProductCode = entry.ProductCode,
-            Revision = revision ?? entry.Revisions.Max(),
-            ParentModule = "Local",
-            ParentModPortId = 1,
-            MajorFault = true,
-            Keying = ElectronicKeying.Disabled,
-            Ports = new LogixContainer<Port>(ports),
-            SafetyEnabled = entry.Categories.Contains("Safety")
-        };
+            throw new InvalidOperationException(
+                $"No module with CatalogNumber '{catalogNumber}' found in '{fileName}'.");
+        }
+
+        return template.Clone();
     }
 
     /// <summary>
     /// Gets the next largest slot number for the current module based on the slot numbers of all other
-    /// child modules with ths same parent module. 
+    /// child modules with this same parent module. 
     /// </summary>
     private Address NextSlot()
     {
@@ -501,26 +660,21 @@ public class Module : LogixComponent<Module>
             .OrderByDescending(b => b)
             .FirstOrDefault();
 
-        return next.HasValue ? Address.Slot(next.Value) : Address.Slot();
+        return next.HasValue ? Address.NewSlot(next.Value) : Address.NewSlot();
     }
 
     /// <summary>
-    /// Sets the address (slot or IP) of the <see cref="Module"/> instance to the provided value.
+    /// Sets the address (Slot or IP) of the module given the provided value and flag indicating whether this is an
+    /// ethernet port or not.
     /// </summary>
-    /// <param name="address">The <see cref="Address"/> to configure this module with.</param>
-    /// <remarks>
-    /// The address in this case can be either a slot number or IP address. This helper method will find the first
-    /// matching upstream port and set the address property if found. If not found, this method will throw an exception.
-    /// </remarks>
-    private void SetAddress(Address address)
+    private void SetAddress(string? value, bool isEthernet = false)
     {
-        if (address is null)
-            throw new ArgumentNullException(nameof(address));
+        var address = Address.TryParse(value);
 
-        var port = Ports.Where(p => p.Upstream).FirstOrDefault(p => p.IsEthernet == address.IsIPv4);
+        var port = Ports.FirstOrDefault(p => Equals(p.IsEthernet, isEthernet));
 
         if (port is null)
-            throw new InvalidOperationException("Failed to set address. No matching upstream port is configured.");
+            throw new InvalidOperationException($"No supporting port found for address: '{value}'");
 
         port.Address = address;
     }

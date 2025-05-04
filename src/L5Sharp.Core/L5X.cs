@@ -73,13 +73,13 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
 
         //We will "normalize" (ensure consistent root controller element and component containers) for all
         //files so that we won't have issues getting top level containers.
-        //When saving we can remove unused containers. 
+        //When saving, we can remove unused containers. 
         NormalizeContent();
 
-        //This stores L5X object as in-memory object for the root XElement,
+        //This stores the L5X object as an in-memory object for the root XElement,
         //allowing child elements to retrieve the object locally without creating a new instance and potentially
         //reindexing of the XML content if requested.
-        //This allows them to reference to root L5X for cross-referencing or other lookup based operations.
+        //This allows them to reference to root L5X for cross-referencing or other lookup-based operations.
         _content.AddAnnotation(this);
 
         //Depending on the options provided, either create a logix index or logix lookup for the ILogixLoop API usage.
@@ -131,7 +131,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// Gets the collection of Controller <see cref="Tags"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Tags"/> components.</value>
-    /// <remarks>To access program specific tag collection user the <see cref="Programs"/> collection.</remarks>
+    /// <remarks>To access program-specific tag collection user the <see cref="Programs"/> collection.</remarks>
     public LogixContainer<Tag> Tags => new(GetContainer(L5XName.Tags));
 
     /// <summary>
@@ -183,7 +183,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
         return new L5X(XElement.Load(fileName), options);
     }
 
-    //Async overload not supported in .NET Standard 2.0
+    //Async overload isn't supported in .NET Standard 2.0
 #if NET7_0_OR_GREATER
     /// <summary>
     /// Asynchronously loads te specified file path and returns the contents as a new <see cref="L5X"/> instance.
@@ -604,18 +604,16 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <summary>
-    /// Gets a top level container element from the root controller element of the L5X.
+    /// Gets a top-level container element from the root controller element of the L5X.
+    /// We expecte
     /// </summary>
-    /// <param name="name">The name of the container to retrieve.</param>
-    /// <returns>A <see cref="XElement"/> representing the container with the provided name.</returns>
-    /// <exception cref="InvalidOperationException">The element does not exist.</exception>
     private XElement GetContainer(string name)
     {
         return _content.Element(L5XName.Controller)?.Element(name) ?? throw _content.L5XError(name);
     }
 
     /// <summary>
-    /// Gets all primary/top level L5X component containers in the current L5X file.
+    /// Gets all primary top level L5X component containers in the current L5X file.
     /// </summary>
     /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="XElement"/> representing the L5X component containers.</returns>
     private List<XElement> GetContainers()
@@ -683,21 +681,23 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <summary>
-    /// If no root controller element exists, adds new context controller and moves all root elements into that controller
-    /// element. Then adds missing top level containers to ensure consistent structure of the root L5X.
+    /// If no root controller element exists, adds a new context controller and moves all root elements into that controller
+    /// element. Then adds missing top level containers to ensure a consistent structure of the root L5X.
     /// </summary>
     private void NormalizeContent()
     {
+        //If no controller element exists, we will insert on with the existing content as the child.
         if (_content.Element(L5XName.Controller) is null)
         {
             var context = new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
             context.Add(_content.Elements());
-            _content.RemoveNodes();
-            _content.Add(context);
+            _content.ReplaceNodes(context);
         }
 
+        //This should now always exist.
         var controller = _content.Element(L5XName.Controller)!;
 
+        //Inject remaining container elements that do not exist to ensure our container collections return without error.
         foreach (var container in Containers)
         {
             var existing = controller.Element(container);
@@ -707,7 +707,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <summary>
-    /// Create document, adds default declaration, and saves the current L5X content to the specified file name.
+    /// Create a document, adds default declaration, and saves the current L5X content to the specified file name.
     /// </summary>
     /// <param name="fileName">A string that contains the name of the file.</param>
     private void SaveContent(string fileName)

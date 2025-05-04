@@ -2,7 +2,7 @@
   <Description><![CDATA[1756 10/100 Mbps Ethernet Bridge, Twisted-Pair Media]]></Description>
   <EKey State="CompatibleModule" />
   <Ports>
-    <Port Id="1" Type="ICP" Address="" Upstream="true" />
-    <Port Id="2" Type="Ethernet" Address="10.10.10.10" Upstream="true" />
+    <Port Id="1" Type="ICP" Upstream="false" Address="0" />
+    <Port Id="2" Type="Ethernet" Upstream="false" Address="192.168.0.1" />
   </Ports>
 </Module>
