@@ -21,7 +21,6 @@ public class Port : LogixObject
     {
         Id = 0;
         Type = string.Empty;
-        Address = Address.None;
         Upstream = false;
     }
 
@@ -67,9 +66,9 @@ public class Port : LogixObject
     /// The Address of a port represents the slot or IP address for the port. This value is used in the
     /// <see cref="Module"/> to determine the slot and IP properties. All ports must have an Address.
     /// </remarks>
-    public Address Address
+    public Address? Address
     {
-        get => GetValue<Address>() ?? Address.None;
+        get => GetValue<Address>();
         set => SetValue(value);
     }
 

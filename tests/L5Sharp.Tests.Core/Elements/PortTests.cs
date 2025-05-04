@@ -21,7 +21,7 @@ namespace L5Sharp.Tests.Core.Elements
             port.Id.Should().Be(0);
             port.Type.Should().Be(string.Empty);
             port.Upstream.Should().BeFalse();
-            port.Address.Should().Be(Address.None);
+            port.Address.Should().BeNull();
             port.BusSize.Should().BeNull();
         }
 
