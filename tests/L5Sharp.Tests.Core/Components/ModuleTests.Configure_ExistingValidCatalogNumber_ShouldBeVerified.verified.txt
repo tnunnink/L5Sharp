@@ -1,0 +1,20 @@
+﻿<Module Name="NewName" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="1" Minor="23" ParentModule="Local" ParentModPortId="1" Inhibited="true" MajorFault="false">
+  <Description><![CDATA[This is a new module instance based on an existing template]]></Description>
+  <EKey State="CompatibleModule" />
+  <Ports>
+    <Port Id="1" Address="1" Type="ICP" Upstream="true" />
+    <Port Id="2" Address="1.1.1.1" Type="Ethernet" Upstream="false">
+      <Bus />
+    </Port>
+  </Ports>
+  <Communications CommMethod="536870914">
+    <Connections />
+  </Communications>
+  <ExtendedProperties>
+    <public>
+      <Vendor>Rockwell Automation/Allen-Bradley</Vendor>
+      <CatNum>1756-EN2T</CatNum>
+      <ConfigID>4325481</ConfigID>
+    </public>
+  </ExtendedProperties>
+</Module>
