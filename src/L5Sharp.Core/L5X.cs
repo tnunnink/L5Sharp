@@ -691,7 +691,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
         {
             var context = new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
             context.Add(_content.Elements());
-            _content.ReplaceAll(context);
+            _content.ReplaceNodes(context);
         }
 
         //This should now always exist.
