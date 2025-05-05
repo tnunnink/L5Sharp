@@ -1,7 +1,8 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 using L5Sharp.Tests.Core.Data.Custom;
-using L5Sharp.Tests.Core.Types.Custom;
+
+// ReSharper disable UseObjectOrCollectionInitializer
 
 namespace L5Sharp.Tests.Core.Components;
 
@@ -39,6 +40,8 @@ public class TagTests
         tag.Root.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
         tag.TagName.Should().Be(TagName.Empty);
+        tag.Comments.Should().BeNull();
+        tag.Units.Should().BeNull();
         tag.Scope.Level.Should().Be(ScopeLevel.Null);
         tag.Scope.IsScoped.Should().BeFalse();
     }
@@ -473,7 +476,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER[] { new(), new(), new(), new() } };
 
-        //array length does not matter. indices will be join on what is available.
+        //array length does not matter. indices will be joined on what is available.
         tag.Value = new TIMER[] { new() { PRE = 100 }, new() { PRE = 200 }, new() { PRE = 300 } };
 
         tag.Value.As<ArrayData>()[0].As<TIMER>().PRE.Should().Be(100);
@@ -834,11 +837,11 @@ public class TagTests
         // ReSharper disable once UseObjectOrCollectionInitializer
         var tag = new Tag("Test", 100);
 
-        tag.Comments = new LogixContainer<Comment>
-        {
-            new(".1", "This is the comment"),
-            new(".2", "this is another comment")
-        };
+        tag.Comments =
+        [
+            new Comment(".1", "This is the comment"),
+            new Comment(".2", "this is another comment")
+        ];
 
         tag.Comments.Should().HaveCount(2);
     }
@@ -846,14 +849,13 @@ public class TagTests
     [Test]
     public Task Comments_ValidCollection_ShouldBeVerified()
     {
-        // ReSharper disable once UseObjectOrCollectionInitializer
         var tag = new Tag("Test", 100, "This is a test tag");
 
-        tag.Comments = new LogixContainer<Comment>
-        {
-            new(".1", "This is the comment"),
-            new(".2", "this is another comment")
-        };
+        tag.Comments =
+        [
+            new Comment(".1", "This is the comment"),
+            new Comment(".2", "this is another comment")
+        ];
 
         var xml = tag.Serialize().ToString();
 
@@ -873,7 +875,7 @@ public class TagTests
     [Test]
     public void New_ValidParameters_ShouldBeExpected()
     {
-        var tag = Tag.New<TIMER>("MyTimer");
+        var tag = Tag.Create<TIMER>("MyTimer");
 
         tag.Name.Should().Be("MyTimer");
         tag.Value.Should().BeOfType<TIMER>();

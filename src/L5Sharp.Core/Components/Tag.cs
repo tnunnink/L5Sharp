@@ -47,9 +47,9 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     public Tag() : base(L5XName.Tag)
     {
-        //The root tag will contain a "virtual" which will simply routine calls to its local get/set data functions.
+        //The root tag will contain a "virtual" member which will simply routine calls to its local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
-        Root = this;
+
         TagType = TagType.Base;
         ExternalAccess = ExternalAccess.ReadWrite;
         Constant = false;
@@ -62,9 +62,16 @@ public class Tag : LogixComponent<Tag>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Tag(XElement element) : base(element)
     {
-        //The root tag will contain a "virtual" which will simply routine calls to its local get/set data functions.
+        //Intercept the In/Out Alias tag elements. We will attempt to retrieve the corresponding data structure using the
+        //attached L5X and set the local member. 
+        if (Element.Name.LocalName is L5XName.InAliasTag or L5XName.OutAliasTag)
+        {
+            _member = GetRackAliasMember();
+            return;
+        }
+
+        //The root tag will contain a "virtual" member which will simply routine calls to its local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
-        Root = this;
     }
 
     /// <summary>
@@ -106,7 +113,7 @@ public class Tag : LogixComponent<Tag>
     {
         //The root tag will contain a "virtual" which will simply routine calls to its local get/set data functions.
         _member = new Member(Element.LogixName(), GetData, SetData);
-        Root = this;
+
         TagType = TagType.Base;
         ExternalAccess = ExternalAccess.ReadWrite;
         Constant = false;
@@ -116,18 +123,16 @@ public class Tag : LogixComponent<Tag>
     /// Creates a new nested member <see cref="Tag"/> initialized with the root tag, underlying member,
     /// and parent tag.
     /// </summary>
-    /// <param name="root">The root or base tag of this tag member.</param>
     /// <param name="member">The underlying member that this tag wraps.</param>
     /// <param name="parent">The parent tag of this tag member.</param>
     /// <remarks>
     /// This constructor is used internally for methods like <see cref="Member"/> to return new
     /// wrapped members as Tag objects.
     /// </remarks>
-    private Tag(Tag root, Member member, Tag parent) : base(root.Element)
+    private Tag(Member member, Tag parent) : base(parent.Root.Element)
     {
-        _member = member ?? throw new ArgumentNullException(nameof(member));
-        Root = root ?? throw new ArgumentNullException(nameof(root));
-        Parent = parent ?? throw new ArgumentNullException(nameof(parent));
+        _member = member;
+        Parent = parent;
     }
 
     /// <inheritdoc />
@@ -158,8 +163,8 @@ public class Tag : LogixComponent<Tag>
     /// <para>
     /// If this is the root tag, this will return the root/base description.
     /// If this is a nested tag member, this will look for a configured comment (as comments are stored in a different
-    /// element in the L5X), and return the value if found. If the comment is not found for the tag member,
-    /// this will return the parent description, which mimics the pass through feature of logix tag documentation.
+    /// element in the L5X) and return the value if found. If the comment is not found for the tag member,
+    /// this will return the parent description, which mimics the pass-through feature of logix tag documentation.
     /// </para>
     /// <para>
     /// Setting this value for a nested tag member will update the underlying comments element for the tag.
@@ -178,7 +183,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="Core.TagName"/> containing the full dot-down path of the tag member name.</value>
     /// <remarks>
     /// <para>
-    /// This property will always represent the fully qualified tag name path, which includes nested tag
+    /// This property will always represent the fully qualified tag name path, which includes a nested tag
     /// member object. This property is determined using the hierarchical structure of the tag component.
     /// </para>
     /// </remarks>
@@ -207,7 +212,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions of the tag.</value>
     /// <remarks>
-    /// This value will always point to the dimensions property of <see cref="Value"/>, assuming it is an
+    /// This value will always point to the <see cref="Dimensions"/> property of <see cref="Value"/>, assuming it is an
     /// <see cref="ArrayData"/>.
     /// If <c>Value</c> is not an array type, this property will always return <see cref="L5Sharp.Core.Dimensions.Empty"/>.
     /// </remarks>
@@ -234,7 +239,7 @@ public class Tag : LogixComponent<Tag>
     /// to convert .NET types to <c>LogixData</c> objects so to make setting <c>Value</c> more concise.
     /// </para>
     /// <para>
-    /// Since the type can not be known at compile time when deserializing, we treat it as the abstract base class.
+    /// Since the type cannot be known at compile time when deserializing, we treat it as the abstract base class.
     /// However, the <see cref="LogixSerializer"/> will attempt to create concrete instances of types that are available,
     /// allowing the user to cast <c>Value</c> down to more derived types.
     /// </para>
@@ -278,7 +283,7 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// A type indicating whether the current tag component is a base tag, or alias for another tag instance.
+    /// A type indicating whether the current tag component is a base tag or alias for another tag instance.
     /// </summary>
     /// <value>A <see cref="Core.TagType"/> option representing the type of tag component.</value>
     public TagType? TagType
@@ -311,7 +316,7 @@ public class Tag : LogixComponent<Tag>
     /// Indicates whether the tag is a constant.
     /// </summary>
     /// <value><c>true</c> if the tag is constant; otherwise, <c>false</c>.</value>
-    /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
+    /// <remarks>Only value type tags can be set as a constant. Default is <c>false</c>.</remarks>
     public bool? Constant
     {
         get => GetValue<bool?>();
@@ -350,7 +355,7 @@ public class Tag : LogixComponent<Tag>
     /// The configured unit value of the tag.
     /// </summary>
     /// <value>A <see cref="string"/> representing the defined units of the tag.</value>
-    /// <remarks>This appears only used for module defined tags.</remarks>
+    /// <remarks>This appears only used for module-defined tags.</remarks>
     public string? Unit
     {
         get => GetUnit();
@@ -365,7 +370,7 @@ public class Tag : LogixComponent<Tag>
     /// for all root tag objects.
     /// </value>
     /// <remarks>
-    /// This property helps model the hierarchical structure of a tag object. Tags has a <see cref="Value"/>
+    /// This property helps model the hierarchical structure of a tag object. Tags have a <see cref="Value"/>
     /// which can represent a nested complex data type. This class models this by keeping references to the <c>Root</c>
     /// and <c>Parent</c> tags for each tag object. Only nested tag members should have a <c>Parent</c>.
     /// </remarks>
@@ -377,12 +382,12 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <value>A <see cref="Tag"/> representing the root tag.</value>
     /// <remarks>
-    /// This property helps model the hierarchical structure of a tag object. Tags has a <see cref="Value"/>
+    /// This property helps model the hierarchical structure of a tag object. Tags have a <see cref="Value"/>
     /// which can represent a nested complex data type. This class models this by keeping references to the <c>Root</c>
     /// and <c>Parent</c> tags for each tag object. All tags should have a <c>Root</c>.
     /// </remarks>
     /// <seealso cref="Parent"/>
-    public Tag Root { get; }
+    public Tag Root => GetRootTag();
 
     /// <summary>
     /// Gets the <see cref="Tag"/> object from the L5X that is the alias for this tag object.
@@ -397,7 +402,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="LogixContainer{TObject}"/> wrapping the root collection of tag units.</value>
     /// <remarks>
     /// <para>
-    /// This will always operate over the root Comments element, regardless from which tag member object
+    /// This will always operate over the root Comments element, regardless of which tag member object
     /// this is called from. The caller is responsible for ensuring proper configuration of the comment collection.
     /// </para>
     /// <para>
@@ -418,7 +423,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="LogixContainer{TObject}"/> wrapping the root collection of tag units.</value>
     /// <remarks>
     /// <para>
-    /// This will always operate over the root EngineeringUnits element, regardless from which tag member object
+    /// This will always operate over the root EngineeringUnits element, regardless of which tag member object
     /// this is called from. The caller is responsible for ensuring proper configuration of the units' collection.
     /// </para>
     /// <para>
@@ -446,7 +451,7 @@ public class Tag : LogixComponent<Tag>
     /// of the tag. However, it must start with a member of the current tag, and not the
     /// actual name of this tag object. The difference between this indexer property and
     /// <see cref="Member"/> is that this will throw and exception if a member with <c>tagName</c> is not found
-    /// (i.e. returns non-nullable reference type).
+    /// (i.e., returns a non-nullable reference type).
     /// </remarks>
     public Tag this[TagName tagName]
     {
@@ -460,7 +465,7 @@ public class Tag : LogixComponent<Tag>
                 throw new ArgumentException(
                     $"No member with name '{tagName.Root}' exists in the tag data structure for type {DataType}.");
 
-            var tag = new Tag(Root, member, this);
+            var tag = new Tag(member, this);
             var remaining = TagName.Combine(tagName.Members.Skip(1));
             return remaining.IsEmpty ? tag : tag[remaining];
         }
@@ -480,9 +485,29 @@ public class Tag : LogixComponent<Tag>
     public void Add(string name, LogixData value)
     {
         var member = new Member(name, value);
+
         if (Value is not ComplexData complexType)
-            throw new InvalidOperationException("Can only mutate ComplexType tags.");
+            throw new InvalidOperationException($"The type {Value.GetType()} is not a mutable data structure.");
+
         complexType.Add(member);
+    }
+
+    /// <summary>
+    /// Removes a member with the specified name from the tag's complex data structure.
+    /// </summary>
+    /// <param name="name">The name of the member to remove.</param>
+    /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
+    /// <remarks>
+    /// This will operate relative to the current tag member object, and is simply a call to the underlying
+    /// <see cref="ComplexData"/> <c>Remove</c> method. Therefore, this is simply a helper to make mutating tag structures
+    /// more concise.
+    /// </remarks>
+    public void Remove(string name)
+    {
+        if (Value is not ComplexData complexType)
+            throw new InvalidOperationException($"The type {Value.GetType()} is not a mutable data structure.");
+
+        complexType.Remove(name);
     }
 
     /// <summary>
@@ -506,7 +531,7 @@ public class Tag : LogixComponent<Tag>
         var member = Value.Member(tagName.Root);
         if (member is null) return null;
 
-        var tag = new Tag(Root, member, this);
+        var tag = new Tag(member, this);
         var remaining = TagName.Combine(tagName.Members.Skip(1));
         return remaining.IsEmpty ? tag : tag.Member(remaining);
     }
@@ -517,7 +542,7 @@ public class Tag : LogixComponent<Tag>
     /// <returns>A <see cref="IEnumerable{T}"/> containing <see cref="Tag"/> objects.</returns>
     /// <remarks>
     /// This recursively traverses the hierarchical data structure of tag's <see cref="Value"/> and returns all
-    /// descendant tags, as well as this tag.
+    /// descendant tags, as well as this tag, in a flat collection.
     /// </remarks>
     public IEnumerable<Tag> Members()
     {
@@ -525,7 +550,7 @@ public class Tag : LogixComponent<Tag>
 
         foreach (var member in Value.Members)
         {
-            var tagMember = new Tag(Root, member, this);
+            var tagMember = new Tag(member, this);
             members.Add(tagMember);
             members.AddRange(tagMember.Members());
         }
@@ -550,7 +575,7 @@ public class Tag : LogixComponent<Tag>
 
         foreach (var member in Value.Members)
         {
-            var tag = new Tag(Root, member, this);
+            var tag = new Tag(member, this);
 
             if (predicate.Invoke(tag.TagName))
                 members.Add(tag);
@@ -578,7 +603,7 @@ public class Tag : LogixComponent<Tag>
 
         foreach (var member in Value.Members)
         {
-            var tag = new Tag(Root, member, this);
+            var tag = new Tag(member, this);
 
             if (predicate.Invoke(tag))
                 members.Add(tag);
@@ -604,7 +629,7 @@ public class Tag : LogixComponent<Tag>
         var member = Value.Member(tagName.Root);
         if (member is null) return [];
 
-        var tag = new Tag(Root, member, this);
+        var tag = new Tag(member, this);
         var remaining = TagName.Combine(tagName.Members.Skip(1));
         return remaining.IsEmpty ? tag.Members() : tag.MembersOf(remaining);
     }
@@ -613,28 +638,10 @@ public class Tag : LogixComponent<Tag>
     /// Creates a new <see cref="Tag"/> with the provided name and specified type parameter.
     /// </summary>
     /// <param name="name">The name of the tag.</param>
-    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have parameterless constructor to create.</typeparam>
+    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
     /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
-    public static Tag New<TLogixType>(string name) where TLogixType : LogixData, new() =>
+    public static Tag Create<TLogixType>(string name) where TLogixType : LogixData, new() =>
         new() { Name = name, Value = new TLogixType() };
-
-    /// <summary>
-    /// Removes a member with the specified name from the tag's complex data structure.
-    /// </summary>
-    /// <param name="name">The name of the member to remove.</param>
-    /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
-    /// <remarks>
-    /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexData"/> <c>Remove</c> method. Therefore, this is simply a helper to make mutating tag structures
-    /// more concise.
-    /// </remarks>
-    public void Remove(string name)
-    {
-        if (Value is not ComplexData complexType)
-            throw new InvalidOperationException("Can only mutate ComplexType tags.");
-
-        complexType.Remove(name);
-    }
 
     /// <summary>
     /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
@@ -690,9 +697,25 @@ public class Tag : LogixComponent<Tag>
 
     #region Internal
 
+    /// <summary>
+    /// Retrieves the root tag by traversing the hierarchy of parent tags.
+    /// </summary>
+    /// <returns>The root <see cref="Tag"/> representing the top-most tag in the hierarchy.</returns>
+    private Tag GetRootTag()
+    {
+        var current = this;
+
+        while (current.Parent is not null)
+        {
+            current = current.Parent;
+        }
+
+        return current;
+    }
+
     /// <inheritdoc />
     /// <remarks>
-    /// After setting the data element we need to also update the tag attributes to keep them in with
+    /// After setting the data element, we need to also update the tag attributes to keep them in with
     /// the currently assigned value.
     /// </remarks>
     protected override void SetData(LogixData? value)
@@ -708,7 +731,7 @@ public class Tag : LogixComponent<Tag>
             return;
         }
 
-        //If there is no data then we want to add it using the base implementation.
+        //If there is no data, then we want to add it using the base implementation.
         base.SetData(value);
         UpdateDataAttributes(value);
     }
@@ -732,14 +755,18 @@ public class Tag : LogixComponent<Tag>
 
     /// <summary>
     /// Handles determining the tag name of the current object from the underlying XElement. This handles module
-    /// tag elements (ConfigTag, InputTag, OutputTag) as well as normal component elements (Tag, LocalTag).
+    /// tag elements (ConfigTag, InputTag, OutputTag, InAliasTag, OutAliasTag) as well as normal component
+    /// elements (Tag, LocalTag).
     /// </summary>
     private string GetTagName()
     {
-        var xName = Element.Name;
+        var xName = Element.Name.LocalName;
 
-        if (xName == L5XName.ConfigTag || xName == L5XName.InputTag || xName == L5XName.OutputTag)
+        if (xName is L5XName.ConfigTag or L5XName.InputTag or L5XName.OutputTag
+            or L5XName.InAliasTag or L5XName.OutAliasTag)
+        {
             return Element.ModuleTagName();
+        }
 
         return Element.Attribute(L5XName.Name)?.Value ?? string.Empty;
     }
@@ -753,7 +780,7 @@ public class Tag : LogixComponent<Tag>
 
         var comment = Comments?.FirstOrDefault(c => TagName.HasOperand(c.Operand));
 
-        //logix descriptions propagates to their children when not overriden. This mimics that.
+        //Logix descriptions propagate to their children when not overriden. This mimics that.
         return comment is not null ? comment.Value : Parent.Description;
     }
 
@@ -762,15 +789,15 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     private void SetTagDescription(string? value)
     {
-        //If the parent is null forward set to base description implementation which is essentially
-        //setting the description element of the root tag component.
+        //If the parent is null, forward the call to base implementation (which is essentially setting the description
+        //element of the root tag component).
         if (Parent is null)
         {
             base.Description = value;
             return;
         }
 
-        //Child descriptions are set in the comments element of a tag.
+        //Child descriptions are set in the 'Comments' element of a tag.
         if (value is null || value.IsEmpty())
         {
             Comments?.RemoveAll(c => TagName.HasOperand(c.Operand));
@@ -816,6 +843,34 @@ public class Tag : LogixComponent<Tag>
         }
 
         Units!.Add(new Unit(TagName.Operand, value));
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the In/Out alias tag member for the parent rack-connected module. This will allow the
+    /// caller to directly interact with the alias data element that a given In/out alias tag represents (this data is
+    /// stored in a separate module element). If not found, then we are going to return a member with a null data instance.
+    /// </summary>
+    private Member GetRackAliasMember()
+    {
+        //We can use this tag name to determine which parent module tag to retrieve.
+        var tagName = GetTagName();
+        var parts = tagName.Split(':', StringSplitOptions.RemoveEmptyEntries).ToArray();
+
+        //We have to have all 3 parts (module name, I/O suffix, and slot number) to find the correct member.
+        //If not, then we will default to a virtual member with a no action getter and setter;
+        if (parts.Length != 3 || L5X is null)
+            return new Member(tagName, () => LogixData.Null, _ => { });
+
+        var rack = parts[0];
+        var slot = parts[1];
+        var suffix = parts[2];
+
+        var tag = L5X.Query<Module>()
+            .FirstOrDefault(m => m.Name == rack)
+            ?.Tags.FirstOrDefault(t => t.Name.EndsWith(suffix))
+            ?.Member($"Slot[{slot}]"); //Not sure if this is all rack connections tag structure, but for now will hard code
+
+        return tag is not null ? tag._member : new Member(tagName, () => LogixData.Null, _ => { });
     }
 
     #endregion
