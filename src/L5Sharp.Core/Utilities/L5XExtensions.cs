@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Extensions methods that assist with the base functionality of the library.
+/// Extensions methods that help with the base functionality of the library.
 /// </summary>
 internal static class L5XExtensions
 {
@@ -16,7 +16,7 @@ internal static class L5XExtensions
     /// Determines if the current string is equal to string.Empty.
     /// </summary>
     /// <param name="value">The string input to analyze.</param>
-    /// <returns>true if the string is empty. Otherwise, false.</returns>
+    /// <returns>True if the string is empty. Otherwise, false.</returns>
     internal static bool IsEmpty(this string value) => value.Equals(string.Empty);
 
     /// <summary>
@@ -223,7 +223,7 @@ internal static class L5XExtensions
     /// <remarks>
     /// This is a helper extension since the logic is somewhat complex and used in more than one class.
     /// We look up the L5X tree for module name and parent name, as well as back down to find the potential slot of the module.
-    /// All this info along with the corresponding tag suffix make up the tag name for a module tag,
+    /// All this info, along with the corresponding tag suffix, makes up the tag name for a module tag,
     /// which is not inherent in the L5X element itself, but one that is important to us as it allows us to
     /// find or reference these tags by name just as you would find in Studio 5k.
     /// </remarks>
@@ -300,11 +300,11 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines if the current element represents an element we would deserialize as a <see cref="Tag"/> component.
+    /// Determines if the current element represents an element, we would deserialize as a <see cref="Tag"/> component.
     /// </summary>
     /// <param name="element">The element to check.</param>
     /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
-    internal static bool IsDataMemberElement(this XElement element)
+    private static bool IsDataMemberElement(this XElement element)
     {
         return element.Name.LocalName
             is L5XName.DataValueMember
@@ -316,8 +316,8 @@ internal static class L5XExtensions
     /// Determines if the specified XML element represents a code element such as a Rung, Line, or Sheet.
     /// </summary>
     /// <param name="element">The XML element to evaluate.</param>
-    /// <returns>true if the element is a code element. Otherwise, false.</returns>
-    internal static bool IsCodeElement(this XElement element)
+    /// <returns>True if the element is a code element. Otherwise, false.</returns>
+    private static bool IsCodeElement(this XElement element)
     {
         return element.Name.LocalName
             is L5XName.Rung

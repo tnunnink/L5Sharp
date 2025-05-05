@@ -30,13 +30,13 @@ public sealed class Member : LogixElement
     private readonly string? _name;
 
     /// <summary>
-    /// The custom getter function for a "virtual" member. If not null this will always be used in place of the normal
+    /// The custom getter function for a "virtual" member. If not null, this will always be used in place of the normal
     /// getter methods.
     /// </summary>
     private readonly Func<LogixData?>? _getter;
 
     /// <summary>
-    /// The custom setter function for a "virtual" member. If not null this will always be used in place of the normal
+    /// The custom setter function for a "virtual" member. If not null, this will always be used in place of the normal
     /// setter methods.
     /// </summary>
     private readonly Action<LogixData>? _setter;
@@ -54,9 +54,9 @@ public sealed class Member : LogixElement
     /// <inheritdoc />
     /// <remarks>
     /// Internal will make <see cref="Member"/> not something that is deserializable since we only look for public
-    /// constructors. This library should handle all complex data structure deserialization internally so this is fine.
+    /// constructors. This library should handle all complex data structure deserialization internally, so this is fine.
     /// This is also a class that is the basis for how Tag traverses its hierarchy. Also, this would not work in our
-    /// LogixSerializer implementation since there is no mappings of the elements to it that are not already used for
+    /// LogixSerializer implementation since there are no mappings of the elements to it that are not already used for
     /// other types. Meaning, even data value, structure, and array members should be deserialized to the
     /// <see cref="LogixData"/> class and not the <see cref="Member"/>. So this is kind of a special internal class
     /// that helps build the logix data structure.
@@ -67,13 +67,13 @@ public sealed class Member : LogixElement
 
     /// <summary>
     /// Creates a new "virtual" <see cref="Member"/> object with the provided name, getter, and setter functions. There
-    /// is no backing XElement in this scenario, but the provided delegates will be called in place of the get/set for
-    /// <see cref="Value"/> to allow special logix type objects to provide a mapping of a member object to it's custom
+    /// is no backing XElement in this scenario. However, the provided delegates will be called in place of the get/set for
+    /// <see cref="Value"/> to allow special logix type objects to provide a mapping of a member object to its custom
     /// backing L5X data element. This is used for the custom classes like <see cref="ALARM_ANALOG"/>,
     /// <see cref="ALARM_DIGITAL"/>, <see cref="MESSAGE"/> and others.
     /// </summary>
     /// <param name="name">The name of the member.</param>
-    /// <param name="getter">The function that get the logix type value for this member.</param>
+    /// <param name="getter">The function that gets the logix type value for this member.</param>
     /// <param name="setter">The function that sets the underlying L5X data for this member.</param>
     internal Member(string name, Func<LogixData?> getter, Action<LogixData> setter) : base(new XElement(L5XName.Data))
     {
@@ -87,7 +87,7 @@ public sealed class Member : LogixElement
     /// </summary>
     /// <value>A <see cref="string"/> representing the member name or array element index.</value>
     /// <remarks>
-    /// All member names are immutable. To change the name of a member for a given tag or data structure you
+    /// All member names are immutable. To change the name of a member for a given tag or data structure, you
     /// must remove and add a new member element. This can only be done for <c>ComplexType</c> objects.
     /// </remarks>
     public string Name => _name ?? Element.MemberName();
@@ -105,9 +105,9 @@ public sealed class Member : LogixElement
     /// </para>
     /// <para>
     /// Also note that you must set the value with the correct corresponding logix type
-    /// (e.g. AtomicType = AtomicType, StringType = StringType, ArrayType = ArrayType).
-    /// Arrays and structures will join provided value structure on the member name and forward the call down the
-    /// hierarchy in order to set complex object values.
+    /// (e.g., AtomicType = AtomicType, StringType = StringType, ArrayType = ArrayType).
+    /// Arrays and structures will join the provided value structure on the member name and forward the call down the
+    /// hierarchy to set complex object values.
     /// </para>
     /// </remarks>
     public LogixData Value
@@ -120,10 +120,10 @@ public sealed class Member : LogixElement
 
     /// <inheritdoc />
     /// <remarks>
-    /// For member elements we want to just call deserialize of the current element, which should represent a data
+    /// For member elements we want to just call deserializing of the current element, which should represent a data
     /// element (value, array, structure, etc.). However, we also provided custom getter to allow special classes to
     /// specify how to retrieve the underlying data, so we will call that if provided. This is a workaround for special
-    /// data formats (Alarm, Message, etc.) as well as root tag component.
+    /// data formats (Alarm, Message, etc.) as well as the root tag component.
     /// </remarks>
     protected override LogixData GetData()
     {
@@ -133,8 +133,8 @@ public sealed class Member : LogixElement
     /// <inheritdoc />
     /// <remarks>
     /// Sets the underlying value of the member to the provided logix type. This is a special setter specific to member,
-    /// as this is where we update the data for a given data structure. We handle the cases for all base logix types
-    /// including null, atomic, string, array, and structure. If the provided type can not be cast to the current type
+    /// as this is where we update the data for a given data structure. We handle the cases for all base logix types,
+    /// including null, atomic, string, array, and structure. If the provided type cannot be cast to the current type
     /// then we will get a <see cref="InvalidCastException"/>. This will help let the user know that they are setting
     /// values incorrectly.
     /// </remarks>
@@ -212,7 +212,7 @@ public sealed class Member : LogixElement
     }
 
     /// <summary>
-    /// Joins each child member for this member and the provided type data structure on name and sets each subsequent value.
+    /// Joins each child member for this member and the provided type data structure on name and sets each later value.
     /// This will effectively forward the update down the type/member hierarchy until it gets to atomics or string.
     /// </summary>
     private void SetStructure(LogixData data)
@@ -225,7 +225,7 @@ public sealed class Member : LogixElement
 
     /// <summary>
     /// Creates a new member element to contain the underlying member data for this object using the provided name
-    /// and <see cref="LogixData"/> instance. Members are really only different from the base decorated data in that the
+    /// and <see cref="LogixData"/> instance. Members are really only different from the base-decorated data in that the
     /// element names append "Member" and they have the <c>Name</c> attribute.
     /// So we can build them more dynamically this way and not have to have a method to construct each type manually.
     /// </summary>
@@ -238,17 +238,17 @@ public sealed class Member : LogixElement
         if (data is null or NullData)
             throw new ArgumentException("Can not create member with null data type.");
 
-        //Get either the normal data element or if a string then the "Structure" element
+        //Get either the normal data element or if a string, then the "Structure" element
         var element = data is StringData stringType ? stringType.SerializeStructure() : data.Serialize();
 
-        //If it happens that the data already contains a member element, then return that with updated name.
+        //If it happens that the data already contains a member element, then return that with an updated name.
         if (element.Name.LocalName.Contains(nameof(Member)))
         {
             element.SetAttributeValue(L5XName.Name, name);
             return element;
         }
 
-        //Otherwise create a new member element with same data and name.
+        //Otherwise create a new member element with the same data and name.
         var member = new XElement($"{element.Name}Member", new XAttribute(L5XName.Name, name));
         member.Add(element.Attributes());
         member.Add(element.Elements());

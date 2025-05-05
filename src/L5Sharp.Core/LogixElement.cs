@@ -394,7 +394,7 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets the element's <see cref="LogixData"/> representing the objects data structure. 
+    /// Gets the element's <see cref="LogixData"/> representing the tag data structure. 
     /// </summary>
     /// <returns>
     /// A <see cref="LogixData"/> object representing the simple or complex data structure for the element.
@@ -718,11 +718,11 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Add or updates the child formatted data element with the data of the provided <see cref="LogixData"/> object.
+    /// Add or updates the child data element with the data of the provided <see cref="LogixData"/> object.
     /// </summary>
     /// <param name="data">The <see cref="LogixData"/> data to update.</param>
     /// <remarks>
-    /// This is a specialized helper which will generate the new formatted data element to wrap the provided type element
+    /// This is a specialized helper that will generate the new formatted data element to wrap the provided type element
     /// if needed. It will also determine which XName to use based on whether this is a tag, local tag, or parameter.
     /// This is only intended for use with Tag and Parameter and will completely add or replace the existing root data
     /// element.
@@ -731,6 +731,7 @@ public abstract class LogixElement : ILogixSerializable
     {
         //Parameter and LocalTag have the element DefaultData instead of Data.
         var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
+        
         //Always use our Null type instead of actual null.
         data ??= LogixData.Null;
 
@@ -740,21 +741,21 @@ public abstract class LogixElement : ILogixSerializable
         var existing = Element.Elements(name).FirstOrDefault(e =>
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
-        //If that is null then add the new data.
+        //If existing is null, then add the new data.
         if (existing is null)
         {
             Element.Add(formatted);
             return;
         }
 
-        //If found then just replace.
+        //If found, then replace the existing element.
         existing.ReplaceWith(formatted);
         return;
 
         //Local function to generate a new formatted data element for the given type.
         XElement GenerateDataElement(string n, LogixData t)
         {
-            //First check for string type since there is no child element (Data is the element in this case)
+            //First check for a string type since there is no child element (Data is the element in this case)
             if (t is StringData str) return str.Serialize();
 
             //All other format types are wrapped in a containing data element with a format attribute.
