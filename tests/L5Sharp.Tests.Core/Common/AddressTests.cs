@@ -6,11 +6,19 @@ namespace L5Sharp.Tests.Core.Common
     public class AddressTests
     {
         [Test]
-        public void New_Empty_ShouldNotBeNull()
+        public void New_Null_ShouldThrowException()
         {
-            var address = new Address(string.Empty);
+            var action = () => new Address(null);
 
-            address.Should().NotBeNull();
+            action.Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void New_Empty_ShouldThrowException()
+        {
+            var action = () => new Address(string.Empty);
+
+            action.Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -20,19 +28,27 @@ namespace L5Sharp.Tests.Core.Common
 
             address.IsSlot.Should().BeTrue();
         }
-        
+
         [Test]
-        public void New_IP_IsIPv4ShouldBeTrue()
+        public void New_IP_IsNetworkShouldBeTrue()
         {
             var address = new Address("192.168.0.1");
 
-            address.IsIPv4.Should().BeTrue();
+            address.IsNetwork.Should().BeTrue();
+        }
+
+        [Test]
+        public void New_HostName_IsNetworkShouldBeTrue()
+        {
+            var address = new Address("MyHostName");
+
+            address.IsNetwork.Should().BeTrue();
         }
 
         [Test]
         public void Slot_WithValue_ShouldHAveExpectedValue()
         {
-            var address = Address.Slot(4);
+            var address = Address.NewSlot(4);
 
             address.ToSlot().Should().Be(4);
         }

@@ -150,7 +150,7 @@ public class DataType : LogixComponent<DataType>
         //This will be some predefined type or a complex data instance, depending on whether it is statically defined.
         var data = LogixData.Create(Name);
 
-        //If it is not a complex data then it was defined, and we can return it.
+        //If it is not a complex data, then it was defined, and we can return it.
         if (data is not ComplexData complexData) return data;
 
         //Otherwise, we need to build the members using the configured Members collection.

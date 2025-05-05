@@ -47,14 +47,14 @@ public class Vendor : ILogixParsable<Vendor>
     public static Vendor Rockwell => new(1, "Rockwell Automation/Allen-Bradley");
 
     /// <summary>
-    /// Converts a <see cref="Vendor"/> object to a <see cref="ushort"/> that represents the Id.
+    /// Converts a <see cref="Vendor"/> object to a <see cref="ushort"/> that represents the ID.
     /// </summary>
     /// <param name="vendor">The <see cref="Vendor"/> object to convert.</param>
-    /// <returns>A <see cref="ushort"/> representing the value of the Vendor Id.</returns>
+    /// <returns>A <see cref="ushort"/> representing the value of the Vendor ID.</returns>
     public static implicit operator ushort(Vendor vendor) => vendor.Id;
 
     /// <summary>
-    /// Converts a <see cref="ushort"/> value to a <see cref="Vendor"/> object that represents the Id.
+    /// Converts a <see cref="ushort"/> value to a <see cref="Vendor"/> object that represents the ID.
     /// </summary>
     /// <param name="vendorId">The <see cref="ushort"/> value to convert.</param>
     /// <returns>A <see cref="Vendor"/> with the Id of the converted value.</returns>
@@ -85,7 +85,7 @@ public class Vendor : ILogixParsable<Vendor>
         return obj switch
         {
             Vendor other => Id == other.Id,
-            ValueType other =>  Id.Equals(Convert.ChangeType(other, typeof(ushort))),
+            ValueType other => Id.Equals(Convert.ChangeType(other, typeof(ushort))),
             _ => false
         };
     }

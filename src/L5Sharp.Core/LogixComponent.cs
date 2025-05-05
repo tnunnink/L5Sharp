@@ -178,7 +178,7 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
     }
 
     /// <summary>
-    /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
+    /// Returns a new deep-cloned instance as the specified <see cref="LogixElement"/> type.
     /// </summary>
     /// <returns>A new instance of the specified element type with the same property values.</returns>
     public new TComponent Clone() => new XElement(Serialize()).Deserialize<TComponent>();

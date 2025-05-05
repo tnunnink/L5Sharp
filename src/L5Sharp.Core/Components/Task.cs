@@ -60,7 +60,7 @@ public sealed class Task : LogixComponent<Task>
     /// </summary>
     /// <param name="name">The name of the Task.</param>
     /// <param name="type">The <see cref="TaskType"/> of the Task.</param>
-    public Task(string name, TaskType? type = default) : this()
+    public Task(string name, TaskType? type = null) : this()
     {
         Name = name;
         Type = type ?? TaskType.Periodic;
@@ -183,16 +183,16 @@ public sealed class Task : LogixComponent<Task>
     /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Program"/> component objects schedule to this task.</value>
     /// <remarks>
     /// This is an extension to the type and uses the attached L5X file to retrieve the program components.
-    /// Therefore, if this task is not attached it will return and empty collection. Also, if no program exists with the
+    /// Therefore, if this task is not attached, it will return and empty collection. Also, if no program exists with the
     /// scheduled name, this will return an empty collection.
     /// </remarks>
     public IEnumerable<Program> Programs => L5X?.Programs.Where(p => Scheduled.Any(s => s == p.Name)) ?? [];
 
     /// <summary>
-    /// The collection of program names that are scheduled to the task.
+    /// The collection of program names that are scheduled for the task.
     /// </summary>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
-    /// <remarks>This member just returns the read only list of scheduled programs. To modify the list, use
+    /// <remarks>This member just returns the read-only list of scheduled programs. To modify the list, use
     /// the methods <see cref="Schedule"/> or <see cref="Cancel"/>.</remarks>
     public IEnumerable<string> Scheduled => Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
 

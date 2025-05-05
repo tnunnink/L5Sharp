@@ -11,6 +11,8 @@ namespace L5Sharp.Samples
         public static readonly string TestAcd = Path.Combine(Directory, "Test.ACD");
         public static readonly string Empty = Path.Combine(Directory, "Empty.xml");
         public static readonly string LotOfTags = Path.Combine(Directory, "LotOfTags.xml");
+        public static readonly string ModuleExport = Path.Combine(Directory, "Modules", "TestCard.L5X");
+        public static readonly string DataTypeExport = Path.Combine(Directory, "DataTypes", "ComplexType.L5X");
         public const string Example = @"C:\Users\tnunnink\Documents\Rockwell\Example.L5X";
 
         public const string DataType = "SimpleType";

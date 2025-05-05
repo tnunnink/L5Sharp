@@ -2,6 +2,6 @@
   <Description><![CDATA[This is a test module]]></Description>
   <EKey State="Disabled" />
   <Ports>
-    <Port Id="1" Type="ICP" Address="1" Upstream="true" />
+    <Port Id="1" Type="ICP" Upstream="true" Address="1" />
   </Ports>
 </Module>
