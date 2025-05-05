@@ -358,7 +358,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
         if (tagName.IsEmpty() || tagName.StartsWith(MemberSeparator)) return string.Empty;
         if (tagName.StartsWith(ArrayOpenSeparator))
         {
-            return tagName.Substring(0, tagName.IndexOf(ArrayCloseSeparator));
+            return tagName.Substring(0, tagName.IndexOf(ArrayCloseSeparator) + 1);
         }
 
         var index = tagName.IndexOfAny([MemberSeparator, ArrayOpenSeparator]);
