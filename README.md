@@ -133,7 +133,6 @@ L5Sharp provides support for all primary Logix components:
 DeepWiki is an AI-powered platform that automatically generates comprehensive, Wikipedia-style documentation for any public GitHub repository, complete with interactive diagrams and a conversational assistant to answer technical questions about the codebase.
 (From Perplexity)
 
-The link below is for the DeepWiki entry for this repository.
 [https://deepwiki.com/tnunnink/L5Sharp](https://deepwiki.com/tnunnink/L5Sharp)
 
 ## Requirements
