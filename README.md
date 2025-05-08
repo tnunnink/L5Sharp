@@ -128,6 +128,12 @@ L5Sharp provides support for all primary Logix components:
 - Tag documentation and reporting
 - PLC code generation
 - Automation tool development.
+ 
+## DeepWiki Documentation
+DeepWiki is an AI-powered platform that automatically generates comprehensive, Wikipedia-style documentation for any public GitHub repository, complete with interactive diagrams and a conversational assistant to answer technical questions about the codebase.
+(From Perplexity)
+
+[https://deepwiki.com/tnunnink/L5Sharp](https://deepwiki.com/tnunnink/L5Sharp)
 
 ## Requirements
 - .NET Standard 2.0 or .NET 8.0 compatible framework
