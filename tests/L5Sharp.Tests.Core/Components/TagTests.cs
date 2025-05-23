@@ -879,13 +879,14 @@ public class TagTests
     [Test]
     public void GetDescription_FromUserDefinedWithPassThroughEnabled_ShouldHavePassThroughDescription()
     {
-        const string expectedBase = "This is a test tag with a description or comment.";
+        const string expectedBase = "Base";
+        var expectedMember = string.Concat(expectedBase, " ", "User defined complex type", " ", "Test Bool");
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var tag = content.Get<Tag>(Known.Tag);
+        var tag = content.Get<Tag>("TestComplexTag");
 
         tag.Description.Should().Be(expectedBase);
-        tag["BoolMember"].Description.Should().Be(string.Concat(expectedBase, " ", "Test Bool"));
+        tag["SimpleMember.BoolMember"].Description.Should().Be(expectedMember);
     }
 
     #endregion

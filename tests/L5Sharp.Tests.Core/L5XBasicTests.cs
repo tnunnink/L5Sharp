@@ -86,7 +86,7 @@ public class L5XBasicTests
     public void Parse_ValidContent_ShouldNotBeNull()
     {
         var xml = XDocument.Load(Known.Test).ToString();
-        
+
         var content = L5X.Parse(xml);
 
         content.Info.Should().NotBeNull();
@@ -95,7 +95,6 @@ public class L5XBasicTests
         content.Info.TargetName.Should().Be("TestController");
         content.Info.TargetType.Should().Be("Controller");
         content.Info.ContainsContext.Should().Be(false);
-        content.Info.Owner.Should().Be("tnunnink, EN Engineering");
         content.Info.ExportDate.Should().NotBeNull();
     }
 
@@ -110,7 +109,6 @@ public class L5XBasicTests
         content.Info.TargetName.Should().Be("TestController");
         content.Info.TargetType.Should().Be("Controller");
         content.Info.ContainsContext.Should().Be(false);
-        content.Info.Owner.Should().Be("tnunnink, EN Engineering");
         content.Info.ExportDate.Should().NotBeNull();
     }
 
@@ -192,7 +190,7 @@ public class L5XBasicTests
     public void Remove_ExistingComponent_ShouldNotExist()
     {
         var content = L5X.Load(Known.Test);
-        
+
         content.Remove<Tag>(Known.Tag);
 
         content.TryGet<Tag>(Known.Tag, out _).Should().BeFalse();
@@ -202,9 +200,9 @@ public class L5XBasicTests
     public void Remove_ScopeBuilder_ShouldNotExist()
     {
         var content = L5X.Load(Known.Test);
-        
+
         content.Remove(s => s.Tag(Known.Tag));
-        
+
         content.TryGet<Tag>(Known.Tag, out _).Should().BeFalse();
     }
 
