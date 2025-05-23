@@ -797,7 +797,9 @@ public class Tag : LogixComponent<Tag>
         if (comment is not null) return comment.Value;
 
         //If there is no indexed context or the corresponding data type is not available, default to inherited description.
-        if (L5X is null || !L5X.IsIndexed || !L5X.TryGet<DataType>(DataType, out var type))
+        //Note that we need to always use the parent type. If we are here, we know we have a parent and could
+        //potentially be some user-defined type.
+        if (L5X is null || !L5X.IsIndexed || !L5X.TryGet<DataType>(Parent.DataType, out var type))
             return Parent.Description;
 
         //Here we have the corresponding type definition and can use the description to emulate pass through.
@@ -810,7 +812,8 @@ public class Tag : LogixComponent<Tag>
         //EnableWithAppend means append the definition description to the parent.
         if (Equals(L5X.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
         {
-            return Parent.Description + " " + type.Description;
+            var description = type.Members.FirstOrDefault(m => m.Name == _member.Name)?.Description;
+            return Parent.Description + " " + description;
         }
 
         //Disable means we don't use this pass through. Default to Inherited description.
