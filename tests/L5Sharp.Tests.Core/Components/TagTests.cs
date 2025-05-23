@@ -876,6 +876,18 @@ public class TagTests
         comment.Should().Be("TIMER TAG");
     }
 
+    [Test]
+    public void GetDescription_FromUserDefinedWithPassThroughEnabled_ShouldHavePassThroughDescription()
+    {
+        const string expectedBase = "This is a test tag with a description or comment.";
+        var content = L5X.Load(Known.Test);
+
+        var tag = content.Get<Tag>(Known.Tag);
+
+        tag.Description.Should().Be(expectedBase);
+        tag["BoolMember"].Description.Should().Be(string.Concat(expectedBase, " ", "Test Bool."));
+    }
+
     #endregion
 
     #region CommentsTests
@@ -912,7 +924,6 @@ public class TagTests
     }
 
     #endregion
-
 
     #region BuilderTests
 
@@ -1127,7 +1138,6 @@ public class TagTests
     }
 
     #endregion
-
 
     #region ProduceConsumeTests
 

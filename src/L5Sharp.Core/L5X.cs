@@ -166,6 +166,11 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     public LogixContainer<WatchList> WatchLists => new(GetContainer(L5XName.QuickWatchLists));
 
     /// <summary>
+    /// Indicates whether the current L5X object is utilizing an indexed structure for lookup operations.
+    /// </summary>
+    public bool IsIndexed => _lookup is LogixIndex;
+
+    /// <summary>
     /// Creates a new <see cref="L5X"/> by loading the contents of the provide file name.
     /// </summary>
     /// <param name="fileName">A URI string referencing the file to load.</param>

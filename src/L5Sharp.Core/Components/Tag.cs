@@ -782,16 +782,39 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Handles getting a comment value for the current tag. 
+    /// Handles getting a comment value for the current tag.
+    /// This method supports emulation of pass-through documentation by attempting to find the corresponding
+    /// user-defined type from the L5X content. If found, we will append that description to the parent (based on the
+    /// configured pass-through options for the project)
     /// </summary>
     private string? GetTagDescription()
     {
-        if (Parent is null) return Element.Element(L5XName.Description)?.Value;
+        if (Parent is null)
+            return Element.Element(L5XName.Description)?.Value;
 
+        //Local member comments always override pass through and inherited descriptions
         var comment = Comments?.FirstOrDefault(c => TagName.HasOperand(c.Operand));
+        if (comment is not null) return comment.Value;
 
-        //Logix descriptions propagate to their children when not overriden. This mimics that.
-        return comment is not null ? comment.Value : Parent.Description;
+        //If there is no indexed context or the corresponding data type is not available, default to inherited description.
+        if (L5X is null || !L5X.IsIndexed || !L5X.TryGet<DataType>(DataType, out var type))
+            return Parent.Description;
+
+        //Here we have the corresponding type definition and can use the description to emulate pass through.
+        //Enable means returning the definition description.
+        if (Equals(L5X.Controller.PassThroughConfiguration, PassThroughOption.Enabled))
+        {
+            return type.Description;
+        }
+
+        //EnableWithAppend means append the definition description to the parent.
+        if (Equals(L5X.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
+        {
+            return Parent.Description + " " + type.Description;
+        }
+
+        //Disable means we don't use this pass through. Default to Inherited description.
+        return Parent.Description;
     }
 
     /// <summary>
