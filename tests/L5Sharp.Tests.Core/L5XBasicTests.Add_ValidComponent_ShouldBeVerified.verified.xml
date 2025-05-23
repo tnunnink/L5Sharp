@@ -17,8 +17,7 @@
         <Description>Test Int Array</Description>
       </Member>
       <Member Name="DintArray" DataType="DINT" Dimension="5" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
-        <Description>Test 
-Dint Array</Description>
+        <Description>Test Dint Array</Description>
       </Member>
       <Member Name="LintArray" DataType="LINT" Dimension="5" Radix="Date/Time" Hidden="false" ExternalAccess="Read/Write">
         <Description>Test Lint Array</Description>
