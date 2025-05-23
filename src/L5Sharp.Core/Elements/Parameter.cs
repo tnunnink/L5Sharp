@@ -56,7 +56,7 @@ public class Parameter : LogixObject<Parameter>
     /// This constructor if meant to create simple atomic Input/Output parameters which can be used as members
     /// of the complex tag data structure for an AOI component.
     /// </remarks>
-    public Parameter(string name, AtomicData value, TagUsage? usage = default) : this()
+    public Parameter(string name, AtomicData value, TagUsage? usage = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         DataType = value.Name;
@@ -82,7 +82,7 @@ public class Parameter : LogixObject<Parameter>
     public string? Description
     {
         get => GetProperty<string>();
-        set => SetDescription(value);
+        set => SetProperty(value);
     }
 
     /// <summary>
@@ -158,7 +158,7 @@ public class Parameter : LogixObject<Parameter>
     /// </summary>
     /// <value>
     /// A <see cref="TagUsage"/> option representing the <c>Parameter</c> scope.
-    /// Default for AoiBlock is <see cref="TagUsage.Input"/>. Only valid options for AoiBlock are Input, Output,
+    /// Default for AoiBlock is <see cref="TagUsage.Input"/>. The only valid options for AoiBlock are Input, Output,
     /// and InOut.
     /// </value>
     public TagUsage Usage
@@ -168,7 +168,7 @@ public class Parameter : LogixObject<Parameter>
     }
 
     /// <summary>
-    /// Indicates whether the <c>Parameter</c> is required form the instruction code clock.
+    /// Indicates whether the <c>Parameter</c> is required from the instruction code clock.
     /// </summary>
     /// <value>
     /// <c>true</c> if the <c>Parameter</c> is required; otherwise, false. Default is <c>false</c>.</value>
@@ -212,7 +212,7 @@ public class Parameter : LogixObject<Parameter>
     /// Indicates whether the <c>Parameter</c> is a constant.
     /// </summary>
     /// <value><c>true</c> if the <c>Parameter</c> is constant; otherwise, <c>false</c>.</value>
-    /// <remarks>Only value type tags have the ability to be set as a constant. Default is <c>false</c>.</remarks>
+    /// <remarks>Only value type tags can be set as a constant. Default is <c>false</c>.</remarks>
     public bool? Constant
     {
         get => GetValue<bool>();
@@ -224,9 +224,9 @@ public class Parameter : LogixObject<Parameter>
     /// </summary>
     /// <param name="tagName">The name of the tag.</param>
     /// <returns>A <see cref="Tag"/> instance with the specified name and value populated using this parameter's configuration.</returns>
-    /// <exception cref="InvalidOperationException"><see cref="DataType"/> is null or emprty.</exception>
+    /// <exception cref="InvalidOperationException"><see cref="DataType"/> is null or empty.</exception>
     /// <remarks>
-    /// This is a helper to allow us to generate default tag instance from a parameter element. This will internally
+    /// This is a helper to allow us to generate a default tag instance from a parameter element. This will internally
     /// generate a default <see cref="LogixData"/> instance using the configured data typ name of the parameter.
     /// </remarks>
     public Tag ToTag(string tagName)
@@ -248,10 +248,10 @@ public class Parameter : LogixObject<Parameter>
     /// is not configured as Input or Output.</exception>
     /// <returns>A <see cref="Member"/> instance with the name and default value of the current parameter.</returns>
     /// <remarks>
-    /// This is helper to allow us to generate default tag members from a given parameter, so that we
+    /// This is a helper to allow us to generate default tag members from a given parameter so that we
     /// can easily build up an in memory instance of an AOI tag component. Note that this method is intended to only be
-    /// called on Input or Output parameters which Logix requires to be atomic type parameters. these are the only parameter
-    /// types that are available on a AOI tag instance.
+    /// called on Input or Output parameters, which Logix requires to be atomic type parameters.
+    /// These are the only parameter types that are available on an AOI tag instance.
     /// </remarks>
     public Member ToMember()
     {

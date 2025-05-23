@@ -15,7 +15,7 @@ namespace L5Sharp.Core;
 ///     • The sheets in the routine appear in order in the export file.
 ///         Each sheet section contains all the drawing elements and wires for that sheet. <br/>
 ///     • On import, sheet numbers are assigned based on order in the file, not on the number attribute on the sheet.<br/>
-///     • The sheet name is stored as description on the sheet.<br/>
+///     • The sheet name is stored as a description on the sheet.<br/>
 ///     • Input references, blocks, output references, special drawing elements,
 ///         and wires are contained within the sheet. On export, the elements
 ///         appear in the order shown. On import in the L5K format, elements can
@@ -24,7 +24,7 @@ namespace L5Sharp.Core;
 ///     • Wire and feedback wire statements must appear after all the other
 ///         components.<br/>
 ///     • Be careful when copying and pasting function block components
-///         within an import/export file. Each component within a sheet must
+///         within an import/export file. Each component within a sheet must-
 ///         have a unique id number within that sheet.<br/>
 /// </para>
 /// </remarks>
@@ -75,7 +75,7 @@ public class Sheet : Diagram
     public string? Description
     {
         get => GetProperty<string>();
-        set => SetDescription(value);
+        set => SetProperty(value);
     }
 
     /// <summary>

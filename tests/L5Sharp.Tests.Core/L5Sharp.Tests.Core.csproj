@@ -375,6 +375,12 @@
       <None Update="Components\TagTests.Build_SimpleAliasTag_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.Duplicate_ValidConfig_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ProgramTests.Duplicate_ValidConfig_ShouldBeVerified.verified.txt">
+        <DependentUpon>ProgramTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

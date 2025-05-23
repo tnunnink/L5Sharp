@@ -689,35 +689,6 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Adds, removes, or updates the common logix description child element on the current underlying element object.
-    /// If null, it will remove the child element. If not null, will either add as the first child element or replace the
-    /// existing child element.
-    /// </summary>
-    /// <param name="value">The description value to set.</param>
-    /// <remarks>
-    /// This is a specialized helper to make setting the description value as concise as possible for derived
-    /// classes. Many logix elements will have a description element.
-    /// </remarks>
-    protected void SetDescription(string? value = null)
-    {
-        if (value is null)
-        {
-            Element.Element(L5XName.Description)?.Remove();
-            return;
-        }
-
-        var description = Element.Element(L5XName.Description);
-
-        if (description is null)
-        {
-            Element.AddFirst(new XElement(L5XName.Description, new XCData(value)));
-            return;
-        }
-
-        description.ReplaceWith(new XElement(L5XName.Description, new XCData(value)));
-    }
-
-    /// <summary>
     /// Add or updates the child data element with the data of the provided <see cref="LogixData"/> object.
     /// </summary>
     /// <param name="data">The <see cref="LogixData"/> data to update.</param>

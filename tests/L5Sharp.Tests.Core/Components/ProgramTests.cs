@@ -73,7 +73,7 @@ public class ProgramTests
 
         program.Tags.Should().HaveCount(1);
     }
-    
+
     [Test]
     public Task AddTag_ValidTag_ShouldBeVerified()
     {
@@ -93,7 +93,7 @@ public class ProgramTests
 
         program.Routines.Should().HaveCount(1);
     }
-    
+
     [Test]
     public Task AddRoutine_ValidRoutine_ShouldBeVerified()
     {
@@ -118,12 +118,28 @@ public class ProgramTests
             MainRoutineName = "Main",
             FaultRoutineName = "Fault",
             UseAsFolder = true,
-            Tags = new LogixContainer<Tag> { new() { Name = "Test", Value = true } },
-            Routines = new LogixContainer<Routine>()
+            Tags = [new Tag { Name = "Test", Value = true }],
+            Routines = []
         };
 
         var xml = program.Serialize().ToString();
 
         return Verify(xml);
+    }
+
+    [Test]
+    public Task Duplicate_ValidConfig_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Test);
+        var program = content.Get<Program>("MainProgram");
+
+        var duplicate = program.Duplicate(p =>
+        {
+            p.Name = "DuplicateProgram";
+            p.Description = "This is my new program";
+            p.Replace("Test", "Temp");
+        });
+
+        return Verify(duplicate.Serialize().ToString());
     }
 }
