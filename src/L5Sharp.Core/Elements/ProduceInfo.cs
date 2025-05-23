@@ -76,7 +76,7 @@ public class ProduceInfo : LogixElement
     }
 
     /// <summary>
-    /// Specifies the RPI to use for an out of range consumer of the tag.
+    /// Specifies the RPI to use for an out-of-range consumer of the tag.
     /// </summary>
     /// <value>A <see cref="double"/> representing the duration in ms that the tag may be requested by out of range consumer.</value>
     public double DefaultRPI

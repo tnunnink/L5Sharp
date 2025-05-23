@@ -1,0 +1,3 @@
+﻿<Tag Name="MyTagName" TagType="Alias" ExternalAccess="Read/Write" Constant="false" AliasFor="SomeOtherTag">
+  <Description><![CDATA[We don't need to configure anything since it is based on SOmeOtherTag]]></Description>
+</Tag>

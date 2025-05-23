@@ -1,0 +1,19 @@
+﻿<Tag Name="ArrayTag" TagType="Base" ExternalAccess="Read Only" Constant="false" DataType="REAL" Radix="Float" Dimensions="12">
+  <Description><![CDATA[This is a simple array type builder]]></Description>
+  <Data Format="Decorated">
+    <Array DataType="REAL" Dimensions="12" Radix="Float">
+      <Element Index="[0]" Value="0.0" />
+      <Element Index="[1]" Value="0.0" />
+      <Element Index="[2]" Value="0.0" />
+      <Element Index="[3]" Value="0.0" />
+      <Element Index="[4]" Value="12.4" />
+      <Element Index="[5]" Value="0.0" />
+      <Element Index="[6]" Value="0.0" />
+      <Element Index="[7]" Value="123.3" />
+      <Element Index="[8]" Value="0.0" />
+      <Element Index="[9]" Value="0.0" />
+      <Element Index="[10]" Value="0.0" />
+      <Element Index="[11]" Value="0.0" />
+    </Array>
+  </Data>
+</Tag>

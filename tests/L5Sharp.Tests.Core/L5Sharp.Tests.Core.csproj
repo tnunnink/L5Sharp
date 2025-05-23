@@ -357,6 +357,24 @@
       <None Update="L5XTagTests.SetValue_RackConnectionAliasTag_ShouldUpdateTheParentModuleTagElement.verified.txt">
         <DependentUpon>L5XTagTests.cs</DependentUpon>
       </None>
+      <None Update="Components\TagTests.Build_SimpleStructureWithConfiguredMembers_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_StructureWithPredefinedMember_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_AtomicArrayWithSetValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_ComplexNestedStructure_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_StructureArrayWithNestedConfig_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_SimpleAliasTag_ShouldBeVerified.verified.txt">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

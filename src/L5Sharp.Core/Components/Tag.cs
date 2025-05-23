@@ -635,15 +635,6 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Creates a new <see cref="Tag"/> with the provided name and specified type parameter.
-    /// </summary>
-    /// <param name="name">The name of the tag.</param>
-    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
-    /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
-    public static Tag Create<TLogixType>(string name) where TLogixType : LogixData, new() =>
-        new() { Name = name, Value = new TLogixType() };
-
-    /// <summary>
     /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
     /// this <c>Tag</c>. 
     /// </summary>
@@ -693,6 +684,25 @@ public class Tag : LogixComponent<Tag>
 
         complexType.Replace(TagName.Member, value);
         return Root[TagName.Path];
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> with the provided name and specified type parameter.
+    /// </summary>
+    /// <param name="name">The name of the tag.</param>
+    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
+    /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
+    public static Tag Create<TLogixType>(string name) where TLogixType : LogixData, new() =>
+        new() { Name = name, Value = new TLogixType() };
+
+    /// <summary>
+    /// Builds a tag using the fluent tag builder API to intuitively construct simple or complex tag objects. 
+    /// </summary>
+    /// <param name="name">The name of the tag to build.</param>
+    /// <returns>An instance of <see cref="ITagBaseTypeBuilder"/> to enable tag configuration.</returns>
+    public static ITagBaseTypeBuilder Configure(string name)
+    {
+        return new TagBaseTypeBuilder(name);
     }
 
     #region Internal
