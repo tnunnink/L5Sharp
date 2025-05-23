@@ -19,7 +19,7 @@ namespace L5Sharp.Core;
 /// only operate over the specified element type which is configured via the type's <see cref="L5XTypeAttribute"/>.
 /// </para>
 /// <para>
-/// The class is designed to only offer very basic operations, allowing it to be applicable to all container type elements,
+/// The class is designed to only offer very basic operations, allowing it to be applicable to all container type elements;
 /// However, the user can extend the API for any container type using extension methods.
 /// See <see cref="ContainerExtensions"/> for examples demonstrating extensions for containers of type <see cref="LogixComponent"/>.
 /// </para>
@@ -27,7 +27,7 @@ namespace L5Sharp.Core;
 public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICollection where TObject : LogixObject
 {
     /// <summary>
-    /// Creates a empty <see cref="LogixContainer{TObject}"/> with the default type name.
+    /// Creates an empty <see cref="LogixContainer{TObject}"/> with the default type name.
     /// </summary>
     public LogixContainer() : base(typeof(TObject).L5XContainer())
     {
@@ -80,7 +80,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <summary>
     /// Accesses a single element at the specified index of the container collection.
     /// </summary>
-    /// <param name="index">The zero based index of the element to retrieve.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
     /// <returns>The element at the specified position in the source container.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of elements in the collection.</exception>
@@ -211,7 +211,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <summary>
     /// Inserts the provided element at the specified index of the container collection.
     /// </summary>
-    /// <param name="index">The zero based index at which to insert the element.</param>
+    /// <param name="index">The zero-based index at which to insert the element.</param>
     /// <param name="element">The element to insert.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
@@ -240,9 +240,9 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     }
 
     /// <summary>
-    /// Removes a element at the specified index of the collection.
+    /// Removes an element at the specified index of the collection.
     /// </summary>
-    /// <param name="index">The zero based index of the element to remove.</param>
+    /// <param name="index">The zero-based index of the element to remove.</param>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of elements in the collection.</exception>
     public void RemoveAt(int index)
@@ -273,7 +273,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <summary>
     /// Updates all elements in the container by applying the provided update action delegate.
     /// </summary>
-    /// <param name="update">A update to apply to each element.</param>
+    /// <param name="update">An update to apply to each element.</param>
     /// <exception cref="ArgumentNullException"><c>update</c> is null.</exception>
     public void Update(Action<TObject> update)
     {
@@ -290,7 +290,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// Updates all elements in the container that satisfy the provided condition predicate by applying the provided
     /// update action delegate.
     /// </summary>
-    /// <param name="update">A update to apply to each element.</param>
+    /// <param name="update">An update to apply to each element.</param>
     /// <param name="condition">The condition for which to update elements.</param>
     /// <exception cref="ArgumentNullException"><c>update</c> or <c>condition</c> is null.</exception>
     public void Update(Action<TObject> update, Func<TObject, bool> condition)

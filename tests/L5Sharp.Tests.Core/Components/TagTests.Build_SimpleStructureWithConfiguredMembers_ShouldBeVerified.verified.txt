@@ -1,0 +1,10 @@
+﻿<Tag Name="MyTagName" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="SimpleType">
+  <Description><![CDATA[Builder example of tag from a user defined type that is not statically defined]]></Description>
+  <Data Format="Decorated">
+    <Structure DataType="SimpleType">
+      <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="1" />
+      <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="123" />
+      <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="1.23" />
+    </Structure>
+  </Data>
+</Tag>

@@ -28,7 +28,7 @@ public abstract class LogixObject : LogixElement
     /// <param name="item">The logix object to add.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
-    /// the provided logix element is not the same type or convertable to the type of this logix element.
+    /// the provided logix element is a different type or convertable to the type of this logix element.
     /// </exception>
     /// <remarks>
     /// This method requires the component be attached to the <see cref="L5X"/> as it will
@@ -36,7 +36,7 @@ public abstract class LogixObject : LogixElement
     /// It will also automatically perform the "type conversion" of the provided element if possible.
     /// This just means it will attempt to change the element name to match this element name so that the
     /// underlying element type will have the correct sequence name. This is used primarily for types that support
-    /// multiple elements (i.e. Tags).
+    /// multiple elements (i.e., Tags).
     /// </remarks>
     public void AddAfter(LogixObject item)
     {
@@ -60,7 +60,7 @@ public abstract class LogixObject : LogixElement
     /// <param name="element">The logix element to add.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
-    /// the provided logix element is not the same type or convertable to the type of this logix element.
+    /// the provided logix element is a different type or convertable to the type of this logix element.
     /// </exception>
     /// <remarks>
     /// This method requires the component be attached to an <see cref="L5X"/>, as it will
@@ -68,7 +68,7 @@ public abstract class LogixObject : LogixElement
     /// It will also automatically perform the "type conversion" of the provided element if possible.
     /// This just means it will attempt to change the element name to match this element name so that the
     /// underlying element type will have the correct sequence name. This is used primarily for types that support
-    /// multiple elements (i.e. Tags).
+    /// multiple elements (i.e., Tags).
     /// </remarks>
     public void AddBefore(LogixObject element)
     {
@@ -93,7 +93,7 @@ public abstract class LogixObject : LogixElement
     /// <param name="typeName">The name of the element type to convert this logix element to.</param>
     /// <returns>A new <see cref="LogixElement"/> instance with the converted element name.</returns>
     /// <exception cref="ArgumentException"><c>typeName</c> is null or empty.</exception>
-    /// <exception cref="InvalidOperationException">The specified type name is not supported by this class type.</exception>
+    /// <exception cref="InvalidOperationException">This class type does not support the specified type name.</exception>
     /// <remarks>
     /// This simply updates the underlying element name to the provided name if it is a supported type name for this
     /// logix element class type, which is configured via the <see cref="L5XTypeAttribute"/> for the derived type. This
@@ -123,7 +123,7 @@ public abstract class LogixObject : LogixElement
     /// to convert to is not the default L5XType name.</param>
     /// <typeparam name="TObject">The <see cref="LogixObject"/> to convert this object type to.</typeparam>
     /// <returns>A new <see cref="LogixElement"/> of the specified generic type with the converted element name.</returns>
-    /// <exception cref="InvalidOperationException">The specified type name is not supported by this class type.</exception>
+    /// <exception cref="InvalidOperationException">This class type does not support the specified type name.</exception>
     /// <remarks>
     /// This simply updates the underlying element name to the provided name if it is a supported type name for this
     /// logix element class type, which is configured via the <see cref="L5XTypeAttribute"/> for the derived type. This
@@ -169,7 +169,7 @@ public abstract class LogixObject : LogixElement
     /// <param name="element">The new logix element to replace this element with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
-    /// the provided logix element is not the same type or convertable to the type of this logix element.
+    /// the provided logix element is different type or convertable to the type of this logix element.
     /// </exception>
     /// <remarks>
     /// This method requires the component be attached to the <see cref="L5X"/>, as it will
@@ -177,7 +177,7 @@ public abstract class LogixObject : LogixElement
     /// It will also automatically perform the "type conversion" of the provided element if possible.
     /// This just means it will attempt to change the element name to match this element name so that the
     /// underlying element type will have the correct sequence name. This is used primarily for types that support
-    /// multiple elements (i.e. Tags).
+    /// multiple elements (i.e., Tags).
     /// </remarks>
     public void Replace(LogixObject element)
     {
@@ -198,7 +198,7 @@ public abstract class LogixObject : LogixElement
 
 /// <summary>
 /// A generic abstract <see cref="LogixObject"/> that implements the <see cref="ILogixParsable{T}"/> interface.
-/// This generic type class allow us to specify the strong return types for methods <see cref="Parse"/>,
+/// This generic type class allows us to specify the strong return types for methods <see cref="Parse"/>,
 /// <see cref="TryParse"/> and <see cref="Clone"/>. This means we don't have to implement these methods for every
 /// derivative type, and allows these types to be used with the <see cref="LogixParser"/> in a dynamic fashion.
 /// </summary>
@@ -217,7 +217,7 @@ public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject
     }
 
     /// <summary>
-    /// Returns a new deep cloned instance of this object.
+    /// Returns a new deep-cloned instance of this object.
     /// </summary>
     /// <returns>A new object instance of the same type with the same property values.</returns>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
@@ -230,9 +230,9 @@ public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject
     /// <returns>A new <see cref="LogixObject"/> instance that represents the parsed value.</returns>
     /// <remarks>
     /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
     /// Also note that since this uses internal XElement and casts the type, this method can throw exceptions for invalid
-    /// XML or XML that is parsed to an different type thatn the one specified here.
+    /// XML or XML that is parsed to a different type than the one specified here.
     /// </remarks>
     public static TObject Parse(string value)
     {
@@ -241,24 +241,24 @@ public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject
     }
 
     /// <summary>
-    /// Attempts to parse the provided string and returned the strongly typed object. If unsuccesful, then this method
+    /// Attempts to parse the provided string and returned the strongly typed object. If unsuccessful, then this method
     /// returns <c>null</c>.
     /// </summary>
     /// <param name="value">The XML string value to parse.</param>
     /// <returns>A new <see cref="LogixObject"/> instance that represents the parsed value if successful, otherwise, <c>null</c>.</returns>
     /// <remarks>
     /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
     /// Note that this method will just return null if any exception is caught. This could be for invalid XML formats
     /// of invalid type casts.
     /// </remarks>
     public static TObject? TryParse(string? value)
     {
         if (value is null || value.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
-            return default;
+            return null;
 
         var trimmed = value.Trim();
-        if (trimmed.Length == 0 || trimmed[0] != '<') return default;
+        if (trimmed.Length == 0 || trimmed[0] != '<') return null;
 
         try
         {
@@ -267,7 +267,7 @@ public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject
         }
         catch (Exception)
         {
-            return default;
+            return null;
         }
     }
 }

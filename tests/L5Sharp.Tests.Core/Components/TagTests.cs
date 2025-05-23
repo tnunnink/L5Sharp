@@ -182,6 +182,55 @@ public class TagTests
         tag.Members().Where(m => m.TagName.Depth == 1).Should().HaveCount(3);
     }
 
+    [Test]
+    public Task Class_SetValidValue_ShouldBeVerified()
+    {
+        var tag = new Tag { Name = "Test", Class = ComponentClass.Safety, Value = 100 };
+
+        var xml = tag.Serialize().ToString();
+
+        return VerifyXml(xml);
+    }
+
+    [Test]
+    public void ToString_WhenCalled_ShouldReturnTagName()
+    {
+        var tag = new Tag { Name = "Test", Value = true };
+
+        tag.ToString().Should().Be("Test");
+    }
+
+    [Test]
+    public void With_RootTagValidValue_ShouldUpdateValue()
+    {
+        var tag = new Tag { Name = "Test", Value = new DINT() };
+
+        var result = tag.With(new REAL(2.3f));
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Test");
+        result.DataType.Should().Be("REAL");
+        result.Value.Should().BeOfType<REAL>();
+        result.Value.Should().Be(2.3f);
+    }
+
+    [Test]
+    public void With_NestedComplexType_ShouldHaveUpdatedValue()
+    {
+        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
+
+        var member = tag["Simple.M4"];
+
+        var result = member.With(new REAL(2.3f));
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Test");
+        result.TagName.Should().Be("Test.Simple.M4");
+        result.DataType.Should().Be("REAL");
+        result.Value.Should().BeOfType<REAL>();
+        result.Value.Should().Be(2.3f);
+    }
+
     #endregion
 
     #region DeserializeTests
@@ -827,6 +876,19 @@ public class TagTests
         comment.Should().Be("TIMER TAG");
     }
 
+    [Test]
+    public void GetDescription_FromUserDefinedWithPassThroughEnabled_ShouldHavePassThroughDescription()
+    {
+        const string expectedBase = "Base";
+        var expectedMember = string.Concat(expectedBase, " ", "User defined complex type", " ", "Test Bool");
+        var content = L5X.Load(Known.Test, L5XOptions.Index);
+
+        var tag = content.Get<Tag>("TestComplexTag");
+
+        tag.Description.Should().Be(expectedBase);
+        tag["SimpleMember.BoolMember"].Description.Should().Be(expectedMember);
+    }
+
     #endregion
 
     #region CommentsTests
@@ -864,16 +926,10 @@ public class TagTests
 
     #endregion
 
-    [Test]
-    public void ToString_WhenCalled_ShouldReturnTagName()
-    {
-        var tag = new Tag { Name = "Test", Value = true };
-
-        tag.ToString().Should().Be("Test");
-    }
+    #region BuilderTests
 
     [Test]
-    public void New_ValidParameters_ShouldBeExpected()
+    public void Create_ValidParameters_ShouldBeExpected()
     {
         var tag = Tag.Create<TIMER>("MyTimer");
 
@@ -882,35 +938,207 @@ public class TagTests
     }
 
     [Test]
-    public void With_RootTagValidValue_ShouldUpdateValue()
+    public void Build_SimpleAtomicTypeWithValue_ShouldHaveExpectedValues()
     {
-        var tag = new Tag { Name = "Test", Value = new DINT() };
+        var tag = Tag.Configure("SomeAtomic")
+            .AsAtomic<DINT>()
+            .WithValue(123)
+            .Build();
 
-        var result = tag.With(new REAL(2.3f));
-
-        result.Should().NotBeNull();
-        result.Name.Should().Be("Test");
-        result.DataType.Should().Be("REAL");
-        result.Value.Should().BeOfType<REAL>();
-        result.Value.Should().Be(2.3f);
+        tag.Name.Should().Be("SomeAtomic");
+        tag.DataType.Should().Be("DINT");
+        tag.Value.Should().Be(123);
+        tag.Radix.Should().Be(Radix.Decimal);
+        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.TagType.Should().Be(TagType.Base);
     }
 
     [Test]
-    public void With_NestedComplexType_ShouldHaveUpdatedValue()
+    public void Build_SimpleAtomicWithAccess_ShouldHaveExpectedAccess()
     {
-        var tag = new Tag { Name = "Test", Value = new MyNestedData() };
+        var tag = Tag.Configure("SomeAtomic")
+            .AsAtomic<DINT>()
+            .WithAccess(ExternalAccess.None)
+            .Build();
 
-        var member = tag["Simple.M4"];
-
-        var result = member.With(new REAL(2.3f));
-
-        result.Should().NotBeNull();
-        result.Name.Should().Be("Test");
-        result.TagName.Should().Be("Test.Simple.M4");
-        result.DataType.Should().Be("REAL");
-        result.Value.Should().BeOfType<REAL>();
-        result.Value.Should().Be(2.3f);
+        tag.ExternalAccess.Should().Be(ExternalAccess.None);
     }
+
+    [Test]
+    public void Build_SimpleAtomicWithDescription_ShouldHaveExpectedDescription()
+    {
+        var tag = Tag.Configure("SomeAtomic")
+            .AsAtomic<DINT>()
+            .WithDescription("This is a test of the fluent tag builder")
+            .Build();
+
+        tag.Description.Should().Be("This is a test of the fluent tag builder");
+    }
+
+    [Test]
+    public void Build_SimpleAtomicConstant_ShouldHaveExpectedConstant()
+    {
+        var tag = Tag.Configure("SomeAtomic")
+            .AsAtomic<DINT>()
+            .Constant()
+            .Build();
+
+        tag.Constant.Should().BeTrue();
+    }
+
+    [Test]
+    public void Build_SimpleAtomicConsumes_ShouldHaveExpectedInfo()
+    {
+        var tag = Tag.Configure("ConsumerTag")
+            .AsAtomic<DINT>()
+            .Consumes(cb => cb
+                .Provider("RemoteProviderName")
+                .RemoteTag("RemoteTagName.Member.Value")
+                .RPI(100)
+                .Unicast()
+            )
+            .Build();
+
+        tag.Name.Should().Be("ConsumerTag");
+        tag.TagType.Should().Be(TagType.Consumed);
+        tag.ConsumeInfo.Should().NotBeNull();
+        tag.ConsumeInfo?.Producer.Should().Be("RemoteProviderName");
+        tag.ConsumeInfo?.RemoteTag.Should().Be("RemoteTagName.Member.Value");
+        tag.ConsumeInfo?.RPI.Should().Be(100);
+        tag.ConsumeInfo?.Unicast.Should().BeTrue();
+    }
+
+    [Test]
+    public void Build_SimpleAtomicProducer_ShouldHaveExpectedInfo()
+    {
+        var tag = Tag.Configure("ProducerTag")
+            .AsAtomic<DINT>()
+            .Produces(b => b
+                .WithMaxCount(5)
+                .SendEventTrigger()
+                .Unicast()
+            )
+            .Build();
+
+        tag.Name.Should().Be("ProducerTag");
+        tag.TagType.Should().Be(TagType.Produced);
+        tag.ProduceInfo.Should().NotBeNull();
+        tag.ProduceInfo?.ProduceCount.Should().Be(5);
+        tag.ProduceInfo?.ProgrammaticallySendEventTrigger.Should().BeTrue();
+        tag.ProduceInfo?.UnicastPermitted.Should().BeTrue();
+    }
+
+    [Test]
+    public Task Build_SimpleAliasTag_ShouldBeVerified()
+    {
+        var tag = Tag.Configure("MyTagName")
+            .AsAlias("SomeOtherTag")
+            .WithDescription("We don't need to configure anything since it is based on SOmeOtherTag")
+            .Build();
+
+        return Verify(tag.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Build_SimpleStructureWithConfiguredMembers_ShouldBeVerified()
+    {
+        var tag = Tag.Configure("MyTagName")
+            .AsStructure("SimpleType")
+            .AddMember("BoolMember").AsAtomic<BOOL>().WithValue(true)
+            .AddMember("DintMember").AsAtomic<DINT>().WithValue(123)
+            .AddMember("RealMember").AsAtomic<REAL>().WithValue(1.23f)
+            .WithDescription("Builder example of tag from a user defined type that is not statically defined")
+            .Build();
+
+        return Verify(tag.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Build_StructureWithPredefinedMember_ShouldBeVerified()
+    {
+        var tag = Tag.Configure("MyTagName")
+            .AsStructure("TIMER")
+            .WithValue("PRE", 5000)
+            .WithValue("DN", true)
+            .WithDescription("Builder example of tag from predefined type that is statically defined")
+            .Build();
+
+        return Verify(tag.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Build_AtomicArrayWithSetValue_ShouldBeVerified()
+    {
+        var tag = Tag.Configure("ArrayTag")
+            .AsArray<REAL>(12)
+            .WithElement(4, 12.4f)
+            .WithElement(7, new REAL(123.3f))
+            .WithAccess(ExternalAccess.ReadOnly)
+            .WithDescription("This is a simple array type builder")
+            .Build();
+
+        return Verify(tag.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Build_StructureArrayWithNestedConfig_ShouldBeVerified()
+    {
+        var tag = Tag.Configure("TimerConfigArray")
+            .AsArray("TIMER", 5)
+            .WithElement(0, b => b
+                .WithValue("PRE", 1000)
+            )
+            .WithElement(1, b => b
+                .WithValue("PRE", 2000)
+            )
+            .WithElement(2, b => b
+                .WithValue("PRE", 3000)
+                .WithValue("TT", true)
+                .WithDescription("Nested array structure element test")
+            )
+            .WithDescription("This is a structure array example")
+            .WithAccess(ExternalAccess.ReadOnly)
+            .Build();
+
+        return Verify(tag.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Build_ComplexNestedStructure_ShouldBeVerified()
+    {
+        var tag = Tag.Configure("MyTagName")
+            .AsStructure("ComplexType")
+            .AddMember("TimerMember").AsStructure("TIMER", b => b
+                .WithDescription("This is a nested TIMER structure")
+                .WithValue("PRE", 1234)
+                .WithValue("DN", false)
+            )
+            .AddMember("SimpleMember").AsStructure("SimpleType", b => b
+                .WithDescription("This is a nested user-defined structure")
+                .AddMember("BoolMember").AsAtomic<BOOL>().WithValue(true)
+                .AddMember("DintMember").AsAtomic<DINT>().WithValue(123)
+                .AddMember("RealMember").AsAtomic<REAL>().WithValue(1.23f)
+                .AddMember("CommentMember").AsAtomic<DINT>().WithDescription("Testing").WithValue(4321)
+            )
+            .AddMember("NestedMember").AsStructure("NestedType", b => b
+                    .WithDescription("This is a nested structure example")
+                    .AddMember("AnotherStructure").AsStructure("AnotherType", another => another
+                        .AddMember("SomeValueMemberFinally").AsAtomic<DINT>().WithValue(1234567)
+                        .WithDescription("We made it")
+                    )
+                    .AddMember("SomeArray").AsArray<DINT>(12, array => array
+                            .WithElement(0, 123)
+                        //...and so on
+                    )
+                //...and so on
+            )
+            .WithDescription("The builder pattern supports arbitrarily deep tag structures!")
+            .Build();
+
+        return Verify(tag.Serialize().ToString());
+    }
+
+    #endregion
 
     #region ProduceConsumeTests
 
@@ -954,14 +1182,4 @@ public class TagTests
     }
 
     #endregion
-
-    [Test]
-    public Task Class_SetValidValue_ShouldBeVerified()
-    {
-        var tag = new Tag { Name = "Test", Class = ComponentClass.Safety, Value = 100 };
-
-        var xml = tag.Serialize().ToString();
-
-        return VerifyXml(xml);
-    }
 }

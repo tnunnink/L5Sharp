@@ -1,0 +1,46 @@
+﻿<Tag Name="MyTagName" TagType="Base" ExternalAccess="Read/Write" Constant="false" DataType="ComplexType">
+  <Description><![CDATA[The builder pattern supports arbitrarily deep tag structures!]]></Description>
+  <Comments>
+    <Comment Operand=".TimerMember"><![CDATA[This is a nested TIMER structure]]></Comment>
+    <Comment Operand=".SimpleMember"><![CDATA[This is a nested user-defined structure]]></Comment>
+    <Comment Operand=".SimpleMember.CommentMember"><![CDATA[Testing]]></Comment>
+    <Comment Operand=".NestedMember"><![CDATA[This is a nested structure example]]></Comment>
+    <Comment Operand=".NestedMember.AnotherStructure"><![CDATA[We made it]]></Comment>
+  </Comments>
+  <Data Format="Decorated">
+    <Structure DataType="ComplexType">
+      <StructureMember Name="TimerMember" DataType="TIMER">
+        <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="1234" />
+        <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+        <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
+        <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+      </StructureMember>
+      <StructureMember Name="SimpleMember" DataType="SimpleType">
+        <DataValueMember Name="BoolMember" DataType="BOOL" Radix="Decimal" Value="1" />
+        <DataValueMember Name="DintMember" DataType="DINT" Radix="Decimal" Value="123" />
+        <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="1.23" />
+        <DataValueMember Name="CommentMember" DataType="DINT" Radix="Decimal" Value="4321" />
+      </StructureMember>
+      <StructureMember Name="NestedMember" DataType="NestedType">
+        <StructureMember Name="AnotherStructure" DataType="AnotherType">
+          <DataValueMember Name="SomeValueMemberFinally" DataType="DINT" Radix="Decimal" Value="1234567" />
+        </StructureMember>
+        <ArrayMember Name="SomeArray" DataType="DINT" Dimensions="12" Radix="Decimal">
+          <Element Index="[0]" Value="123" />
+          <Element Index="[1]" Value="0" />
+          <Element Index="[2]" Value="0" />
+          <Element Index="[3]" Value="0" />
+          <Element Index="[4]" Value="0" />
+          <Element Index="[5]" Value="0" />
+          <Element Index="[6]" Value="0" />
+          <Element Index="[7]" Value="0" />
+          <Element Index="[8]" Value="0" />
+          <Element Index="[9]" Value="0" />
+          <Element Index="[10]" Value="0" />
+          <Element Index="[11]" Value="0" />
+        </ArrayMember>
+      </StructureMember>
+    </Structure>
+  </Data>
+</Tag>

@@ -8,7 +8,7 @@
 
 
     <ItemGroup>
-      <None Update="Empty.xml">
+      <None Update="Empty.L5X">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="DataTypes\BoolTest.L5X">
@@ -104,11 +104,8 @@
       <None Update="Trends\TriggerTrend.L5X">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="LotOfTags.xml">
+      <None Update="LotOfTags.L5X">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Test.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Test.ACD">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -120,6 +117,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Modules\Rack_Mode_3.L5X">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Test.L5X">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

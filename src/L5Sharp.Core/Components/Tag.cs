@@ -635,15 +635,6 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Creates a new <see cref="Tag"/> with the provided name and specified type parameter.
-    /// </summary>
-    /// <param name="name">The name of the tag.</param>
-    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
-    /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
-    public static Tag Create<TLogixType>(string name) where TLogixType : LogixData, new() =>
-        new() { Name = name, Value = new TLogixType() };
-
-    /// <summary>
     /// Returns a collection of all descendent tag names of the current <c>Tag</c>, including the tag name of the
     /// this <c>Tag</c>. 
     /// </summary>
@@ -693,6 +684,25 @@ public class Tag : LogixComponent<Tag>
 
         complexType.Replace(TagName.Member, value);
         return Root[TagName.Path];
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> with the provided name and specified type parameter.
+    /// </summary>
+    /// <param name="name">The name of the tag.</param>
+    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
+    /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
+    public static Tag Create<TLogixType>(string name) where TLogixType : LogixData, new() =>
+        new() { Name = name, Value = new TLogixType() };
+
+    /// <summary>
+    /// Builds a tag using the fluent tag builder API to intuitively construct simple or complex tag objects. 
+    /// </summary>
+    /// <param name="name">The name of the tag to build.</param>
+    /// <returns>An instance of <see cref="ITagBaseTypeBuilder"/> to enable tag configuration.</returns>
+    public static ITagBaseTypeBuilder Configure(string name)
+    {
+        return new TagBaseTypeBuilder(name);
     }
 
     #region Internal
@@ -772,16 +782,42 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Handles getting a comment value for the current tag. 
+    /// Handles getting a comment value for the current tag.
+    /// This method supports emulation of pass-through documentation by attempting to find the corresponding
+    /// user-defined type from the L5X content. If found, we will append that description to the parent (based on the
+    /// configured pass-through options for the project)
     /// </summary>
     private string? GetTagDescription()
     {
-        if (Parent is null) return Element.Element(L5XName.Description)?.Value;
+        if (Parent is null)
+            return Element.Element(L5XName.Description)?.Value;
 
+        //Local member comments always override pass through and inherited descriptions
         var comment = Comments?.FirstOrDefault(c => TagName.HasOperand(c.Operand));
+        if (comment is not null) return comment.Value;
 
-        //Logix descriptions propagate to their children when not overriden. This mimics that.
-        return comment is not null ? comment.Value : Parent.Description;
+        //If there is no indexed context or the corresponding data type is not available, default to inherited description.
+        //Note that we need to always use the parent type. If we are here, we know we have a parent and could
+        //potentially be some user-defined type.
+        if (L5X is null || !L5X.IsIndexed || !L5X.TryGet<DataType>(Parent.DataType, out var type))
+            return Parent.Description;
+
+        //Here we have the corresponding type definition and can use the description to emulate pass through.
+        //Enable means returning the definition description.
+        if (Equals(L5X.Controller.PassThroughConfiguration, PassThroughOption.Enabled))
+        {
+            return type.Description;
+        }
+
+        //EnableWithAppend means append the definition description to the parent.
+        if (Equals(L5X.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
+        {
+            var description = type.Members.FirstOrDefault(m => m.Name == _member.Name)?.Description;
+            return Parent.Description + " " + description;
+        }
+
+        //Disable means we don't use this pass through. Default to Inherited description.
+        return Parent.Description;
     }
 
     /// <summary>

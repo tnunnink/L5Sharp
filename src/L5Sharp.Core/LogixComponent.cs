@@ -45,8 +45,8 @@ public abstract class LogixComponent : LogixScoped
     /// </summary>
     /// <remarks>
     /// Typically used when exporting individual components (DataType, AoiBlock, Module) to indicate whether the component
-    /// is the target of the L5X content, or exists solely as a context or dependency of the target component. When
-    /// saving a project as an L5X, the top level controller component is the target, and all other components will
+    /// is the target of the L5X content or exists solely as a context or dependency of the target component. When
+    /// saving a project as an L5X, the top-level controller component is the target, and all other components will
     /// not have this property. 
     /// </remarks>
     public Use? Use
@@ -110,8 +110,8 @@ public abstract class LogixComponent : LogixScoped
     /// This method can be helpful for completely scrubbing a L5X file of the specific component, which means removing
     /// references to it as well as the component itself. This is on contrast to <see cref="LogixObject.Remove()"/>
     /// which will simply remove this element from the parent container. If this component is not attached to an L5X
-    /// then it will simply return and not throw any exceptions. Obviously, use this with caution as you will not be able
-    /// to undo the process except for the fact that you have reference to component being deleted. 
+    /// then it will simply return and not throw any exceptions. Use this with caution as you will not be able
+    /// to undo the process except for the fact that you have reference to the component being deleted. 
     /// </remarks>
     public virtual void Delete()
     {
@@ -159,7 +159,7 @@ public abstract class LogixComponent : LogixScoped
 
 /// <summary>
 /// A generic abstract <see cref="LogixComponent"/> that implements the <see cref="ILogixParsable{T}"/> interface.
-/// This generic type class allow us to specify the strong return types for methods <see cref="Parse"/>,
+/// This generic type class allows us to specify the strong return types for methods <see cref="Parse"/>,
 /// <see cref="TryParse"/> and <see cref="Clone"/>. This means we don't have to implement these methods for every
 /// derivative type, and allows these types to be used with the <see cref="LogixParser"/> in a dynamic fashion.
 /// </summary>

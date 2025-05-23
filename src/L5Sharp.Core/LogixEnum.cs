@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 /// A base class for all logix enumeration types.
 /// </summary>
 /// <remarks>
-/// This abstraction was added to allow caller to obtains a <see cref="LogixEnum"/> without having express the type statically
+/// This abstraction was added to allow caller to obtain a <see cref="LogixEnum"/> without having expressed the type statically
 /// or using generics. The makes it easier to get a collection of enumeration options for a given type. It also makes reflection
 /// code and patter matching easier since we don't have to worry about generic type parameters.
 /// </remarks>
@@ -155,10 +155,10 @@ public abstract class LogixEnum
 /// A base class for all logix enumeration types.
 /// </summary>
 /// <remarks>
-/// This code was taken from https://github.com/ardalis/SmartEnum and modified to suit needs of this library.
+/// This code was taken from https://github.com/ardalis/SmartEnum and modified to suit the needs of this library.
 /// Wanted to remove and external dependencies and not rely on other packages.
 /// This class provided some base functionality for working with a logix enum type.
-/// This includes methods for retrieving all enums of a specified type, and parsing enums from a name or value.
+/// This includes methods for retrieving all enums of a specified type and parsing enums from a name or value.
 /// </remarks>
 /// <typeparam name="TEnum">The type that is inheriting from this class.</typeparam>
 /// <typeparam name="TValue">The type of the inner value.</typeparam>
@@ -207,7 +207,7 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// <exception cref="ArgumentNullException">Thrown if the <paramref name="value"/> is null.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if no enum value with the specified string representation is found.</exception>
     /// <remarks>
-    /// This method will first check for enums by name. If none exist, then it will check the value lookup dictionary
+    /// This method will first check for enums by name. If none exists, then it will check the value lookup dictionary
     /// of enumeration values converted to string. This combines factories for name and value
     /// into a single method to avoid having to worry about the right one to use.
     /// In this library we typically represent the XML value as the <see cref="Value"/> property which is also a string,
@@ -234,7 +234,7 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// <param name="value">The string to parse. This can be the name or value.</param>
     /// <returns>The enum value corresponding to the specified string representation if found; Otherwise, <c>null</c>.</returns>
     /// <remarks>
-    /// This method will first check for enums by name. If none exist, then it will check the value lookup dictionary
+    /// This method will first check for enums by name. If none exists, then it will check the value lookup dictionary
     /// of enumeration values converted to string. This combines factories for name and value
     /// into a single method to avoid having to worry about the right one to use.
     /// In this library we typically represent the XML value as the <see cref="Value"/> property which is also a string,
@@ -242,7 +242,7 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// </remarks>
     public static TEnum? TryParse(string? value)
     {
-        if (value is null) return default;
+        if (value is null) return null;
 
         if (NameLookup.Value.TryGetValue(value, out var named))
             return named;
@@ -252,7 +252,7 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
         if (ValueLookup.Value.TryGetValue(value, out var literal))
             return literal;
 
-        return default;
+        return null;
     }
 
     /// <inheritdoc />
@@ -358,6 +358,6 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// Implicitly converts the provided value to a <see cref="LogixEnum{TEnum,TValue}"/>. 
     /// </summary>
     /// <param name="value">The enumeration value.</param>
-    /// <returns>A enumeration value representing the value type.</returns>
+    /// <returns>An enumeration value representing the value type.</returns>
     public static explicit operator LogixEnum<TEnum, TValue>(TValue value) => Parse(value.ToString()!);
 }

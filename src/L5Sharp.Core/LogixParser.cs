@@ -129,7 +129,7 @@ public static class LogixParser
     /// Retrieves the <c>TryParse</c> function for the specified type.
     /// </summary>
     /// <param name="type">The type for which the parser is requested.</param>
-    /// <returns>The parser function that can attempt to parse a string into an object of the specified type and return default if not..</returns>
+    /// <returns>The parser function that can attempt to parse a string into an object of the specified type and return default if not.</returns>
     /// <remarks>
     /// Simply looks to the local parser cache and returns one if found for the specified type.
     /// Otherwise, will use the <see cref="TypeDescriptor"/> of the current type and return the ConvertFrom function
@@ -259,7 +259,7 @@ public static class LogixParser
     private static bool ParseBool(string input)
     {
         if (string.IsNullOrEmpty(input))
-            throw new ArgumentException("Can not parse null or emprty string to boolean");
+            throw new ArgumentException("Can not parse null or empty string to boolean");
 
         input = input.ToLower();
 
@@ -298,7 +298,7 @@ public static class LogixParser
 }
 
 /// <summary>
-/// And internal record containing the Parse and TypeParse function for a given Type.
+/// And an internal record containing the Parse and TypeParse function for a given Type.
 /// </summary>
 internal record Parsers(Func<string, object> Parse, Func<string, object?> TryParse)
 {

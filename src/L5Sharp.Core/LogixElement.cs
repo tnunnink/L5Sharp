@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A base class for all types that can be serialized and deserialized from a L5X file. This abstract class enforces
 /// the <see cref="ILogixSerializable"/> interface and a constructor taking a <see cref="XElement"/> for initialization
-/// of and underlying element object. Deriving classes will have access to the underlying element and
+/// of and an underlying element object. Deriving classes will have access to the underlying element and
 /// methods for easily getting and setting data. Implementing classes need to also provide at least a constructor taking
 /// a single <see cref="XElement"/> and pass it to the base constructor to be deserializable by the library.
 /// </summary>
@@ -44,7 +44,7 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// A list containing the order of any child elements for the current logix element.
-    /// By default, this is empty collection but derived classes can override this. When this collection contains names,
+    /// By default, this is an empty collection, but derived classes can override this. When this collection contains names,
     /// any adds of properties, containers, or complex types will then use this list to sort the order of the elements
     /// in the underlying parent element. 
     /// </summary>
@@ -54,11 +54,11 @@ public abstract class LogixElement : ILogixSerializable
     /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
     /// </summary>
     /// <returns>
-    /// If the current element is attached to a L5X document (i.e. has the root content element),
+    /// If the current element is attached to a L5X document (i.e., has the root content element),
     /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
     /// </returns>
     /// <remarks>
-    /// This allows attached logix elements to reach up to the L5X root in order to traverse or retrieve
+    /// This allows attached logix elements to reach up to the L5X root to traverse or retrieve
     /// other elements in the L5X. This is helpful/used for other extensions and cross-referencing functions.
     /// </remarks>
     public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
@@ -70,7 +70,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <remarks>
     /// The "L5XType" is nothing more than the name of the underlying <see cref="XElement"/> for the object.
     /// Most L5X element names correspond to a class type of the library with the same or similar name.
-    /// However, each class type in this library can also support multiple element types (e.g. Tag/LocalTag/ConfigTag).
+    /// However, each class type in this library can also support multiple element types (e.g., Tag/LocalTag/ConfigTag).
     /// This property will indicate the actual type of the underlying element as opposed to the actual class type of
     /// the object.
     /// </remarks>
@@ -92,7 +92,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <returns><c>ture</c> if the objects are equivalent; Otherwise, <c>false</c>.</returns>
     /// <remarks>
     /// This internally compares the underlying XML nodes of the two elements to determine if all their
-    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e. it
+    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e., it
     /// compares the entire XML structure).
     /// </remarks>
     public bool EquivalentTo(LogixElement other)
@@ -154,7 +154,7 @@ public abstract class LogixElement : ILogixSerializable
     /// Gets the value of the selected attribute parsed as the specified generic type parameter if it exists.
     /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
     /// </summary>
-    /// <param name="selector">A selection delegate that allows custom selection of a element relative to <see cref="Element"/>.
+    /// <param name="selector">A selection delegate that allows custom selection of an element relative to <see cref="Element"/>.
     /// Use this to reach down the element hierarchy for nested values.</param>
     /// <param name="name">The name of the attribute.</param>
     /// <typeparam name="T">The return type of the value.</typeparam>
@@ -224,17 +224,17 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Gets a collection of values for the specified attribute name parsed as the specified generic type parameter if it exists.
-    /// If the element does not exist, returns an empty collection of the generic type parameter.
+    /// If the element does not exist, it returns an empty collection of the generic type parameters.
     /// </summary>
     /// <param name="name">The name of the attribute.</param>
-    /// <param name="separator">The value separator character. Default is ' '.</param>
+    /// <param name="separator">The value separator character. Default is ''.</param>
     /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>
     /// If found, all values of the attribute split on the specified separator and parsed as the generic type parameter.
     /// If not found, returns an empty collection.
     /// </returns>
     /// <remarks>
-    /// This method makes getting/setting attributes with collection of values as a single string with a certain separator
+    /// This method makes getting/setting attributes with a collection of values as a single string with a certain separator
     /// character as concise as possible for derived classes. This method is added here since only types like <see cref="Block"/>
     /// are using this method overload.
     /// </remarks>
@@ -247,7 +247,7 @@ public abstract class LogixElement : ILogixSerializable
 
         return value is not null
             ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
-            : Enumerable.Empty<T>();
+            : [];
     }
 
     /// <summary>
@@ -257,7 +257,7 @@ public abstract class LogixElement : ILogixSerializable
     /// <param name="name">The name of the child element.</param>
     /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>
-    /// If found, the value of child element parsed as the generic type parameter.
+    /// If found, the value of a child element parsed as the generic type parameter.
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
@@ -275,13 +275,13 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Gets a immediate child element of the specified member name if it exists and deserializes it as the
+    /// Gets an immediate child element of the specified member name if it exists and deserializes it as the
     /// specific generic type parameter. If the element does not exist, returns <c>default</c>.
     /// </summary>
     /// <param name="name">The name of the child element.</param>
     /// <typeparam name="T">The return type of the element.</typeparam>
     /// <returns>
-    /// If found, the value of child element deserialized as the generic type parameter.
+    /// If found, the value of a child element deserialized as the generic type parameter.
     /// If not found, returns <c>default</c>.
     /// </returns>
     /// <remarks>
@@ -301,7 +301,7 @@ public abstract class LogixElement : ILogixSerializable
     /// Gets a child <see cref="LogixContainer{TEntity}"/> with the specified element name, representing the root of a
     /// collection of contained elements.
     /// </summary>
-    /// <param name="name">The name of the child container collection (e.g. Members).</param>
+    /// <param name="name">The name of the child container collection (e.g., Members).</param>
     /// <typeparam name="TObject">The child element type.</typeparam>
     /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
     /// <exception cref="InvalidOperationException">A child element with <c>name</c> does not exist.</exception>
@@ -328,7 +328,7 @@ public abstract class LogixElement : ILogixSerializable
     /// Tries to get a child <see cref="LogixContainer{TEntity}"/> with the specified element name, representing
     /// the root of a collection of contained elements. Returns null if not found (instead of throwing an exception).
     /// </summary>
-    /// <param name="name">The name of the child container collection (e.g. Members).</param>
+    /// <param name="name">The name of the child container collection (e.g., Members).</param>
     /// <typeparam name="TObject">The child element type.</typeparam>
     /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
     /// <remarks>
@@ -344,11 +344,11 @@ public abstract class LogixElement : ILogixSerializable
 
         var container = Element.Element(name);
 
-        return container is not null ? new LogixContainer<TObject>(container) : default;
+        return container is not null ? new LogixContainer<TObject>(container) : null;
     }
 
     /// <summary>
-    /// Gets the first parent element of the current underlying element object with the specified name, and returns the
+    /// Gets the first parent element of the current underlying element object with the specified name and returns 
     /// a new deserialized instance of the parent type if found. If not found, returns <c>null</c>.
     /// </summary>
     /// <param name="ancestor">The name of the parent element to return. If not provided will use the default configured
@@ -369,11 +369,11 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Gets the date/time value of the specified attribute name from the current element if it exists.
-    /// If the attribute does not exist, returns default value.
+    /// If the attribute does not exist, it returns the default value.
     /// </summary>
     /// <param name="name">The name of the date time attribute.</param>
     /// <param name="format">The format of the date time.
-    /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy' which is a typical L5X date time format.</param>
+    /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy,' which is a typical L5X date time format.</param>
     /// <returns>The parsed <see cref="DateTime"/> value of the attribute.</returns>
     /// <remarks>
     /// This is a specialized helper since the date time formats are different for different component
@@ -436,14 +436,14 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Sets the value of an attribute, adds an attribute, or removes an attribute for a element obtained using the
+    /// Sets the value of an attribute, adds an attribute, or removes an attribute for an element obtained using the
     /// provided selector delegate.
     /// </summary>
     /// <param name="value">
     /// The value to assign to the attribute. The attribute is removed if the value is null.
     /// Otherwise, the value is converted to its string representation and assigned to the Value property of the attribute.
     /// </param>
-    /// <param name="selector">A selection delegate that allows custom selection of a element relative to <see cref="Element"/>.
+    /// <param name="selector">A selection delegate that allows custom selection of an element relative to <see cref="Element"/>.
     /// Use this to reach down the element hierarchy for nested values.</param>
     /// <param name="name">The name of the attribute to set.</param>
     /// <typeparam name="T">The value type.</typeparam>
@@ -464,7 +464,7 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Sets the value of an attribute, adds an attribute, or removes an attribute for a nested element
-    /// specified by provided element name.
+    /// specified by the provided element name.
     /// </summary>
     /// <param name="name">The name of the attribute to set.</param>
     /// <param name="child">The name of the child <see cref="XElement"/> for which to set the attribute.
@@ -603,8 +603,8 @@ public abstract class LogixElement : ILogixSerializable
     /// Sets the value of a child container, adds a child container, or removes a child container.
     /// </summary>
     /// <param name="value">The <see cref="LogixContainer{TComponent}"/> value to set. The child container is removed
-    /// if the value is null. Otherwise, the value is serialized and added (or replaces the existing) to underlying parent element.</param>
-    /// <param name="name">The name of the child container collection (e.g. Members).</param>
+    /// if the value is null. Otherwise, the value is serialized and added (or replaces the existing) to an underlying parent element.</param>
+    /// <param name="name">The name of the child container collection (e.g., Members).</param>
     /// <typeparam name="TObject">The container type parameter.</typeparam>
     /// <remarks>
     /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
@@ -662,11 +662,11 @@ public abstract class LogixElement : ILogixSerializable
     }
 
     /// <summary>
-    /// Sets the date/time value of a attribute, adds a attribute, or removes a attribute if null.
+    /// Sets the date/time value of an attribute, adds an attribute, or removes an attribute if null.
     /// </summary>
     /// <param name="value">The value to set.</param>
     /// <param name="format">The format of the date time.
-    /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy' which is a typical L5X date time format.</param>
+    /// If not provided will default to 'ddd MMM d HH:mm:ss yyyy,' which is a typical L5X date time format.</param>
     /// <param name="name">The name of the date time attribute.</param>
     /// <remarks>
     /// This is a specialized helper since the date time formats are different for different component
@@ -690,7 +690,7 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Adds, removes, or updates the common logix description child element on the current underlying element object.
-    /// If null, will remove the child element. If not null, will either add as the first child element or replace the
+    /// If null, it will remove the child element. If not null, will either add as the first child element or replace the
     /// existing child element.
     /// </summary>
     /// <param name="value">The description value to set.</param>
@@ -731,7 +731,7 @@ public abstract class LogixElement : ILogixSerializable
     {
         //Parameter and LocalTag have the element DefaultData instead of Data.
         var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
-        
+
         //Always use our Null type instead of actual null.
         data ??= LogixData.Null;
 
@@ -767,7 +767,7 @@ public abstract class LogixElement : ILogixSerializable
 
     /// <summary>
     /// Orders the child elements using the configured <see cref="ElementOrder"/> list. If no elements are found, this
-    /// will simply return. If a derived classes has overriden this collection then we will join the ordered names
+    /// will simply return. If derived classes have overriden this collection, then we will join the ordered names
     /// with the current elements and then replace all child nodes with the ordered set.
     /// </summary>
     protected void EnsureOrder()

@@ -1,0 +1,55 @@
+﻿<Tag Name="TimerConfigArray" TagType="Base" ExternalAccess="Read Only" Constant="false" DataType="TIMER" Dimensions="5">
+  <Description><![CDATA[This is a structure array example]]></Description>
+  <Comments>
+    <Comment Operand="[2]"><![CDATA[Nested array structure element test]]></Comment>
+  </Comments>
+  <Data Format="Decorated">
+    <Array DataType="TIMER" Dimensions="5">
+      <Element Index="[0]">
+        <Structure DataType="TIMER">
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="1000" />
+          <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+        </Structure>
+      </Element>
+      <Element Index="[1]">
+        <Structure DataType="TIMER">
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="2000" />
+          <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+        </Structure>
+      </Element>
+      <Element Index="[2]">
+        <Structure DataType="TIMER">
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="3000" />
+          <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="1" />
+          <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+        </Structure>
+      </Element>
+      <Element Index="[3]">
+        <Structure DataType="TIMER">
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+        </Structure>
+      </Element>
+      <Element Index="[4]">
+        <Structure DataType="TIMER">
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="EN" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TT" DataType="BOOL" Radix="Decimal" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Radix="Decimal" Value="0" />
+        </Structure>
+      </Element>
+    </Array>
+  </Data>
+</Tag>

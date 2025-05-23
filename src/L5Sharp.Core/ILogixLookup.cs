@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// An interface that defines an API for searching an L5X for <see cref="LogixScoped"/> objects having a specified
-/// type, name, and optioanl controller/program/routine scope.
+/// type, name, and optional controller/program/routine scope.
 /// </summary>
 public interface ILogixLookup
 {
@@ -50,7 +50,7 @@ public interface ILogixLookup
     /// </summary>
     /// <param name="scope">The path defining the route to the element in L5X tree. This can be
     /// a simple <c>/Type/Name</c> path or include containing program such as <c>/Program/Type/Name</c>.
-    /// For more inforamtion see <see cref="Scope"/>.</param>
+    /// For more information see <see cref="Scope"/>.</param>
     /// <returns>
     /// A <see cref="LogixScoped"/> instance having the specified scope path.
     /// If no element with the provided path is found, then this method throws a <see cref="KeyNotFoundException"/>.
@@ -73,7 +73,7 @@ public interface ILogixLookup
     /// </summary>
     /// <param name="scope">The path defining the route to the element in L5X tree. This can be
     /// a simple <c>/Type/Name</c> path or include containing program such as <c>/Program/Type/Name</c>.
-    /// For more inforamtion see <see cref="Scope"/>.</param>
+    /// For more information see <see cref="Scope"/>.</param>
     /// <typeparam name="TScoped">The element type to find and return.</typeparam>
     /// <returns>
     /// A <see cref="LogixScoped"/> instance of the specified type having the specified scope path.
@@ -83,7 +83,7 @@ public interface ILogixLookup
     /// <exception cref="InvalidCastException"> When the element can't be cast to the type specified by <c>TScoped</c>.</exception>
     /// <remarks>
     /// <para>
-    /// If no type is provided as part of the scope, then the type will be infered from <c>TScoped</c>.
+    /// If no type is provided as part of the scope, then the type will be inferred from <c>TScoped</c>.
     /// </para>
     /// <para>
     /// <c>Get</c> methods imply you know the element at the provided path exists. If this is not the case, use one of the
@@ -133,7 +133,7 @@ public interface ILogixLookup
     /// </summary>
     /// <param name="scope">The path defining the route to the element in L5X tree. This can be
     /// a simple <c>/Type/Name</c> path or include containing program such as <c>/Program/Type/Name</c>.
-    /// For more inforamtion see <see cref="Scope"/>.</param>
+    /// For more information see <see cref="Scope"/>.</param>
     /// <param name="element">The <see cref="LogixScoped"/> object that was found if an element with the provided scope exists.
     /// If not found, then this value will be null.</param>
     /// <returns>
@@ -156,7 +156,7 @@ public interface ILogixLookup
     /// </summary>
     /// <param name="scope">The path defining the route to the element in L5X tree. This can be
     /// a simple <c>/Type/Name</c> path or include containing program such as <c>/Program/Type/Name</c>.
-    /// For more inforamtion see <see cref="Scope"/>.</param>
+    /// For more information see <see cref="Scope"/>.</param>
     /// <param name="element">The <see cref="LogixScoped"/> object of the specified typ that was found if an
     /// element with the provided scope exists. If not found, then this value will be null.</param>
     /// <typeparam name="TScoped">The element type to find and return.</typeparam>
@@ -165,7 +165,7 @@ public interface ILogixLookup
     /// </returns>
     /// <remarks>
     /// <para>
-    /// If no type is provided as part of the scope, then the type will be infered from <c>TScoped</c>.
+    /// If no type is provided as part of the scope, then the type will be inferred from <c>TScoped</c>.
     /// </para>
     /// <para>
     /// <c>TryGet</c> methods imply you don't know the element at the provided path exists, as it will check and then
@@ -229,7 +229,7 @@ public interface ILogixLookup
     /// </summary>
     /// <returns>An enumerable collection of <see cref="Scope"/> for each scoped element in the L5X.</returns>
     /// <remarks>
-    /// This allows the caller to obtain a list of each component and code element that can found in using the
+    /// This allows the caller to get a list of each component and code element that can found in using the
     /// <see cref="ILogixLookup"/> API.
     /// </remarks>
     IEnumerable<Scope> Scopes();
