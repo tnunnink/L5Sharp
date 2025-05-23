@@ -278,21 +278,21 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <summary>
-    /// Finds element across the entire L5X with the provided type as a flat collection of object. 
+    /// Finds an element across the entire L5X with the provided type as a flat collection of objects. 
     /// </summary>
     /// <param name="type">The type name or element name to retrieve.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing all found object with the provided type name.</returns>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects with the provided type name.</returns>
     /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
     /// <remarks>
     /// <para>
     /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
-    /// specifying the type at runtime as opposed the generic type but sacrifices the strong type querying of the
+    /// specifying the type at runtime as opposed to the generic type but sacrifices the strong type querying of the
     /// generic counterpart. This method does not make use of any optimized searching. If you want efficient lookup,
     /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
     /// </para>
     /// <para>
     /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
-    /// element name for the provided type. This means the query will return all elements that the type supports.
+    /// element names for the provided type. This means the query will return all elements that the type supports.
     /// This is in contrast to something list <see cref="Tags"/>, which just returns controller scoped tags.
     /// </para>
     /// </remarks>
@@ -305,21 +305,21 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <summary>
-    /// Finds element across the entire L5X with the provided type as a flat collection of object. 
+    /// Finds an element across the entire L5X with the provided type as a flat collection of objects. 
     /// </summary>
     /// <param name="type">The type of the element type to retrieve.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing all found object with the provided type name.</returns>
+    /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects with the provided type name.</returns>
     /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
     /// <remarks>
     /// <para>
     /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
-    /// specifying the type at runtime as opposed the generic type but sacrifices the strong type querying of the
+    /// specifying the type at runtime as opposed to the generic type but sacrifices the strong type querying of the
     /// generic counterpart. This method does not make use of any optimized searching. If you want efficient lookup,
     /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
     /// </para>
     /// <para>
     /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
-    /// element name for the provided type. This means the query will return all elements that the type supports.
+    /// element names for the provided type. This means the query will return all elements that the type supports.
     /// This is in contrast to something list <see cref="Tags"/>, which just returns controller scoped tags.
     /// </para>
     /// </remarks>
@@ -478,7 +478,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// </summary>
     /// <param name="component">The component to add to the L5X.</param>
     /// <remarks>
-    /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top level
+    /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top-level
     /// container, it will work for most types. However, note that this only adds to the first container found of the specific type.
     /// If you are adding scoped components such as, <see cref="Tag"/> or <see cref="Routine"/> you should be doing so in the context
     /// of a specific <see cref="Program"/> component, or use the overload accepting a specific container.
@@ -605,7 +605,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
 
     /// <summary>
     /// Gets a top-level container element from the root controller element of the L5X.
-    /// We expecte
+    /// We expect
     /// </summary>
     private XElement GetContainer(string name)
     {
@@ -630,7 +630,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// provided L5X content. Will overwrite if specified.
     /// </summary>
     /// <param name="l5X">The L5X element to merge with the current target element.</param>
-    /// <param name="overwrite">A flag to indicate whether to overwrite child elements of matching name.</param>
+    /// <param name="overwrite">A flag to indicate whether to overwrite child elements of a matching name.</param>
     private void MergeContent(L5X l5X, bool overwrite)
     {
         if (l5X is null) throw new ArgumentNullException(nameof(l5X));
@@ -734,9 +734,9 @@ public enum L5XOptions
     /// No additional options for loading or parsing the L5X file are enabled.
     /// </summary>
     /// <remarks>
-    /// This means that the L5X file will be loaded or parsed with default behaviour.
+    /// This means that the L5X file will be loaded or parsed with the default behavior.
     /// Any call to one of the <see cref="ILogixLookup"/> methods will use XPath lookup for elements.
-    /// If you need fast lookups, consider selecting <see cref="Index"/> to have the content indexed upon load.
+    /// If you need fast lookups, consider selecting <see cref="Index"/> to have the content indexed upon a load.
     /// </remarks>
     None,
 
@@ -745,9 +745,9 @@ public enum L5XOptions
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This will slightly increase the load time, but it significantly accelerates the performance
+    /// This will slightly increase the load time, but it significantly speeds up the performance
     /// of lookup operations using any <see cref="ILogixLookup"/> API. 
-    /// This option is advantageous when the user plans to execute numerous lookups of elements.
+    /// This option is useful when the user plans to execute many element lookups.
     /// </para>
     /// <para>
     /// Any mutation of scoped elements will not be reflected in the index as it does not track changes.

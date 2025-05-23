@@ -6,7 +6,7 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// A class containing information regarding the L5X export file. This information is found on the root
-/// RSLogix5000Content element, and is used by the Logix software to determine the context of the L5X file.
+/// RSLogix5000Content element and is used by the Logix software to determine the context of the L5X file.
 /// </summary>
 public class LogixInfo : LogixElement
 {
@@ -54,7 +54,7 @@ public class LogixInfo : LogixElement
     }
 
     /// <summary>
-    /// Gets the value indicating whether the current L5X is contextual..
+    /// Gets the value indicating whether the current L5X is contextual.
     /// </summary>
     public bool? ContainsContext
     {

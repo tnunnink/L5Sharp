@@ -6,14 +6,12 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// An abstract representation of a segment of Logix code found within the content portion of a logix <c>Routine</c>.
+/// An abstract representation of Logix code found within the content portion of a logix <c>Routine</c>.
 /// </summary>
 /// <remarks>
 /// <para>
-/// This class is meant to specify a common set of properties and functions that all code elements, regardless
-/// of programming language type (RLL, ST, FBD, SFC) should provide so that we can retrieve information about the contents
-/// and location of the code within the L5X file. It is also here to help constrain the type of element that the caller
-/// can query from the content of a given routine type.
+/// This class is meant to specify a common set of properties and functions that all code elements should provide.
+/// Rockwell supported programming languages  include RLL, ST, FBD, SFC.
 /// </para>
 /// <para>
 /// This class overrides the default equality implementation to determine code equality by its location within the L5X tree.
@@ -62,7 +60,7 @@ public abstract class LogixCode : LogixScoped
         get
         {
             var routine = Element.Ancestors(L5XName.Routine).FirstOrDefault();
-            return routine is not null ? new Routine(routine) : default;
+            return routine is not null ? new Routine(routine) : null;
         }
     }
 

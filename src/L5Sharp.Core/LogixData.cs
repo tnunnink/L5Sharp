@@ -63,7 +63,7 @@ public abstract class LogixData : LogixElement
     /// <remarks>
     /// Complex data structures such as <see cref="StructureData"/> and <see cref="ArrayData{TLogixType}"/> will return
     /// members. <see cref="AtomicData"/> will not return the bit members since they are not present in the underlying
-    /// XML and having them would exponentially increase the number of members a given tags has.
+    /// XML and having them would exponentially increase the number of members given tags have.
     /// </remarks>
     public virtual IEnumerable<Member> Members => [];
 
@@ -104,13 +104,13 @@ public abstract class LogixData : LogixElement
     /// <returns>A new <see cref="LogixData"/> representing the provided data type name.</returns>
     /// <remarks>
     /// <para>
-    /// Internally we are again using reflection and expression builders and caching them for efficiency.
+    /// Internally, we are again using reflection and expression builders and caching them for efficiency.
     /// This method will create concrete instances for types defined in this library which have a default parameterless
-    /// constructor in order to generate the type, and it's structure/members for a given type name.
+    /// constructor to generate the type and its structure /members for a given type name.
     ///</para>
     /// <para>
     /// If the type name is not
-    /// statically defined (i.e. not an AtomicData or known/predeinfed StructureData object), then this method will
+    /// statically defined (i.e., not an AtomicData or known/predeinfed StructureData object), then this method will
     /// return a default <see cref="ComplexData"/> instance with the provided name and no members, as it is impossible to
     /// know what the structure of the type is.
     /// </para>
@@ -323,7 +323,7 @@ public abstract class LogixData : LogixElement
         var sharp = typeof(LogixData).Assembly;
         factories.AddRange(Scan(sharp));
 
-        //Scan other loaded assemblies for use defined types.
+        //Scan other loaded assemblies for use-defined types.
         var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a != sharp);
         foreach (var assembly in assemblies)
             factories.AddRange(Scan(assembly));
@@ -332,7 +332,7 @@ public abstract class LogixData : LogixElement
     }
 
     /// <summary>
-    /// Scans the provided assemble for types satisfying the LogixData factory condition and creates a collection of
+    /// Scans the provided assembly for types satisfying the LogixData factory condition and creates a collection of
     /// key value pairs where the key is a name of the type and the value is a function that instantiates the type.
     /// </summary>
     /// <param name="assembly">The assembly to scan.</param>
@@ -356,7 +356,7 @@ public abstract class LogixData : LogixElement
 
     /// <summary>
     /// Determines whether the given type is a LogixData derivative that we can instantiate a default instance of
-    /// given a type name.
+    /// a given a type name.
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>Returns true if the type is a LogixDataType; otherwise, false.</returns>
@@ -377,7 +377,7 @@ public abstract class LogixData : LogixElement
     }
 
     /// <summary>
-    /// Creates and compiles a function expression for a given logix data type in order to create new instances efficiently. 
+    /// Creates and compiles a function expression for a given logix data type to create new instances efficiently. 
     /// </summary>
     /// <param name="type">The type of LogixData to instantiate.</param>
     /// <returns>A Func delegate that can be invoked to create a new instance of the specified type.</returns>

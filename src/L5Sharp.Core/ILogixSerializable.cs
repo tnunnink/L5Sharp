@@ -3,7 +3,7 @@
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A interface defining the method for serialization of an object to a <see cref="XElement"/>.
+/// An interface defining the method for serialization of an object to a <see cref="XElement"/>.
 /// </summary>
 public interface ILogixSerializable
 {
