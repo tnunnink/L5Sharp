@@ -52,7 +52,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     public string? Description
     {
         get => GetProperty<string>();
-        set => SetDescription(value);
+        set => SetProperty(value);
     }
 
     /// <summary>

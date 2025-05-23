@@ -1083,7 +1083,7 @@ public class TestElement : LogixObject<TestElement>
     public string? Description
     {
         get => GetProperty<string>();
-        set => SetDescription(value);
+        set => SetProperty(value);
     }
 
     public DateTime? Date

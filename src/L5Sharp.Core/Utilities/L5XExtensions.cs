@@ -141,7 +141,7 @@ internal static class L5XExtensions
     /// </summary>
     /// <param name="element">The element object for which to get the name.</param>
     /// <returns>A <see cref="string"/> containing the value of the name or index attribute. If neither attribute is
-    /// found then this returns an empty string.</returns>
+    /// found, then this returns an empty string.</returns>
     internal static string MemberName(this XElement element)
     {
         var name = element.Attribute(L5XName.Name)?.Value;
@@ -152,14 +152,14 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Gets the <c>DataType</c> attribute value for the provided element, or it's parent element, which ever value is
+    /// Gets the <c>DataType</c> attribute value for the provided element, or it's a parent element, whichever value is
     /// found first.
     /// </summary>
     /// <param name="element">The element to retrieve the data type for.</param>
     /// <returns>A <see cref="string"/> indicating the value of the data type property.</returns>
     /// <remarks>
     /// This is a helper for deserializing data structures. Most data elements have the data type we need
-    /// in order to determine which object to construct, but some don't, and we need to look at its parent element
+    /// to determine which object to construct, but some don't, and we need to look at its parent element
     /// to find out. Obviously, if we can't find the <c>DataType</c> value then we can't deserialize the type.
     /// </remarks>
     internal static string? DataType(this XElement element)
@@ -199,7 +199,7 @@ internal static class L5XExtensions
         var tagName = new TagName(root.LogixName());
 
         //Gets ancestors from here up to right before the root tag element.
-        //If this is the tag element then should not perform iteration, and we return what we have.
+        //If this is the tag element, then should not perform iteration, and we return what we have.
         var members = element.AncestorsAndSelf()
             .Where(e => !e.MemberName().IsEmpty())
             .TakeWhile(e => !e.IsTagElement())
@@ -386,6 +386,67 @@ internal static class L5XExtensions
         return value.EndsWith(character) ? value.Substring(0, value.Length - 1) : value;
     }
 
+    /// <summary>
+    /// Finds and replaces occurrences of a specified string within the attributes, text, and CDATA sections
+    /// of the given XML element and its descendants.
+    /// </summary>
+    /// <param name="element">The XML element where the search and replace operation is performed.</param>
+    /// <param name="find">The string to search for within the XML element and its children.</param>
+    /// <param name="replace">The string to replace the found occurrences with.</param>
+    /// <param name="targets">
+    /// An array of target element or attribute names where the replace operation should be restricted.
+    /// If empty, all elements and attributes will be included in the operation.
+    /// </param>
+    internal static void FindAndReplace(this XElement element, string find, string replace, string[] targets)
+    {
+        foreach (var attribute in element.Attributes())
+        {
+            TryReplaceAttribute(attribute);
+        }
+
+        foreach (var node in element.Nodes().ToList())
+        {
+            switch (node)
+            {
+                case XCData data:
+                    TryReplaceData(node, data);
+                    break;
+                case XText text:
+                    TryReplaceText(node, text);
+                    break;
+                case XElement child:
+                    child.FindAndReplace(find, replace, targets);
+                    break;
+            }
+        }
+
+        return;
+
+        void TryReplaceAttribute(XAttribute attribute)
+        {
+            if ((targets.Length > 0 && !targets.Contains(attribute.Name.LocalName)) || !attribute.Value.Contains(find))
+                return;
+
+            attribute.Value = attribute.Value.Replace(find, replace);
+        }
+
+        void TryReplaceData(XNode node, XCData data)
+        {
+            if ((targets.Length > 0 && !targets.Contains(node.Parent?.Name.LocalName)) || !data.Value.Contains(find))
+                return;
+
+            data.ReplaceWith(new XCData(data.Value.Replace(find, replace)));
+        }
+
+        void TryReplaceText(XNode node, XText text)
+        {
+            if ((targets.Length > 0 && !targets.Contains(node.Parent?.Name.LocalName)) || !text.Value.Contains(find))
+                return;
+
+            text.Value = text.Value.Replace(find, replace);
+        }
+    }
+
     //Extensions for .NET Standard 2.0 to allow me not to have to rewrite the code in certain places. 
 #if NETSTANDARD2_0
     /// <summary>
@@ -452,7 +513,7 @@ internal static class L5XExtensions
     /// The separator itself is not included in the resulting substrings.</param>
     /// <param name="options">Specifies whether empty substrings should be removed from the resulting array.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> of strings that contains the substrings in the input string that are delimited by the separator.</returns>
-    internal static IEnumerable<string> Split(this string value, char separator, StringSplitOptions options)
+    internal static string[] Split(this string value, char separator, StringSplitOptions options)
     {
         return value.Split([separator], options);
     }

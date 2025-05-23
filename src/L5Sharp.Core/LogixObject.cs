@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -7,8 +8,8 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A class implementing <see cref="LogixElement"/> that adds common properties and methods shared by most elements or
 /// components. Features include the <see cref="Scope"/> to identify where in the document they exist,
-/// and methods <see cref="AddBefore"/>, <see cref="AddBefore"/>, <see cref="Remove"/>, and <see cref="Replace"/>
-/// which allow easy interface to mutate the object or collection of objects.
+/// and methods <see cref="AddBefore"/>, <see cref="AddBefore"/>, <see cref="Remove"/>, and
+/// <see cref="Replace(L5Sharp.Core.LogixObject)"/> which allow easy interface to mutate the object or collection of objects.
 /// </summary>
 public abstract class LogixObject : LogixElement
 {
@@ -193,6 +194,25 @@ public abstract class LogixObject : LogixElement
         }
 
         Element.ReplaceWith(element.Serialize());
+    }
+
+    /// <summary>
+    /// Replaces occurrences of a specified string within the properties of the underlying XML element.
+    /// </summary>
+    /// <param name="find">The string to find within the element properties.</param>
+    /// <param name="replace">The string to replace the found occurrences with.</param>
+    /// <param name="properties">An optional array of property names that specify the scope of the replacement operation.
+    /// If no property is specified, then this method will operate on every immediate and nested property in the object.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="find"/> or <paramref name="replace"/> is <c>null</c>.</exception>
+    public void Replace(string find, string replace, string[]? properties = null)
+    {
+        if (find is null)
+            throw new ArgumentNullException(nameof(find));
+
+        if (replace is null)
+            throw new ArgumentNullException(nameof(replace));
+
+        Element.FindAndReplace(find, replace, properties ?? []);
     }
 }
 

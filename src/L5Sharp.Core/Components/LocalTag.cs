@@ -9,7 +9,7 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// This class does not add any new functionality but simply overrides the default L5XType to LocalTag. Logix
-/// uses a different element name for tags in an AOI so to match this our L5XTypeAttribute implementation, we are
+/// uses a different element name for tags in an AOI, so to match this our L5XTypeAttribute implementation, we are
 /// deriving a new specific class.
 /// </remarks>
 [L5XType(L5XName.LocalTag)]
@@ -44,15 +44,15 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
     /// <param name="name">The name of the LocalTag.</param>
     /// <param name="value">The <see cref="LogixData"/> value of the LocalTag.</param>
     /// <param name="description">the optional description of the LocalTag.</param>
-    public LocalTag(string name, LogixData value, string? description = default) : base(L5XName.LocalTag)
+    public LocalTag(string name, LogixData value, string? description = null) : base(L5XName.LocalTag)
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Value = value;
-        SetDescription(description);
+        SetProperty(description, nameof(Description));
     }
 
     /// <summary>
-    /// Returns a new deep cloned instance as the specified <see cref="LogixElement"/> type.
+    /// Returns a new deep-cloned instance as the specified <see cref="LogixElement"/> type.
     /// </summary>
     /// <returns>A new instance of the specified element type with the same property values.</returns>
     public new LocalTag Clone() => new XElement(Serialize()).Deserialize<LocalTag>();
@@ -64,9 +64,9 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
     /// <returns>A new <see cref="LogixComponent"/> instance that represents the parsed value.</returns>
     /// <remarks>
     /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
     /// Also note that since this uses internal XElement and casts the type, this method can throw exceptions for invalid
-    /// XML or XML that is parsed to an different type thatn the one specified here.
+    /// XML or XML that is parsed to a different type than the one specified here.
     /// </remarks>
     public new static LocalTag Parse(string value)
     {
@@ -76,23 +76,23 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
 
     /// <summary>
     /// Attempts to parse the provided string and returned the strongly typed component object.
-    /// If unsuccesful, then this method returns <c>null</c>.
+    /// If unsuccessful, then this method returns <c>null</c>.
     /// </summary>
     /// <param name="value">The XML string value to parse.</param>
     /// <returns>A new <see cref="LogixComponent"/> instance that represents the parsed value if successful, otherwise, <c>null</c>.</returns>
     /// <remarks>
     /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into stongly tyed logix objects.
+    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
     /// Note that this method will just return null if any exception is caught. This could be for invalid XML formats
     /// of invalid type casts.
     /// </remarks>
     public new static LocalTag? TryParse(string? value)
     {
         if (value is null || value.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
-            return default;
+            return null;
 
         var trimmed = value.Trim();
-        if (trimmed.Length == 0 || trimmed[0] != '<') return default;
+        if (trimmed.Length == 0 || trimmed[0] != '<') return null;
 
         try
         {
@@ -101,7 +101,7 @@ public class LocalTag : Tag, ILogixParsable<LocalTag>
         }
         catch (Exception)
         {
-            return default;
+            return null;
         }
     }
 }

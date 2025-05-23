@@ -84,7 +84,7 @@ public class Tag : LogixComponent<Tag>
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Value = value;
-        SetDescription(description);
+        SetProperty(description, nameof(Description));
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public class Tag : LogixComponent<Tag>
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Value = LogixData.Create(dataType);
-        SetDescription(description);
+        SetProperty(description, nameof(Description));
     }
 
     /// <summary>
@@ -890,7 +890,7 @@ public class Tag : LogixComponent<Tag>
     {
         //We can use this tag name to determine which parent module tag to retrieve.
         var tagName = GetTagName();
-        var parts = tagName.Split(':', StringSplitOptions.RemoveEmptyEntries).ToArray();
+        var parts = tagName.Split(':', StringSplitOptions.RemoveEmptyEntries);
 
         //We have to have all 3 parts (module name, I/O suffix, and slot number) to find the correct member.
         //If not, then we will default to a virtual member with a no action getter and setter;

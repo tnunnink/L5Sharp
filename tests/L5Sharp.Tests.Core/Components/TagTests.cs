@@ -231,6 +231,46 @@ public class TagTests
         result.Value.Should().Be(2.3f);
     }
 
+    [Test]
+    public Task Duplicate_ValidConfig_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Test);
+        var tag = content.Get<Tag>(Known.Tag);
+
+        var duplicate = tag.Duplicate(t =>
+        {
+            t.Name = "NewSimpleTag";
+            t.Description = "This is an updated tag";
+            t["DintMember"].Value = 56203;
+            t["RealMember"].Value = 345.6f;
+        });
+
+        return Verify(duplicate.Serialize().ToString());
+    }
+
+    [Test]
+    public void Replace_NameProperty_ShouldBeVerified()
+    {
+        var tag = Tag.Create<BOOL>("MyBoolTag");
+
+        tag.Replace("My", "Test", t => t.Name);
+
+        tag.Name.Should().StartWith("Test");
+    }
+
+    [Test]
+    public void Replace_DescriptionProperty_ShouldBeExpected()
+    {
+        var tag = Tag.Configure("SomeTimer")
+            .AsStructure("TIMER")
+            .WithDescription("This is a test tag")
+            .Build();
+
+        tag.Replace("test", "timer", t => t.Description);
+
+        tag.Description.Should().Contain("timer");
+    }
+
     #endregion
 
     #region DeserializeTests

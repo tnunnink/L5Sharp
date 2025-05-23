@@ -1,0 +1,342 @@
+﻿<Program Name="DuplicateProgram" TestEdits="false" MainRoutineName="Main" Disabled="false" UseAsFolder="false">
+  <Description><![CDATA[This is my new program]]></Description>
+  <Tags>
+    <Tag Name="Action_000" TagType="Base" DataType="SFC_ACTION" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[2097152,0,0,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SFC_ACTION">
+          <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000" />
+          <DataValueMember Name="A" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Q" DataType="BOOL" Value="0" />
+          <DataValueMember Name="PauseTimer" DataType="BOOL" Value="1" />
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="BufferTag" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[0]]></Data>
+      <Data Format="Decorated">
+        <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="Channel" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[0]]></Data>
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="InputParameter" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[0]]></Data>
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="OutputParameter" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[0]]></Data>
+      <Data Format="Decorated">
+        <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="Step_000" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[2097152,0,0,0,0,0,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SFC_STEP">
+          <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000" />
+          <DataValueMember Name="X" DataType="BOOL" Value="0" />
+          <DataValueMember Name="FS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="SA" DataType="BOOL" Value="0" />
+          <DataValueMember Name="LS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmEn" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmLow" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmHigh" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Reset" DataType="BOOL" Value="0" />
+          <DataValueMember Name="PauseTimer" DataType="BOOL" Value="1" />
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TMax" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitLow" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitHigh" DataType="DINT" Radix="Decimal" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="Step_001" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[2097152,0,0,0,0,0,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SFC_STEP">
+          <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000" />
+          <DataValueMember Name="X" DataType="BOOL" Value="0" />
+          <DataValueMember Name="FS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="SA" DataType="BOOL" Value="0" />
+          <DataValueMember Name="LS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmEn" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmLow" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmHigh" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Reset" DataType="BOOL" Value="0" />
+          <DataValueMember Name="PauseTimer" DataType="BOOL" Value="1" />
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TMax" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitLow" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitHigh" DataType="DINT" Radix="Decimal" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="Step_002" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[2097152,0,0,0,0,0,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SFC_STEP">
+          <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000" />
+          <DataValueMember Name="X" DataType="BOOL" Value="0" />
+          <DataValueMember Name="FS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="SA" DataType="BOOL" Value="0" />
+          <DataValueMember Name="LS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmEn" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmLow" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmHigh" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Reset" DataType="BOOL" Value="0" />
+          <DataValueMember Name="PauseTimer" DataType="BOOL" Value="1" />
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TMax" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitLow" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitHigh" DataType="DINT" Radix="Decimal" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="Step_003" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[2097152,0,0,0,0,0,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SFC_STEP">
+          <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000" />
+          <DataValueMember Name="X" DataType="BOOL" Value="0" />
+          <DataValueMember Name="FS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="SA" DataType="BOOL" Value="0" />
+          <DataValueMember Name="LS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmEn" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmLow" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmHigh" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Reset" DataType="BOOL" Value="0" />
+          <DataValueMember Name="PauseTimer" DataType="BOOL" Value="1" />
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TMax" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitLow" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitHigh" DataType="DINT" Radix="Decimal" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="Step_004" TagType="Base" DataType="SFC_STEP" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[2097152,0,0,0,0,0,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SFC_STEP">
+          <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0020_0000" />
+          <DataValueMember Name="X" DataType="BOOL" Value="0" />
+          <DataValueMember Name="FS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="SA" DataType="BOOL" Value="0" />
+          <DataValueMember Name="LS" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmEn" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmLow" DataType="BOOL" Value="0" />
+          <DataValueMember Name="AlarmHigh" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Reset" DataType="BOOL" Value="0" />
+          <DataValueMember Name="PauseTimer" DataType="BOOL" Value="1" />
+          <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="T" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="TMax" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitLow" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="LimitHigh" DataType="DINT" Radix="Decimal" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="Stop_000" TagType="Base" DataType="SFC_STOP" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[0,0,0,0,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SFC_STOP">
+          <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000" />
+          <DataValueMember Name="X" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Reset" DataType="BOOL" Value="0" />
+          <DataValueMember Name="Count" DataType="DINT" Radix="Decimal" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="Temp" TagType="Base" DataType="SERIAL_PORT_CONTROL" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[0,0,12,0]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SERIAL_PORT_CONTROL">
+          <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="POS" DataType="DINT" Radix="Decimal" Value="12" />
+          <DataValueMember Name="ERROR" DataType="DINT" Radix="Hex" Value="16#0000_0000" />
+          <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="EU" DataType="BOOL" Value="0" />
+          <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="EM" DataType="BOOL" Value="0" />
+          <DataValueMember Name="ER" DataType="BOOL" Value="0" />
+          <DataValueMember Name="UL" DataType="BOOL" Value="0" />
+          <DataValueMember Name="RN" DataType="BOOL" Value="0" />
+          <DataValueMember Name="FD" DataType="BOOL" Value="0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="TempSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[[0,0,0,0,0,0.00000000e+000]]]></Data>
+      <Data Format="Decorated">
+        <Structure DataType="SimpleType">
+          <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+          <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+          <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+          <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+          <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+        </Structure>
+      </Data>
+    </Tag>
+    <Tag Name="Tran_000" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[0]]></Data>
+      <Data Format="Decorated">
+        <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="Tran_001" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[0]]></Data>
+      <Data Format="Decorated">
+        <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+    <Tag Name="Tran_002" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+      <Data Format="L5K"><![CDATA[0]]></Data>
+      <Data Format="Decorated">
+        <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+      </Data>
+    </Tag>
+  </Tags>
+  <Routines>
+    <Routine Name="FBD" Type="FBD">
+      <FBDContent SheetSize="B - 11 x 17 in" SheetOrientation="Landscape">
+        <Sheet Number="1">
+          <IRef ID="0" X="140" Y="180" Operand="SimpleBool" HideDesc="false" />
+          <ORef ID="1" X="500" Y="200" Operand="TempComplexTag.SimpleMember.BoolMember" HideDesc="false" />
+          <Function Type="BNOT__F" ID="2" X="140" Y="260" />
+          <Function Type="BAND__F" ID="3" X="260" Y="200" />
+          <Wire FromID="0" ToID="2" ToParam="In" />
+          <Wire FromID="0" ToID="3" ToParam="In1" />
+          <Wire FromID="2" FromParam="Out" ToID="3" ToParam="In2" />
+          <Wire FromID="3" FromParam="Out" ToID="1" />
+          <TextBox ID="4" X="60" Y="100" Width="0">
+            <Text><![CDATA[Temp]]></Text>
+          </TextBox>
+        </Sheet>
+      </FBDContent>
+    </Routine>
+    <Routine Name="Main" Type="RLL">
+      <RLLContent>
+        <Rung Number="0" Type="N">
+          <Text><![CDATA[TON(TempTimer,?,?);]]></Text>
+        </Rung>
+        <Rung Number="1" Type="N">
+          <Text><![CDATA[MOV(16#20,SimpleSint);]]></Text>
+        </Rung>
+        <Rung Number="2" Type="N">
+          <Text><![CDATA[aoi_Temp(aoiTempInstance,TempSimpleTag,SimpleInt,RealArray,0);]]></Text>
+        </Rung>
+        <Rung Number="3" Type="N">
+          <Text><![CDATA[[XIC(SimpleBool) ,XIC(SimpleBool) ][OTE(SimpleBool) ,OTU(SimpleBool) ];]]></Text>
+        </Rung>
+        <Rung Number="4" Type="N">
+          <Text><![CDATA[OTE(TempComplexTag.SimpleMember.BoolMember);]]></Text>
+        </Rung>
+        <Rung Number="5" Type="N">
+          <Text><![CDATA[MOV(SimpleSint,AsciiTag);]]></Text>
+        </Rung>
+        <Rung Number="6" Type="N">
+          <Text><![CDATA[XIC(FlexIO:3:I.Pt01.Data)OTE(BufferTag);]]></Text>
+        </Rung>
+        <Rung Number="7" Type="N">
+          <Text><![CDATA[JSR(FBD,1,InputParameter,OutputParameter);]]></Text>
+        </Rung>
+        <Rung Number="8" Type="N">
+          <Text><![CDATA[GRT(SimpleInt,100)OTE(SimpleArray[4].0);]]></Text>
+        </Rung>
+        <Rung Number="9" Type="N">
+          <Text><![CDATA[GRT(SimpleInt,400)XIO(MultiDimensionalArray[1,3].3)CMP(ATN(_Temp) > 1.0)[TON(TimerArray[0],?,?) ,OTU(TempComplexTag.SimpleMember.BoolMember) ];]]></Text>
+        </Rung>
+        <Rung Number="10" Type="N">
+          <Text><![CDATA[OTE(SimpleDint.[TempSimpleTag.IntMember]);]]></Text>
+        </Rung>
+      </RLLContent>
+    </Routine>
+    <Routine Name="SFC" Type="SFC">
+      <SFCContent SheetSize="Letter - 8.5 x 11 in" SheetOrientation="Landscape" StepName="Step" TransitionName="Tran" ActionName="Action" StopName="Stop">
+        <Step ID="0" X="200" Y="100" Operand="Step_001" HideDesc="false" DescX="240" DescY="80" DescWidth="0" InitialStep="true" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true">
+          <Action ID="1" Operand="Action_000" Qualifier="NonStored" IsBoolean="false" PresetUsesExpr="false">
+            <Body>
+              <STContent>
+                <Line Number="0"><![CDATA[]]></Line>
+              </STContent>
+            </Body>
+          </Action>
+        </Step>
+        <Step ID="2" X="700" Y="120" Operand="Step_002" HideDesc="false" DescX="740" DescY="100" DescWidth="0" InitialStep="false" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true" />
+        <Step ID="3" X="420" Y="380" Operand="Step_003" HideDesc="false" DescX="460" DescY="360" DescWidth="0" InitialStep="false" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true" />
+        <Step ID="4" X="520" Y="380" Operand="Step_004" HideDesc="false" DescX="560" DescY="360" DescWidth="0" InitialStep="false" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true" />
+        <Transition ID="5" X="200" Y="180" Operand="Tran_001" HideDesc="false" DescX="260" DescY="160" DescWidth="0">
+          <Condition>
+            <STContent>
+              <Line Number="0"><![CDATA[SimpleBool := TempComplexTag.SimpleMember.BoolMember;]]></Line>
+            </STContent>
+          </Condition>
+        </Transition>
+        <Transition ID="6" X="700" Y="200" Operand="Tran_002" HideDesc="false" DescX="760" DescY="180" DescWidth="0">
+          <Condition>
+            <STContent>
+              <Line Number="0"><![CDATA[]]></Line>
+            </STContent>
+          </Condition>
+        </Transition>
+        <Branch ID="7" Y="278" BranchType="Simultaneous" BranchFlow="Diverge">
+          <Leg ID="8" />
+          <Leg ID="9" />
+        </Branch>
+        <Branch ID="10" Y="300" BranchType="Selection" BranchFlow="Converge">
+          <Leg ID="11" />
+          <Leg ID="12" />
+        </Branch>
+        <Branch ID="13" Y="340" BranchType="Simultaneous" BranchFlow="Diverge">
+          <Leg ID="14" />
+          <Leg ID="15" />
+        </Branch>
+        <Stop ID="16" X="760" Y="380" Operand="Stop_000" HideDesc="false" DescX="840" DescY="360" DescWidth="0" />
+        <DirectedLink FromID="0" ToID="5" Show="true" />
+        <DirectedLink FromID="2" ToID="6" Show="true" />
+        <DirectedLink FromID="5" ToID="11" Show="true" />
+        <DirectedLink FromID="6" ToID="7" Show="true" />
+        <DirectedLink FromID="8" ToID="12" Show="true" />
+        <DirectedLink FromID="9" ToID="16" Show="true" />
+        <DirectedLink FromID="14" ToID="4" Show="true" />
+        <DirectedLink FromID="15" ToID="3" Show="true" />
+      </SFCContent>
+    </Routine>
+    <Routine Name="ST" Type="ST">
+      <STContent>
+        <Line Number="0"><![CDATA[SimpleBool := TempComplexTag.SimpleMember.BoolMember;]]></Line>
+        <Line Number="1"><![CDATA[]]></Line>
+        <Line Number="2"><![CDATA[]]></Line>
+      </STContent>
+    </Routine>
+  </Routines>
+</Program>

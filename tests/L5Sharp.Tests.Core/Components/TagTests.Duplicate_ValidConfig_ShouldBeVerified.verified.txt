@@ -1,0 +1,14 @@
+﻿<Tag Name="NewSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read Only">
+  <Description><![CDATA[This is an updated tag]]></Description>
+  <Data Format="L5K"><![CDATA[[0,0,14,1,0,0.00000000e+000]]]></Data>
+  <Data Format="Decorated">
+    <Structure DataType="SimpleType">
+      <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+      <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+      <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_016" />
+      <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$DB$8B'" />
+      <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+      <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="345.6" />
+    </Structure>
+  </Data>
+</Tag>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -78,7 +79,7 @@ public abstract class LogixComponent : LogixScoped
     public virtual string? Description
     {
         get => GetProperty<string>();
-        set => SetDescription(value);
+        set => SetProperty(value);
     }
 
     /// <summary>
@@ -182,6 +183,52 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
     /// </summary>
     /// <returns>A new instance of the specified element type with the same property values.</returns>
     public new TComponent Clone() => new XElement(Serialize()).Deserialize<TComponent>();
+
+    /// <summary>
+    /// Creates a duplicate of the current component, applies a specified configuration to the duplicate, and returns it.
+    /// </summary>
+    /// <param name="config">A configuration action to modify the cloned component before it is returned.</param>
+    /// <returns>A new instance of the component with the specified configuration applied.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="config"/> parameter is null.</exception>
+    public TComponent Duplicate(Action<TComponent> config)
+    {
+        if (config is null)
+            throw new ArgumentNullException(nameof(config));
+
+        var instance = new XElement(Serialize()).Deserialize<TComponent>();
+        config.Invoke(instance);
+
+        return instance;
+    }
+
+    /// <summary>
+    /// Replaces all occurrences of a specified substring with another substring within the specified property of the component.
+    /// </summary>
+    /// <param name="find">The substring to be replaced.</param>
+    /// <param name="replace">The substring that replaces the original substring.</param>
+    /// <param name="selector">
+    /// An expression that specifies the property of the component where the replacement should be performed.
+    /// </param>
+    /// <typeparam name="TProperty">The type of the property being selected for the replacement operation.</typeparam>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when either the <paramref name="find"/> or <paramref name="replace"/> parameter is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the <paramref name="selector"/> does not specify a valid property of type <see cref="MemberExpression"/>.
+    /// </exception>
+    public void Replace<TProperty>(string find, string replace, Expression<Func<TComponent, TProperty>> selector)
+    {
+        if (find is null)
+            throw new ArgumentNullException(nameof(find));
+
+        if (replace is null)
+            throw new ArgumentNullException(nameof(replace));
+
+        if (selector.Body is not MemberExpression memberExpression)
+            throw new ArgumentException($"Property selector must be of type {typeof(MemberExpression)}.");
+
+        Element.FindAndReplace(find, replace, [memberExpression.Member.Name]);
+    }
 
     /// <summary>
     /// Parses the provided string and returned the strongly typed component object.

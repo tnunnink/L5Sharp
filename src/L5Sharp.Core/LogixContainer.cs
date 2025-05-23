@@ -309,7 +309,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <inheritdoc />
     public IEnumerator<TObject> GetEnumerator() =>
         Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).GetEnumerator();
-    
+
     void ICollection.CopyTo(Array array, int index)
     {
         var source = Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).ToArray();
