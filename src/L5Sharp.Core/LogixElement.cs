@@ -379,7 +379,7 @@ public abstract class LogixElement : ILogixSerializable
     /// This is a specialized helper since the date time formats are different for different component
     /// properties, we need to allow that to be specified.
     /// </remarks>
-    protected DateTime? GetDateTime(string? format = null, [CallerMemberName] string? name = null)
+    protected DateTime GetDateTime(string? format = null, [CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
@@ -390,7 +390,7 @@ public abstract class LogixElement : ILogixSerializable
 
         return attribute is not null
             ? DateTime.ParseExact(attribute.Value, format, CultureInfo.CurrentCulture)
-            : null;
+            : default;
     }
 
     /// <summary>
@@ -672,19 +672,13 @@ public abstract class LogixElement : ILogixSerializable
     /// This is a specialized helper since the date time formats are different for different component
     /// properties, we should allow that to be specified.
     /// </remarks>
-    protected void SetDateTime(DateTime? value, string? format = null, [CallerMemberName] string? name = null)
+    protected void SetDateTime(DateTime value, string? format = null, [CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
-        if (value is null)
-        {
-            Element.Attribute(name)?.Remove();
-            return;
-        }
-
         format ??= "ddd MMM d HH:mm:ss yyyy";
-        var formatted = value.Value.ToString(format);
+        var formatted = value.ToString(format);
         Element.SetAttributeValue(name, formatted);
     }
 

@@ -103,6 +103,9 @@ public class AddOnInstructionTests
         var content = instruction.Export();
 
         return VerifyXml(content.Serialize().ToString())
+            .ScrubMember("ProjectCreationDate")
+            .ScrubMember("LastModifiedDate")
+            .ScrubMember("CreatedDate")
             .ScrubMember("CreatedDate")
             .ScrubMember("CreatedBy")
             .ScrubMember("EditedDate")
@@ -133,8 +136,8 @@ public class AddOnInstructionTests
     [Test]
     public void ToTag_InstructionWithValidParameters_ShouldBeExpected()
     {
-        var content = L5X.New("Test", "1756-L83E", new Revision(33, 1));
-        
+        var content = L5X.Empty();
+
         var aoi = new AddOnInstruction("MyAoi");
         aoi.Parameters.Add(new Parameter("Param01", new DINT(123)));
         aoi.Parameters.Add(new Parameter("Param02", new BOOL(true)));
@@ -145,10 +148,10 @@ public class AddOnInstructionTests
         var referenceTags = aoi.Parameters
             .Where(p => p.Usage == TagUsage.InOut)
             .Select(p => new Tag(p.Name, new ComplexData(p.DataType!)));
-        
+
         content.Tags.Add(tag);
         content.Tags.AddRange(referenceTags);
-        
+
 
         tag.Should().NotBeNull();
         tag.Name.Should().Be("MyAoiTag");

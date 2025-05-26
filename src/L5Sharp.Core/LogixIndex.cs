@@ -350,7 +350,7 @@ internal class LogixIndex : ILogixLookup
             IndexProgramScopedSheets(program);
         }
     }
-    
+
     /// <summary>
     /// Handles finding and indexing all content in the AOI scoped elements.
     /// </summary>
@@ -360,7 +360,6 @@ internal class LogixIndex : ILogixLookup
 
         foreach (var instruction in instructions)
         {
-            
         }
     }
 

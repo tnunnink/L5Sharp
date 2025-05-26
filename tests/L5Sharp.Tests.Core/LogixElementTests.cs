@@ -565,14 +565,14 @@ public class LogixElementTests
     }
 
     [Test]
-    public void GetDateTime_NoValue_ShouldBeNull()
+    public void GetDateTime_NoValue_ShouldBeDefault()
     {
         var xml = new XElement("Test");
         var element = new TestElement(xml);
 
         var value = element.Date;
 
-        value.Should().BeNull();
+        value.Should().Be(default);
     }
 
     [Test]
@@ -603,7 +603,7 @@ public class LogixElementTests
         var xml = new XElement("Test", new XAttribute("Date", "Mon Sep 27 15:23:27 2021"));
         var element = new TestElement(xml);
 
-        element.Date = null;
+        element.Date = default;
 
         return Verify(element.Serialize().ToString());
     }
@@ -938,7 +938,7 @@ public class LogixElementTests
     /*[Test]
     public void Parse_ValidXml_ShouldNotBeNull()
     {
-        
+
         var element = LogixElement.Parse("");
 
         element.Should().NotBeNull();
@@ -949,7 +949,7 @@ public class LogixElementTests
     {
         var first = new TestElement();
         var second = new TestElement();
-        
+
         var result = first.EquivalentTo(second);
 
         result.Should().BeTrue();
@@ -978,7 +978,7 @@ public class LogixElementTests
 
         result.Should().BeTrue();
     }
-    
+
     [Test]
     public void EquivalentTo_AreNotEquivalentWithOneDifferent_ShouldBeFalse()
     {
@@ -1002,7 +1002,7 @@ public class LogixElementTests
 
         result.Should().BeFalse();
     }
-    
+
     [Test]
     public void EquivalentTo_AreNotEquivalentOneUnsetProperty_ShouldBeFalse()
     {
@@ -1086,7 +1086,7 @@ public class TestElement : LogixObject<TestElement>
         set => SetProperty(value);
     }
 
-    public DateTime? Date
+    public DateTime Date
     {
         get => GetDateTime();
         set => SetDateTime(value);

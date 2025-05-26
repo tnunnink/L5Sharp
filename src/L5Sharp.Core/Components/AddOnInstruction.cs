@@ -176,7 +176,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// The date and time that the instruction was created.
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the creation date and time.</value>
-    public DateTime? CreatedDate
+    public DateTime CreatedDate
     {
         get => GetDateTime(DateFormat);
         set => SetDateTime(value, DateFormat);
@@ -196,7 +196,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// The date and time that the instruction was last edited.
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the edit date and time.</value>
-    public DateTime? EditedDate
+    public DateTime EditedDate
     {
         get => GetDateTime(DateFormat);
         set => SetDateTime(value, DateFormat);

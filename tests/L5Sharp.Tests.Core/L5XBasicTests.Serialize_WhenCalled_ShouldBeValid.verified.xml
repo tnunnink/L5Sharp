@@ -34,6 +34,7 @@
         </ScheduledPrograms>
       </Task>
     </Tasks>
+    <ParameterConnections />
     <CST MasterID="0" />
     <WallClockTime LocalTimeAdjustment="0" TimeZone="0" />
     <Trends />
@@ -42,7 +43,5 @@
     <EthernetPorts>
       <EthernetPort Port="1" Label="1" PortEnabled="true" />
     </EthernetPorts>
-    <ParameterConnections />
-    <QuickWatchLists />
   </Controller>
 </RSLogix5000Content>

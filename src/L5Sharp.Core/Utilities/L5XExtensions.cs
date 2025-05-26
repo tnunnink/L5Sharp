@@ -268,7 +268,26 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines if the current element represents an element we would deserialize as a <see cref="Tag"/> component.
+    /// Determines if the specified string represents a container element in the L5X schema.
+    /// </summary>
+    /// <param name="name">The string to evaluate as a container element.</param>
+    /// <returns>True if the string is a recognized container element name; otherwise, false.</returns>
+    internal static bool IsContainerName(this string name)
+    {
+        return name
+            is L5XName.DataTypes
+            or L5XName.Modules
+            or L5XName.AddOnInstructionDefinitions
+            or L5XName.Tags
+            or L5XName.Programs
+            or L5XName.Tasks
+            or L5XName.ParameterConnections
+            or L5XName.Trends
+            or L5XName.QuickWatchList;
+    }
+
+    /// <summary>
+    /// Determines if the current element represents an element, we would deserialize as a <see cref="Tag"/> component.
     /// </summary>
     /// <param name="element">The element to check.</param>
     /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>

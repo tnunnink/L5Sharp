@@ -354,9 +354,6 @@
       <None Update="Components\ModuleTests.Create_CatalogNumberAndConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
-      <None Update="L5XTagTests.SetValue_RackConnectionAliasTag_ShouldUpdateTheParentModuleTagElement.verified.txt">
-        <DependentUpon>L5XTagTests.cs</DependentUpon>
-      </None>
       <None Update="Components\TagTests.Build_SimpleStructureWithConfiguredMembers_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
@@ -380,6 +377,9 @@
       </None>
       <None Update="Components\ProgramTests.Duplicate_ValidConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>ProgramTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XTagTests.SetValue_RackConnectionAliasTag_ShouldUpdateTheParentModuleTagElement.verified.xml">
+        <DependentUpon>L5XTagTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

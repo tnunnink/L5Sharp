@@ -8,71 +8,6 @@ namespace L5Sharp.Tests.Core;
 public class L5XBasicTests
 {
     [Test]
-    public void New_WithControllerAndProcessorNames_ShouldNotBeNullAndExpectedValues()
-    {
-        var content = L5X.New("ControllerName", "1756-L83E", new Revision(33, 1));
-
-        content.Should().NotBeNull();
-        content.Controller.Name.Should().Be("ControllerName");
-        content.Controller.ProcessorType.Should().Be("1756-L83E");
-        content.Controller.Revision.Should().BeEquivalentTo(new Revision(33, 1));
-    }
-
-    [Test]
-    public Task New_ValidValues_ShouldBeVerified()
-    {
-        var content = L5X.New("ControllerName", "1756-L83E", 34.11);
-
-        return VerifyXml(content.Serialize().ToString())
-            .ScrubMember("ExportDate")
-            .ScrubMember("Owner")
-            .ScrubMember("ProjectCreationDate")
-            .ScrubMember("LastModifiedDate");
-    }
-
-    [Test]
-    public void New_NullName_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New(null!, "Test", new Revision())).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_NullProcessor_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New("Test", null!, new Revision())).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_NullRevision_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New("Test", "1756-L83E", null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public Task New_ValidComponent_ShouldBeVerified()
-    {
-        var component = new DataType
-        {
-            Name = "TestType",
-            Description = "This is a test component",
-        };
-
-        var content = L5X.New(component);
-
-        return VerifyXml(content.Serialize().ToString())
-            .ScrubMember("ExportDate")
-            .ScrubMember("Owner")
-            .ScrubMember("ProjectCreationDate")
-            .ScrubMember("LastModifiedDate");
-    }
-
-    [Test]
-    public void New_NullComponent_shouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
     public void Empty_NoOverride_ShouldBeExpected()
     {
         var content = L5X.Empty();
@@ -89,13 +24,13 @@ public class L5XBasicTests
 
         var content = L5X.Parse(xml);
 
-        content.Info.Should().NotBeNull();
+        content.Should().NotBeNull();
         content.Info.SchemaRevision.Should().Be("1.0");
         content.Info.SoftwareRevision.Should().Be("32.02");
         content.Info.TargetName.Should().Be("TestController");
         content.Info.TargetType.Should().Be("Controller");
         content.Info.ContainsContext.Should().Be(false);
-        content.Info.ExportDate.Should().NotBeNull();
+        content.Info.ExportDate.Should().BeAfter(default);
     }
 
     [Test]
@@ -103,13 +38,13 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Test);
 
-        content.Info.Should().NotBeNull();
+        content.Should().NotBeNull();
         content.Info.SchemaRevision.Should().Be("1.0");
         content.Info.SoftwareRevision.Should().Be("32.02");
         content.Info.TargetName.Should().Be("TestController");
         content.Info.TargetType.Should().Be("Controller");
         content.Info.ContainsContext.Should().Be(false);
-        content.Info.ExportDate.Should().NotBeNull();
+        content.Info.ExportDate.Should().BeAfter(default);
     }
 
     [Test]

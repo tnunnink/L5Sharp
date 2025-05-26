@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using TTask = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Core;
 
@@ -15,18 +14,9 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// </remarks>
-public sealed class L5X : ILogixSerializable, ILogixLookup
+[L5XType(L5XName.RSLogix5000Content)]
+public sealed class L5X : LogixElement, ILogixLookup
 {
-    /// <summary>
-    /// The date/time format for the L5X content.
-    /// </summary>
-    private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
-
-    /// <summary>
-    /// The underlying root RSLogix5000Content element of the L5X file.
-    /// </summary>
-    private readonly XElement _content;
-
     /// <summary>
     /// The <see cref="ILogixLookup"/> implementation used to quickly find objects in the file.
     /// The actual implementation that is instantiated is determined by the <see cref="L5XOptions"/> provided to the constructor.
@@ -34,139 +24,104 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     private readonly ILogixLookup _lookup;
 
     /// <summary>
-    /// The list of top level component containers for a L5X content or controller element in order of which
-    /// they should appear in the L5X file.
+    /// Creates a new <see cref="L5X"/> from the provided <see cref="LogixInfo"/> and optional <see cref="L5XOptions"/> argument.
     /// </summary>
-    private static readonly List<string> Containers =
-    [
-        L5XName.DataTypes,
-        L5XName.Modules,
-        L5XName.AddOnInstructionDefinitions,
-        L5XName.Tags,
-        L5XName.Programs,
-        L5XName.Tasks,
-        L5XName.ParameterConnections,
-        L5XName.Trends,
-        L5XName.QuickWatchLists
-    ];
-
-    /// <summary>
-    /// Creates a new <see cref="L5X"/> instance wrapping the provided <see cref="XElement"/> content object.
-    /// </summary>
-    /// <param name="content">The root <see cref="XElement"/> object representing the RSLogix5000Content element of the
-    /// L5X file.</param>
-    /// <param name="options">The <see cref="L5XOptions"/> that control how the L5X is initialized.
-    /// The default is none, meaning no extra initialization steps are performed.
-    /// </param>
-    /// <exception cref="ArgumentNullException"><c>content</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>content</c> name is not expected <c>RSLogix5000Content</c>.</exception>
-    private L5X(XElement content, L5XOptions options = L5XOptions.None)
+    /// <param name="info">The <see cref="LogixInfo"/> object that represents the L5X content.</param>
+    /// <param name="options">The <see cref="L5XOptions"/> that indicate how to load the content.</param>
+    public L5X(LogixInfo info, L5XOptions options = L5XOptions.None) : base(info.Serialize())
     {
-        if (content is null)
-            throw new ArgumentNullException(nameof(content));
-
-        if (content.Name != L5XName.RSLogix5000Content)
-            throw new ArgumentException(
-                $"Expecting root element name of {L5XName.RSLogix5000Content} to initialize L5X.");
-
-        _content = content;
-
-        //We will "normalize" (ensure consistent root controller element and component containers) for all
-        //files so that we won't have issues getting top level containers.
-        //When saving, we can remove unused containers. 
-        NormalizeContent();
+        Info = info;
+        Controller = new Controller(Element.Element(L5XName.Controller)!);
 
         //This stores the L5X object as an in-memory object for the root XElement,
         //allowing child elements to retrieve the object locally without creating a new instance and potentially
         //reindexing of the XML content if requested.
         //This allows them to reference to root L5X for cross-referencing or other lookup-based operations.
-        _content.AddAnnotation(this);
+        Element.AddAnnotation(this);
 
         //Depending on the options provided, either create a logix index or logix lookup for the ILogixLoop API usage.
         if (options == L5XOptions.Index)
         {
             //LogixIndex uses dictionaries and is super performant.
-            _lookup = new LogixIndex(GetController());
+            _lookup = new LogixIndex(Element.Element(L5XName.Controller)!);
         }
         else
         {
             //LogixLookup uses XPath with is not terrible but will be slow for many lookups (mostly for tag elements).
-            _lookup = new LogixLookup(GetController());
+            _lookup = new LogixLookup(Element.Element(L5XName.Controller)!);
         }
     }
 
     /// <summary>
-    /// The <see cref="LogixInfo"/> representing the L5X content export information.
+    /// The <see cref="LogixInfo"/> instance representing the metadata and descriptive information of the L5X object.
+    /// This property provides essential context and details about the RSLogix5000 content, such as target name, type,
+    /// and other key attributes.
     /// </summary>
-    public LogixInfo Info => new(_content);
+    public LogixInfo Info { get; }
 
     /// <summary>
-    /// The root <see cref="Core.Controller"/> component of the L5X file.
+    /// Represents the primary controller within a Logix project.
+    /// This serves as the root element for components such as tags, programs, tasks, and other key project elements.
     /// </summary>
-    /// <value>A <see cref="Core.Controller"/> component object.</value>
-    /// <remarks>If the L5X does not <c>ContainContext</c>, meaning it is a project export, this will contain all the
-    /// relevant controller properties and configurations. Otherwise, most data will be null as the controller serves as
-    /// just a root container for other component objects.</remarks>
-    public Controller Controller => new(GetController());
+    public Controller Controller { get; }
 
     /// <summary>
     /// The container collection of <see cref="DataType"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="DataType"/> components.</value>
-    public LogixContainer<DataType> DataTypes => new(GetContainer(L5XName.DataTypes));
+    public LogixContainer<DataType> DataTypes => Controller.DataTypes;
 
     /// <summary>
     /// Gets the collection of <see cref="AddOnInstruction"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="AddOnInstruction"/> components.</value>
-    public LogixContainer<AddOnInstruction> Instructions => new(GetContainer(L5XName.AddOnInstructionDefinitions));
+    public LogixContainer<AddOnInstruction> Instructions => Controller.Instructions;
 
     /// <summary>
     /// Gets the collection of <see cref="Module"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Module"/> components.</value>
-    public LogixContainer<Module> Modules => new(GetContainer(L5XName.Modules));
+    public LogixContainer<Module> Modules => Controller.Modules;
 
     /// <summary>
     /// Gets the collection of Controller <see cref="Tags"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Tags"/> components.</value>
     /// <remarks>To access program-specific tag collection user the <see cref="Programs"/> collection.</remarks>
-    public LogixContainer<Tag> Tags => new(GetContainer(L5XName.Tags));
+    public LogixContainer<Tag> Tags => Controller.Tags;
 
     /// <summary>
     /// Gets the collection of <see cref="Program"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Program"/> components.</value>
-    public LogixContainer<Program> Programs => new(GetContainer(L5XName.Programs));
+    public LogixContainer<Program> Programs => Controller.Programs;
 
     /// <summary>
     /// Gets the collection of <see cref="Task"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Task"/> components.</value>
-    public LogixContainer<Task> Tasks => new(GetContainer(L5XName.Tasks));
+    public LogixContainer<Task> Tasks => Controller.Tasks;
 
     /// <summary>
     /// The container collection of <see cref="ParameterConnection"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="ParameterConnection"/> components.</value>
-    public LogixContainer<ParameterConnection> ParameterConnections =>
-        new(GetContainer(L5XName.ParameterConnections));
+    public LogixContainer<ParameterConnection> ParameterConnections => Controller.ParameterConnections;
 
     /// <summary>
     /// The container collection of <see cref="Trend"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Trend"/> components.</value>
-    public LogixContainer<Trend> Trends => new(GetContainer(L5XName.Trends));
+    public LogixContainer<Trend> Trends => Controller.Trends;
 
     /// <summary>
     /// The container collection of <see cref="WatchList"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="WatchList"/> components.</value>
-    public LogixContainer<WatchList> WatchLists => new(GetContainer(L5XName.QuickWatchLists));
+    public LogixContainer<WatchList> WatchLists => Controller.WatchLists;
 
     /// <summary>
-    /// Indicates whether the current L5X object is utilizing an indexed structure for lookup operations.
+    /// Indicates whether the current L5X object is using an indexed structure for lookup operations.
     /// </summary>
     public bool IsIndexed => _lookup is LogixIndex;
 
@@ -185,7 +140,9 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// </remarks>
     public static L5X Load(string fileName, L5XOptions options = L5XOptions.None)
     {
-        return new L5X(XElement.Load(fileName), options);
+        var element = XElement.Load(fileName);
+        var info = new LogixInfo(element);
+        return new L5X(info, options);
     }
 
     //Async overload isn't supported in .NET Standard 2.0
@@ -207,7 +164,8 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
 
         await using var stream = new FileStream(fileName, FileMode.Open);
         var element = await XElement.LoadAsync(stream, LoadOptions.SetLineInfo, token);
-        var file = await TTask.Run(() => new L5X(element, options), token);
+        var info = new LogixInfo(element);
+        var file = new L5X(info, options);
         return file;
     }
 #endif
@@ -215,7 +173,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// <summary>
     /// Creates a new <see cref="L5X"/> with the provided L5X string content.
     /// </summary>
-    /// <param name="text">The string that contains the L5X content to parse.</param>
+    /// <param name="xml">The string that contains the L5X content to parse.</param>
     /// <param name="options">The <see cref="L5XOptions"/> that control how the L5X is initialized.
     /// The default is none, meaning no extra initialization steps are performed.</param>
     /// <returns>A new <see cref="L5X"/> containing the contents of the specified string.</returns>
@@ -225,62 +183,18 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// memory. This means that this method is subject to the same exceptions that could be generated by parsing the
     /// XElement.
     /// </remarks>
-    public static L5X Parse(string text, L5XOptions options = L5XOptions.None) => new(XElement.Parse(text), options);
-
-    /// <summary>
-    /// Creates a new instance of <see cref="L5X"/> with an empty content.
-    /// </summary>
-    /// <param name="targetName">The optional target name for the new L5X content. Will default to empty string.</param>
-    /// <param name="targetType">The optional target type for the new L5X content. Will default to Controller.</param>
-    /// <returns>A new <see cref="L5X"/> instance with an empty content.</returns>
-    public static L5X Empty(string? targetName = null, string? targetType = null)
+    public static L5X Parse(string xml, L5XOptions options = L5XOptions.None)
     {
-        return new L5X(NewContent(targetName ?? string.Empty, targetType ?? L5XName.Controller, new Revision()));
+        var element = XElement.Parse(xml);
+        var info = new LogixInfo(element);
+        return new L5X(info, options);
     }
 
     /// <summary>
-    /// Creates a new blank <see cref="L5X"/> file with the standard root content and controller elements,
-    /// and configures them with the provided controller name, processor, and revision. Also adds the Local controller
-    /// Module component as Studio does so that module scan be added in memory. 
+    /// Creates a new, empty <see cref="L5X"/> instance with a default <see cref="LogixInfo"/> configuration.
     /// </summary>
-    /// <param name="name">The name of the controller.</param>
-    /// <param name="processor">The processor type of the controller.</param>
-    /// <param name="revision">The optional software revision of the processor.</param>
-    /// <returns>A new <see cref="L5X"/> instance with the specified controller properties.</returns>
-    /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="processor"/> is null or empty.</exception>
-    public static L5X New(string name, string processor, Revision revision)
-    {
-        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name can not be null or empty.");
-        if (string.IsNullOrEmpty(processor)) throw new ArgumentException("Processor can not be null or empty.");
-        if (revision is null) throw new ArgumentException("Revision can not be null.");
-
-        var content = NewContent(name, nameof(Controller), revision);
-        var controller = new Controller(name, processor, revision) { Use = Use.Target };
-        content.Add(controller.Serialize());
-
-        return new L5X(content);
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="L5X"/> file with the provided <see cref="LogixComponent"/> object instance as the export
-    /// target of the file.
-    /// </summary>
-    /// <param name="component">The component that will serve as the target for the new L5X.</param>
-    /// <param name="revision">The software revision of the L5X file.</param>
-    /// <returns>A new <see cref="L5X"/> with the default root and target component as the content of the file.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="component"/> is null.</exception>
-    public static L5X New(LogixComponent component, Revision? revision = null)
-    {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
-
-        var content = NewContent(component.Name, component.L5XType, revision);
-
-        var file = new L5X(content);
-        file.Add(component);
-
-        return file;
-    }
+    /// <returns>An empty <see cref="L5X"/> instance with no additional content.</returns>
+    public static L5X Empty() => new(LogixInfo.Empty());
 
     /// <summary>
     /// Finds an element across the entire L5X with the provided type as a flat collection of objects. 
@@ -306,7 +220,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
         if (string.IsNullOrEmpty(type))
             throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
 
-        return _content.Descendants(type).Select(e => e.Deserialize());
+        return Element.Descendants(type).Select(e => e.Deserialize());
     }
 
     /// <summary>
@@ -335,7 +249,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
 
         var types = new HashSet<string>(type.L5XTypes());
 
-        foreach (var descendant in _content.Descendants())
+        foreach (var descendant in Element.Descendants())
         {
             if (!types.Contains(descendant.L5XType())) continue;
             yield return descendant.Deserialize();
@@ -362,7 +276,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     {
         var typeNames = typeof(TObject).L5XTypes().ToList();
 
-        return _content.Descendants()
+        return Element.Descendants()
             .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
             .Select(e => e.Deserialize<TObject>());
     }
@@ -388,7 +302,7 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     {
         var typeNames = typeof(TObject).L5XTypes().ToList();
 
-        return _content.Descendants()
+        return Element.Descendants()
             .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
             .Select(e => e.Deserialize<TObject>())
             .Where(predicate);
@@ -491,9 +405,14 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// <seealso cref="Add(LogixComponent,string)"/>
     public void Add(LogixComponent component)
     {
-        var containerType = component.GetType().L5XContainer();
-        var container = GetContainer(containerType);
-        container.Add(component.Serialize());
+        var container = component.GetType().L5XContainer();
+
+        var target = Element.Descendants(container).FirstOrDefault();
+
+        if (target is null)
+            throw new InvalidOperationException($"Could not find container for type {component.GetType()}");
+
+        target.Add(component.Serialize());
     }
 
     /// <summary>
@@ -510,11 +429,12 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     /// </remarks>
     public void Add(LogixComponent component, string program)
     {
-        var type = component.GetType().L5XContainer();
+        var container = component.GetType().L5XContainer();
 
-        var target = _content.Descendants(type).FirstOrDefault(e => ScopeLevel.Container(e) == program);
+        var target = Element.Descendants(container).FirstOrDefault(e => ScopeLevel.Container(e) == program);
+
         if (target is null)
-            throw new InvalidOperationException($"Not container with name '{program}' was found in the L5X.");
+            throw new InvalidOperationException($"Could not find container '{program}' for type {component.GetType()}");
 
         target.Add(component.Serialize());
     }
@@ -560,174 +480,19 @@ public sealed class L5X : ILogixSerializable, ILogixLookup
     }
 
     /// <summary>
-    /// Merges the specified L5X file with the current <see cref="L5X"/> L5X by adding or overwriting logix components.
-    /// </summary>
-    /// <param name="fileName">The file name of L5X to merge.</param>
-    /// <param name="overwrite">A bit indicating whether to overwrite incoming components of the same name.</param>
-    /// <exception cref="ArgumentException"><c>fileName</c> is null or empty.</exception>
-    public void Import(string fileName, bool overwrite = true)
-    {
-        if (string.IsNullOrEmpty(fileName))
-            throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
-        var content = Load(fileName);
-        MergeContent(content, overwrite);
-    }
-
-    /// <summary>
-    /// Merges another <see cref="L5X"/> file into the current L5X by adding or overwriting logix components.
-    /// </summary>
-    /// <param name="content">The <see cref="L5X"/> to merge.</param>
-    /// <param name="overwrite">A bit indicating whether to overwrite incoming components of the same name.</param>
-    /// <exception cref="ArgumentNullException"><c>content</c> is null.</exception>
-    public void Import(L5X content, bool overwrite = true)
-    {
-        if (content is null) throw new ArgumentNullException(nameof(content));
-        MergeContent(content, overwrite);
-    }
-
-    /// <summary>
     /// Serialize this <see cref="L5X"/> to a file, overwriting an existing file, if it exists.
     /// </summary>
     /// <param name="fileName">A string that contains the name of the file.</param>
-    public void Save(string fileName) => SaveContent(fileName);
-
-    /// <inheritdoc />
-    public XElement Serialize() => _content;
-
-    /// <inheritdoc />
-    public override string ToString() => _content.ToString();
-
-    #region Internal
-
-    /// <summary>
-    /// Gets the root controller element of the L5X file. We expect this to always exist if the L5X is constructed
-    /// due to the normalization process. 
-    /// </summary>
-    private XElement GetController()
+    public void Save(string fileName)
     {
-        return _content.Element(L5XName.Controller) ?? throw _content.L5XError(L5XName.Controller);
-    }
-
-    /// <summary>
-    /// Gets a top-level container element from the root controller element of the L5X.
-    /// We expect
-    /// </summary>
-    private XElement GetContainer(string name)
-    {
-        return _content.Element(L5XName.Controller)?.Element(name) ?? throw _content.L5XError(name);
-    }
-
-    /// <summary>
-    /// Gets all primary top level L5X component containers in the current L5X file.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="XElement"/> representing the L5X component containers.</returns>
-    private List<XElement> GetContainers()
-    {
-        return Containers
-            .Select(name => _content.Element(L5XName.Controller)?.Element(name))
-            .Where(e => e is not null)
-            .Cast<XElement>()
-            .ToList();
-    }
-
-    /// <summary>
-    /// Merges all top level containers and their immediate child elements between the current L5X content and the
-    /// provided L5X content. Will overwrite if specified.
-    /// </summary>
-    /// <param name="l5X">The L5X element to merge with the current target element.</param>
-    /// <param name="overwrite">A flag to indicate whether to overwrite child elements of a matching name.</param>
-    private void MergeContent(L5X l5X, bool overwrite)
-    {
-        if (l5X is null) throw new ArgumentNullException(nameof(l5X));
-
-        var containerPairs = GetContainers()
-            .Join(l5X.GetContainers(), e => e.Name, e => e.Name, (a, b) => new { a, b })
-            .ToList();
-
-        foreach (var pair in containerPairs)
-            MergeContainers(pair.a, pair.b, overwrite);
-    }
-
-    /// <summary>
-    /// Given to top level containers, adds or replaces all child elements matching based on the logix name of the elements.
-    /// </summary>
-    private static void MergeContainers(XContainer target, XContainer source, bool overwrite)
-    {
-        foreach (var element in source.Elements())
-        {
-            var match = target.Elements().FirstOrDefault(e => e.LogixName() == element.LogixName());
-
-            if (match is null)
-            {
-                target.Add(element);
-                continue;
-            }
-
-            if (overwrite)
-                match.ReplaceWith(element);
-        }
-    }
-
-    /// <summary>
-    /// Creates a new default content element for a new instance of an L5X file given the provided target name and type.
-    /// </summary>
-    private static XElement NewContent(string targetName, string targetType, Revision? softwareRevision)
-    {
-        var content = new XElement(L5XName.RSLogix5000Content);
-        content.Add(new XAttribute(L5XName.SchemaRevision, new Revision()));
-        if (softwareRevision is not null) content.Add(new XAttribute(L5XName.SoftwareRevision, softwareRevision));
-        content.Add(new XAttribute(L5XName.TargetName, targetName));
-        content.Add(new XAttribute(L5XName.TargetType, targetType));
-        content.Add(new XAttribute(L5XName.ContainsContext, targetType != nameof(Controller)));
-        content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
-        content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
-
-        return content;
-    }
-
-    /// <summary>
-    /// If no root controller element exists, adds a new context controller and moves all root elements into that controller
-    /// element. Then adds missing top level containers to ensure a consistent structure of the root L5X.
-    /// </summary>
-    private void NormalizeContent()
-    {
-        //If no controller element exists, we will insert on with the existing content as the child.
-        if (_content.Element(L5XName.Controller) is null)
-        {
-            var context = new XElement(L5XName.Controller, new XAttribute(L5XName.Use, Use.Context));
-            context.Add(_content.Elements());
-            _content.ReplaceNodes(context);
-        }
-
-        //This should now always exist.
-        var controller = _content.Element(L5XName.Controller)!;
-
-        //Inject remaining container elements that do not exist to ensure our container collections return without error.
-        foreach (var container in Containers)
-        {
-            var existing = controller.Element(container);
-            if (existing is not null) continue;
-            controller.Add(new XElement(container));
-        }
-    }
-
-    /// <summary>
-    /// Create a document, adds default declaration, and saves the current L5X content to the specified file name.
-    /// </summary>
-    /// <param name="fileName">A string that contains the name of the file.</param>
-    private void SaveContent(string fileName)
-    {
-        //This will sanitize containers that were perhaps added when normalizing that went unused.
-        foreach (var container in GetContainers().Where(c => !c.HasElements))
-            container.Remove();
-
         var declaration = new XDeclaration("1.0", "UTF-8", "yes");
         var document = new XDocument(declaration);
-        document.Add(_content);
+        document.Add(Element);
         document.Save(fileName);
     }
 
-    #endregion
+    /// <inheritdoc />
+    public override string ToString() => Info.ToString();
 }
 
 /// <summary>

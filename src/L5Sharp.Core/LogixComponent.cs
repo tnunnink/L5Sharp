@@ -141,7 +141,9 @@ public abstract class LogixComponent : LogixScoped
         Use = Use.Target;
         softwareRevision ??= L5X?.Info.SoftwareRevision;
 
-        var content = L5X.New(this, softwareRevision);
+        var info = LogixInfo.Create(this, softwareRevision);
+        var content = new L5X(info);
+        content.Add(this);
 
         var dependencies = Dependencies().ToList();
         foreach (var dependency in dependencies)

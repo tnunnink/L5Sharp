@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -170,7 +169,7 @@ public abstract class LogixObject : LogixElement
     /// <param name="element">The new logix element to replace this element with.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException">No parent exists for the underlying element -or-
-    /// the provided logix element is different type or convertable to the type of this logix element.
+    /// the provided logix element is a different type or convertable to the type of this logix element.
     /// </exception>
     /// <remarks>
     /// This method requires the component be attached to the <see cref="L5X"/>, as it will

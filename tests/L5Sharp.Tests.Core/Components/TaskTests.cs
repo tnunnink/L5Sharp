@@ -62,7 +62,7 @@ namespace L5Sharp.Tests.Core.Components
 
             task.Name.Should().Be("Test");
         }
-        
+
         [Test]
         public void New_NameAndTypeOverload_ShouldHaveExpectedName()
         {
@@ -150,7 +150,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public Task AddProgram_ValidProgram_ShouldBeVerified()
         {
-            var content = L5X.New("Test", "1756-L84E", new Revision(33, 1));
+            var content = L5X.Empty();
             var task = new LTask("Test");
             content.Tasks.Add(task);
             var program = new Program("Program1");

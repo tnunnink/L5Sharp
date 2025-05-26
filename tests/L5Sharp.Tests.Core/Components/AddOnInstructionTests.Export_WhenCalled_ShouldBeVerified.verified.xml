@@ -1,5 +1,5 @@
-﻿<RSLogix5000Content SchemaRevision="1.0" TargetName="" TargetType="AddOnInstructionDefinition" ContainsContext="true" Owner="Scrubbed" ExportDate="Scrubbed">
-  <Controller Use="Context">
+﻿<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="1.0" TargetName="" TargetType="AddOnInstructionDefinition" ContainsContext="true" Owner="Scrubbed" ExportDate="Scrubbed">
+  <Controller Name="Context" Use="Context" MajorRev="1" MinorRev="0" ProjectCreationDate="Scrubbed" LastModifiedDate="Scrubbed">
     <DataTypes />
     <Modules />
     <AddOnInstructionDefinitions>

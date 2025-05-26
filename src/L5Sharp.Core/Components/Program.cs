@@ -30,11 +30,9 @@ public class Program : LogixComponent<Program>
     public Program() : base(L5XName.Program)
     {
         Type = ProgramType.Normal;
-        TestEdits = default;
-        Disabled = default;
-        MainRoutineName = default;
-        FaultRoutineName = default;
-        UseAsFolder = default;
+        TestEdits = false;
+        Disabled = false;
+        UseAsFolder = false;
         Tags = [];
         Routines = [];
     }
@@ -53,7 +51,7 @@ public class Program : LogixComponent<Program>
     /// </summary>
     /// <param name="name">The name of the Program.</param>
     /// <param name="type">The <see cref="ProgramType"/> of the Program.</param>
-    public Program(string name, ProgramType? type = default) : this()
+    public Program(string name, ProgramType? type = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Type = type ?? ProgramType.Normal;
@@ -104,7 +102,7 @@ public class Program : LogixComponent<Program>
     }
 
     /// <summary>
-    /// The name of the routine that serves as the entry point for the program (i.e. main routine).
+    /// The name of the routine that serves as the entry point for the program (i.e., main routine).
     /// </summary>
     /// <value>A <see cref="string"/> representing the name of the main routine for the program.</value>
     public string? MainRoutineName
@@ -159,7 +157,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
     /// <remarks>
     /// <para>
-    /// This member just returns the read only list of child program names. To modify the list, use the local
+    /// This member just returns the read-only list of child program names. To modify the list, use the local
     /// <see cref="AddChild"/> and <see cref="RemoveChild"/> methods. This list is what is serialized and defines the collection
     /// of child programs for a given program in the logical organizer.
     /// </para>
@@ -178,7 +176,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="IEnumerable{T}"/> of <see cref="Program"/> component elements.</value>
     /// <remarks>
     /// This is a helper to retrieve the other program component objects as children of this <c>Program</c>.
-    /// This allows the caller to travers down the logical hierarchy of programs. This requires an attached L5X as
+    /// This allows the caller to traver down the logical hierarchy of programs. This requires an attached L5X as
     /// it reaches back up the document tree and back down to find the child programs. If this component is not
     /// attached to an L5X or as no <see cref="Children"/> configured, then this will return an empty collection.
     /// </remarks>
@@ -191,7 +189,7 @@ public class Program : LogixComponent<Program>
     /// </summary>
     /// <remarks>
     /// This is a navigation helper to allow easily retrieving the parent program container for a given program component.
-    /// This requires an scoped/attached L5X as it traverses the L5X document tree to find the target component. 
+    /// This requires a scoped/attached L5X as it traverses the L5X document tree to find the target component. 
     /// </remarks>
     public Program? Parent => L5X?.Programs.FirstOrDefault(p => p.Children.Contains(Name));
 
@@ -202,7 +200,7 @@ public class Program : LogixComponent<Program>
     /// <see cref="Core.Task"/> component instance, Otherwise, null.</value>
     /// <remarks>
     /// This is a helper for retrieving the parent <c>Task</c> for this program.
-    /// This requires an scoped/attached L5X as it traverses the L5X document tree to find the target component.
+    /// This requires a scoped/attached L5X as it traverses the L5X document tree to find the target component.
     /// </remarks>
     public Task? Task => L5X?.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
 

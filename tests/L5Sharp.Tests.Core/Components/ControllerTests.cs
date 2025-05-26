@@ -90,7 +90,7 @@ public class ControllerTests
             {
                 SafetyLocked = true,
                 SafetySignature = "Test SafetSignature",
-                SafetyTagMap = new SafetyTagMap { "TestTag", "TestTag" }
+                SafetyTagMap = ["TestTag", "TestTag"]
             },
             Security = new Security
             {
@@ -233,7 +233,7 @@ public class ControllerTests
             {
                 SafetyLocked = true,
                 SafetySignature = "Test SafetSignature",
-                SafetyTagMap = new SafetyTagMap { "TestTag", "TestTag" }
+                SafetyTagMap = ["TestTag", "TestTag"]
             },
             Security = new Security
             {
@@ -253,5 +253,30 @@ public class ControllerTests
         return VerifyXml(xml)
             .IgnoreMember("ProjectCreationDate")
             .IgnoreMember("LastModifiedDate");
+    }
+
+    [Test]
+    public void Import_SimpleDataType_ShouldBeVerified()
+    {
+        var controller = L5X.Load(Known.Test).Controller;
+
+        controller.Import(b => b
+            .DataType("MyDataType")
+            .From("The/file/containing/MyDataType")
+            .Overwrite()
+            .Replace("SomeText", "NewText")
+            .Discard("/DataType/NestedType")
+        );
+
+        controller.Import(b => b
+            .DataTypes(d => d.Name.Contains("MyType"))
+            .From("SomeFile")
+            .UseExisting()
+            .Discard("/DataType/UnusedType")
+            .UseExisting("/DataType/DontReplace")
+            .Overwrite("/DataType/ReplaceType")
+            .Replace("INJ01", "INJ02")
+            .Modify(source => source.Remove<DataType>("SomeTypeName"))
+        );
     }
 }

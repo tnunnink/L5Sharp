@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 
@@ -11,13 +12,13 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// <para>A controller component may or may not contain various properties depending on if the exported L5X file
 /// was a full project file or just a component export file. This is indicated in the <see cref="L5X"/> by the property
-/// <c>ContainsContext</c>, which if true, means the controller element exists simply to contain other components that
+/// <c>ContainsContext</c>, which is true, means the controller element exists simply to contain other components that
 /// are needed by the <c>TargetName</c> for successful re-imports of the content, and therefore will typically only have
 /// a name, revision, and processor type.</para>
 /// <para>
 /// Observe these guidelines when defining a controller:<br/>
 ///     • All declarations must be ordered in the prescribed syntax.<br/>
-///     • The maximum number of tasks vary by the controller type.<br/>
+///     • The maximum number of tasks varies by the controller type.<br/>
 ///     • There can be only one continuous task.<br/>
 ///     • Programs can be scheduled under only one task.<br/>
 ///     • There can be a maximum of 1000 programs under a task.<br/>
@@ -52,9 +53,8 @@ public class Controller : LogixComponent<Controller>
         L5XName.DataLogs,
         L5XName.QuickWatchLists,
         L5XName.TimeSynchronize,
-        L5XName.EthernetPorts,
+        L5XName.EthernetPorts
     ];
-
 
     /// <summary>
     /// Creates a new <see cref="Controller"/> with default values.
@@ -84,6 +84,7 @@ public class Controller : LogixComponent<Controller>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Controller(XElement element) : base(element)
     {
+        EnsureContainersExist();
     }
 
     /// <summary>
@@ -182,7 +183,7 @@ public class Controller : LogixComponent<Controller>
         {
             var major = Element.Attribute(L5XName.MajorRev)?.Value.Parse<ushort>();
             var minor = Element.Attribute(L5XName.MinorRev)?.Value.Parse<ushort>();
-            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : default;
+            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : null;
         }
         set
         {
@@ -197,7 +198,7 @@ public class Controller : LogixComponent<Controller>
     /// <value>A <see cref="DateTime"/> representing the date and time of creation.</value>
     public DateTime ProjectCreationDate
     {
-        get => GetDateTime(DateTimeFormat) ?? default;
+        get => GetDateTime(DateTimeFormat);
         set => SetDateTime(value, DateTimeFormat);
     }
 
@@ -207,7 +208,7 @@ public class Controller : LogixComponent<Controller>
     /// <value>A <see cref="DateTime"/> representing the date and time of modification.</value>
     public DateTime LastModifiedDate
     {
-        get => GetDateTime(DateTimeFormat) ?? default;
+        get => GetDateTime(DateTimeFormat);
         set => SetDateTime(value, DateTimeFormat);
     }
 
@@ -282,7 +283,7 @@ public class Controller : LogixComponent<Controller>
     }
 
     /// <summary>
-    /// Specify the default project language for a project document at on project.
+    /// Specify the default project language for a project document at on a project.
     /// </summary>
     public string? DefaultProjectLanguage
     {
@@ -291,7 +292,7 @@ public class Controller : LogixComponent<Controller>
     }
 
     /// <summary>
-    /// Specify the controller project language for a project document at on project.
+    /// Specify the controller project language for a project document at on a project.
     /// </summary>
     public string? ControllerLanguage
     {
@@ -465,4 +466,87 @@ public class Controller : LogixComponent<Controller>
         // ReSharper disable once ExplicitCallerInfoArgument
         set => SetContainer(value, L5XName.QuickWatchLists);
     }
+
+    /// <summary>
+    /// Merges the specified L5X file with the current <see cref="L5X"/> L5X by adding or overwriting logix components.
+    /// </summary>
+    /// <param name="fileName">The file name of L5X to merge.</param>
+    /// <param name="overwrite">A bit indicating whether to overwrite incoming components of the same name.</param>
+    /// <exception cref="ArgumentException"><c>fileName</c> is null or empty.</exception>
+    public void Import(string fileName, bool overwrite = true)
+    {
+        if (string.IsNullOrEmpty(fileName))
+            throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
+
+        var content = L5X.Load(fileName);
+
+        MergeContent(content, overwrite);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    public void Import(Action<IImportControllerBuilder> builder)
+    {
+        var importer = new ControllerImporter();
+        builder.Invoke(importer);
+        importer.Execute(this);
+    }
+
+    #region Internal
+
+    /// <summary>
+    /// Merges all top level containers and their immediate child elements between the current L5X content and the
+    /// provided L5X content. Will overwrite if specified.
+    /// </summary>
+    /// <param name="l5X">The L5X element to merge with the current target element.</param>
+    /// <param name="overwrite">A flag to indicate whether to overwrite child elements of a matching name.</param>
+    private void MergeContent(L5X l5X, bool overwrite)
+    {
+        var local = Element.Descendants().Where(e => e.Name.LocalName.IsContainerName());
+        var external = l5X.Serialize().Descendants().Where(e => e.Name.LocalName.IsContainerName());
+        var pairs = local.Join(external, e => e.Name, e => e.Name, (a, b) => new { a, b }).ToList();
+
+        foreach (var pair in pairs)
+            MergeContainers(pair.a, pair.b, overwrite);
+    }
+
+    /// <summary>
+    /// Given two top level containers, adds or replaces all child elements matching based on the logix name of the elements.
+    /// </summary>
+    private static void MergeContainers(XContainer target, XContainer source, bool overwrite)
+    {
+        foreach (var element in source.Elements())
+        {
+            var match = target.Elements().FirstOrDefault(e => e.LogixName() == element.LogixName());
+
+            if (match is null)
+            {
+                target.Add(element);
+                continue;
+            }
+
+            if (overwrite)
+                match.ReplaceWith(element);
+        }
+    }
+
+    /// <summary>
+    /// Will ensure that all known component container elements are created and ordered according to the defined L5X
+    /// element order. This will ensure that no container element returns null and which would cause exceptions.
+    /// If the containers cod unused (are empty), we will remove them upon save.
+    /// </summary>
+    private void EnsureContainersExist()
+    {
+        foreach (var container in ElementOrder.Where(e => e.IsContainerName()))
+        {
+            if (Element.Element(container) is not null) continue;
+            Element.Add(new XElement(container));
+        }
+
+        EnsureOrder();
+    }
+
+    #endregion
 }

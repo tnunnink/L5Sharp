@@ -58,7 +58,7 @@ public sealed class Revision : IComparable, ILogixParsable<Revision>
     /// The build number of the <see cref="Revision"/> value.
     /// </summary>
     /// <remarks>
-    /// Build is often and optional number and will only be considered if greater than zero.
+    /// Build is often and optionally number and will only be considered if greater than zero.
     /// </remarks>
     public ushort Build { get; }
 
@@ -154,23 +154,23 @@ public sealed class Revision : IComparable, ILogixParsable<Revision>
     public static Revision? TryParse(string? value)
     {
         if (value is null || value.IsEmpty())
-            return default;
+            return null;
 
         var match = RevisionPattern.Match(value);
 
         if (!match.Success)
-            return default;
+            return null;
 
         if (!ushort.TryParse(match.Groups[1].Value, out var major))
-            return default;
+            return null;
 
         ushort minor = 0;
         if (!match.Groups[2].Value.IsEmpty() && !ushort.TryParse(match.Groups[2].Value, out minor))
-            return default;
+            return null;
 
         ushort build = 0;
         if (!match.Groups[3].Value.IsEmpty() && !ushort.TryParse(match.Groups[3].Value, out build))
-            return default;
+            return null;
 
         return new Revision(major, minor, build);
     }

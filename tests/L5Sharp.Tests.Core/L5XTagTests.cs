@@ -70,6 +70,9 @@ public class L5XTagTests
         
         member.Value = 1234;
 
-        return Verify(content.Serialize().ToString());
+        return VerifyXml(content.Serialize().ToString())
+            .ScrubMembersWithType<DateTime>()
+            .ScrubMember("ProjectCreationDate")
+            .ScrubMember("LastModifiedDate");
     }
 }
