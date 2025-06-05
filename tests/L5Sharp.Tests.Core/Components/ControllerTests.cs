@@ -260,23 +260,11 @@ public class ControllerTests
     {
         var controller = L5X.Load(Known.Test).Controller;
 
-        controller.Import(b => b
-            .DataType("MyDataType")
-            .From("The/file/containing/MyDataType")
-            .Overwrite()
-            .Replace("SomeText", "NewText")
-            .Discard("/DataType/NestedType")
-        );
-
-        controller.Import(b => b
-            .DataTypes(d => d.Name.Contains("MyType"))
-            .From("SomeFile")
-            .UseExisting()
-            .Discard("/DataType/UnusedType")
-            .UseExisting("/DataType/DontReplace")
-            .Overwrite("/DataType/ReplaceType")
-            .Replace("INJ01", "INJ02")
-            .Modify(source => source.Remove<DataType>("SomeTypeName"))
+        controller.Import("The/file/containing/MyDataType", b => b
+            .Overwrite<DataType>(d => d.Name == "someType")
+            .Overwrite<DataType>(d => d.Name.Contains("Test"))
+            .Modify<DataType>(d => d.Name == "Something", d => { d.Description = "This is an update"; })
+            .Rename<DataType>("Current", "NewName")
         );
     }
 }

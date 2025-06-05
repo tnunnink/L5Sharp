@@ -119,7 +119,7 @@ public class LogixInfo : LogixElement
         content.Add(new XAttribute(L5XName.SoftwareRevision, revision ?? new Revision()));
         content.Add(new XAttribute(L5XName.TargetName, component.Name));
         content.Add(new XAttribute(L5XName.TargetType, component.L5XType));
-        content.Add(new XAttribute(L5XName.ContainsContext, component is not Controller));
+        content.Add(new XAttribute(L5XName.ContainsContext, true));
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
 

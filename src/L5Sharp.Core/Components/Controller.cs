@@ -29,7 +29,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Controller : LogixComponent<Controller>
+public sealed class Controller : LogixElement
 {
     private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
 
@@ -61,7 +61,6 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public Controller() : base(L5XName.Controller)
     {
-        Use = Use.Context;
         Revision = new Revision();
         ProjectCreationDate = DateTime.Now;
         LastModifiedDate = DateTime.Now;
@@ -100,8 +99,46 @@ public class Controller : LogixComponent<Controller>
         Revision = revision;
     }
 
-    /// <inheritdoc />
-    public override Scope Scope => Scope.Empty;
+    /// <summary>
+    /// The <see cref="Use"/> of the component within the L5X file.
+    /// </summary>
+    /// <remarks>
+    /// Typically used when exporting individual components (DataType, AoiBlock, Module) to indicate whether the component
+    /// is the target of the L5X content or exists solely as a context or dependency of the target component. When
+    /// saving a project as an L5X, the top-level controller component is the target, and all other components will
+    /// not have this property. 
+    /// </remarks>
+    public Use? Use
+    {
+        get => GetValue<Use>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The unique name of the component.
+    /// </summary>
+    /// <value>A <see cref="string"/> representing the component name.</value>
+    /// <remarks>
+    /// The name servers as a unique identifier for various types of components.
+    /// In most cases, the component name should satisfy Logix naming constraints of alphanumeric and
+    /// underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
+    /// Validation is not performed by this library, so importing components with invalid names may fail.
+    /// </remarks>
+    public string Name
+    {
+        get => GetRequiredValue<string>();
+        set => SetRequiredValue(value);
+    }
+
+    /// <summary>
+    /// The description of the component.
+    /// </summary>
+    /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
+    public string? Description
+    {
+        get => GetProperty<string>();
+        set => SetProperty(value);
+    }
 
     /// <summary>
     /// The catalog number representing the processor of the controller component.
@@ -388,7 +425,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<DataType> DataTypes
     {
         get => GetContainer<DataType>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -399,7 +436,7 @@ public class Controller : LogixComponent<Controller>
         // ReSharper disable once ExplicitCallerInfoArgument
         get => GetContainer<AddOnInstruction>(L5XName.AddOnInstructionDefinitions);
         // ReSharper disable once ExplicitCallerInfoArgument
-        set => SetContainer(value, L5XName.AddOnInstructionDefinitions);
+        private set => SetContainer(value, L5XName.AddOnInstructionDefinitions);
     }
 
     /// <summary>
@@ -408,7 +445,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Module> Modules
     {
         get => GetContainer<Module>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -417,7 +454,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Tag> Tags
     {
         get => GetContainer<Tag>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -426,7 +463,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Program> Programs
     {
         get => GetContainer<Program>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -435,7 +472,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Task> Tasks
     {
         get => GetContainer<Task>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -444,7 +481,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<ParameterConnection> ParameterConnections
     {
         get => GetContainer<ParameterConnection>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -453,7 +490,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Trend> Trends
     {
         get => GetContainer<Trend>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -464,73 +501,29 @@ public class Controller : LogixComponent<Controller>
         // ReSharper disable once ExplicitCallerInfoArgument
         get => GetContainer<WatchList>(L5XName.QuickWatchLists);
         // ReSharper disable once ExplicitCallerInfoArgument
-        set => SetContainer(value, L5XName.QuickWatchLists);
-    }
-
-    /// <summary>
-    /// Merges the specified L5X file with the current <see cref="L5X"/> L5X by adding or overwriting logix components.
-    /// </summary>
-    /// <param name="fileName">The file name of L5X to merge.</param>
-    /// <param name="overwrite">A bit indicating whether to overwrite incoming components of the same name.</param>
-    /// <exception cref="ArgumentException"><c>fileName</c> is null or empty.</exception>
-    public void Import(string fileName, bool overwrite = true)
-    {
-        if (string.IsNullOrEmpty(fileName))
-            throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
-
-        var content = L5X.Load(fileName);
-
-        MergeContent(content, overwrite);
+        private set => SetContainer(value, L5XName.QuickWatchLists);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="builder"></param>
-    public void Import(Action<IImportControllerBuilder> builder)
+    /// <param name="fileName"></param>
+    /// <param name="action"></param>
+    /// <exception cref="ArgumentException"></exception>
+    public void Import(string fileName, Action<IImportPlanBuilder>? action = null)
     {
-        var importer = new ControllerImporter();
-        builder.Invoke(importer);
-        importer.Execute(this);
+        if (string.IsNullOrEmpty(fileName))
+            throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
+
+        var source = L5X.Load(fileName);
+
+        var builder = new ImportPlanBuilder();
+        action?.Invoke(builder);
+        var plan = builder.Build();
+        plan.Execute(L5X, source);
     }
 
     #region Internal
-
-    /// <summary>
-    /// Merges all top level containers and their immediate child elements between the current L5X content and the
-    /// provided L5X content. Will overwrite if specified.
-    /// </summary>
-    /// <param name="l5X">The L5X element to merge with the current target element.</param>
-    /// <param name="overwrite">A flag to indicate whether to overwrite child elements of a matching name.</param>
-    private void MergeContent(L5X l5X, bool overwrite)
-    {
-        var local = Element.Descendants().Where(e => e.Name.LocalName.IsContainerName());
-        var external = l5X.Serialize().Descendants().Where(e => e.Name.LocalName.IsContainerName());
-        var pairs = local.Join(external, e => e.Name, e => e.Name, (a, b) => new { a, b }).ToList();
-
-        foreach (var pair in pairs)
-            MergeContainers(pair.a, pair.b, overwrite);
-    }
-
-    /// <summary>
-    /// Given two top level containers, adds or replaces all child elements matching based on the logix name of the elements.
-    /// </summary>
-    private static void MergeContainers(XContainer target, XContainer source, bool overwrite)
-    {
-        foreach (var element in source.Elements())
-        {
-            var match = target.Elements().FirstOrDefault(e => e.LogixName() == element.LogixName());
-
-            if (match is null)
-            {
-                target.Add(element);
-                continue;
-            }
-
-            if (overwrite)
-                match.ReplaceWith(element);
-        }
-    }
 
     /// <summary>
     /// Will ensure that all known component container elements are created and ordered according to the defined L5X
