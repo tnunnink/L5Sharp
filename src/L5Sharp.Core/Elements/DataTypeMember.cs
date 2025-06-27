@@ -204,10 +204,10 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     private DataType GetDefinition()
     {
         //Just going to return a fake DataType here since it is atomic or not able to be retrieved.
-        if (AtomicData.IsAtomic(DataType) || L5X is null)
+        if (AtomicData.IsAtomic(DataType) || Document is null)
             return new DataType(DataType);
 
-        var definition = L5X.DataTypes.Find(DataType);
+        var definition = Document.DataTypes.Find(DataType);
         return definition ?? new DataType(DataType);
     }
 

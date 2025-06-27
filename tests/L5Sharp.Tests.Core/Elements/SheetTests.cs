@@ -18,7 +18,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
         
-        sheet.L5X.Should().BeNull();
+        sheet.Document.Should().BeNull();
     }
 
     [Test]

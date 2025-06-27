@@ -44,20 +44,20 @@ public sealed class Line : LogixCode
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (L5X is null) return [];
+        if (Document is null) return [];
 
         var dependencies = new List<LogixComponent>();
 
         foreach (var tagName in Text.Tags())
         {
-            if (!L5X.TryGet<Tag>(tagName, out var tag)) continue;
+            if (!Document.TryGet<Tag>(tagName, out var tag)) continue;
             dependencies.Add(tag);
             dependencies.AddRange(tag.Dependencies());
         }
 
         foreach (var instruction in Text.Instructions())
         {
-            if (!L5X.TryGet<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            if (!Document.TryGet<AddOnInstruction>(instruction.Key, out var aoi)) continue;
             dependencies.Add(aoi);
             dependencies.AddRange(aoi.Dependencies());
         }

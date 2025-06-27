@@ -14,8 +14,8 @@ internal class ImportProgramBuilder(ImportConfig config) :
         _config.Operations.Add(new ConfigureOperation(x =>
         {
             if (x is not Program program) return;
-            if (program.L5X is null) return;
-            if (!program.L5X.TryGet<Task>(taskName, out var task))
+            if (program.Document is null) return;
+            if (!program.Document.TryGet<Task>(taskName, out var task))
                 throw new InvalidOperationException(
                     $"No task with name '{taskName}' exists in the current project.");
             task.Schedule(program.Name);
@@ -29,8 +29,8 @@ internal class ImportProgramBuilder(ImportConfig config) :
         _config.Operations.Add(new ConfigureOperation(x =>
         {
             if (x is not Program program) return;
-            if (program.L5X is null) return;
-            if (!program.L5X.TryGet<Program>(programName, out var parent))
+            if (program.Document is null) return;
+            if (!program.Document.TryGet<Program>(programName, out var parent))
                 throw new InvalidOperationException(
                     $"No program with name '{programName}' exists in the current project.");
             parent.AddChild(program.Name);

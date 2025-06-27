@@ -51,17 +51,17 @@ public abstract class LogixElement : ILogixSerializable
     protected virtual List<string> ElementOrder { get; } = [];
 
     /// <summary>
-    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
+    /// Returns the <see cref="Document"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
     /// </summary>
     /// <returns>
     /// If the current element is attached to a L5X document (i.e., has the root content element),
-    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
+    /// then the <see cref="Document"/> instance; Otherwise, <c>null</c>.
     /// </returns>
     /// <remarks>
     /// This allows attached logix elements to reach up to the L5X root to traverse or retrieve
     /// other elements in the L5X. This is helpful/used for other extensions and cross-referencing functions.
     /// </remarks>
-    public L5X? L5X => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
+    public L5X? Document => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
     /// <summary>
     /// Returns the name of the L5XType for this <see cref="LogixElement"/> object.

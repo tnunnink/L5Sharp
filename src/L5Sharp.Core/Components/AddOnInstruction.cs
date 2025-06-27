@@ -273,8 +273,8 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        return Parameters.SelectMany(p => L5X.DependenciesForType(p.DataType))
-            .Concat(LocalTags.SelectMany(t => L5X.DependenciesForType(t.DataType)))
+        return Parameters.SelectMany(p => Document.DependenciesForType(p.DataType))
+            .Concat(LocalTags.SelectMany(t => Document.DependenciesForType(t.DataType)))
             .Distinct(c => c.Name);
     }
 

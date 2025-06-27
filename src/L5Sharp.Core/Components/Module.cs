@@ -353,7 +353,7 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (L5X is null) return [];
+        if (Document is null) return [];
 
         var dependencies = new List<LogixComponent>();
 

@@ -19,7 +19,7 @@ public class LineTests
     {
         var sheet = new Line();
         
-        sheet.L5X.Should().BeNull();
+        sheet.Document.Should().BeNull();
     }
 
     [Test]

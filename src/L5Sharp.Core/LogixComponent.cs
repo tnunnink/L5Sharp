@@ -102,7 +102,7 @@ public abstract class LogixComponent : LogixScoped
     /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
     /// at least one property value referencing this component's name.
     /// </returns>
-    public IEnumerable<CrossReference> References() => L5X?.References(this) ?? [];
+    public IEnumerable<CrossReference> References() => Document?.References(this) ?? [];
 
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.
@@ -122,7 +122,7 @@ public abstract class LogixComponent : LogixScoped
 
         foreach (var reference in references)
         {
-            if (L5X?.TryGet(reference.Scope, out var element) is true)
+            if (Document?.TryGet(reference.Scope, out var element) is true)
             {
                 element.Remove();
             }
@@ -139,7 +139,7 @@ public abstract class LogixComponent : LogixScoped
     public virtual L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;
-        softwareRevision ??= L5X?.Info.SoftwareRevision;
+        softwareRevision ??= Document?.Info.SoftwareRevision;
 
         var info = LogixInfo.Create(this, softwareRevision);
         var content = new L5X(info);

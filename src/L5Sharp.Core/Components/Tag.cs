@@ -394,7 +394,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <value>The <see cref="Tag"/> object that represents the alias if found. If this object is not
     /// attached, or <see cref="AliasFor"/> is not set, then this will return <c>null</c>.</value>
-    public Tag? Alias => AliasFor is not null && L5X?.TryGet<Tag>(AliasFor, out var alias) is true ? alias : null;
+    public Tag? Alias => AliasFor is not null && Document?.TryGet<Tag>(AliasFor, out var alias) is true ? alias : null;
 
     /// <summary>
     /// The collection of <see cref="Comment"/> configured for this tag.
@@ -443,7 +443,7 @@ public class Tag : LogixComponent<Tag>
     {
         if (TagType is not null && TagType != TagType.Alias)
         {
-            return L5X.DependenciesForType(DataType);
+            return Document.DependenciesForType(DataType);
         }
 
         var alias = Alias;
@@ -815,18 +815,18 @@ public class Tag : LogixComponent<Tag>
         //If there is no indexed context or the corresponding data type is not available, default to inherited description.
         //Note that we need to always use the parent type. If we are here, we know we have a parent and could
         //potentially be some user-defined type.
-        if (L5X is null || !L5X.IsIndexed || !L5X.TryGet<DataType>(Parent.DataType, out var type))
+        if (Document is null || !Document.IsIndexed || !Document.TryGet<DataType>(Parent.DataType, out var type))
             return Parent.Description;
 
         //Here we have the corresponding type definition and can use the description to emulate pass through.
         //Enable means returning the definition description.
-        if (Equals(L5X.Controller.PassThroughConfiguration, PassThroughOption.Enabled))
+        if (Equals(Document.Controller.PassThroughConfiguration, PassThroughOption.Enabled))
         {
             return type.Description;
         }
 
         //EnableWithAppend means append the definition description to the parent.
-        if (Equals(L5X.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
+        if (Equals(Document.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
         {
             var description = type.Members.FirstOrDefault(m => m.Name == _member.Name)?.Description;
             return Parent.Description + " " + description;
@@ -910,14 +910,14 @@ public class Tag : LogixComponent<Tag>
 
         //We have to have all 3 parts (module name, I/O suffix, and slot number) to find the correct member.
         //If not, then we will default to a virtual member with a no action getter and setter;
-        if (parts.Length != 3 || L5X is null)
+        if (parts.Length != 3 || Document is null)
             return new Member(tagName, () => LogixData.Null, _ => { });
 
         var rack = parts[0];
         var slot = parts[1];
         var suffix = parts[2];
 
-        var tag = L5X.Query<Module>()
+        var tag = Document.Query<Module>()
             .FirstOrDefault(m => m.Name == rack)
             ?.Tags.FirstOrDefault(t => t.Name.EndsWith(suffix))
             ?.Member($"Slot[{slot}]"); //Not sure if this is all rack connections tag structure, but for now will hard code

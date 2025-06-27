@@ -100,7 +100,7 @@ public class DataType : LogixComponent<DataType>
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        return Members.SelectMany(m => L5X.DependenciesForType(m.DataType)).Distinct(c => c.Name);
+        return Members.SelectMany(m => Document.DependenciesForType(m.DataType)).Distinct(c => c.Name);
     }
 
     /// <summary>

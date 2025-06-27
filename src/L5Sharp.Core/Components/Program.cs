@@ -181,7 +181,7 @@ public class Program : LogixComponent<Program>
     /// attached to an L5X or as no <see cref="Children"/> configured, then this will return an empty collection.
     /// </remarks>
     public IEnumerable<Program> Programs =>
-        L5X?.Programs.Where(p => Children.Any(c => c == p.Name)) ?? [];
+        Document?.Programs.Where(p => Children.Any(c => c == p.Name)) ?? [];
 
     /// <summary>
     /// Gets the parent <see cref="Core.Program"/> in which this program is contained. If this program has no container,
@@ -191,7 +191,7 @@ public class Program : LogixComponent<Program>
     /// This is a navigation helper to allow easily retrieving the parent program container for a given program component.
     /// This requires a scoped/attached L5X as it traverses the L5X document tree to find the target component. 
     /// </remarks>
-    public Program? Parent => L5X?.Programs.FirstOrDefault(p => p.Children.Contains(Name));
+    public Program? Parent => Document?.Programs.FirstOrDefault(p => p.Children.Contains(Name));
 
     /// <summary>
     /// Finds the <see cref="Core.Task"/> in which this <see cref="Program"/> is scheduled.
@@ -202,12 +202,12 @@ public class Program : LogixComponent<Program>
     /// This is a helper for retrieving the parent <c>Task</c> for this program.
     /// This requires a scoped/attached L5X as it traverses the L5X document tree to find the target component.
     /// </remarks>
-    public Task? Task => L5X?.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
+    public Task? Task => Document?.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
 
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (L5X is null) return [];
+        if (Document is null) return [];
 
         return Tags.SelectMany(t => t.Dependencies())
             .Concat(Routines.SelectMany(r => r.Dependencies()))

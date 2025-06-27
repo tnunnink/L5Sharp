@@ -186,7 +186,7 @@ public sealed class Task : LogixComponent<Task>
     /// Therefore, if this task is not attached, it will return and empty collection. Also, if no program exists with the
     /// scheduled name, this will return an empty collection.
     /// </remarks>
-    public IEnumerable<Program> Programs => L5X?.Programs.Where(p => Scheduled.Any(s => s == p.Name)) ?? [];
+    public IEnumerable<Program> Programs => Document?.Programs.Where(p => Scheduled.Any(s => s == p.Name)) ?? [];
 
     /// <summary>
     /// The collection of program names that are scheduled for the task.
@@ -253,9 +253,9 @@ public sealed class Task : LogixComponent<Task>
     public void AddProgram(Program program)
     {
         if (program is null) throw new ArgumentNullException(nameof(program));
-        if (L5X is null) throw new InvalidOperationException("Can not add program to detached Task component.");
+        if (Document is null) throw new InvalidOperationException("Can not add program to detached Task component.");
 
-        L5X.Programs.Add(program);
+        Document.Programs.Add(program);
         Schedule(program.Name);
     }
 }

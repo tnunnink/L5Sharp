@@ -22,7 +22,7 @@ public class LogixElementTests
         var element = new TestElement();
 
         element.GetElementType().Should().Be("Test");
-        element.L5X.Should().BeNull();
+        element.Document.Should().BeNull();
     }
 
     [Test]

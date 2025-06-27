@@ -83,20 +83,20 @@ public class Rung : LogixCode
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (L5X is null) return [];
+        if (Document is null) return [];
 
         var dependencies = new List<LogixComponent>();
 
         foreach (var tagName in Text.Tags())
         {
-            if (!L5X.TryGet<Tag>(tagName, out var tag)) continue;
+            if (!Document.TryGet<Tag>(tagName, out var tag)) continue;
             dependencies.Add(tag);
             dependencies.AddRange(tag.Dependencies());
         }
 
         foreach (var instruction in Text.Instructions())
         {
-            if (!L5X.TryGet<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            if (!Document.TryGet<AddOnInstruction>(instruction.Key, out var aoi)) continue;
             dependencies.Add(aoi);
             dependencies.AddRange(aoi.Dependencies());
         }
@@ -119,12 +119,12 @@ public class Rung : LogixCode
     /// </remarks>
     public IEnumerable<NeutralText> Flatten()
     {
-        if (L5X is null)
+        if (Document is null)
             throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
 
         var code = new List<NeutralText>();
 
-        var references = L5X.Instructions
+        var references = Document.Instructions
             .Select(i => new { Instruction = i, Instances = Text.Instructions(i.Name) })
             .ToList();
 
@@ -178,7 +178,7 @@ public static class RungExtensions
         var code = new List<NeutralText>();
         var collection = rungs.ToList();
 
-        var content = collection.FirstOrDefault()?.L5X;
+        var content = collection.FirstOrDefault()?.Document;
         if (content is null)
             throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
 
