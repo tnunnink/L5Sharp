@@ -74,7 +74,7 @@ public abstract class LogixElement : ILogixSerializable
     /// This property will indicate the actual type of the underlying element as opposed to the actual class type of
     /// the object.
     /// </remarks>
-    public virtual string L5XType => Element.Name.LocalName;
+    public string GetElementType() => Element.Name.LocalName;
 
     /// <summary>
     /// Casts this element instance to the specified type TElement.
@@ -695,7 +695,7 @@ public abstract class LogixElement : ILogixSerializable
     protected virtual void SetData(LogixData? data)
     {
         //Parameter and LocalTag have the element DefaultData instead of Data.
-        var name = L5XType is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
+        var name = GetElementType() is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
 
         //Always use our Null type instead of actual null.
         data ??= LogixData.Null;

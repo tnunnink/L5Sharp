@@ -73,5 +73,5 @@ public abstract class LogixCode : LogixScoped
     public virtual IEnumerable<LogixComponent> Dependencies() => [];
 
     /// <inheritdoc />
-    public override string ToString() => $"{L5XType} {Number}".Trim();
+    public override string ToString() => $"{GetElementType()} {Number}".Trim();
 }

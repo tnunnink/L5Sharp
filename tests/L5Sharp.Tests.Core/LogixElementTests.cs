@@ -21,7 +21,7 @@ public class LogixElementTests
     {
         var element = new TestElement();
 
-        element.L5XType.Should().Be("Test");
+        element.GetElementType().Should().Be("Test");
         element.L5X.Should().BeNull();
     }
 
@@ -886,7 +886,7 @@ public class LogixElementTests
 
         var converted = element.Convert("Alternate");
 
-        converted.L5XType.Should().Be("Alternate");
+        converted.GetElementType().Should().Be("Alternate");
         converted.Should().BeOfType<TestElement>();
         converted.Should().NotBeSameAs(element);
     }
@@ -898,7 +898,7 @@ public class LogixElementTests
 
         var converted = element.Convert("Test");
 
-        converted.L5XType.Should().Be("Test");
+        converted.GetElementType().Should().Be("Test");
         converted.Should().BeOfType<TestElement>();
         converted.Should().BeSameAs(element);
     }
@@ -918,7 +918,7 @@ public class LogixElementTests
 
         var converted = element.Convert<TestElement>("Alternate");
 
-        converted.L5XType.Should().Be("Alternate");
+        converted.GetElementType().Should().Be("Alternate");
         converted.Should().BeOfType<TestElement>();
         converted.Should().NotBeSameAs(element);
     }
@@ -930,7 +930,7 @@ public class LogixElementTests
 
         var converted = element.Convert<TestElement>();
 
-        converted.L5XType.Should().Be("Test");
+        converted.GetElementType().Should().Be("Test");
         converted.Should().BeOfType<TestElement>();
         converted.Should().BeSameAs(element);
     }

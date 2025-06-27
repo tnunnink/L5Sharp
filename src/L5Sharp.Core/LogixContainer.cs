@@ -26,12 +26,14 @@ namespace L5Sharp.Core;
 /// </remarks>
 public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICollection where TObject : LogixObject
 {
+    private readonly string _itemType;
+
     /// <summary>
     /// Creates an empty <see cref="LogixContainer{TObject}"/> with the default type name.
     /// </summary>
     public LogixContainer() : base(typeof(TObject).L5XContainer())
     {
-        L5XType = typeof(TObject).L5XType();
+        _itemType = typeof(TObject).L5XType();
     }
 
     /// <summary>
@@ -41,7 +43,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
     public LogixContainer(XElement element) : base(element)
     {
-        L5XType = typeof(TObject).L5XType();
+        _itemType = typeof(TObject).L5XType();
     }
 
     /// <summary>
@@ -58,24 +60,19 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
             if (element is null)
                 throw new ArgumentException("Can not initialize LogixContainer with null elements.");
 
-            var xml = element.L5XType == L5XType
+            var xml = element.GetElementType() == _itemType
                 ? element.Serialize()
-                : element.Convert<TObject>(L5XType).Serialize();
+                : element.Convert<TObject>(_itemType).Serialize();
 
             Element.Add(xml);
         }
     }
 
     /// <summary>
-    /// The type name of the child elements contained within this <see cref="LogixContainer{TObject}"/> collection. 
-    /// </summary>
-    public override string L5XType { get; }
-
-    /// <summary>
     /// Gets the number of elements contained in the collection.
     /// </summary>
     /// <returns>A <see cref="int"/> representing the number of elements in the collection.</returns>
-    public int Count => Element.Elements(L5XType).Count();
+    public int Count => Element.Elements(_itemType).Count();
 
     /// <summary>
     /// Accesses a single element at the specified index of the container collection.
@@ -87,18 +84,18 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <exception cref="ArgumentNullException"><c>value</c> is null when setting index.</exception>
     public TObject this[int index]
     {
-        get => Element.Elements(L5XType).ElementAt(index).Deserialize<TObject>();
+        get => Element.Elements(_itemType).ElementAt(index).Deserialize<TObject>();
         set
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value),
                     $"Can not set container element of type {typeof(TObject)} null instance.");
 
-            var xml = value.L5XType == L5XType
+            var xml = value.GetElementType() == _itemType
                 ? value.Serialize()
-                : value.Convert<TObject>(L5XType).Serialize();
+                : value.Convert<TObject>(_itemType).Serialize();
 
-            Element.Elements(L5XType).ElementAt(index).ReplaceWith(xml);
+            Element.Elements(_itemType).ElementAt(index).ReplaceWith(xml);
         }
     }
 
@@ -112,11 +109,11 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var xml = element.L5XType == L5XType
+        var xml = element.GetElementType() == _itemType
             ? element.Serialize()
-            : element.Convert<TObject>(L5XType).Serialize();
+            : element.Convert<TObject>(_itemType).Serialize();
 
-        var last = Element.Elements(L5XType).LastOrDefault();
+        var last = Element.Elements(_itemType).LastOrDefault();
 
         if (last is null)
         {
@@ -132,7 +129,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// </summary>
     public void Clear()
     {
-        Element.Elements(L5XType).Remove();
+        Element.Elements(_itemType).Remove();
     }
 
     /// <summary>
@@ -142,7 +139,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <returns><c>true</c> if the source sequence contains an element that has the specified value; otherwise,<c>false</c></returns>
     public bool Contains(TObject element)
     {
-        return Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).Contains(element);
+        return Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).Contains(element);
     }
 
     /// <summary>
@@ -152,7 +149,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <inheritdoc />
     public void CopyTo(TObject[] array, int arrayIndex)
     {
-        var list = Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).ToList();
+        var list = Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).ToList();
         list.CopyTo(array, arrayIndex);
     }
 
@@ -171,11 +168,11 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
             if (element is null)
                 throw new ArgumentException("Can not add null elements to a LogixContainer.");
 
-            var xml = element.L5XType == L5XType
+            var xml = element.GetElementType() == _itemType
                 ? element.Serialize()
-                : element.Convert<TObject>(L5XType).Serialize();
+                : element.Convert<TObject>(_itemType).Serialize();
 
-            var last = Element.Elements(L5XType).LastOrDefault();
+            var last = Element.Elements(_itemType).LastOrDefault();
 
             if (last is null)
             {
@@ -221,11 +218,11 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var xml = element.L5XType == L5XType
+        var xml = element.GetElementType() == _itemType
             ? element.Serialize()
-            : element.Convert<TObject>(L5XType).Serialize();
+            : element.Convert<TObject>(_itemType).Serialize();
 
-        Element.Elements(L5XType).ElementAt(index).AddBeforeSelf(xml);
+        Element.Elements(_itemType).ElementAt(index).AddBeforeSelf(xml);
     }
 
     /// <summary>
@@ -236,7 +233,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     public void RemoveAll(Func<TObject, bool> condition)
     {
         if (condition is null) throw new ArgumentNullException(nameof(condition));
-        Element.Elements(L5XType).Where(e => condition.Invoke(e.Deserialize<TObject>())).Remove();
+        Element.Elements(_itemType).Where(e => condition.Invoke(e.Deserialize<TObject>())).Remove();
     }
 
     /// <summary>
@@ -247,7 +244,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// number of elements in the collection.</exception>
     public void RemoveAt(int index)
     {
-        Element.Elements(L5XType).ElementAt(index).Remove();
+        Element.Elements(_itemType).ElementAt(index).Remove();
     }
 
     /// <summary>
@@ -279,7 +276,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     {
         if (update is null) throw new ArgumentNullException(nameof(update));
 
-        foreach (var child in Element.Elements(L5XType))
+        foreach (var child in Element.Elements(_itemType))
         {
             var element = child.Deserialize<TObject>();
             update.Invoke(element);
@@ -298,7 +295,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
         if (update is null) throw new ArgumentNullException(nameof(update));
         if (condition is null) throw new ArgumentNullException(nameof(condition));
 
-        foreach (var child in Element.Elements(L5XType))
+        foreach (var child in Element.Elements(_itemType))
         {
             var element = child.Deserialize<TObject>();
             if (condition.Invoke(element))
@@ -308,11 +305,11 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
 
     /// <inheritdoc />
     public IEnumerator<TObject> GetEnumerator() =>
-        Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).GetEnumerator();
+        Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).GetEnumerator();
 
     void ICollection.CopyTo(Array array, int index)
     {
-        var source = Element.Elements(L5XType).Select(e => e.Deserialize<TObject>()).ToArray();
+        var source = Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).ToArray();
         Array.Copy(source, 0, array, index, source.Length);
     }
 

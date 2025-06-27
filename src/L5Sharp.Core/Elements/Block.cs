@@ -63,7 +63,7 @@ public class Block : DiagramElement
     {
         get
         {
-            return L5XType switch
+            return GetElementType() switch
             {
                 L5XName.Block => Element.Attribute(L5XName.Type)?.Value ?? throw Element.L5XError(L5XName.Type),
                 L5XName.Function => Element.Attribute(L5XName.Type)?.Value ?? throw Element.L5XError(L5XName.Type),
@@ -92,7 +92,7 @@ public class Block : DiagramElement
     {
         get
         {
-            return L5XType switch
+            return GetElementType() switch
             {
                 L5XName.ICon => Element.Attribute(L5XName.Name)?.Value.Parse<Argument>(),
                 L5XName.OCon => Element.Attribute(L5XName.Name)?.Value.Parse<Argument>(),
@@ -104,7 +104,7 @@ public class Block : DiagramElement
         }
         set
         {
-            switch (L5XType)
+            switch (GetElementType())
             {
                 case L5XName.IRef:
                 case L5XName.ORef:
@@ -122,7 +122,7 @@ public class Block : DiagramElement
                     Element.SetAttributeValue(L5XName.Routine, value);
                     break;
                 default:
-                    throw new NotSupportedException($"Block type '{L5XType}' does not support Operand.");
+                    throw new NotSupportedException($"Block type '{GetElementType()}' does not support Operand.");
             }
         }
     }
@@ -146,7 +146,7 @@ public class Block : DiagramElement
     {
         get
         {
-            return L5XType switch
+            return GetElementType() switch
             {
                 L5XName.Block => GetValues<TagName>(L5XName.VisiblePins),
                 L5XName.AddOnInstruction => GetValues<TagName>(L5XName.VisiblePins),

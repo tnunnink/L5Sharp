@@ -28,7 +28,7 @@ public class BlockTests
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
         block.L5X.Should().BeNull();
-        block.L5XType.Should().Be(L5XName.IRef);
+        block.GetElementType().Should().Be(L5XName.IRef);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
     }
@@ -55,7 +55,7 @@ public class BlockTests
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
         block.L5X.Should().BeNull();
-        block.L5XType.Should().Be(L5XName.ORef);
+        block.GetElementType().Should().Be(L5XName.ORef);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
     }
@@ -82,7 +82,7 @@ public class BlockTests
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
         block.L5X.Should().BeNull();
-        block.L5XType.Should().Be(L5XName.ICon);
+        block.GetElementType().Should().Be(L5XName.ICon);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
     }
@@ -109,7 +109,7 @@ public class BlockTests
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
         block.L5X.Should().BeNull();
-        block.L5XType.Should().Be(L5XName.OCon);
+        block.GetElementType().Should().Be(L5XName.OCon);
         block.Cell.Should().Be("A1");
         block.Location.Should().NotBeNull();
     }
@@ -128,7 +128,7 @@ public class BlockTests
         block.Pins.Should().HaveCount(2);
         block.Sheet.Should().BeNull();
         block.L5X.Should().BeNull();
-        block.L5XType.Should().Be(L5XName.Block);
+        block.GetElementType().Should().Be(L5XName.Block);
         block.Cell.Should().Be("A1");
     }
     
@@ -146,7 +146,7 @@ public class BlockTests
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
         block.L5X.Should().BeNull();
-        block.L5XType.Should().Be(L5XName.Function);
+        block.GetElementType().Should().Be(L5XName.Function);
         block.Cell.Should().Be("A1");
     }
 
@@ -164,7 +164,7 @@ public class BlockTests
         block.Pins.Should().HaveCount(3);
         block.Sheet.Should().BeNull();
         block.L5X.Should().BeNull();
-        block.L5XType.Should().Be(L5XName.AddOnInstruction);
+        block.GetElementType().Should().Be(L5XName.AddOnInstruction);
         block.Cell.Should().Be("A1");
     }
 

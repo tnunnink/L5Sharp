@@ -46,9 +46,9 @@ public abstract class LogixObject : LogixElement
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the logix content before invoking.");
 
-        if (item.L5XType != L5XType)
+        if (item.GetElementType() != GetElementType())
         {
-            item = item.Convert(L5XType);
+            item = item.Convert(GetElementType());
         }
 
         Element.AddAfterSelf(item.Serialize());
@@ -79,9 +79,9 @@ public abstract class LogixObject : LogixElement
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
 
-        if (element.L5XType != L5XType)
+        if (element.GetElementType() != GetElementType())
         {
-            element = element.Convert(L5XType);
+            element = element.Convert(GetElementType());
         }
 
         Element.AddBeforeSelf(element.Serialize());
@@ -107,9 +107,9 @@ public abstract class LogixObject : LogixElement
             throw new ArgumentException("Type name can not be null or empty to perform conversion", nameof(typeName));
 
         if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert element type '{L5XType}' to type '{typeName}'.");
+            throw new InvalidOperationException($"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
 
-        if (L5XType == typeName) return this;
+        if (GetElementType() == typeName) return this;
 
         Element.Name = typeName;
         return (LogixObject)Element.Deserialize();
@@ -136,9 +136,9 @@ public abstract class LogixObject : LogixElement
         typeName ??= typeof(TObject).L5XType();
 
         if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert element type '{L5XType}' to type '{typeName}'.");
+            throw new InvalidOperationException($"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
 
-        if (L5XType == typeName) return (TObject)this;
+        if (GetElementType() == typeName) return (TObject)this;
 
         Element.Name = typeName;
         return Element.Deserialize<TObject>();
@@ -187,9 +187,9 @@ public abstract class LogixObject : LogixElement
             throw new InvalidOperationException(
                 "Can only perform operation for L5X attached elements. Add this element to the L5X before invoking.");
 
-        if (element.L5XType != L5XType)
+        if (element.GetElementType() != GetElementType())
         {
-            element = element.Convert(L5XType);
+            element = element.Convert(GetElementType());
         }
 
         Element.ReplaceWith(element.Serialize());
