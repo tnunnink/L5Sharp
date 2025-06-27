@@ -61,6 +61,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public Controller() : base(L5XName.Controller)
     {
+        Element.SetAttributeValue(L5XName.Name, string.Empty);
         Revision = new Revision();
         ProjectCreationDate = DateTime.Now;
         LastModifiedDate = DateTime.Now;
@@ -504,31 +505,11 @@ public sealed class Controller : LogixElement
         private set => SetContainer(value, L5XName.QuickWatchLists);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="action"></param>
-    /// <exception cref="ArgumentException"></exception>
-    public void Import(string fileName, Action<IImportPlanBuilder>? action = null)
-    {
-        if (string.IsNullOrEmpty(fileName))
-            throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
-
-        var source = L5X.Load(fileName);
-
-        var builder = new ImportPlanBuilder();
-        action?.Invoke(builder);
-        var plan = builder.Build();
-        plan.Execute(L5X, source);
-    }
-
     #region Internal
 
     /// <summary>
     /// Will ensure that all known component container elements are created and ordered according to the defined L5X
     /// element order. This will ensure that no container element returns null and which would cause exceptions.
-    /// If the containers cod unused (are empty), we will remove them upon save.
     /// </summary>
     private void EnsureContainersExist()
     {

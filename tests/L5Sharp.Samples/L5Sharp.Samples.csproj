@@ -74,9 +74,6 @@
       <None Update="Programs\Empty.L5X">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Programs\Main.L5X">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
       <None Update="Programs\TestProgram.L5X">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

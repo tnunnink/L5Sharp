@@ -254,17 +254,4 @@ public class ControllerTests
             .IgnoreMember("ProjectCreationDate")
             .IgnoreMember("LastModifiedDate");
     }
-
-    [Test]
-    public void Import_SimpleDataType_ShouldBeVerified()
-    {
-        var controller = L5X.Load(Known.Test).Controller;
-
-        controller.Import("The/file/containing/MyDataType", b => b
-            .Overwrite<DataType>(d => d.Name == "someType")
-            .Overwrite<DataType>(d => d.Name.Contains("Test"))
-            .Modify<DataType>(d => d.Name == "Something", d => { d.Description = "This is an update"; })
-            .Rename<DataType>("Current", "NewName")
-        );
-    }
 }

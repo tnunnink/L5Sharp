@@ -4,36 +4,11 @@
     <Security Code="0" ChangesToDetect="16#ffff_ffff_ffff_ffff" />
     <SafetyInfo />
     <DataTypes />
-    <Modules>
-      <Module Name="Local" CatalogNumber="1756-L84E" Vendor="1" ProductType="14" ProductCode="167" Major="34" Minor="11" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="true">
-        <EKey State="Disabled" />
-        <Ports>
-          <Port Id="1" Address="1" Type="ICP" Upstream="false">
-            <Bus Size="7" />
-          </Port>
-          <Port Id="2" Type="Ethernet" Upstream="false">
-            <Bus />
-          </Port>
-        </Ports>
-      </Module>
-    </Modules>
+    <Modules />
     <AddOnInstructionDefinitions />
     <Tags />
-    <Programs>
-      <Program Name="MainProgram" TestEdits="false" MainRoutineName="MainRoutine" Disabled="false" UseAsFolder="false">
-        <Tags />
-        <Routines>
-          <Routine Name="MainRoutine" Type="RLL" />
-        </Routines>
-      </Program>
-    </Programs>
-    <Tasks>
-      <Task Name="MainTask" Type="CONTINUOUS" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false">
-        <ScheduledPrograms>
-          <ScheduledProgram Name="MainProgram" />
-        </ScheduledPrograms>
-      </Task>
-    </Tasks>
+    <Programs />
+    <Tasks />
     <ParameterConnections />
     <CST MasterID="0" />
     <WallClockTime LocalTimeAdjustment="0" TimeZone="0" />

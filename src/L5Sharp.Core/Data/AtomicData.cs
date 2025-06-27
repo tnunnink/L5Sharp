@@ -82,10 +82,10 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// </summary>
     /// <param name="dataType">The name of the data type to check.</param>
     /// <returns><c>true</c> if the data type name represents an atomic data type; otherwise, <c>false</c>.</returns>
-    public static bool IsAtomic(string dataType)
+    public static bool IsAtomic(string? dataType)
     {
-        return dataType is 
-            nameof(BOOL) or nameof(SINT) or nameof(INT) or nameof(DINT) or nameof(LINT) or nameof(REAL) 
+        return dataType is
+            nameof(BOOL) or nameof(SINT) or nameof(INT) or nameof(DINT) or nameof(LINT) or nameof(REAL)
             or "BIT" or nameof(USINT) or nameof(UINT) or nameof(UDINT) or nameof(ULINT) or nameof(LREAL);
     }
 

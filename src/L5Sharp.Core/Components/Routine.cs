@@ -30,7 +30,7 @@ public class Routine : LogixComponent<Routine>
     /// Creates a new <see cref="Routine"/> with default values.
     /// </summary>
     /// <remarks>
-    /// By default, this will be a RLL routine type.
+    /// By default, this will be an RLL routine type.
     /// To specify a different type, use the <see cref="RoutineType"/> constructor.
     /// </remarks>
     public Routine() : base(L5XName.Routine)
@@ -61,8 +61,8 @@ public class Routine : LogixComponent<Routine>
     /// Creates a new <see cref="Routine"/> with the provided name and optional <see cref="RoutineType"/>
     /// </summary>
     /// <param name="name">The name of the routine.</param>
-    /// <param name="type">The <see cref="RoutineType"/> of the routine. If null will default to <c>RLL</c>.</param>
-    public Routine(string name, RoutineType? type = default) : base(L5XName.Routine)
+    /// <param name="type">The <see cref="RoutineType"/> of the routine. If null defaults to <c>RLL</c>.</param>
+    public Routine(string name, RoutineType? type = null) : base(L5XName.Routine)
     {
         Element.SetAttributeValue(L5XName.Name, name);
         UpdateContent(type ?? RoutineType.RLL);
@@ -137,7 +137,7 @@ public class Routine : LogixComponent<Routine>
     /// </summary>
     /// <remarks>
     /// This internally just calls <see cref="Content{TCode}"/> and is here mostly as a navigation helper.
-    /// Obviously, if this routine is not an RLL routine, then you shouldn't use this property to add rung objects
+    /// If this routine is not an RLL routine, then you shouldn't use this property to add rung objects
     /// to the underlying XML, as it would result in import errors.
     /// </remarks>
     public LogixContainer<Rung> Rungs => Content<Rung>();
@@ -148,7 +148,7 @@ public class Routine : LogixComponent<Routine>
     /// </summary>
     /// <remarks>
     /// This internally just calls <see cref="Content{TCode}"/> and is here mostly as a navigation helper.
-    /// Obviously, if this routine is not an ST routine, then you shouldn't use this property to add line objects
+    /// If this routine is not an ST routine, then you shouldn't use this property to add line objects
     /// to the underlying XML, as it would result in import errors.
     /// </remarks>
     public LogixContainer<Line> Lines => Content<Line>();
@@ -159,7 +159,7 @@ public class Routine : LogixComponent<Routine>
     /// </summary>
     /// <remarks>
     /// This internally just calls <see cref="Content{TCode}"/> and is here mostly as a navigation helper.
-    /// Obviously, if this routine is not an FBD routine, then you shouldn't use this property to add sheet objects
+    /// If this routine is not an FBD routine, then you shouldn't use this property to add sheet objects
     /// to the underlying XML, as it would result in import errors.
     /// </remarks>
     public LogixContainer<Line> Sheets => Content<Line>();
@@ -167,7 +167,7 @@ public class Routine : LogixComponent<Routine>
     /// <summary>
     /// Gets the routine content as a <see cref="LogixContainer{TElement}"/> containing elements of the specified type.
     /// </summary>
-    /// <typeparam name="TCode">The content element type to return.</typeparam>
+    /// <typeparam name="TCode">The content element types to return.</typeparam>
     /// <returns>A <see cref="LogixContainer{TElement}"/> with access to the root content and specified element types.</returns>
     /// <remarks>
     /// This method offers a dynamic interface for accessing content of any routine type.
@@ -183,8 +183,17 @@ public class Routine : LogixComponent<Routine>
             : throw Element.L5XError(Type.ContentName);
     }
 
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        if (Type == RoutineType.RLL) return Rungs.SelectMany(r => r.Dependencies());
+        if (Type == RoutineType.ST) return Lines.SelectMany(r => r.Dependencies());
+        if (Type == RoutineType.FBD) return Sheets.SelectMany(r => r.Dependencies());
+        return [];
+    }
+
     /// <summary>
-    /// Ensures that the expected content element is added to this routine element. This prevents emprty routines from
+    /// Ensures that the expected content element is added to this routine element. This prevents empty routines from
     /// throwing exceptions when the caller accesses <see cref="Content{TCode}"/>.
     /// </summary>
     private void EnsureContentAdded()

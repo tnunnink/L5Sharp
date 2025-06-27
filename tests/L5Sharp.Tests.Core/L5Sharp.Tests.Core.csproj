@@ -381,6 +381,30 @@
       <None Update="L5XTagTests.SetValue_RackConnectionAliasTag_ShouldUpdateTheParentModuleTagElement.verified.xml">
         <DependentUpon>L5XTagTests.cs</DependentUpon>
       </None>
+      <None Update="Components\ControllerTests.Import_SimpleDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
+        <DependentUpon>ControllerTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ControllerTests.Import_SimpleDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>ControllerTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ControllerTests.Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>ControllerTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Import_ComplexDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Import_ComplexDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Import_ModuleComponent_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -79,7 +79,31 @@ public class Rung : LogixCode
         get => GetProperty<string>();
         set => SetProperty(value);
     }
-    
+
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        if (L5X is null) return [];
+
+        var dependencies = new List<LogixComponent>();
+
+        foreach (var tagName in Text.Tags())
+        {
+            if (!L5X.TryGet<Tag>(tagName, out var tag)) continue;
+            dependencies.Add(tag);
+            dependencies.AddRange(tag.Dependencies());
+        }
+
+        foreach (var instruction in Text.Instructions())
+        {
+            if (!L5X.TryGet<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            dependencies.Add(aoi);
+            dependencies.AddRange(aoi.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Name);
+    }
+
     /// <summary>
     /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AoiBlock logic in the
     /// collection of <see cref="Rung"/> objects.

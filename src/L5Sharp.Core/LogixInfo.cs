@@ -51,7 +51,7 @@ public class LogixInfo : LogixElement
     public string? TargetType => GetValue<string>();
 
     /// <summary>
-    /// Gets the type of Logix component that is the target of the current L5X context.
+    /// The total number of targets defined in the L5X file.
     /// </summary>
     public int? TargetCount => GetValue<int>();
 

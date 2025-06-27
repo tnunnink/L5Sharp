@@ -1,0 +1,202 @@
+﻿<Controller Use="Target" Name="Empty" ProcessorType="1756-L84E" MajorRev="34" MinorRev="11" ProjectCreationDate="Mon Jan 23 14:45:38 2023" LastModifiedDate="Mon Jan 23 14:45:40 2023" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000" MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false" AutoDiagsEnabled="true" WebServerEnabled="false">
+  <RedundancyInfo Enabled="false" KeepTestEditsOnSwitchOver="false" />
+  <Security Code="0" ChangesToDetect="16#ffff_ffff_ffff_ffff" />
+  <SafetyInfo />
+  <DataTypes>
+    <DataType Use="Target" Name="ComplexType" Family="NoFamily" Class="User">
+      <Description>Test data type with more complex members</Description>
+      <Members>
+        <Member Name="CounterMember" DataType="COUNTER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+          <Description>Test counter member</Description>
+        </Member>
+        <Member Name="TimeMember" DataType="TIMER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+          <Description>Test Timer member</Description>
+        </Member>
+        <Member Name="AlarmMember" DataType="ALARM" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+          <Description>Test Analog Alarm</Description>
+        </Member>
+        <Member Name="AOIType" DataType="aoi_Test" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+          <Description>Test aoi</Description>
+        </Member>
+        <Member Name="SimplArray" DataType="SimpleType" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+          <Description>Test simple array type</Description>
+        </Member>
+        <Member Name="ZZZZZZZZZZComplexTyp6" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+        <Member Name="NewMember" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZComplexTyp6" BitNumber="0" ExternalAccess="Read/Write">
+          <Description>This is a new member</Description>
+        </Member>
+        <Member Name="StringMember" DataType="STRING" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+          <Description>This is a test string member</Description>
+        </Member>
+        <Member Name="MyStringMember" DataType="MyStringType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+          <Description>This is a test custom string type</Description>
+        </Member>
+      </Members>
+      <Dependencies>
+        <Dependency Type="DataType" Name="SimpleType" />
+        <Dependency Type="AddOnInstructionDefinition" Name="aoi_Test" />
+        <Dependency Type="DataType" Name="SimpleType" />
+        <Dependency Type="DataType" Name="MyStringType" />
+      </Dependencies>
+    </DataType>
+    <DataType Name="MyStringType" Family="StringFamily" Class="User">
+      <Description>This is a test string type</Description>
+      <Members>
+        <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+        <Member Name="DATA" DataType="SINT" Dimension="100" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write" />
+      </Members>
+    </DataType>
+  </DataTypes>
+  <Modules>
+    <Module Name="Local" CatalogNumber="1756-L84E" Vendor="1" ProductType="14" ProductCode="167" Major="34" Minor="11" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="true">
+      <EKey State="Disabled" />
+      <Ports>
+        <Port Id="1" Address="1" Type="ICP" Upstream="false">
+          <Bus Size="7" />
+        </Port>
+        <Port Id="2" Type="Ethernet" Upstream="false">
+          <Bus />
+        </Port>
+      </Ports>
+    </Module>
+  </Modules>
+  <AddOnInstructionDefinitions>
+    <AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="DateTimeOffset_1" CreatedBy="ENE\tnunnink" EditedDate="DateTimeOffset_2" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
+      <SignatureHistory>
+        <HistoryEntry User="ENE\tnunnink" Timestamp="DateTimeOffset_3" SignatureID="16#cae1_ac8c">
+          <Description>This is a signature history description
+</Description>
+        </HistoryEntry>
+      </SignatureHistory>
+      <AdditionalHelpText>This is a test aoi definitio that was built for purposes of exporting data to examine the structure of the L5X</AdditionalHelpText>
+      <Parameters>
+        <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+          <Description>Enable Input - System Defined Parameter</Description>
+        </Parameter>
+        <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+          <Description>Enable Output - System Defined Parameter</Description>
+        </Parameter>
+        <Parameter Name="InputTest" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+          <DefaultData Format="L5K">0</DefaultData>
+          <DefaultData Format="Decorated">
+            <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+          </DefaultData>
+        </Parameter>
+        <Parameter Name="OutputTest" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read Only">
+          <DefaultData Format="L5K">0</DefaultData>
+          <DefaultData Format="Decorated">
+            <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+          </DefaultData>
+        </Parameter>
+        <Parameter Name="InOutTest" TagType="Base" DataType="SimpleType" Usage="InOut" Required="true" Visible="true" Constant="false" />
+        <Parameter Name="Config" TagType="Base" DataType="INT" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="None">
+          <DefaultData Format="L5K">0</DefaultData>
+          <DefaultData Format="Decorated">
+            <DataValue DataType="INT" Radix="Decimal" Value="0" />
+          </DefaultData>
+        </Parameter>
+        <Parameter Name="Test" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="None">
+          <DefaultData Format="L5K">0</DefaultData>
+          <DefaultData Format="Decorated">
+            <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+          </DefaultData>
+        </Parameter>
+        <Parameter Name="InOutArray" TagType="Base" DataType="REAL" Dimensions="5" Usage="InOut" Radix="Float" Required="true" Visible="true" Constant="false" />
+        <Parameter Name="New" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read/Write">
+          <DefaultData Format="L5K">0</DefaultData>
+          <DefaultData Format="Decorated">
+            <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+          </DefaultData>
+        </Parameter>
+        <Parameter Name="Alias" TagType="Alias" Usage="Input" Radix="Decimal" AliasFor="LocalBool" Required="false" Visible="false" ExternalAccess="None">
+          <Description>This is an alias</Description>
+        </Parameter>
+      </Parameters>
+      <LocalTags>
+        <LocalTag Name="LocalBool" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+          <DefaultData Format="L5K">0</DefaultData>
+          <DefaultData Format="Decorated">
+            <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+          </DefaultData>
+        </LocalTag>
+        <LocalTag Name="LocalComplex" DataType="SimpleType" ExternalAccess="Read/Write">
+          <Description>Description Test</Description>
+          <DefaultData Format="L5K">[0,0,0,0,0,0.00000000e+000]</DefaultData>
+          <DefaultData Format="Decorated">
+            <Structure DataType="SimpleType">
+              <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+              <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+              <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+              <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+              <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+              <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+            </Structure>
+          </DefaultData>
+        </LocalTag>
+        <LocalTag Name="LocalArray" DataType="DINT" Dimensions="5" Radix="Decimal" ExternalAccess="None">
+          <DefaultData Format="L5K">[0,0,0,0,0]</DefaultData>
+          <DefaultData Format="Decorated">
+            <Array DataType="DINT" Dimensions="5" Radix="Decimal">
+              <Element Index="[0]" Value="0" />
+              <Element Index="[1]" Value="0" />
+              <Element Index="[2]" Value="0" />
+              <Element Index="[3]" Value="0" />
+              <Element Index="[4]" Value="0" />
+            </Array>
+          </DefaultData>
+        </LocalTag>
+        <LocalTag Name="LocalString" DataType="STRING" ExternalAccess="None">
+          <DefaultData Format="L5K">[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00']</DefaultData>
+          <DefaultData Format="String" Length="0">''</DefaultData>
+        </LocalTag>
+      </LocalTags>
+      <Routines>
+        <Routine Name="Logic" Type="RLL">
+          <RLLContent>
+            <Rung Number="0" Type="N">
+              <Text>OTE(InputTest);</Text>
+            </Rung>
+            <Rung Number="1" Type="N">
+              <Text>XIC(InOutTest.BoolMember)OTL(LocalBool);</Text>
+            </Rung>
+            <Rung Number="2" Type="N">
+              <Text>EQU(Config,LocalArray[0])MOV(Config,InOutArray[0]);</Text>
+            </Rung>
+            <Rung Number="3" Type="N">
+              <Text>MOV(100,LocalArray[2]);</Text>
+            </Rung>
+          </RLLContent>
+        </Routine>
+        <Routine Name="Prescan" Type="RLL" />
+      </Routines>
+      <Dependencies>
+        <Dependency Type="DataType" Name="SimpleType" />
+      </Dependencies>
+    </AddOnInstructionDefinition>
+  </AddOnInstructionDefinitions>
+  <Tags />
+  <Programs>
+    <Program Name="MainProgram" TestEdits="false" MainRoutineName="MainRoutine" Disabled="false" UseAsFolder="false">
+      <Tags />
+      <Routines>
+        <Routine Name="MainRoutine" Type="RLL" />
+      </Routines>
+    </Program>
+  </Programs>
+  <Tasks>
+    <Task Name="MainTask" Type="CONTINUOUS" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false">
+      <ScheduledPrograms>
+        <ScheduledProgram Name="MainProgram" />
+      </ScheduledPrograms>
+    </Task>
+  </Tasks>
+  <ParameterConnections />
+  <CST MasterID="0" />
+  <WallClockTime LocalTimeAdjustment="0" TimeZone="0" />
+  <Trends />
+  <DataLogs />
+  <TimeSynchronize Priority1="128" Priority2="128" PTPEnable="false" />
+  <EthernetPorts>
+    <EthernetPort Port="1" Label="1" PortEnabled="true" />
+  </EthernetPorts>
+</Controller>

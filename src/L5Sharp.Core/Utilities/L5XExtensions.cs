@@ -466,6 +466,59 @@ internal static class L5XExtensions
         }
     }
 
+    /// <summary>
+    /// Filters a sequence of values by a specific key selector, ensuring that only distinct elements, based on the key, are returned.
+    /// </summary>
+    /// <param name="source">The source collection to process.</param>
+    /// <param name="selector">A function that projects a key for each element in the source collection.</param>
+    /// <typeparam name="TSource">The type of elements in the source collection.</typeparam>
+    /// <typeparam name="TKey">The type of key used to distinguish elements in the source collection.</typeparam>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains distinct elements from the source collection based on the specified key.</returns>
+    internal static IEnumerable<TSource> Distinct<TSource, TKey>(this IEnumerable<TSource> source,
+        Func<TSource, TKey> selector)
+    {
+        var seen = new HashSet<TKey>();
+
+        foreach (var element in source)
+        {
+            if (seen.Add(selector(element)))
+            {
+                yield return element;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Retrieves the dependencies for a specified data type within the given L5X content.
+    /// </summary>
+    /// <param name="content">The L5X content to search for dependencies.</param>
+    /// <param name="dataType">The name of the data type for which dependencies are to be retrieved.</param>
+    /// <returns>A collection of <see cref="LogixComponent"/> representing the dependencies of the specified data type.</returns>
+    /// <remarks>
+    /// Note this extension will return only distinct components by name.
+    /// This could be either <see cref="DataType"/> of <see cref="AddOnInstruction"/> components.
+    /// </remarks>
+    public static IEnumerable<LogixComponent> DependenciesForType(this L5X? content, string? dataType)
+    {
+        if (content is null || dataType is null || dataType.IsEmpty() || AtomicData.IsAtomic(dataType)) return [];
+
+        var dependencies = new List<LogixComponent>();
+
+        if (content.TryGet<DataType>(dataType, out var udt))
+        {
+            dependencies.Add(udt);
+            dependencies.AddRange(udt.Dependencies());
+        }
+
+        if (content.TryGet<AddOnInstruction>(dataType, out var aoi))
+        {
+            dependencies.Add(aoi);
+            dependencies.AddRange(aoi.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Name);
+    }
+
     //Extensions for .NET Standard 2.0 to allow me not to have to rewrite the code in certain places. 
 #if NETSTANDARD2_0
     /// <summary>

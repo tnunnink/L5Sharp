@@ -182,7 +182,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
         //Create the data type using the static factory method.
         var data = LogixData.Create(DataType);
 
-        //If it's a known type (i.e. not ComplexData) we can just return that.
+        //If it's a known type (i.e., not ComplexData), we can just return that.
         if (data is not ComplexData)
         {
             var value = !isArray ? data : new ArrayData<LogixData>(data, Dimension!);
@@ -190,7 +190,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
         }
 
         //If not, we can try to get the data type definition from the l5X if attached,
-        //and use that to recusively build up the complex type.
+        //and use that to recursively build up the complex type.
         var definition = GetDefinition();
         var structure = !isArray ? definition.ToData() : new ArrayData<LogixData>(definition.ToData(), Dimension!);
         return new Member(Name, structure);
@@ -203,12 +203,12 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// <exception cref="InvalidOperationException"></exception>
     private DataType GetDefinition()
     {
-        //Just going to return a dummy DataType here since it is atomic or not able to be retrieved.
+        //Just going to return a fake DataType here since it is atomic or not able to be retrieved.
         if (AtomicData.IsAtomic(DataType) || L5X is null)
             return new DataType(DataType);
 
-        var defintion = L5X.DataTypes.Find(DataType);
-        return defintion ?? new DataType(DataType);
+        var definition = L5X.DataTypes.Find(DataType);
+        return definition ?? new DataType(DataType);
     }
 
     /// <inheritdoc />

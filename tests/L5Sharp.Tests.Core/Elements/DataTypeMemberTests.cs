@@ -21,32 +21,25 @@ public class DataTypeMemberTests
     }
 
     [Test]
-    public void DataTypeMember_ConstructorWithParameters_ShouldSetPropertiesToSpecifiedValues()
+    public void New_OverloadedProperties_ShouldHaveExpectedValues()
     {
-        var name = "member1";
-        var description = "description1";
-        var dataType = "INT";
-        var dimension = new Dimensions(10);
-        var radix = Radix.Decimal;
-        var externalAccess = ExternalAccess.ReadOnly;
-
         var member = new DataTypeMember
         {
-            Name = name,
-            Description = description,
-            DataType = dataType,
-            Dimension = dimension,
-            Radix = radix,
-            ExternalAccess = externalAccess
+            Name = "Test",
+            Description = "This is a test",
+            DataType = "INT",
+            Dimension = 10,
+            Radix = Radix.Decimal,
+            ExternalAccess = ExternalAccess.ReadOnly
         };
 
 
-        member.Name.Should().Be(name);
-        member.Description.Should().Be(description);
-        member.DataType.Should().Be(dataType);
-        member.Dimension.Should().BeEquivalentTo(dimension);
-        member.Radix.Should().Be(radix);
-        member.ExternalAccess.Should().Be(externalAccess);
+        member.Name.Should().Be("Test");
+        member.Description.Should().Be("This is a test");
+        member.DataType.Should().Be("INT");
+        member.Dimension.Should().Be(new Dimensions(10));
+        member.Radix.Should().Be(Radix.Decimal);
+        member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
     }
 
     [Test]
@@ -88,5 +81,27 @@ public class DataTypeMemberTests
         var xml = member.Serialize().ToString();
 
         return Verify(xml);
+    }
+
+    [Test]
+    public void ToMember_AtomicData_ShouldBeExpectedValues()
+    {
+        var member = new DataTypeMember
+        {
+            Name = "Test",
+            DataType = "REAL",
+            Dimension = new Dimensions(3),
+            Radix = Radix.Exponential,
+            ExternalAccess = ExternalAccess.ReadWrite,
+            Description = "This is a test",
+            Hidden = true,
+            Target = "SomeOtherMember",
+            BitNumber = 12
+        };
+
+        var instance = member.ToMember();
+
+        instance.Name.Should().Be("Test");
+        instance.Value.Should().Be(new REAL());
     }
 }

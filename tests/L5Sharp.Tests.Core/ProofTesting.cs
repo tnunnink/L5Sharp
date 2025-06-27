@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Text.Json;
 using FluentAssertions;
 
 
@@ -8,12 +8,6 @@ namespace L5Sharp.Tests.Core;
 [TestFixture]
 public class ProofTesting
 {
-    [Test]
-    public void Scratch()
-    {
-        true.Should().BeTrue();
-    }
-
     [Test]
     public void ParserTypeTests()
     {

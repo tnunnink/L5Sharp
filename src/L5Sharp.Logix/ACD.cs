@@ -16,7 +16,7 @@ public static class ACD
     /// <remarks>
     /// This method uses the new Logix Designer SDK to load the ACD project and convert it to an L5X file.
     /// Note that this code requires access to the SDK software which is not included in this library so to not
-    /// violate Rockwell EULA. Also note that this conversion take around 30 seconds to complete depending on the
+    /// violate Rockwell EULA. Also note that this conversion takes around 30 seconds to complete depending on the
     /// project size.
     /// </remarks>
     public static async Task<L5X> LoadAsync(string filePath,
@@ -32,7 +32,7 @@ public static class ACD
         //Generate file temp path for L5X
         var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.L5X");
 
-        //Uses SDK to load project file into memory and save as an L5X.
+        //Uses SDK to load a project file into memory and save as an L5X.
         using var project = await LogixProject.OpenLogixProjectAsync(filePath, cancellationToken: token);
         await project.SaveAsAsync(path, cancellationToken: token);
 

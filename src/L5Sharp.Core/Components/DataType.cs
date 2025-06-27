@@ -11,14 +11,14 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-/// A DataType represents a user defined type structure that one can define and reuse within a PLC project.
+/// A DataType represents a user-defined type structure that one can define and reuse within a PLC project.
 /// This type inherits <see cref="LogixComponent"/> which specifies <c>Name</c> and <c>Description</c> properties along with other
 /// common component functionality. DataTypes also contain <see cref="Members"/> that define the structure of the
-/// complex type. This class does not actually represent the type value, but rather the configuration of how a tag structure
+/// complex type. This class does not represent the type value, but rather the configuration of how a tag structure
 /// would look if it referenced this type.
 /// </para>
 /// <para>DataType components can be defined out of order within an L5X. This means a type that is dependent on another
-/// type can be defined first and Logix will import just fine.</para>
+/// type can be defined first, and Logix will import just fine.</para>
 /// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -100,18 +100,71 @@ public class DataType : LogixComponent<DataType>
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (L5X is null) return [];
+        return Members.SelectMany(m => L5X.DependenciesForType(m.DataType)).Distinct(c => c.Name);
+    }
 
-        var dependencies = new List<LogixComponent>();
+    /// <summary>
+    /// Adds a new member to the current <see cref="DataType"/> with the specified name, data type, and optional configuration.
+    /// </summary>
+    /// <param name="name">The name of the member to add. Must not be null or empty.</param>
+    /// <param name="dataType">The data type of the member. Must not be null or empty.</param>
+    /// <param name="config">An optional configuration action to modify the member after creation.</param>
+    /// <returns>The newly added <see cref="DataTypeMember"/>.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the <paramref name="name"/> or <paramref name="dataType"/> is null or empty.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if a member with the given <paramref name="name"/> already exists in the <see cref="DataType"/>.
+    /// </exception>
+    public DataTypeMember AddMember(string name, string dataType, Action<DataTypeMember>? config = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Member property 'Name' can not be null or empty");
 
-        foreach (var member in Members)
-        {
-            if (!L5X.TryGet<DataType>(member.DataType, out var dataType)) continue;
-            dependencies.Add(dataType);
-            dependencies.AddRange(dataType.Dependencies());
-        }
+        if (string.IsNullOrEmpty(dataType))
+            throw new ArgumentException("Member property 'DataType' can not be null or empty");
 
-        return dependencies.Distinct();
+        if (Members.Any(m => m.Name == name))
+            throw new InvalidOperationException($"A member with the name '{name}' already exists for type '{Name}'");
+
+        var member = new DataTypeMember { Name = name, DataType = dataType };
+        config?.Invoke(member);
+        Members.Add(member);
+        return member;
+    }
+
+    /// <summary>
+    /// Removes a member with the specified name from the <see cref="Members"/> collection of the current DataType.
+    /// </summary>
+    /// <param name="name">The name of the member to be removed.</param>
+    public void RemoveMember(string name)
+    {
+        Members.FirstOrDefault(m => m.Name == name)?.Remove();
+    }
+
+    /// <summary>
+    /// Updates the specified member of the data type by applying the provided configuration.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the member to be updated. Must correspond to an existing member of the data type.
+    /// </param>
+    /// <param name="config">
+    /// An action that defines the configuration to apply to the selected member.
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when no member with the specified name is found in the data type.
+    /// </exception>
+    public void UpdateMember(string name, Action<DataTypeMember> config)
+    {
+        if (config is null)
+            throw new ArgumentNullException(nameof(config));
+
+        var member = Members.FirstOrDefault(m => m.Name == name);
+
+        if (member is null)
+            throw new InvalidOperationException($"No member with name '{name}' is defined for type '{Name}'");
+
+        config.Invoke(member);
     }
 
     /// <summary>
@@ -143,8 +196,8 @@ public class DataType : LogixComponent<DataType>
     {
         if (string.IsNullOrEmpty(Name))
             throw new InvalidOperationException("Can not create data with null or empty data type name");
-        
-        //We need to handle strings types specifically to match Logix custom format.
+
+        //We need to handle strings types specifically to match a Logix custom format.
         if (Family is not null && Family == DataTypeFamily.String) return new StringData(Name, string.Empty);
 
         //This will be some predefined type or a complex data instance, depending on whether it is statically defined.

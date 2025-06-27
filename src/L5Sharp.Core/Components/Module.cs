@@ -346,6 +346,26 @@ public class Module : LogixComponent<Module>
     /// <remarks>This is a simple helper to make accessing the module config data more concise.</remarks>
     public Tag? Config => Communications?.ConfigTag;
 
+    /// <inheritdoc />
+    /// <remarks>
+    /// For modules, this will return all child modules of the current module. This resembles how logix exports
+    /// modules from Studio.
+    /// </remarks>
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        if (L5X is null) return [];
+
+        var dependencies = new List<LogixComponent>();
+
+        foreach (var module in Modules)
+        {
+            dependencies.Add(module);
+            dependencies.AddRange(module.Dependencies());
+        }
+
+        return dependencies.Distinct(m => m.Name);
+    }
+
     /// <summary>
     /// Connects the provided child module to the current module and tries to add it to the underlying L5X if possible.
     /// </summary>

@@ -67,20 +67,10 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <param name="name">The name of the instruction.</param>
     /// <param name="type">The <see cref="RoutineType"/> for the logic of the instruction.</param>
     /// <param name="revision">The optional revision of the instruction.</param>
-    public AddOnInstruction(string name, RoutineType? type = default, Revision? revision = default) :
-        base(L5XName.AddOnInstructionDefinition)
+    public AddOnInstruction(string name, RoutineType? type = null, Revision? revision = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Revision = revision ?? new Revision();
-        ExecutePreScan = false;
-        ExecutePostScan = false;
-        ExecuteEnableInFalse = false;
-        CreatedDate = DateTime.Now;
-        CreatedBy = Environment.UserName;
-        EditedDate = DateTime.Now;
-        EditedBy = Environment.UserName;
-        Parameters = [EnableIn(), EnableOut()];
-        LocalTags = [];
         Routines = [new Routine("Logic", type)];
     }
 
@@ -280,26 +270,29 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     public Routine Logic => Routines.SingleOrDefault(r => r.Name == nameof(Logic)) ??
                             throw new InvalidOperationException("No Logic routine is defined for AOI.");
 
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        return Parameters.SelectMany(p => L5X.DependenciesForType(p.DataType))
+            .Concat(LocalTags.SelectMany(t => L5X.DependenciesForType(t.DataType)))
+            .Distinct(c => c.Name);
+    }
+
     /// <summary>
-    /// Creates a new <see cref="Instruction"/> instance using the provided tagname and optional arguments.
+    /// Creates a new <see cref="Instruction"/> instance using the provided tagnames and optional arguments.
     /// </summary>
     /// <param name="tagName">The tag name of the AOI instance.</param>
-    /// <param name="arguments">The optional arguments to supply the instruction signatrue with.</param>
+    /// <param name="arguments">The optional arguments to supply the instruction signature with.</param>
     /// <returns>A <see cref="Instruction"/> having this AOI's key and provided arguments.</returns>
-    public Instruction ToInstruction(TagName tagName, params Argument[] arguments)
-    {
-        var args = new List<Argument> { tagName };
-        args.AddRange(arguments);
-        return Instruction.New(Name, args.ToArray());
-    }
-    
+    public Instruction ToInstruction(TagName tagName, params Argument[] arguments) => Instantiate(tagName, arguments);
+
     /// <summary>
     /// Creates a new <see cref="NeutralText"/> instance using the provided tagname and optional arguments.
     /// </summary>
     /// <param name="tagName">The tag name of the AOI instance.</param>
     /// <param name="arguments">The optional arguments to supply the instruction signatrue with.</param>
     /// <returns>A <see cref="NeutralText"/> having this AOI's key and provided arguments.</returns>
-    public NeutralText ToText(TagName tagName, params Argument[] arguments) => ToInstruction(tagName, arguments).Text;
+    public NeutralText ToText(TagName tagName, params Argument[] arguments) => Instantiate(tagName, arguments).Text;
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> instance with data configured from this <see cref="AddOnInstruction"/> component. 
@@ -327,13 +320,13 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     {
         if (string.IsNullOrEmpty(Name))
             throw new InvalidOperationException("Can not create data with null or empty data type name");
-        
+
         //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
         var data = LogixData.Create(Name);
 
         //If it is not a complex data (meaning more derived) then it was defined, and we can return it.
         if (data is not ComplexData complexData) return data;
-        
+
         //Generate the members from the parameters that are configured as input/output parameters.
         //These are the only members that are used as members of an AOI tag structure.
         var members = Parameters
@@ -345,7 +338,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
-    /// Returns the AoiBlock instruction logic with the parameters tag names replaced with the argument tag names of the
+    /// Returns the AoiBlock instruction logic with the parameter tag names replaced with the argument tag names of the
     /// provided instruction instance.
     /// </summary>
     /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
@@ -367,9 +360,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
 
         var rungs = logic?.Content<Rung>();
-        if (rungs is null) return Enumerable.Empty<NeutralText>();
+        if (rungs is null) return [];
 
-        //Skip first operand as it is always the AoiBlock tag, which does not have corresponding parameter within the logic.
+        //Skip the first operand as it is always the AoiBlock tag, which does not have a corresponding parameter within the logic.
         var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToList();
 
         //Only required parameters are part of the instruction signature
@@ -390,7 +383,20 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
-    /// Returns the default built in EnableIn parameter.
+    /// Instantiates a new <see cref="Instruction"/> object based on the provided tag name and arguments.
+    /// </summary>
+    /// <param name="tagName">The tag name to associate with the new <see cref="Instruction"/>.</param>
+    /// <param name="arguments">An array of <see cref="Argument"/> objects used to configure the new <see cref="Instruction"/>.</param>
+    /// <returns>A new instance of the <see cref="Instruction"/> type.</returns>
+    private Instruction Instantiate(TagName tagName, params Argument[] arguments)
+    {
+        var args = new List<Argument> { tagName };
+        args.AddRange(arguments);
+        return Instruction.New(Name, args.ToArray());
+    }
+
+    /// <summary>
+    /// Returns the default built-in EnableIn parameter.
     /// </summary>
     private static Parameter EnableIn()
     {
@@ -410,7 +416,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
-    /// Returns the default built in EnableOut parameter.
+    /// Returns the default built-in EnableOut parameter.
     /// </summary>
     private static Parameter EnableOut()
     {

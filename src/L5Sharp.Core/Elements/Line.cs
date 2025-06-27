@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -38,6 +39,30 @@ public sealed class Line : LogixCode
     public Line(NeutralText text) : base(L5XName.Line)
     {
         Element.ReplaceNodes(new XCData(text));
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        if (L5X is null) return [];
+
+        var dependencies = new List<LogixComponent>();
+
+        foreach (var tagName in Text.Tags())
+        {
+            if (!L5X.TryGet<Tag>(tagName, out var tag)) continue;
+            dependencies.Add(tag);
+            dependencies.AddRange(tag.Dependencies());
+        }
+
+        foreach (var instruction in Text.Instructions())
+        {
+            if (!L5X.TryGet<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            dependencies.Add(aoi);
+            dependencies.AddRange(aoi.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Name);
     }
 
     /// <inheritdoc />

@@ -1,0 +1,355 @@
+﻿<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="34.00" TargetName="Empty" TargetType="Controller" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Mon Jan 23 14:46:21 2023" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+  <Controller Use="Target" Name="Empty" ProcessorType="1756-L84E" MajorRev="34" MinorRev="11" ProjectCreationDate="Mon Jan 23 14:45:38 2023" LastModifiedDate="Mon Jan 23 14:45:40 2023" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000" MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false" AutoDiagsEnabled="true" WebServerEnabled="false">
+    <RedundancyInfo Enabled="false" KeepTestEditsOnSwitchOver="false" />
+    <Security Code="0" ChangesToDetect="16#ffff_ffff_ffff_ffff" />
+    <SafetyInfo />
+    <DataTypes>
+      <DataType Name="ComplexType" Family="NoFamily" Class="User">
+        <Description>Test data type with more complex members</Description>
+        <Members>
+          <Member Name="SimpleMember" DataType="SimpleType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>User defined complex type</Description>
+          </Member>
+          <Member Name="CounterMember" DataType="COUNTER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test counter member</Description>
+          </Member>
+          <Member Name="TimeMember" DataType="TIMER" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test Timer member</Description>
+          </Member>
+          <Member Name="AlarmMember" DataType="ALARM" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test Analog Alarm</Description>
+          </Member>
+          <Member Name="AOIType" DataType="aoi_Test" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test aoi</Description>
+          </Member>
+          <Member Name="SimplArray" DataType="SimpleType" Dimension="5" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test simple array type</Description>
+          </Member>
+          <Member Name="ZZZZZZZZZZComplexTyp6" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+          <Member Name="NewMember" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ZZZZZZZZZZComplexTyp6" BitNumber="0" ExternalAccess="Read/Write">
+            <Description>This is a new member</Description>
+          </Member>
+          <Member Name="StringMember" DataType="STRING" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>This is a test string member</Description>
+          </Member>
+          <Member Name="MyStringMember" DataType="MyStringType" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+            <Description>This is a test custom string type</Description>
+          </Member>
+        </Members>
+        <Dependencies>
+          <Dependency Type="DataType" Name="SimpleType" />
+          <Dependency Type="AddOnInstructionDefinition" Name="aoi_Test" />
+          <Dependency Type="DataType" Name="SimpleType" />
+          <Dependency Type="DataType" Name="MyStringType" />
+        </Dependencies>
+      </DataType>
+      <DataType Name="SimpleType" Family="NoFamily" Class="User">
+        <Description>This is a test data type that contains simple atomic types with an updated description</Description>
+        <Members>
+          <Member Name="ZZZZZZZZZZSimpleType0" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write" />
+          <Member Name="BoolMember" DataType="BIT" Dimension="0" Radix="Hex" Hidden="false" Target="ZZZZZZZZZZSimpleType0" BitNumber="0" ExternalAccess="Read/Write">
+            <Description>Test Bool</Description>
+          </Member>
+          <Member Name="SintMember" DataType="SINT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test Sint</Description>
+          </Member>
+          <Member Name="IntMember" DataType="INT" Dimension="0" Radix="Octal" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test Int</Description>
+          </Member>
+          <Member Name="DintMember" DataType="DINT" Dimension="0" Radix="ASCII" Hidden="false" ExternalAccess="None">
+            <Description>Test Dint</Description>
+          </Member>
+          <Member Name="LintMember" DataType="LINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test Lint</Description>
+          </Member>
+          <Member Name="RealMember" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write">
+            <Description>Test Real</Description>
+          </Member>
+        </Members>
+      </DataType>
+      <DataType Name="MyStringType" Family="StringFamily" Class="User">
+        <Description>This is a test string type</Description>
+        <Members>
+          <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write" />
+          <Member Name="DATA" DataType="SINT" Dimension="100" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write" />
+        </Members>
+      </DataType>
+    </DataTypes>
+    <Modules />
+    <AddOnInstructionDefinitions>
+      <AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="DateTimeOffset_1" CreatedBy="ENE\tnunnink" EditedDate="DateTimeOffset_2" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
+        <SignatureHistory>
+          <HistoryEntry User="ENE\tnunnink" Timestamp="DateTimeOffset_3" SignatureID="16#cae1_ac8c">
+            <Description>This is a signature history description
+</Description>
+          </HistoryEntry>
+        </SignatureHistory>
+        <AdditionalHelpText>This is a test aoi definitio that was built for purposes of exporting data to examine the structure of the L5X</AdditionalHelpText>
+        <Parameters>
+          <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+            <Description>Enable Input - System Defined Parameter</Description>
+          </Parameter>
+          <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+            <Description>Enable Output - System Defined Parameter</Description>
+          </Parameter>
+          <Parameter Name="InputTest" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write">
+            <DefaultData Format="L5K">0</DefaultData>
+            <DefaultData Format="Decorated">
+              <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+            </DefaultData>
+          </Parameter>
+          <Parameter Name="OutputTest" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read Only">
+            <DefaultData Format="L5K">0</DefaultData>
+            <DefaultData Format="Decorated">
+              <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+            </DefaultData>
+          </Parameter>
+          <Parameter Name="InOutTest" TagType="Base" DataType="SimpleType" Usage="InOut" Required="true" Visible="true" Constant="false" />
+          <Parameter Name="Config" TagType="Base" DataType="INT" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="None">
+            <DefaultData Format="L5K">0</DefaultData>
+            <DefaultData Format="Decorated">
+              <DataValue DataType="INT" Radix="Decimal" Value="0" />
+            </DefaultData>
+          </Parameter>
+          <Parameter Name="Test" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="None">
+            <DefaultData Format="L5K">0</DefaultData>
+            <DefaultData Format="Decorated">
+              <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+            </DefaultData>
+          </Parameter>
+          <Parameter Name="InOutArray" TagType="Base" DataType="REAL" Dimensions="5" Usage="InOut" Radix="Float" Required="true" Visible="true" Constant="false" />
+          <Parameter Name="New" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read/Write">
+            <DefaultData Format="L5K">0</DefaultData>
+            <DefaultData Format="Decorated">
+              <DataValue DataType="DINT" Radix="Decimal" Value="0" />
+            </DefaultData>
+          </Parameter>
+          <Parameter Name="Alias" TagType="Alias" Usage="Input" Radix="Decimal" AliasFor="LocalBool" Required="false" Visible="false" ExternalAccess="None">
+            <Description>This is an alias</Description>
+          </Parameter>
+        </Parameters>
+        <LocalTags>
+          <LocalTag Name="LocalBool" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+            <DefaultData Format="L5K">0</DefaultData>
+            <DefaultData Format="Decorated">
+              <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
+            </DefaultData>
+          </LocalTag>
+          <LocalTag Name="LocalComplex" DataType="SimpleType" ExternalAccess="Read/Write">
+            <Description>Description Test</Description>
+            <DefaultData Format="L5K">[0,0,0,0,0,0.00000000e+000]</DefaultData>
+            <DefaultData Format="Decorated">
+              <Structure DataType="SimpleType">
+                <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+                <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+                <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+                <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+                <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+                <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+              </Structure>
+            </DefaultData>
+          </LocalTag>
+          <LocalTag Name="LocalArray" DataType="DINT" Dimensions="5" Radix="Decimal" ExternalAccess="None">
+            <DefaultData Format="L5K">[0,0,0,0,0]</DefaultData>
+            <DefaultData Format="Decorated">
+              <Array DataType="DINT" Dimensions="5" Radix="Decimal">
+                <Element Index="[0]" Value="0" />
+                <Element Index="[1]" Value="0" />
+                <Element Index="[2]" Value="0" />
+                <Element Index="[3]" Value="0" />
+                <Element Index="[4]" Value="0" />
+              </Array>
+            </DefaultData>
+          </LocalTag>
+          <LocalTag Name="LocalString" DataType="STRING" ExternalAccess="None">
+            <DefaultData Format="L5K">[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00']</DefaultData>
+            <DefaultData Format="String" Length="0">''</DefaultData>
+          </LocalTag>
+        </LocalTags>
+        <Routines>
+          <Routine Name="Logic" Type="RLL">
+            <RLLContent>
+              <Rung Number="0" Type="N">
+                <Text>OTE(InputTest);</Text>
+              </Rung>
+              <Rung Number="1" Type="N">
+                <Text>XIC(InOutTest.BoolMember)OTL(LocalBool);</Text>
+              </Rung>
+              <Rung Number="2" Type="N">
+                <Text>EQU(Config,LocalArray[0])MOV(Config,InOutArray[0]);</Text>
+              </Rung>
+              <Rung Number="3" Type="N">
+                <Text>MOV(100,LocalArray[2]);</Text>
+              </Rung>
+            </RLLContent>
+          </Routine>
+          <Routine Name="Prescan" Type="RLL" />
+        </Routines>
+        <Dependencies>
+          <Dependency Type="DataType" Name="SimpleType" />
+        </Dependencies>
+      </AddOnInstructionDefinition>
+    </AddOnInstructionDefinitions>
+    <Tags />
+    <Programs>
+      <Program Use="Target" Name="TestProgram" TestEdits="false" Disabled="false" UseAsFolder="false">
+        <Tags>
+          <Tag Name="MyTag" TagType="Base" DataType="ComplexType" Constant="false" ExternalAccess="Read/Write">
+            <Description>This is a test</Description>
+            <Data Format="L5K">[[0,0,0,0,0,0.00000000e+000],[0,0,0],[0,0,0],[1,0.00000000e+000,3.40282347e+038,3.40282347e+038,-3.40282347e+038
+		,-3.40282347e+038,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0,0.00000000e+000
+		,0,5.60519386e-045,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000],[1,0,0,0,[0,0
+		,0,0,0,0.00000000e+000],[0,0,0,0,0],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]],[[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0,0,0,0,0,0.00000000e+000],[0
+		,0,0,0,0,0.00000000e+000]],0,[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		],[0,'$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+		]]</Data>
+            <Data Format="Decorated">
+              <Structure DataType="ComplexType">
+                <StructureMember Name="SimpleMember" DataType="SimpleType">
+                  <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+                  <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+                  <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+                  <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+                </StructureMember>
+                <StructureMember Name="CounterMember" DataType="COUNTER">
+                  <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="CU" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="CD" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="OV" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="UN" DataType="BOOL" Value="0" />
+                </StructureMember>
+                <StructureMember Name="TimeMember" DataType="TIMER">
+                  <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="5000" />
+                  <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="EN" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="TT" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="DN" DataType="BOOL" Value="0" />
+                </StructureMember>
+                <StructureMember Name="AlarmMember" DataType="ALARM">
+                  <DataValueMember Name="EnableIn" DataType="BOOL" Value="1" />
+                  <DataValueMember Name="In" DataType="REAL" Radix="Float" Value="0.0" />
+                  <DataValueMember Name="HHLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038" />
+                  <DataValueMember Name="HLimit" DataType="REAL" Radix="Float" Value="3.40282347e+038" />
+                  <DataValueMember Name="LLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038" />
+                  <DataValueMember Name="LLLimit" DataType="REAL" Radix="Float" Value="-3.40282347e+038" />
+                  <DataValueMember Name="Deadband" DataType="REAL" Radix="Float" Value="0.0" />
+                  <DataValueMember Name="ROCPosLimit" DataType="REAL" Radix="Float" Value="0.0" />
+                  <DataValueMember Name="ROCNegLimit" DataType="REAL" Radix="Float" Value="0.0" />
+                  <DataValueMember Name="ROCPeriod" DataType="REAL" Radix="Float" Value="0.0" />
+                  <DataValueMember Name="EnableOut" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="HHAlarm" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="HAlarm" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="LAlarm" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="LLAlarm" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="ROCPosAlarm" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="ROCNegAlarm" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="ROC" DataType="REAL" Radix="Float" Value="0.0" />
+                  <DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000" />
+                  <DataValueMember Name="InstructFault" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="DeadbandInv" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="ROCPosLimitInv" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="ROCNegLimitInv" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="ROCPeriodInv" DataType="BOOL" Value="0" />
+                </StructureMember>
+                <StructureMember Name="AOIType" DataType="aoi_Test">
+                  <DataValueMember Name="EnableIn" DataType="BOOL" Value="1" />
+                  <DataValueMember Name="EnableOut" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="InputTest" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="OutputTest" DataType="DINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="Config" DataType="INT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="Test" DataType="BOOL" Value="0" />
+                  <DataValueMember Name="New" DataType="DINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="Alias" DataType="BOOL" Value="0" />
+                </StructureMember>
+                <ArrayMember Name="SimplArray" DataType="SimpleType" Dimensions="5">
+                  <Element Index="[0]">
+                    <Structure DataType="SimpleType">
+                      <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+                      <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+                      <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+                      <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+                      <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+                      <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+                    </Structure>
+                  </Element>
+                  <Element Index="[1]">
+                    <Structure DataType="SimpleType">
+                      <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+                      <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+                      <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+                      <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+                      <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+                      <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+                    </Structure>
+                  </Element>
+                  <Element Index="[2]">
+                    <Structure DataType="SimpleType">
+                      <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+                      <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+                      <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+                      <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+                      <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+                      <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+                    </Structure>
+                  </Element>
+                  <Element Index="[3]">
+                    <Structure DataType="SimpleType">
+                      <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+                      <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+                      <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+                      <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+                      <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+                      <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+                    </Structure>
+                  </Element>
+                  <Element Index="[4]">
+                    <Structure DataType="SimpleType">
+                      <DataValueMember Name="BoolMember" DataType="BOOL" Value="0" />
+                      <DataValueMember Name="SintMember" DataType="SINT" Radix="Hex" Value="16#00" />
+                      <DataValueMember Name="IntMember" DataType="INT" Radix="Octal" Value="8#000_000" />
+                      <DataValueMember Name="DintMember" DataType="DINT" Radix="ASCII" Value="'$00$00$00$00'" />
+                      <DataValueMember Name="LintMember" DataType="LINT" Radix="Decimal" Value="0" />
+                      <DataValueMember Name="RealMember" DataType="REAL" Radix="Float" Value="0.0" />
+                    </Structure>
+                  </Element>
+                </ArrayMember>
+                <DataValueMember Name="NewMember" DataType="BOOL" Value="0" />
+                <StructureMember Name="StringMember" DataType="STRING">
+                  <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="DATA" DataType="STRING" Radix="ASCII"></DataValueMember>
+                </StructureMember>
+                <StructureMember Name="MyStringMember" DataType="MyStringType">
+                  <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0" />
+                  <DataValueMember Name="DATA" DataType="MyStringType" Radix="ASCII"></DataValueMember>
+                </StructureMember>
+              </Structure>
+            </Data>
+          </Tag>
+        </Tags>
+        <Routines />
+      </Program>
+    </Programs>
+    <Tasks>
+      <Task Name="Standard" Type="PERIODIC" Priority="10" Rate="10" Watchdog="500" InhibitTask="false" DisableUpdateOutputs="false">
+        <ScheduledPrograms>
+          <ScheduledProgram Name="TestProgram" />
+        </ScheduledPrograms>
+      </Task>
+    </Tasks>
+    <ParameterConnections />
+    <CST MasterID="0" />
+    <WallClockTime LocalTimeAdjustment="0" TimeZone="0" />
+    <Trends />
+    <DataLogs />
+    <TimeSynchronize Priority1="128" Priority2="128" PTPEnable="false" />
+    <EthernetPorts>
+      <EthernetPort Port="1" Label="1" PortEnabled="true" />
+    </EthernetPorts>
+  </Controller>
+</RSLogix5000Content>

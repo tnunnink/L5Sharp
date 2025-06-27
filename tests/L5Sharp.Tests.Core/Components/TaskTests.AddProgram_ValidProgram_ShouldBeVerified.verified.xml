@@ -1,5 +1,5 @@
 ﻿<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="1.0" TargetName="" TargetType="Controller" ContainsContext="false">
-  <Controller Name="Context" Use="Context" MajorRev="1" MinorRev="0">
+  <Controller Name="Context" MajorRev="1" MinorRev="0">
     <DataTypes />
     <Modules />
     <AddOnInstructionDefinitions />

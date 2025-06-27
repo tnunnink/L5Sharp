@@ -94,6 +94,16 @@ namespace L5Sharp.Tests.Core.Components
         }
 
         [Test]
+        public void AddMember_ValidParameters_ShouldContainMember()
+        {
+            var type = new DataType("Test");
+
+            type.AddMember("MemberName", "DINT");
+
+            type.Members.Should().HaveCount(1);
+        }
+
+        [Test]
         public void ToData_SimpleType_ShouldHaveExpectedStructure()
         {
             var content = L5X.Load(Known.Test);

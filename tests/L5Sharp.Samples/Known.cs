@@ -14,6 +14,7 @@ namespace L5Sharp.Samples
         public static readonly string ModuleExport = Path.Combine(Directory, "Modules", "TestCard.L5X");
         public static readonly string ModuleRackIoExport = Path.Combine(Directory, "Modules", "RackIO.L5X");
         public static readonly string DataTypeExport = Path.Combine(Directory, "DataTypes", "ComplexType.L5X");
+        public static readonly string ProgramExport = Path.Combine(Directory, "Programs", "TestProgram.L5X");
         public const string Example = @"C:\Users\tnunnink\Documents\Rockwell\Example.L5X";
 
         public const string DataType = "SimpleType";

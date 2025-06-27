@@ -165,6 +165,73 @@ public class L5XBasicTests
             .ScrubMember("LastModifiedDate");
     }
 
+
+    [Test]
+    public Task Import_ComplexDataTypeWithNotConfiguration_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        content.Import(Known.DataTypeExport).DataType().Run();
+
+        return VerifyXml(content.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Import_ComplexDataTypeDiscardSimpleType_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        content.Import(Known.DataTypeExport)
+            .DataType()
+            .Discard<DataType>(d => d.Name == "SimpleType")
+            .Run();
+
+        return VerifyXml(content.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        content.Import(Known.DataTypeExport)
+            .DataType()
+            .Discard<DataType>(d => d.Name == "SimpleType")
+            .Modify<DataType>(
+                d => d.Name == "ComplexType",
+                d => d.RemoveMember("SimpleMember")
+            )
+            .Run();
+
+        return VerifyXml(content.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Import_ModuleComponent_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        content.Import(Known.ModuleExport).Module().Run();
+
+        return VerifyXml(content.Serialize().ToString());
+    }
+
+    [Test]
+    public Task Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        content.Add(new LTask { Name = "Standard", Type = TaskType.Periodic });
+
+        content.Import(Known.ProgramExport)
+            .Program()
+            .ScheduleIn("Standard")
+            .Rename("ImportedProgram")
+            .Run();
+
+        return VerifyXml(content.Serialize().ToString());
+    }
+
     [DotMemoryUnit(FailIfRunWithoutSupport = false)]
     [Test]
     public void CheckForMemoryLeaksTest()

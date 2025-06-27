@@ -204,6 +204,16 @@ public class Program : LogixComponent<Program>
     /// </remarks>
     public Task? Task => L5X?.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
 
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        if (L5X is null) return [];
+
+        return Tags.SelectMany(t => t.Dependencies())
+            .Concat(Routines.SelectMany(r => r.Dependencies()))
+            .Distinct(c => c.Scope.Path);
+    }
+
     /// <summary>
     /// Adds the specified program name as a child of this <see cref="Program"/> component.
     /// </summary>

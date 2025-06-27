@@ -438,6 +438,22 @@ public class Tag : LogixComponent<Tag>
         set => SetContainer(value);
     }
 
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        if (TagType is not null && TagType != TagType.Alias)
+        {
+            return L5X.DependenciesForType(DataType);
+        }
+
+        var alias = Alias;
+        if (alias is null) return [];
+
+        var dependencies = new List<LogixComponent> { alias };
+        dependencies.AddRange(alias.Dependencies());
+        return dependencies;
+    }
+
     /// <summary>
     /// Gets the tag member having the provided tag name value. The tag name can represent either an immediate member
     /// or a nested member in the tag hierarchy.
