@@ -16,12 +16,12 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// <para>
 /// Elements can be globally scoped (Controller), or locally scoped (Program/Routine).
-/// Scope also includes the <see cref="Type"/> and <see cref="Name"/> of a given target element, therefore it can be
+/// Scope also includes the <see cref="Type"/> and <see cref="Name"/> of a given target element, therefore, it can be
 /// viewed as a sort of Uri or resource identifier for any given component/code element in a file.
 /// </para>
 /// <para>
-/// Ultimately scope is defined by <see cref="Path"/> which resembles a Uri. Each part of the path is separated by a
-/// '/' character. Paths can be absolute or relative (start with '/').
+/// Ultimately scope is defined by <see cref="Path"/> which resembles a Uri. A '/' character separates each part of the path
+/// . Paths can be absolute or relative (start with '/').
 /// </para>
 /// </remarks>
 public sealed class Scope
@@ -80,6 +80,12 @@ public sealed class Scope
     public string Path { get; } = string.Empty;
 
     /// <summary>
+    /// Gets the local path of the scope object. This is just the <see cref="Path"/> without the
+    /// <c>Controller</c> potion. (i.e., relative path).
+    /// </summary>
+    public string LocalPath => DetermineLocalPath();
+
+    /// <summary>
     /// The <see cref="ScopeLevel"/> indicating whether this is a controller, program, or routine scoped element.
     /// </summary>
     /// <remarks>
@@ -97,15 +103,20 @@ public sealed class Scope
     /// <remarks>
     /// This value will be the same as <see cref="Controller"/>, <see cref="Program"/>, or <see cref="Routine"/>
     /// depending on what the <see cref="Level"/> is. This property is helpful for instances where you don't care about
-    /// the level and just need to know the parent container scope name.
+    /// the level and need to know the parent container scope name.
+    /// </remarks>
+    public string Parent => DetermineParent();
+
+    /// <summary>
+    /// The name of the controller, program, or routine that represents the immediate parent container of the element.
+    /// </summary>
+    /// <remarks>
+    /// This value will be the same as <see cref="Controller"/>, <see cref="Program"/>, or <see cref="Routine"/>
+    /// depending on what the <see cref="Level"/> is. This property is helpful for instances where you don't care about
+    /// the level and need to know the parent container scope name.
     /// </remarks>
     public string Container => DetermineContainer();
 
-    /// <summary>
-    /// Gets the local path of the scope object. This is just the <see cref="Path"/> without the
-    /// <c>Controller</c> potion. (i.e. relative path).
-    /// </summary>
-    public string LocalPath => DetermineLocalPath();
 
     /// <summary>
     /// The name of the controller the element is scoped to.
@@ -243,12 +254,12 @@ public sealed class Scope
     /// <returns>A new <see cref="Scope"/> instance with the concatenated path.</returns>
     public Scope Append(Scope scope)
     {
-        if (scope is null) 
+        if (scope is null)
             throw new ArgumentNullException(nameof(scope));
-        
+
         var left = Path.TrimEnd(PathSeparator);
         var right = scope.Path.TrimStart(PathSeparator);
-        
+
         return new Scope(string.Concat(left, PathSeparator, right));
     }
 
@@ -483,6 +494,17 @@ public sealed class Scope
     }
 
     /// <summary>
+    /// Determines the parent container of the scope.
+    /// </summary>
+    private string DetermineParent()
+    {
+        if (!string.IsNullOrEmpty(Routine)) return Routine;
+        if (!string.IsNullOrEmpty(Program)) return Program;
+        if (!string.IsNullOrEmpty(Controller)) return Controller;
+        return string.Empty;
+    }
+
+    /// <summary>
     /// Determines the container of the path based on the number of segments.
     /// The container is really the portion of the path that excludes type/name
     /// </summary>
@@ -516,7 +538,7 @@ public sealed class Scope
         var program = ancestors.TryGetValue(L5XName.Program, out var p) ? p.LogixName() : null;
         var aoi = ancestors.TryGetValue(L5XName.AddOnInstructionDefinition, out var i) ? i.LogixName() : null;
         var routine = ancestors.TryGetValue(L5XName.Routine, out var r) ? r.LogixName() : string.Empty;
-        var type = node.IsTagElement() ? ScopeType.Tag : ScopeType.Parse(node.Name.LocalName);
+        var type = node.IsTagElement() ? ScopeType.Tag : ScopeType.TryParse(node.Name.LocalName) ?? ScopeType.Null;
         var name = node.Identifier();
 
         return BuildPath(controller, program ?? aoi ?? string.Empty, routine, type, name);

@@ -405,6 +405,9 @@
       <None Update="L5XBasicTests.Import_ModuleComponent_ShouldBeVerified.verified.xml">
         <DependentUpon>L5XBasicTests.cs</DependentUpon>
       </None>
+      <None Update="L5XBasicTests.Import_SpecificTypeNameFromSource_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

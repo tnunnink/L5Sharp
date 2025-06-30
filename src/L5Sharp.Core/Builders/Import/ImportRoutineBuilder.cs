@@ -1,13 +1,26 @@
 ﻿namespace L5Sharp.Core;
 
-internal class ImportRoutineBuilder(ImportConfig config) :
-    ImportConfigBuilder<IImportRoutineBuilder>(config),
+internal class ImportRoutineBuilder(Import import) :
+    ImportConfigBuilder<IImportRoutineBuilder>(import),
     IImportRoutineBuilder
 {
+    private readonly Import _import = import;
     protected override IImportRoutineBuilder GetBuilder() => this;
 
-    public IImportRoutineBuilder InProgram(string name)
+    public IImportRoutineBuilder InProgram(string programName)
     {
-        throw new System.NotImplementedException();
+        _import.Operations.Add(new ModifyOperation(x =>
+        {
+            if (x is not Routine routine) return;
+            if (!Use.Target.Equals(routine.Use)) return;
+            if (routine.Document is null) return;
+            if (routine.Program is null) return;
+            if (routine.Program.Name == programName) return;
+            //This is a bit of a hack but should work if we are just importing a single routine and then discarding
+            //the source L5X (not saving).
+            routine.Program.Name = programName;
+        }));
+
+        return this;
     }
 }

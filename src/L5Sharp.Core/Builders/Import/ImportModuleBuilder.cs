@@ -2,15 +2,16 @@
 
 namespace L5Sharp.Core;
 
-internal class ImportModuleBuilder(ImportConfig config) :
-    ImportConfigBuilder<IImportModuleBuilder>(config),
+internal class ImportModuleBuilder(Import import) :
+    ImportConfigBuilder<IImportModuleBuilder>(import),
     IImportModuleBuilder
 {
+    private readonly Import _import = import;
     protected override IImportModuleBuilder GetBuilder() => this;
 
     public IImportModuleBuilder ConnectTo(string parentName)
     {
-        config.Operations.Add(new ConfigureOperation(x =>
+        _import.Operations.Add(new ConfigureOperation(x =>
         {
             if (x is not Module module) return;
             if (x.Document is null) return;

@@ -8,9 +8,9 @@ public interface IImportRoutineBuilder : IImportConfigBuilder<IImportRoutineBuil
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="programName"></param>
     /// <returns></returns>
-    IImportRoutineBuilder InProgram(string name);
+    IImportRoutineBuilder InProgram(string programName);
     
     
 }

@@ -1,23 +1,36 @@
 ﻿using System;
+using System.Linq;
 
 namespace L5Sharp.Core;
 
-internal class ImportProgramBuilder(ImportConfig config) :
-    ImportConfigBuilder<IImportProgramBuilder>(config),
+internal class ImportProgramBuilder(Import import) :
+    ImportConfigBuilder<IImportProgramBuilder>(import),
     IImportProgramBuilder
 {
-    private readonly ImportConfig _config = config;
+    private readonly Import _import = import;
     protected override IImportProgramBuilder GetBuilder() => this;
 
-    public IImportProgramBuilder ScheduleIn(string taskName)
+    public IImportProgramBuilder ScheduleIn(string taskName, Action<Task>? taskConfig = null)
     {
-        _config.Operations.Add(new ConfigureOperation(x =>
+        _import.Operations.Add(new ConfigureOperation(x =>
         {
             if (x is not Program program) return;
             if (program.Document is null) return;
-            if (!program.Document.TryGet<Task>(taskName, out var task))
+
+            if (taskConfig is not null)
+            {
+                var newTask = new Task();
+                taskConfig.Invoke(newTask);
+                program.Document.Add(newTask);
+            }
+
+            //We can't rely on the index API since if this content was indexed upon loading,
+            //then the previously added task will not be found.
+            var task = program.Document.Tasks.FirstOrDefault(t => t.Name == taskName);
+            if (task is null)
                 throw new InvalidOperationException(
                     $"No task with name '{taskName}' exists in the current project.");
+
             task.Schedule(program.Name);
         }));
 
@@ -26,7 +39,7 @@ internal class ImportProgramBuilder(ImportConfig config) :
 
     public IImportProgramBuilder WithParent(string programName)
     {
-        _config.Operations.Add(new ConfigureOperation(x =>
+        _import.Operations.Add(new ConfigureOperation(x =>
         {
             if (x is not Program program) return;
             if (program.Document is null) return;

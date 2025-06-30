@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// This interface supports various operations to manage and manipulate components during an import action,
 /// such as overwriting, discarding, modifying, or renaming components.
 /// </summary>
-public interface IImportConfigBuilder<out TBuilder> : IImportRunner
+public interface IImportConfigBuilder<out TBuilder>
 {
     /// <summary>
     /// Configures the import process to rename the target component to the provided name.

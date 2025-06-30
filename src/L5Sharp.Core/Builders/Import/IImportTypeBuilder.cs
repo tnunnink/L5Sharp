@@ -10,16 +10,16 @@ public interface IImportTypeBuilder
     /// </summary>
     /// <param name="name">The name of the data type to be imported. If null, the import process will use the
     /// target name from the source L5X file.</param>
-    /// <returns>An <see cref="IImportBaseBuilder"/> instance used to configure the remaining import operations.</returns>
-    IImportBaseBuilder DataType(string? name = null);
+    /// <returns>An <see cref="IImportDefaultBuilder"/> instance used to configure the remaining import operations.</returns>
+    IImportDefaultBuilder DataType(string? name = null);
 
     /// <summary>
     /// Specifies the instruction type to be imported, with an optional name.
     /// </summary>
     /// <param name="name">The name of the instruction to be imported. If null, the import process will use the
     /// target name from the source L5X file.</param>
-    /// <returns>An <see cref="IImportBaseBuilder"/> instance used to configure the remaining import operations.</returns>
-    IImportBaseBuilder Instruction(string? name = null);
+    /// <returns>An <see cref="IImportDefaultBuilder"/> instance used to configure the remaining import operations.</returns>
+    IImportDefaultBuilder Instruction(string? name = null);
 
     /// <summary>
     /// Configures the builder to import a module with the specified name if provided. If no name is provided, then will

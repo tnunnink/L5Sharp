@@ -1,4 +1,6 @@
-﻿namespace L5Sharp.Core;
+﻿using System;
+
+namespace L5Sharp.Core;
 
 /// <summary>
 /// Defines functionality for building and customizing the import configuration specific to a program within a Logix project.
@@ -10,8 +12,11 @@ public interface IImportProgramBuilder : IImportConfigBuilder<IImportProgramBuil
     /// Configures the program to be scheduled within the specified task in a Logix project.
     /// </summary>
     /// <param name="taskName">The name of the task to schedule the program within.</param>
+    /// <param name="taskConfig">An optional task config delegate.
+    /// When provided, we will create, configure, and add a new task to the current L5X before scheduling this program import.
+    /// This is essentially a helper that can be used if the task to schedule to doesn't already exist.</param>
     /// <returns>An instance of the <see cref="IImportProgramBuilder"/> for further configuration.</returns>
-    IImportProgramBuilder ScheduleIn(string taskName);
+    IImportProgramBuilder ScheduleIn(string taskName, Action<Task>? taskConfig = null);
 
     /// <summary>
     /// Specifies the parent program for the current program within a Logix project.

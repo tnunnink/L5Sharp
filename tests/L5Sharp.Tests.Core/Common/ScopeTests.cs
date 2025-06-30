@@ -26,7 +26,7 @@ public class ScopeTests
     }
 
     [Test]
-    public void TagScope_InMemeory_ShouldBeExpected()
+    public void TagScope_InMemory_ShouldBeExpected()
     {
         var element = new Tag("Test", 100);
 

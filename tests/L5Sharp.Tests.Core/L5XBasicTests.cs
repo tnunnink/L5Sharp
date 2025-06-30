@@ -171,7 +171,11 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Empty);
 
-        content.Import(Known.DataTypeExport).DataType().Run();
+        content.Import(b => b
+            .From(Known.DataTypeExport)
+            .DataType()
+            .Force()
+        );
 
         return VerifyXml(content.Serialize().ToString());
     }
@@ -181,10 +185,11 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Empty);
 
-        content.Import(Known.DataTypeExport)
+        content.Import(b => b
+            .From(Known.DataTypeExport)
             .DataType()
             .Discard<DataType>(d => d.Name == "SimpleType")
-            .Run();
+        );
 
         return VerifyXml(content.Serialize().ToString());
     }
@@ -194,14 +199,15 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Empty);
 
-        content.Import(Known.DataTypeExport)
+        content.Import(b => b
+            .From(Known.DataTypeExport)
             .DataType()
             .Discard<DataType>(d => d.Name == "SimpleType")
             .Modify<DataType>(
                 d => d.Name == "ComplexType",
                 d => d.RemoveMember("SimpleMember")
             )
-            .Run();
+        );
 
         return VerifyXml(content.Serialize().ToString());
     }
@@ -211,7 +217,10 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Empty);
 
-        content.Import(Known.ModuleExport).Module().Run();
+        content.Import(b => b
+            .From(Known.ModuleExport)
+            .Module()
+        );
 
         return VerifyXml(content.Serialize().ToString());
     }
@@ -223,11 +232,34 @@ public class L5XBasicTests
 
         content.Add(new LTask { Name = "Standard", Type = TaskType.Periodic });
 
-        content.Import(Known.ProgramExport)
+        content.Import(b => b
+            .From(Known.ProgramExport)
             .Program()
             .ScheduleIn("Standard")
             .Rename("ImportedProgram")
-            .Run();
+        );
+
+        return VerifyXml(content.Serialize().ToString());
+    }
+
+    [Test]
+    public void Import_IncorrectTypeBasedOnTarget_ShouldThrowException()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        FluentActions.Invoking(() => content.Import(b => b.From(Known.ProgramExport).DataType()))
+            .Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public Task Import_SpecificTypeNameFromSource_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Empty);
+
+        content.Import(b => b
+            .From(Known.Test)
+            .DataType("ComplexType")
+        );
 
         return VerifyXml(content.Serialize().ToString());
     }

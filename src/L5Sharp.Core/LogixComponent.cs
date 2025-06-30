@@ -143,10 +143,10 @@ public abstract class LogixComponent : LogixScoped
 
         var info = LogixInfo.Create(this, softwareRevision);
         var content = new L5X(info);
+        //this won't work for routines
         content.Add(this);
 
-        var dependencies = Dependencies().ToList();
-        foreach (var dependency in dependencies)
+        foreach (var dependency in Dependencies())
         {
             dependency.Use = Use.Context;
             content.Add(dependency);
@@ -187,7 +187,8 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
     public new TComponent Clone() => new XElement(Serialize()).Deserialize<TComponent>();
 
     /// <summary>
-    /// Creates a duplicate of the current component, applies a specified configuration to the duplicate, and returns it.
+    /// Creates a duplicate of the current component, applies a specified configuration to the duplicate, tries to add
+    /// it to the current document, and returns the new instance.
     /// </summary>
     /// <param name="config">A configuration action to modify the cloned component before it is returned.</param>
     /// <returns>A new instance of the component with the specified configuration applied.</returns>
@@ -199,6 +200,11 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
 
         var instance = new XElement(Serialize()).Deserialize<TComponent>();
         config.Invoke(instance);
+
+        if (Document is not null)
+        {
+            AddAfter(instance);
+        }
 
         return instance;
     }

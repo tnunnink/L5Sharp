@@ -22,6 +22,8 @@ public abstract class LogixObject : LogixElement
     {
     }
 
+    
+
     /// <summary>
     /// Adds a new object of the same type directly after this object in the L5X document.
     /// </summary>
@@ -52,6 +54,39 @@ public abstract class LogixObject : LogixElement
         }
 
         Element.AddAfterSelf(item.Serialize());
+    }
+
+    /// <summary>
+    /// Adds the specified <see cref="LogixObject"/> to the end of current element's parent collection.
+    /// </summary>
+    /// <param name="item">The <see cref="LogixObject"/> to add to the parent collection.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="item"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the current element is not attached to a parent or when the <paramref name="item"/>'s element type
+    /// does not match the current element's type and cannot be converted.
+    /// </exception>
+    /// <remarks>
+    /// This method requires the component be attached to the <see cref="L5X"/> as it will
+    /// access the parent of the underlying <see cref="XElement"/> to perform the function.
+    /// It will also automatically perform the "type conversion" of the provided element if possible.
+    /// This just means it will attempt to change the element name to match this element name so that the
+    /// underlying element type will have the correct sequence name. This is used primarily for types that support
+    /// multiple elements (i.e., Tags).
+    /// </remarks>
+    public void Append(LogixObject item)
+    {
+        if (item is null) throw new ArgumentNullException(nameof(item));
+
+        if (Element.Parent is null)
+            throw new InvalidOperationException(
+                "Can only perform operation for attached elements. Add this element to the logix content before invoking.");
+
+        if (item.GetElementType() != GetElementType())
+        {
+            item = item.Convert(GetElementType());
+        }
+
+        Element.Parent.Add(item.Serialize());
     }
 
     /// <summary>
@@ -107,7 +142,8 @@ public abstract class LogixObject : LogixElement
             throw new ArgumentException("Type name can not be null or empty to perform conversion", nameof(typeName));
 
         if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
+            throw new InvalidOperationException(
+                $"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
 
         if (GetElementType() == typeName) return this;
 
@@ -136,7 +172,8 @@ public abstract class LogixObject : LogixElement
         typeName ??= typeof(TObject).L5XType();
 
         if (!GetType().L5XTypes().Contains(typeName))
-            throw new InvalidOperationException($"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
+            throw new InvalidOperationException(
+                $"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
 
         if (GetElementType() == typeName) return (TObject)this;
 

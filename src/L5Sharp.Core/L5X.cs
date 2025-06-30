@@ -398,45 +398,49 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// <param name="component">The component to add to the L5X.</param>
     /// <remarks>
     /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top-level
-    /// container, it will work for most types. However, note that this only adds to the first container found of the specific type.
-    /// If you are adding scoped components such as, <see cref="Tag"/> or <see cref="Routine"/> you should be doing so in the context
-    /// of a specific <see cref="Program"/> component, or use the overload accepting a specific container.
+    /// container, it will work most of the time. If the provided component has a defined scope, then this method will
+    /// attempt to find the corresponding container to add this component to the correct scope. If this component is not
+    /// scoped, then we will build a simple global relative scope using the type and name. If you want to explicit about
+    /// where this component should be added, then use the <seealso cref="Add(L5Sharp.Core.LogixComponent, string)"/> overload.
     /// </remarks>
-    /// <seealso cref="Add(LogixComponent,string)"/>
     public void Add(LogixComponent component)
     {
-        var container = component.GetType().L5XContainer();
+        //If the provided component has a defined scope, then we can use that to add this component to the correct location.
+        //Otherwise, we will build a relative scope assuming this is a global component (i.e., not a routine or program tag).
+        var scope = component.Scope.IsScoped
+            ? component.Scope
+            : Scope.Build().Type(component.GetElementType()).Named(component.Name);
 
-        var target = Element.Descendants(container).FirstOrDefault();
+        var target = Element.Descendants()
+            .FirstOrDefault(e => e.Name.LocalName == component.GetElementType() && Scope.Of(e).IsIn(scope))
+            ?.Deserialize<LogixComponent>();
 
         if (target is null)
-            throw new InvalidOperationException($"Could not find container for type {component.GetType()}");
+            throw new InvalidOperationException($"Could not find container for type {component.GetElementType()}");
 
-        target.Add(component.Serialize());
+        target.Append(component);
     }
 
     /// <summary>
     /// Adds the provided <see cref="LogixComponent"/> to the specified container within the L5X file. 
     /// </summary>
     /// <param name="component">The component to add to the L5X.</param>
-    /// <param name="program">The container name (controller, program, or instruction) in which to add the component.</param>
+    /// <param name="programName">The program name in which to add the component.</param>
     /// <exception cref="InvalidOperationException">No container was found in the L5X for the specified type and container name.</exception>
     /// <remarks>
     /// This provides a more dynamic way to add content to an L5X file. This method will look for a container element
-    /// within the specified container/scope name. Therefore, it is important to be sure you specify the correct type and
-    /// container name. For example, if you try to add a Module to a Program, this will fail even if a program with the
-    /// container name exists, because there is no Modules container in a Program component.
+    /// within the specified container/scope name.
     /// </remarks>
-    public void Add(LogixComponent component, string program)
+    public void Add(LogixComponent component, string programName)
     {
-        var container = component.GetType().L5XContainer();
-
-        var target = Element.Descendants(container).FirstOrDefault(e => ScopeLevel.Container(e) == program);
+        var scope = Scope.Build().In(programName).Type(component.GetElementType()).Named(component.Name);
+        var target = Element.Descendants().FirstOrDefault(e => Scope.Of(e).IsIn(scope))?.Deserialize<LogixComponent>();
 
         if (target is null)
-            throw new InvalidOperationException($"Could not find container '{program}' for type {component.GetType()}");
+            throw new InvalidOperationException(
+                $"Could not find container '{programName}' for type {component.GetElementType()}");
 
-        target.Add(component.Serialize());
+        target.Append(component);
     }
 
     /// <summary>
@@ -492,17 +496,17 @@ public sealed class L5X : LogixElement, ILogixLookup
     }
 
     /// <summary>
-    /// 
+    /// Imports components into the current <see cref="L5X"/> instance based on the provided configuration action.
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public IImportTypeBuilder Import(string fileName)
+    /// <param name="action">An <see cref="Action{T}"/> delegate that configures the import using import builder API.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="action"/> parameter is null.</exception>
+    public void Import(Action<IImportSourceBuilder> action)
     {
-        if (string.IsNullOrEmpty(fileName))
-            throw new ArgumentException("FileName can not be null or empty.", nameof(fileName));
-
-        return new ImportTypeBuilder(fileName, this);
+        if (action is null) throw new ArgumentNullException(nameof(action));
+        var builder = new ImportBuilder();
+        action.Invoke(builder);
+        var import = builder.Build();
+        import.Execute(this);
     }
 
     /// <inheritdoc />
