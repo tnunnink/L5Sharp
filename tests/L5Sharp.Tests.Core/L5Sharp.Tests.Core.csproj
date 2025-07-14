@@ -390,23 +390,23 @@
       <None Update="Components\ControllerTests.Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
         <DependentUpon>ControllerTests.cs</DependentUpon>
       </None>
-      <None Update="L5XBasicTests.Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified.verified.xml">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      <None Update="L5XImportTests.Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XBasicTests.Import_ComplexDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      <None Update="L5XImportTests.Import_ComplexDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XBasicTests.Import_ComplexDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      <None Update="L5XImportTests.Import_ComplexDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XBasicTests.Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      <None Update="L5XImportTests.Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XBasicTests.Import_ModuleComponent_ShouldBeVerified.verified.xml">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      <None Update="L5XImportTests.Import_ModuleComponent_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XBasicTests.Import_SpecificTypeNameFromSource_ShouldBeVerified.verified.xml">
-        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      <None Update="L5XImportTests.Import_SpecificTypeNameFromSource_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

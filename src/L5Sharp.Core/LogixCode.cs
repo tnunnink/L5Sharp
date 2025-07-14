@@ -19,7 +19,7 @@ namespace L5Sharp.Core;
 /// same number.
 /// </para>
 /// </remarks>
-public abstract class LogixCode : LogixScoped
+public abstract class LogixCode : LogixEntity
 {
     /// <summary>
     /// Creates a new <see cref="LogixCode"/> instance with default values.
@@ -56,21 +56,6 @@ public abstract class LogixCode : LogixScoped
     /// </summary>
     /// <value>A <see cref="Routine"/> element if found; Otherwise, and <c>null</c>.</value>
     public Routine? Routine => GetAncestor<Routine>();
-
-    /// <summary>
-    /// Returns a collection of <see cref="CrossReference"/> objects found within this code element.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CrossReference"/> values contained by this code.</returns>
-    public IEnumerable<CrossReference> References() => CrossReference.In(Element);
-
-    /// <summary>
-    /// Retrieves a collection of <see cref="LogixComponent"/> instances that the current object depends on.
-    /// </summary>
-    /// <returns>
-    /// An enumerable collection of <see cref="LogixComponent"/> representing the dependencies of the current object.
-    /// If no dependencies exist, an empty collection is returned.
-    /// </returns>
-    public virtual IEnumerable<LogixComponent> Dependencies() => [];
 
     /// <inheritdoc />
     public override string ToString() => $"{GetElementType()} {Number}".Trim();

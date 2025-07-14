@@ -152,56 +152,6 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void References_NormalInstruction_ShouldBeExpected()
-        {
-            var instruction = Instruction.MOVE("MyTagValue", "SomeTagName.Member.Value");
-
-            var references = instruction.References;
-
-            references.Should().HaveCount(2);
-            references[0].Type.Should().Be(ScopeType.Tag);
-            references[1].Type.Should().Be(ScopeType.Tag);
-        }
-
-        [Test]
-        public void References_TaskReference_ShouldBeExpected()
-        {
-            var instruction = Instruction.EVENT("MyTask");
-
-            var references = instruction.References;
-
-            references.Should().HaveCount(1);
-            references[0].Type.Should().Be(ScopeType.Task);
-        }
-
-        [Test]
-        public void References_RoutineReference_ShouldBeExpected()
-        {
-            var instruction = Instruction.JSR("Routine", 1, "In1", "Out1");
-
-            var references = instruction.References;
-
-            references.Should().HaveCount(3);
-            references[0].Type.Should().Be(ScopeType.Routine);
-            references[1].Type.Should().Be(ScopeType.Tag);
-            references[2].Type.Should().Be(ScopeType.Tag);
-        }
-
-        [Test]
-        public void References_SystemInstruction_ShouldBeExpected()
-        {
-            var instruction = Instruction.GSV("Program", "MyProgram", "LastScanTime", "MyTagName");
-
-            var references = instruction.References;
-
-            references.Should().HaveCount(2);
-            references[0].Type.Should().Be(ScopeType.Program);
-            references[0].Name.Should().Be("MyProgram");
-            references[1].Type.Should().Be(ScopeType.Tag);
-            references[1].Name.Should().Be("MyTagName");
-        }
-
-        [Test]
         public void Of_ValidArguments_ShouldHaveExpectedTextAndArgumentsAndBeValid()
         {
             var instruction = Instruction.XIC("MyTag");

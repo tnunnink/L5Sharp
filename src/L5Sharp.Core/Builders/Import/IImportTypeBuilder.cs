@@ -43,5 +43,5 @@ public interface IImportTypeBuilder
     /// </summary>
     /// <param name="scope">The scope in which the routine resides. If null, the routine will be treated as global.</param>
     /// <returns>An <see cref="IImportRoutineBuilder"/> instance used to configure the remaining import operations.</returns>
-    IImportRoutineBuilder Routine(Scope? scope = null);
+    IImportRoutineBuilder Routine(Reference? scope = null);
 }

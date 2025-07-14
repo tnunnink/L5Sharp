@@ -205,13 +205,20 @@ public class Program : LogixComponent<Program>
     public Task? Task => Document?.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
 
     /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        //Programs can be references in system instruction code references
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+    }
+
+    /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
         if (Document is null) return [];
 
         return Tags.SelectMany(t => t.Dependencies())
             .Concat(Routines.SelectMany(r => r.Dependencies()))
-            .Distinct(c => c.Scope.Path);
+            .Distinct(c => c.Reference);
     }
 
     /// <summary>

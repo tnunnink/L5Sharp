@@ -14,7 +14,7 @@ internal class ImportBuilder : IImportSourceBuilder, IImportTypeBuilder
     {
         if (name is not null && !name.IsEmpty())
         {
-            _import.Target = Scope.Build().DataType(name);
+            _import.Target = Reference.To<DataType>(name);
         }
 
         return new ImportDefaultBuilder(_import);
@@ -24,7 +24,7 @@ internal class ImportBuilder : IImportSourceBuilder, IImportTypeBuilder
     {
         if (name is not null && !name.IsEmpty())
         {
-            _import.Target = Scope.Build().Instruction(name);
+            _import.Target = Reference.To<AddOnInstruction>(name);
         }
 
         return new ImportDefaultBuilder(_import);
@@ -34,7 +34,7 @@ internal class ImportBuilder : IImportSourceBuilder, IImportTypeBuilder
     {
         if (name is not null && !name.IsEmpty())
         {
-            _import.Target = Scope.Build().Module(name);
+            _import.Target = Reference.To<Module>(name);
         }
 
         return new ImportModuleBuilder(_import);
@@ -44,13 +44,13 @@ internal class ImportBuilder : IImportSourceBuilder, IImportTypeBuilder
     {
         if (name is not null && !name.IsEmpty())
         {
-            _import.Target = Scope.Build().Program(name);
+            _import.Target = Reference.To<Program>(name);
         }
 
         return new ImportProgramBuilder(_import);
     }
 
-    public IImportRoutineBuilder Routine(Scope? scope = null)
+    public IImportRoutineBuilder Routine(Reference? scope = null)
     {
         if (scope is not null)
         {

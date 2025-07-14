@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ReSharper disable RedundantUsingDirective
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,12 +45,12 @@ public sealed class L5X : LogixElement, ILogixLookup
         if (options == L5XOptions.Index)
         {
             //LogixIndex uses dictionaries and is super performant.
-            _lookup = new LogixIndex(Element.Element(L5XName.Controller)!);
+            _lookup = new LogixIndex(Element);
         }
         else
         {
             //LogixLookup uses XPath with is not terrible but will be slow for many lookups (mostly for tag elements).
-            _lookup = new LogixLookup(Element.Element(L5XName.Controller)!);
+            _lookup = new LogixLookup(Element);
         }
     }
 
@@ -197,6 +199,34 @@ public sealed class L5X : LogixElement, ILogixLookup
     public static L5X Empty() => new(LogixInfo.Empty());
 
     /// <summary>
+    /// Retrieves a collection of <see cref="LogixComponent"/> objects based on the provided filter predicate.
+    /// </summary>
+    /// <param name="predicate">A function to filter the <see cref="LogixComponent"/> objects.
+    /// If null, all components are returned.</param>
+    /// <returns>An enumerable collection of <see cref="LogixComponent"/> objects that satisfy the specified predicate.</returns>
+    public IEnumerable<LogixComponent> Components(Func<LogixComponent, bool>? predicate = null)
+    {
+        return Element.Descendants()
+            .Where(x => x.IsComponentElement() || x.IsModuleTagElement())
+            .Select(e => e.Deserialize<LogixComponent>())
+            .Where(c => predicate is null || predicate.Invoke(c));
+    }
+
+    /// <summary>
+    /// Retrieves a collection of <see cref="LogixCode"/> elements that match the provided predicate.
+    /// </summary>
+    /// <param name="predicate">A function to filter the <see cref="LogixCode"/> elements.
+    /// If null, all <see cref="LogixCode"/> elements are returned.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> containing the <see cref="LogixCode"/> elements that satisfy the predicate condition.</returns>
+    public IEnumerable<LogixCode> Code(Func<LogixCode, bool>? predicate = null)
+    {
+        return Element.Descendants()
+            .Where(x => x.IsCodeElement())
+            .Select(e => e.Deserialize<LogixCode>())
+            .Where(c => predicate is null || predicate.Invoke(c));
+    }
+
+    /// <summary>
     /// Finds an element across the entire L5X with the provided type as a flat collection of objects. 
     /// </summary>
     /// <param name="type">The type name or element name to retrieve.</param>
@@ -207,7 +237,7 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
     /// specifying the type at runtime as opposed to the generic type but sacrifices the strong type querying of the
     /// generic counterpart. This method does not make use of any optimized searching. If you want efficient lookup,
-    /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
+    /// explore the methods defined by the <see cref="ILogixLookup"/> API.
     /// </para>
     /// <para>
     /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
@@ -234,7 +264,7 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
     /// specifying the type at runtime as opposed to the generic type but sacrifices the strong type querying of the
     /// generic counterpart. This method does not make use of any optimized searching. If you want efficient lookup,
-    /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
+    /// explore the methods defined by the <see cref="ILogixLookup"/> API.
     /// </para>
     /// <para>
     /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
@@ -247,13 +277,11 @@ public sealed class L5X : LogixElement, ILogixLookup
         if (type is null)
             throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
 
-        var types = new HashSet<string>(type.L5XTypes());
+        var types = new HashSet<string>(type.GetLogixTypeNames());
 
-        foreach (var descendant in Element.Descendants())
-        {
-            if (!types.Contains(descendant.L5XType())) continue;
-            yield return descendant.Deserialize();
-        }
+        return Element.Descendants()
+            .Where(e => types.Contains(e.Name.LocalName))
+            .Select(e => e.Deserialize());
     }
 
     /// <summary>
@@ -267,17 +295,13 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// it returns <see cref="IEnumerable{T}"/>, you can make use of LINQ and the strongly typed objects to build
     /// more complex queries.
     ///</para>
-    /// <para>
-    /// This method does not make use of any optimized searching. If you want efficient lookup,
-    /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
-    /// </para>
     /// </remarks>
     public IEnumerable<TObject> Query<TObject>() where TObject : LogixObject, new()
     {
-        var typeNames = typeof(TObject).L5XTypes().ToList();
+        var types = new HashSet<string>(typeof(TObject).GetLogixTypeNames());
 
         return Element.Descendants()
-            .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
+            .Where(e => types.Contains(e.Name.LocalName))
             .Select(e => e.Deserialize<TObject>());
     }
 
@@ -293,103 +317,95 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// it returns <see cref="IEnumerable{T}"/>, you can make use of LINQ and the strongly typed objects to build
     /// more complex queries.
     ///</para>
-    /// <para>
-    /// This method does not make use of any optimized searching. If you want efficient lookup,
-    /// explore the methods defined by the <see cref="ILogixLookup"/> API such as <see cref="Find"/>.
-    /// </para>
     /// </remarks>
     public IEnumerable<TObject> Query<TObject>(Func<TObject, bool> predicate) where TObject : LogixObject, new()
     {
-        var typeNames = typeof(TObject).L5XTypes().ToList();
+        var types = new HashSet<string>(typeof(TObject).GetLogixTypeNames());
 
         return Element.Descendants()
-            .Where(e => typeNames.Any(n => n.IsEquivalent(e.L5XType())))
+            .Where(e => types.Contains(e.Name.LocalName))
             .Select(e => e.Deserialize<TObject>())
             .Where(predicate);
     }
 
     /// <inheritdoc />
-    public bool Contains(Scope scope)
+    public bool Contains(Reference reference)
     {
-        return _lookup.Contains(scope);
+        return _lookup.Contains(reference);
     }
 
     /// <inheritdoc />
-    public bool Contains(Func<IScopeBuilder, Scope> builder)
+    public bool Contains(Action<IReferenceTypeBuilder> action)
     {
-        return _lookup.Contains(builder);
+        return _lookup.Contains(action);
     }
 
     /// <inheritdoc />
-    public IEnumerable<LogixScoped> Find(Scope scope)
+    public LogixEntity Get(Reference reference)
     {
-        return _lookup.Find(scope);
+        return _lookup.Get(reference);
     }
 
     /// <inheritdoc />
-    public IEnumerable<TScoped> Find<TScoped>(Scope scope) where TScoped : LogixScoped
+    public TComponent Get<TComponent>(string name, string? program = null) where TComponent : LogixComponent
     {
-        return _lookup.Find<TScoped>(scope);
+        return _lookup.Get<TComponent>(name, program);
     }
 
     /// <inheritdoc />
-    public LogixScoped Get(Scope scope)
+    public TCode Get<TCode>(int number, string program, string routine) where TCode : LogixCode
     {
-        return _lookup.Get(scope);
+        return _lookup.Get<TCode>(number, program, routine);
     }
 
     /// <inheritdoc />
-    public TScoped Get<TScoped>(Scope scope) where TScoped : LogixScoped
+    public LogixEntity Get(Action<IReferenceTypeBuilder> action)
     {
-        return _lookup.Get<TScoped>(scope);
+        return _lookup.Get(action);
     }
 
     /// <inheritdoc />
-    public LogixScoped Get(Func<IScopeBuilder, Scope> builder)
+    public TEntity Get<TEntity>(Action<IReferenceLocationBuilder> action) where TEntity : LogixEntity
     {
-        return _lookup.Get(builder);
+        return _lookup.Get<TEntity>(action);
     }
 
     /// <inheritdoc />
-    public TScoped Get<TScoped>(Func<IScopeBuilder, Scope> builder) where TScoped : LogixScoped
+    public bool TryGet(Reference reference, out LogixEntity entity)
     {
-        return _lookup.Get<TScoped>(builder);
+        return _lookup.TryGet(reference, out entity);
     }
 
     /// <inheritdoc />
-    public bool TryGet(Scope scope, out LogixScoped element)
+    public bool TryGet<TComponent>(string name, out TComponent compoenent) where TComponent : LogixComponent
     {
-        return _lookup.TryGet(scope, out element);
+        return _lookup.TryGet(name, out compoenent);
     }
 
     /// <inheritdoc />
-    public bool TryGet<TScoped>(Scope scope, out TScoped element) where TScoped : LogixScoped
+    public bool TryGet<TComponent>(string name, string program, out TComponent component)
+        where TComponent : LogixComponent
     {
-        return _lookup.TryGet(scope, out element);
+        return _lookup.TryGet(name, out component);
     }
 
     /// <inheritdoc />
-    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixScoped element)
+    public bool TryGet<TCode>(int number, string program, string routine, out TCode code) where TCode : LogixCode
     {
-        return _lookup.TryGet(builder, out element);
+        return _lookup.TryGet(number, program, routine, out code);
     }
 
     /// <inheritdoc />
-    public bool TryGet<TScoped>(Func<IScopeBuilder, Scope> builder, out TScoped element) where TScoped : LogixScoped
+    public bool TryGet(Action<IReferenceTypeBuilder> action, out LogixEntity entity)
     {
-        return _lookup.TryGet(builder, out element);
+        return _lookup.TryGet(action, out entity);
     }
 
     /// <inheritdoc />
-    public IEnumerable<CrossReference> References(LogixComponent component)
+    public bool TryGet<TEntity>(Action<IReferenceLocationBuilder> action, out TEntity element)
+        where TEntity : LogixEntity
     {
-        return _lookup.References(component);
-    }
-
-    /// <inheritdoc />
-    public IEnumerable<Scope> Scopes()
-    {
-        return _lookup.Scopes();
+        return _lookup.TryGet(action, out element);
     }
 
     /// <summary>
@@ -400,25 +416,22 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top-level
     /// container, it will work most of the time. If the provided component has a defined scope, then this method will
     /// attempt to find the corresponding container to add this component to the correct scope. If this component is not
-    /// scoped, then we will build a simple global relative scope using the type and name. If you want to explicit about
+    /// scoped, then we will build a simple global relative scope using the type and name. If you want to be explicit about
     /// where this component should be added, then use the <seealso cref="Add(L5Sharp.Core.LogixComponent, string)"/> overload.
     /// </remarks>
     public void Add(LogixComponent component)
     {
-        //If the provided component has a defined scope, then we can use that to add this component to the correct location.
-        //Otherwise, we will build a relative scope assuming this is a global component (i.e., not a routine or program tag).
-        var scope = component.Scope.IsScoped
-            ? component.Scope
-            : Scope.Build().Type(component.GetElementType()).Named(component.Name);
+        if (component is null)
+            throw new ArgumentNullException(nameof(component));
 
-        var target = Element.Descendants()
-            .FirstOrDefault(e => e.Name.LocalName == component.GetElementType() && Scope.Of(e).IsIn(scope))
-            ?.Deserialize<LogixComponent>();
+        var container = Element
+            .Descendants(component.GetType().GetLogixContainerName())
+            .FirstOrDefault(e => Scope.Of(e).IsLocalTo(component.Reference));
 
-        if (target is null)
-            throw new InvalidOperationException($"Could not find container for type {component.GetElementType()}");
+        if (container is null)
+            throw new InvalidOperationException($"Could not find container type '{component.GetElementType()}'");
 
-        target.Append(component);
+        container.Add(component.Serialize());
     }
 
     /// <summary>
@@ -433,25 +446,32 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// </remarks>
     public void Add(LogixComponent component, string programName)
     {
-        var scope = Scope.Build().In(programName).Type(component.GetElementType()).Named(component.Name);
-        var target = Element.Descendants().FirstOrDefault(e => Scope.Of(e).IsIn(scope))?.Deserialize<LogixComponent>();
+        if (component is null)
+            throw new ArgumentNullException(nameof(component));
 
-        if (target is null)
+        var container = Element
+            .Descendants(component.GetType().GetLogixContainerName())
+            .FirstOrDefault(e => Scope.Of(e).Container == programName);
+
+        if (container is null)
             throw new InvalidOperationException(
-                $"Could not find container '{programName}' for type {component.GetElementType()}");
+                $"Could not find container type '{component.GetElementType()}' in scope: '{programName}'");
 
-        target.Append(component);
+        container.Add(component.Serialize());
     }
 
     /// <summary>
-    /// Removes the element returned by the provided <see cref="IScopeBuilder"/> function.
+    /// Removes a specific element identified by the provided <see cref="IReferenceTypeBuilder"/> action.
     /// </summary>
-    /// <param name="builder">A function that takes an <see cref="IScopeBuilder"/> and returns an <see cref="Scope"/> element to remove.</param>
-    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="builder"/> function is null.</exception>
-    public void Remove(Func<IScopeBuilder, Scope> builder)
+    /// <param name="action">An action to configure the <see cref="IReferenceTypeBuilder"/> for identifying the element to remove.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
+    public void Remove(Action<IReferenceTypeBuilder> action)
     {
-        if (builder is null) throw new ArgumentNullException(nameof(builder));
-        var element = _lookup.Get(builder);
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
+
+        var element = _lookup.Get(action);
+
         element.Remove();
     }
 
@@ -478,8 +498,8 @@ public sealed class L5X : LogixElement, ILogixLookup
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
-        var scope = Scope.Build(Controller.Name).Type(typeof(TComponent).L5XType()).Named(name);
-        var element = _lookup.Get(scope);
+        var reference = Reference.To<TComponent>(name);
+        var element = _lookup.Get(reference);
         element.Remove();
     }
 
@@ -507,6 +527,31 @@ public sealed class L5X : LogixElement, ILogixLookup
         action.Invoke(builder);
         var import = builder.Build();
         import.Execute(this);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ILogixLookup"/> instance for indexing the L5X content.
+    /// </summary>
+    /// <returns>An <see cref="ILogixLookup"/> instance representing the indexed L5X content.</returns>
+    public ILogixLookup ToLookup()
+    {
+        return new LogixIndex(Element);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ILogixLookup"/> for the specified program within the L5X content.
+    /// </summary>
+    /// <param name="program">The name of the program to create a lookup for.</param>
+    /// <returns>An instance of <see cref="ILogixLookup"/> representing the specified program.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no program with the specified name exists.</exception>
+    public ILogixLookup ToLookup(string program)
+    {
+        var element = Element.Descendants(L5XName.Program).FirstOrDefault(p => p.LogixName() == program);
+
+        if (element is null)
+            throw new InvalidOperationException($"No program with name '{program}' found.");
+
+        return new LogixIndex(element);
     }
 
     /// <inheritdoc />

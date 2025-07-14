@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -65,60 +65,35 @@ internal static class L5XExtensions
     internal static string L5XType(this XElement element) => element.Name.LocalName;
 
     /// <summary>
-    /// Gets the first configured L5XType name or element name for the specified type. 
+    /// Retrieves the full Logix path of the specified XML element within an L5X file hierarchy.
+    /// This path will always start from the controller element and descend to the current element specified.
+    /// This path resembles the XPath syntax required to get an element relative to the controller.
     /// </summary>
-    /// <param name="type">The type to get the L5XType (element name) for.</param>
-    /// <returns>A <see cref="string"/> representing the name of the element that corresponds to the type.</returns>
-    /// <remarks>
-    /// <para>
-    /// All this does look for the first <see cref="L5XTypeAttribute"/> configured to use as the explicitly configured
-    /// name, and if not found, returns the <see cref="Type"/> name as the default element name,
-    /// as most types are the name of the element anyway.
-    /// </para>
-    /// <para>
-    /// The "L5XType" is simply the name of the element. Since elements map the classes, we can know which
-    /// type to deserialize or instantiate given the name of the element.
-    /// </para>
-    /// </remarks>
-    internal static string L5XType(this Type type)
+    /// <param name="element">The XML element for which to retrieve the Logix path.</param>
+    /// <returns>A string representing the full Logix path for the specified XML element.</returns>
+    internal static string LogixPath(this XElement element)
     {
-        var attribute = type.GetCustomAttributes<L5XTypeAttribute>(false).FirstOrDefault();
-        return attribute is not null ? attribute.TypeName : type.Name;
-    }
+        //Handle module tags specifically we need to view these as controller tags.
+        if (element.IsModuleTagElement())
+        {
+            return $"Controller/Tags/Tag[@Name='{element.ModuleTagName()}']";
+        }
 
-    /// <summary>
-    /// Gets all the configured L5XType names fo the current type.
-    /// </summary>
-    /// <param name="type">The type to get the L5XTypes (element names) name for.</param>
-    /// <returns>A collection of <see cref="string"/> values representing the element names the type supports.</returns>
-    /// <remarks>
-    /// This attempts to find all configured class <see cref="L5XTypeAttribute"/> to use as the explicitly
-    /// configured name(s) for the type, and if not found, returns just the <see cref="Type"/> name as the
-    /// default element name, as most types are the name of the element anyway.
-    /// </remarks>
-    internal static IEnumerable<string> L5XTypes(this Type type)
-    {
-        var attributes = type.GetCustomAttributes<L5XTypeAttribute>(false).ToList();
-        return attributes.Count != 0 ? attributes.Select(a => a.TypeName) : [type.Name];
-    }
+        var builder = new StringBuilder();
 
-    /// <summary>
-    /// Gets the L5X element name of the type's containing element. 
-    /// </summary>
-    /// <param name="type">The type to get the L5X element name for.</param>
-    /// <returns>
-    /// A <see cref="string"/> representing the name of the parent element that corresponds to the type's container.
-    /// </returns>
-    /// <remarks>
-    /// All this does is look for the first <see cref="L5XTypeAttribute"/> to use as the explicitly configured container
-    /// name, and if not found, returns the <see cref="Type"/> name with an 's' appended as the default element container
-    /// name, as most type's element container is just the plural type name. This is unsophisticated pluralization,
-    /// but it works for all cases in the L5X.
-    /// </remarks>
-    internal static string L5XContainer(this Type type)
-    {
-        var attribute = type.GetCustomAttributes<L5XTypeAttribute>(false).FirstOrDefault();
-        return attribute is not null ? $"{attribute.TypeName}s" : $"{type.Name}s";
+        var elements = element.AncestorsAndSelf()
+            .TakeWhile(x => x.Name.LocalName != L5XName.RSLogix5000Content)
+            .ToArray();
+
+        //Iterate in reverse to build the path from root down to this element.
+        for (var i = elements.Length - 1; i >= 0; i--)
+        {
+            if (i < elements.Length - 1) builder.Append('/');
+            var identifier = elements[i].Identifier();
+            builder.Append(identifier);
+        }
+
+        return builder.ToString();
     }
 
     /// <summary>
@@ -256,19 +231,37 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Retrieves the identifier for the specified XML element based on its type or attributes.
+    /// Generates an identifier for the specified XML element based on its attributes and type.
     /// </summary>
-    /// <param name="element">The XML element from which to retrieve the identifier.</param>
-    /// <returns>A string representing the identifier of the XML element.</returns>
-    internal static string Identifier(this XElement element)
+    /// <param name="element">The XML element for which the identifier is generated.</param>
+    /// <returns>A string representing the identifier for the XML element.</returns>
+    private static string Identifier(this XElement element)
     {
-        if (element.IsCodeElement()) return element.Attribute(L5XName.Number)?.Value ?? string.Empty;
-        if (element.IsTagElement() || element.IsDataMemberElement()) return element.TagName();
-        return element.LogixName();
+        if (element.IsTagElement() || element.IsDataMemberElement())
+        {
+            return $"Tag[@Name='{element.TagName()}']";
+        }
+
+        if (element.IsComponentElement())
+        {
+            return $"{element.Name.LocalName}[@Name='{element.LogixName()}']";
+        }
+
+        if (element.IsCodeElement())
+        {
+            return $"{element.Name.LocalName}[@Number='{element.Attribute(L5XName.Number)?.Value ?? string.Empty}']";
+        }
+
+        if (element.Attribute(L5XName.ID) is not null)
+        {
+            return $"{element.Name.LocalName}[@ID='{element.Attribute(L5XName.ID)?.Value ?? string.Empty}']";
+        }
+
+        return element.Name.LocalName;
     }
 
     /// <summary>
-    /// Determines if the specified string represents a container element in the L5X schema.
+    /// Determines if the specified string represents a toplevel container element in the L5X schema.
     /// </summary>
     /// <param name="name">The string to evaluate as a container element.</param>
     /// <returns>True if the string is a recognized container element name; otherwise, false.</returns>
@@ -284,6 +277,51 @@ internal static class L5XExtensions
             or L5XName.ParameterConnections
             or L5XName.Trends
             or L5XName.QuickWatchList;
+    }
+
+    /// <summary>
+    /// Determines whether the given XElement represents a component element in the L5X file.
+    /// </summary>
+    /// <param name="element">The XElement to check.</param>
+    /// <returns>
+    /// True if the XElement is a component element, such as a DataType, Module, AddOnInstructionDefinition,
+    /// Tag, Program, Routine, Task, Trend, or QuickWatchList. Otherwise, false.
+    /// </returns>
+    internal static bool IsComponentElement(this XElement element)
+    {
+        return element.Name.LocalName
+            is L5XName.DataType
+            or L5XName.Module
+            or L5XName.AddOnInstructionDefinition
+            or L5XName.Tag
+            or L5XName.Program
+            or L5XName.Routine
+            or L5XName.Task
+            or L5XName.Trend
+            or L5XName.QuickWatchList;
+    }
+
+    /// <summary>
+    /// Determines if the specified XML element represents a code element such as a Rung, Line, or Sheet.
+    /// </summary>
+    /// <param name="element">The XML element to evaluate.</param>
+    /// <returns>True if the element is a code element. Otherwise, false.</returns>
+    internal static bool IsCodeElement(this XElement element)
+    {
+        return element.Name.LocalName
+            is L5XName.Rung
+            or L5XName.Line
+            or L5XName.Sheet;
+    }
+
+    /// <summary>
+    /// Determines whether the specified XElement represents a reference element.
+    /// </summary>
+    /// <param name="element">The XElement to evaluate.</param>
+    /// <returns>True if the element is a reference element; otherwise, false.</returns>
+    internal static bool IsReferenceElement(this XElement element)
+    {
+        return element.IsComponentElement() || element.IsCodeElement() || element.IsTagElement();
     }
 
     /// <summary>
@@ -304,7 +342,7 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines if the current element represents an element we would deserialize as a <see cref="Tag"/> component.
+    /// Determines if the current element represents an element, we would deserialize as a <see cref="Tag"/> component.
     /// </summary>
     /// <param name="element">The element to check.</param>
     /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
@@ -332,16 +370,28 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines if the specified XML element represents a code element such as a Rung, Line, or Sheet.
+    /// Determines whether the specified XElement represents a container element.
     /// </summary>
-    /// <param name="element">The XML element to evaluate.</param>
-    /// <returns>True if the element is a code element. Otherwise, false.</returns>
-    private static bool IsCodeElement(this XElement element)
+    /// <param name="element">The XElement to analyze.</param>
+    /// <returns>True if the element is a container element; otherwise, false.</returns>
+    internal static bool IsContainerElement(this XElement element)
     {
         return element.Name.LocalName
-            is L5XName.Rung
-            or L5XName.Line
-            or L5XName.Sheet;
+            is L5XName.Program
+            or L5XName.AddOnInstructionDefinition;
+    }
+
+    /// <summary>
+    /// Determines whether the specified XML element is identifiable, based on its attributes or type.
+    /// </summary>
+    /// <param name="element">The XML element to be evaluated.</param>
+    /// <returns>True if the element has a 'Name' or 'Number' attribute or is a module tag element. Otherwise, false.</returns>
+    internal static bool IsIdentifiable(this XElement element)
+    {
+        return element.Attribute(L5XName.Name) is not null
+               || element.Attribute(L5XName.Number) is not null
+               || element.Attribute(L5XName.ID) is not null
+               || element.IsModuleTagElement();
     }
 
     /// <summary>
@@ -489,34 +539,45 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Retrieves the dependencies for a specified data type within the given L5X content.
+    /// Appends the specified value to the string builder if the provided predicate evaluates to true.
     /// </summary>
-    /// <param name="content">The L5X content to search for dependencies.</param>
-    /// <param name="dataType">The name of the data type for which dependencies are to be retrieved.</param>
-    /// <returns>A collection of <see cref="LogixComponent"/> representing the dependencies of the specified data type.</returns>
-    /// <remarks>
-    /// Note this extension will return only distinct components by name.
-    /// This could be either <see cref="DataType"/> of <see cref="AddOnInstruction"/> components.
-    /// </remarks>
-    public static IEnumerable<LogixComponent> DependenciesForType(this L5X? content, string? dataType)
+    /// <param name="builder">The StringBuilder instance to append to.</param>
+    /// <param name="value">The string value to conditionally append.</param>
+    /// <param name="predicate">The predicate function used to determine if the value should be appended.</param>
+    /// <returns>The original StringBuilder instance, with the value appended if the predicate evaluates to true.</returns>
+    public static StringBuilder AppendIf(this StringBuilder builder, string value, Func<bool> predicate)
     {
-        if (content is null || dataType is null || dataType.IsEmpty() || AtomicData.IsAtomic(dataType)) return [];
+        if (builder is null)
+            throw new ArgumentNullException(nameof(builder));
 
-        var dependencies = new List<LogixComponent>();
+        if (predicate is null)
+            throw new ArgumentNullException(nameof(predicate));
 
-        if (content.TryGet<DataType>(dataType, out var udt))
+        if (predicate.Invoke())
         {
-            dependencies.Add(udt);
-            dependencies.AddRange(udt.Dependencies());
+            builder.Append(value);
         }
 
-        if (content.TryGet<AddOnInstruction>(dataType, out var aoi))
+        return builder;
+    }
+
+    /// <summary>
+    /// Determines whether the specified element is null.
+    /// </summary>
+    /// <typeparam name="T">The type of the element.</typeparam>
+    /// <param name="element">The element to evaluate.</param>
+    /// <param name="result">The output parameter that will contain the value of the element if it is not null.</param>
+    /// <returns>True if the element is not null; otherwise, false.</returns>
+    internal static bool IsNull<T>(this T? element, out T result) where T : class
+    {
+        if (element is null)
         {
-            dependencies.Add(aoi);
-            dependencies.AddRange(aoi.Dependencies());
+            result = null!;
+            return false;
         }
 
-        return dependencies.Distinct(c => c.Name);
+        result = element;
+        return true;
     }
 
     //Extensions for .NET Standard 2.0 to allow me not to have to rewrite the code in certain places. 

@@ -161,6 +161,21 @@ public class AddOnInstructionTests
     }
 
     [Test]
+    public void ToData_InstructionWithValidParameters_ShouldBeExpected()
+    {
+        var aoi = new AddOnInstruction("MyAoi");
+        aoi.Parameters.Add(new Parameter("Param01", new DINT(123)));
+        aoi.Parameters.Add(new Parameter("Param02", new BOOL(true)));
+        aoi.Parameters.Add(new Parameter("Param02", new REAL(1.23f)));
+
+        var data = aoi.ToData();
+
+        data.Should().NotBeNull();
+        data.Name.Should().Be("MyAoi");
+        data.Members.ToList().Should().HaveCount(5);
+    }
+
+    [Test]
     public void ToText_ValidArguments_ShouldBeExpected()
     {
         var aoi = new AddOnInstruction("TestAOI");

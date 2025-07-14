@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -42,27 +43,36 @@ public sealed class Line : LogixCode
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// For Lines, this method will return all parsed code/instruction references in the <see cref="Text"/> property.
+    /// This is because Rungs are not "Used" but use other components like tags or instructions, and we want
+    /// to reverse this method to allow those components to find their usages susinctly.
+    /// </remarks>
+    public override IEnumerable<Reference> Usages()
+    {
+        return Text.Instructions().Select(x => Reference.ToLogic(x));
+    }
+
+    /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (Document is null) return [];
-
         var dependencies = new List<LogixComponent>();
 
         foreach (var tagName in Text.Tags())
         {
-            if (!Document.TryGet<Tag>(tagName, out var tag)) continue;
+            if (!TryResolve<Tag>(tagName, out var tag)) continue;
             dependencies.Add(tag);
             dependencies.AddRange(tag.Dependencies());
         }
 
         foreach (var instruction in Text.Instructions())
         {
-            if (!Document.TryGet<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            if (!TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
             dependencies.Add(aoi);
             dependencies.AddRange(aoi.Dependencies());
         }
 
-        return dependencies.Distinct(c => c.Name);
+        return dependencies.Distinct(c => c.Reference);
     }
 
     /// <inheritdoc />

@@ -133,9 +133,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
-    /// Indicates that the instruction has and executes a pre scan routine.
+    /// Indicates that the instruction has and executes a pre-scan routine.
     /// </summary>
-    /// <value><c>true</c> if the instruction executes a pre scan routine; otherwise, <c>false</c>.</value>
+    /// <value><c>true</c> if the instruction executes a pre-scan routine; otherwise, <c>false</c>.</value>
     public bool ExecutePreScan
     {
         get => GetValue<bool>();
@@ -143,9 +143,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
-    /// Indicates that the instruction has and executes a post scan routine.
+    /// Indicates that the instruction has and executes a post-scan routine.
     /// </summary>
-    /// <value><c>true</c> if the instruction executes a post scan routine; otherwise, <c>false</c>.</value>
+    /// <value><c>true</c> if the instruction executes a post-scan routine; otherwise, <c>false</c>.</value>
     public bool ExecutePostScan
     {
         get => GetValue<bool>();
@@ -153,9 +153,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
-    /// Indicates that the instruction has and executes a enable in false routine.
+    /// Indicates that the instruction has and executes an enabled in false routine.
     /// </summary>
-    /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes a enable in false routine; otherwise, <c>false</c>.</value>
+    /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes an enabled in false routine; otherwise, <c>false</c>.</value>
     public bool ExecuteEnableInFalse
     {
         get => GetValue<bool>();
@@ -267,15 +267,43 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// This is an extension to make accessing the code for the instruction easier. All instructions have at
     /// least a single routine called Logic which contains the code for the instruction.
     /// </remarks>
-    public Routine Logic => Routines.SingleOrDefault(r => r.Name == nameof(Logic)) ??
-                            throw new InvalidOperationException("No Logic routine is defined for AOI.");
+    public Routine Logic
+    {
+        get
+        {
+            return Routines.SingleOrDefault(r => r.Name == nameof(Logic)) ??
+                   throw new InvalidOperationException("No Logic routine is defined for AOI.");
+        }
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+
+        //todo any type reference to this AOI (tag or other AOI parameter/local tag).
+    }
 
     /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        return Parameters.SelectMany(p => Document.DependenciesForType(p.DataType))
-            .Concat(LocalTags.SelectMany(t => Document.DependenciesForType(t.DataType)))
-            .Distinct(c => c.Name);
+        var dependencies = new List<LogixComponent>();
+
+        foreach (var parameter in Parameters)
+        {
+            if (parameter.DataType is null || !TryResolveType(parameter.DataType, out var type)) continue;
+            dependencies.Add(type);
+            dependencies.AddRange(type.Dependencies());
+        }
+
+        foreach (var tag in LocalTags)
+        {
+            if (!TryResolveType(tag.DataType, out var type)) continue;
+            dependencies.Add(type);
+            dependencies.AddRange(type.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Reference);
     }
 
     /// <summary>
@@ -287,10 +315,10 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     public Instruction ToInstruction(TagName tagName, params Argument[] arguments) => Instantiate(tagName, arguments);
 
     /// <summary>
-    /// Creates a new <see cref="NeutralText"/> instance using the provided tagname and optional arguments.
+    /// Creates a new <see cref="NeutralText"/> instance using the provided tagnames and optional arguments.
     /// </summary>
     /// <param name="tagName">The tag name of the AOI instance.</param>
-    /// <param name="arguments">The optional arguments to supply the instruction signatrue with.</param>
+    /// <param name="arguments">The optional arguments to supply the instruction signature with.</param>
     /// <returns>A <see cref="NeutralText"/> having this AOI's key and provided arguments.</returns>
     public NeutralText ToText(TagName tagName, params Argument[] arguments) => Instantiate(tagName, arguments).Text;
 
@@ -324,7 +352,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
         var data = LogixData.Create(Name);
 
-        //If it is not a complex data (meaning more derived) then it was defined, and we can return it.
+        //If it is not a complex data (meaning more derived), then it was defined, and we can return it.
         if (data is not ComplexData complexData) return data;
 
         //Generate the members from the parameters that are configured as input/output parameters.
@@ -347,7 +375,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// logic, with each instruction parameter tag name replaced with the arguments from the provided text.
     /// </returns>
     /// <remarks>
-    /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic we can
+    /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic, we can
     /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
     /// content or code type.
     /// </remarks>
@@ -356,7 +384,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         if (instruction is null)
             throw new ArgumentNullException(nameof(instruction));
 
-        // All instructions primary logic is contained in the routine named 'Logic'
+        // All-instructions primary logic is contained in the routine named 'Logic'
         var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
 
         var rungs = logic?.Content<Rung>();
@@ -371,7 +399,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         //Generate a mapping of the provided instructions arguments to instruction parameters.
         var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
 
-        //Replace all parameter names with argument names in the instruction logic text, and return the results.
+        //Replace all parameter names with argument names in the instruction logic text and return the results.
         return rungs.Select(r => r.Text)
             .Select(t => mapping.Aggregate(t, (current, pair) =>
             {

@@ -28,7 +28,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent : LogixScoped
+public abstract class LogixComponent : LogixEntity
 {
     /// <inheritdoc />
     protected LogixComponent(string name) : base(name)
@@ -83,28 +83,6 @@ public abstract class LogixComponent : LogixScoped
     }
 
     /// <summary>
-    /// Returns a collection of <see cref="LogixComponent"/> that this component depends on to be valid within a given
-    /// L5X file.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing all distinct <see cref="LogixComponent"/> objects this
-    /// component depends on.</returns>
-    /// <remarks>
-    /// This is primarily useful for exporting individual components to a new L5X file. It allows them to also
-    /// bring along all the other components they would need to be successfully importing into a logix project file.
-    /// Each derived component implements this method since the dependencies are different for each type.
-    /// </remarks>
-    public virtual IEnumerable<LogixComponent> Dependencies() => [];
-
-    /// <summary>
-    /// Returns a collection of all <see cref="LogixElement"/> objects that reference this component by name.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="IEnumerable{T}"/> containing <see cref="LogixElement"/> objects that have
-    /// at least one property value referencing this component's name.
-    /// </returns>
-    public IEnumerable<CrossReference> References() => Document?.References(this) ?? [];
-
-    /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.
     /// </summary>
     /// <remarks>
@@ -118,11 +96,11 @@ public abstract class LogixComponent : LogixScoped
     {
         if (Element.Parent is null) return;
 
-        var references = References();
+        var references = Usages();
 
         foreach (var reference in references)
         {
-            if (Document?.TryGet(reference.Scope, out var element) is true)
+            if (Document?.TryGet(reference, out var element) is true)
             {
                 element.Remove();
             }
@@ -143,7 +121,6 @@ public abstract class LogixComponent : LogixScoped
 
         var info = LogixInfo.Create(this, softwareRevision);
         var content = new L5X(info);
-        //this won't work for routines
         content.Add(this);
 
         foreach (var dependency in Dependencies())

@@ -48,6 +48,74 @@ public class L5XBasicTests
     }
 
     [Test]
+    public void Components_WhenCalled_ShouldAllDeriveFromLogixComponent()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var components = content.Components().ToArray();
+
+        components.Should().NotBeEmpty();
+        components.Should().AllSatisfy(c => c.Should().BeAssignableTo<LogixComponent>());
+    }
+
+    [Test]
+    public void Components_WithPredicate_ShouldReturnExpected()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var components = content.Components(c => c.Name.Contains("Test")).ToArray();
+
+        components.Should().NotBeEmpty();
+        components.Should().AllSatisfy(c => c.Name.Should().Contain("Test"));
+    }
+
+    [Test]
+    public void Code_WhenCalled_ShouldNotBeEmptyAndAssignableToLogixCode()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var code = content.Code().ToArray();
+
+        code.Should().NotBeEmpty();
+        code.Should().AllSatisfy(c => c.Should().BeAssignableTo<LogixCode>());
+    }
+
+    [Test]
+    public void Code_ValidPredicate_ShouldHaveExpectedResults()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var code = content.Code(c => c.Scope.IsLocalTo("MainProgram")).ToArray();
+
+        code.Should().NotBeEmpty();
+        code.Should().AllSatisfy(c => c.Reference.Container.Should().Be("MainProgram"));
+    }
+
+    [Test]
+    public void Code_SelectUsagesInSpecificRoutine_ShouldReturnExpected()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var usages = content.Code().SelectMany(c => c.Usages()).Where(r => r.Routine == "Main").ToArray();
+
+        usages.Should().NotBeEmpty();
+        usages.Should().AllSatisfy(r => r.Routine.Should().Be("Main"));
+    }
+
+    [Test]
+    public void Code_SelectUsagesWithStringArguments_ShouldReturnExpected()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var usages = content.Code()
+            .SelectMany(c => c.Usages())
+            .Where(r => r.Logic.Arguments.Any(a => a.IsString))
+            .ToArray();
+
+        usages.Should().NotBeEmpty();
+    }
+
+    [Test]
     public void Query_TypeNameOverload_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test);
@@ -165,104 +233,6 @@ public class L5XBasicTests
             .ScrubMember("LastModifiedDate");
     }
 
-
-    [Test]
-    public Task Import_ComplexDataTypeWithNotConfiguration_ShouldBeVerified()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        content.Import(b => b
-            .From(Known.DataTypeExport)
-            .DataType()
-            .Force()
-        );
-
-        return VerifyXml(content.Serialize().ToString());
-    }
-
-    [Test]
-    public Task Import_ComplexDataTypeDiscardSimpleType_ShouldBeVerified()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        content.Import(b => b
-            .From(Known.DataTypeExport)
-            .DataType()
-            .Discard<DataType>(d => d.Name == "SimpleType")
-        );
-
-        return VerifyXml(content.Serialize().ToString());
-    }
-
-    [Test]
-    public Task Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        content.Import(b => b
-            .From(Known.DataTypeExport)
-            .DataType()
-            .Discard<DataType>(d => d.Name == "SimpleType")
-            .Modify<DataType>(
-                d => d.Name == "ComplexType",
-                d => d.RemoveMember("SimpleMember")
-            )
-        );
-
-        return VerifyXml(content.Serialize().ToString());
-    }
-
-    [Test]
-    public Task Import_ModuleComponent_ShouldBeVerified()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        content.Import(b => b
-            .From(Known.ModuleExport)
-            .Module()
-        );
-
-        return VerifyXml(content.Serialize().ToString());
-    }
-
-    [Test]
-    public Task Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        content.Add(new LTask { Name = "Standard", Type = TaskType.Periodic });
-
-        content.Import(b => b
-            .From(Known.ProgramExport)
-            .Program()
-            .ScheduleIn("Standard")
-            .Rename("ImportedProgram")
-        );
-
-        return VerifyXml(content.Serialize().ToString());
-    }
-
-    [Test]
-    public void Import_IncorrectTypeBasedOnTarget_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        FluentActions.Invoking(() => content.Import(b => b.From(Known.ProgramExport).DataType()))
-            .Should().Throw<InvalidOperationException>();
-    }
-
-    [Test]
-    public Task Import_SpecificTypeNameFromSource_ShouldBeVerified()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        content.Import(b => b
-            .From(Known.Test)
-            .DataType("ComplexType")
-        );
-
-        return VerifyXml(content.Serialize().ToString());
-    }
 
     [DotMemoryUnit(FailIfRunWithoutSupport = false)]
     [Test]

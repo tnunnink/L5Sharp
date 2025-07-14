@@ -31,9 +31,9 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <summary>
     /// Creates an empty <see cref="LogixContainer{TObject}"/> with the default type name.
     /// </summary>
-    public LogixContainer() : base(typeof(TObject).L5XContainer())
+    public LogixContainer() : base(typeof(TObject).GetLogixContainerName())
     {
-        _itemType = typeof(TObject).L5XType();
+        _itemType = typeof(TObject).GetLogixTypeName();
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
     public LogixContainer(XElement element) : base(element)
     {
-        _itemType = typeof(TObject).L5XType();
+        _itemType = typeof(TObject).GetLogixTypeName();
     }
 
     /// <summary>

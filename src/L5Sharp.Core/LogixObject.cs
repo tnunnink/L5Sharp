@@ -6,7 +6,7 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// A class implementing <see cref="LogixElement"/> that adds common properties and methods shared by most elements or
-/// components. Features include the <see cref="Scope"/> to identify where in the document they exist,
+/// components. Features include the <see cref="Reference"/> to identify where in the document they exist,
 /// and methods <see cref="AddBefore"/>, <see cref="AddBefore"/>, <see cref="Remove"/>, and
 /// <see cref="Replace(L5Sharp.Core.LogixObject)"/> which allow easy interface to mutate the object or collection of objects.
 /// </summary>
@@ -141,7 +141,7 @@ public abstract class LogixObject : LogixElement
         if (string.IsNullOrEmpty(typeName))
             throw new ArgumentException("Type name can not be null or empty to perform conversion", nameof(typeName));
 
-        if (!GetType().L5XTypes().Contains(typeName))
+        if (!GetType().GetLogixTypeNames().Contains(typeName))
             throw new InvalidOperationException(
                 $"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
 
@@ -169,9 +169,9 @@ public abstract class LogixObject : LogixElement
     /// </remarks>
     public TObject Convert<TObject>(string? typeName = null) where TObject : LogixObject
     {
-        typeName ??= typeof(TObject).L5XType();
+        typeName ??= typeof(TObject).GetLogixTypeName();
 
-        if (!GetType().L5XTypes().Contains(typeName))
+        if (!GetType().GetLogixTypeNames().Contains(typeName))
             throw new InvalidOperationException(
                 $"Can not convert element type '{GetElementType()}' to type '{typeName}'.");
 

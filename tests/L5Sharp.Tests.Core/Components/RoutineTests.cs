@@ -135,7 +135,7 @@ public class RoutineTests
 
         var results = content.Query<Routine>().ToList();
 
-        results.Should().AllSatisfy(r => r.Program?.Name.Should().Be(r.Scope.Program));
+        results.Should().AllSatisfy(r => r.Program?.Name.Should().Be(r.Scope.Container));
     }
 
     #endregion

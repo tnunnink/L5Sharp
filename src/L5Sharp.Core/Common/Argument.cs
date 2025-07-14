@@ -9,6 +9,7 @@ namespace L5Sharp.Core;
 /// </summary>
 public class Argument : ILogixParsable<Argument>
 {
+    private const string UnknownValue = "?";
     private readonly object _value;
 
     /// <summary>
@@ -31,7 +32,7 @@ public class Argument : ILogixParsable<Argument>
     /// Indicates whether the argument is a literal string value with the single quote identifiers.
     /// </summary>
     /// <value><c>true</c> if the underlying value is an <see cref="string"/> object; Otherwise, <c>false</c>.</value>
-    public bool IsString => _value is string;
+    public bool IsString => _value is string s && s != UnknownValue && s.StartsWith('\'') && s.EndsWith('\'');
 
     /// <summary>
     /// Indicates whether the argument is an immediate value, either string literal or atomic value.
@@ -41,7 +42,7 @@ public class Argument : ILogixParsable<Argument>
     public bool IsImmediate => _value is AtomicData or string;
 
     /// <summary>
-    /// Indicates whether the argument is an tag name reference.
+    /// Indicates whether the argument is a tag name reference.
     /// </summary>
     /// <value><c>true</c> if the underlying value is a <see cref="TagName"/> object; Otherwise, <c>false</c>.</value>
     public bool IsTag => _value is TagName;
@@ -59,7 +60,7 @@ public class Argument : ILogixParsable<Argument>
     /// <value>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values.</value>
     /// <remarks>
     /// Since an argument could represent a complex expression, it may contain more than one tag name value.
-    /// We need a way to get all tag names from a single argument whether it's a single tag name or expression or
+    /// We need a way to get all tag names from a single argument, whether it's a single tag name or expression or
     /// multiple tag names.
     /// </remarks>
     public IReadOnlyList<TagName> Tags => _value switch
@@ -75,12 +76,12 @@ public class Argument : ILogixParsable<Argument>
     /// <value>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values.</value>
     /// <remarks>
     /// Since an argument could represent a complex expression, it may contain more than one tag name value.
-    /// We need a way to get all tag names from a single argument whether it's a single tag name or expression or
+    /// We need a way to get all tag names from a single argument, whether it's a single tag name or expression or
     /// multiple tag names.
     /// </remarks>
     public IReadOnlyList<AtomicData> Values => _value switch
     {
-        AtomicData aomtic => [aomtic],
+        AtomicData atomic => [atomic],
         _ => []
     };
 
@@ -89,14 +90,14 @@ public class Argument : ILogixParsable<Argument>
     /// </summary>
     /// <value>A <see cref="Argument"/> representing an unknown parameter.</value>
     /// <remarks>This is literally the '?' character, as often seen in the TIMER instruction arguments.</remarks>
-    public static Argument Unknown => new("?");
+    public static Argument Unknown => new(UnknownValue);
 
     /// <summary>
     /// Represents an empty argument.
     /// </summary>
     /// <value>A <see cref="Argument"/> wrapping an empty string objet value.</value>
     /// <remarks>
-    /// Some instruction have an empty/optional argument(s) (GSV) and therefore we need a way to represent
+    /// Some instruction has an empty/optional argument(s) (GSV), and therefore we need a way to represent
     /// that value.
     /// </remarks>
     public static Argument Empty => new(string.Empty);
@@ -239,6 +240,13 @@ public class Argument : ILogixParsable<Argument>
     /// <param name="value">The object value to convert.</param>
     /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
     public static implicit operator Argument(double value) => new(new LREAL(value));
+
+    /// <summary>
+    /// Explicitly converts the provided <see cref="Argument"/> to a <see cref="TagName"/>.
+    /// </summary>
+    /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
+    /// <returns>A <see cref="TagName"/> object representing the value of the argument.</returns>
+    public static implicit operator string(Argument argument) => argument._value.ToString();
 
     /// <summary>
     /// Explicitly converts the provided <see cref="Argument"/> to a <see cref="TagName"/>.

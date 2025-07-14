@@ -32,7 +32,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     public static readonly Radix Binary = new BinaryRadix();
 
     /// <summary>
-    /// Represents a Octal number base format. 
+    /// Represents an Octal number base format. 
     /// </summary>
     public static readonly Radix Octal = new OctalRadix();
 
@@ -47,7 +47,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     public static readonly Radix Hex = new HexRadix();
 
     /// <summary>
-    /// Represents a Exponential number base format.
+    /// Represents an Exponential number base format.
     /// </summary>
     public static readonly Radix Exponential = new ExponentialRadix();
 
@@ -57,7 +57,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     public static readonly Radix Float = new FloatRadix();
 
     /// <summary>
-    /// Represents a Ascii number base format.
+    /// Represents an Ascii number base format.
     /// </summary>
     public static readonly Radix Ascii = new AsciiRadix();
 
@@ -76,7 +76,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     /// <param name="data">The logix type to evaluate.</param>
     /// <returns>
-    /// <see cref="Null"/> for all non atomic types.
+    /// <see cref="Null"/> for all non-atomic types.
     /// <see cref="Float"/> for <see cref="REAL"/> types.
     /// <see cref="Decimal"/> for all other atomic types.
     /// </returns>
@@ -114,7 +114,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     /// <param name="input">The string for which to infer the format.</param>
     /// <returns>A <see cref="Radix"/> format enum value.</returns>
-    /// <exception cref="FormatException">A radix can not be determined from the format of <c>value</c>.</exception>
+    /// <exception cref="FormatException">A radix cannot be determined from the format of <c>value</c>.</exception>
     public static Radix Infer(string input)
     {
         var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
@@ -146,14 +146,14 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <value>A <see cref="string"/> representing the text that identifies the format of the Radix.</value>
     /// <remarks>
     /// Most <see cref="Radix"/> will have a specifier prefix, such as '#2' for Binary, '#16' for Hex, and so on.
-    /// By default this property is used by <see cref="HasFormat"/> to determine if an input string has the specified
+    /// By default, this property is used by <see cref="HasFormat"/> to determine if an input string has the specified
     /// Radix format, and further by <see cref="Infer"/> to determine a Radix from a string value.
-    /// However, some Radix options are overriden as they do not have specifiers (e.g. Decimal, Float).
+    /// However, some Radix options are overriden as they do not have specifiers (e.g., Decimal, Float).
     /// </remarks>
     protected abstract string Specifier { get; }
 
     /// <summary>
-    /// Returns an indication as to whether the current string input value has the format of the current Radix type.
+    /// Returns an indication whether the current string input value has the format of the current Radix type.
     /// </summary>
     /// <param name="input">The input text value to examine.</param>
     /// <returns><c>true</c> if <c>input</c> qualifies as a valid format for the Radix type; otherwise, <c>false</c>.</returns>
@@ -181,7 +181,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <param name="data">The atomic type to convert.</param>
     /// <param name="baseNumber">The base of the return value, which must be 2, 8, 10, or 16.</param>
     /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
-    /// <exception cref="ArgumentException">baseNumber is not 2, 8, 10, or 16.</exception>
+    /// <exception cref="ArgumentException">the baseNumber is not 2, 8, 10, or 16.</exception>
     private static string ToBase(AtomicData data, int baseNumber)
     {
         var bitsPerByte = baseNumber switch
@@ -210,7 +210,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <param name="charsPerByte">The number of chars in <c>value</c> that represented a single byte of data.</param>
     /// <param name="baseNumber">The base number of the return value, which must be 2, 8, 10, or 16.</param>
     /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
-    /// <exception cref="ArgumentException">baseNumber is not 2, 8, 10, or 16.</exception>
+    /// <exception cref="ArgumentException">the baseNumber is not 2, 8, 10, or 16.</exception>
     private static AtomicData ToAtomic(string value, int charsPerByte, int baseNumber)
     {
         if (value.IsEmpty())
@@ -489,7 +489,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             return !input.IsEmpty() && input.Contains(".")
                                     && input.IndexOf("e", StringComparison.OrdinalIgnoreCase) >= 0
-                                    && ReplaceAll(input, new[] { ".", "e", "E", "+", "-" }, string.Empty)
+                                    && ReplaceAll(input, [".", "e", "E", "+", "-"], string.Empty)
                                         .All(char.IsDigit);
         }
 
@@ -576,7 +576,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             foreach (var segment in segments)
             {
-                //If this is a special logix character we need to add the escape '$' and then that char...
+                //If this is a special logix character, we need to add the escape '$' and then that char...
                 var special = SpecialCharacters.FirstOrDefault(v => v.Value.IsEquivalent(segment));
                 if (special.Key is not null)
                 {
@@ -584,7 +584,7 @@ public abstract class Radix : LogixEnum<Radix, string>
                     continue;
                 }
 
-                //Chars between 31 and 127 are printable characters so just append.
+                //Chars between 31 and 127 are printable characters so append.
                 var character = Convert.ToChar(Convert.ToUInt16(segment, BaseNumber));
                 if (character > 31 && character < 127)
                 {
@@ -592,7 +592,7 @@ public abstract class Radix : LogixEnum<Radix, string>
                     continue;
                 }
 
-                //Everything else is represented as Hex with '$' escape character.
+                //Everything else is represented as Hex with the '$' escape character.
                 builder.Append(ByteSeparator);
                 builder.Append(segment.ToUpper());
             }

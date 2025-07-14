@@ -26,7 +26,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void New_Null_ShouldBeExpected()
         {
-            var sut = ScopeLevel.Null;
+            var sut = ScopeLevel.None;
 
             sut.Should().NotBeNull();
             sut.Value.Should().Be("NullScope");

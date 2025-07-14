@@ -69,7 +69,7 @@ public class Block : DiagramElement
                 L5XName.Function => Element.Attribute(L5XName.Type)?.Value ?? throw Element.L5XError(L5XName.Type),
                 L5XName.AddOnInstruction => Element.Attribute(L5XName.Name)?.Value ??
                                             throw Element.L5XError(L5XName.Name),
-                _ => Element.L5XType(),
+                _ => Element.Name.LocalName,
             };
         }
     }

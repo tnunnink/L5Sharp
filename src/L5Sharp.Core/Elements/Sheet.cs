@@ -31,7 +31,7 @@ namespace L5Sharp.Core;
 [L5XType(L5XName.Sheet)]
 public class Sheet : Diagram
 {
-    private static readonly HashSet<string> BlockTypes = [..typeof(Block).L5XTypes()];
+    private static readonly HashSet<string> BlockTypes = [..typeof(Block).GetLogixTypeNames()];
 
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -189,7 +189,7 @@ public class Sheet : Diagram
     /// </remarks>
     public IEnumerable<Block> Blocks()
     {
-        return Element.Elements().Where(e => BlockTypes.Contains(e.L5XType())).Select(e => e.Deserialize<Block>());
+        return Element.Elements().Where(e => BlockTypes.Contains(e.Name.LocalName)).Select(e => e.Deserialize<Block>());
     }
 
     /// <summary>
@@ -213,9 +213,9 @@ public class Sheet : Diagram
         var wire = new Wire
         {
             FromID = source.ID,
-            FromParam = !string.IsNullOrEmpty(from.Path) ? from.Path : default,
+            FromParam = !string.IsNullOrEmpty(from.Path) ? from.Path : null,
             ToID = destination.ID,
-            ToParam = !string.IsNullOrEmpty(to.Path) ? to.Path : default
+            ToParam = !string.IsNullOrEmpty(to.Path) ? to.Path : null
         };
 
         Add(wire);

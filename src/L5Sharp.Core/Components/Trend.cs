@@ -23,7 +23,7 @@ public class Trend : LogixComponent<Trend>
         L5XName.Template,
         L5XName.Pens
     ];
-    
+
     /// <inheritdoc />
     public Trend() : base(L5XName.Trend)
     {
@@ -149,7 +149,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<TagName>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify a logical operation (AND or OR) that is performed on StartTriggerXXX1 and StartTriggerXXX2.
     /// </summary>
@@ -161,7 +161,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<Operator>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the tag name of the second start trigger. The name must be one of the pen names.
     /// </summary>
@@ -213,7 +213,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<TagName>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Define how pre-samples are specified. Type Samples or TimePeriod.
     /// </summary>
@@ -232,7 +232,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<int>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the type of the stop trigger
     /// </summary>
@@ -242,7 +242,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<TriggerType>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the tag name of the first start trigger. The name must be one of the pen names.
     /// </summary>
@@ -294,7 +294,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<TagName>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify a logical operation (AND or OR) that is performed on StopTriggerXXX1 and StopTriggerXXX2.
     /// </summary>
@@ -306,7 +306,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<Operator>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the tag name of the second start trigger. The name must be one of the pen names.
     /// </summary>
@@ -358,7 +358,7 @@ public class Trend : LogixComponent<Trend>
         get => GetValue<TagName>();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Define how post-samples are specified. Type Samples or TimePeriod.
     /// </summary>
@@ -396,4 +396,10 @@ public class Trend : LogixComponent<Trend>
         get => GetContainer<Pen>();
         set => SetContainer(value);
     }
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages() => [];
+
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies() => [];
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -49,7 +50,7 @@ public class WatchList : LogixComponent<WatchList>
         set
         {
             if (value is null) throw new ArgumentNullException(nameof(value));
-            
+
             var tag = Element.Elements(L5XName.WatchTag)
                 .FirstOrDefault(e => e.Attribute(L5XName.Specifier)?.Value == specifier);
 
@@ -58,7 +59,7 @@ public class WatchList : LogixComponent<WatchList>
                 Element.Add(value.Serialize());
                 return;
             }
-            
+
             tag.ReplaceWith(value.Serialize());
         }
     }
@@ -81,8 +82,14 @@ public class WatchList : LogixComponent<WatchList>
     public void Remove(string specifier)
     {
         if (string.IsNullOrEmpty(specifier)) throw new ArgumentNullException(nameof(specifier));
-        
+
         Element.Elements(L5XName.WatchTag)
             .FirstOrDefault(e => e.Attribute(L5XName.Specifier)?.Value == specifier)?.Remove();
     }
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages() => [];
+
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies() => [];
 }

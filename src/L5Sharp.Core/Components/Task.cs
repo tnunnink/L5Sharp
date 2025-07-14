@@ -34,7 +34,7 @@ public sealed class Task : LogixComponent<Task>
     /// <summary>
     /// Creates a new <see cref="Task"/> with default values.
     /// </summary>
-    /// <remarks>By default uses <see cref="TaskType.Periodic"/>, 10ms <see cref="Priority"/>, 10ms <see cref="Rate"/>,
+    /// <remarks>By default, uses <see cref="TaskType.Periodic"/>, 10ms <see cref="Priority"/>, 10ms <see cref="Rate"/>,
     /// and 500ms <see cref="Watchdog"/>.</remarks>
     public Task() : base(L5XName.Task)
     {
@@ -186,7 +186,7 @@ public sealed class Task : LogixComponent<Task>
     /// Therefore, if this task is not attached, it will return and empty collection. Also, if no program exists with the
     /// scheduled name, this will return an empty collection.
     /// </remarks>
-    public IEnumerable<Program> Programs => Document?.Programs.Where(p => Scheduled.Any(s => s == p.Name)) ?? [];
+    public IEnumerable<Program> Programs => Document?.Programs.Where(p => Scheduled.Contains(p.Name)) ?? [];
 
     /// <summary>
     /// The collection of program names that are scheduled for the task.
@@ -195,6 +195,18 @@ public sealed class Task : LogixComponent<Task>
     /// <remarks>This member just returns the read-only list of scheduled programs. To modify the list, use
     /// the methods <see cref="Schedule"/> or <see cref="Cancel"/>.</remarks>
     public IEnumerable<string> Scheduled => Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies()
+    {
+        return Document?.Programs.Where(p => Scheduled.Contains(p.Name)) ?? [];
+    }
 
     /// <inheritdoc />
     public override L5X Export(Revision? softwareRevision = null)
@@ -252,8 +264,11 @@ public sealed class Task : LogixComponent<Task>
     /// <param name="program">The program to add to this Task.</param>
     public void AddProgram(Program program)
     {
-        if (program is null) throw new ArgumentNullException(nameof(program));
-        if (Document is null) throw new InvalidOperationException("Can not add program to detached Task component.");
+        if (program is null)
+            throw new ArgumentNullException(nameof(program));
+
+        if (Document is null)
+            throw new InvalidOperationException("Can not add program to detached Task component.");
 
         Document.Programs.Add(program);
         Schedule(program.Name);

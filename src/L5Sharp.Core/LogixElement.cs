@@ -64,16 +64,9 @@ public abstract class LogixElement : ILogixSerializable
     public L5X? Document => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
     /// <summary>
-    /// Returns the name of the L5XType for this <see cref="LogixElement"/> object.
+    /// 
     /// </summary>
-    /// <returns>A <see cref="string"/> representing the name of the L5X element type.</returns>
-    /// <remarks>
-    /// The "L5XType" is nothing more than the name of the underlying <see cref="XElement"/> for the object.
-    /// Most L5X element names correspond to a class type of the library with the same or similar name.
-    /// However, each class type in this library can also support multiple element types (e.g., Tag/LocalTag/ConfigTag).
-    /// This property will indicate the actual type of the underlying element as opposed to the actual class type of
-    /// the object.
-    /// </remarks>
+    /// <returns></returns>
     public string GetElementType() => Element.Name.LocalName;
 
     /// <summary>
@@ -363,7 +356,7 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected TElement? GetAncestor<TElement>(string? ancestor = null) where TElement : LogixElement
     {
-        ancestor ??= typeof(TElement).L5XType();
+        ancestor ??= typeof(TElement).GetLogixTypeName();
         return Element.Ancestors(ancestor).FirstOrDefault()?.Deserialize<TElement>();
     }
 

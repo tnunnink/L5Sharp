@@ -9,7 +9,7 @@ internal abstract class ImportConfigBuilder<TBuilder>(Import import) : IImportCo
         import.Operations.Add(new ModifyOperation(x =>
         {
             //Only apply to the import target
-            if (x.Scope != import.Target) return;
+            if (x.Reference != import.Target) return;
             x.Name = name;
         }));
 

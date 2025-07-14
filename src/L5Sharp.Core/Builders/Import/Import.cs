@@ -17,7 +17,7 @@ internal class Import
     /// <summary>
     /// The scope of the target component that we are importing.
     /// </summary>
-    public Scope? Target { get; set; }
+    public Reference? Target { get; set; }
 
     /// <summary>
     /// The collection of import operations to perform when running the import process.
@@ -61,14 +61,14 @@ internal class Import
     {
         ApplyModification(import);
 
-        if (content.TryGet(import.Scope, out var match) && match is LogixComponent current)
+        if (content.TryGet(import.Reference, out var match) && match is LogixComponent current)
             HandleConflict(current, import);
         else
             content.Add(import);
 
         //Get the new added instance to configure.
         //This is because the old will still contain a reference to the source L5X.
-        var component = content.Get(import.Scope.LocalPath).As<LogixComponent>();
+        var component = content.Get(import.Reference).As<LogixComponent>();
         ApplyConfiguration(component);
     }
 
@@ -85,7 +85,7 @@ internal class Import
             if (IsDiscardable(import)) continue;
             ApplyModification(import);
 
-            if (content.TryGet(import.Scope, out var match) && match is LogixComponent current)
+            if (content.TryGet(import.Reference, out var match) && match is LogixComponent current)
                 HandleConflict(current, import);
             else
                 content.Add(import);
@@ -145,11 +145,11 @@ internal class Import
     /// Generates a target scope for the import process based on the provided source information.
     /// </summary>
     /// <param name="source">The source L5X containing target type and name information.</param>
-    /// <returns>A <see cref="Scope"/> object representing the target scope for the import process.</returns>
+    /// <returns>A <see cref="Reference"/> object representing the target scope for the import process.</returns>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the target type or name information is missing in the source, or if the scope could not be determined.
     /// </exception>
-    private static Scope GenerateTargetScope(L5X source)
+    private static Reference GenerateTargetScope(L5X source)
     {
         if (source.Info.TargetType is null || source.Info.TargetName is null)
             throw new InvalidOperationException(
@@ -162,9 +162,10 @@ internal class Import
             if (program is null)
                 throw new InvalidOperationException("Could not determine scope for import process.");
 
-            return Scope.Build().In(program.Name).Routine(source.Info.TargetName);
+            return Reference.To<Routine>(source.Info.TargetName, program.Name);
         }
 
-        return Scope.Build().Type(source.Info.TargetType).Named(source.Info.TargetName);
+        var type = ReferenceType.Parse(source.Info.TargetType);
+        return Reference.Build(b => b.Type(type).Named(source.Info.TargetName));
     }
 }

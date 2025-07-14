@@ -164,5 +164,16 @@ namespace L5Sharp.Tests.Core.Components
                 .IgnoreMember("ExportDate")
                 .IgnoreMember("Owner");
         }
+
+        [Test]
+        public void References_KnownTest_ShouldNotBeEmpty()
+        {
+            var content = L5X.Load(Known.Test);
+            var task = content.Get<LTask>("Event");
+            
+            var references = task.Usages().ToArray();
+
+            references.Should().HaveCount(1);
+        }
     }
 }

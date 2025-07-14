@@ -13,7 +13,7 @@ public class ScopeLevel : LogixEnum<ScopeLevel, string>
     /// Represents a Null <see cref="ScopeLevel"/> value.
     /// </summary>
     /// <remarks>A <c>Null</c> scope will occur on element objects that have not been added to a container.</remarks>
-    public static readonly ScopeLevel Null = new(nameof(Null), "NullScope");
+    public static readonly ScopeLevel None = new(nameof(None), "NullScope");
 
     /// <summary>
     /// Represents a Controller <see cref="ScopeLevel"/> value.

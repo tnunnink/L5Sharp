@@ -43,4 +43,10 @@ public class Chart : Diagram
 
     /// <inheritdoc />
     public override int Number => 0;
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages() => [];
+
+    /// <inheritdoc />
+    public override IEnumerable<LogixComponent> Dependencies() => [];
 }

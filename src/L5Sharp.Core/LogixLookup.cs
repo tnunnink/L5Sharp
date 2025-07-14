@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -8,249 +7,203 @@ namespace L5Sharp.Core;
 
 internal class LogixLookup(XElement content) : ILogixLookup
 {
-    /// <summary>
-    /// The internal scope generator that can generate scope keys to be used in lookup operations.
-    /// </summary>
-    private readonly L5XScopeGenerator _generator = new(content);
-
-    #region API
-
-    public bool Contains(Scope scope)
+    public bool Contains(Reference reference)
     {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
 
-        var key = _generator.GenerateSingle(scope);
-
-        var element = content.XPathSelectElement(key.ToXPath());
+        var element = content.XPathSelectElement(reference);
         return element is not null;
     }
 
-    public bool Contains(Func<IScopeBuilder, Scope> builder)
+    public bool Contains(Action<IReferenceTypeBuilder> action)
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
 
-        var root = Scope.Build(content.LogixName());
-        var scope = builder(root);
-        var key = _generator.GenerateSingle(scope);
-
-        var element = content.XPathSelectElement(key.ToXPath());
+        var reference = Reference.Build(action);
+        var element = content.XPathSelectElement(reference);
         return element is not null;
     }
 
-    public IEnumerable<LogixScoped> Find(Scope scope)
+    public LogixEntity Get(Reference reference)
     {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
 
-        var results = new List<LogixScoped>();
-        var scopes = _generator.GenerateAll(scope).ToList();
-
-        foreach (var key in scopes)
-        {
-            var element = content.XPathSelectElement(key.ToXPath())?.Deserialize<LogixScoped>();
-            var result = element is Tag tag ? tag.Member(scope.Name.Path) : element;
-            if (result is null) continue;
-            results.Add(result);
-        }
-
-        return results;
-    }
-
-    public IEnumerable<TScoped> Find<TScoped>(Scope scope) where TScoped : LogixScoped
-    {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
-
-        var results = new List<TScoped>();
-        var scopes = _generator.GenerateAll(scope, typeof(TScoped));
-
-        foreach (var key in scopes)
-        {
-            var element = content.XPathSelectElement(key.ToXPath())?.Deserialize<TScoped>();
-            var result = element is Tag tag ? tag.Member(scope.Name.Path) as LogixObject : element;
-            if (result is not TScoped typed) continue;
-            results.Add(typed);
-        }
-
-        return results;
-    }
-
-    public LogixScoped Get(Scope scope)
-    {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
-
-        var key = _generator.GenerateSingle(scope);
-        var element = content.XPathSelectElement(key.ToXPath());
+        var element = content.XPathSelectElement(reference);
 
         if (element is null)
-            throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
+            throw new KeyNotFoundException($"No element with the provided scope was found: {reference}");
 
-        var result = element.Deserialize<LogixScoped>();
-        return result is Tag tag ? tag[scope.Name.Path] : result;
+        var result = element.Deserialize<LogixEntity>();
+        return result is Tag tag ? tag[reference.Location.ToTagName().Path] : result;
     }
 
-    public TScoped Get<TScoped>(Scope scope) where TScoped : LogixScoped
+    public TComponent Get<TComponent>(string name, string? program = null) where TComponent : LogixComponent
     {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
+        var reference = Reference.To<TComponent>(name, program);
 
-        var key = _generator.GenerateSingle(scope, typeof(TScoped));
-        var element = content.XPathSelectElement(key.ToXPath());
+        var element = content.XPathSelectElement(reference);
 
         if (element is null)
-            throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
 
-        var result = element.Deserialize<TScoped>();
-        return result is Tag tag ? (TScoped)(LogixObject)tag[scope.Name.Path] : result;
+        var result = element.Deserialize<TComponent>();
+        return result is Tag tag ? (TComponent)(LogixObject)tag[reference.Location.ToTagName().Path] : result;
     }
 
-    public LogixScoped Get(Func<IScopeBuilder, Scope> builder)
+    public TCode Get<TCode>(int number, string program, string routine) where TCode : LogixCode
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        var reference = Reference.To<TCode>(number, program, routine);
 
-        var root = Scope.Build(content.LogixName());
-        var scope = builder(root);
-        var key = _generator.GenerateSingle(scope);
-
-        var element = content.XPathSelectElement(key.ToXPath());
+        var element = content.XPathSelectElement(reference);
 
         if (element is null)
-            throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
 
-        var result = element.Deserialize<LogixScoped>();
-        return result is Tag tag ? tag[scope.Name.Path] : result;
+        return element.Deserialize<TCode>();
     }
 
-    public TScoped Get<TScoped>(Func<IScopeBuilder, Scope> builder) where TScoped : LogixScoped
+    public LogixEntity Get(Action<IReferenceTypeBuilder> action)
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
 
-        var root = Scope.Build(content.LogixName());
-        var scope = builder(root);
-        var key = _generator.GenerateSingle(scope, typeof(TScoped));
-
-        var element = content.XPathSelectElement(key.ToXPath());
+        var reference = Reference.Build(action);
+        var element = content.XPathSelectElement(reference);
 
         if (element is null)
-            throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
 
-        var result = element.Deserialize<TScoped>();
-        return result is Tag tag ? (TScoped)(LogixObject)tag[scope.Name.Path] : result;
+        var result = element.Deserialize<LogixEntity>();
+        return result is Tag tag ? tag[reference.Location.ToTagName().Path] : result;
     }
 
-    public bool TryGet(Scope scope, out LogixScoped element)
+    public TEntity Get<TEntity>(Action<IReferenceLocationBuilder> action) where TEntity : LogixEntity
     {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
 
-        var key = _generator.GenerateSingle(scope);
-        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<LogixScoped>();
+        var builder = new ReferenceBuilder();
+        builder.Type(ReferenceType.Parse(typeof(TEntity).Name));
+        action.Invoke(builder);
+        var reference = builder.Build();
+
+        var element = content.XPathSelectElement(reference);
+
+        if (element is null)
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
+
+        var result = element.Deserialize<TEntity>();
+        return result is Tag tag ? (TEntity)(LogixObject)tag[reference.Location.ToTagName().Path] : result;
+    }
+
+    public bool TryGet(Reference reference, out LogixEntity entity)
+    {
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
+
+        var result = content.XPathSelectElement(reference)?.Deserialize<LogixEntity>();
 
         if (result is null)
         {
-            element = null!;
+            entity = null!;
             return false;
         }
 
-        var target = result is Tag tag ? tag.Member(scope.Name.Path) : result;
-        return IsNull(target, out element);
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path) : result;
+        return target.IsNull(out entity);
     }
 
-    public bool TryGet<TScoped>(Scope scope, out TScoped element) where TScoped : LogixScoped
+    bool ILogixLookup.TryGet<TComponent>(string name, out TComponent compoenent)
     {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
+        var reference = Reference.To<TComponent>(name);
 
-        var key = _generator.GenerateSingle(scope, typeof(TScoped));
-        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<TScoped>();
+        var result = content.XPathSelectElement(reference)?.Deserialize<TComponent>();
 
         if (result is null)
         {
-            element = null!;
+            compoenent = null!;
             return false;
         }
 
-        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
-        return IsNull(target as TScoped, out element);
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
+        return (target as TComponent).IsNull(out compoenent);
     }
 
-    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixScoped element)
+    public bool TryGet<TComponent>(string name, string program, out TComponent component)
+        where TComponent : LogixComponent
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        var reference = Reference.To<TComponent>(name, program);
 
-        var root = Scope.Build(content.LogixName());
-        var scope = builder(root);
-        var key = _generator.GenerateSingle(scope);
-
-        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<LogixScoped>();
+        var result = content.XPathSelectElement(reference)?.Deserialize<TComponent>();
 
         if (result is null)
         {
-            element = null!;
+            component = null!;
             return false;
         }
 
-        var target = result is Tag tag ? tag.Member(scope.Name.Path) : result;
-        return IsNull(target, out element);
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
+        return (target as TComponent).IsNull(out component);
     }
 
-    public bool TryGet<TScoped>(Func<IScopeBuilder, Scope> builder, out TScoped element) where TScoped : LogixScoped
+    public bool TryGet<TCode>(int number, string program, string routine, out TCode code) where TCode : LogixCode
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        var reference = Reference.To<TCode>(number, program, routine);
 
-        var root = Scope.Build(content.LogixName());
-        var scope = builder(root);
-        var key = _generator.GenerateSingle(scope, typeof(TScoped));
-
-        var result = content.XPathSelectElement(key.ToXPath())?.Deserialize<TScoped>();
+        var result = content.XPathSelectElement(reference)?.Deserialize<TCode>();
 
         if (result is null)
         {
-            element = null!;
+            code = null!;
             return false;
         }
 
-        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
-        return IsNull(target as TScoped, out element);
+        return result.IsNull(out code);
     }
 
-    public IEnumerable<CrossReference> References(LogixComponent component)
+    public bool TryGet(Action<IReferenceTypeBuilder> action, out LogixEntity entity)
     {
-        throw new NotSupportedException(
-            "Retrieving references is only supported for L5X instances that are created with the L5XOptions.Index specified.");
-    }
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
 
-    public IEnumerable<Scope> Scopes()
-    {
-        throw new NotSupportedException(
-            "Retrieving scopes is only supported for L5X instances that are created with the L5XOptions.Index specified.");
-    }
+        var reference = Reference.Build(action);
+        var element = content.XPathSelectElement(reference);
+        var result = element?.Deserialize<LogixEntity>();
 
-    #endregion
-
-    #region Internal
-
-    /// <summary>
-    /// Helper for returning the TryGet result and element based on the nullness of the input element.
-    /// </summary>
-    private static bool IsNull<TObject>(TObject? element, out TObject result) where TObject : LogixObject
-    {
-        if (element is null)
+        if (result is null)
         {
-            result = null!;
+            entity = null!;
             return false;
         }
 
-        result = element;
-        return true;
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path) : result;
+        return target.IsNull(out entity);
     }
 
-    #endregion
+    public bool TryGet<TEntity>(Action<IReferenceLocationBuilder> action, out TEntity entity)
+        where TEntity : LogixEntity
+    {
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
+
+        var builder = new ReferenceBuilder();
+        builder.Type(ReferenceType.Parse(typeof(TEntity).Name));
+        action.Invoke(builder);
+        var reference = builder.Build();
+
+        var element = content.XPathSelectElement(reference);
+        var result = element?.Deserialize<LogixEntity>();
+
+        if (result is null)
+        {
+            entity = null!;
+            return false;
+        }
+
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
+        return (target as TEntity).IsNull(out entity);
+    }
 }

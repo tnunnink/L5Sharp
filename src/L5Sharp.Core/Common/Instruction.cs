@@ -29,7 +29,7 @@ public sealed class Instruction
 
     /// <summary>
     /// Captures all content within parentheses, including outer parentheses and nested parentheses, assuming they
-    /// are balanced (number of opening equals number of closing).
+    /// are balanced (amount of opening equals amount of closing).
     /// </summary>
     private const string SignaturePattern = @"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
 
@@ -80,7 +80,7 @@ public sealed class Instruction
     /// The unique shorthand identifier of the instruction type.
     /// </summary>
     /// <value>
-    /// A <see cref="string"/> containing the shorthand instruction key identifier (e.g. XIC/OTE).
+    /// A <see cref="string"/> containing the shorthand instruction key identifier (e.g., XIC/OTE).
     /// For an <c>AddOnInstruction</c> this is the name of the component.
     /// </value>
     public string Key { get; }
@@ -107,7 +107,7 @@ public sealed class Instruction
     /// Operands are the names of the parameters that define the instruction signature, whereas <see cref="Arguments"/>
     /// are the actual values that are found in the text representation of the instruction.
     /// Operands can only be obtained from known instruction signatures, which are configured when using the built-in
-    /// factory methods of this class.
+    /// factory methods of this class. These are not serialized as part of an L5X neutral text value.
     /// </remarks>
     public IReadOnlyList<string> Operands => ExtractOperands();
 
@@ -122,16 +122,6 @@ public sealed class Instruction
     /// </summary>
     /// <returns>A collection of <see cref="AtomicData"/> values cotnained by the instruction.</returns>
     public IReadOnlyList<AtomicData> Values => ExtractValues();
-
-    /// <summary>
-    /// Retrieves all component references found in the instruction as a relative <see cref="Scope"/> object.
-    /// </summary>
-    /// <returns>A collection of <see cref="Scope"/> values cotnained by the instruction.</returns>
-    /// <remarks>
-    /// These will not only be tag references, but any other component type including routine, task, module, etc.
-    /// This is determined by the instruction type (e.g. JSR, EVENT, GSV, etc.).
-    /// </remarks>
-    public Scope[] References => ExtractReferences();
 
     /// <summary>
     /// The <see cref="NeutralText"/> representation of the instruction instance.
@@ -157,9 +147,22 @@ public sealed class Instruction
         or nameof(XIC) or nameof(XIO);
 
     /// <summary>
+    /// Indicates whether the instruction is destructive to data or state.
+    /// A destructive instruction modifies or overwrites data during its execution. This property
+    /// returns true for instructions that alter existing data and false for conditional or non-destructive instructions.
+    /// </summary>
+    public bool IsDesctructive => !IsConditional;
+
+    /// <summary>
     /// Indicates whether the instruction argument count matches the operand count.
     /// </summary>
     public bool IsValid => Key is nameof(JSR) or nameof(SBR) or nameof(RET) || Operands.Count == Arguments.Count;
+
+    /// <summary>
+    /// Represents an instruction of an unknown type or functionality. This is typically used as
+    /// a placeholder or to denote an unrecognized instruction in the system.
+    /// </summary>
+    public static Instruction Unkown => new("UNK");
 
     /// <summary>
     /// Creates a new <see cref="Instruction"/> with the provided key and optional arguments.
@@ -169,7 +172,7 @@ public sealed class Instruction
     /// <returns>A <see cref="Instruction"/> instance with the provided key and arguments.</returns>
     /// <remarks>
     /// This factory method is the means through which to create unknown or other instruction that are not captured
-    /// in this classes static factory methods. If this is a known instruction, use the corresponding instruction
+    /// in this class static factory methods. If this is a known instruction, use the corresponding instruction
     /// factory method, so it can initialize the known signature.
     /// </remarks>
     public static Instruction New(string key, params Argument[] args) => new(key, arguments: args);
@@ -216,23 +219,30 @@ public sealed class Instruction
     /// <returns>
     /// A <see cref="IEnumerable{T}"/> containing all known <see cref="Instruction"/> instances with no arguments.
     /// </returns>
-    public static IEnumerable<string> Keys() => _known.Keys.AsEnumerable();
+    public static IEnumerable<string> Keys()
+    {
+        return _known.Keys.AsEnumerable();
+    }
 
     /// <summary>
     /// Creates a <see cref="Instruction"/> of the same type with the updated argument values.
     /// </summary>
-    /// <param name="arguments">The collection of arguments make up the instruction signature.</param>
+    /// <param name="arguments">The collection of arguments makes up the instruction signature.</param>
     /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Core.Argument"/> values.</returns>
-    public Instruction Append(params Argument[] arguments) =>
-        new(Key, Signature, Arguments.Concat(arguments).ToArray());
-
+    public Instruction Append(params Argument[] arguments)
+    {
+        return new Instruction(Key, Signature, Arguments.Concat(arguments).ToArray());
+    }
 
     /// <summary>
     /// Creates a <see cref="Instruction"/> of the same type with the updated argument values.
     /// </summary>
-    /// <param name="arguments">The collection of arguments make up the instruction signature.</param>
+    /// <param name="arguments">The collection of arguments makes up the instruction signature.</param>
     /// <returns>A new <see cref="Instruction"/> complete with the provided <see cref="Core.Argument"/> values.</returns>
-    public Instruction With(params Argument[] arguments) => new(Key, Signature, arguments);
+    public Instruction With(params Argument[] arguments)
+    {
+        return new Instruction(Key, Signature, arguments);
+    }
 
     /// <summary>
     /// Retrieves the argument for a specified operand name from the instruction.
@@ -242,7 +252,17 @@ public sealed class Instruction
     public Argument? Argument(string operand)
     {
         var index = Operands.ToList().IndexOf(operand);
-        return index >= 0 ? Arguments.ElementAt(index) : default;
+        return index >= 0 ? Arguments.ElementAt(index) : null;
+    }
+
+    /// <summary>
+    /// Determines whether the instruction contains the specified reference.
+    /// </summary>
+    /// <param name="reference">The reference to check for within the instruction.</param>
+    /// <returns>A boolean value indicating whether the reference is contained in the instruction.</returns>
+    public bool Contains(Reference reference)
+    {
+        return ContainsReference(reference.Type, reference.Location);
     }
 
     /// <inheritdoc />
@@ -878,7 +898,7 @@ public sealed class Instruction
         new(nameof(JSR), "JSR(routine_name,number_of_inputs,input_1,input_n,return_1,return_n)",
             parameters is not null
                 ? new[] { routine_name, number_of_inputs }.Concat(parameters).ToArray()
-                : new[] { routine_name, number_of_inputs });
+                : [routine_name, number_of_inputs]);
 
     /// <summary>
     /// Gets the <c>JXR</c> instruction definition instance.
@@ -1760,7 +1780,7 @@ public sealed class Instruction
     /// <summary>
     /// Creates a new XIC instruction instance with the predeinfed signature and provided instruction arguments. 
     /// </summary>
-    /// <returns>A new <see cref="Instruction"/> with initialized key, signature, and arguments.</returns>
+    /// <returns>A new <see cref="Instruction"/> with an initialized key, signature, and arguments.</returns>
     /// <remarks>
     /// Note that this instruction method signature was extracted from the Rockwell L5X documentation.
     /// Each instruction will take the set of <see cref="Core.Argument"/> matching the instruction signature.
@@ -1842,29 +1862,113 @@ public sealed class Instruction
     /// Determines the component references for each argument in the instruction and returns the relative scope
     /// representation of the component object.
     /// </summary>
-    private Scope[] ExtractReferences()
+    private Reference[] GetReferences()
     {
+        var references = new List<Reference>();
+
         switch (Key)
         {
             case nameof(GSV) or nameof(SSV) when Arguments.Count >= 2:
             {
-                var component = Scope.To($"/{Arguments[0]}/{Arguments[1]}");
-                var tag = Scope.To($"/{ScopeType.Tag}/{Arguments.Last()}");
-                return component.Type != ScopeType.Null ? [component, tag] : [tag];
+                //For GSV/SSV the firt 2 args might refer to a component.
+                var component = Reference.To($"{Arguments[0]}[@Name='{Arguments[1]}']");
+                if (component.Type != ReferenceType.Null) references.Add(component);
+                //The last arg is a reference to a destination tag.
+                references.Add(Reference.To<Tag>(Arguments.Last()));
+                break;
             }
             case nameof(EVENT) when Arguments.Count == 1:
             {
-                var task = Scope.To($"/{ScopeType.Task}/{Arguments[0]}");
-                return [task];
+                //EVENT refers to a task component by name.
+                references.Add(Reference.To<Task>(Arguments[0]));
+                break;
             }
             case nameof(JSR) or nameof(JXR) or nameof(SFR) or nameof(SFP) or nameof(FOR) when Arguments.Count >= 1:
             {
-                var routine = Scope.To($"/{ScopeType.Routine}/{Arguments[0]}");
-                var tags = Arguments.Skip(1).Where(a => a.IsTag).Select(a => Scope.To($"/{ScopeType.Tag}/{a}"));
-                return new[] { routine }.Concat(tags).ToArray();
+                //These all contain references to routines by name as the first argument.
+                references.Add(Reference.To<Routine>(Arguments[0]));
+                //The remaining arguments should be tags or immediate values, so we will grab any tags found.
+                references.AddRange(Arguments.Skip(1).Where(a => a.IsTag).Select(a => Reference.To<Tag>(a)));
+                break;
             }
             default:
-                return Arguments.SelectMany(a => a.Tags).Select(a => Scope.To($"/{ScopeType.Tag}/{a}")).ToArray();
+            {
+                //All other instructions we just want to parse any tag references
+                references.AddRange(Arguments.SelectMany(a => a.Tags).Select(a => Reference.To<Tag>(a)));
+
+                //If this insturuction is not known, then we assume it is an AOI
+                //(I'm not sure if this is a fair assumption but going with it for now).
+                if (!_known.ContainsKey(Key)) references.Add(Reference.To<AddOnInstruction>(Key));
+
+                break;
+            }
+        }
+
+        return references.ToArray();
+    }
+
+    /// <summary>
+    /// Determines whether the current instruction contains a reference to a specified component based on the provided type and name.
+    /// </summary>
+    /// <param name="type">The type of reference to evaluate, such as Tag, Task, Routine, or Aoi.</param>
+    /// <param name="name">The name of the component to match against the instruction's arguments.</param>
+    /// <returns>True if the instruction references the specified component; otherwise, false.</returns>
+    private bool ContainsReference(ReferenceType type, string name)
+    {
+        //For AOI references we don't need to check arguments, just the key/name and if it is known or not.
+        if (type == ReferenceType.Aoi && !_known.ContainsKey(Key) && Key == name) return true;
+
+        var arguments = Arguments.ToArray();
+
+        return Key switch
+        {
+            nameof(GSV) when HasComponentMatch(arguments) => true,
+            nameof(SSV) when HasComponentMatch(arguments) => true,
+            nameof(EVENT) when HasTaskMatch(arguments) => true,
+            nameof(JSR) when HasRoutineMatch(arguments) => true,
+            nameof(JXR) when HasRoutineMatch(arguments) => true,
+            nameof(SFR) when HasRoutineMatch(arguments) => true,
+            nameof(SFP) when HasRoutineMatch(arguments) => true,
+            nameof(FOR) when HasRoutineMatch(arguments) => true,
+            _ => HasTagMatch(arguments)
+        };
+
+        bool HasComponentMatch(Argument[] args)
+        {
+            var hasComponent = args.Length >= 2
+                               && args[0].ToString().Equals(type.Name)
+                               && args[1].ToString().Equals(name, StringComparison.OrdinalIgnoreCase);
+
+            var hasTag = type.Name == ReferenceType.Tag
+                         && args.Length == 4
+                         && args[4].ToString().Equals(name, StringComparison.OrdinalIgnoreCase);
+
+            return hasComponent || hasTag;
+        }
+
+        bool HasTaskMatch(Argument[] args)
+        {
+            return type.Name == ReferenceType.Task
+                   && args.Length == 1
+                   && args[0].ToString().Equals(name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        bool HasRoutineMatch(Argument[] args)
+        {
+            var hasRoutine = type == ReferenceType.Routine
+                             && args.Length >= 1
+                             && args[0].ToString().Equals(name, StringComparison.OrdinalIgnoreCase);
+
+            var hasTag = type == ReferenceType.Tag
+                         && args.Length >= 1
+                         && arguments.Skip(1).Any(a => a.ToString().Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            return hasRoutine || hasTag;
+        }
+
+        bool HasTagMatch(Argument[] args)
+        {
+            return type == ReferenceType.Tag && args.SelectMany(a => a.Tags).Any(t => t == name);
         }
     }
 
@@ -1879,7 +1983,7 @@ public sealed class Instruction
     /// <summary>
     /// Indexes all instruction factory methods in the class and creates a function returning the instruction 
     /// mathcing the specified key or method name. The method is passed null argumnts and therefore will be a default
-    /// instruction instance. Callers can then use <see cref="With"/> to pass argument array.
+    /// instruction instance. Callers can then use <see cref="With"/> to pass an argument array.
     /// </summary>
     private static IEnumerable<KeyValuePair<string, Func<Instruction>>> Factories()
     {

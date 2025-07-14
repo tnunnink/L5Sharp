@@ -6,27 +6,17 @@ namespace L5Sharp.Tests.Core;
 public class LogixIndexTests
 {
     [Test]
-    public void Contains_KnownElementRelativeScope_ShouldBeTrue()
+    public void Contains_KnownElement_ShouldBeTrue()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.Contains($"/Tag/{Known.Tag}");
+        var result = content.Contains(Reference.To<Tag>(Known.Tag));
 
         result.Should().BeTrue();
     }
 
     [Test]
-    public void Contains_KnownElementAbsoluteScope_ShouldBeTrue()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var result = content.Contains($"TestController/Tag/{Known.Tag}");
-
-        result.Should().BeTrue();
-    }
-
-    [Test]
-    public void Contains_NonExistingRelativeScope_ShouldBeFalse()
+    public void Contains_NonExisting_ShouldBeFalse()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
@@ -36,7 +26,7 @@ public class LogixIndexTests
     }
 
     [Test]
-    public void Contains_KnownElementScopeBuilder_ShouldBeTrue()
+    public void Contains_KnownElementWithBuilder_ShouldBeTrue()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
@@ -46,7 +36,7 @@ public class LogixIndexTests
     }
 
     [Test]
-    public void Contains_NonExistingScopeBuilder_ShouldBeFalse()
+    public void Contains_NonExistingWithBuilder_ShouldBeFalse()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
@@ -56,96 +46,11 @@ public class LogixIndexTests
     }
 
     [Test]
-    public void Find_NullScope_ShouldThrowException()
+    public void Get_KnownTagByReference_ShouldBeExpectedElement()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        FluentActions.Invoking(() => content.Find(null!)).Should().Throw<ArgumentNullException>();
-    }
-    
-    [Test]
-    public void Find_ContainerTypeScope_ShouldNotSure()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var results = content.Query("Tag").ToList();
-
-        results.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void Find_KnownElementNoType_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var results = content.Find(Known.Tag);
-
-        results.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void Find_KnownElementRelativeScope_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var results = content.Find($"/Tag/{Known.Tag}");
-
-        results.Should().HaveCount(2);
-    }
-
-    [Test]
-    public void Find_TypeAndNullName_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        FluentActions.Invoking(() => content.Find<Tag>(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Find_TypeAndEmptyName_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        FluentActions.Invoking(() => content.Find<Tag>(string.Empty)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Find_KnownElementTypeAndName_ShouldHaveExpectedCount()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var results = content.Find<Tag>(Known.Tag);
-
-        results.Should().HaveCount(2);
-    }
-
-    [Test]
-    public void Find_NonExistingTypeAndName_ShouldBeEmpty()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var results = content.Find<Tag>("FakeTagName");
-
-        results.Should().BeEmpty();
-    }
-
-    [Test]
-    public void Find_KnownTagMemberTypeAndName_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var results = content.Find<Tag>("TestSimpleTag.DintMember").ToList();
-
-        results.Should().HaveCount(2);
-        results.Should().AllSatisfy(t => t.TagName.Should().Be("TestSimpleTag.DintMember"));
-    }
-
-    [Test]
-    public void Get_ScopeRelative_ShouldBeExpectedElement()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        var result = content.Get($"/Tag/{Known.Tag}");
+        var result = content.Get(Reference.To<Tag>(Known.Tag));
 
         result.Should().NotBeNull();
         result.Should().BeOfType<Tag>();
@@ -153,35 +58,23 @@ public class LogixIndexTests
     }
 
     [Test]
-    public void Get_ScopeAbsolute_ShouldBeExpectedElement()
+    public void Get_NonExistingReference_ShouldThrowException()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.Get($"TestController/Tag/{Known.Tag}");
-
-        result.Should().NotBeNull();
-        result.Should().BeOfType<Tag>();
-        result.As<Tag>().Name.Should().Be(Known.Tag);
+        FluentActions.Invoking(() => content.Get<Tag>("FakeTag")).Should().Throw<KeyNotFoundException>();
     }
 
     [Test]
-    public void Get_NonExistingScope_ShouldThrowException()
+    public void Get_NullReference_ShouldThrowException()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        FluentActions.Invoking(() => content.Get("/Tag/FakeTag")).Should().Throw<KeyNotFoundException>();
+        FluentActions.Invoking(() => content.Get((Reference)null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
-    public void Get_NullScope_ShouldThrowException()
-    {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
-
-        FluentActions.Invoking(() => content.Get((Scope)null!)).Should().Throw<ArgumentNullException>();
-    }
-
-    [Test]
-    public void Get_EmptyScope_ShouldThrowException()
+    public void Get_EmptyReference_ShouldThrowException()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
@@ -225,7 +118,7 @@ public class LogixIndexTests
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.Get(x => x.In("MainProgram").Tag(Known.Tag));
+        var result = content.Get(x => x.Tag(Known.Tag).In("MainProgram"));
 
         result.Should().NotBeNull();
         result.Should().BeOfType<Tag>();
@@ -237,7 +130,7 @@ public class LogixIndexTests
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.Get<Tag>(x => x.Tag(Known.Tag));
+        var result = content.Get<Tag>(x => x.Named(Known.Tag));
 
         result.Should().NotBeNull();
         result.Should().BeOfType<Tag>();
@@ -249,7 +142,7 @@ public class LogixIndexTests
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.Get<Tag>(x => x.In("MainProgram").Tag(Known.Tag));
+        var result = content.Get<Tag>(x => x.Named(Known.Tag).In("MainProgram"));
 
         result.Should().NotBeNull();
         result.Should().BeOfType<Tag>();
@@ -261,22 +154,22 @@ public class LogixIndexTests
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.TryGet(Known.DataType, out var scoped);
+        var result = content.TryGet(Known.DataType, out var entity);
 
         result.Should().BeFalse();
-        scoped.Should().BeNull();
+        entity.Should().BeNull();
     }
-
+    
     [Test]
-    public void TryGet_RelativeScope_ShouldBeTrueAndExpectedComponent()
+    public void TryGet_KnownType_ShouldBeTrue()
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.TryGet($"/DataType/{Known.DataType}", out var component);
+        var result = content.TryGet(Reference.To<DataType>(Known.DataType), out var entity);
 
         result.Should().BeTrue();
-        component.Should().NotBeNull();
-        component.As<DataType>().Name.Should().Be(Known.DataType);
+        entity.Should().NotBeNull();
+        entity.As<DataType>().Name.Should().Be(Known.DataType);
     }
 
     [Test]
@@ -308,7 +201,7 @@ public class LogixIndexTests
     {
         var content = L5X.Load(Known.Test, L5XOptions.Index);
 
-        var result = content.TryGet<DataType>(s => s.DataType(Known.DataType), out var component);
+        var result = content.TryGet<DataType>(s => s.Named(Known.DataType), out var component);
 
         result.Should().BeTrue();
         component.Should().NotBeNull();
@@ -325,15 +218,5 @@ public class LogixIndexTests
         result.Should().BeTrue();
         component.Should().NotBeNull();
         component.As<Tag>().Name.Should().Be(Known.Tag);
-    }
-
-    [Test]
-    public void Scopes_WhenCalled_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Example, L5XOptions.Index);
-
-        var scopes = content.Scopes().ToList();
-
-        scopes.Should().NotBeEmpty();
     }
 }

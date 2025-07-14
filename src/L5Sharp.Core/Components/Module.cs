@@ -347,6 +347,12 @@ public class Module : LogixComponent<Module>
     public Tag? Config => Communications?.ConfigTag;
 
     /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+    }
+
+    /// <inheritdoc />
     /// <remarks>
     /// For modules, this will return all child modules of the current module. This resembles how logix exports
     /// modules from Studio.

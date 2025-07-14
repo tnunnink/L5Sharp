@@ -78,7 +78,7 @@ public static class LogixSerializer
 
         while (true)
         {
-            if (Deserializers.Value.TryGetValue(element.L5XType(), out var deserializer))
+            if (Deserializers.Value.TryGetValue(element.Name.LocalName, out var deserializer))
                 return deserializer.Invoke(element);
 
             element = element.Parent ??
@@ -132,7 +132,7 @@ public static class LogixSerializer
             //data type with the name of a component or element, and we don't want our serializer to confuse the two types.
             //Therefore, we prepend all LogixType types with our internal known prefix and will use that when lookup occurs.
             var isDataType = typeof(LogixData).IsAssignableFrom(type);
-            var names = type.L5XTypes().Select(n => isDataType ? $"{DataTypePrefix}{n}" : $"{n}");
+            var names = type.GetLogixTypeNames().Select(n => isDataType ? $"{DataTypePrefix}{n}" : $"{n}");
             var functions = names.Select(n => new KeyValuePair<string, Func<XElement, LogixElement>>(n, deserializer));
             deserializers.AddRange(functions);
         }

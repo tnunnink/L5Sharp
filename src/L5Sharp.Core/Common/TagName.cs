@@ -12,8 +12,8 @@ namespace L5Sharp.Core;
 /// A string wrapper representing a Logix <c>TagName</c>.
 /// </summary>
 /// <remarks>
-/// This value type class make working with string tag name easier by providing
-/// methods fo analyzing and breaking the tag name into constituent parts (members).
+/// This value type class makes working with a string tag name easier by providing
+/// methods for analyzing and breaking the tag name into constituent parts (members).
 /// </remarks>
 public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixParsable<TagName>
 {
@@ -32,8 +32,8 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
 
     /// <summary>
     /// The regex pattern for Logix tag names without starting and ending anchors.
-    /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e. instruction keys)
-    /// Use this pattern for tag names within text, such as longer
+    /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e., instruction keys)
+    /// Use this pattern for tag names within a text, such as longer
     /// </summary>
     public const string SearchPattern =
         @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?";
@@ -54,7 +54,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// <remarks>
     /// <para>
     /// The root portion of a given tag name is simply the beginning part of the tag name up to the first
-    /// member separator character '.' or '['. For Module defined tags, this includes the colon separator.
+    /// member separator character '.' or '['. For Module-defined tags, this includes the colon separator.
     /// </para>
     /// <para>
     /// This value can be swapped out easily using <see cref="Rename"/> to return a new <see cref="TagName"/> with the
@@ -96,7 +96,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     public string Member => GetMember(_tagName);
 
     /// <summary>
-    /// Returns a collection of string names representing each individual member of the full tag name value.
+    /// Returns a collection of string names representing each member of the full tag name value.
     /// </summary>
     /// <remarks>
     /// Each member of a tag name can be represented by a string, array bracket, or bit index value.
@@ -110,7 +110,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// between this tag name and the root.
     /// </summary>
     /// <remarks>
-    /// This value represents the number of members between the root tag and last member name (i.e. one less than
+    /// This value represents the number of members between the root tag and the last member name (i.e., one less than
     /// the number of members in the tag name). This is helpful for filtering tag descendents. Note that array
     /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
     /// are descendent member names of the root tag 'MyTag' member.
@@ -281,7 +281,7 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
     /// <param name="first">A tag name object to compare.</param>
     /// <param name="second">A tag name object to compare.</param>
     /// <param name="comparer">The equality comparer to use for comparison.</param>
-    /// <returns><c>true</c> if the tag name are equal according to the provided comparer; otherwise, false.</returns>
+    /// <returns><c>true</c> if the tag name is equal, according to the provided comparer; otherwise, false.</returns>
     /// <remarks>Use the prebuilt <see cref="TagNameComparer"/> class for several predefined comparer objects.</remarks>
     public static bool Equals(TagName first, TagName second, IEqualityComparer<TagName> comparer) =>
         comparer.Equals(first, second);
@@ -460,6 +460,23 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixP
 
         return builder.ToString();
     }
+}
+
+/// <summary>
+/// Provides extension methods for working with <c>TagName</c> objects.
+/// </summary>
+/// <remarks>
+/// This static class contains methods that extend the functionality of <c>TagName</c>,
+/// offering convenience for handling tag name conversions and operations.
+/// </remarks>
+public static class TagNameExtensions
+{
+    /// <summary>
+    /// Converts the specified string value to a <see cref="TagName"/> object.
+    /// </summary>
+    /// <param name="value">The string value to convert to a <see cref="TagName"/>.</param>
+    /// <returns>A <see cref="TagName"/> object created from the specified string value.</returns>
+    public static TagName ToTagName(this string value) => new(value);
 }
 
 /// <summary>

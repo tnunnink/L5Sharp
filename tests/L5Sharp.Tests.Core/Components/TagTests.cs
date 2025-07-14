@@ -42,8 +42,6 @@ public class TagTests
         tag.TagName.Should().Be(TagName.Empty);
         tag.Comments.Should().BeNull();
         tag.Units.Should().BeNull();
-        tag.Scope.Level.Should().Be(ScopeLevel.Null);
-        tag.Scope.IsScoped.Should().BeFalse();
     }
 
     [Test]

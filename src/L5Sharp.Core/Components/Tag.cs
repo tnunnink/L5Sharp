@@ -177,6 +177,13 @@ public class Tag : LogixComponent<Tag>
         set => SetTagDescription(value);
     }
 
+    /// <inheritdoc />
+    /// <remarks>
+    /// Tag overrides the default implementation so that each nested tag member will include the
+    /// full dot down path to it's instance/reference (not just the root tag name).
+    /// </remarks>
+    public override Reference Reference => Parent is null ? Root.Reference : Root.Reference.ToTag(TagName);
+
     /// <summary>
     /// The full tag name path of the <see cref="Tag"/>.
     /// </summary>
@@ -188,13 +195,6 @@ public class Tag : LogixComponent<Tag>
     /// </para>
     /// </remarks>
     public TagName TagName => Parent is not null ? TagName.Concat(Parent.TagName, _member.Name) : new TagName(Name);
-
-    /// <inheritdoc />
-    /// <remarks>
-    /// Tag overrides Scope to ensure nested tag members build the correct scope path that includes
-    /// the full <see cref="TagName"/>.
-    /// </remarks>
-    public override Scope Scope => Parent is null ? Scope.Of(Element) : Root.Scope.Container + TagName;
 
     /// <summary>
     /// The name of the data type the tag represents. 
@@ -439,18 +439,28 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.Contains(Reference)) ?? [];
+    }
+
+    /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        if (TagType is not null && TagType != TagType.Alias)
+        var dependencies = new List<LogixComponent>();
+
+        if (TagType is not null && TagType == TagType.Alias && Alias is not null)
         {
-            return Document.DependenciesForType(DataType);
+            dependencies.Add(Alias);
+            dependencies.AddRange(Alias.Dependencies());
         }
 
-        var alias = Alias;
-        if (alias is null) return [];
+        if (TryResolveType(DataType, out var type))
+        {
+            dependencies.Add(type);
+            dependencies.AddRange(type.Dependencies());
+        }
 
-        var dependencies = new List<LogixComponent> { alias };
-        dependencies.AddRange(alias.Dependencies());
         return dependencies;
     }
 

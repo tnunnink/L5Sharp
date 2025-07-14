@@ -12,554 +12,215 @@ namespace L5Sharp.Core;
 internal class LogixIndex : ILogixLookup
 {
     /// <summary>
-    /// The root controller element of the project.
-    /// </summary>
-    private readonly XElement _content;
-
-    /// <summary>
-    /// The name of the root controller this index is attached to.
-    /// </summary>
-    private readonly string _controller;
-
-    /// <summary>
     /// An index of all logix elements (that we care to index) in the L5X file for fast lookups.
     /// </summary>
-    private readonly Dictionary<Scope, XElement> _elements = new();
+    private readonly Dictionary<Reference, XElement> _index;
 
-    /// <summary>
-    /// An index of all named references found in code or tags in the L5X file for fast lookups.
-    /// </summary>
-    private readonly Dictionary<string, List<CrossReference>> _references = new();
-
-    /// <summary>
-    /// The internal scope generator that can generate scope keys to be used in lookup operations.
-    /// </summary>
-    private readonly L5XScopeGenerator _generator;
-
-    public LogixIndex(XElement content)
+    public LogixIndex(XElement content, bool trackChanges = false)
     {
-        _content = content;
-        _controller = _content.LogixName();
-        _generator = new L5XScopeGenerator(_content);
+        _index = content.Descendants()
+            .Where(e => e.IsReferenceElement() && e.IsIdentifiable())
+            .ToDictionary(Reference.To);
 
-        Index();
-    }
-
-    #region API
-
-    public bool Contains(Scope scope)
-    {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
-
-        var key = _generator.GenerateSingle(scope);
-
-        return _elements.ContainsKey(key);
-    }
-
-    public bool Contains(Func<IScopeBuilder, Scope> builder)
-    {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
-
-        var controller = Scope.Build(_controller);
-        var scope = builder(controller);
-
-        return _elements.ContainsKey(scope);
-    }
-
-    public IEnumerable<LogixScoped> Find(Scope scope)
-    {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
-
-        var results = new List<LogixScoped>();
-
-        var scopes = _generator.GenerateAll(scope).ToList();
-
-        foreach (var key in scopes)
+        if (trackChanges)
         {
-            if (!_elements.TryGetValue(key, out var value)) continue;
-            var element = value.Deserialize<LogixScoped>();
-            var result = element is Tag tag ? tag.Member(scope.Name.Path) : element;
-            if (result is null) continue;
-            results.Add(result);
+            content.Changed += ContentOnChanged;
         }
-
-        return results;
     }
 
-    public IEnumerable<TScoped> Find<TScoped>(Scope scope) where TScoped : LogixScoped
+    public bool Contains(Reference reference)
     {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
 
-        var results = new List<TScoped>();
+        return _index.ContainsKey(reference);
+    }
 
-        var scopes = _generator.GenerateAll(scope, typeof(TScoped)).ToList();
+    public bool Contains(Action<IReferenceTypeBuilder> action)
+    {
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
 
-        foreach (var s in scopes)
+        var reference = Reference.Build(action);
+
+        return _index.ContainsKey(reference);
+    }
+
+    public LogixEntity Get(Reference reference)
+    {
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
+
+        if (!_index.TryGetValue(reference, out var value))
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
+
+        var result = value.Deserialize<LogixEntity>();
+        return result is Tag tag ? tag[reference.Location.ToTagName().Path] : result;
+    }
+
+    public TComponent Get<TComponent>(string name, string? program = null) where TComponent : LogixComponent
+    {
+        var reference = Reference.To<TComponent>(name, program);
+
+        if (!_index.TryGetValue(reference, out var value))
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
+
+        var result = value.Deserialize<TComponent>();
+        return result is Tag tag ? (TComponent)(LogixObject)tag[reference.Location.ToTagName().Path] : result;
+    }
+
+    public TCode Get<TCode>(int number, string program, string routine) where TCode : LogixCode
+    {
+        var reference = Reference.To<TCode>(number, program, routine);
+
+        if (!_index.TryGetValue(reference, out var value))
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
+
+        return value.Deserialize<TCode>();
+    }
+
+    public LogixEntity Get(Action<IReferenceTypeBuilder> action)
+    {
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
+
+        var reference = Reference.Build(action);
+
+        if (!_index.TryGetValue(reference, out var value))
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
+
+        var element = value.Deserialize<LogixEntity>();
+        return element is Tag tag ? tag[reference.Location.ToTagName().Path] : element;
+    }
+
+    public TEntity Get<TEntity>(Action<IReferenceLocationBuilder> action) where TEntity : LogixEntity
+    {
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
+
+        var builder = new ReferenceBuilder();
+        builder.Type(ReferenceType.Parse(typeof(TEntity).Name));
+        action.Invoke(builder);
+        var reference = builder.Build();
+
+        if (!_index.TryGetValue(reference, out var value))
+            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
+
+        var element = value.Deserialize<TEntity>();
+        return element is Tag tag ? (TEntity)(LogixObject)tag[reference.Location.ToTagName().Path] : element;
+    }
+
+    public bool TryGet(Reference reference, out LogixEntity entity)
+    {
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
+
+        if (!_index.TryGetValue(reference, out var value))
         {
-            if (!_elements.TryGetValue(s, out var value)) continue;
-            var element = value.Deserialize<TScoped>();
-            var result = element is Tag tag ? tag.Member(scope.Name.Path) as LogixScoped : element;
-            if (result is not TScoped typed) continue;
-            results.Add(typed);
-        }
-
-        return results;
-    }
-
-    public LogixScoped Get(Scope scope)
-    {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
-
-        var key = _generator.GenerateSingle(scope);
-
-        if (!_elements.TryGetValue(key, out var value))
-            throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
-
-        var result = value.Deserialize<LogixScoped>();
-        return result is Tag tag ? tag[scope.Name.Path] : result;
-    }
-
-    public TScoped Get<TScoped>(Scope scope) where TScoped : LogixScoped
-    {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
-
-        var key = _generator.GenerateSingle(scope, typeof(TScoped));
-
-        if (!_elements.TryGetValue(key, out var value))
-            throw new KeyNotFoundException($"No element with the provided scope was found: {key}");
-
-        var result = value.Deserialize<TScoped>();
-        return result is Tag tag ? (TScoped)(LogixObject)tag[scope.Name.Path] : result;
-    }
-
-    public LogixScoped Get(Func<IScopeBuilder, Scope> builder)
-    {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
-
-        var root = Scope.Build(_controller);
-        var scope = builder(root);
-        //we still need to use the generator since the scope could be a tag member
-        var key = _generator.GenerateSingle(scope);
-
-        if (!_elements.TryGetValue(key, out var value))
-            throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
-
-        var element = value.Deserialize<LogixScoped>();
-        return element is Tag tag ? tag[scope.Name.Path] : element;
-    }
-
-    public TScope Get<TScope>(Func<IScopeBuilder, Scope> builder) where TScope : LogixScoped
-    {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
-
-        var root = Scope.Build(_controller);
-        var scope = builder(root);
-        //we still need to use the generator since the scope could be a tag member
-        var key = _generator.GenerateSingle(scope);
-
-        if (!_elements.TryGetValue(key, out var value))
-            throw new KeyNotFoundException($"No element with the provided scope was found: {scope}");
-
-        var element = value.Deserialize<TScope>();
-        return element is Tag tag ? (TScope)(LogixObject)tag[scope.Name.Path] : element;
-    }
-
-    public bool TryGet(Scope scope, out LogixScoped element)
-    {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
-
-        var key = _generator.GenerateSingle(scope);
-
-        if (!_elements.TryGetValue(key, out var value))
-        {
-            element = null!;
+            entity = null!;
             return false;
         }
 
-        var result = value.Deserialize<LogixScoped>();
-        var target = result is Tag tag ? tag.Member(scope.Name.Path) : result;
-        return IsNull(target, out element);
+        var result = value.Deserialize<LogixEntity>();
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path) : result;
+        return target.IsNull(out entity);
     }
 
-    public bool TryGet<TScoped>(Scope scope, out TScoped element) where TScoped : LogixScoped
+    public bool TryGet<TComponent>(string name, out TComponent compoenent) where TComponent : LogixComponent
     {
-        if (scope is null)
-            throw new ArgumentNullException(nameof(scope));
+        var reference = Reference.To<TComponent>(name);
 
-        var key = _generator.GenerateSingle(scope, typeof(TScoped));
-
-        if (!_elements.TryGetValue(key, out var value))
+        if (!_index.TryGetValue(reference, out var value))
         {
-            element = null!;
+            compoenent = null!;
             return false;
         }
 
-        var result = value.Deserialize<TScoped>();
-        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
-        return IsNull(target as TScoped, out element);
+        var result = value.Deserialize<TComponent>();
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixObject>() : result;
+        return (target as TComponent).IsNull(out compoenent);
     }
 
-    public bool TryGet(Func<IScopeBuilder, Scope> builder, out LogixScoped element)
+    public bool TryGet<TComponent>(string name, string program, out TComponent component)
+        where TComponent : LogixComponent
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        var reference = Reference.To<TComponent>(name, program);
 
-        var root = Scope.Build(_controller);
-        var scope = builder(root);
-        //we still need to use the generator since the scope could be a tag member
-        var key = _generator.GenerateSingle(scope);
-
-        if (!_elements.TryGetValue(key, out var value))
+        if (!_index.TryGetValue(reference, out var value))
         {
-            element = null!;
+            component = null!;
             return false;
         }
 
-        var result = value.Deserialize<LogixScoped>();
-        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixScoped>() : result;
-        return IsNull(target, out element);
+        var result = value.Deserialize<TComponent>();
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixObject>() : result;
+        return (target as TComponent).IsNull(out component);
     }
 
-    public bool TryGet<TScoped>(Func<IScopeBuilder, Scope> builder, out TScoped element) where TScoped : LogixScoped
+    public bool TryGet<TCode>(int number, string program, string routine, out TCode code) where TCode : LogixCode
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        var reference = Reference.To<TCode>(number, program, routine);
 
-        var root = Scope.Build(_controller);
-        var scope = builder(root);
-        //we still need to use the generator since the scope could be a tag member
-        var key = _generator.GenerateSingle(scope);
-
-        if (!_elements.TryGetValue(key, out var value))
+        if (!_index.TryGetValue(reference, out var value))
         {
-            element = null!;
+            code = null!;
             return false;
         }
 
-        var result = value.Deserialize<TScoped>();
-        var target = result is Tag tag ? tag.Member(scope.Name.Path)?.As<LogixObject>() : result;
-        return IsNull(target as TScoped, out element);
+        var result = value.Deserialize<TCode>();
+        return result.IsNull(out code);
     }
 
-    public IEnumerable<CrossReference> References(LogixComponent component)
+    public bool TryGet(Action<IReferenceTypeBuilder> action, out LogixEntity entity)
     {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
 
-        var key = $"{ReferenceType.FromComponent(component)}:{component.Name}";
+        var reference = Reference.Build(action);
 
-        return _references.TryGetValue(key, out var references)
-            ? references.Where(r => component.Scope.IsVisibleTo(r.Scope))
-            : [];
-    }
-
-    public IEnumerable<Scope> Scopes()
-    {
-        return _elements.Keys;
-    }
-
-    #endregion
-
-    #region Internal
-
-    /// <summary>
-    /// Clears all current data and kicks off indexing of all the elements and references for the L5X. Sets flag to
-    /// false.
-    /// </summary>
-    private void Index()
-    {
-        //Elements
-        IndexControllerScopedComponents();
-        IndexControllerScopedModuleTags();
-        IndexProgramScopedElements();
-
-        //References
-        IndexTagReferences();
-        IndexRoutineReferences();
-        IndexRungReferences();
-        IndexLineReferences();
-        IndexSheetReferences();
-    }
-
-    /// <summary>
-    /// Handles finding and indexing all named component elements in the L5X.
-    /// </summary>
-    private void IndexControllerScopedComponents()
-    {
-        HashSet<string> types =
-        [
-            L5XName.DataType,
-            L5XName.AddOnInstructionDefinition,
-            L5XName.Module,
-            L5XName.Tag,
-            L5XName.Program,
-            L5XName.Task
-        ];
-
-        var elements = _content.Descendants()
-            .Where(e => types.Contains(e.L5XType()) && !string.IsNullOrEmpty(e.Attribute(L5XName.Name)?.Value));
-
-        foreach (var element in elements)
+        if (!_index.TryGetValue(reference, out var value))
         {
-            var scope = Scope
-                .Build(_controller)
-                .Type(element.L5XType())
-                .Named(element.LogixName());
-
-            _elements[scope] = element;
+            entity = null!;
+            return false;
         }
+
+        var result = value.Deserialize<LogixEntity>();
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
+        return target.IsNull(out entity);
     }
 
-    /// <summary>
-    /// Handles finding and indexing all module defined tag elements in the L5X.
-    /// </summary>
-    private void IndexControllerScopedModuleTags()
+    public bool TryGet<TEntity>(Action<IReferenceLocationBuilder> action, out TEntity entity)
+        where TEntity : LogixEntity
     {
-        var elements = _content.Descendants(L5XName.Module).Where(e => e.IsModuleTagElement());
+        if (action is null)
+            throw new ArgumentNullException(nameof(action));
 
-        foreach (var element in elements)
+        var builder = new ReferenceBuilder();
+        builder.Type(ReferenceType.Parse(typeof(TEntity).Name));
+        action.Invoke(builder);
+        var reference = builder.Build();
+
+        if (!_index.TryGetValue(reference, out var value))
         {
-            var tagName = element.TagName();
-            var scope = Scope.Build(_controller).Tag(tagName);
-            _elements[scope] = element;
+            entity = null!;
+            return false;
         }
-    }
 
-    /// <summary>
-    /// Handles finding and indexing all content in the program scoped elements.
-    /// </summary>
-    private void IndexProgramScopedElements()
-    {
-        var programs = _content.Descendants(L5XName.Program);
-
-        foreach (var program in programs)
-        {
-            IndexProgramScopedTags(program);
-            IndexProgramScopedRoutines(program);
-            IndexProgramScopedRungs(program);
-            IndexProgramScopedLines(program);
-            IndexProgramScopedSheets(program);
-        }
-    }
-
-    /// <summary>
-    /// Handles finding and indexing all content in the AOI scoped elements.
-    /// </summary>
-    private void IndexInstructionScopedElements()
-    {
-        var instructions = _content.Descendants(L5XName.AddOnInstructionDefinition);
-
-        foreach (var instruction in instructions)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Indexes all the tag component elements in the provided program element.
-    /// </summary>
-    private void IndexProgramScopedTags(XElement program)
-    {
-        var programName = program.LogixName();
-
-        foreach (var tag in program.Descendants(L5XName.Tag))
-        {
-            var scope = Scope
-                .Build(_controller)
-                .In(programName)
-                .Type(ScopeType.Tag)
-                .Named(tag.LogixName());
-
-            _elements[scope] = tag;
-        }
-    }
-
-    /// <summary>
-    /// Indexes all the routine component elements in the provided program element.
-    /// </summary>
-    private void IndexProgramScopedRoutines(XElement program)
-    {
-        var programName = program.LogixName();
-
-        foreach (var routine in program.Descendants(L5XName.Routine))
-        {
-            var scope = Scope
-                .Build(_controller)
-                .In(programName)
-                .Type(ScopeType.Routine)
-                .Named(routine.LogixName());
-
-            _elements[scope] = routine;
-        }
-    }
-
-    /// <summary>
-    /// Indexes all the rung elements in the provided program element.
-    /// </summary>
-    private void IndexProgramScopedRungs(XElement program)
-    {
-        var programName = program.LogixName();
-        var rungs = program.Descendants(L5XName.Rung).ToList();
-
-        //We won't rely on number but rather the order/index since that is all Studio cares about.
-        for (var i = 0; i < rungs.Count; i++)
-        {
-            var rung = rungs[i];
-            var routineName = rung.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
-
-            var scope = Scope
-                .Build(_controller)
-                .In(programName)
-                .In(routineName)
-                .Type(ScopeType.Rung)
-                .Named(i.ToString());
-
-            _elements[scope] = rung;
-        }
-    }
-
-    /// <summary>
-    /// Indexes all the line elements in the provided program element.
-    /// </summary>
-    private void IndexProgramScopedLines(XElement program)
-    {
-        var programName = program.LogixName();
-        var lines = program.Descendants(L5XName.Line).ToList();
-
-        //We won't rely on number but rather the oder/index since that is all Studio cares about.
-        for (var i = 0; i < lines.Count; i++)
-        {
-            var line = lines[i];
-            var routineName = line.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
-
-            var scope = Scope.Build(_controller)
-                .In(programName)
-                .In(routineName)
-                .Type(ScopeType.Line)
-                .Named(i.ToString());
-
-            _elements[scope] = line;
-        }
-    }
-
-    /// <summary>
-    /// Indexes all the sheet elements in the provided program element.
-    /// </summary>
-    private void IndexProgramScopedSheets(XElement program)
-    {
-        var programName = program.LogixName();
-        var sheets = program.Descendants(L5XName.Sheet).ToList();
-
-        //We won't rely on number but rather the oder/index since that is all Studio cares about.
-        for (var i = 0; i < sheets.Count; i++)
-        {
-            var sheet = sheets[i];
-            var routineName = sheets.Ancestors(L5XName.Routine).FirstOrDefault()?.LogixName() ?? string.Empty;
-
-            var scope = Scope.Build(_controller)
-                .In(programName)
-                .In(routineName)
-                .Type(ScopeType.Sheet)
-                .Named(i.ToString());
-
-            _elements[scope] = sheet;
-        }
-    }
-
-    /// <summary>
-    /// Finds all elements with a data type attribute and indexes them into a local reference index for fast lookup.
-    /// This will include technically any type, predefined, atomic, user defined, or add on instruction.
-    /// </summary>
-    private void IndexTagReferences()
-    {
-        var tags = _content.Descendants().Where(d => d.IsTagElement());
-        var references = tags.SelectMany(CrossReference.In).ToList();
-
-        foreach (var reference in references)
-            AddReference(reference);
-    }
-
-    /// <summary>
-    /// Finds all program elements and indexes the referenced routine names found in the program attributes.
-    /// </summary>
-    private void IndexRoutineReferences()
-    {
-        var programs = _content.Descendants(L5XName.Program);
-        var references = programs.SelectMany(CrossReference.In).ToList();
-
-        foreach (var reference in references)
-            AddReference(reference);
-    }
-
-    /// <summary>
-    /// Handles indexing the tags or component names of for all rungs in the L5X file.
-    /// </summary>
-    private void IndexRungReferences()
-    {
-        var rungs = _content.Descendants(L5XName.Program).Descendants(L5XName.Rung);
-        var references = rungs.SelectMany(CrossReference.In).ToList();
-
-        foreach (var reference in references)
-            AddReference(reference);
-    }
-
-    /// <summary>
-    /// Handles indexing the tags or component names of for all rungs in the L5X file.
-    /// </summary>
-    private void IndexLineReferences()
-    {
-        var elements = _content.Descendants(L5XName.Program).Descendants(L5XName.Line);
-        var references = elements.SelectMany(CrossReference.In).ToList();
-
-        foreach (var reference in references)
-            AddReference(reference);
+        var result = value.Deserialize<TEntity>();
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixObject>() : result;
+        return (target as TEntity).IsNull(out entity);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    private void IndexSheetReferences()
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void ContentOnChanged(object sender, XObjectChangeEventArgs e)
     {
-        var elements = _content.Descendants(L5XName.Program).Descendants(L5XName.Sheet);
-        var references = elements.SelectMany(CrossReference.In).ToList();
-
-        foreach (var reference in references)
-            AddReference(reference);
+        //todo we could have option to track changes made but the only issue is reference collisions.
+        //does that throw an exception? how does that work. For now we can just offer a ReIndex() method.
+        throw new NotImplementedException();
     }
-
-    /// <summary>
-    /// Creates the reference key and adds the cross-reference to the internal dictionary.
-    /// </summary>
-    private void AddReference(CrossReference reference)
-    {
-        var key = $"{reference.Type.Name}:{reference.Reference.Root}";
-
-        if (!_references.TryAdd(key, [reference]))
-            _references[key].Add(reference);
-    }
-
-    /// <summary>
-    /// Helper for returning the TryGet result and element based on whether the input element is null.
-    /// </summary>
-    private static bool IsNull<TObject>(TObject? element, out TObject result) where TObject : LogixObject
-    {
-        if (element is null)
-        {
-            result = null!;
-            return false;
-        }
-
-        result = element;
-        return true;
-    }
-
-    #endregion
 }

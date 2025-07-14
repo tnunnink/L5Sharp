@@ -346,7 +346,7 @@ public abstract class LogixData : LogixElement
         foreach (var logixType in logixTypes)
         {
             var factory = BuildFactory(logixType);
-            var names = logixType.L5XTypes().ToList();
+            var names = logixType.GetLogixTypeNames().ToList();
             var functions = names.Select(n => new KeyValuePair<string, Func<LogixData>>(n, factory));
             factories.AddRange(functions);
         }

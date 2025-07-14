@@ -98,9 +98,32 @@ public class DataType : LogixComponent<DataType>
     }
 
     /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        if (Document is null) return [];
+
+        var references = Document.Serialize().Descendants()
+            .Where(e => e.IsTagElement() && e.Attribute(L5XName.DataType)?.Value == Name)
+            .Select(Reference.To)
+            .Distinct()
+            .ToArray();
+
+        return references;
+    }
+
+    /// <inheritdoc />
     public override IEnumerable<LogixComponent> Dependencies()
     {
-        return Members.SelectMany(m => Document.DependenciesForType(m.DataType)).Distinct(c => c.Name);
+        var dependencies = new List<LogixComponent>();
+
+        foreach (var member in Members)
+        {
+            if (!TryResolveType(member.DataType, out var type)) continue;
+            dependencies.Add(type);
+            dependencies.AddRange(type.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Reference);
     }
 
     /// <summary>

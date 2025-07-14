@@ -162,7 +162,7 @@ public class Routine : LogixComponent<Routine>
     /// If this routine is not an FBD routine, then you shouldn't use this property to add sheet objects
     /// to the underlying XML, as it would result in import errors.
     /// </remarks>
-    public LogixContainer<Line> Sheets => Content<Line>();
+    public LogixContainer<Sheet> Sheets => Content<Sheet>();
 
     /// <summary>
     /// Gets the routine content as a <see cref="LogixContainer{TElement}"/> containing elements of the specified type.
@@ -181,6 +181,24 @@ public class Routine : LogixComponent<Routine>
         return content is not null
             ? new LogixContainer<TCode>(content)
             : throw Element.L5XError(Type.ContentName);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        if (Document is null) return [];
+        
+        var references = new List<Reference>();
+
+        //1. Programs reference routines in their RoutineName properties.
+        var programs = Document.Programs.Where(p => p.MainRoutineName == Name || p.FaultRoutineName == Name);
+        references.AddRange(programs.Select(p => p.Reference));
+
+        //2. Code references routines in routine type instruction (e.g., JSR, FOR)
+        var code = Document.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true);
+        references.AddRange(code);
+
+        return references;
     }
 
     /// <inheritdoc />
