@@ -50,7 +50,7 @@ public class StringData : StructureData, IEnumerable<SINT>
     /// <param name="value">The value of the string data type. If null then defaults to an empty string.</param>
     /// <remarks>
     /// This constructor allows the caller to create a generic string type instance that could represent a
-    /// user defined string type class without having to actually create a custom class.
+    /// user-defined string type class without having to actually create a custom class.
     /// </remarks>
     public StringData(string? name, string? value) : base(new XElement(L5XName.Data))
     {
@@ -67,22 +67,20 @@ public class StringData : StructureData, IEnumerable<SINT>
     /// <value>A <see cref="DINT"/> value representing the integer length of the string value.</value>
     /// <remarks>
     /// This member property is not returned in the <c>Members</c> collection because it is not serialized.
-    /// It would also generate an extemely large number of member tags, which would consume more memeory.
-    /// To reduce space/file size, Rockwell formats strings as a single element value in a Data member element.
-    /// This property is only here as a helper to allow the caller to conveniently obtain the length of the
+    /// Rockwell formats strings as a single element value in a Data or DataValueMember element.
+    /// This property is only here as a helper to allow the caller to conveniently get the length of the
     /// underlying string value.
     /// </remarks>
     public DINT LEN => _value.Length;
 
     /// <summary>
-    /// Gets the array of <see cref="SINT"/> characters that represent the ASCII encoded string value.
+    /// Gets the array of <see cref="SINT"/> characters that represent the ASCII-encoded string value.
     /// </summary>
     /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
     /// <remarks>
     /// This member property is not returned in the <c>Members</c> collection because it is not serialized.
-    /// It would also generate an extemely large number of member tags, which would consume more memeory.
-    /// To reduce space/file size, Rockwell formats strings as a single element value in a Data or DataValueMember element.
-    /// This property is only here as a helper to allow the caller to conveniently obtain the SINT array
+    /// Rockwell formats strings as a single element value in a Data or DataValueMember element.
+    /// This property is only here as a helper to allow the caller to conveniently get the SINT array
     /// representation of the underlying string by converting the underlying value.
     /// </remarks>
     public ArrayData<SINT> DATA => ToDataArray(_value);
@@ -121,7 +119,7 @@ public class StringData : StructureData, IEnumerable<SINT>
 
     /// <summary>
     /// Serializes this current <see cref="StringData"/> as a structure data element. This is a custom serialization
-    /// method which is need to format a string as a nested structure within an array or other structure type.
+    /// method needed to format a string as a nested structure within an array or other structure type.
     /// </summary>
     /// <returns>A <see cref="XElement"/> containing the serialized data.</returns>
     /// <remarks>
@@ -151,7 +149,7 @@ public class StringData : StructureData, IEnumerable<SINT>
     }
 
     /// <summary>
-    /// Gets the value of the string form the provided element object. Where this value exists depends on if the
+    /// Gets the value of the string from the provided element object. Where this value exists depends on if the
     /// element is a root data element or a nested structure or structure member element. If neither is found this
     /// returns and empty string.
     /// </summary>
@@ -189,7 +187,7 @@ public class StringData : StructureData, IEnumerable<SINT>
         //Logix encloses strings in single quotes, so we need to remove those if they are present.
         value = value.TrimStart('\'').TrimEnd('\'');
 
-        //If we get a null or empty string then return an empty array.
+        //If we get a null or empty string, then return an empty array.
         if (string.IsNullOrEmpty(value)) return [];
 
         //Breaks apart the string into single ASCII characters to be parsed.

@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// or the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
 /// Each port is identifiable by the <see cref="Id"/> property. 
 /// </remarks>
-public class Port : LogixObject
+public class Port : LogixObject<Port>
 {
     /// <summary>
     /// Creates a new <see cref="Port"/> with default values.
@@ -124,4 +124,14 @@ public class Port : LogixObject
     /// The IsEthernet property is true if the Type property of the Port is set to "Ethernet".
     /// </remarks>
     public bool IsEthernet => Type == "Ethernet";
+
+    /// <summary>
+    /// Gets a value indicating whether the <see cref="Port"/> represents a chassis connection.
+    /// </summary>
+    /// <remarks>
+    /// A <see cref="Port"/> is considered a chassis if its associated <see cref="Address"/> indicates
+    /// a slot within the chassis or backplane. This property determines if the <see cref="Port"/>
+    /// configuration corresponds to such a slot.
+    /// </remarks>
+    public bool IsChassis => Address?.IsSlot is true;
 }

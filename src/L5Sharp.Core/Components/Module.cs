@@ -266,7 +266,7 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public IPAddress? IP
     {
-        get => Ports.FirstOrDefault(p => p is { IsEthernet: true })?.Address?.ToIPAddress();
+        get => Ports.FirstOrDefault(p => p is { IsEthernet: true, Address.IsIP: true })?.Address?.ToIPAddress();
         set => SetAddress(value?.ToString(), true);
     }
 
@@ -349,7 +349,7 @@ public class Module : LogixComponent<Module>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true) ?? [];
     }
 
     /// <inheritdoc />

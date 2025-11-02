@@ -16,7 +16,7 @@ public class Unit : LogixObject
     /// <summary>
     /// Creates a new <see cref="Unit"/> element with the provided operand tag and comment text.
     /// </summary>
-    public Unit(TagName operand, string? value = default) : base(L5XName.EngineeringUnit)
+    public Unit(TagName operand, string? value = null) : base(L5XName.EngineeringUnit)
     {
         Operand = operand;
         Value = value ?? string.Empty;
@@ -45,7 +45,7 @@ public class Unit : LogixObject
     }
 
     /// <summary>
-    /// The text containting the unit value.
+    /// Get or sets the value of the unit.
     /// </summary>
     /// <value>A <see cref="string"/> containsing the unit text.</value>
     public string Value

@@ -100,7 +100,7 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, ILogixParsable
     public new static REAL? TryParse(string? value)
     {
         if (value is null || value.IsEmpty())
-            return default;
+            return null;
 
         if (value.Contains("QNAN")) return new REAL(float.NaN);
 
@@ -108,11 +108,23 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, ILogixParsable
             return new REAL(primitive);
 
         if (!Radix.TryInfer(value, out var radix))
-            return default;
+            return null;
 
         var parsed = radix.ParseValue(value);
         var converted = (float)Convert.ChangeType(parsed, typeof(float));
         return new REAL(converted, radix);
+    }
+    
+    /// <inheritdoc />
+    public override byte[] GetBytes()
+    {
+        return BitConverter.GetBytes(_value);
+    }
+
+    /// <inheritdoc />
+    public override ValueType ToValue()
+    {
+        return _value;
     }
 
     // Contains the implicit .NET conversions for the type.

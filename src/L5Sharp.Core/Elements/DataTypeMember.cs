@@ -106,7 +106,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     }
 
     /// <summary>
-    /// An flag indicating whether the <c>Member</c> is a hidden backing member for another boolean member of the data type. 
+    /// A flag indicating whether the <c>Member</c> is a hidden backing member for another boolean member of the data type. 
     /// </summary>
     /// <value><c>true</c> if member is a hidden member of the type, <c>false</c> if not, and <c>null</c> if the attribute
     /// does not exist for the underlying element.</value>
@@ -207,8 +207,10 @@ public class DataTypeMember : LogixObject<DataTypeMember>
         if (AtomicData.IsAtomic(DataType) || Document is null)
             return new DataType(DataType);
 
-        var definition = Document.DataTypes.Find(DataType);
-        return definition ?? new DataType(DataType);
+        if (Document.TryGet<DataType>(DataType, out var definition))
+            return definition;
+        
+        return new DataType(DataType);
     }
 
     /// <inheritdoc />

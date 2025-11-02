@@ -182,7 +182,7 @@ public class Tag : LogixComponent<Tag>
     /// Tag overrides the default implementation so that each nested tag member will include the
     /// full dot down path to it's instance/reference (not just the root tag name).
     /// </remarks>
-    public override Reference Reference => Parent is null ? Root.Reference : Root.Reference.ToTag(TagName);
+    public override Reference Reference => Parent is null ? base.Reference : Root.Reference.ToTag(TagName);
 
     /// <summary>
     /// The full tag name path of the <see cref="Tag"/>.
@@ -441,7 +441,7 @@ public class Tag : LogixComponent<Tag>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.Contains(Reference)) ?? [];
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
     }
 
     /// <inheritdoc />
@@ -726,7 +726,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <param name="name">The name of the tag to build.</param>
     /// <returns>An instance of <see cref="ITagBaseTypeBuilder"/> to enable tag configuration.</returns>
-    public static ITagBaseTypeBuilder Configure(string name)
+    public static ITagBaseTypeBuilder New(string name)
     {
         return new TagBaseTypeBuilder(name);
     }

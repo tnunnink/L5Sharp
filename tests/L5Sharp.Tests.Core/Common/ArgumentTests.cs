@@ -11,6 +11,7 @@ public class ArgumentTests
         var argument = Argument.Empty;
 
         argument.Should().Be(string.Empty);
+        argument.Type.Should().Be(ArgumentType.Empty);
     }
 
     [Test]
@@ -19,154 +20,113 @@ public class ArgumentTests
         var argument = Argument.Unknown;
 
         argument.Should().Be("?");
+        argument.Type.Should().Be(ArgumentType.Unknown);
     }
 
     [Test]
-    public void IsAtomic_AtomicArgument_ShouldBeTrue()
+    public void New_AtomicArgument_ShouldBeExpected()
     {
         Argument argument = 100;
 
-        argument.IsAtomic.Should().BeTrue();
+        argument.Should().Be("100");
+        argument.Type.Should().Be(ArgumentType.Atomic);
     }
 
     [Test]
-    public void IsAtomic_NonAtomicArgument_ShouldBeFalse()
-    {
-        Argument argument = "Test";
-
-        argument.IsAtomic.Should().BeFalse();
-    }
-
-    [Test]
-    public void IsExpression_ExpressionArgument_ShouldBeTrue()
-    {
-        Argument argument = "XIC(MyTagName.Member[1].Active)";
-
-        argument.IsExpression.Should().BeTrue();
-    }
-
-    [Test]
-    public void IsExpression_NonExpressionArgument_ShouldBeFalse()
+    public void New_TagArgument_ShouldBeExpected()
     {
         Argument argument = "MyTagName.Member[1].Active.1";
 
-        argument.IsExpression.Should().BeFalse();
+        argument.Should().Be("MyTagName.Member[1].Active.1");
+        argument.Type.Should().Be(ArgumentType.Tag);
     }
 
     [Test]
-    public void IsImmediate_AtomicArgument_ShouldBeTrue()
+    public void New_StringArgument_ShouldBeExpected()
     {
-        Argument argument = 100;
+        Argument argument = "'This is a test string'";
 
-        argument.IsImmediate.Should().BeTrue();
+        argument.Should().Be("'This is a test string'");
+        argument.Type.Should().Be(ArgumentType.String);
     }
 
     [Test]
-    public void IsImmediate_StringArgument_ShouldBeTrue()
+    public void New_ExpressionArgument_ShouldBeExpected()
     {
-        Argument argument = "'Constant'";
+        Argument argument = "SomeTag.Value > 100";
 
-        argument.IsImmediate.Should().BeTrue();
+        argument.Should().Be("SomeTag.Value > 100");
+        argument.Type.Should().Be(ArgumentType.Expression);
     }
 
     [Test]
-    public void IsImmediate_TagNameArgument_ShouldBeFalse()
-    {
-        Argument argument = "MyTagName.Member[1].Active.1";
-
-        argument.IsImmediate.Should().BeFalse();
-    }
-
-    [Test]
-    public void IsTag_TagArgument_ShouldBeTrue()
-    {
-        Argument argument = "MyTagName.Member[1].Active.1";
-
-        argument.IsTag.Should().BeTrue();
-    }
-
-    [Test]
-    public void IsTag_AtomicArgument_ShouldBeFalse()
-    {
-        Argument argument = true;
-
-        argument.IsTag.Should().BeFalse();
-    }
-
-    [Test]
-    public void IsString_StringArgument_ShouldBeTrue()
-    {
-        Argument argument = "'Constant'";
-
-        argument.IsString.Should().BeTrue();
-    }
-
-    [Test]
-    public void IsString_AtomicArgument_ShouldBeFalse()
-    {
-        Argument argument = 1.23;
-
-        argument.IsString.Should().BeFalse();
-    }
-
-    [Test]
-    public void Parse_Null_ShouldBeEmpty()
+    public void Parse_NullValue_ShouldThrowException()
     {
         FluentActions.Invoking(() => Argument.Parse(null)).Should().Throw<ArgumentException>();
     }
 
     [Test]
-    public void Parse_EmptyString_ShouldThrowException()
+    public void Parse_EmptyValue_ShouldBeEmpty()
     {
-        FluentActions.Invoking(() => Argument.Parse(string.Empty)).Should().Throw<ArgumentException>();
+        var argument = Argument.Parse(string.Empty);
+
+        argument.Should().Be(string.Empty);
+        argument.Type.Should().Be(ArgumentType.Empty);
     }
 
     [Test]
-    public void Parse_QuestionMark_ShouldBeUnknown()
+    public void Parse_UnknownValue_ShouldBeUnknown()
     {
         var argument = Argument.Parse("?");
 
         argument.Should().Be("?");
+        argument.Type.Should().Be(ArgumentType.Unknown);
     }
 
     [Test]
-    public void Parse_StringLiteral_ShouldHaveExpectedValueAndType()
+    public void Parse_AtomicDecimalValue_ShouldHaveExpectedValueAndType()
     {
-        var argument = Argument.Parse("'Test String'");
+        var argument = Argument.Parse("12345");
 
-        argument.Should().NotBeNull();
-        argument.IsString.Should().BeTrue();
-        argument.Should().Be("'Test String'");
+        argument.Should().Be("12345");
+        argument.Type.Should().Be(ArgumentType.Atomic);
     }
 
     [Test]
-    public void Parse_AtomicDecimalRadix_ShouldHaveExpectedValueAndType()
-    {
-        var argument = Argument.Parse("100");
-
-        argument.Should().NotBeNull();
-        argument.IsAtomic.Should().BeTrue();
-        argument.Should().Be(100);
-    }
-
-    [Test]
-    public void Parse_AtomicBinaryRadix_ShouldHaveExpectedValueAndType()
+    public void Parse_AtomicBinaryValue_ShouldHaveExpectedValueAndType()
     {
         var argument = Argument.Parse("2#0010_0110");
 
-        argument.Should().NotBeNull();
-        argument.IsAtomic.Should().BeTrue();
-        argument.Should().Be(38);
+        argument.Should().Be("2#0010_0110");
+        argument.Type.Should().Be(ArgumentType.Atomic);
     }
 
     [Test]
-    public void TagName_ValidTagName_ShouldHaveExpectedValueAndType()
+    public void Parse_StringValue_ShouldHaveExpectedValueAndType()
+    {
+        var argument = Argument.Parse("'Test String'");
+
+        argument.Should().Be("'Test String'");
+        argument.Type.Should().Be(ArgumentType.String);
+    }
+
+
+    [Test]
+    public void Parse_TagNameValue_ShouldHaveExpectedValueAndType()
     {
         var argument = Argument.Parse("MyTagName.Member[1].Active.1");
 
-        argument.Should().NotBeNull();
-        argument.IsTag.Should().BeTrue();
         argument.Should().Be("MyTagName.Member[1].Active.1");
+        argument.Type.Should().Be(ArgumentType.Tag);
+    }
+
+    [Test]
+    public void Parse_ExpressionValue_ShouldHaveExpectedValueAndType()
+    {
+        var argument = Argument.Parse("ABS(MyTagName) >= 1000");
+
+        argument.Should().Be("ABS(MyTagName) >= 1000");
+        argument.Type.Should().Be(ArgumentType.Expression);
     }
 
     [Test]
@@ -174,7 +134,7 @@ public class ArgumentTests
     {
         var argument = Argument.Parse("MyTagName.Member[1].Active.1");
 
-        var tags = argument.Tags;
+        var tags = argument.Tags.ToArray();
 
         tags.Should().HaveCount(1);
     }
@@ -200,19 +160,54 @@ public class ArgumentTests
     }
 
     [Test]
-    public void ImplicitConversion_TagName_ShouldNotBeExpected()
-    {
-        Argument argument = new TagName("Test");
-
-        argument.Should().NotBeNull();
-        argument.Should().Be("Test");
-    }
-
-    [Test]
-    public void ImplicitOperator_Int_ShouldNotBeBeExpected()
+    public void ToAtomic_OnAtomicArgument_ShouldBeExpectedTypeAndValue()
     {
         Argument argument = 100;
 
-        argument.Should().Be(100);
+        var atomic = argument.ToAtomic();
+
+        atomic.Should().BeOfType<SINT>();
+        atomic.Should().Be(100);
+    }
+
+    [Test]
+    public void ToAtomic_WithValidFormat_ShouldBeExpectedTypeAndValue()
+    {
+        Argument argument = "2#0010_0010";
+
+        var atomic = argument.ToAtomic();
+
+        atomic.Should().BeOfType<SINT>();
+        atomic.Should().Be(34);
+    }
+
+    [Test]
+    public void ToAtomic_NonAtomicArgument_ShouldThrowException()
+    {
+        Argument argument = "SomeTagName";
+
+        FluentActions.Invoking(() => argument.ToAtomic()).Should().Throw<FormatException>();
+    }
+
+    [Test]
+    public void ToTag_ValidTagArgument_ShouldBeExpected()
+    {
+        Argument argument = "MyTag.Item[0].Value";
+
+        var tag = argument.ToTag();
+
+        tag.Should().BeOfType<TagName>();
+        tag.Should().Be("MyTag.Item[0].Value");
+    }
+
+    [Test]
+    public void ToTag_InvalidTagArgument_ShouldBeExpected()
+    {
+        Argument argument = "1234";
+
+        var tag = argument.ToTag();
+
+        tag.Should().BeOfType<TagName>();
+        tag.IsQualified.Should().BeFalse();
     }
 }

@@ -343,7 +343,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         protected override bool HasFormat(string input)
         {
-            if (input.StartsWith("+") || input.StartsWith("-"))
+            if (input.StartsWith('+') || input.StartsWith('-'))
             {
                 input = input.Remove(0, 1);
             }

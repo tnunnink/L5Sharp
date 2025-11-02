@@ -199,7 +199,7 @@ public sealed class Task : LogixComponent<Task>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true) ?? [];
     }
 
     /// <inheritdoc />

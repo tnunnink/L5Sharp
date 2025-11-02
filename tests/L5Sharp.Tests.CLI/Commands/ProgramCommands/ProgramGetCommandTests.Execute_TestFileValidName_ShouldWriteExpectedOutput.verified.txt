@@ -1,0 +1,13 @@
+﻿{
+  Name: MainProgram,
+  Description: null,
+  Type: Normal,
+  Class: Standard,
+  MainRoutine: Main,
+  FaultRoutine: null,
+  Disabled: false,
+  Folder: false,
+  TestEdits: false,
+  Parent: null,
+  Task: Continuous
+}

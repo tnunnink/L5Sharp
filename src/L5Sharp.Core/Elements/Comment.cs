@@ -16,7 +16,7 @@ public class Comment : LogixObject
     /// <summary>
     /// Creates a new <see cref="Comment"/> element with the provided operand tag and comment text.
     /// </summary>
-    public Comment(TagName operand, string? value = default) : base(L5XName.Comment)
+    public Comment(TagName operand, string? value = null) : base(L5XName.Comment)
     {
         Operand = operand;
         Value = value ?? string.Empty;

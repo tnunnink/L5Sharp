@@ -92,9 +92,9 @@ public class DintTests
     {
         var type = new DINT(123);
 
-        var bits = type.GetBits();
+        var bits = type.ToBitArray();
 
-        bits.Should().HaveCount(32);
+        bits.Count.Should().Be(32);
     }
 
     [Test]
@@ -181,7 +181,7 @@ public class DintTests
 
         var bytes = type.GetBytes();
 
-        CollectionAssert.AreEqual(bytes, expected);
+        bytes.Should().BeEquivalentTo(expected);
     }
 
     [Test]

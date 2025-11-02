@@ -118,10 +118,10 @@ public interface ILogixLookup
     /// Attempts to retrieve the specified component by name, returning a value that indicates whether the operation succeeded.
     /// </summary>
     /// <param name="name">The name of the component to retrieve.</param>
-    /// <param name="compoenent">When this method returns, contains the component of type <typeparamref name="TComponent"/> if found; otherwise, the default value for this type.</param>
+    /// <param name="component">When this method returns, contains the component of type <typeparamref name="TComponent"/> if found; otherwise, the default value for this type.</param>
     /// <typeparam name="TComponent">The type of the component to retrieve, which must be a <see cref="LogixComponent"/>.</typeparam>
     /// <returns><c>true</c> if the component with the specified name exists and is successfully retrieved; otherwise, <c>false</c>.</returns>
-    bool TryGet<TComponent>(string name, out TComponent compoenent) where TComponent : LogixComponent;
+    bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent;
 
     /// <summary>
     /// Attempts to retrieve a <typeparamref name="TComponent"/> from the L5X based on the specified name and program.

@@ -193,6 +193,23 @@ public sealed class L5X : LogixElement, ILogixLookup
     }
 
     /// <summary>
+    /// Creates a new <see cref="L5X"/> file with a seeded controller and processor module element using the provided
+    /// controller name, processor type, and revision. 
+    /// </summary>
+    /// <param name="name">The name of the controller.</param>
+    /// <param name="processor">The processor type of the controller.</param>
+    /// <param name="revision">The optional software revision of the processor.
+    /// If not provided, then the maximum installed revision is used.</param>
+    /// <returns>A new <see cref="L5X"/> instance with the specified controller properties.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="processor"/> is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">No module info is defined for the provided processor type.</exception>
+    public static L5X New(string name, string processor, Revision? revision = null)
+    {
+        var info = LogixInfo.Create(name, processor, revision);
+        return new L5X(info);
+    }
+
+    /// <summary>
     /// Creates a new, empty <see cref="L5X"/> instance with a default <see cref="LogixInfo"/> configuration.
     /// </summary>
     /// <returns>An empty <see cref="L5X"/> instance with no additional content.</returns>
@@ -296,7 +313,7 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// more complex queries.
     ///</para>
     /// </remarks>
-    public IEnumerable<TObject> Query<TObject>() where TObject : LogixObject, new()
+    public IEnumerable<TObject> Query<TObject>() where TObject : LogixObject
     {
         var types = new HashSet<string>(typeof(TObject).GetLogixTypeNames());
 
@@ -318,7 +335,7 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// more complex queries.
     ///</para>
     /// </remarks>
-    public IEnumerable<TObject> Query<TObject>(Func<TObject, bool> predicate) where TObject : LogixObject, new()
+    public IEnumerable<TObject> Query<TObject>(Func<TObject, bool> predicate) where TObject : LogixObject
     {
         var types = new HashSet<string>(typeof(TObject).GetLogixTypeNames());
 
@@ -377,9 +394,9 @@ public sealed class L5X : LogixElement, ILogixLookup
     }
 
     /// <inheritdoc />
-    public bool TryGet<TComponent>(string name, out TComponent compoenent) where TComponent : LogixComponent
+    public bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent
     {
-        return _lookup.TryGet(name, out compoenent);
+        return _lookup.TryGet(name, out component);
     }
 
     /// <inheritdoc />
@@ -533,7 +550,7 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// Creates a new <see cref="ILogixLookup"/> instance for indexing the L5X content.
     /// </summary>
     /// <returns>An <see cref="ILogixLookup"/> instance representing the indexed L5X content.</returns>
-    public ILogixLookup ToLookup()
+    public ILogixLookup Index()
     {
         return new LogixIndex(Element);
     }
@@ -544,7 +561,7 @@ public sealed class L5X : LogixElement, ILogixLookup
     /// <param name="program">The name of the program to create a lookup for.</param>
     /// <returns>An instance of <see cref="ILogixLookup"/> representing the specified program.</returns>
     /// <exception cref="InvalidOperationException">Thrown when no program with the specified name exists.</exception>
-    public ILogixLookup ToLookup(string program)
+    public ILogixLookup Index(string program)
     {
         var element = Element.Descendants(L5XName.Program).FirstOrDefault(p => p.LogixName() == program);
 

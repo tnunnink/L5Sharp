@@ -140,8 +140,8 @@ public class ReferenceTests
         reference.IsLocal.Should().BeTrue();
         reference.IsLogic.Should().BeTrue();
         reference.Logic.Should().NotBeNull();
-        reference.Logic?.ToString().Should().Be("XIC(LocalTag)");
-        reference.Logic?.Tags.Should().Contain("LocalTag");
+        reference.Logic.ToString().Should().Be("XIC(LocalTag)");
+        reference.Logic.Tags.Should().Contain("LocalTag");
     }
 
     [Test]

@@ -14,21 +14,19 @@ public class SheetTests
     }
 
     [Test]
-    public void New_Default_ShouldNotBeAttached()
-    {
-        var sheet = new Sheet();
-        
-        sheet.Document.Should().BeNull();
-    }
-
-    [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
         var sheet = new Sheet();
 
         sheet.Number.Should().Be(0);
         sheet.Description.Should().BeNull();
-        sheet.Blocks().Should().BeEmpty();
+        sheet.Program.Should().BeNull();
+        sheet.Routine.Should().BeNull();
+
+        sheet
+            .AddBlock(Block.ABS("block01"))
+            .AddBlock(Block.ALMD("block02"))
+            .Connect("block01.Out", "block02.HiHi");
     }
 
     [Test]
@@ -36,7 +34,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        var id = sheet.Add(Block.IREF("MyTagName"));
+        var id = sheet.AddBlock(Block.IREF("MyTagName"));
 
         id.Should().Be(0);
         sheet.Blocks().Should().HaveCount(1);
@@ -47,7 +45,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        var id = sheet.Add(Block.OREF("MyTagName"));
+        var id = sheet.AddBlock(Block.OREF("MyTagName"));
 
         id.Should().Be(0);
         sheet.Blocks().Should().HaveCount(1);
@@ -58,7 +56,7 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        var id = sheet.Add(Block.SCL());
+        var id = sheet.AddBlock(Block.SCL());
 
         id.Should().Be(0);
         sheet.Blocks().Should().HaveCount(1);
@@ -69,9 +67,9 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        var zero = sheet.Add(Block.IREF("MyTagName"));
-        var one = sheet.Add(Block.IREF("MyTagName"));
-        var two = sheet.Add(Block.IREF("MyTagName"));
+        var zero = sheet.AddBlock(Block.IREF("MyTagName"));
+        var one = sheet.AddBlock(Block.IREF("MyTagName"));
+        var two = sheet.AddBlock(Block.IREF("MyTagName"));
 
         zero.Should().Be(0);
         one.Should().Be(1);
@@ -83,31 +81,20 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        sheet.Add(Block.IREF("InputReference"));
-        sheet.Add(Block.SCL());
-        sheet.Add(Block.IREF("OutputReference"));
+        sheet.AddBlock(Block.IREF("InputReference"));
+        sheet.AddBlock(Block.SCL());
+        sheet.AddBlock(Block.IREF("OutputReference"));
 
         return Verify(sheet.Serialize().ToString());
     }
 
     [Test]
-    public void Add_BlockAndText_ShouldHaveExpectedCount()
+    public void GetBlock_ValidId_ShouldNotBeNull()
     {
         var sheet = new Sheet();
-
-        sheet.Add(Block.IREF("InputReference"));
-        sheet.AddAt("MyBlockTag", 100, 300);
-
-        sheet.Blocks().Should().HaveCount(1);
-    }
-
-    [Test]
-    public void Block_ValidId_ShouldNotBeNull()
-    {
-        var sheet = new Sheet();
-        sheet.Add(Block.IREF("InputReference"));
-        sheet.Add(Block.ADD());
-        sheet.Add(Block.OREF("OutputReference"));
+        sheet.AddBlock(Block.IREF("InputReference"));
+        sheet.AddBlock(Block.ADD());
+        sheet.AddBlock(Block.OREF("OutputReference"));
 
         var block = sheet.Block(2);
 
@@ -117,12 +104,12 @@ public class SheetTests
     }
 
     [Test]
-    public void Block_InvalidId_ShouldBeNull()
+    public void GetBlock_InvalidId_ShouldBeNull()
     {
         var sheet = new Sheet();
-        sheet.Add(Block.IREF("InputReference"));
-        sheet.Add(Block.ADD());
-        sheet.Add(Block.OREF("OutputReference"));
+        sheet.AddBlock(Block.IREF("InputReference"));
+        sheet.AddBlock(Block.ADD());
+        sheet.AddBlock(Block.OREF("OutputReference"));
 
         var block = sheet.Block(4);
 
@@ -143,74 +130,12 @@ public class SheetTests
     public void Blocks_HasCollection_ShouldHaveExpectedCount()
     {
         var sheet = new Sheet();
-        sheet.Add(Block.IREF("InputReference"));
-        sheet.Add(Block.ADD());
-        sheet.Add(Block.OREF("OutputReference"));
+        sheet.AddBlock(Block.IREF("InputReference"));
+        sheet.AddBlock(Block.ADD());
+        sheet.AddBlock(Block.OREF("OutputReference"));
 
         var blocks = sheet.Blocks();
 
         blocks.Should().HaveCount(3);
-    }
-
-    [Test]
-    public void AddAt_ValidBlock_ShouldHaveExpectedCount()
-    {
-        var sheet = new Sheet();
-
-        var id = sheet.AddAt(100, 200, Block.ADD("TestTag"));
-
-        sheet.Blocks().Should().HaveCount(1);
-        id.Should().Be(0);
-        sheet.Block(id)?.Type.Should().Be("ADD");
-        sheet.Block(id)?.X.Should().Be(100);
-        sheet.Block(id)?.Y.Should().Be(200);
-        sheet.Block(id)?.Operand.Should().Be("TestTag");
-    }
-
-    [Test]
-    public void Wire_ValidOperands_ShouldHaveExpectedCount()
-    {
-        var sheet = new Sheet();
-        sheet.Add(Block.IREF("MyTag"));
-        sheet.Add(Block.SCL());
-        
-        sheet.Wire("MyTag", "SCL_01.In");
-
-        sheet.Wires().Should().HaveCount(1);
-    }
-    
-    [Test]
-    public Task Wire_ValidOperands_ShouldBeVerified()
-    {
-        var sheet = new Sheet();
-        sheet.Add(Block.IREF("MyTag"));
-        sheet.Add(Block.SCL());
-        
-        sheet.Wire("MyTag", "SCL_01.In");
-
-        return Verify(sheet.Serialize().ToString());
-    }
-
-    [Test]
-    public void Connectors_Default_ShouldBeEmpty()
-    {
-        var sheet = new Sheet();
-
-        var wires = sheet.Wires().ToList();
-
-        wires.Should().BeEmpty();
-    }
-    
-    [Test]
-    public void Connectors_HasWired_ShouldHaveExpectedCount()
-    {
-        var sheet = new Sheet();
-        sheet.Add(new Wire { FromID = 0, ToID = 1 });
-        sheet.Add(new Wire { FromID = 0, ToID = 2 });
-        sheet.Add(new Wire { FromID = 1, ToID = 3 });
-
-        var wires = sheet.Wires().ToList();
-
-        wires.Should().HaveCount(3);
     }
 }

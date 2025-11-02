@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Tag"/> component that contains properties or configuration
+/// An element of the <see cref="Tag"/> component that contains properties or configuration
 /// consumer tag types.
 /// </summary>
 public class ConsumeInfo : LogixElement

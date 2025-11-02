@@ -208,7 +208,7 @@ public class Program : LogixComponent<Program>
     public override IEnumerable<Reference> Usages()
     {
         //Programs can be references in system instruction code references
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
     }
 
     /// <inheritdoc />
@@ -251,5 +251,26 @@ public class Program : LogixComponent<Program>
             throw new ArgumentException("Can not remove program with null or empty name.", nameof(programName));
 
         Element.Element(L5XName.ChildPrograms)?.Elements().Where(e => e.LogixName().IsEquivalent(programName)).Remove();
+    }
+
+    /// <summary>
+    /// Schedules the current program to the specified task or unschedules it if the task name is null.
+    /// </summary>
+    /// <param name="taskName">The name of the task to which the program will be scheduled. Pass null to unschedule the program.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the program is not attached to a valid L5X document
+    /// or when the task with the specified name cannot be retrieved.</exception>
+    public void Schedule(string? taskName = null)
+    {
+        //First, unschedule if schedule already and return early if no task is provided.
+        Task?.Cancel(Name);
+        if (taskName is null || taskName.IsEmpty()) return;
+
+        if (Document is null)
+            throw new InvalidOperationException("The current program instance is not attached to a L5X document");
+
+        if (Document.TryGet<Task>(taskName, out var task))
+            throw new InvalidOperationException($"Could not retrieve task: {taskName}");
+
+        task.Schedule(Name);
     }
 }

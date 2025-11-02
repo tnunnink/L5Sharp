@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Xml.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 
 namespace L5Sharp.Tests.Core;
 
@@ -36,19 +34,6 @@ public class LogixParserTests
     }
 
     [Test]
-    [TestCase("true", true, typeof(bool))]
-    [TestCase("123", 123, typeof(int))]
-    [TestCase("lol", "lol", typeof(string))]
-    [TestCase("1.234", 1.234, typeof(decimal))]
-    public void Parse_Primitives_ShouldBeExpectedValue(string input, object expected, Type type)
-    {
-        var result = input.Parse(type);
-
-        result.Should().Be(expected);
-        result.Should().BeOfType(type);
-    }
-
-    [Test]
     public void Parse_DateTime_ShouldBeExpected()
     {
         var result = "1/1/2024 1:23:45 AM".Parse<DateTime>();
@@ -72,26 +57,6 @@ public class LogixParserTests
 
         result.Should().NotBeNull();
         result.Should().Be(Radix.Decimal);
-    }
-
-    [Test]
-    public void Parse_RadixTypeFromDerivedEnumValue_ToEnsurePrivateClassesAreAlsoParsable()
-    {
-        var type = Radix.Octal.GetType();
-        var result = "Octal".Parse(type);
-
-        result.Should().NotBeNull();
-        result.Should().Be(Radix.Octal);
-    }
-
-    [Test]
-    public void Parse_RadixTypeFromDerivedEnumValue_ToEnsureThatThisAlsoParsedToOtherRadixTypes()
-    {
-        var type = Radix.Decimal.GetType();
-        var result = "Octal".Parse(type);
-
-        result.Should().NotBeNull();
-        result.Should().Be(Radix.Octal);
     }
 
     [Test]
@@ -128,15 +93,6 @@ public class LogixParserTests
 
         result.Should().NotBeNull();
         result.Should().Be(Operator.Equal);
-    }
-
-    [Test]
-    public void ParseByType_LogixEnum_ShouldBeExpected()
-    {
-        var result = "RLL".Parse(typeof(RoutineType));
-
-        result.Should().NotBeNull();
-        result.Should().Be(RoutineType.RLL);
     }
 
     [Test]

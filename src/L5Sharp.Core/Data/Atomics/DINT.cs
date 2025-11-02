@@ -107,17 +107,29 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, ILogixParsable
     public new static DINT? TryParse(string? value)
     {
         if (value is null || value.IsEmpty())
-            return default;
+            return null;
 
         if (int.TryParse(value, out var primitive))
             return new DINT(primitive);
 
         if (!Radix.TryInfer(value, out var radix))
-            return default;
+            return null;
 
         var parsed = radix.ParseValue(value);
         var converted = (int)Convert.ChangeType(parsed, typeof(int));
         return new DINT(converted, radix);
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes()
+    {
+        return BitConverter.GetBytes(_value);
+    }
+
+    /// <inheritdoc />
+    public override ValueType ToValue()
+    {
+        return _value;
     }
 
     // Contains the implicit .NET conversions for the type.

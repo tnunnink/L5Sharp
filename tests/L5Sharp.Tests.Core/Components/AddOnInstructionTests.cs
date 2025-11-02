@@ -176,29 +176,12 @@ public class AddOnInstructionTests
     }
 
     [Test]
-    public void ToText_ValidArguments_ShouldBeExpected()
+    public void Instantiate_ValidArguments_ShouldBeExpected()
     {
-        var aoi = new AddOnInstruction("TestAOI");
-        var text = aoi.ToText("TestAoiTag", "Param1", "Param2", 123, 0);
-        text.Should().Be("TestAOI(TestAoiTag,Param1,Param2,123,0)");
+        var type = new AddOnInstruction("TestAOI");
+
+        var result = type.Instantiate("TestAoiTag", "Param1", "Param2", 123, 0);
+
+        result.Should().Be("TestAOI(TestAoiTag,Param1,Param2,123,0)");
     }
-
-    /*[Test]
-    public void Example()
-    {
-        var content = L5X.Load("PathToFile");
-
-        var aoi = content.Instructions.Get("AOI_OB16_Mapping");
-
-        var aoiTag = aoi.ToTag("AOI_OB16_Mapping_Tag");
-
-        var aoiInOutTags = aoi.Parameters
-            .Where(p => p.Usage == TagUsage.InOut)
-            .Select(p => new Tag(p.Name, new ComplexData(p.DataType!)));
-
-        content.Tags.Add(aoiTag);
-        content.Tags.AddRange(aoiInOutTags);
-
-        content.Save("PathToFile");
-    }*/
 }

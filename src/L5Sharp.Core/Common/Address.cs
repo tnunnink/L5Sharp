@@ -33,6 +33,12 @@ public class Address : ILogixParsable<Address>
     public bool IsSlot => byte.TryParse(_value, out _);
 
     /// <summary>
+    /// Indicates whether the current <see cref="Address"/> represents a valid IPv4 address.
+    /// </summary>
+    /// <returns>true if the address value is a valid IPv4 address; otherwise, false.</returns>
+    public bool IsIP => IsIPv4(_value);
+
+    /// <summary>
     /// Indicates whether the current <see cref="Address"/> represents a network address, such as an IPv4 or hostname address.
     /// </summary>
     /// <returns>true if the address value is either a valid IPv4 or matches a host name pattern; otherwise, false.</returns>
@@ -169,7 +175,7 @@ public class Address : ILogixParsable<Address>
     /// <param name="address">The value to convert.</param>
     /// <returns>A <see cref="string"/> representing the address value.</returns>
     public static implicit operator byte(Address address) => byte.Parse(address._value);
-    
+
     /// <summary>
     /// Converts the current <see cref="IPAddress"/> to a <see cref="Address"/> value.
     /// </summary>

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Tag"/> component that contains properties or configuration
+/// An element of the <see cref="Tag"/> component that contains properties or configuration
 /// producer tag types.
 /// </summary>
 public class ProduceInfo : LogixElement
@@ -78,7 +78,7 @@ public class ProduceInfo : LogixElement
     /// <summary>
     /// Specifies the RPI to use for an out-of-range consumer of the tag.
     /// </summary>
-    /// <value>A <see cref="double"/> representing the duration in ms that the tag may be requested by out of range consumer.</value>
+    /// <value>A <see cref="double"/> representing the duration in ms that the tag may be requested by out-of-range consumer.</value>
     public double DefaultRPI
     {
         get => GetValue<double>();

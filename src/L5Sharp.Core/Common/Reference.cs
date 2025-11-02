@@ -77,7 +77,7 @@ public sealed class Reference
     public string Routine => ParseRoutine(_path.Expression);
 
     /// <summary>
-    /// Attempts to parse the instruction text of the reference path if it exists. This 
+    /// Attempts to parse the instruction text of the reference path if it exists. 
     /// </summary>
     public Instruction Logic => ParseInstruction(_path.Expression);
     
@@ -168,7 +168,7 @@ public sealed class Reference
             throw new InvalidOperationException("This operation is only support by Logic type references");
         
         var builder = new StringBuilder();
-        builder.Append(Path).Append($"/Text[contains(text(), \"{logic.Text}\")]");
+        builder.Append(Path).Append($"/Text[contains(text(), \"{logic}\")]");
         return new Reference(builder.ToString());
     }
 

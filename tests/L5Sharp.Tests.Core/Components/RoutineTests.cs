@@ -158,13 +158,13 @@ public class RoutineTests
         };
 
         var sheet = new Sheet { Number = 1 };
-        var id1 = sheet.AddAt(100, 100, Block.IREF("InputTag"));
+        /*var id1 = sheet.AddAt(100, 100, Block.IREF("InputTag"));
         var id2 = sheet.AddAt(100, 200, Block.IREF(100));
         var id3 = sheet.AddAt(200, 100, Block.ADD("Add_Block"));
         var id4 = sheet.AddAt(300, 100, Block.OREF("OutputTag"));
-        sheet.Add(new Wire { FromID = id1, ToID = id3, ToParam = "SourceA" });
-        sheet.Add(new Wire { FromID = id2, ToID = id3, ToParam = "SourceB" });
-        sheet.Add(new Wire { FromID = id3, ToID = id4, FromParam = "Destination" });
+        sheet.AddBlock(new Wire { FromID = id1, ToID = id3, ToParam = "SourceA" });
+        sheet.AddBlock(new Wire { FromID = id2, ToID = id3, ToParam = "SourceB" });
+        sheet.AddBlock(new Wire { FromID = id3, ToID = id4, FromParam = "Destination" });*/
 
         routine.Content<Sheet>().Add(sheet);
         program.Routines.Add(routine);

@@ -1,0 +1,15 @@
+﻿[
+  {
+    Name: Empty,
+    Description: null,
+    Type: Normal,
+    Class: Standard,
+    MainRoutine: null,
+    FaultRoutine: null,
+    Disabled: false,
+    Folder: false,
+    TestEdits: false,
+    Parent: null,
+    Task: Periodic
+  }
+]

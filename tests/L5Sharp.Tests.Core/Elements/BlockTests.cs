@@ -7,14 +7,6 @@ namespace L5Sharp.Tests.Core.Elements;
 public class BlockTests
 {
     [Test]
-    public void New_IRef_ShouldNotBeNull()
-    {
-        var block = Block.IREF("MyTag");
-
-        block.Should().NotBeNull();
-    }
-    
-    [Test]
     public void New_IRef_ShouldHaveExpectedValues()
     {
         var block = Block.IREF("MyTag");
@@ -22,52 +14,41 @@ public class BlockTests
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
+        block.Cell.Should().Be("A1");
         block.Type.Should().Be("IRef");
         block.Operand.Should().Be("MyTag");
-        block.HideDesc.Should().BeNull();
+        block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
+        block.Arguments.Should().BeEmpty();
+        block.Inputs.Should().BeEmpty();
+        block.Outputs.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.Document.Should().BeNull();
         block.GetElementType().Should().Be(L5XName.IRef);
-        block.Cell.Should().Be("A1");
-        block.Location.Should().NotBeNull();
     }
-    
-    [Test]
-    public void New_ORef_ShouldNotBeNull()
-    {
-        var block = Block.OREF("MyTag");
 
-        block.Should().NotBeNull();
-    }
-    
     [Test]
     public void New_ORef_ShouldHaveExpectedValues()
     {
         var block = Block.OREF("MyTag");
 
+        var another  = Block.ADD("MyAddFunction");
+        
+
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
+        block.Cell.Should().Be("A1");
         block.Type.Should().Be("ORef");
         block.Operand.Should().Be("MyTag");
-        block.HideDesc.Should().BeNull();
+        block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
+        block.Arguments.Should().BeEmpty();
+        block.Inputs.Should().BeEmpty();
+        block.Outputs.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.Document.Should().BeNull();
         block.GetElementType().Should().Be(L5XName.ORef);
-        block.Cell.Should().Be("A1");
-        block.Location.Should().NotBeNull();
     }
-    
-    [Test]
-    public void New_ICon_ShouldNotBeNull()
-    {
-        var block = Block.ICON("Connector");
 
-        block.Should().NotBeNull();
-    }
-    
     [Test]
     public void New_ICon_ShouldHaveExpectedValues()
     {
@@ -76,25 +57,18 @@ public class BlockTests
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
+        block.Cell.Should().Be("A1");
         block.Type.Should().Be("ICon");
         block.Operand.Should().Be("Connector");
-        block.HideDesc.Should().BeNull();
+        block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
+        block.Arguments.Should().BeEmpty();
+        block.Inputs.Should().BeEmpty();
+        block.Outputs.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.Document.Should().BeNull();
         block.GetElementType().Should().Be(L5XName.ICon);
-        block.Cell.Should().Be("A1");
-        block.Location.Should().NotBeNull();
     }
-    
-    [Test]
-    public void New_OCon_ShouldNotBeNull()
-    {
-        var block = Block.OCON("Connector");
 
-        block.Should().NotBeNull();
-    }
-    
     [Test]
     public void New_OCon_ShouldHaveExpectedValues()
     {
@@ -103,15 +77,13 @@ public class BlockTests
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
+        block.Cell.Should().Be("A1");
         block.Type.Should().Be("OCon");
         block.Operand.Should().Be("Connector");
-        block.HideDesc.Should().BeNull();
+        block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.Document.Should().BeNull();
         block.GetElementType().Should().Be(L5XName.OCon);
-        block.Cell.Should().Be("A1");
-        block.Location.Should().NotBeNull();
     }
 
     [Test]
@@ -122,16 +94,15 @@ public class BlockTests
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
+        block.Cell.Should().Be("A1");
         block.Type.Should().Be("SCL");
         block.Operand.Should().Be("SCL_01");
-        block.HideDesc.Should().BeNull();
-        block.Pins.Should().HaveCount(2);
+        block.HideDesc.Should().BeFalse();
+        block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.Document.Should().BeNull();
         block.GetElementType().Should().Be(L5XName.Block);
-        block.Cell.Should().Be("A1");
     }
-    
+
     [Test]
     public void New_Function_ShouldHaveDefaultValues()
     {
@@ -142,7 +113,7 @@ public class BlockTests
         block.Y.Should().Be(0);
         block.Type.Should().Be("ADD__F");
         block.Operand.Should().BeNull();
-        block.HideDesc.Should().BeNull();
+        block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
         block.Document.Should().BeNull();
@@ -154,18 +125,24 @@ public class BlockTests
     public void New_AOI_ShouldHaveExpectedValues()
     {
         var block = Block.AOI("aoiTest", "MyAoiTag", "Pin1", "Pin2", "Pin3");
-        
+
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
         block.Type.Should().Be("aoiTest");
         block.Operand.Should().Be("MyAoiTag");
-        block.HideDesc.Should().BeNull();
+        block.HideDesc.Should().BeFalse();
         block.Pins.Should().HaveCount(3);
         block.Sheet.Should().BeNull();
         block.Document.Should().BeNull();
         block.GetElementType().Should().Be(L5XName.AddOnInstruction);
         block.Cell.Should().Be("A1");
+    }
+
+    [Test]
+    public void Wire_ValidSyntax_ShouldBeExpected()
+    {
+        var block = Block.ABS("ABS01");
     }
 
     [Test]
@@ -185,9 +162,8 @@ public class BlockTests
 
         block.Operand.Should().NotBeNull();
         block.Operand.Should().Be("MyTag");
-        block.Operand?.IsTag.Should().BeTrue();
     }
-    
+
     [Test]
     public void Operand_SetToAtomicValue_ShouldBeExpected()
     {
@@ -197,6 +173,5 @@ public class BlockTests
 
         block.Operand.Should().NotBeNull();
         block.Operand.Should().Be(100);
-        block.Operand?.IsAtomic.Should().BeTrue();
     }
 }

@@ -382,6 +382,43 @@ internal static class L5XExtensions
     }
 
     /// <summary>
+    /// Determines if the specified XElement represents a block element within the L5X structure.
+    /// </summary>
+    /// <param name="element">The XElement to analyze.</param>
+    /// <returns>True if the XElement is a block element. Otherwise, false.</returns>
+    internal static bool IsBlockElement(this XElement element)
+    {
+        return element.Name.LocalName
+            is L5XName.IRef
+            or L5XName.ORef
+            or L5XName.ICon
+            or L5XName.OCon
+            or L5XName.Block
+            or L5XName.Function
+            or L5XName.AddOnInstruction
+            or L5XName.JSR
+            or L5XName.SBR
+            or L5XName.RET;
+    }
+
+    /// <summary>
+    /// Retrieves the block operand value from the given XML element.
+    /// </summary>
+    /// <param name="element">The XML element from which to extract the block operand.</param>
+    /// <returns>A string representing the block operand. Returns an empty string if the operand is not found.</returns>
+    internal static Argument GetBlockOperand(this XElement element)
+    {
+        var name = element.Name.LocalName switch
+        {
+            L5XName.ICon or L5XName.OCon => L5XName.Name,
+            L5XName.JSR or L5XName.SBR or L5XName.RET => L5XName.Routine,
+            _ => L5XName.Operand
+        };
+
+        return element.Attribute(name)?.Value.Parse<Argument>() ?? Argument.Empty;
+    }
+
+    /// <summary>
     /// Determines whether the specified XML element is identifiable, based on its attributes or type.
     /// </summary>
     /// <param name="element">The XML element to be evaluated.</param>

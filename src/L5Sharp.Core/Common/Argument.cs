@@ -1,58 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents an argument to an instruction, which could be a tag name reference or an immediate atomic value.
+/// Represents a textual argument value that can be parsed and analyzed. Arguments are part of an instruction and can
+/// be either a tag name reference, immediate atomic or string value, or even complex expressions. This class provides
+/// members for inspecting and parsing/extracting specific data from an argument value.
 /// </summary>
 public class Argument : ILogixParsable<Argument>
 {
+    /// <summary>
+    /// The value typically found in Studio for undefined argument values in certain instructions.
+    /// </summary>
     private const string UnknownValue = "?";
-    private readonly object _value;
+
+    /// <summary>
+    /// Represents the underlying value of an <see cref="Argument"/> instance.
+    /// </summary>
+    private readonly string _value;
 
     /// <summary>
     /// Creates a new <see cref="Argument"/> wrapping the object value.
     /// </summary>
     /// <param name="value">An object representing the argument.</param>
     /// <exception cref="ArgumentNullException"><c>value</c> is <c>null</c>.</exception>
-    private Argument(object value)
+    private Argument(string value)
     {
         _value = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     /// <summary>
-    /// Indicates whether the argument is an immediate atomic value.
+    /// Gets the interpreted type of the argument value.
     /// </summary>
-    /// <value><c>true</c> if the underlying value is an <see cref="AtomicData"/> object; Otherwise, <c>false</c>.</value>
-    public bool IsAtomic => _value is AtomicData;
-
-    /// <summary>
-    /// Indicates whether the argument is a literal string value with the single quote identifiers.
-    /// </summary>
-    /// <value><c>true</c> if the underlying value is an <see cref="string"/> object; Otherwise, <c>false</c>.</value>
-    public bool IsString => _value is string s && s != UnknownValue && s.StartsWith('\'') && s.EndsWith('\'');
-
-    /// <summary>
-    /// Indicates whether the argument is an immediate value, either string literal or atomic value.
-    /// </summary>
-    /// <value><c>true</c> if the underlying value is an <see cref="AtomicData"/> or <see cref="string"/> object;
-    /// Otherwise, <c>false</c>.</value>
-    public bool IsImmediate => _value is AtomicData or string;
-
-    /// <summary>
-    /// Indicates whether the argument is a tag name reference.
-    /// </summary>
-    /// <value><c>true</c> if the underlying value is a <see cref="TagName"/> object; Otherwise, <c>false</c>.</value>
-    public bool IsTag => _value is TagName;
-
-    /// <summary>
-    /// Indicates whether the argument is an expression or combination of tag names, operators, and/or immediate values.
-    /// </summary>
-    /// <value><c>true</c> if the underlying value is a <see cref="NeutralText"/> instance wrapping a complex expression;
-    /// Otherwise, <c>false</c>.</value>
-    public bool IsExpression => _value is NeutralText;
+    /// <remarks>
+    /// This is determined by analyzing the structure or format of the argument's textual representation
+    /// and returning a corresponding predefined <see cref="ArgumentType"/> enumeration value.
+    /// </remarks>
+    public ArgumentType Type => ArgumentType.Of(_value);
 
     /// <summary>
     /// The collection of <see cref="TagName"/> values found in the argument.
@@ -63,12 +51,7 @@ public class Argument : ILogixParsable<Argument>
     /// We need a way to get all tag names from a single argument, whether it's a single tag name or expression or
     /// multiple tag names.
     /// </remarks>
-    public IReadOnlyList<TagName> Tags => _value switch
-    {
-        TagName tagName => [tagName],
-        NeutralText text => text.Tags().ToArray(),
-        _ => []
-    };
+    public IReadOnlyList<TagName> Tags => ExtractTags(_value).ToArray();
 
     /// <summary>
     /// The collection of <see cref="TagName"/> values found in the argument.
@@ -79,26 +62,38 @@ public class Argument : ILogixParsable<Argument>
     /// We need a way to get all tag names from a single argument, whether it's a single tag name or expression or
     /// multiple tag names.
     /// </remarks>
-    public IReadOnlyList<AtomicData> Values => _value switch
+    public IReadOnlyList<AtomicData> Values => ExtractValues(_value).ToArray();
+
+    /// <summary>
+    /// Converts the argument value to an equivalent <see cref="AtomicData"/> representation based on the inferred radix.
+    /// </summary>
+    /// <returns>A new instance of <see cref="AtomicData"/> parsed from the argument's value.</returns>
+    public AtomicData ToAtomic()
     {
-        AtomicData atomic => [atomic],
-        _ => []
-    };
+        var radix = Radix.Infer(_value);
+        return radix.ParseValue(_value);
+    }
+
+    /// <summary>
+    /// Converts the current <see cref="Argument"/> to a <see cref="TagName"/> instance.
+    /// </summary>
+    /// <returns>A <see cref="TagName"/> representation of the current <see cref="Argument"/>.</returns>
+    public TagName ToTag()
+    {
+        return TagName.Parse(_value);
+    }
 
     /// <summary>
     /// Represents an unknown argument that can be found in certain instruction text.
     /// </summary>
-    /// <value>A <see cref="Argument"/> representing an unknown parameter.</value>
-    /// <remarks>This is literally the '?' character, as often seen in the TIMER instruction arguments.</remarks>
+    /// <remarks>This is literally the '?' character, as often seen in the timer and counter instructions.</remarks>
     public static Argument Unknown => new(UnknownValue);
 
     /// <summary>
     /// Represents an empty argument.
     /// </summary>
-    /// <value>A <see cref="Argument"/> wrapping an empty string objet value.</value>
     /// <remarks>
-    /// Some instruction has an empty/optional argument(s) (GSV), and therefore we need a way to represent
-    /// that value.
+    /// Some instruction has an empty/optional argument(s) (GSV), and therefore we will support empty arguments instances.
     /// </remarks>
     public static Argument Empty => new(string.Empty);
 
@@ -107,167 +102,26 @@ public class Argument : ILogixParsable<Argument>
     /// </summary>
     /// <param name="value">Teh string to parse.</param>
     /// <returns>An <see cref="Argument"/> representing the parsed value.</returns>
-    /// <exception cref="ArgumentException"><c>value</c> is null or empty</exception>
+    /// <exception cref="ArgumentException"><c>value</c> is null.</exception>
     public static Argument Parse(string? value)
     {
-        if (value is null || value.IsEmpty())
-            throw new ArgumentException("Value can not be null or empty to parse.");
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
 
-        //Unknown value - Can be found in TON instructions and probably others.
-        if (value == "?") return Unknown;
-
-        //Literal string value - We need to intercept this before the Atomic.TryParse method to prevent overflows.
-        if (value.StartsWith('\'') && value.EndsWith('\'')) return new Argument(value);
-
-        //Immediate atomic value
-        var atomic = AtomicData.TryParse(value);
-        if (atomic is not null) return new Argument(atomic);
-
-        //TagName or Expression otherwise
-        return TagName.IsTag(value) ? new Argument(new TagName(value)) : new Argument(new NeutralText(value));
+        return new Argument(value);
     }
 
     /// <summary>
-    /// Parses the provided string into a <see cref="Argument"/> value.
+    /// Attempts to parse the specified string into an <see cref="Argument"/>.
     /// </summary>
-    /// <param name="value">Teh string to parse.</param>
-    /// <returns>An <see cref="Argument"/> representing the parsed value if successful; Otherwise, <see cref="Empty"/>.</returns>
+    /// <param name="value">The string value to be parsed into an <see cref="Argument"/>.</param>
+    /// <returns>An <see cref="Argument"/> instance created from the input value.</returns>
     public static Argument TryParse(string? value)
     {
-        if (value is null || value.IsEmpty()) return Empty;
-
-        //Unknown value - Can be found in TON instructions and probably others.
-        if (value == "?") return Unknown;
-
-        //Literal string value - We need to intercept this before the Atomic.TryParse method to prevent overflows.
-        if (value.StartsWith('\'') && value.EndsWith('\'')) return new Argument(value);
-
-        //Immediate atomic value
-        var atomic = AtomicData.TryParse(value);
-        if (atomic is not null) return new Argument(atomic);
-
-        //TagName or Expression otherwise
-        return TagName.IsTag(value) ? new Argument(new TagName(value)) : new Argument(new NeutralText(value));
+        return new Argument(value ?? string.Empty);
     }
 
-    /// <summary>
-    /// Implicitly converts the provided <see cref="TagName"/> to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="tagName">The <see cref="TagName"/> object to convert.</param>
-    /// <returns>A <see cref="Argument"/> object containing the value of the tag name.</returns>
-    public static implicit operator Argument(TagName tagName) => new(tagName);
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>A <see cref="Argument"/> object containing the value of the tag name.</returns>
-    public static implicit operator Argument(string value) => Parse(value);
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(bool value) => new(new BOOL(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(sbyte value) => new(new SINT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(byte value) => new(new USINT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(short value) => new(new INT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(ushort value) => new(new UINT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(int value) => new(new DINT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(uint value) => new(new UDINT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(long value) => new(new LINT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(ulong value) => new(new ULINT(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(float value) => new(new REAL(value));
-
-    /// <summary>
-    /// Implicitly converts the provided value to an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The object value to convert.</param>
-    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
-    public static implicit operator Argument(double value) => new(new LREAL(value));
-
-    /// <summary>
-    /// Explicitly converts the provided <see cref="Argument"/> to a <see cref="TagName"/>.
-    /// </summary>
-    /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
-    /// <returns>A <see cref="TagName"/> object representing the value of the argument.</returns>
-    public static implicit operator string(Argument argument) => argument._value.ToString();
-
-    /// <summary>
-    /// Explicitly converts the provided <see cref="Argument"/> to a <see cref="TagName"/>.
-    /// </summary>
-    /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
-    /// <returns>A <see cref="TagName"/> object representing the value of the argument.</returns>
-    public static explicit operator TagName(Argument argument) => (TagName)argument._value;
-
-    /// <summary>
-    /// Explicitly converts the provided <see cref="Argument"/> to an <see cref="AtomicData"/>.
-    /// </summary>
-    /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
-    /// <returns>A <see cref="AtomicData"/> object representing the value of the argument.</returns>
-    public static explicit operator AtomicData(Argument argument) => (AtomicData)argument._value;
-
-    /// <summary>
-    /// Explicitly converts the provided <see cref="Argument"/> to an <see cref="NeutralText"/>.
-    /// </summary>
-    /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
-    /// <returns>A <see cref="NeutralText"/> object representing the value of the argument.</returns>
-    public static explicit operator NeutralText(Argument argument) => (NeutralText)argument._value;
+    #region Equality
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => _value.Equals(obj);
@@ -276,7 +130,7 @@ public class Argument : ILogixParsable<Argument>
     public override int GetHashCode() => _value.GetHashCode();
 
     /// <inheritdoc />
-    public override string ToString() => _value.ToString()!;
+    public override string ToString() => _value;
 
     /// <summary>
     /// Determines whether two Argument objects are equal.
@@ -293,4 +147,142 @@ public class Argument : ILogixParsable<Argument>
     /// <param name="right">The right Argument object.</param>
     /// <returns>true if the left Argument is not equal to the right Argument; otherwise, false.</returns>
     public static bool operator !=(Argument left, Argument right) => Equals(left, right);
+
+    #endregion
+
+    #region Operators
+
+    /// <summary>
+    /// Implicitly converts the provided <see cref="TagName"/> to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> object to convert.</param>
+    /// <returns>A <see cref="Argument"/> object containing the value of the tag name.</returns>
+    public static implicit operator Argument(TagName tagName) => new(tagName);
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>A <see cref="Argument"/> object containing the value of the tag name.</returns>
+    public static implicit operator Argument(string value) => new(value);
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(bool value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(sbyte value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(byte value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(short value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(ushort value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(int value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(uint value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(long value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(ulong value) => new(value.ToString());
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(float value) => new(value.ToString(CultureInfo.InvariantCulture));
+
+    /// <summary>
+    /// Implicitly converts the provided value to an <see cref="Argument"/>.
+    /// </summary>
+    /// <param name="value">The object value to convert.</param>
+    /// <returns>An <see cref="Argument"/> containing the value of the provided object.</returns>
+    public static implicit operator Argument(double value) => new(value.ToString(CultureInfo.InvariantCulture));
+
+    /// <summary>
+    /// Explicitly converts the provided <see cref="Argument"/> to a <see cref="TagName"/>.
+    /// </summary>
+    /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
+    /// <returns>A <see cref="TagName"/> object representing the value of the argument.</returns>
+    public static implicit operator string(Argument argument) => argument._value;
+
+    #endregion
+
+    #region Internal
+
+    /// <summary>
+    /// Extracts all tag names from the provided text based on a predefined search pattern.
+    /// </summary>
+    private static IEnumerable<TagName> ExtractTags(string text)
+    {
+        var matches = Regex.Matches(text, TagName.SearchPattern);
+
+        foreach (Match match in matches)
+        {
+            yield return new TagName(match.Value);
+        }
+    }
+
+    /// <summary>
+    /// Extracts a collection of <see cref="AtomicData"/> from the given argument string.
+    /// </summary>
+    private static IEnumerable<AtomicData> ExtractValues(string argument)
+    {
+        var type = ArgumentType.Of(argument);
+
+        if (type == ArgumentType.Atomic)
+            return [AtomicData.Parse(argument)];
+
+        if (type == ArgumentType.Expression)
+            //todo handle nested values in expression
+            throw new NotImplementedException();
+
+        return [];
+    }
+
+    #endregion
 }

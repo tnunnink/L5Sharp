@@ -102,17 +102,29 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, ILogixParsable
     public new static SINT? TryParse(string? value)
     {
         if (value is null || value.IsEmpty())
-            return default;
+            return null;
 
         if (sbyte.TryParse(value, out var primitive))
             return new SINT(primitive);
 
         if (!Radix.TryInfer(value, out var radix))
-            return default;
+            return null;
 
         var parsed = radix.ParseValue(value);
         var converted = (sbyte)Convert.ChangeType(parsed, typeof(sbyte));
         return new SINT(converted, radix);
+    }
+
+    /// <inheritdoc />
+    public override byte[] GetBytes()
+    {
+        return [(byte)_value];
+    }
+
+    /// <inheritdoc />
+    public override ValueType ToValue()
+    {
+        return _value;
     }
 
     // Contains the implicit .NET conversions for the type.

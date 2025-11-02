@@ -1,0 +1,20 @@
+﻿[
+  {
+    Name: Empty
+  },
+  {
+    Name: EPProgram
+  },
+  {
+    Name: EventProgram
+  },
+  {
+    Name: FolderProgram
+  },
+  {
+    Name: MainProgram
+  },
+  {
+    Name: NProgram
+  }
+]

@@ -1,0 +1,15 @@
+﻿┌──────────────┬────────┐
+│ Property     │ Type   │
+├──────────────┼────────┤
+│ Name         │ string │
+│ Description  │ string │
+│ Type         │ string │
+│ Class        │ string │
+│ MainRoutine  │ string │
+│ FaultRoutine │ string │
+│ Disabled     │ bool   │
+│ Folder       │ bool   │
+│ TestEdits    │ bool   │
+│ Parent       │ string │
+│ Task         │ string │
+└──────────────┴────────┘

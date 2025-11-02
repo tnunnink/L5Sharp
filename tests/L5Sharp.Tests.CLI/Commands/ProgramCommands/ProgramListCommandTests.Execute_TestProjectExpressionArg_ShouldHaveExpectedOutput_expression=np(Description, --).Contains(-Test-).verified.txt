@@ -1,0 +1,28 @@
+﻿[
+  {
+    Name: EPProgram,
+    Description: Test Equipment Phase Program,
+    Type: EquipmentPhase,
+    Class: Standard,
+    MainRoutine: null,
+    FaultRoutine: null,
+    Disabled: false,
+    Folder: false,
+    TestEdits: false,
+    Parent: null,
+    Task: Periodic
+  },
+  {
+    Name: NProgram,
+    Description: Test Program,
+    Type: Normal,
+    Class: Standard,
+    MainRoutine: Main,
+    FaultRoutine: Fault,
+    Disabled: false,
+    Folder: false,
+    TestEdits: false,
+    Parent: null,
+    Task: Periodic
+  }
+]

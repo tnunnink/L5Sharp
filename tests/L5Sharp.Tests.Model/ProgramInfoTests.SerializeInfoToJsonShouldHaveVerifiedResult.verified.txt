@@ -1,0 +1,13 @@
+﻿{
+  Name: Test,
+  Description: This is a test,
+  Type: Normal,
+  Class: Standard,
+  MainRoutine: Main,
+  FaultRoutine: Fault,
+  Disabled: false,
+  Folder: true,
+  TestEdits: false,
+  Parent: ParentFolder,
+  Task: SomeTask
+}

@@ -116,7 +116,7 @@ internal class LogixLookup(XElement content) : ILogixLookup
         return target.IsNull(out entity);
     }
 
-    bool ILogixLookup.TryGet<TComponent>(string name, out TComponent compoenent)
+    bool ILogixLookup.TryGet<TComponent>(string name, out TComponent component)
     {
         var reference = Reference.To<TComponent>(name);
 
@@ -124,12 +124,12 @@ internal class LogixLookup(XElement content) : ILogixLookup
 
         if (result is null)
         {
-            compoenent = null!;
+            component = null!;
             return false;
         }
 
         var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
-        return (target as TComponent).IsNull(out compoenent);
+        return (target as TComponent).IsNull(out component);
     }
 
     public bool TryGet<TComponent>(string name, string program, out TComponent component)

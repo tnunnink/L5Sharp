@@ -259,7 +259,7 @@ public class TagTests
     [Test]
     public void Replace_DescriptionProperty_ShouldBeExpected()
     {
-        var tag = Tag.Configure("SomeTimer")
+        var tag = Tag.New("SomeTimer")
             .AsStructure("TIMER")
             .WithDescription("This is a test tag")
             .Build();
@@ -978,7 +978,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicTypeWithValue_ShouldHaveExpectedValues()
     {
-        var tag = Tag.Configure("SomeAtomic")
+        var tag = Tag.New("SomeAtomic")
             .AsAtomic<DINT>()
             .WithValue(123)
             .Build();
@@ -994,7 +994,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicWithAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Configure("SomeAtomic")
+        var tag = Tag.New("SomeAtomic")
             .AsAtomic<DINT>()
             .WithAccess(ExternalAccess.None)
             .Build();
@@ -1005,7 +1005,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicWithDescription_ShouldHaveExpectedDescription()
     {
-        var tag = Tag.Configure("SomeAtomic")
+        var tag = Tag.New("SomeAtomic")
             .AsAtomic<DINT>()
             .WithDescription("This is a test of the fluent tag builder")
             .Build();
@@ -1016,7 +1016,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicConstant_ShouldHaveExpectedConstant()
     {
-        var tag = Tag.Configure("SomeAtomic")
+        var tag = Tag.New("SomeAtomic")
             .AsAtomic<DINT>()
             .Constant()
             .Build();
@@ -1027,7 +1027,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicConsumes_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.Configure("ConsumerTag")
+        var tag = Tag.New("ConsumerTag")
             .AsAtomic<DINT>()
             .Consumes(cb => cb
                 .Provider("RemoteProviderName")
@@ -1049,7 +1049,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicProducer_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.Configure("ProducerTag")
+        var tag = Tag.New("ProducerTag")
             .AsAtomic<DINT>()
             .Produces(b => b
                 .WithMaxCount(5)
@@ -1069,7 +1069,7 @@ public class TagTests
     [Test]
     public Task Build_SimpleAliasTag_ShouldBeVerified()
     {
-        var tag = Tag.Configure("MyTagName")
+        var tag = Tag.New("MyTagName")
             .AsAlias("SomeOtherTag")
             .WithDescription("We don't need to configure anything since it is based on SOmeOtherTag")
             .Build();
@@ -1080,7 +1080,7 @@ public class TagTests
     [Test]
     public Task Build_SimpleStructureWithConfiguredMembers_ShouldBeVerified()
     {
-        var tag = Tag.Configure("MyTagName")
+        var tag = Tag.New("MyTagName")
             .AsStructure("SimpleType")
             .AddMember("BoolMember").AsAtomic<BOOL>().WithValue(true)
             .AddMember("DintMember").AsAtomic<DINT>().WithValue(123)
@@ -1094,7 +1094,7 @@ public class TagTests
     [Test]
     public Task Build_StructureWithPredefinedMember_ShouldBeVerified()
     {
-        var tag = Tag.Configure("MyTagName")
+        var tag = Tag.New("MyTagName")
             .AsStructure("TIMER")
             .WithValue("PRE", 5000)
             .WithValue("DN", true)
@@ -1107,7 +1107,7 @@ public class TagTests
     [Test]
     public Task Build_AtomicArrayWithSetValue_ShouldBeVerified()
     {
-        var tag = Tag.Configure("ArrayTag")
+        var tag = Tag.New("ArrayTag")
             .AsArray<REAL>(12)
             .WithElement(4, 12.4f)
             .WithElement(7, new REAL(123.3f))
@@ -1121,7 +1121,7 @@ public class TagTests
     [Test]
     public Task Build_StructureArrayWithNestedConfig_ShouldBeVerified()
     {
-        var tag = Tag.Configure("TimerConfigArray")
+        var tag = Tag.New("TimerConfigArray")
             .AsArray("TIMER", 5)
             .WithElement(0, b => b
                 .WithValue("PRE", 1000)
@@ -1144,7 +1144,7 @@ public class TagTests
     [Test]
     public Task Build_ComplexNestedStructure_ShouldBeVerified()
     {
-        var tag = Tag.Configure("MyTagName")
+        var tag = Tag.New("MyTagName")
             .AsStructure("ComplexType")
             .AddMember("TimerMember").AsStructure("TIMER", b => b
                 .WithDescription("This is a nested TIMER structure")

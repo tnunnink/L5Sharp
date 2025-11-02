@@ -64,9 +64,10 @@ public abstract class LogixElement : ILogixSerializable
     public L5X? Document => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
 
     /// <summary>
-    /// 
+    /// Retrieves the element type based on the local name of the associated <see cref="XElement"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A string representation of the element type derived from the <see cref="Element"/> name.</returns>
+    /// <remarks>This will typically represent or map to the object type name.</remarks>
     public string GetElementType() => Element.Name.LocalName;
 
     /// <summary>
@@ -76,6 +77,13 @@ public abstract class LogixElement : ILogixSerializable
     /// <returns>The current instance, cast to the specified type.</returns>
     /// <exception cref="InvalidCastException">Thrown if the cast isn't valid.</exception>    
     public TElement As<TElement>() where TElement : LogixElement => (TElement)this;
+
+    /// <summary>
+    /// Converts the current <see cref="LogixElement"/> instance to the specified type parameter.
+    /// </summary>
+    /// <typeparam name="TElement">The type of <see cref="LogixElement"/> to which the instance should be converted.</typeparam>
+    /// <returns>An instance of the specified type parameter <typeparamref name="TElement"/> representing the converted element.</returns>
+    public TElement To<TElement>() where TElement : LogixElement => Element.Deserialize<TElement>();
 
     /// <summary>
     /// Determines if the provided element is structurally or deeply equal to another by performing a compare
@@ -220,7 +228,7 @@ public abstract class LogixElement : ILogixSerializable
     /// If the element does not exist, it returns an empty collection of the generic type parameters.
     /// </summary>
     /// <param name="name">The name of the attribute.</param>
-    /// <param name="separator">The value separator character. Default is ''.</param>
+    /// <param name="separator">The value separator character. Default is a space character.</param>
     /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>
     /// If found, all values of the attribute split on the specified separator and parsed as the generic type parameter.
@@ -356,7 +364,7 @@ public abstract class LogixElement : ILogixSerializable
     /// </remarks>
     protected TElement? GetAncestor<TElement>(string? ancestor = null) where TElement : LogixElement
     {
-        ancestor ??= typeof(TElement).GetLogixTypeName();
+        ancestor ??= typeof(TElement).Name;
         return Element.Ancestors(ancestor).FirstOrDefault()?.Deserialize<TElement>();
     }
 

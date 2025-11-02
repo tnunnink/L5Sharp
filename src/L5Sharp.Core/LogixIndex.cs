@@ -126,19 +126,19 @@ internal class LogixIndex : ILogixLookup
         return target.IsNull(out entity);
     }
 
-    public bool TryGet<TComponent>(string name, out TComponent compoenent) where TComponent : LogixComponent
+    public bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent
     {
         var reference = Reference.To<TComponent>(name);
 
         if (!_index.TryGetValue(reference, out var value))
         {
-            compoenent = null!;
+            component = null!;
             return false;
         }
 
         var result = value.Deserialize<TComponent>();
         var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixObject>() : result;
-        return (target as TComponent).IsNull(out compoenent);
+        return (target as TComponent).IsNull(out component);
     }
 
     public bool TryGet<TComponent>(string name, string program, out TComponent component)
@@ -220,7 +220,7 @@ internal class LogixIndex : ILogixLookup
     private void ContentOnChanged(object sender, XObjectChangeEventArgs e)
     {
         //todo we could have option to track changes made but the only issue is reference collisions.
-        //does that throw an exception? how does that work. For now we can just offer a ReIndex() method.
+        //does that throw an exception? how does that work.
         throw new NotImplementedException();
     }
 }

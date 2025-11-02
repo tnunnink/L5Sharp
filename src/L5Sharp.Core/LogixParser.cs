@@ -54,20 +54,6 @@ public static class LogixParser
     }
 
     /// <summary>
-    /// Parses the provided string input to the specified type using the predefined L5X parser functions.
-    /// </summary>
-    /// <param name="input">The string input to parse.</param>
-    /// <param name="type">The type to parse the input to.</param>
-    /// <returns>The resulting parsed object value.</returns>
-    /// <exception cref="InvalidOperationException">When a parser was not found to the specified type.</exception>
-    public static object Parse(this string input, Type type)
-    {
-        var parser = GetParser(type);
-        var value = parser(input);
-        return value;
-    }
-
-    /// <summary>
     /// Tries to parse the input string into the specified data type.
     /// </summary>
     /// <typeparam name="T">The data type to parse the input string into.</typeparam>

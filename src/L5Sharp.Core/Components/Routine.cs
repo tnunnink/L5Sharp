@@ -195,7 +195,7 @@ public class Routine : LogixComponent<Routine>
         references.AddRange(programs.Select(p => p.Reference));
 
         //2. Code references routines in routine type instruction (e.g., JSR, FOR)
-        var code = Document.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true);
+        var code = Document.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true);
         references.AddRange(code);
 
         return references;

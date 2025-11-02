@@ -1,0 +1,16 @@
+﻿{
+  Name: Test,
+  Description: This is a test,
+  DataType: DINT,
+  Dimensions: 1,2,3,
+  Radix: Decimal,
+  Access: ReadOnly,
+  Value: null,
+  Type: Base,
+  Usage: Normal,
+  Class: Standard,
+  Constant: true,
+  Alias: AliasTag,
+  Scope: Program,
+  Container: MainProgram
+}

@@ -29,9 +29,9 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
 {
     /// <inheritdoc />
     /// <remarks>
-    /// We are passing a dummy XElement to the base class. Atomics are seen as in memory immutable value types. In order
-    /// to be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
-    /// don't use the backing element, but will create it when the Serialize is called.
+    /// We are passing a fake XElement to the base class. Atomics are seen as in-memory immutable value types. 
+    /// To be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
+    /// don't use the backing element but will create it when the Serialize is called.
     /// </remarks>
     protected internal AtomicData() : base(new XElement(L5XName.DataValue))
     {
@@ -40,9 +40,9 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
 
     /// <inheritdoc />
     /// <remarks>
-    /// We are passing a dummy XElement to the base class. Atomics are seen as in memory immutable value types. In order
-    /// to be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
-    /// don't use the backing element, but will create it when the Serialize is called.
+    /// We are passing a fake XElement to the base class. Atomics are seen as in-memory immutable value types. 
+    /// To be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
+    /// don't use the backing element but will create it when the Serialize is called.
     /// </remarks>
     protected internal AtomicData(Radix radix) : base(new XElement(L5XName.DataValue))
     {
@@ -60,7 +60,7 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> representing the format of the atomic type value.</value>
     /// <remarks>
-    /// This value is not actually read from the underlying XML element but instead inferred from the value
+    /// This value is not read from the underlying XML element but instead inferred from the value
     /// of the underlying data element. This is because some elements were observed to show the incorrect format
     /// which could cause runtime errors when trying to parse the string value. The Radix will however be written to the
     /// element upon creation of an <see cref="AtomicData"/> and should never be changed. Radix and Value are immutable
@@ -71,7 +71,7 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
-    /// <param name="bit">The zero based bit index of the value to get.</param>
+    /// <param name="bit">The zero-based bit index of the value to get.</param>
     /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
     public BOOL this[int bit] => new BitArray(GetBytes())[bit];
@@ -97,7 +97,6 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// <exception cref="ArgumentException"><paramref name="dataType"/> is not a valid atomic type.</exception>
     public static AtomicData Default(string dataType)
     {
-        //In case lower or camel is passed in we can accept that.
         dataType = dataType.ToUpper();
 
         return dataType switch
@@ -181,31 +180,20 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     /// </summary>
     /// <returns>An array of <see cref="byte"/> representing the binary value of the atomic type.</returns>
     /// <remarks>This is needed for formatting the atomic value in the proper radix format.</remarks>
-    public byte[] GetBytes()
-    {
-        return this switch
-        {
-            BOOL v => BitConverter.GetBytes((bool)v),
-            SINT v => [(byte)(sbyte)v],
-            USINT v => [v],
-            INT v => BitConverter.GetBytes(v),
-            UINT v => BitConverter.GetBytes(v),
-            DINT v => BitConverter.GetBytes(v),
-            UDINT v => BitConverter.GetBytes(v),
-            LINT v => BitConverter.GetBytes(v),
-            ULINT v => BitConverter.GetBytes(v),
-            REAL v => BitConverter.GetBytes(v),
-            LREAL v => BitConverter.GetBytes(v),
-            _ => []
-        };
-    }
+    public abstract byte[] GetBytes();
 
     /// <summary>
-    /// Gets the array of bit representing the value of tha atomic type.
+    /// Converts the current atomic data to its corresponding .NET value type representation.
+    /// </summary>
+    /// <returns>A <see cref="ValueType"/> representing the .NET equivalent of the atomic data.</returns>
+    public abstract ValueType ToValue();
+
+    /// <summary>
+    /// Gets the array of bit representing the value of the atomic type.
     /// </summary>
     /// <returns>A <see cref="BitArray"/> containing the array bit values</returns>
     // ReSharper disable once ReturnTypeCanBeEnumerable.Global no I want an array
-    public BOOL[] GetBits() => new BitArray(GetBytes()).Cast<bool>().Select(b => new BOOL(b)).ToArray();
+    public BitArray ToBitArray() => new(GetBytes());
 
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.

@@ -6,33 +6,42 @@ namespace L5Sharp.Tests.Core.Common
     public class InstructionTests
     {
         [Test]
-        public void New_ValidKey_ShouldNotBeNull()
+        public void New_KeyNoArgs_ShouldHaveExpectedValues()
         {
-            var instruction = Instruction.New("Test");
+            var instruction = new Instruction("Test");
 
-            instruction.Should().NotBeNull();
-        }
-
-        [Test]
-        public void New_ValidKey_ShouldHaveExpectedDefaults()
-        {
-            var instruction = Instruction.New("Test");
-
+            instruction.Should().Be("Test()");
             instruction.Key.Should().Be("Test");
-            instruction.Signature.Should().Be("Test()");
             instruction.Arguments.Should().BeEmpty();
-            instruction.Operands.Should().BeEmpty();
-            instruction.Text.Should().Be("Test()");
+            instruction.IsDesctructive.Should().BeTrue();
             instruction.IsConditional.Should().BeFalse();
-            instruction.IsValid.Should().BeTrue();
+            instruction.IsNative.Should().BeFalse();
         }
 
         [Test]
-        public void Keys_WhenCalled_ShouldNotBeEmpty()
+        public void New_KeyAndArgs_ShouldHaveExpectedValues()
         {
-            var known = Instruction.Keys();
+            var instruction = new Instruction("Test", "arg1", "arg2", 100);
 
-            known.Should().NotBeEmpty();
+            instruction.Should().Be("Test(arg1,arg2,100)");
+            instruction.Key.Should().Be("Test");
+            instruction.Arguments.Should().HaveCount(3);
+            instruction.IsDesctructive.Should().BeTrue();
+            instruction.IsConditional.Should().BeFalse();
+            instruction.IsNative.Should().BeFalse();
+        }
+
+        [Test]
+        public void New_NativeInstruction_ShouldHaveExpectedValues()
+        {
+            var instruction = new Instruction("XIC", "MyTag");
+
+            instruction.Should().Be("XIC(MyTag)");
+            instruction.Key.Should().Be("XIC");
+            instruction.Arguments.Should().HaveCount(1);
+            instruction.IsConditional.Should().BeTrue();
+            instruction.IsDesctructive.Should().BeFalse();
+            instruction.IsNative.Should().BeTrue();
         }
 
         [Test]
@@ -40,13 +49,12 @@ namespace L5Sharp.Tests.Core.Common
         {
             var instruction = Instruction.XIC("MyTag");
 
+            instruction.Should().Be("XIC(MyTag)");
             instruction.Key.Should().Be("XIC");
-            instruction.Signature.Should().Be("XIC(data_bit)");
             instruction.Arguments.Should().HaveCount(1);
-            instruction.Operands.Should().HaveCount(1);
-            instruction.Text.Should().Be("XIC(MyTag)");
             instruction.IsConditional.Should().BeTrue();
-            instruction.IsValid.Should().BeTrue();
+            instruction.IsDesctructive.Should().BeFalse();
+            instruction.IsNative.Should().BeTrue();
         }
 
         [Test]
@@ -54,13 +62,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var instruction = Instruction.OTE("MyTag");
 
+            instruction.Should().Be("OTE(MyTag)");
             instruction.Key.Should().Be("OTE");
-            instruction.Signature.Should().Contain("OTE(data_bit)");
             instruction.Arguments.Should().HaveCount(1);
-            instruction.Operands.Should().HaveCount(1);
-            instruction.Text.Should().Be("OTE(MyTag)");
-            instruction.IsConditional.Should().BeFalse();
-            instruction.IsValid.Should().BeTrue();
+            instruction.IsDesctructive.Should().BeTrue();
+            instruction.IsNative.Should().BeTrue();
         }
 
         [Test]
@@ -68,28 +74,23 @@ namespace L5Sharp.Tests.Core.Common
         {
             var instruction = Instruction.TON("SomeTimer", 5000, 0);
 
+            instruction.Should().Be("TON(SomeTimer,5000,0)");
             instruction.Key.Should().Be("TON");
-            instruction.Signature.Should().Contain("TON(timer,preset,accum)");
             instruction.Arguments.Should().HaveCount(3);
-            instruction.Operands.Should().HaveCount(3);
-            instruction.Text.Should().Be("TON(SomeTimer,5000,0)");
-            instruction.IsConditional.Should().BeFalse();
-            instruction.IsValid.Should().BeTrue();
+            instruction.IsDesctructive.Should().BeTrue();
+            instruction.IsNative.Should().BeTrue();
         }
 
         [Test]
         public void JSR_WhenCalled_ShouldBeExpectedProperties()
         {
-            var instruction = Instruction.JSR("Routine", 1, "In1", "Out1");
+            var instruction = Instruction.JSR("RoutineName", 1, "In1", "Out1");
 
+            instruction.Should().Be("JSR(RoutineName,1,In1,Out1)");
             instruction.Key.Should().Be("JSR");
-            instruction.Signature.Should()
-                .Contain("JSR(routine_name,number_of_inputs,input_1,input_n,return_1,return_n)");
             instruction.Arguments.Should().HaveCount(4);
-            instruction.Operands.Should().HaveCount(6);
-            instruction.Text.Should().Be("JSR(Routine,1,In1,Out1)");
-            instruction.IsConditional.Should().BeFalse();
-            instruction.IsValid.Should().BeTrue();
+            instruction.IsDesctructive.Should().BeTrue();
+            instruction.IsNative.Should().BeTrue();
         }
 
         [Test]
@@ -97,13 +98,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var instruction = Instruction.EVENT("MyTask");
 
+            instruction.Should().Be("EVENT(MyTask)");
             instruction.Key.Should().Be("EVENT");
-            instruction.Signature.Should().Contain("EVENT(task)");
             instruction.Arguments.Should().HaveCount(1);
-            instruction.Operands.Should().HaveCount(1);
-            instruction.Text.Should().Be("EVENT(MyTask)");
-            instruction.IsConditional.Should().BeFalse();
-            instruction.IsValid.Should().BeTrue();
+            instruction.IsDesctructive.Should().BeTrue();
+            instruction.IsNative.Should().BeTrue();
         }
 
         [Test]
@@ -152,27 +151,14 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Of_ValidArguments_ShouldHaveExpectedTextAndArgumentsAndBeValid()
+        public void With_NewTagArguments_ShouldUpdateArgument()
         {
             var instruction = Instruction.XIC("MyTag");
 
             instruction = instruction.With("NewTag");
 
+            instruction.Should().Be("XIC(NewTag)");
             instruction.Arguments.Should().HaveCount(1);
-            instruction.Text.Should().Be("XIC(NewTag)");
-            instruction.IsValid.Should().BeTrue();
-        }
-
-        [Test]
-        public void Of_InvalidArgs_ShouldHaveExpectedTextAndArgumentsAndNotBeValid()
-        {
-            var instruction = Instruction.XIC("MyTag");
-
-            instruction = instruction.With("NewTag", "InvalidTag");
-
-            instruction.Arguments.Should().HaveCount(2);
-            instruction.Text.Should().Be("XIC(NewTag,InvalidTag)");
-            instruction.IsValid.Should().BeFalse();
         }
 
         [Test]
@@ -183,7 +169,7 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase("JSR(Routine,2,in1,in2,out1,out2,out3);", "JSR", 7)]
         [TestCase("SBR(Routine,in1,in2);", "SBR", 3)]
         [TestCase("RET(Routine,out1,out2);", "RET", 3)]
-        public void Parse_ValidInput_ShouldHaveExpectedKeyAndArguments(string text, string key, int args)
+        public void Parse_ValidFormats_ShouldHaveExpectedKeyAndArgumentCount(string text, string key, int args)
         {
             var instruction = Instruction.Parse(text);
 
@@ -193,9 +179,14 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Parse_ExpressionTypeInput_ShouldThrowNewException()
+        [TestCase("")]
+        [TestCase("Test")]
+        [TestCase("()")]
+        [TestCase("(SomeTag > 1.0)/100")]
+        [TestCase("ABS(SomeTag) / 100  > 1")]
+        public void Parse_InvalidFormats_ShouldThrowException(string text)
         {
-            FluentActions.Invoking(() => Instruction.Parse("(SomeTag > 1.0)/100")).Should().Throw<FormatException>();
+            FluentActions.Invoking(() => Instruction.Parse(text)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -203,9 +194,9 @@ namespace L5Sharp.Tests.Core.Common
         {
             var instruction = Instruction.ADD(1, 1, "Test");
 
-            var argument = instruction.Argument("source_B");
+            var argument = instruction.Arguments[1];
 
-            argument.Should().NotBeNull();
+            argument.Should().Be("1");
         }
 
         [Test]
@@ -275,13 +266,13 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void GetHasCode_WhenCalled_ReturnsHasOfKey()
+        public void GetHasCode_WhenCalled_ReturnsHashOfInstructionText()
         {
             var instruction = Instruction.XIC("MyTag");
 
             var result = instruction.GetHashCode();
 
-            result.Should().Be(instruction.Text.GetHashCode());
+            result.Should().Be("XIC(MyTag)".GetHashCode());
         }
 
         [Test]

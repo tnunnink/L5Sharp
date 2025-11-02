@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Controller"/> component that contains properties or configuration
+/// A element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller security.
 /// </summary>
 public class Security : LogixElement

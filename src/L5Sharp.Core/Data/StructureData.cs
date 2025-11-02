@@ -23,7 +23,7 @@ public abstract class StructureData : LogixData
     /// </summary>
     /// <param name="name">The name of the type.</param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    protected StructureData(string name) : base(CreateStructure(name, Enumerable.Empty<Member>()))
+    protected StructureData(string name) : base(CreateStructure(name, []))
     {
     }
 

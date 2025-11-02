@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Controller"/> component that contains properties or configuration
+/// An element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller safety.
 /// </summary>
 public class SafetyInfo : LogixElement
@@ -14,7 +14,7 @@ public class SafetyInfo : LogixElement
     /// </summary>
     public SafetyInfo() : base(L5XName.SafetyInfo)
     {
-        SafetyTagMap = new SafetyTagMap();
+        SafetyTagMap = [];
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class SafetyInfo : LogixElement
     }
 
     /// <summary>
-    /// Specifies the unlock password in the controller. This value is encrypted on export.
+    /// Specifies the unlocked password in the controller. This value is encrypted on export.
     /// </summary>
     /// <value>A <see cref="string"/> representing the encrypted password.</value>
     public string? SafetyUnlockPassword

@@ -1,0 +1,41 @@
+﻿[
+  {
+    Name: EventProgram,
+    Description: null,
+    Type: Normal,
+    Class: Standard,
+    MainRoutine: Main,
+    FaultRoutine: null,
+    Disabled: false,
+    Folder: false,
+    TestEdits: false,
+    Parent: null,
+    Task: Event
+  },
+  {
+    Name: MainProgram,
+    Description: null,
+    Type: Normal,
+    Class: Standard,
+    MainRoutine: Main,
+    FaultRoutine: null,
+    Disabled: false,
+    Folder: false,
+    TestEdits: false,
+    Parent: null,
+    Task: Continuous
+  },
+  {
+    Name: NProgram,
+    Description: Test Program,
+    Type: Normal,
+    Class: Standard,
+    MainRoutine: Main,
+    FaultRoutine: Fault,
+    Disabled: false,
+    Folder: false,
+    TestEdits: false,
+    Parent: null,
+    Task: Periodic
+  }
+]

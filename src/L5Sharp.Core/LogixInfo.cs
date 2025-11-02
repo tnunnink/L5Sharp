@@ -104,6 +104,42 @@ public class LogixInfo : LogixElement
     }
 
     /// <summary>
+    /// Creates a new instance of the <see cref="LogixInfo"/> class with the specified name, processor, and revision.
+    /// </summary>
+    /// <param name="name">The name of the controller being created.</param>
+    /// <param name="processor">The processor type to be associated with the created controller.</param>
+    /// <param name="revision">The software revision of the controller. If not provided, the latest revision for the
+    /// specified processor is used (if found).</param>
+    /// <returns>A new instance of the <see cref="LogixInfo"/> class that represents the configured controller metadata.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="name"/> or <paramref name="processor"/>
+    /// parameter is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the provided processor type is not found in the </exception>
+    public static LogixInfo Create(string name, string processor, Revision? revision = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentNullException(nameof(name));
+
+        if (string.IsNullOrEmpty(processor))
+            throw new ArgumentNullException(nameof(processor));
+
+        var local = Module.Local(processor, revision);
+        var controller = new Controller(name, processor, local.Revision!);
+        controller.Modules.Add(local);
+
+        var content = new XElement(L5XName.RSLogix5000Content);
+        content.Add(new XAttribute(L5XName.SchemaRevision, 1.0));
+        content.Add(new XAttribute(L5XName.SoftwareRevision, local.Revision!));
+        content.Add(new XAttribute(L5XName.TargetName, controller.Name));
+        content.Add(new XAttribute(L5XName.TargetType, L5XName.Controller));
+        content.Add(new XAttribute(L5XName.ContainsContext, false));
+        content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
+        content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
+        content.Add(controller.Serialize());
+
+        return new LogixInfo(content);
+    }
+
+    /// <summary>
     /// Creates a new <see cref="LogixInfo"/> instance targeting the provided component instance.
     /// </summary>
     /// <param name="component">The <see cref="LogixComponent"/> representing content target of the new info object.</param>
@@ -115,7 +151,7 @@ public class LogixInfo : LogixElement
             throw new ArgumentNullException(nameof(component));
 
         var content = new XElement(L5XName.RSLogix5000Content);
-        content.Add(new XAttribute(L5XName.SchemaRevision, new Revision()));
+        content.Add(new XAttribute(L5XName.SchemaRevision, 1.0));
         content.Add(new XAttribute(L5XName.SoftwareRevision, revision ?? new Revision()));
         content.Add(new XAttribute(L5XName.TargetName, component.Name));
         content.Add(new XAttribute(L5XName.TargetType, component.GetElementType()));

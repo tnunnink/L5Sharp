@@ -1,0 +1,15 @@
+﻿[
+  {
+    Name: FolderProgram,
+    Description: null,
+    Type: Normal,
+    Class: Standard,
+    MainRoutine: null,
+    FaultRoutine: null,
+    Disabled: false,
+    Folder: true,
+    TestEdits: false,
+    Parent: null,
+    Task: null
+  }
+]

@@ -160,7 +160,7 @@ public class Connection : LogixObject
     /// </summary>
     /// <value>A <see cref="string"/> containing the suffix character if it exists; Otherwise, will default as 'I'.</value>
     /// <remarks>
-    /// This value is used in determining the module tag name. Not all modules serialize this property,
+    /// This value is used in determining the module tag name. Not all modules serialize this property
     /// but still use 'I' as the suffix character for input tags. Therefore, we will default to 'I' if not found.
     /// </remarks>
     public string InputTagSuffix
@@ -174,7 +174,7 @@ public class Connection : LogixObject
     /// </summary>
     /// <value>A <see cref="string"/> containing the suffix character if it exists; Otherwise, will default as 'O'.</value>
     /// <remarks>
-    /// This value is used in determining the module tag name. Not all modules serialize this property,
+    /// This value is used in determining the module tag name. Not all modules serialize this property
     /// but still use 'O' as the suffix character for output tags. Therefore, we will default to 'O' if not found.
     /// </remarks>
     public string OutputTagSuffix

@@ -20,7 +20,7 @@ public sealed class NullData : LogixData
     public override string Name => "NULL";
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => Enumerable.Empty<Member>();
+    public override IEnumerable<Member> Members => [];
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullData"/> logix type.

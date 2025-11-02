@@ -18,6 +18,16 @@ public class L5XBasicTests
     }
 
     [Test]
+    public Task New_ValidNameAndProcessor_ShouldBeVerified()
+    {
+        var content = L5X.New("Test", "1756-L83E");
+
+        return VerifyXml(content.Serialize().ToString())
+            .ScrubInlineDateTimes("ddd MMM d HH:mm:ss yyyy")
+            .ScrubMember("Owner");
+    }
+
+    [Test]
     public void Parse_ValidContent_ShouldNotBeNull()
     {
         var xml = XDocument.Load(Known.Test).ToString();
@@ -109,7 +119,7 @@ public class L5XBasicTests
 
         var usages = content.Code()
             .SelectMany(c => c.Usages())
-            .Where(r => r.Logic.Arguments.Any(a => a.IsString))
+            .Where(r => r.Logic.Arguments.Any(a => a.Type == ArgumentType.String))
             .ToArray();
 
         usages.Should().NotBeEmpty();

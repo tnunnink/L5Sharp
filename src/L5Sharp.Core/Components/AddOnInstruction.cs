@@ -279,7 +279,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.Contains(Reference) is true) ?? [];
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
 
         //todo any type reference to this AOI (tag or other AOI parameter/local tag).
     }
@@ -312,15 +312,12 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <param name="tagName">The tag name of the AOI instance.</param>
     /// <param name="arguments">The optional arguments to supply the instruction signature with.</param>
     /// <returns>A <see cref="Instruction"/> having this AOI's key and provided arguments.</returns>
-    public Instruction ToInstruction(TagName tagName, params Argument[] arguments) => Instantiate(tagName, arguments);
-
-    /// <summary>
-    /// Creates a new <see cref="NeutralText"/> instance using the provided tagnames and optional arguments.
-    /// </summary>
-    /// <param name="tagName">The tag name of the AOI instance.</param>
-    /// <param name="arguments">The optional arguments to supply the instruction signature with.</param>
-    /// <returns>A <see cref="NeutralText"/> having this AOI's key and provided arguments.</returns>
-    public NeutralText ToText(TagName tagName, params Argument[] arguments) => Instantiate(tagName, arguments).Text;
+    public Instruction Instantiate(TagName tagName, params Argument[] arguments)
+    {
+        var args = new List<Argument> { tagName };
+        args.AddRange(arguments);
+        return new Instruction(Name, args.ToArray());
+    }
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> instance with data configured from this <see cref="AddOnInstruction"/> component. 
@@ -371,7 +368,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// </summary>
     /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
     /// <returns>
-    /// A <see cref="IEnumerable{T}"/> containing <see cref="NeutralText"/> representing all the instruction's
+    /// A <see cref="IEnumerable{T}"/> containing <see cref="Rung"/> representing all the instruction's
     /// logic, with each instruction parameter tag name replaced with the arguments from the provided text.
     /// </returns>
     /// <remarks>
@@ -379,7 +376,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
     /// content or code type.
     /// </remarks>
-    public IEnumerable<NeutralText> LogicFor(Instruction instruction)
+    public IEnumerable<Rung> LogicFor(Instruction instruction)
     {
         if (instruction is null)
             throw new ArgumentNullException(nameof(instruction));
@@ -390,37 +387,24 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         var rungs = logic?.Content<Rung>();
         if (rungs is null) return [];
 
-        //Skip the first operand as it is always the AoiBlock tag, which does not have a corresponding parameter within the logic.
-        var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToList();
+        //Skip the first operand as it is always the AOI instance tag, which does not have a corresponding
+        //parameter within the logic.
+        var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToArray();
 
         //Only required parameters are part of the instruction signature
-        var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToList();
+        var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToArray();
 
         //Generate a mapping of the provided instructions arguments to instruction parameters.
-        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
+        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToArray();
 
         //Replace all parameter names with argument names in the instruction logic text and return the results.
-        return rungs.Select(r => r.Text)
-            .Select(t => mapping.Aggregate(t, (current, pair) =>
-            {
-                if (!TagName.IsTag(pair.Argument)) return current;
-                var replace = $@"(?<=[^.]){pair.Parameter}\b";
-                return Regex.Replace(current, replace, pair.Argument.ToString());
-            }))
-            .ToList();
-    }
-
-    /// <summary>
-    /// Instantiates a new <see cref="Instruction"/> object based on the provided tag name and arguments.
-    /// </summary>
-    /// <param name="tagName">The tag name to associate with the new <see cref="Instruction"/>.</param>
-    /// <param name="arguments">An array of <see cref="Argument"/> objects used to configure the new <see cref="Instruction"/>.</param>
-    /// <returns>A new instance of the <see cref="Instruction"/> type.</returns>
-    private Instruction Instantiate(TagName tagName, params Argument[] arguments)
-    {
-        var args = new List<Argument> { tagName };
-        args.AddRange(arguments);
-        return Instruction.New(Name, args.ToArray());
+        return rungs.Select(r => mapping.Aggregate(r, (current, pair) =>
+        {
+            if (!TagName.IsTag(pair.Argument)) return current;
+            var pattern = $@"(?<=[^.]){pair.Parameter}\b";
+            var text = Regex.Replace(current.Text, pattern, pair.Argument.ToString());
+            return new Rung(text);
+        }));
     }
 
     /// <summary>
