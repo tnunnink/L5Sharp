@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// These dimensions are represented by the properties X, Y, and Z.
 /// This class also provides helpful methods and properties for working with dimensions of an array.
 /// </remarks>
-public sealed class Dimensions : ILogixParsable<Dimensions>
+public sealed class Dimensions
 {
     private Dimensions()
     {

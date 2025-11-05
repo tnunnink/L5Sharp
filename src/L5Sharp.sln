@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Samples", "..\tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Core", "L5Sharp.Core\L5Sharp.Core.csproj", "{927D481B-CB0E-4FA5-A5DC-98D8ECE5EF56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Logix", "L5Sharp.Logix\L5Sharp.Logix.csproj", "{F502A3D0-AC0E-41EF-9689-433B1E2728E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Extensions.Logix", "L5Sharp.Extensions.Logix\L5Sharp.Extensions.Logix.csproj", "{F502A3D0-AC0E-41EF-9689-433B1E2728E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests.Logix", "..\tests\L5Sharp.Tests.Logix\L5Sharp.Tests.Logix.csproj", "{7DF13FE2-259F-4236-9201-D7430B9FF4DA}"
 EndProject

@@ -62,7 +62,7 @@ var results = content.Query<Tag>()
 ### Fast Component Lookup
 To index the L5X on load or parse, you must supply the `L5XOptions.Index`.
 ```csharp
-var content = L5X.Load("MyTestFile.L5X", L5XOptions.Index);
+var content = L5X.Load("MyTestFile.L5X");
 ```
 Then use `ILogixLookup` API `Get`, `TryGet`, `Find`, or `Contains`.
 ``` csharp

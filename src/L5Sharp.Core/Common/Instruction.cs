@@ -22,7 +22,7 @@ namespace L5Sharp.Core;
 /// This  class also supports conversion between function blocks so that we can provide a single abstraction over most
 /// coding elements in a L5X project.
 /// </remarks>
-public sealed class Instruction : ILogixParsable<Instruction>
+public sealed class Instruction
 {
     /// <summary>
     /// Represents the opening character used to signify the start of an instruction's argument list.

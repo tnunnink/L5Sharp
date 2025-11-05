@@ -42,7 +42,7 @@ public class Port : LogixObject<Port>
     /// </remarks>
     public int Id
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -55,7 +55,7 @@ public class Port : LogixObject<Port>
     /// </remarks>
     public string? Type
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -68,7 +68,7 @@ public class Port : LogixObject<Port>
     /// </remarks>
     public Address? Address
     {
-        get => GetValue<Address>();
+        get => GetValue(Address.Parse);
         set => SetValue(value);
     }
 
@@ -83,7 +83,7 @@ public class Port : LogixObject<Port>
     /// </remarks>
     public bool Upstream
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -96,24 +96,8 @@ public class Port : LogixObject<Port>
     /// </remarks>
     public byte? BusSize
     {
-        get => Element.Element(L5XName.Bus)?.Attribute(L5XName.Size)?.Value.Parse<byte>();
-        set
-        {
-            if (value is null)
-            {
-                Element.Element(L5XName.Bus)?.Remove();
-                return;
-            }
-
-            var bus = Element.Element(L5XName.Bus);
-            if (bus is null)
-            {
-                bus = new XElement(L5XName.Bus);
-                Element.Add(bus);
-            }
-
-            bus.SetAttributeValue(L5XName.Size, value);
-        }
+        get => GetBusSize();
+        set => SetBusSize(value);
     }
 
     /// <summary>
@@ -134,4 +118,38 @@ public class Port : LogixObject<Port>
     /// configuration corresponds to such a slot.
     /// </remarks>
     public bool IsChassis => Address?.IsSlot is true;
+
+    /// <summary>
+    /// Retrieves the size of the bus if it is defined for the current <see cref="Port"/>.
+    /// </summary>
+    /// <returns>
+    /// A nullable <see cref="byte"/> representing the size of the bus, or null if the size is not specified.
+    /// </returns>
+    private byte? GetBusSize()
+    {
+        var value = Element.Element(L5XName.Bus)?.Attribute(L5XName.Size)?.Value;
+        return value is not null ? byte.Parse(value) : null;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetBusSize(byte? value)
+    {
+        if (value is null)
+        {
+            Element.Element(L5XName.Bus)?.Remove();
+            return;
+        }
+
+        var bus = Element.Element(L5XName.Bus);
+        if (bus is null)
+        {
+            bus = new XElement(L5XName.Bus);
+            Element.Add(bus);
+        }
+
+        bus.SetAttributeValue(L5XName.Size, value);
+    }
 }

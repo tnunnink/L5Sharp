@@ -50,7 +50,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public int SamplePeriod
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -59,7 +59,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public int NumberOfCaptures
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -69,7 +69,7 @@ public class Trend : LogixComponent<Trend>
     /// <value>A <see cref="CaptureSize"/> representing the capture size option. Type Samples, TimePeriod, or NoLimit.</value>
     public CaptureSizeType? CaptureSizeType
     {
-        get => GetValue<CaptureSizeType>();
+        get => GetValue(CaptureSizeType.Parse);
         set => SetValue(value);
     }
 
@@ -84,7 +84,7 @@ public class Trend : LogixComponent<Trend>
     /// </remarks>
     public int CaptureSize
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -94,7 +94,7 @@ public class Trend : LogixComponent<Trend>
     /// <returns></returns>
     public TriggerType? StartTriggerType
     {
-        get => GetValue<TriggerType>();
+        get => GetValue(TriggerType.Parse);
         set => SetValue(value);
     }
 
@@ -103,7 +103,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StartTriggerTag1
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -113,7 +113,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TriggerOperation? StartTriggerOperation1
     {
-        get => GetValue<TriggerOperation>();
+        get => GetValue(TriggerOperation.Parse);
         set => SetValue(value);
     }
 
@@ -126,7 +126,7 @@ public class Trend : LogixComponent<Trend>
     /// </remarks>
     public TriggerTargetType? StartTriggerTargetType1
     {
-        get => GetValue<TriggerTargetType>();
+        get => GetValue(TriggerTargetType.Parse);
         set => SetValue(value);
     }
 
@@ -136,7 +136,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StartTriggerTargetValue1
     {
-        get => GetValue<AtomicData>();
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 
@@ -146,7 +146,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StartTriggerTargetTag1
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -158,7 +158,7 @@ public class Trend : LogixComponent<Trend>
     /// StartTriggerOperation2, StartTriggerTargetType2, and StartTriggerTargetValue2 or StartTriggerTargetTag2.</remarks>
     public Operator? StartTriggerLogicalOperation
     {
-        get => GetValue<Operator>();
+        get => GetValue(Operator.Parse);
         set => SetValue(value);
     }
 
@@ -167,7 +167,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StartTriggerTag2
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -177,7 +177,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TriggerOperation? StartTriggerOperation2
     {
-        get => GetValue<TriggerOperation>();
+        get => GetValue(TriggerOperation.Parse);
         set => SetValue(value);
     }
 
@@ -190,7 +190,7 @@ public class Trend : LogixComponent<Trend>
     /// </remarks>
     public TriggerTargetType? StartTriggerTargetType2
     {
-        get => GetValue<TriggerTargetType>();
+        get => GetValue(TriggerTargetType.Parse);
         set => SetValue(value);
     }
 
@@ -200,7 +200,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StartTriggerTargetValue2
     {
-        get => GetValue<AtomicData>();
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 
@@ -210,7 +210,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StartTriggerTargetTag2
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -219,7 +219,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public SamplesType? PreSamplesType
     {
-        get => GetValue<SamplesType>();
+        get => GetValue(SamplesType.Parse);
         set => SetValue(value);
     }
 
@@ -229,7 +229,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public int? PreSamples
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -239,7 +239,7 @@ public class Trend : LogixComponent<Trend>
     /// <value>A <see cref="TriggerType"/> representing the value NoTrigger or Event Trigger.</value>
     public TriggerType? StopTriggerType
     {
-        get => GetValue<TriggerType>();
+        get => GetValue(TriggerType.Parse);
         set => SetValue(value);
     }
 
@@ -248,7 +248,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StopTriggerTag1
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -258,7 +258,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TriggerOperation? StopTriggerOperation1
     {
-        get => GetValue<TriggerOperation>();
+        get => GetValue(TriggerOperation.Parse);
         set => SetValue(value);
     }
 
@@ -271,7 +271,7 @@ public class Trend : LogixComponent<Trend>
     /// </remarks>
     public TriggerTargetType? StopTriggerTargetType1
     {
-        get => GetValue<TriggerTargetType>();
+        get => GetValue(TriggerTargetType.Parse);
         set => SetValue(value);
     }
 
@@ -281,7 +281,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StopTriggerTargetValue1
     {
-        get => GetValue<AtomicData>();
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 
@@ -291,7 +291,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StopTriggerTargetTag1
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -303,7 +303,7 @@ public class Trend : LogixComponent<Trend>
     /// StopTriggerOperation2, StopTriggerTargetType2, and StopTriggerTargetValue2 or StopTriggerTargetTag2.</remarks>
     public Operator? StopTriggerLogicalOperation
     {
-        get => GetValue<Operator>();
+        get => GetValue(Operator.Parse);
         set => SetValue(value);
     }
 
@@ -312,7 +312,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StopTriggerTag2
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -322,7 +322,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TriggerOperation? StopTriggerOperation2
     {
-        get => GetValue<TriggerOperation>();
+        get => GetValue(TriggerOperation.Parse);
         set => SetValue(value);
     }
 
@@ -335,7 +335,7 @@ public class Trend : LogixComponent<Trend>
     /// </remarks>
     public TriggerTargetType? StopTriggerTargetType2
     {
-        get => GetValue<TriggerTargetType>();
+        get => GetValue(TriggerTargetType.Parse);
         set => SetValue(value);
     }
 
@@ -345,7 +345,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StopTriggerTargetValue2
     {
-        get => GetValue<AtomicData>();
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 
@@ -355,7 +355,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StopTriggerTargetTag2
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -364,7 +364,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public SamplesType? PostSamplesType
     {
-        get => GetValue<SamplesType>();
+        get => GetValue(SamplesType.Parse);
         set => SetValue(value);
     }
 
@@ -374,7 +374,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public int? PostSamples
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -383,7 +383,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public int? TrendxVersion
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 

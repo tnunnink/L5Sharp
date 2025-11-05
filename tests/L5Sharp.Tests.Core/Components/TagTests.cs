@@ -919,7 +919,7 @@ public class TagTests
     {
         const string expectedBase = "Base";
         var expectedMember = string.Concat(expectedBase, " ", "User defined complex type", " ", "Test Bool");
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
 
         var tag = content.Get<Tag>("TestComplexTag");
 

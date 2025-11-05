@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <see cref="ArgumentOutOfRangeException"/>.
 /// This parameter will control the scan order of task components as related to other tasks.
 /// </remarks>
-public readonly struct TaskPriority : IEquatable<TaskPriority>, ILogixParsable<TaskPriority>
+public readonly struct TaskPriority : IEquatable<TaskPriority>
 {
     private readonly byte _value;
 

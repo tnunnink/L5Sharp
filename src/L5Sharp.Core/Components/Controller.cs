@@ -111,7 +111,7 @@ public sealed class Controller : LogixElement
     /// </remarks>
     public Use? Use
     {
-        get => GetValue<Use>();
+        get => GetValue(Use.Parse);
         set => SetValue(value);
     }
 
@@ -127,7 +127,7 @@ public sealed class Controller : LogixElement
     /// </remarks>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -137,7 +137,7 @@ public sealed class Controller : LogixElement
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -147,7 +147,7 @@ public sealed class Controller : LogixElement
     /// <value>A <see cref="string"/> representing the alphanumeric catalog number.</value>
     public string? ProcessorType
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -156,7 +156,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public string? TimeSlice
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -165,7 +165,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? ShareUnusedTimeSlice
     {
-        get => GetValue<bool?>();
+        get => GetBool();
         set => SetBit(value);
     }
 
@@ -175,7 +175,7 @@ public sealed class Controller : LogixElement
     /// <value>A <see cref="string"/> representing the name of the program.</value>
     public string? PowerLossProgram
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -185,7 +185,7 @@ public sealed class Controller : LogixElement
     /// <value>A <see cref="string"/> representing the name of the program.</value>
     public string? MajorFaultProgram
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -196,7 +196,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public string? CommPath
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -207,7 +207,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public string? CommDriver
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -217,12 +217,7 @@ public sealed class Controller : LogixElement
     /// <value>A <see cref="Core.Revision"/> value representing the major/minor version of the controller</value>
     public Revision? Revision
     {
-        get
-        {
-            var major = Element.Attribute(L5XName.MajorRev)?.Value.Parse<ushort>();
-            var minor = Element.Attribute(L5XName.MinorRev)?.Value.Parse<ushort>();
-            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : null;
-        }
+        get => GetRevision(L5XName.MajorRev, L5XName.MinorRev);
         set
         {
             Element.SetAttributeValue(L5XName.MajorRev, value?.Major);
@@ -257,7 +252,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public SFCExecutionControl? SFCExecutionControl
     {
-        get => GetValue<SFCExecutionControl>();
+        get => GetValue(SFCExecutionControl.Parse);
         set => SetValue(value);
     }
 
@@ -267,7 +262,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public SFCRestartPosition? SFCRestartPosition
     {
-        get => GetValue<SFCRestartPosition>();
+        get => GetValue(SFCRestartPosition.Parse);
         set => SetValue(value);
     }
 
@@ -277,7 +272,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public SFCLastScan? SFCLastScan
     {
-        get => GetValue<SFCLastScan>();
+        get => GetValue(SFCLastScan.Parse);
         set => SetValue(value);
     }
 
@@ -289,7 +284,7 @@ public sealed class Controller : LogixElement
     // ReSharper disable once InconsistentNaming to match logix name.
     public string? ProjectSN
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -298,7 +293,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? MatchProjectToController
     {
-        get => GetValue<string>() is not null ? GetValue<string>() == "Yes" : null;
+        get => GetValue() is not null ? GetValue() == "Yes" : null;
         set => SetValue(value is true ? "Yes" : "No");
     }
 
@@ -307,7 +302,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? InhibitAutomaticFirmwareUpdate
     {
-        get => GetValue<int?>() is not null ? GetValue<int?>() == 1 : null;
+        get => GetBool();
         set => SetValue(value is true ? 1 : 0);
     }
 
@@ -316,7 +311,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public string? CurrentProjectLanguage
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -325,7 +320,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public string? DefaultProjectLanguage
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -334,7 +329,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public string? ControllerLanguage
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -344,7 +339,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? CanUseRPIFromProducer
     {
-        get => GetValue<bool?>();
+        get => GetBool();
         set => SetValue(value);
     }
 
@@ -354,7 +349,7 @@ public sealed class Controller : LogixElement
     /// <value>A <see cref="PassThroughOption"/> representing the configured value.</value>
     public PassThroughOption? PassThroughConfiguration
     {
-        get => GetValue<PassThroughOption>();
+        get => GetValue(PassThroughOption.Parse);
         set => SetValue(value);
     }
 
@@ -363,7 +358,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? DownloadProjectDocumentationAndExtendedProperties
     {
-        get => GetValue<bool?>();
+        get => GetBool();
         set => SetValue(value);
     }
 
@@ -378,7 +373,7 @@ public sealed class Controller : LogixElement
     /// </remarks>
     public bool? DownloadProjectCustomProperties
     {
-        get => GetValue<bool?>();
+        get => GetBool();
         set => SetValue(value);
     }
 
@@ -389,7 +384,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public string? EtherNetIPMode
     {
-        get => GetValue<string?>();
+        get => GetValue();
         set => SetValue(value);
     }
 

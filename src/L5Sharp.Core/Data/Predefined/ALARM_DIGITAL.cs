@@ -67,7 +67,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL EnableIn
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -76,7 +76,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL In
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -85,7 +85,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL InFault
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -94,7 +94,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL Condition
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -103,7 +103,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL AckRequired
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -112,7 +112,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL Latched
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -121,7 +121,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -130,7 +130,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -139,7 +139,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgReset
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -148,7 +148,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperReset
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -157,7 +157,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgSuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -166,7 +166,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperSuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -175,7 +175,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgUnsuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -184,7 +184,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperUnsuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -193,7 +193,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -202,7 +202,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -211,7 +211,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -220,7 +220,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgDisable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -229,7 +229,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperDisable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -238,7 +238,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -247,7 +247,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -256,7 +256,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL AlarmCountReset
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -265,7 +265,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL UseProgTime
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -274,7 +274,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public LINT ProgTime
     {
-        get => GetRequiredValue<LINT>();
+        get => GetRequiredValue(LINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -283,7 +283,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT Severity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -292,7 +292,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT MinDurationPRE
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -301,7 +301,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT ShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -310,7 +310,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT MaxShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 

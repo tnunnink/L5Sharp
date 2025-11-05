@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>INT</b> Logix atomic data type, or a type analogous to a <see cref="short"/>.
 /// </summary>
-public sealed class INT : AtomicData, IComparable, IConvertible, ILogixParsable<INT>
+public sealed class INT : AtomicData, IComparable, IConvertible
 {
     /// <summary>
     /// The underlying primitive value which is set upon construction and not changed.

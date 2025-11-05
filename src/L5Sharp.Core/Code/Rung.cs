@@ -52,7 +52,7 @@ public class Rung : LogixCode
     /// </summary>
     public RungType? Type
     {
-        get => GetValue<RungType>();
+        get => GetValue(RungType.Parse);
         set => SetValue(value);
     }
 
@@ -66,7 +66,7 @@ public class Rung : LogixCode
     /// </remarks>
     public string Text
     {
-        get => GetProperty<string>() ?? string.Empty;
+        get => GetProperty() ?? string.Empty;
         set => SetProperty(value);
     }
 
@@ -77,7 +77,7 @@ public class Rung : LogixCode
     /// </summary>
     public string? Comment
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 

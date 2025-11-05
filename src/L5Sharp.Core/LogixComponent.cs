@@ -50,7 +50,7 @@ public abstract class LogixComponent : LogixEntity
     /// </remarks>
     public Use? Use
     {
-        get => GetValue<Use>();
+        get => GetValue(Use.Parse);
         set => SetValue(value);
     }
 
@@ -66,7 +66,7 @@ public abstract class LogixComponent : LogixEntity
     /// </remarks>
     public virtual string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -76,7 +76,7 @@ public abstract class LogixComponent : LogixEntity
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public virtual string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -136,14 +136,14 @@ public abstract class LogixComponent : LogixEntity
 }
 
 /// <summary>
-/// A generic abstract <see cref="LogixComponent"/> that implements the <see cref="ILogixParsable{T}"/> interface.
-/// This generic type class allows us to specify the strong return types for methods <see cref="Parse"/>,
-/// <see cref="TryParse"/> and <see cref="Clone"/>. This means we don't have to implement these methods for every
-/// derivative type, and allows these types to be used with the <see cref="LogixParser"/> in a dynamic fashion.
+/// Represents an abstract base class for a Logix component, providing foundational functionality for all derived components.
 /// </summary>
-/// <typeparam name="TComponent">The type implementing <see cref="LogixComponent"/></typeparam>
-public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsable<TComponent>
-    where TComponent : LogixComponent, ILogixParsable<TComponent>
+/// <remarks>
+/// This class serves as a generic extension of the <see cref="LogixComponent"/> class, providing type-specific functionality.
+/// It includes mechanisms to clone, duplicate, and modify Logix components while maintaining the integrity of their properties
+/// and relationships within the Logix environment.
+/// </remarks>
+public abstract class LogixComponent<TComponent> : LogixComponent where TComponent : LogixComponent
 {
     /// <inheritdoc />
     protected LogixComponent(string name) : base(name)
@@ -211,53 +211,5 @@ public abstract class LogixComponent<TComponent> : LogixComponent, ILogixParsabl
             throw new ArgumentException($"Property selector must be of type {typeof(MemberExpression)}.");
 
         Element.FindAndReplace(find, replace, [memberExpression.Member.Name]);
-    }
-
-    /// <summary>
-    /// Parses the provided string and returned the strongly typed component object.
-    /// </summary>
-    /// <param name="value">The XML string value to parse.</param>
-    /// <returns>A new <see cref="LogixComponent"/> instance that represents the parsed value.</returns>
-    /// <remarks>
-    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
-    /// Also note that since this uses internal XElement and casts the type, this method can throw exceptions for invalid
-    /// XML or XML that is parsed to a different type than the one specified here.
-    /// </remarks>
-    public static TComponent Parse(string value)
-    {
-        var element = XElement.Parse(value);
-        return element.Deserialize<TComponent>();
-    }
-
-    /// <summary>
-    /// Attempts to parse the provided string and returned the strongly typed component object.
-    /// If unsuccessful, then this method returns <c>null</c>.
-    /// </summary>
-    /// <param name="value">The XML string value to parse.</param>
-    /// <returns>A new <see cref="LogixComponent"/> instance that represents the parsed value if successful, otherwise, <c>null</c>.</returns>
-    /// <remarks>
-    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
-    /// Note that this method will just return null if any exception is caught. This could be for invalid XML formats
-    /// of invalid type casts.
-    /// </remarks>
-    public static TComponent? TryParse(string? value)
-    {
-        if (value is null || value.IsEmpty())
-            return null;
-
-        var trimmed = value.Trim();
-        if (trimmed.Length == 0 || trimmed[0] != '<') return null;
-
-        try
-        {
-            var element = XElement.Parse(trimmed);
-            return element.Deserialize<TComponent>();
-        }
-        catch (Exception)
-        {
-            return null;
-        }
     }
 }

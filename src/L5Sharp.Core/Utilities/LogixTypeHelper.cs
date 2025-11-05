@@ -23,7 +23,7 @@ internal static class LogixTypeHelper
     /// <returns>A <see cref="string"/> representing the type name configured by the <see cref="L5XTypeAttribute"/>, or the default name of the type if no attribute is found.</returns>
     /// <remarks>
     /// This method retrieves the first configured <see cref="L5XTypeAttribute"/> for the provided type.
-    /// If no attribute is found, it defaults to returning the <see cref="Type.Name"/> property.
+    /// If no attribute is found, it defaults to returning type name property.
     /// </remarks>
     internal static string GetLogixTypeName(this Type type)
     {
@@ -40,7 +40,7 @@ internal static class LogixTypeHelper
     /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="string"/> representing all type names configured by the <see cref="L5XTypeAttribute"/>, or a collection containing the default name of the type if no attributes are found.</returns>
     /// <remarks>
     /// This method retrieves all configured <see cref="L5XTypeAttribute"/> instances for the provided type.
-    /// If no attributes are found, it defaults to returning a collection with the <see cref="Type.Name"/> property.
+    /// If no attribute is found, it defaults to returning type name property.
     /// </remarks>
     internal static IEnumerable<string> GetLogixTypeNames(this Type type)
     {
@@ -57,7 +57,7 @@ internal static class LogixTypeHelper
     /// <returns>A <see cref="string"/> representing the name of the container configured by the <see cref="L5XTypeAttribute"/>, or a pluralized version of the default type name if no attribute is found.</returns>
     /// <remarks>
     /// This method retrieves the first configured <see cref="L5XTypeAttribute"/> for the provided type.
-    /// If no attribute is found, it defaults to returning the pluralized version of the <see cref="Type.Name"/> property.
+    /// If no attribute is found, it defaults to returning the pluralized version of the type's name.
     /// </remarks>
     internal static string GetLogixContainerName(this Type type)
     {

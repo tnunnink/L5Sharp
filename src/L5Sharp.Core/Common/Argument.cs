@@ -11,7 +11,7 @@ namespace L5Sharp.Core;
 /// be either a tag name reference, immediate atomic or string value, or even complex expressions. This class provides
 /// members for inspecting and parsing/extracting specific data from an argument value.
 /// </summary>
-public class Argument : ILogixParsable<Argument>
+public class Argument
 {
     /// <summary>
     /// The value typically found in Studio for undefined argument values in certain instructions.

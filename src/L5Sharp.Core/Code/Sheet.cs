@@ -74,7 +74,7 @@ public class Sheet : LogixCode
     /// <value>A <see cref="string"/> containing the description if it exists; Otherwise, <c>null</c></value>
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -125,7 +125,7 @@ public class Sheet : LogixCode
     public Block Block(uint id)
     {
         var element = Element.Elements()
-            .SingleOrDefault(e => e.Attribute(L5XName.ID)?.Value.Parse<uint>() == id);
+            .SingleOrDefault(e => e.Attribute(L5XName.ID)?.Value == id.ToString());
 
         return element?.Deserialize<Block>() ?? throw new KeyNotFoundException("");
     }
@@ -155,7 +155,7 @@ public class Sheet : LogixCode
     public Sheet AddInput(TagName operand)
     {
         var block = Core.Block.IREF(operand);
-        
+
         var element = block.Serialize();
         element.SetAttributeValue(L5XName.ID, NextAvailableId());
 
@@ -164,7 +164,7 @@ public class Sheet : LogixCode
 
         return this;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -173,7 +173,7 @@ public class Sheet : LogixCode
     public Sheet AddOutput(TagName operand)
     {
         var block = Core.Block.OREF(operand);
-        
+
         var element = block.Serialize();
         element.SetAttributeValue(L5XName.ID, NextAvailableId());
         element.SetAttributeValue(L5XName.X, NextAvailableId());
@@ -212,9 +212,9 @@ public class Sheet : LogixCode
     public Sheet RemoveBlock(TagName operand)
     {
         if (operand is null) throw new ArgumentNullException(nameof(operand));
-        
+
         Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == operand)?.Remove();
-        
+
         return this;
     }
 
@@ -250,18 +250,18 @@ public class Sheet : LogixCode
     {
         if (from is null) throw new ArgumentNullException(nameof(from));
         if (to is null) throw new ArgumentNullException(nameof(to));
-        
+
         var source = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == from.Root)?.Deserialize<Block>();
         var target = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == to.Root)?.Deserialize<Block>();
 
         if (source is null)
             throw new InvalidOperationException($"No source block with operand '{from.Root}' exists in the sheet.");
-        
+
         if (target is null)
             throw new InvalidOperationException($"No target block with operand '{to.Root}' exists in the sheet.");
 
         WireBlocks(source.ID, target.ID, from.Path, to.Path);
-        
+
         return this;
     }
 
@@ -270,7 +270,13 @@ public class Sheet : LogixCode
     /// </summary>
     private uint NextAvailableId()
     {
-        return Element.Elements().Select(e => e.Attribute(L5XName.ID)?.Value.Parse<uint>()).Max() + 1 ?? 0;
+        var ids = Element.Elements().Select(e =>
+        {
+            var id = e.Attribute(L5XName.ID)?.Value;
+            return id is not null ? int.Parse(id) : -1;
+        });
+
+        return (uint)ids.Max() + 1;
     }
 
     /// <summary>

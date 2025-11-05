@@ -19,9 +19,9 @@ public record TaskInfo()
         Watchdog = task.Watchdog;
         Inhibited = task.InhibitTask;
         UpdateOutputs = !task.DisableUpdateOutputs;
-        EventTrigger = task.EventTrigger?.Name;
-        EventTag = task.EventTag?.ToString();
-        EnableTimeout = task.EnableTimeout ?? false;
+        EventTrigger = task.EventInfo?.EventTrigger?.Name;
+        EventTag = task.EventInfo?.EventTag;
+        EnableTimeout = task.EventInfo?.EnableTimeout ?? false;
         Programs = task.Scheduled.ToArray();
     }
 

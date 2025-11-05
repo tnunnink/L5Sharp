@@ -51,7 +51,7 @@ public class Block : LogixObject<Block>
     /// The unique identifier of the block for the current sheet content.
     /// </summary>
     /// <value>A zero based <see cref="uint"/> representing the block id.</value>
-    public uint ID => GetRequiredValue<uint>();
+    public uint ID => GetRequiredValue(uint.Parse);
 
     /// <summary>
     /// The X coordinate of the block element within the current sheet.
@@ -60,7 +60,7 @@ public class Block : LogixObject<Block>
     /// The <c>X</c> and <c>Y</c> grid locations are a relative position from the upper-left corner of the sheet.
     /// X is the horizontal position; Y is the vertical position.
     /// </remarks>
-    public uint X => GetRequiredValue<uint>();
+    public uint X => GetRequiredValue(uint.Parse);
 
     /// <summary>
     /// The Y coordinate of the block element within the current sheet.
@@ -69,7 +69,7 @@ public class Block : LogixObject<Block>
     /// The <c>X</c> and <c>Y</c> grid locations are a relative position from the upper-left corner of the sheet.
     /// X is the horizontal position; Y is the vertical position.
     /// </remarks>
-    public uint Y => GetRequiredValue<uint>();
+    public uint Y => GetRequiredValue(uint.Parse);
 
     /// <summary>
     /// The alphanumeric cell of the sheet where the block is located. 
@@ -117,7 +117,7 @@ public class Block : LogixObject<Block>
     /// </value>
     public bool HideDesc
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 

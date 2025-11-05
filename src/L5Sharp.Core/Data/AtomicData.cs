@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A <see cref="LogixData"/> that represents value type object.
+/// A <see cref="LogixData"/> that represents a value type object.
 /// </summary>
 /// <remarks>
 /// <para>
 /// Logix atomic types are types that have value (e.g., BOOL, SINT, INT, DINT, REAL, etc.).
-/// These type are synonymous with value types in .NET and in fact wrap the .NET value types internally while adding
+/// These types are synonymous with value types in .NET and in fact wrap the .NET value types internally while adding
 /// the common <see cref="LogixData"/> API. Atomic types also add <see cref="Radix"/> to indicate the format of the current
 /// type value.
 /// </para>
@@ -25,7 +24,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
+public abstract class AtomicData : LogixData
 {
     /// <inheritdoc />
     /// <remarks>
@@ -119,34 +118,6 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
     }
 
     /// <summary>
-    /// Parses the provided string value into the atomic type value specified by name.
-    /// </summary>
-    /// <param name="name">The name of the atomic type.</param>
-    /// <param name="value">The string value to parse.</param>
-    /// <returns>An <see cref="AtomicData"/> representing the parsed value and format of the provided string.</returns>
-    /// <exception cref="ArgumentException"><c>name</c> does not represent a valid atomic type.</exception>
-    /// <exception cref="FormatException"><c>value</c> does not have a valid format to be parsed as the specified atomic type.</exception>
-    public static AtomicData Parse(string name, string value)
-    {
-        return name switch
-        {
-            nameof(BOOL) => BOOL.Parse(value),
-            "BIT" => BOOL.Parse(value),
-            nameof(SINT) => SINT.Parse(value),
-            nameof(INT) => INT.Parse(value),
-            nameof(DINT) => DINT.Parse(value),
-            nameof(LINT) => LINT.Parse(value),
-            nameof(REAL) => REAL.Parse(value),
-            nameof(USINT) => USINT.Parse(value),
-            nameof(UINT) => UINT.Parse(value),
-            nameof(UDINT) => UDINT.Parse(value),
-            nameof(ULINT) => ULINT.Parse(value),
-            nameof(LREAL) => LREAL.Parse(value),
-            _ => throw new ArgumentException($"The name '{name}' does not represent a known {typeof(AtomicData)} type.")
-        };
-    }
-
-    /// <summary>
     /// Parses the provided string value into an atomic type value.
     /// </summary>
     /// <param name="value">The string to parse.</param>
@@ -210,9 +181,9 @@ public abstract class AtomicData : LogixData, ILogixParsable<AtomicData>
 
     /// <inheritdoc />
     /// <remarks>
-    /// An <see cref="AtomicData"/> is special in that it does not use the base Element for storing it's
+    /// An <see cref="AtomicData"/> is special in that it does not use the base Element for storing its
     /// information. All atomic types values are set in the derived classes. This method will generate a new
-    /// <see cref="XElement"/> when called. This is because atomics need the value types to be performant. We don't
+    /// <see cref="XElement"/> when called. This is because atomic needs the value types to be performant. We don't
     /// want to have to box the atomic value as an object, but rather let it wrap a simple .NET primitive type.
     /// </remarks>
     public override XElement Serialize()

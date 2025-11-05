@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 /// Vendors are defined by Rockwell and assigned unique Id and name.
 /// Use <see cref="Rockwell"/> as it is the most common vendor for compatible devices.
 /// </remarks>
-public class Vendor : ILogixParsable<Vendor>
+public class Vendor
 {
     /// <summary>
     /// Creates a new <see cref="Vendor"/> value with the provided id and name.

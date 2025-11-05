@@ -83,7 +83,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// </remarks>
     public ComponentClass? Class
     {
-        get => GetValue<ComponentClass>();
+        get => GetValue(ComponentClass.Parse);
         set => SetValue(value);
     }
 
@@ -98,7 +98,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// </remarks>
     public Revision? Revision
     {
-        get => GetValue<Revision>();
+        get => GetValue(Revision.Parse);
         set => SetValue(value);
     }
 
@@ -108,7 +108,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> containing text of the revision extension.</value>
     public string? RevisionExtension
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -118,7 +118,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> containing the text of the revision note.</value>
     public string? RevisionNote
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -128,7 +128,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> value representing the name of the vendor.</value>
     public string? Vendor
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -138,7 +138,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value><c>true</c> if the instruction executes a pre-scan routine; otherwise, <c>false</c>.</value>
     public bool ExecutePreScan
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -148,7 +148,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value><c>true</c> if the instruction executes a post-scan routine; otherwise, <c>false</c>.</value>
     public bool ExecutePostScan
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -158,7 +158,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes an enabled in false routine; otherwise, <c>false</c>.</value>
     public bool ExecuteEnableInFalse
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -178,7 +178,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> representing the name of the user.</value>
     public string? CreatedBy
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -198,7 +198,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> representing the name of the user.</value>
     public string? EditedBy
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -209,7 +209,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>
     public Revision? SoftwareRevision
     {
-        get => GetValue<Revision>();
+        get => GetValue(Revision.Parse);
         set => SetValue(value);
     }
 
@@ -219,7 +219,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> containing the help text.</value>
     public string? AdditionalHelpText
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -229,7 +229,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value><c>true</c> if the instruction is encrypted; otherwise, <c>false</c>.</value>
     public bool? IsEncrypted
     {
-        get => GetValue<bool>();
+        get => GetBool();
         set => SetValue(value);
     }
 

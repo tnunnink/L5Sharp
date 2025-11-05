@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// A static deserialization class for <see cref="LogixElement"/> objects and their derivatives.
 /// This class uses a dictionary to cache deserialization functions for types deriving from LogixElement.
 /// We are using compiled expression functions as they are more performant than invoking constructors via reflection.
-/// We are also caching them for reuse so we don't have to build them each time we call <see cref="Deserialize"/>.
+/// We are also caching them for reuse so we don't have to build them each time we call deserialize.
 /// </summary>
 public static class LogixSerializer
 {
@@ -221,7 +221,7 @@ public static class LogixSerializer
     /// </summary>
     private static LogixElement DeserializeData(XElement element)
     {
-        var format = element.Attribute(L5XName.Format)?.Value.TryParse<DataFormat>();
+        var format = DataFormat.TryParse(element.Attribute(L5XName.Format)?.Value);
 
         if (format is null)
             return LogixData.Null;
@@ -259,7 +259,26 @@ public static class LogixSerializer
     {
         var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
         var value = element.Attribute(L5XName.Value)?.Value ?? throw element.L5XError(L5XName.Value);
-        return AtomicData.Parse(dataType, value);
+        return ParseValue(dataType, value);
+
+        AtomicData ParseValue(string n, string v)
+        {
+            return n switch
+            {
+                nameof(BOOL) or "BIT" => BOOL.Parse(v),
+                nameof(SINT) => SINT.Parse(v),
+                nameof(INT) => INT.Parse(v),
+                nameof(DINT) => DINT.Parse(v),
+                nameof(LINT) => LINT.Parse(v),
+                nameof(REAL) => REAL.Parse(v),
+                nameof(USINT) => USINT.Parse(v),
+                nameof(UINT) => UINT.Parse(v),
+                nameof(UDINT) => UDINT.Parse(v),
+                nameof(ULINT) => ULINT.Parse(v),
+                nameof(LREAL) => LREAL.Parse(v),
+                _ => throw new ArgumentException($"Type '{n}' is not a known {typeof(AtomicData)} type.")
+            };
+        }
     }
 
     /// <summary>

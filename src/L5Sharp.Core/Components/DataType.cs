@@ -71,7 +71,7 @@ public class DataType : LogixComponent<DataType>
     /// </value>
     public DataTypeFamily? Family
     {
-        get => GetValue<DataTypeFamily>();
+        get => GetValue(DataTypeFamily.Parse);
         set => SetValue(value);
     }
 
@@ -84,7 +84,7 @@ public class DataType : LogixComponent<DataType>
     /// </value>
     public DataTypeClass? Class
     {
-        get => GetValue<DataTypeClass>();
+        get => GetValue(DataTypeClass.Parse);
         set => SetValue(value);
     }
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace L5Sharp.Core;
+﻿namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents an enumeration of all <see cref="TriggerOperation"/> options for a given <see cref="Trend"/>.

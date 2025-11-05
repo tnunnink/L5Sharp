@@ -6,8 +6,8 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built in data type used with message instructions. Note that the members of this type resemble those
-/// observed from exported L5X, and not that of the predefined data type.
+/// A predefined or built-in data type used with message instructions. Note that the members of this type resemble those
+/// observed from exported L5X and not those of the predefined data type.
 /// </summary>
 public sealed class MESSAGE : StructureData
 {
@@ -47,7 +47,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public MessageType? MessageType
     {
-        get => GetValue<MessageType>();
+        get => GetValue(MessageType.Parse);
         set => SetValue(value);
     }
 
@@ -56,7 +56,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? RequestedLength
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -65,7 +65,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? ConnectedFlag
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -74,7 +74,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public STRING? ConnectionPath
     {
-        get => GetValue<STRING>();
+        get => GetValue() ?? new STRING();
         set => SetValue(value);
     }
 
@@ -83,7 +83,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? CommTypeCode
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -92,7 +92,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? ServiceCode
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -101,7 +101,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? ObjectType
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -110,7 +110,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? TargetObject
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -119,7 +119,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? AttributeNumber
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -128,7 +128,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public INT? LocalIndex
     {
-        get => GetValue<INT>();
+        get => GetValue(INT.Parse);
         set => SetValue(value);
     }
 
@@ -137,7 +137,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public STRING? DestinationTag
     {
-        get => GetValue<STRING>();
+        get => GetValue() ?? new STRING();
         set => SetValue(value);
     }
 
@@ -146,7 +146,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public BOOL CacheConnections
     {
-        get => GetValue<BOOL>() ?? false;
+        get => GetValue(BOOL.Parse) ?? false;
         set => SetValue(value);
     }
 
@@ -155,7 +155,7 @@ public sealed class MESSAGE : StructureData
     /// </summary>
     public BOOL LargePacketUsage
     {
-        get => GetValue<BOOL>() ?? false;
+        get => GetValue(BOOL.Parse) ?? false;
         set => SetValue(value);
     }
 

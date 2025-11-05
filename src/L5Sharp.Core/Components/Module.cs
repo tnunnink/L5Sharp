@@ -69,7 +69,7 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public override string Name
     {
-        get => GetValue<string>() ?? string.Empty;
+        get => GetValue() ?? string.Empty;
         set => SetValue(value);
     }
 
@@ -80,7 +80,7 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="string"/> value containing the catalog number.</value>
     public string? CatalogNumber
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -93,7 +93,7 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public Vendor? Vendor
     {
-        get => GetValue<Vendor>();
+        get => GetValue(Vendor.Parse);
         set => SetValue(value?.Id);
     }
 
@@ -105,7 +105,7 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public ProductType? ProductType
     {
-        get => GetValue<ProductType>();
+        get => GetValue(ProductType.Parse);
         set => SetValue(value?.Id);
     }
 
@@ -117,7 +117,7 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public ushort ProductCode
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -130,12 +130,7 @@ public class Module : LogixComponent<Module>
     /// </remarks>
     public Revision? Revision
     {
-        get
-        {
-            var major = Element.Attribute(L5XName.Major)?.Value.Parse<ushort>();
-            var minor = Element.Attribute(L5XName.Minor)?.Value.Parse<ushort>();
-            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : null;
-        }
+        get => GetRevision(L5XName.Major, L5XName.Minor);
         set
         {
             Element.SetAttributeValue(L5XName.Major, value?.Major);
@@ -150,7 +145,7 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="string"/> representing the parent module name. Default is an empty string.</value>
     public string? ParentModule
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -161,7 +156,7 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="int"/> representing the id of the parent port. Default is zero.</value>
     public int ParentModPortId
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -170,7 +165,7 @@ public class Module : LogixComponent<Module>
     /// </summary>
     public bool Inhibited
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -179,7 +174,7 @@ public class Module : LogixComponent<Module>
     /// </summary>
     public bool MajorFault
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -188,7 +183,7 @@ public class Module : LogixComponent<Module>
     /// </summary>
     public bool SafetyEnabled
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -198,23 +193,8 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="ElectronicKeying"/> enum value representing the mode.</value>
     public ElectronicKeying? Keying
     {
-        get => Element.Element(L5XName.EKey)?.Attribute(L5XName.State)?.Value.Parse<ElectronicKeying>();
-        set
-        {
-            if (value is null)
-            {
-                Element.Element(L5XName.EKey)?.Remove();
-                return;
-            }
-
-            if (Element.Element(L5XName.EKey) is null)
-            {
-                Element.Add(new XElement(L5XName.EKey, new XAttribute(L5XName.State, value)));
-                return;
-            }
-
-            Element.Element(L5XName.EKey)!.SetAttributeValue(L5XName.State, value);
-        }
+        get => ElectronicKeying.TryParse(Element.Element(L5XName.EKey)?.Attribute(L5XName.State)?.Value);
+        set => SetKeying(value);
     }
 
     /// <summary>
@@ -295,15 +275,7 @@ public class Module : LogixComponent<Module>
     /// is attached to the L5X content. In-memory created modules will inherently return an empty collection,
     /// as there is no L5X structure to introspect.
     /// </remarks>
-    public IEnumerable<Module> Modules
-    {
-        get
-        {
-            return Element.Parent?.Elements()
-                .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
-                .Select(e => new Module(e)) ?? [];
-        }
-    }
+    public Module[] Modules => GetModules().ToArray();
 
     /// <summary>
     /// Returns a collection of all non-null <see cref="Tag"/> objects for the current Module, including all
@@ -349,7 +321,7 @@ public class Module : LogixComponent<Module>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true) ?? [];
+        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
     }
 
     /// <inheritdoc />
@@ -363,7 +335,7 @@ public class Module : LogixComponent<Module>
 
         var dependencies = new List<LogixComponent>();
 
-        foreach (var module in Modules)
+        foreach (var module in GetModules())
         {
             dependencies.Add(module);
             dependencies.AddRange(module.Dependencies());
@@ -548,6 +520,27 @@ public class Module : LogixComponent<Module>
     #region Internals
 
     /// <summary>
+    /// Updates the electronic keying configuration of the module.
+    /// </summary>
+    /// <param name="value">The electronic keying state to be set, or null to remove the keying configuration.</param>
+    private void SetKeying(ElectronicKeying? value)
+    {
+        if (value is null)
+        {
+            Element.Element(L5XName.EKey)?.Remove();
+            return;
+        }
+
+        if (Element.Element(L5XName.EKey) is null)
+        {
+            Element.Add(new XElement(L5XName.EKey, new XAttribute(L5XName.State, value)));
+            return;
+        }
+
+        Element.Element(L5XName.EKey)!.SetAttributeValue(L5XName.State, value);
+    }
+
+    /// <summary>
     /// Gets the parent module to this module using the current Element to traverse the XML structure. 
     /// </summary>
     private Module? GetParent()
@@ -555,6 +548,18 @@ public class Module : LogixComponent<Module>
         return Element.Parent?.Elements(L5XName.Module)
             .FirstOrDefault(m => m.LogixName() == ParentModule)
             ?.Deserialize<Module>();
+    }
+
+    /// <summary>
+    /// Retrieves a collection of child modules that are defined within the current module's parent element,
+    /// where the parent module attribute matches the current module's name.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="Module"/> representing the child modules.</returns>
+    private IEnumerable<Module> GetModules()
+    {
+        return Element.Parent?.Elements()
+            .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
+            .Select(e => new Module(e)) ?? [];
     }
 
     /// <summary>
@@ -679,10 +684,12 @@ public class Module : LogixComponent<Module>
         var children = Element.Parent?.Elements()
             .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name);
 
-        var next = children?.Select(c => c.Descendants(L5XName.Port)
-                .FirstOrDefault(p => p.Attribute(L5XName.Upstream)?.Value.Parse<bool>() is true &&
-                                     byte.TryParse(p.Attribute(L5XName.Address)?.Value, out _))
-                ?.Attribute(L5XName.Address)?.Value.Parse<byte>())
+        var next = children?.Select(c =>
+                c.Descendants(L5XName.Port).FirstOrDefault(p =>
+                    bool.TryParse(p.Attribute(L5XName.Upstream)?.Value, out var up) && up &&
+                    byte.TryParse(p.Attribute(L5XName.Address)?.Value, out _)
+                )?.Attribute(L5XName.Address)?.Value)
+            .Select(s => s is not null ? byte.Parse(s) : default)
             .OrderByDescending(b => b)
             .FirstOrDefault();
 

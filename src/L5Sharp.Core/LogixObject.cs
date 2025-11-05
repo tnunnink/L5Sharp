@@ -22,7 +22,6 @@ public abstract class LogixObject : LogixElement
     {
     }
 
-    
 
     /// <summary>
     /// Adds a new object of the same type directly after this object in the L5X document.
@@ -253,14 +252,15 @@ public abstract class LogixObject : LogixElement
 }
 
 /// <summary>
-/// A generic abstract <see cref="LogixObject"/> that implements the <see cref="ILogixParsable{T}"/> interface.
-/// This generic type class allows us to specify the strong return types for methods <see cref="Parse"/>,
-/// <see cref="TryParse"/> and <see cref="Clone"/>. This means we don't have to implement these methods for every
-/// derivative type, and allows these types to be used with the <see cref="LogixParser"/> in a dynamic fashion.
+/// An abstract base class for all Logix objects, providing foundational functionality for
+/// serialization, cloning, and type enforcement. Implements <see cref="LogixElement"/>
+/// to establish common behavior for all elements in the Logix structure.
 /// </summary>
-/// <typeparam name="TObject">The type implementing <see cref="LogixObject"/></typeparam>
-public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject>
-    where TObject : LogixObject, ILogixParsable<TObject>
+/// <typeparam name="TObject">
+/// The specific type derived from <see cref="LogixObject"/>. This constraint ensures that
+/// derived classes maintain strong type consistency.
+/// </typeparam>
+public abstract class LogixObject<TObject> : LogixObject where TObject : LogixObject
 {
     /// <inheritdoc />
     protected LogixObject(string name) : base(name)
@@ -278,52 +278,4 @@ public abstract class LogixObject<TObject> : LogixObject, ILogixParsable<TObject
     /// <returns>A new object instance of the same type with the same property values.</returns>
     /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
     public new TObject Clone() => new XElement(Serialize()).Deserialize<TObject>();
-
-    /// <summary>
-    /// Parses the provided string as the specified generic <see cref="LogixObject{TObject}"/>.
-    /// </summary>
-    /// <param name="value">The XML string value to parse.</param>
-    /// <returns>A new <see cref="LogixObject"/> instance that represents the parsed value.</returns>
-    /// <remarks>
-    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
-    /// Also note that since this uses internal XElement and casts the type, this method can throw exceptions for invalid
-    /// XML or XML that is parsed to a different type than the one specified here.
-    /// </remarks>
-    public static TObject Parse(string value)
-    {
-        var element = XElement.Parse(value);
-        return element.Deserialize<TObject>();
-    }
-
-    /// <summary>
-    /// Attempts to parse the provided string and returned the strongly typed object. If unsuccessful, then this method
-    /// returns <c>null</c>.
-    /// </summary>
-    /// <param name="value">The XML string value to parse.</param>
-    /// <returns>A new <see cref="LogixObject"/> instance that represents the parsed value if successful, otherwise, <c>null</c>.</returns>
-    /// <remarks>
-    /// Internally this uses XElement.Parse along with our <see cref="LogixSerializer"/> to instantiate the concrete instance.
-    /// This means the user can use the <see cref="LogixParser"/> extensions to also parse XML into strongly typed logix objects.
-    /// Note that this method will just return null if any exception is caught. This could be for invalid XML formats
-    /// of invalid type casts.
-    /// </remarks>
-    public static TObject? TryParse(string? value)
-    {
-        if (value is null || value.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
-            return null;
-
-        var trimmed = value.Trim();
-        if (trimmed.Length == 0 || trimmed[0] != '<') return null;
-
-        try
-        {
-            var element = XElement.Parse(trimmed);
-            return element.Deserialize<TObject>();
-        }
-        catch (Exception)
-        {
-            return null;
-        }
-    }
 }

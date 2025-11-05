@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>LINT</b> Logix atomic data type, or a type analogous to a <see cref="long"/>.
 /// </summary>
-public sealed class LINT : AtomicData, IComparable, IConvertible, ILogixParsable<LINT>
+public sealed class LINT : AtomicData, IComparable, IConvertible
 {
     /// <summary>
     /// The underlying primitive value which is set upon construction and not changed.

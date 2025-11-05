@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>UINT</b> Logix atomic data type, or a type analogous to a <see cref="ushort"/>.
 /// </summary>
-public sealed class UINT : AtomicData, IComparable, IConvertible, ILogixParsable<UINT>
+public sealed class UINT : AtomicData, IComparable, IConvertible
 {
     /// <summary>
     /// The underlying primitive value which is set upon construction and not changed.

@@ -8,7 +8,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Provides a wrapper around the string port address value to indicate what type of address the value is.
 /// </summary>
-public class Address : ILogixParsable<Address>
+public class Address
 {
     private static readonly Regex HostNamePattern = new("^[A-Za-z][A-Za-z0-9.-]{1,63}$");
     private readonly string _value;

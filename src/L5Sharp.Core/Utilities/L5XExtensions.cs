@@ -54,17 +54,6 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Gets the L5X element local name for the current element, which represents the "L5XType". 
-    /// </summary>
-    /// <param name="element">The <see cref="XElement"/> to get the type of.</param>
-    /// <returns>A <see cref="string"/> representing the type name for the element.</returns>
-    /// <remarks>
-    /// The "L5XType" is simply the name of the element. Since elements map to classes, we can know which
-    /// type to deserialize or instantiate given the name of the element.
-    /// </remarks>
-    internal static string L5XType(this XElement element) => element.Name.LocalName;
-
-    /// <summary>
     /// Retrieves the full Logix path of the specified XML element within an L5X file hierarchy.
     /// This path will always start from the controller element and descend to the current element specified.
     /// This path resembles the XPath syntax required to get an element relative to the controller.
@@ -198,9 +187,6 @@ internal static class L5XExtensions
     /// <remarks>
     /// This is a helper extension since the logic is somewhat complex and used in more than one class.
     /// We look up the L5X tree for module name and parent name, as well as back down to find the potential slot of the module.
-    /// All this info, along with the corresponding tag suffix, makes up the tag name for a module tag,
-    /// which is not inherent in the L5X element itself, but one that is important to us as it allows us to
-    /// find or reference these tags by name just as you would find in Studio 5k.
     /// </remarks>
     internal static TagName ModuleTagName(this XElement element)
     {
@@ -415,7 +401,7 @@ internal static class L5XExtensions
             _ => L5XName.Operand
         };
 
-        return element.Attribute(name)?.Value.Parse<Argument>() ?? Argument.Empty;
+        return element.Attribute(name)?.Value ?? Argument.Empty;
     }
 
     /// <summary>
@@ -430,37 +416,6 @@ internal static class L5XExtensions
                || element.Attribute(L5XName.ID) is not null
                || element.IsModuleTagElement();
     }
-
-    /// <summary>
-    /// Attempts to retrieve the data format from the specified XML element.
-    /// </summary>
-    /// <param name="element">The XML element from which to extract the data format.</param>
-    /// <param name="format">The output parameter that, on success, will contain the retrieved data format.</param>
-    /// <returns>true if a valid data format is found; otherwise, false.</returns>
-    internal static bool TryGetDataFormat(this XElement element, out DataFormat format)
-    {
-        var value = element
-            .Elements(L5XName.Data)
-            .FirstOrDefault(x => x.Attribute(L5XName.Format)?.Value != DataFormat.L5K.Name)?
-            .Attribute(L5XName.Format)?.Value;
-
-        if (value is null)
-        {
-            format = null!;
-            return false;
-        }
-
-        format = value.Parse<DataFormat>();
-        return true;
-    }
-
-    /// <summary>
-    /// Returns the string value as a <see cref="XName"/> value object.
-    /// </summary>
-    /// <param name="value">The string value.</param>
-    /// <returns>A <see cref="XName"/> object containing the string value.</returns>
-    /// <remarks>This is to make converting from string to XName concise.</remarks>
-    internal static XName XName(this string value) => System.Xml.Linq.XName.Get(value);
 
     /// <summary>
     /// Combines the collection of string values into a single string separated by the provided character.

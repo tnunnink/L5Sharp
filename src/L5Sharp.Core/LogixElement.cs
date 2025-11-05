@@ -8,13 +8,12 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A base class for all types that can be serialized and deserialized from a L5X file. This abstract class enforces
-/// the <see cref="ILogixSerializable"/> interface and a constructor taking a <see cref="XElement"/> for initialization
-/// of and an underlying element object. Deriving classes will have access to the underlying element and
-/// methods for easily getting and setting data. Implementing classes need to also provide at least a constructor taking
-/// a single <see cref="XElement"/> and pass it to the base constructor to be deserializable by the library.
+/// A base class for all types that can be serialized and deserialized from a L5X file.
+/// Deriving classes will have access to the underlying element and  methods for easily getting and setting data.
+/// Implementing classes should provide a constructor taking a single <see cref="XElement"/> and pass it to the
+/// base constructor to be deserializable by the library.
 /// </summary>
-public abstract class LogixElement : ILogixSerializable
+public abstract class LogixElement
 {
     /// <summary>
     /// Creates a new <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
@@ -132,7 +131,6 @@ public abstract class LogixElement : ILogixSerializable
     /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
     /// </summary>
     /// <param name="name">The name of the attribute.</param>
-    /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>
     /// If found, the value of attribute parsed as the generic type parameter.
     /// If not found, returns <c>default</c>.
@@ -142,13 +140,34 @@ public abstract class LogixElement : ILogixSerializable
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming it's the name matches the underlying element property).
     /// </remarks>
-    protected T? GetValue<T>([CallerMemberName] string? name = null)
+    protected string? GetValue([CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
+        return Element.Attribute(name)?.Value;
+    }
+
+    /// <summary>
+    /// Retrieves the value of the specified attribute or element from the current <see cref="XElement"/> and parses it into the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type to which the value should be parsed.</typeparam>
+    /// <param name="parser">A function that converts a string to the desired type <typeparamref name="T"/>.</param>
+    /// <param name="name">The name of the attribute or element to retrieve. Defaults to the name of the calling member if not specified.</param>
+    /// <returns>The parsed value of the specified attribute or element if found, otherwise the default value for <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="parser"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if the <paramref name="name"/> is null or an empty string.</exception>
+    protected T? GetValue<T>(Func<string, T> parser, [CallerMemberName] string? name = null)
+    {
+        if (parser is null)
+            throw new ArgumentNullException(nameof(parser));
+
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
         var value = Element.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : default;
+
+        return value is not null ? parser(value) : default;
     }
 
     /// <summary>
@@ -168,38 +187,12 @@ public abstract class LogixElement : ILogixSerializable
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming it's the name matches the underlying element property).
     /// </remarks>
-    protected T? GetValue<T>(Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
+    protected string? GetValue(Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
-        var value = selector.Invoke(Element)?.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : default;
-    }
-
-    /// <summary>
-    /// Gets the value of a child element attribute parsed as the specified generic type parameter if it exists.
-    /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
-    /// </summary>
-    /// <param name="child">The name of the child element containing the attribute value to retrieve.</param>
-    /// <param name="name">The name of the attribute.</param>
-    /// <typeparam name="T">The return type of the value.</typeparam>
-    /// <returns>
-    /// If found, the value of attribute parsed as the generic type parameter.
-    /// If not found, returns <c>default</c>.
-    /// </returns>
-    /// <remarks>
-    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
-    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
-    /// the property name (assuming the name matches the underlying element property).
-    /// </remarks>
-    protected T? GetValue<T>(XName child, [CallerMemberName] string? name = null)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty", nameof(name));
-
-        var value = Element.Element(child)?.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : default;
+        return selector.Invoke(Element)?.Attribute(name)?.Value;
     }
 
     /// <summary>
@@ -214,13 +207,31 @@ public abstract class LogixElement : ILogixSerializable
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected T GetRequiredValue<T>([CallerMemberName] string? name = null)
+    protected string GetRequiredValue([CallerMemberName] string? name = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        return Element.Attribute(name)?.Value ?? throw Element.L5XError(name);
+    }
+
+    /// <summary>
+    /// Retrieves a required attribute value from the current element and parses it using the provided parser function.
+    /// </summary>
+    /// <typeparam name="T">The type of the value to be parsed and returned.</typeparam>
+    /// <param name="parser">The function used to parse the string value into the specified type <typeparamref name="T"/>.</param>
+    /// <param name="name">The name of the attribute to retrieve. Defaults to the calling member's name if not provided.</param>
+    /// <returns>The parsed value of the specified type <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown if the attribute name is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the required attribute is not found in the element.</exception>
+    protected T GetRequiredValue<T>(Func<string, T> parser, [CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         var value = Element.Attribute(name)?.Value;
-        return value is not null ? value.Parse<T>() : throw Element.L5XError(name);
+
+        return value is not null ? parser(value) : throw Element.L5XError(name);
     }
 
     /// <summary>
@@ -229,7 +240,6 @@ public abstract class LogixElement : ILogixSerializable
     /// </summary>
     /// <param name="name">The name of the attribute.</param>
     /// <param name="separator">The value separator character. Default is a space character.</param>
-    /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>
     /// If found, all values of the attribute split on the specified separator and parsed as the generic type parameter.
     /// If not found, returns an empty collection.
@@ -239,16 +249,14 @@ public abstract class LogixElement : ILogixSerializable
     /// character as concise as possible for derived classes. This method is added here since only types like <see cref="Block"/>
     /// are using this method overload.
     /// </remarks>
-    protected IEnumerable<T> GetValues<T>(char separator = ' ', [CallerMemberName] string? name = null)
+    protected IEnumerable<string> GetValues(char separator = ' ', [CallerMemberName] string? name = null)
     {
         if (name is null || name.IsEmpty())
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         var value = Element.Attribute(name)?.Value;
 
-        return value is not null
-            ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Parse<T>())
-            : [];
+        return value is not null ? value.Split(separator, StringSplitOptions.RemoveEmptyEntries) : [];
     }
 
     /// <summary>
@@ -256,7 +264,6 @@ public abstract class LogixElement : ILogixSerializable
     /// If the element does not exist, returns <c>default</c> value of the generic type parameter.
     /// </summary>
     /// <param name="name">The name of the child element.</param>
-    /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>
     /// If found, the value of a child element parsed as the generic type parameter.
     /// If not found, returns <c>default</c>.
@@ -266,13 +273,12 @@ public abstract class LogixElement : ILogixSerializable
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected T? GetProperty<T>([CallerMemberName] string? name = null)
+    protected string? GetProperty([CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
-        var value = Element.Element(name)?.Value;
-        return value is not null ? value.Parse<T>() : default;
+        return Element.Element(name)?.Value;
     }
 
     /// <summary>
@@ -280,7 +286,7 @@ public abstract class LogixElement : ILogixSerializable
     /// specific generic type parameter. If the element does not exist, returns <c>default</c>.
     /// </summary>
     /// <param name="name">The name of the child element.</param>
-    /// <typeparam name="T">The return type of the element.</typeparam>
+    /// <typeparam name="TElement">The return type of the element.</typeparam>
     /// <returns>
     /// If found, the value of a child element deserialized as the generic type parameter.
     /// If not found, returns <c>default</c>.
@@ -290,12 +296,12 @@ public abstract class LogixElement : ILogixSerializable
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected T? GetComplex<T>([CallerMemberName] string? name = null) where T : LogixElement
+    protected TElement? GetComplex<TElement>([CallerMemberName] string? name = null) where TElement : LogixElement
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
-        return Element.Element(name)?.Deserialize<T>();
+        return Element.Element(name)?.Deserialize<TElement>();
     }
 
     /// <summary>
@@ -368,6 +374,59 @@ public abstract class LogixElement : ILogixSerializable
         return Element.Ancestors(ancestor).FirstOrDefault()?.Deserialize<TElement>();
     }
 
+
+    /// <summary>
+    /// Retrieves a boolean value from the element attribute specified by the property name.
+    /// </summary>
+    /// <param name="name">The name of the attribute to retrieve the boolean value from. Defaults to the caller's name if not provided.</param>
+    /// <returns>
+    /// A nullable boolean value parsed from the attribute. Returns true for "1" or "true",
+    /// false for "0" or "false", or null if the attribute is not found.
+    /// </returns>
+    /// <exception cref="ArgumentException">Thrown if the provided name is null or empty.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if the attribute value cannot be parsed into a boolean type.
+    /// </exception>
+    protected bool GetBool([CallerMemberName] string? name = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        var value = Element.Attribute(name)?.Value.ToLower();
+
+        return value switch
+        {
+            "1" => true,
+            "0" => false,
+            "true" => true,
+            "false" => false,
+            _ => throw new ArgumentOutOfRangeException($"Value '{value}' could not be parsed to type '{typeof(bool)}'")
+        };
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    protected bool? TryGetBool([CallerMemberName] string? name = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        var value = Element.Attribute(name)?.Value.ToLower();
+
+        return value switch
+        {
+            "1" => true,
+            "0" => false,
+            "true" => true,
+            "false" => false,
+            _ => null
+        };
+    }
+
     /// <summary>
     /// Gets the date/time value of the specified attribute name from the current element if it exists.
     /// If the attribute does not exist, it returns the default value.
@@ -392,6 +451,28 @@ public abstract class LogixElement : ILogixSerializable
         return attribute is not null
             ? DateTime.ParseExact(attribute.Value, format, CultureInfo.CurrentCulture)
             : default;
+    }
+
+    /// <summary>
+    /// Retrieves a <see cref="Revision"/> from the attributes of the underlying <see cref="XElement"/> based on the provided
+    /// major and minor attribute names.
+    /// </summary>
+    /// <param name="majorName">The name of the attribute representing the major revision number.</param>
+    /// <param name="minorName">The name of the attribute representing the minor revision number.</param>
+    /// <returns>A <see cref="Revision"/> object containing the major and minor revision numbers parsed from the attributes.</returns>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="majorName"/> or <paramref name="minorName"/> is null or empty.</exception>
+    protected Revision GetRevision(string majorName, string minorName)
+    {
+        if (string.IsNullOrEmpty(majorName))
+            throw new ArgumentException("majorName can not be null or empty", nameof(majorName));
+
+        if (string.IsNullOrEmpty(minorName))
+            throw new ArgumentException("minorName can not be null or empty", nameof(minorName));
+
+        var majorValue = Element.Attribute(majorName)?.Value ?? "0";
+        var minorValue = Element.Attribute(minorName)?.Value ?? "0";
+
+        return new Revision(ushort.Parse(majorValue), ushort.Parse(minorValue));
     }
 
     /// <summary>
@@ -434,33 +515,6 @@ public abstract class LogixElement : ILogixSerializable
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         Element.SetAttributeValue(name, value);
-    }
-
-    /// <summary>
-    /// Sets the value of an attribute, adds an attribute, or removes an attribute for an element obtained using the
-    /// provided selector delegate.
-    /// </summary>
-    /// <param name="value">
-    /// The value to assign to the attribute. The attribute is removed if the value is null.
-    /// Otherwise, the value is converted to its string representation and assigned to the Value property of the attribute.
-    /// </param>
-    /// <param name="selector">A selection delegate that allows custom selection of an element relative to <see cref="Element"/>.
-    /// Use this to reach down the element hierarchy for nested values.</param>
-    /// <param name="name">The name of the attribute to set.</param>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <remarks>
-    /// This method helps make getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
-    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
-    /// the property name (assuming the name matches the underlying element property).
-    /// </remarks>
-    protected void SetValue<T>(T? value, Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty", nameof(name));
-
-        var element = selector.Invoke(Element);
-        if (element is null) throw Element.L5XError(name);
-        element.SetAttributeValue(name, value);
     }
 
     /// <summary>
@@ -539,7 +593,7 @@ public abstract class LogixElement : ILogixSerializable
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected void SetProperty<T>(T value, [CallerMemberName] string? name = null)
+    protected void SetProperty(string? value, [CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
@@ -552,15 +606,13 @@ public abstract class LogixElement : ILogixSerializable
             return;
         }
 
-        var property = value.ToString() ?? throw new ArgumentException("Property value can not be null", nameof(value));
-
         if (element is not null)
         {
-            element.ReplaceWith(new XElement(name, new XCData(property)));
+            element.ReplaceWith(new XElement(name, new XCData(value)));
             return;
         }
 
-        Element.Add(new XElement(name, new XCData(property)));
+        Element.Add(new XElement(name, new XCData(value)));
         EnsureOrder();
     }
 
@@ -571,13 +623,14 @@ public abstract class LogixElement : ILogixSerializable
     /// <param name="value">The complex type to assign to the child element.
     /// The child element is removed if the value is null.
     /// Otherwise, the value is serialized and added as a child element to the current type's element.</param>
-    /// <typeparam name="T">The value type.</typeparam>
+    /// <typeparam name="TElement">The value type.</typeparam>
     /// <remarks>
     /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected void SetComplex<T>(T? value, [CallerMemberName] string? name = null) where T : ILogixSerializable
+    protected void SetComplex<TElement>(TElement? value, [CallerMemberName] string? name = null)
+        where TElement : LogixElement
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));

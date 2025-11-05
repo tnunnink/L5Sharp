@@ -1,7 +1,7 @@
 ﻿using L5Sharp.Core;
 using RockwellAutomation.LogixDesigner;
 
-namespace L5Sharp.Logix;
+namespace L5Sharp.Extensions.Logix;
 
 public static class ACD
 {
@@ -19,9 +19,7 @@ public static class ACD
     /// violate Rockwell EULA. Also note that this conversion takes around 30 seconds to complete depending on the
     /// project size.
     /// </remarks>
-    public static async Task<L5X> LoadAsync(string filePath,
-        L5XOptions options = L5XOptions.None,
-        CancellationToken token = default)
+    public static async Task<L5X> LoadAsync(string filePath, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(filePath))
             throw new ArgumentException("File name can not be null or empty.", nameof(filePath));
@@ -37,7 +35,7 @@ public static class ACD
         await project.SaveAsAsync(path, cancellationToken: token);
 
         //Load the L5X instance.
-        var content = await L5X.LoadAsync(path, options, token);
+        var content = await L5X.LoadAsync(path, token);
 
         //Cleanup temp L5X
         File.Delete(path);

@@ -47,7 +47,7 @@ public class Pen : LogixObject
     /// <value>A <see cref="string"/> representing the component name. This property is required for valid elements.</value>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -57,7 +57,7 @@ public class Pen : LogixObject
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -66,7 +66,7 @@ public class Pen : LogixObject
     /// </summary>
     public string? Color
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -76,7 +76,7 @@ public class Pen : LogixObject
     /// <value><c>true</c> if the pen is visible; otherwise, false.</value>
     public bool? Visible
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -85,7 +85,7 @@ public class Pen : LogixObject
     /// </summary>
     public int? Width
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -94,7 +94,7 @@ public class Pen : LogixObject
     /// </summary>
     public PenType? Type
     {
-        get => GetValue<PenType>();
+        get => GetValue(PenType.Parse);
         set => SetValue(value);
     }
 
@@ -111,7 +111,7 @@ public class Pen : LogixObject
     /// </value>
     public int Style
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
     
@@ -120,7 +120,7 @@ public class Pen : LogixObject
     /// </summary>
     public int? Marker
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
     
@@ -129,7 +129,7 @@ public class Pen : LogixObject
     /// </summary>
     public double? Min
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     } 
     
@@ -138,7 +138,7 @@ public class Pen : LogixObject
     /// </summary>
     public double? Max
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     } 
     
@@ -147,7 +147,7 @@ public class Pen : LogixObject
     /// </summary>
     public string? EngUnits
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 }

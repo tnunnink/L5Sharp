@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>DINT</b> Logix atomic data type, or a type analogous to a <see cref="int"/>.
 /// </summary>
-public sealed class DINT : AtomicData, IComparable, IConvertible, ILogixParsable<DINT>
+public sealed class DINT : AtomicData, IComparable, IConvertible
 {
     /// <summary>
     /// The underlying primitive value which is set upon construction and not changed.
@@ -216,7 +216,7 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, ILogixParsable
     /// <inheritdoc />
     object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
     {
-        var convertible = (IConvertible)this;
+        IConvertible convertible = this;
 
         return Type.GetTypeCode(conversionType) switch
         {

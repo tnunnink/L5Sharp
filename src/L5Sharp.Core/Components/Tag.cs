@@ -256,7 +256,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="Core.ExternalAccess"/> option representing read/write access of the tag.</value>
     public ExternalAccess? ExternalAccess
     {
-        get => GetValue<ExternalAccess>();
+        get => GetValue(ExternalAccess.Parse);
         set => SetValue(value);
     }
 
@@ -267,7 +267,7 @@ public class Tag : LogixComponent<Tag>
     // ReSharper disable once InconsistentNaming we need the name to match.
     public OpcUAAccess? OpcUAAccess
     {
-        get => GetValue<OpcUAAccess>();
+        get => GetValue(OpcUAAccess.Parse);
         set => SetValue(value);
     }
 
@@ -278,7 +278,7 @@ public class Tag : LogixComponent<Tag>
     /// <remarks>Specify the class of the tag. This attribute applies only to safety controller projects.</remarks>
     public ComponentClass? Class
     {
-        get => GetValue<ComponentClass>();
+        get => GetValue(ComponentClass.Parse);
         set => SetValue(value);
     }
 
@@ -288,7 +288,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="Core.TagType"/> option representing the type of tag component.</value>
     public TagType? TagType
     {
-        get => GetValue<TagType>();
+        get => GetValue(TagType.Parse);
         set => SetValue(value);
     }
 
@@ -298,7 +298,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="TagUsage"/> option representing the tag scope.</value>
     public TagUsage? Usage
     {
-        get => GetValue<TagUsage>();
+        get => GetValue(TagUsage.Parse);
         set => SetValue(value);
     }
 
@@ -308,7 +308,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="Core.TagName"/> string representing the full tag name of the alias tag.</value>
     public TagName? AliasFor
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -319,7 +319,7 @@ public class Tag : LogixComponent<Tag>
     /// <remarks>Only value type tags can be set as a constant. Default is <c>false</c>.</remarks>
     public bool? Constant
     {
-        get => GetValue<bool?>();
+        get => GetBool();
         set => SetValue(value);
     }
 
@@ -825,7 +825,7 @@ public class Tag : LogixComponent<Tag>
         //If there is no indexed context or the corresponding data type is not available, default to inherited description.
         //Note that we need to always use the parent type. If we are here, we know we have a parent and could
         //potentially be some user-defined type.
-        if (Document is null || !Document.IsIndexed || !Document.TryGet<DataType>(Parent.DataType, out var type))
+        if (Document is null || !Document.TryGet<DataType>(Parent.DataType, out var type))
             return Parent.Description;
 
         //Here we have the corresponding type definition and can use the description to emulate pass through.

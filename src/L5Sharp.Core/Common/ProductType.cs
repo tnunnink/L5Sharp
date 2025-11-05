@@ -11,7 +11,7 @@ namespace L5Sharp.Core;
 /// Some known/common types that are available as static members of this class
 /// include <see cref="Discrete"/>, <see cref="Analog"/>, <see cref="Controller"/>, and <see cref="Communications"/>.
 /// </remarks>
-public class ProductType : ILogixParsable<ProductType>
+public class ProductType
 {
     /// <summary>
     /// Creates a new <see cref="ProductType"/> entity with the provided id and name.
@@ -38,22 +38,22 @@ public class ProductType : ILogixParsable<ProductType>
     /// Represents an Unknown <see cref="ProductType"/> with no id or name.
     /// </summary>
     public static ProductType Unknown => new(0);
-        
+
     /// <summary>
     /// Gets the General Purpose Discrete I/O ProductType instance (id=7).
     /// </summary>
     public static ProductType Discrete => new(7, "General Purpose Discrete I/O");
-        
+
     /// <summary>
     /// Gets the General Purpose Analog I/O ProductType instance (id=10).
     /// </summary>
     public static ProductType Analog => new(10, "General Purpose Analog I/O");
-        
+
     /// <summary>
     /// Gets the General Purpose Discrete ProductType instance (id=14).
     /// </summary>
     public static ProductType Controller => new(14, "Programmable Logic Controller");
-        
+
     /// <summary>
     /// Gets the General Purpose Discrete ProductType instance (id=12).
     /// </summary>
@@ -98,7 +98,7 @@ public class ProductType : ILogixParsable<ProductType>
         return obj switch
         {
             ProductType other => Id == other.Id,
-            ValueType other =>  Id.Equals(Convert.ChangeType(other, typeof(ushort))),
+            ValueType other => Id.Equals(Convert.ChangeType(other, typeof(ushort))),
             _ => false
         };
     }

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// An element of the <see cref="DataType"/> that makes up the structure of the user defined type.
+/// An element of the <see cref="DataType"/> that makes up the structure of the user-defined type.
 /// </summary>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
@@ -41,7 +41,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// <value>A <see cref="string"/> representing the component name. This property is required for valid elements.</value>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -51,7 +51,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -64,7 +64,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// </value>
     public string DataType
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -76,7 +76,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// </value>
     public Dimensions? Dimension
     {
-        get => GetValue<Dimensions>();
+        get => GetValue(Dimensions.Parse);
         set => SetValue(value);
     }
 
@@ -88,7 +88,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// </value>
     public Radix? Radix
     {
-        get => GetValue<Radix>();
+        get => GetValue(Radix.Parse);
         set => SetValue(value?.Value);
     }
 
@@ -101,7 +101,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// </value>
     public ExternalAccess? ExternalAccess
     {
-        get => GetValue<ExternalAccess>();
+        get => GetValue(ExternalAccess.Parse);
         set => SetValue(value);
     }
 
@@ -114,9 +114,9 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// This attribute is not required for valid elements and importing to work. Logix will internally
     /// generate backing members for boolean type members.
     /// </remarks>
-    public bool? Hidden
+    public bool Hidden
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -134,14 +134,14 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// </remarks>
     public string? Target
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
     /// <summary>
     /// The bit number of the hidden member that this boolean member maps to or is backed by.
     /// </summary>
-    /// <value>A zero-based integer representing the backing bit of the hidden member which corresponds to this member.
+    /// <value>A zero-based integer representing the backing a bit of the hidden member which corresponds to this member.
     /// <c>null</c> if the attribute does not exist for the underlying element</value>
     /// <remarks>
     /// This attribute is not required for valid elements and importing to work. Logix will internally
@@ -149,7 +149,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// </remarks>
     public int? BitNumber
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -189,7 +189,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
             return new Member(Name, value);
         }
 
-        //If not, we can try to get the data type definition from the l5X if attached,
+        //If not, we can try to get the data type definition from the l5X if attached
         //and use that to recursively build up the complex type.
         var definition = GetDefinition();
         var structure = !isArray ? definition.ToData() : new ArrayData<LogixData>(definition.ToData(), Dimension!);

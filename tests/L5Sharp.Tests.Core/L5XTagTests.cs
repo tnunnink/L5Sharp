@@ -29,7 +29,7 @@ public class L5XTagTests
     [Test]
     public void Usages_ForAKnownReferencedTag_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
         var tag = content.Tags.Get(Known.Tag);
 
         var references = tag.Usages();

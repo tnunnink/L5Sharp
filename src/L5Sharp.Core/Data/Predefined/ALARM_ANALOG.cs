@@ -104,7 +104,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL EnableIn
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -113,7 +113,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL In
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -122,7 +122,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL InFault
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -131,7 +131,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HHEnabled
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -140,7 +140,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HEnabled
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -149,7 +149,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LEnabled
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -158,7 +158,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LLEnabled
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -167,7 +167,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL AckRequired
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -176,7 +176,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ProgAckAll
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -185,7 +185,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL OperAckAll
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -194,7 +194,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HHProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -203,7 +203,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HHOperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -212,7 +212,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -221,7 +221,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HOperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -230,7 +230,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -239,7 +239,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LOperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -248,7 +248,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LLProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -257,7 +257,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LLOperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -266,7 +266,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCPosProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -275,7 +275,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCPosOperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -284,7 +284,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCNegProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -293,7 +293,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCNegOperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -302,7 +302,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ProgSuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -311,7 +311,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL OperSuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -320,7 +320,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ProgUnsuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -329,7 +329,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL OperUnsuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -338,7 +338,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HHOperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -347,7 +347,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HOperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -356,7 +356,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LOperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -365,7 +365,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LLOperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -374,7 +374,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCPosOperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -383,7 +383,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCNegOperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -392,7 +392,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ProgUnshelveAll
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -401,7 +401,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HHOperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -410,7 +410,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HOperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -419,7 +419,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LOperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -428,7 +428,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LLOperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -437,7 +437,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCPosOperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -446,7 +446,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ROCNegOperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -455,7 +455,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ProgDisable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -464,7 +464,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL OperDisable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -473,7 +473,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL ProgEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -482,7 +482,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL OperEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -491,7 +491,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL AlarmCountReset
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -500,7 +500,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HHMinDurationEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -509,7 +509,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL HMinDurationEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -518,7 +518,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LMinDurationEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -527,7 +527,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public BOOL LLMinDurationEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -536,7 +536,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL HHLimit
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -545,7 +545,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT HHSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -554,7 +554,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL HLimit
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -563,7 +563,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT HSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -572,7 +572,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL LLimit
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -581,7 +581,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT LSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -590,7 +590,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL LLLimit
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -599,7 +599,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT LLSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -608,7 +608,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT MinDurationPRE
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -617,7 +617,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT ShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -626,7 +626,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT MaxShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -635,7 +635,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL Deadband
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -644,7 +644,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL ROCPosLimit
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -653,7 +653,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT ROCPosSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -662,7 +662,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL ROCNegLimit
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -671,7 +671,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public DINT ROCNegSeverity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -680,7 +680,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// </summary>
     public REAL ROCPeriod
     {
-        get => GetRequiredValue<REAL>();
+        get => GetRequiredValue(REAL.Parse);
         set => SetRequiredValue(value);
     }
 

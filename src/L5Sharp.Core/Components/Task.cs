@@ -72,7 +72,7 @@ public sealed class Task : LogixComponent<Task>
     /// <value>A <see cref="TaskType"/> enum representing the type of the task.</value>
     public TaskType Type
     {
-        get => GetRequiredValue<TaskType>();
+        get => GetRequiredValue(TaskType.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -85,7 +85,7 @@ public sealed class Task : LogixComponent<Task>
     /// </remarks>
     public ComponentClass? Class
     {
-        get => GetValue<ComponentClass>();
+        get => GetValue(ComponentClass.Parse);
         set => SetValue(value);
     }
 
@@ -95,7 +95,7 @@ public sealed class Task : LogixComponent<Task>
     /// <value>>A <see cref="TaskPriority"/> value type representing the <see cref="int"/> priority of the task.</value>
     public TaskPriority Priority
     {
-        get => GetValue<TaskPriority>();
+        get => GetValue(TaskPriority.Parse);
         set => SetValue(value);
     }
 
@@ -105,7 +105,7 @@ public sealed class Task : LogixComponent<Task>
     /// <value>>A <see cref="ScanRate"/> value type representing the <see cref="float"/> rate of the task.</value>
     public ScanRate Rate
     {
-        get => GetValue<ScanRate>();
+        get => GetValue(ScanRate.Parse);
         set => SetValue(value);
     }
 
@@ -115,7 +115,7 @@ public sealed class Task : LogixComponent<Task>
     /// <value>A <see cref="Watchdog"/> value type representing the <see cref="float"/> watchdog of the task.</value>
     public Watchdog Watchdog
     {
-        get => GetValue<Watchdog>();
+        get => GetValue(Watchdog.Parse);
         set => SetValue(value);
     }
 
@@ -125,7 +125,7 @@ public sealed class Task : LogixComponent<Task>
     /// <value><c>true</c> if the task is inhibited; otherwise <c>false</c>.</value>
     public bool InhibitTask
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -135,46 +135,17 @@ public sealed class Task : LogixComponent<Task>
     /// <value><c>true</c> if the task has disabled update outputs; otherwise <c>false</c>.</value>
     public bool DisableUpdateOutputs
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
-    /// The trigger for the event task. Only used for event tasks.
+    /// 
     /// </summary>
-    /// <value>
-    /// A <see cref="TaskEventTrigger"/> value indicating what triggers the task. Returns <c>null</c> for non-event tasks.
-    /// </value>
-    public TaskEventTrigger? EventTrigger
+    public EventInfo? EventInfo
     {
-        get => GetValue<TaskEventTrigger>(L5XName.EventInfo.XName());
-        set => SetValue(value, L5XName.EventInfo.XName());
-    }
-
-    /// <summary>
-    /// The tag name that the event task consumes. Only used for event tasks.
-    /// </summary>
-    /// <value>
-    /// A <see cref="TagName"/> value indicating what tag to consume. Returns <c>null</c> for non-event tasks.
-    /// </value>
-    /// <remarks>Only used for event tasks with a Consumed Tag trigger or a Module Input Data State Change trigger.</remarks>
-    public TagName? EventTag
-    {
-        get => GetValue<TagName>(L5XName.EventInfo.XName());
-        set => SetValue(value, L5XName.EventInfo.XName());
-    }
-
-    /// <summary>
-    /// The value indicating whether timeouts are enabled for the event task. Only used for event tasks.
-    /// </summary>
-    /// <value>
-    /// If the task is an event type task, <c>true</c> indicating that timeouts are enabled, <c>false</c> to indicate
-    /// they are disabled. Returns <c>null</c> for non-event tasks.
-    /// </value>
-    public bool? EnableTimeout
-    {
-        get => GetValue<bool>(L5XName.EventInfo.XName());
-        set => SetValue(value, L5XName.EventInfo.XName());
+        get => GetComplex<EventInfo>();
+        set => SetComplex(value);
     }
 
     /// <summary>
@@ -218,11 +189,12 @@ public sealed class Task : LogixComponent<Task>
     public override void Delete()
     {
         if (Element.Parent is null) return;
+        if (Document is null) return;
 
-        foreach (var program in Programs)
-        {
-            program.Delete();
-        }
+        Document.Programs
+            .Where(p => Scheduled.Contains(p.Name))
+            .ToList()
+            .ForEach(p => p.Delete());
 
         Element.Remove();
     }

@@ -5,7 +5,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a <b>LREAL</b> Logix atomic data type, or a type analogous to a <see cref="double"/>.
 /// </summary>
-public sealed class LREAL : AtomicData, IComparable, IConvertible, ILogixParsable<LREAL>
+public sealed class LREAL : AtomicData, IComparable, IConvertible
 {
     /// <summary>
     /// The underlying primitive value which is set upon construction and not changed.

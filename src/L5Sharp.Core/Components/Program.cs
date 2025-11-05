@@ -63,7 +63,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="ProgramType"/> enum representing the type of the program.</value>
     public ProgramType Type
     {
-        get => GetValue<ProgramType>() ?? ProgramType.Normal;
+        get => GetValue(ProgramType.Parse) ?? ProgramType.Normal;
         set => SetValue(value);
     }
 
@@ -77,7 +77,7 @@ public class Program : LogixComponent<Program>
     /// </remarks>
     public ComponentClass? Class
     {
-        get => GetValue<ComponentClass>();
+        get => GetValue(ComponentClass.Parse);
         set => SetValue(value);
     }
 
@@ -87,7 +87,7 @@ public class Program : LogixComponent<Program>
     /// <value>>A <see cref="bool"/>; <c>true</c>if the program has test edits; otherwise <c>false</c>.</value>
     public bool TestEdits
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -97,7 +97,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="bool"/>; <c>true</c> if the program is disabled; otherwise <c>false</c>.</value>
     public bool Disabled
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -107,7 +107,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="string"/> representing the name of the main routine for the program.</value>
     public string? MainRoutineName
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -117,7 +117,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="string"/> representing the name of the fault routine for the program.</value>
     public string? FaultRoutineName
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -128,7 +128,7 @@ public class Program : LogixComponent<Program>
     /// <value>A <see cref="bool"/>; <c>true</c> if the program is a folder; otherwise, <c>false</c>.</value>
     public bool UseAsFolder
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -207,8 +207,21 @@ public class Program : LogixComponent<Program>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
+        var usages = new List<Reference>();
+
+        //Programs are "used" by tasks that they are scheduled in.
+        if (Task is not null)
+        {
+            usages.Add(Task.Reference);
+        }
+
         //Programs can be references in system instruction code references
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
+        var codeReferences = Document?.Code()
+            .SelectMany(c => c.Usages())
+            .Where(r => r.Logic.HasReference(Reference)) ?? [];
+        usages.AddRange(codeReferences);
+
+        return usages;
     }
 
     /// <inheritdoc />

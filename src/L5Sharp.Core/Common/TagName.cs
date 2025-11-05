@@ -15,7 +15,7 @@ namespace L5Sharp.Core;
 /// This value type class makes working with a string tag name easier by providing
 /// methods for analyzing and breaking the tag name into constituent parts (members).
 /// </remarks>
-public sealed class TagName : IComparable<TagName>, IEquatable<TagName>, ILogixParsable<TagName>
+public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
 {
     private readonly string _tagName;
 

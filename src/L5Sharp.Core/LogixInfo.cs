@@ -33,37 +33,37 @@ public class LogixInfo : LogixElement
     /// <summary>
     /// Gets the revision of the schema used within the L5X export file.
     /// </summary>
-    public Revision SchemaRevision => GetValue<Revision>() ?? new Revision();
+    public Revision SchemaRevision => GetValue(Revision.Parse) ?? new Revision();
 
     /// <summary>
     /// Gets the version of the software used to create the L5X export file.
     /// </summary>
-    public Revision SoftwareRevision => GetValue<Revision>() ?? new Revision();
+    public Revision SoftwareRevision => GetValue(Revision.Parse) ?? new Revision();
 
     /// <summary>
     /// Gets the name of the Logix component that is the target of the current L5X context.
     /// </summary>
-    public string? TargetName => GetValue<string>();
+    public string? TargetName => GetValue();
 
     /// <summary>
     /// Gets the type of Logix component that is the target of the current L5X context.
     /// </summary>
-    public string? TargetType => GetValue<string>();
+    public string? TargetType => GetValue();
 
     /// <summary>
     /// The total number of targets defined in the L5X file.
     /// </summary>
-    public int? TargetCount => GetValue<int>();
+    public int? TargetCount => GetValue(int.Parse);
 
     /// <summary>
     /// Gets the value indicating whether the current L5X is contextual.
     /// </summary>
-    public bool ContainsContext => GetValue<bool?>() ?? false;
+    public bool ContainsContext => GetValue(bool.Parse);
 
     /// <summary>
     /// Gets the owner that exported the current L5X file.
     /// </summary>
-    public string? Owner => GetValue<string>();
+    public string? Owner => GetValue();
 
     /// <summary>
     /// Gets the date time that the L5X file was exported.
@@ -74,7 +74,7 @@ public class LogixInfo : LogixElement
     /// Gets the set of configured export options for the L5X file.
     /// </summary>
     /// <value>A collection of <see cref="string"/> indicating the option values.</value>
-    public IEnumerable<string> ExportOptions => GetValues<string>();
+    public IEnumerable<string> ExportOptions => GetValues();
 
     /// <inheritdoc />
     public override string ToString()

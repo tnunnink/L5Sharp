@@ -43,7 +43,7 @@ public class Connection : LogixObject
     /// </summary>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -52,7 +52,7 @@ public class Connection : LogixObject
     /// </summary>
     public int RPI
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue(int.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -61,7 +61,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort InputCxnPoint
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -70,7 +70,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort InputSize
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -79,7 +79,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort OutputCxnPoint
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -88,7 +88,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort OutputSize
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -97,7 +97,7 @@ public class Connection : LogixObject
     /// </summary>
     public ConnectionType? Type
     {
-        get => GetValue<ConnectionType>();
+        get => GetValue(ConnectionType.Parse);
         set => SetValue(value);
     }
 
@@ -106,7 +106,7 @@ public class Connection : LogixObject
     /// </summary>
     public ConnectionPriority? Priority
     {
-        get => GetValue<ConnectionPriority>();
+        get => GetValue(ConnectionPriority.Parse);
         set => SetValue(value);
     }
 
@@ -115,16 +115,16 @@ public class Connection : LogixObject
     /// </summary>
     public TransmissionType? InputConnectionType
     {
-        get => GetValue<TransmissionType>();
+        get => GetValue(TransmissionType.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="Connection"/> output is a redundant owner.
     /// </summary>
-    public bool OutputRedundantOwner
+    public bool? OutputRedundantOwner
     {
-        get => GetValue<bool>();
+        get => TryGetBool();
         set => SetValue(value);
     }
 
@@ -133,16 +133,16 @@ public class Connection : LogixObject
     /// </summary>
     public ProductionTrigger? InputProductionTrigger
     {
-        get => GetValue<ProductionTrigger>();
+        get => GetValue(ProductionTrigger.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the value indicating whether the EtherNet/IP connection is unicast.
     /// </summary>
-    public bool Unicast
+    public bool? Unicast
     {
-        get => GetValue<bool>();
+        get => GetBool();
         set => SetValue(value);
     }
 
@@ -151,7 +151,7 @@ public class Connection : LogixObject
     /// </summary>
     public int? EventId
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -165,7 +165,7 @@ public class Connection : LogixObject
     /// </remarks>
     public string InputTagSuffix
     {
-        get => GetValue<string>() ?? "I";
+        get => GetValue() ?? "I";
         set => SetValue(value);
     }
 
@@ -179,7 +179,7 @@ public class Connection : LogixObject
     /// </remarks>
     public string OutputTagSuffix
     {
-        get => GetValue<string>() ?? "O";
+        get => GetValue() ?? "O";
         set => SetValue(value);
     }
 

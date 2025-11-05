@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <see cref="ArgumentOutOfRangeException"/>.
 /// This parameter will control the rate at which the <see cref="Task"/> component is scanned.
 /// </remarks>
-public readonly struct ScanRate : IEquatable<ScanRate>, ILogixParsable<ScanRate>
+public readonly struct ScanRate : IEquatable<ScanRate>
 {
     private readonly float _value;
 

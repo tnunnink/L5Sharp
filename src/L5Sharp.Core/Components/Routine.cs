@@ -78,7 +78,7 @@ public class Routine : LogixComponent<Routine>
     /// </remarks>
     public RoutineType Type
     {
-        get => GetRequiredValue<RoutineType>();
+        get => GetRequiredValue(RoutineType.Parse);
         set => UpdateContent(value);
     }
 
@@ -91,8 +91,8 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public OnlineEditType? OnlineEditType
     {
-        get => GetValue<OnlineEditType>(e => e.Element(Type.ContentName));
-        set => SetValue(value, e => e.Element(Type.ContentName));
+        get => OnlineEditType.TryParse(Element.Element(Type.ContentName)?.Attribute(nameof(OnlineEditType))?.Value);
+        set => Element.Element(Type.ContentName)?.SetAttributeValue(nameof(OnlineEditType), value);
     }
 
     /// <summary>
@@ -104,8 +104,8 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public SheetSize? SheetSize
     {
-        get => GetValue<SheetSize>(e => e.Element(Type.ContentName));
-        set => SetValue(value, e => e.Element(Type.ContentName));
+        get => SheetSize.TryParse(Element.Element(Type.ContentName)?.Attribute(nameof(SheetSize))?.Value);
+        set => Element.Element(Type.ContentName)?.SetAttributeValue(nameof(SheetSize), value);
     }
 
     /// <summary>
@@ -117,8 +117,8 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public SheetOrientation? SheetOrientation
     {
-        get => GetValue<SheetOrientation>(e => e.Element(Type.ContentName));
-        set => SetValue(value, e => e.Element(Type.ContentName));
+        get => SheetOrientation.TryParse(Element.Element(Type.ContentName)?.Attribute(nameof(SheetOrientation))?.Value);
+        set => Element.Element(Type.ContentName)?.SetAttributeValue(nameof(SheetOrientation), value);
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public class Routine : LogixComponent<Routine>
     public override IEnumerable<Reference> Usages()
     {
         if (Document is null) return [];
-        
+
         var references = new List<Reference>();
 
         //1. Programs reference routines in their RoutineName properties.

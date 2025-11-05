@@ -71,7 +71,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>A <see cref="string"/> representing the component name. This property is required for valid elements.</value>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -81,7 +81,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -95,7 +95,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public string? DataType
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -109,7 +109,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public Dimensions? Dimension
     {
-        get => GetValue<Dimensions>();
+        get => GetValue(Dimensions.Parse);
         set => SetValue(value);
     }
 
@@ -123,7 +123,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public Radix? Radix
     {
-        get => GetValue<Radix>();
+        get => GetValue(Radix.Parse);
         set => SetValue(value?.Value);
     }
 
@@ -136,7 +136,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public ExternalAccess? ExternalAccess
     {
-        get => GetValue<ExternalAccess>();
+        get => GetValue(ExternalAccess.Parse);
         set => SetValue(value);
     }
 
@@ -149,7 +149,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public TagType? TagType
     {
-        get => GetValue<TagType>();
+        get => GetValue(TagType.Parse);
         set => SetValue(value);
     }
 
@@ -163,7 +163,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public TagUsage Usage
     {
-        get => GetRequiredValue<TagUsage>();
+        get => GetRequiredValue(TagUsage.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -174,7 +174,7 @@ public class Parameter : LogixObject<Parameter>
     /// <c>true</c> if the <c>Parameter</c> is required; otherwise, false. Default is <c>false</c>.</value>
     public bool? Required
     {
-        get => GetValue<bool>();
+        get => GetBool();
         set => SetValue(value);
     }
 
@@ -184,7 +184,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value><c>true</c> if the <c>Parameter</c> is visible; otherwise, false. Default is <c>false</c>.</value>
     public bool? Visible
     {
-        get => GetValue<bool>();
+        get => GetBool();
         set => SetValue(value);
     }
 
@@ -194,7 +194,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>A <see cref="TagName"/> string representing the full tag name of the alias tag.</value>
     public TagName? AliasFor
     {
-        get => GetValue<TagName>();
+        get => GetValue(TagName.Parse);
         set => SetValue(value);
     }
 
@@ -215,7 +215,7 @@ public class Parameter : LogixObject<Parameter>
     /// <remarks>Only value type tags can be set as a constant. Default is <c>false</c>.</remarks>
     public bool? Constant
     {
-        get => GetValue<bool>();
+        get => GetBool();
         set => SetValue(value);
     }
 

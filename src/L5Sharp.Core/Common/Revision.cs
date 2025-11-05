@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a revision number that is expressed by as {Major}.{Minor}.
 /// </summary>
-public sealed class Revision : IComparable, ILogixParsable<Revision>
+public sealed class Revision : IComparable
 {
     private const string FormatMessage = "Revision format must be {Major}.{Minor}.{Build} where Build is optional.";
     private static readonly Regex RevisionPattern = new(@"^(\d+)(?:\.(\d+))(?:\.(\d+))?$");

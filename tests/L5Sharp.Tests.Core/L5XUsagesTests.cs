@@ -11,7 +11,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_FromKnownTagInstanceWithUsagesShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
         var tag = content.Get<Tag>(Known.Tag);
 
         var usages = tag.Usages().ToList();
@@ -22,7 +22,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_KnownDataType_ShouldReturnElementsWithExpectedDataType()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
         var dataType = content.DataTypes.Get(Known.DataType);
 
         var usages = dataType.Usages().ToList();
@@ -33,7 +33,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_KnownInstruction_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
         var instruction = content.Get<AddOnInstruction>(Known.AddOnInstruction);
 
         var usages = instruction.Usages().ToList();
@@ -44,7 +44,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_AllDataTypes_DoesThatWork()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
 
         var usages = content.DataTypes.Select(d => new { d.Name, References = d.Usages().ToList() }).ToList();
 
@@ -54,7 +54,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_AllTags_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
 
         var usages = content.Query<Tag>().Select(t => new { t.TagName, Refernces = t.Usages().ToList() })
             .ToList();
@@ -65,7 +65,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_AllRoutines_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
 
         var usages = content.Query<Routine>()
             .Where(r => r.Program is not null)
@@ -82,7 +82,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_ExampleDataType_ShouldHaveNoUnused()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
 
         var unused = content.Query<DataType>()
             .Select(d => new { d.Name, References = d.Usages().ToList() })
@@ -95,7 +95,7 @@ public class L5XUsagesTests
     [Test]
     public void Usages_ExampleAgainstAllTags_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = L5X.Load(Known.Test);
 
         var tags = content.Query<Tag>().ToList();
 

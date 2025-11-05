@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 
 namespace L5Sharp.Core;
 
@@ -17,10 +17,11 @@ namespace L5Sharp.Core;
 public abstract class LogixEnum
 {
     /// <summary>
-    /// a global enum cache for all enumeration types defined in the assembly. 
+    /// Global enum cache for all enumeration types defined.
+    /// This collection is initialized as calls to the Options/Names methods are called to avoid multiple reflection calls.
+    /// Reflection is using the provided type, so it should be source generator safe.
     /// </summary>
-    private static readonly Lazy<Dictionary<Type, LogixEnum[]>> Enums = new(AllOptions,
-        LazyThreadSafetyMode.ExecutionAndPublication);
+    private static readonly ConcurrentDictionary<Type, LogixEnum[]> Enums = [];
 
     /// <summary>
     /// Creates an enumeration with the specified name.
@@ -39,15 +40,6 @@ public abstract class LogixEnum
     public string Name { get; }
 
     /// <summary>
-    /// Retrieves all names for all <see cref="LogixEnum"/> defined in the library.
-    /// </summary>
-    /// <returns>A collection <see cref="string"/> names for all enums.</returns>
-    public static IEnumerable<string> Names()
-    {
-        return Enums.Value.SelectMany(v => v.Value).Select(x => x.Name);
-    }
-
-    /// <summary>
     /// Retrieves all names for a <see cref="LogixEnum"/> of the specified enum type.
     /// </summary>
     /// <param name="type">The type for which to retrieve the enumeration names.</param>
@@ -60,9 +52,7 @@ public abstract class LogixEnum
         if (type is null)
             throw new ArgumentNullException(nameof(type));
 
-        return Enums.Value.TryGetValue(type, out var options)
-            ? options.Select(e => e.Name)
-            : throw new ArgumentException($"Type '{type.Name}' is not a {nameof(LogixEnum)}.");
+        return Enums.GetOrAdd(type, t => GetOptions(t).ToArray()).Select(e => e.Name);
     }
 
     /// <summary>
@@ -73,19 +63,7 @@ public abstract class LogixEnum
     /// then an empty collection.</returns>
     public static IEnumerable<string> Names<TEnum>() where TEnum : LogixEnum
     {
-        return Enums.Value[typeof(TEnum)].Select(e => e.Name);
-    }
-    
-    /// <summary>
-    /// Retrieves all <see cref="LogixEnum"/> options for each enum type in this library. 
-    /// </summary>
-    /// <returns>
-    /// A collection of key value pairs where the key is the <see cref="Type"/> of the enum and the value
-    /// is the collection of <see cref="LogixEnum"/> for the type.
-    /// </returns>
-    public static IEnumerable<KeyValuePair<Type, IEnumerable<LogixEnum>>> Options()
-    {
-        return Enums.Value.Select(x => new KeyValuePair<Type, IEnumerable<LogixEnum>>(x.Key, x.Value));
+        return Enums.GetOrAdd(typeof(TEnum), t => GetOptions(t).ToArray()).Select(e => e.Name);
     }
 
     /// <summary>
@@ -101,9 +79,7 @@ public abstract class LogixEnum
         if (type is null)
             throw new ArgumentNullException(nameof(type));
 
-        return Enums.Value.TryGetValue(type, out var options)
-            ? options
-            : throw new ArgumentException($"Type '{type.Name}' is not a {nameof(LogixEnum)}.");
+        return Enums.GetOrAdd(type, t => GetOptions(t).ToArray());
     }
 
     /// <summary>
@@ -114,35 +90,13 @@ public abstract class LogixEnum
     /// then an empty collection.</returns>
     public static IEnumerable<TEnum> Options<TEnum>() where TEnum : LogixEnum
     {
-        return Enums.Value[typeof(TEnum)].Cast<TEnum>();
+        return Enums.GetOrAdd(typeof(TEnum), t => GetOptions(t).ToArray()).Cast<TEnum>();
     }
 
-    /// <summary>
-    /// Finds all types deriving from this base class and retrieves each statically defined <see cref="LogixEnum"/> instance
-    /// for the types, and returns a dictionary. This is the primary initialization factory for the lazy global enum cache.
-    /// </summary>
-    /// <returns>A <see cref="Dictionary{TKey,TValue}"/> containing types and collections enumeration objects
-    /// associated with the type.</returns>
-    private static Dictionary<Type, LogixEnum[]> AllOptions()
-    {
-        var baseType = typeof(LogixEnum);
-
-        return baseType.Assembly.GetTypes()
-            .Where(t => baseType.IsAssignableFrom(t))
-            .ToDictionary(t => t, t => GetOptions(t).ToArray());
-    }
-
-    /// <summary>
-    /// Retrieves all statically declared <see cref="LogixEnum"/> fields for the provided type using reflection.
-    /// </summary>
-    /// <param name="type">The <see cref="LogixEnum"/> type for which to find the enum options.</param>
-    /// <returns>A collection of <see cref="LogixEnum"/> options defined as static fields on the type.</returns>
-    /// <exception cref="InvalidOperationException">The provided <paramref name="type"/> is not assignable from
-    /// a <see cref="LogixEnum"/> type.</exception>
     private static IEnumerable<LogixEnum> GetOptions(Type type)
     {
         if (!typeof(LogixEnum).IsAssignableFrom(type))
-            throw new InvalidOperationException($"Can not retrieve LogixEnum options for type '{type}'");
+            throw new ArgumentException($"Type '{type}' does not derive from {typeof(LogixEnum)}");
 
         return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
             .Where(f => type.IsAssignableFrom(f.FieldType))
@@ -164,8 +118,7 @@ public abstract class LogixEnum
 /// <typeparam name="TValue">The type of the inner value.</typeparam>
 public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     IEquatable<LogixEnum<TEnum, TValue>>,
-    IComparable<LogixEnum<TEnum, TValue>>,
-    ILogixParsable<TEnum>
+    IComparable<LogixEnum<TEnum, TValue>>
     where TEnum : LogixEnum<TEnum, TValue>
     where TValue : IEquatable<TValue>, IComparable<TValue>
 {
@@ -196,7 +149,7 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// Returns all enumeration options for the specified enumeration type.
     /// </summary>
     /// <returns>An <see cref="IEnumerable{T}"/> containing all enumeration values of the specified type.</returns>
-    public static IEnumerable<TEnum> All() => Options<TEnum>().ToList().AsReadOnly();
+    public static TEnum[] All() => Options<TEnum>().ToArray();
 
     /// <summary>
     /// Parses the specified string representation of an enumeration name or value into its corresponding

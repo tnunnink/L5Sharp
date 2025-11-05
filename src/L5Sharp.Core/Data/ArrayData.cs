@@ -79,14 +79,14 @@ public abstract class ArrayData : LogixData, IEnumerable
     /// The dimensions of the array, which define the length and rank of the array's elements.
     /// </summary>
     /// <value>A <see cref="Core.Dimensions"/> value representing the array dimensions.</value>
-    public Dimensions Dimensions => GetRequiredValue<Dimensions>();
+    public Dimensions Dimensions => GetRequiredValue(Dimensions.Parse);
 
     /// <summary>
     /// Gets the radix format of the array type elements.
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> format if the array is an atomic type array;
     /// otherwise, the radix <see cref="L5Sharp.Core.Radix.Null"/> format.</value>
-    public Radix Radix => GetValue<Radix>() ?? Radix.Null;
+    public Radix Radix => GetValue(Radix.Parse) ?? Radix.Null;
 
     /// <summary>
     /// Gets the <see cref="LogixData"/> instance at the specified index.

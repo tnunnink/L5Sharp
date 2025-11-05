@@ -40,7 +40,7 @@ public abstract class LogixCode : LogixEntity
     /// </remarks>
     public virtual int Number
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 

@@ -8,7 +8,7 @@ namespace L5Sharp.Core;
 /// </summary>
 [L5XType(nameof(BOOL))]
 [L5XType("BIT")] //Logix DataTypeMembers specify BIT instead of BOOL for some reason.
-public sealed class BOOL : AtomicData, IComparable, IConvertible, ILogixParsable<BOOL>
+public sealed class BOOL : AtomicData, IComparable, IConvertible
 {
     /// <summary>
     /// The underlying primitive value which is set upon construction and not changed.

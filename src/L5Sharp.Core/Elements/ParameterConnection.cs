@@ -37,7 +37,7 @@ public class ParameterConnection : LogixObject
     /// is program_name.parameter_name</value>
     public string EndPoint1
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -48,7 +48,7 @@ public class ParameterConnection : LogixObject
     /// is program_name.parameter_name</value>
     public string EndPoint2
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 }

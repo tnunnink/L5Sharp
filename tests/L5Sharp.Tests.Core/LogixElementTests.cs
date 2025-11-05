@@ -179,116 +179,6 @@ public class LogixElementTests
     }
 
     [Test]
-    public void GetSelectorValue_HasValue_ShouldBeExpectedValue()
-    {
-        var xml = new XElement("Test", new XElement("Child", new XAttribute("SelectorValue", "Value")));
-        var element = new TestElement(xml);
-
-        var value = element.SelectorValue;
-
-        value.Should().Be("Value");
-    }
-
-    [Test]
-    public void GetSelectorValue_NoValue_ShouldBeNull()
-    {
-        var xml = new XElement("Test", new XElement("Child"));
-        var element = new TestElement(xml);
-
-        var value = element.SelectorValue;
-
-        value.Should().BeNull();
-    }
-
-    [Test]
-    public Task SetSelectorValue_NoValueToValue_ShouldBeVerified()
-    {
-        var xml = new XElement("Test", new XElement("Child"));
-        var element = new TestElement(xml);
-
-        element.SelectorValue = "Value";
-
-        return Verify(element.Serialize().ToString());
-    }
-
-    [Test]
-    public Task SetSelectorValue_HasValueDifferentValue_ShouldBeVerified()
-    {
-        var xml = new XElement("Test", new XElement("Child", new XAttribute("SelectorValue", "Value")));
-        var element = new TestElement(xml);
-
-        element.SelectorValue = "NewValue";
-
-        return Verify(element.Serialize().ToString());
-    }
-
-    [Test]
-    public Task SetSelectorValue_HasValueToNull_ShouldBeVerified()
-    {
-        var xml = new XElement("Test", new XElement("Child", new XAttribute("SelectorValue", "Value")));
-        var element = new TestElement(xml);
-
-        element.SelectorValue = null;
-
-        return Verify(element.Serialize().ToString());
-    }
-
-    [Test]
-    public void GetChildValue_HasValue_ShouldBeExpectedValue()
-    {
-        var xml = new XElement("Test", new XElement("Child", new XAttribute("ChildValue", 123)));
-        var element = new TestElement(xml);
-
-        var value = element.ChildValue;
-
-        value.Should().Be(123);
-    }
-
-    [Test]
-    public void GetChildValue_NoValue_ShouldBeNull()
-    {
-        var xml = new XElement("Test", new XElement("Child"));
-        var element = new TestElement(xml);
-
-        var value = element.ChildValue;
-
-        value.Should().BeNull();
-    }
-
-    [Test]
-    public Task SetChildValue_NoValueToValue_ShouldBeVerified()
-    {
-        var xml = new XElement("Test", new XElement("Child"));
-        var element = new TestElement(xml);
-
-        element.ChildValue = 123;
-
-        return Verify(element.Serialize().ToString());
-    }
-
-    [Test]
-    public Task SetChildValue_HasValueDifferentValue_ShouldBeVerified()
-    {
-        var xml = new XElement("Test", new XElement("Child", new XAttribute("ChildValue", 123)));
-        var element = new TestElement(xml);
-
-        element.ChildValue = 321;
-
-        return Verify(element.Serialize().ToString());
-    }
-
-    [Test]
-    public Task SetChildValue_HasValueToNull_ShouldBeVerified()
-    {
-        var xml = new XElement("Test", new XElement("Child", new XAttribute("ChildValue", 123)));
-        var element = new TestElement(xml);
-
-        element.ChildValue = null;
-
-        return Verify(element.Serialize().ToString());
-    }
-
-    [Test]
     public void GetRequiredValue_HasValue_ShouldBeExpectedValue()
     {
         var xml = new XElement("Test", new XAttribute("RequiredValue", "Value"));
@@ -1052,37 +942,25 @@ public class TestElement : LogixObject<TestElement>
 
     public string? OptionalValue
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
-    }
-
-    public string? SelectorValue
-    {
-        get => GetValue<string>(e => e.Element("Child"));
-        set => SetValue(value, e => e.Element("Child"));
     }
 
     public string RequiredValue
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
-    }
-
-    public int? ChildValue
-    {
-        get => GetValue<int?>(XName.Get("Child"));
-        set => SetValue(value, XName.Get("Child"));
     }
 
     public string? Property
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -1117,7 +995,7 @@ public class ChildElement : LogixObject
 
     public string? SomeValue
     {
-        get => GetValue<string>();
-        set => SetValue(value);
+        get => GetValue();
+        init => SetValue(value);
     }
 }

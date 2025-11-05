@@ -36,7 +36,7 @@ public class WatchTag : LogixElement
     /// <value>A <see cref="string"/> representing the tag specifier.</value>
     public TagName Specifier
     {
-        get => GetRequiredValue<TagName>();
+        get => GetRequiredValue(TagName.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -51,7 +51,7 @@ public class WatchTag : LogixElement
     /// </remarks>
     public string ScopeName
     {
-        get => GetRequiredValue<string>(nameof(ScopeLevel));
+        get => GetRequiredValue(nameof(ScopeLevel));
         set => SetRequiredValue(value, nameof(ScopeLevel));
     }
 }
