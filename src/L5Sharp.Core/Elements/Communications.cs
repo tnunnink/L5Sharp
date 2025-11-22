@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
 /// </summary>
+[LogixElement(L5XName.Communications)]
 public class Communications : LogixElement
 {
     /// <inheritdoc />
@@ -15,7 +16,7 @@ public class Communications : LogixElement
         L5XName.ConfigTag,
         L5XName.Connections
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="Communications"/> with default values.
     /// </summary>
@@ -38,11 +39,7 @@ public class Communications : LogixElement
     /// A Tag component containing the configuration data for the module.
     /// </summary>
     /// <value>A <see cref="Tag"/> component representing the complex module defined data structure.</value>
-    public Tag? ConfigTag
-    {
-        get => GetComplex<Tag>();
-        set => SetComplex(value?.Convert<Tag>(L5XName.ConfigTag));
-    }
+    public Tag? ConfigTag => GetComplex<Tag>();
 
     /// <summary>
     /// A collection of <see cref="Connection"/> defining the input and output connection specific to the module.

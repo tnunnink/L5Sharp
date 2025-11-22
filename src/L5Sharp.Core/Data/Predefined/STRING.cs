@@ -6,6 +6,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents a predefined String Logix data type.
 /// </summary>
+[LogixData(nameof(STRING))]
 public sealed class STRING : StringData
 {
     /// <inheritdoc />

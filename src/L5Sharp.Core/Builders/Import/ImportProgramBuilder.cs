@@ -15,18 +15,18 @@ internal class ImportProgramBuilder(Import import) :
         _import.Operations.Add(new ConfigureOperation(x =>
         {
             if (x is not Program program) return;
-            if (program.Document is null) return;
+            if (!program.TryGetDocument(out var doc)) return;
 
             if (taskConfig is not null)
             {
                 var newTask = new Task();
                 taskConfig.Invoke(newTask);
-                program.Document.Add(newTask);
+                doc.Add(newTask);
             }
 
             //We can't rely on the index API since if this content was indexed upon loading,
             //then the previously added task will not be found.
-            var task = program.Document.Tasks.FirstOrDefault(t => t.Name == taskName);
+            var task = doc.Tasks.FirstOrDefault(t => t.Name == taskName);
             if (task is null)
                 throw new InvalidOperationException(
                     $"No task with name '{taskName}' exists in the current project.");
@@ -42,8 +42,8 @@ internal class ImportProgramBuilder(Import import) :
         _import.Operations.Add(new ConfigureOperation(x =>
         {
             if (x is not Program program) return;
-            if (program.Document is null) return;
-            if (!program.Document.TryGet<Program>(programName, out var parent))
+            if (!program.TryGetDocument(out var doc)) return;
+            if (!doc.TryGet<Program>(programName, out var parent))
                 throw new InvalidOperationException(
                     $"No program with name '{programName}' exists in the current project.");
             parent.AddChild(program.Name);

@@ -13,6 +13,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.Program)]
 public class Program : LogixComponent<Program>
 {
     /// <inheritdoc />
@@ -180,8 +181,9 @@ public class Program : LogixComponent<Program>
     /// it reaches back up the document tree and back down to find the child programs. If this component is not
     /// attached to an L5X or as no <see cref="Children"/> configured, then this will return an empty collection.
     /// </remarks>
-    public IEnumerable<Program> Programs =>
-        Document?.Programs.Where(p => Children.Any(c => c == p.Name)) ?? [];
+    public IEnumerable<Program> Programs => TryGetDocument(out var doc)
+        ? doc.Programs.Where(p => Children.Any(c => c == p.Name))
+        : [];
 
     /// <summary>
     /// Gets the parent <see cref="Core.Program"/> in which this program is contained. If this program has no container,
@@ -191,7 +193,9 @@ public class Program : LogixComponent<Program>
     /// This is a navigation helper to allow easily retrieving the parent program container for a given program component.
     /// This requires a scoped/attached L5X as it traverses the L5X document tree to find the target component. 
     /// </remarks>
-    public Program? Parent => Document?.Programs.FirstOrDefault(p => p.Children.Contains(Name));
+    public Program? Parent => TryGetDocument(out var doc)
+        ? doc.Programs.FirstOrDefault(p => p.Children.Contains(Name))
+        : null;
 
     /// <summary>
     /// Finds the <see cref="Core.Task"/> in which this <see cref="Program"/> is scheduled.
@@ -202,11 +206,14 @@ public class Program : LogixComponent<Program>
     /// This is a helper for retrieving the parent <c>Task</c> for this program.
     /// This requires a scoped/attached L5X as it traverses the L5X document tree to find the target component.
     /// </remarks>
-    public Task? Task => Document?.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
+    public Task? Task => GetScheduledTask();
+
 
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
+        if (!TryGetDocument(out var doc)) return [];
+
         var usages = new List<Reference>();
 
         //Programs are "used" by tasks that they are scheduled in.
@@ -216,19 +223,17 @@ public class Program : LogixComponent<Program>
         }
 
         //Programs can be references in system instruction code references
-        var codeReferences = Document?.Code()
+        var codeReferences = doc.Code()
             .SelectMany(c => c.Usages())
-            .Where(r => r.Logic.HasReference(Reference)) ?? [];
+            .Where(r => r.Logic.HasReference(Reference));
         usages.AddRange(codeReferences);
 
         return usages;
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        if (Document is null) return [];
-
         return Tags.SelectMany(t => t.Dependencies())
             .Concat(Routines.SelectMany(r => r.Dependencies()))
             .Distinct(c => c.Reference);
@@ -278,12 +283,24 @@ public class Program : LogixComponent<Program>
         Task?.Cancel(Name);
         if (taskName is null || taskName.IsEmpty()) return;
 
-        if (Document is null)
+        if (TryGetDocument(out var doc))
             throw new InvalidOperationException("The current program instance is not attached to a L5X document");
 
-        if (Document.TryGet<Task>(taskName, out var task))
+        if (doc.TryGet<Task>(taskName, out var task))
             throw new InvalidOperationException($"Could not retrieve task: {taskName}");
 
         task.Schedule(Name);
+    }
+
+    /// <summary>
+    /// Retrieves the scheduled task associated with the program.
+    /// </summary>
+    /// <returns>
+    /// The first scheduled <see cref="Task"/> that matches the program name, or null if no matching task is found.
+    /// </returns>
+    private Task? GetScheduledTask()
+    {
+        if (!TryGetDocument(out var doc)) return null;
+        return doc.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
     }
 }

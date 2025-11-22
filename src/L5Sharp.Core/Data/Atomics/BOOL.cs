@@ -1,24 +1,24 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a <i>BOOL</i> Logix atomic data type, or a type analogous to a <see cref="bool"/>. This object is meant
+/// Represents a <i>BOOL</i> Logix atomic data type or a type analogous to a <see cref="bool"/>. This object is meant
 /// to wrap the DataValue or DataValueMember data for the L5X tag data structure.
 /// </summary>
-[L5XType(nameof(BOOL))]
-[L5XType("BIT")] //Logix DataTypeMembers specify BIT instead of BOOL for some reason.
-public sealed class BOOL : AtomicData, IComparable, IConvertible
+[LogixData(nameof(BOOL), true)]
+public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<bool>
 {
-    /// <summary>
-    /// The underlying primitive value which is set upon construction and not changed.
-    /// </summary>
-    private readonly bool _value;
+    /// <inheritdoc />
+    public BOOL(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// Creates a new default <see cref="BOOL"/> type.
     /// </summary>
-    public BOOL()
+    public BOOL() : base(nameof(BOOL))
     {
     }
 
@@ -26,9 +26,9 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     /// Creates a new <see cref="BOOL"/> with the provided value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    public BOOL(bool value)
+    public BOOL(bool value) : this()
     {
-        _value = value;
+        Element.SetAttributeValue(L5XName.Value, value ? "1" : "0");
     }
 
     /// <summary>
@@ -36,31 +36,13 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     /// </summary>
     /// <param name="value">The <see cref="int"/> value to initialize the type with. All non-zero value
     /// will be evaluated as <c>true</c>.</param>
-    public BOOL(int value)
+    public BOOL(int value) : this()
     {
-        _value = value == 1;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="BOOL"/> value with the provided radix format.
-    /// </summary>
-    /// <param name="radix">The <see cref="Core.Radix"/> number format of the value.</param>
-    public BOOL(Radix radix) : base(radix)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="BOOL"/> with the provided value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <param name="radix">The optional radix format of the value.</param>
-    public BOOL(bool value, Radix radix) : base(radix)
-    {
-        _value = value;
+        Element.SetAttributeValue(L5XName.Value, value != 0 ? "1" : "0");
     }
 
     /// <inheritdoc />
-    public override string Name => nameof(BOOL);
+    public bool Value => GetAtomicValue<bool>();
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -68,9 +50,9 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
         return obj switch
         {
             null => 1,
-            BOOL typed => _value.CompareTo(typed._value),
-            AtomicData atomic => _value.CompareTo((bool)Convert.ChangeType(atomic, typeof(bool))),
-            ValueType value => _value.CompareTo((bool)Convert.ChangeType(value, typeof(bool))),
+            BOOL typed => Value.CompareTo(typed.Value),
+            AtomicData atomic => Value.CompareTo((bool)Convert.ChangeType(atomic, typeof(bool))),
+            ValueType value => Value.CompareTo((bool)Convert.ChangeType(value, typeof(bool))),
             _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
         };
     }
@@ -80,72 +62,69 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     {
         return obj switch
         {
-            BOOL value => value._value == _value,
-            AtomicData value => _value.Equals((bool)Convert.ChangeType(value, typeof(bool))),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(bool))),
+            BOOL value => value.Value == Value,
+            AtomicData value => Value.Equals((bool)Convert.ChangeType(value, typeof(bool))),
+            ValueType value => Value.Equals(Convert.ChangeType(value, typeof(bool))),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
-    /// Parses the provided string into a <see cref="BOOL"/> value.
+    /// Return the atomic value formatted using the current <see cref="Radix"/> format.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="BOOL"/> representing the parsed value.</returns>
-    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public new static BOOL Parse(string value)
-    {
-        if (bool.TryParse(value, out var result))
-            return new BOOL(result);
+    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
+    public override string ToString() => Radix.Format(Value);
 
-        switch (value)
-        {
-            case "1":
-                return new BOOL(true);
-            case "0":
-                return new BOOL();
-            default:
-                var radix = Radix.Infer(value);
-                var atomic = radix.ParseValue(value);
-                var converted = (bool)Convert.ChangeType(atomic, typeof(bool));
-                return new BOOL(converted, radix);
-        }
+    /// <summary>
+    /// Returns the atomic value formatted in the specified <see cref="Core.Radix"/> format.
+    /// </summary>
+    /// <param name="radix">The radix format.</param>
+    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
+    public string ToString(Radix radix) => radix.Format(Value);
+
+    /// <summary>
+    /// Parses the specified string representation of a <see cref="BOOL"/> value into its corresponding <see cref="BOOL"/> object.
+    /// </summary>
+    /// <param name="value">The string representation of the <see cref="BOOL"/> value to parse.</param>
+    /// <returns>A <see cref="BOOL"/> object that represents the parsed value.</returns>
+    public static BOOL Parse(string value)
+    {
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<bool>(value);
+
+        return new BOOL(typed);
     }
 
     /// <summary>
-    /// Tries to parse a string into a <see cref="BOOL"/> value.
+    /// Attempts to parse a string representation of a <see cref="BOOL"/> value and creates an instance of the <see cref="BOOL"/> class if successful.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>The parsed <see cref="BOOL"/> value if successful; Otherwise, <c>null</c>.</returns>
-    public new static BOOL? TryParse(string? value)
+    /// <param name="value">The string value to be parsed.</param>
+    /// <param name="atomic">When this method returns, contains the <see cref="BOOL"/> instance equivalent to the string value, if the parse operation succeeded; otherwise, null.</param>
+    /// <returns>True if the value was successfully parsed; otherwise, false.</returns>
+    public static bool TryParse(string? value, out BOOL atomic)
     {
+        atomic = null!;
+
         if (value is null || value.IsEmpty())
-            return null;
+            return false;
 
-        if (bool.TryParse(value, out var primitive))
-            return new BOOL(primitive);
+        if (Radix.TryInfer(value, out var radix))
+        {
+            var typed = radix.Parse<bool>(value);
+            atomic = new BOOL(typed);
+            return true;
+        }
 
-        if (!Radix.TryInfer(value, out var radix))
-            return null;
-
-        var parsed = radix.ParseValue(value);
-        var converted = (bool)Convert.ChangeType(parsed, typeof(bool));
-        return new BOOL(converted, radix);
+        return false;
     }
 
     /// <inheritdoc />
-    public override byte[] GetBytes()
+    public override byte[] ToBytes()
     {
-        return BitConverter.GetBytes(_value);
-    }
-
-    /// <inheritdoc />
-    public override ValueType ToValue()
-    {
-        return _value;
+        return BitConverter.GetBytes(Value);
     }
 
     // Contains the implicit .NET conversions for the type.
@@ -164,7 +143,7 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
-    public static implicit operator bool(BOOL atomic) => atomic._value;
+    public static implicit operator bool(BOOL atomic) => atomic.Value;
 
     /// <summary>
     /// Implicitly converts the provided <see cref="bool"/> to a <see cref="BOOL"/> value.
@@ -178,7 +157,7 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="bool"/> type value.</returns>
-    public static implicit operator int(BOOL atomic) => atomic._value ? 1 : 0;
+    public static implicit operator int(BOOL atomic) => atomic.Value ? 1 : 0;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="BOOL"/> value.
@@ -197,7 +176,7 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     #endregion
 
     // Contains the IConvertible implementation for the type. I am explicitly implementing this interface for each
-    // atomic type to avoid polluting the API, and to have the implementation as performant as possible.
+    // atomic type to avoid polluting the API and to have the implementation as performant as possible.
     // To perform conversion, use the recommended .NET Convert.ChangeType() method and specify the target type.
 
     #region Convertible
@@ -206,10 +185,10 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider? provider) => _value ? (byte)1 : default;
+    byte IConvertible.ToByte(IFormatProvider? provider) => Value ? (byte)1 : default;
 
     /// <inheritdoc />
     char IConvertible.ToChar(IFormatProvider? provider) =>
@@ -224,22 +203,22 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider? provider) => _value ? (double)1 : default;
+    double IConvertible.ToDouble(IFormatProvider? provider) => Value ? (double)1 : 0;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider? provider) => _value ? (short)1 : default;
+    short IConvertible.ToInt16(IFormatProvider? provider) => Value ? (short)1 : default;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider? provider) => _value ? 1 : default;
+    int IConvertible.ToInt32(IFormatProvider? provider) => Value ? 1 : 0;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider? provider) => _value ? (long)1 : default;
+    long IConvertible.ToInt64(IFormatProvider? provider) => Value ? (long)1 : 0;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider? provider) => _value ? (sbyte)1 : default;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => Value ? (sbyte)1 : default;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider? provider) => _value ? (float)1 : default;
+    float IConvertible.ToSingle(IFormatProvider? provider) => Value ? (float)1 : 0;
 
     /// <inheritdoc />
     string IConvertible.ToString(IFormatProvider? provider) => ToString();
@@ -275,13 +254,13 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider? provider) => _value ? (ushort)1 : default;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => Value ? (ushort)1 : default;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider? provider) => _value ? (uint)1 : default;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => Value ? (uint)1 : 0;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider? provider) => _value ? (ulong)1 : default;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => Value ? (ulong)1 : 0;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.
@@ -292,27 +271,27 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible
     private object ToAtomic(Type conversionType)
     {
         if (conversionType == typeof(BOOL))
-            return new BOOL(_value);
+            return new BOOL(Value);
         if (conversionType == typeof(SINT))
-            return new SINT(_value ? (sbyte)1 : default);
+            return new SINT(Value ? (sbyte)1 : default);
         if (conversionType == typeof(INT))
-            return new INT(_value ? (short)1 : default);
+            return new INT(Value ? (short)1 : default);
         if (conversionType == typeof(DINT))
-            return new DINT(_value ? 1 : default);
-        if (conversionType == typeof(LINT))
-            return new LINT(_value ? (long)1 : default);
+            return new DINT(Value ? 1 : 0);
+        if (conversionType == typeof(BOOL))
+            return new LINT(Value ? (long)1 : 0);
         if (conversionType == typeof(REAL))
-            return new REAL(_value ? (float)1 : default);
+            return new REAL(Value ? (float)1 : 0);
         if (conversionType == typeof(LREAL))
-            return new LREAL(_value ? (double)1 : default);
+            return new LREAL(Value ? (double)1 : 0);
         if (conversionType == typeof(USINT))
-            return new USINT(_value ? (byte)1 : default);
+            return new USINT(Value ? (byte)1 : default);
         if (conversionType == typeof(UINT))
-            return new UINT(_value ? (ushort)1 : default);
+            return new UINT(Value ? (ushort)1 : default);
         if (conversionType == typeof(UDINT))
-            return new UDINT(_value ? (uint)1 : default);
+            return new UDINT(Value ? (uint)1 : 0);
         if (conversionType == typeof(ULINT))
-            return new ULINT(_value ? (ulong)1 : default);
+            return new ULINT(Value ? (ulong)1 : 0);
 
         throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
     }

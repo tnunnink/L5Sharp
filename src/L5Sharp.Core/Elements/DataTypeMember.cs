@@ -10,7 +10,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.Member)]
+[LogixElement(L5XName.Member)]
 public class DataTypeMember : LogixObject<DataTypeMember>
 {
     /// <summary>
@@ -180,19 +180,19 @@ public class DataTypeMember : LogixObject<DataTypeMember>
         var isArray = Dimension is not null && Dimension.Length > 0;
 
         //Create the data type using the static factory method.
-        var data = LogixData.Create(DataType);
+        var data = LogixType.Create(DataType);
 
-        //If it's a known type (i.e., not ComplexData), we can just return that.
-        if (data is not ComplexData)
+        //If it's a known type (i.e., not StructureData), we can just return that.
+        if (data is not StructureData)
         {
-            var value = !isArray ? data : new ArrayData<LogixData>(data, Dimension!);
+            var value = !isArray ? data : new ArrayData(data, Dimension!);
             return new Member(Name, value);
         }
 
         //If not, we can try to get the data type definition from the l5X if attached
         //and use that to recursively build up the complex type.
         var definition = GetDefinition();
-        var structure = !isArray ? definition.ToData() : new ArrayData<LogixData>(definition.ToData(), Dimension!);
+        var structure = !isArray ? definition.ToData() : new ArrayData(definition.ToData(), Dimension!);
         return new Member(Name, structure);
     }
 
@@ -204,12 +204,12 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     private DataType GetDefinition()
     {
         //Just going to return a fake DataType here since it is atomic or not able to be retrieved.
-        if (AtomicData.IsAtomic(DataType) || Document is null)
+        if (LogixType.IsAtomic(DataType) || !TryGetDocument(out var doc))
             return new DataType(DataType);
 
-        if (Document.TryGet<DataType>(DataType, out var definition))
+        if (doc.TryGet<DataType>(DataType, out var definition))
             return definition;
-        
+
         return new DataType(DataType);
     }
 

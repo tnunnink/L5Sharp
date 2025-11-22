@@ -14,6 +14,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.Routine)]
 public class Routine : LogixComponent<Routine>
 {
     /// <inheritdoc />
@@ -172,7 +173,7 @@ public class Routine : LogixComponent<Routine>
     /// <remarks>
     /// This method offers a dynamic interface for accessing content of any routine type.
     /// </remarks>
-    public LogixContainer<TCode> Content<TCode>() where TCode : LogixCode
+    public LogixContainer<TCode> Content<TCode>() where TCode : LogixCode<TCode>
     {
         EnsureContentAdded();
 
@@ -186,23 +187,23 @@ public class Routine : LogixComponent<Routine>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        if (Document is null) return [];
+        if (!TryGetDocument(out var doc)) return [];
 
         var references = new List<Reference>();
 
         //1. Programs reference routines in their RoutineName properties.
-        var programs = Document.Programs.Where(p => p.MainRoutineName == Name || p.FaultRoutineName == Name);
+        var programs = doc.Programs.Where(p => p.MainRoutineName == Name || p.FaultRoutineName == Name);
         references.AddRange(programs.Select(p => p.Reference));
 
         //2. Code references routines in routine type instruction (e.g., JSR, FOR)
-        var code = Document.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true);
+        var code = doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true);
         references.AddRange(code);
 
         return references;
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
         if (Type == RoutineType.RLL) return Rungs.SelectMany(r => r.Dependencies());
         if (Type == RoutineType.ST) return Lines.SelectMany(r => r.Dependencies());

@@ -342,6 +342,7 @@ internal static class L5XExtensions
             or L5XName.OutAliasTag;
     }
 
+
     /// <summary>
     /// Determines if the current element represents an element, we would deserialize as a <see cref="Tag"/> component.
     /// </summary>
@@ -353,18 +354,6 @@ internal static class L5XExtensions
             is L5XName.DataValueMember
             or L5XName.ArrayMember
             or L5XName.StructureMember;
-    }
-
-    /// <summary>
-    /// Determines whether the specified XElement represents a container element.
-    /// </summary>
-    /// <param name="element">The XElement to analyze.</param>
-    /// <returns>True if the element is a container element; otherwise, false.</returns>
-    internal static bool IsContainerElement(this XElement element)
-    {
-        return element.Name.LocalName
-            is L5XName.Program
-            or L5XName.AddOnInstructionDefinition;
     }
 
     /// <summary>
@@ -572,27 +561,6 @@ internal static class L5XExtensions
         return true;
     }
 
-    //Extensions for .NET Standard 2.0 to allow me not to have to rewrite the code in certain places. 
-#if NETSTANDARD2_0
-    /// <summary>
-    /// Tries to add a key-value pair to the dictionary.
-    /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
-    /// <param name="dictionary">The dictionary.</param>
-    /// <param name="key">The key of the pair to add.</param>
-    /// <param name="value">The value of the pair to add.</param>
-    /// <returns>
-    /// <c>true</c> if the pair was added successfully; otherwise, <c>false</c>.
-    /// </returns>
-    /// <remarks>This is added to support this method for net standard 2.0.</remarks>
-    internal static bool TryAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
-    {
-        if (dictionary.ContainsKey(key)) return false;
-        dictionary.Add(key, value);
-        return true;
-    }
-
     /// <summary>
     /// Determines whether the specified string contains a specific character.
     /// </summary>
@@ -631,6 +599,31 @@ internal static class L5XExtensions
     }
 
     /// <summary>
+    /// Inserts a specified separator character in the string at every defined interval.
+    /// </summary>
+    /// <param name="value">The original string to be processed.</param>
+    /// /// <param name="separator">The character to insert as a separator.</param>
+    /// <param name="count">The number of characters between each separator.</param>
+    /// <returns>A new string with the separator inserted at the specified intervals.</returns>
+    public static string SeparateWith(this string value, string separator, int count)
+    {
+        if (count == 0 || value.Length < count)
+            return value;
+
+        var builder = new StringBuilder();
+
+        for (var i = value.Length - 1; i >= 0; i--)
+        {
+            builder.Append(value[i]);
+
+            if ((value.Length - i) % count == 0 && i > 0)
+                builder.Append(separator);
+        }
+
+        return new string(builder.ToString().Reverse().ToArray());
+    }
+
+    /// <summary>
     /// Splits a string into substrings based on a specified separator and removal options.
     /// </summary>
     /// <param name="value">The string to split.</param>
@@ -642,6 +635,4 @@ internal static class L5XExtensions
     {
         return value.Split([separator], options);
     }
-
-#endif
 }

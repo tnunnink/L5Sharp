@@ -29,63 +29,35 @@ public class SintTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var type = new SINT();
-
-        type.Should().NotBeNull();
-        type.Should().Be(0);
-        type.Name.Should().Be(nameof(SINT).ToUpper());
-        type.Members.Should().BeEmpty();
-        type.Radix.Should().Be(Radix.Decimal);
+        var atomic = new DINT();
+        
+        atomic.Name.Should().Be(nameof(DINT).ToUpper());
+        atomic.Members.Should().BeEmpty();
+        atomic.Value.Should().Be(0);
+        atomic.Radix.Should().Be(Radix.Decimal);
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var type = new SINT(_random);
+        var atomic = new DINT(_random);
 
-        type.Should().Be(_random);
+        atomic.Should().Be(_random);
     }
 
     [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
+    public void New_StringValue_ShouldHaveExpectedValue()
     {
-        var type = new SINT(Radix.Binary);
+        var atomic = new DINT("16#007b");
 
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0000_0000");
+        atomic.Value.Should().Be(123);
+        atomic.Radix.Should().Be(Radix.Hex);
     }
 
     [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
+    public void New_NullString_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new SINT(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new SINT(Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
-    {
-        var type = new SINT(123, Radix.Hex);
-
-        type.Should().Be(123);
-        type.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new SINT(123, null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new SINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => new DINT((string)null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -111,7 +83,7 @@ public class SintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new SINT(123, Radix.Hex);
+        var type = new SINT(123);
 
         var xml = type.Serialize().ToString();
 

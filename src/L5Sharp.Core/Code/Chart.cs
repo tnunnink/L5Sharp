@@ -7,7 +7,8 @@ namespace L5Sharp.Core;
 /// <summary>
 /// Represents the content for Sequential Function Chart (SFC) elements.
 /// </summary>
-public class Chart : LogixCode
+[LogixElement(L5XName.SFCContent)]
+public class Chart : LogixCode<Chart>
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -58,5 +59,5 @@ public class Chart : LogixCode
     public override IEnumerable<Reference> Usages() => [];
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies() => [];
+    public override IEnumerable<ILogixEntity> Dependencies() => [];
 }

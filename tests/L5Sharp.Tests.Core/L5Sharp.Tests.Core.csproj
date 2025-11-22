@@ -21,6 +21,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj" />
+        <ProjectReference Include="..\..\src\L5Sharp.Core.Generators\L5Sharp.Core.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\..\src\L5Sharp.Core.Analyzers\L5Sharp.Core.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
         <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
 
@@ -110,8 +112,8 @@
       <None Update="Types\Atomics\SintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
         <DependentUpon>SintTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ComplexDataTests.Serialize_Default_ShouldBeVerified.verified.txt">
-        <DependentUpon>ComplexDataTests.cs</DependentUpon>
+      <None Update="Types\StructureDataTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>StructureDataTests.cs</DependentUpon>
       </None>
       <None Update="Components\TagTests.SetValue_StaticMemberOfNestedType_ShouldBeVerifiedXml.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
@@ -387,19 +389,19 @@
       <None Update="Components\ControllerTests.Import_SimpleDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
         <DependentUpon>ControllerTests.cs</DependentUpon>
       </None>
-      <None Update="Components\ControllerTests.Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
+      <None Update="Components\ControllerTests.Import_StructureDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
         <DependentUpon>ControllerTests.cs</DependentUpon>
       </None>
       <None Update="L5XImportTests.Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified.verified.xml">
         <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XImportTests.Import_ComplexDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
+      <None Update="L5XImportTests.Import_StructureDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
         <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XImportTests.Import_ComplexDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
+      <None Update="L5XImportTests.Import_StructureDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
         <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
-      <None Update="L5XImportTests.Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
+      <None Update="L5XImportTests.Import_StructureDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
         <DependentUpon>L5XImportTests.cs</DependentUpon>
       </None>
       <None Update="L5XImportTests.Import_ModuleComponent_ShouldBeVerified.verified.xml">

@@ -30,7 +30,7 @@ public class TagTests
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-        tag.Value.Should().Be(LogixData.Null);
+        tag.Value.Should().Be(LogixType.Null);
         tag.Constant.Should().BeFalse();
         tag.TagType.Should().Be(TagType.Base);
         tag.Usage.Should().BeNull();
@@ -170,11 +170,11 @@ public class TagTests
     [Test]
     public void New_NamedComplexType_ShouldHaveExpectedDataTypeAndMembers()
     {
-        var tag = new Tag { Name = "Test", Value = new ComplexData("MyCustomType") };
+        var tag = new Tag { Name = "Test", Value = new StructureData("MyCustomType") };
 
         tag.Add("Member01", new DINT(100));
         tag.Add("Member02", new TIMER { PRE = 3000 });
-        tag.Add("Member03", new ComplexData("SubType"));
+        tag.Add("Member03", new StructureData("SubType"));
 
         tag.DataType.Should().Be("MyCustomType");
         tag.Members().Where(m => m.TagName.Depth == 1).Should().HaveCount(3);
@@ -297,7 +297,7 @@ public class TagTests
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
         tag.TagType.Should().Be(TagType.Base);
         tag.Constant.Should().BeFalse();
-        tag.Value.Should().Be(LogixData.Null);
+        tag.Value.Should().Be(LogixType.Null);
     }
 
     [Test]
@@ -426,7 +426,7 @@ public class TagTests
         tag.DataType.Should().Be("SimpleType");
         tag.Constant.Should().BeFalse();
         tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
-        tag.Value.Should().BeOfType<ComplexData>();
+        tag.Value.Should().BeOfType<StructureData>();
         tag.Member("BoolMember").Should().NotBeNull();
         tag.Member("SintMember").Should().NotBeNull();
         tag.Member("IntMember").Should().NotBeNull();
@@ -528,7 +528,7 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
         //Name does not matter just the members
-        tag.Value = new ComplexData("Test", new List<Member>
+        tag.Value = new StructureData("Test", new List<Member>
         {
             new("PRE", 5000),
             new("ACC", 1234),

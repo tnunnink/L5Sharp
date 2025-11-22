@@ -6,12 +6,12 @@ namespace L5Sharp.Model;
 public static class Extensions
 {
     /// <summary>
-    /// Converts the specified <see cref="LogixComponent"/> instance to its corresponding information object.
+    /// Converts the specified <see cref="ILogixComponent"/> instance to its corresponding information object.
     /// </summary>
-    /// <param name="component">The <see cref="LogixComponent"/> instance to be converted.</param>
-    /// <returns>An object representing the information associated with the provided <see cref="LogixComponent"/>.</returns>
-    /// <exception cref="NotSupportedException">Thrown if the provided <see cref="LogixComponent"/> type is not supported.</exception>
-    public static object ToInfo(this LogixComponent component)
+    /// <param name="component">The <see cref="ILogixComponent"/> instance to be converted.</param>
+    /// <returns>An object representing the information associated with the provided <see cref="ILogixComponent"/>.</returns>
+    /// <exception cref="NotSupportedException">Thrown if the provided <see cref="ILogixComponent"/> type is not supported.</exception>
+    public static object ToInfo(this ILogixComponent component)
     {
         return component switch
         {

@@ -17,7 +17,7 @@ internal abstract class ImportConfigBuilder<TBuilder>(Import import) : IImportCo
     }
 
     public TBuilder Rename<TComponent>(string current, string updated)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         import.Operations.Add(new ModifyOperation(x =>
         {
@@ -37,7 +37,7 @@ internal abstract class ImportConfigBuilder<TBuilder>(Import import) : IImportCo
     }
 
     public TBuilder Overwrite<TComponent>(Func<TComponent, bool> predicate)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         import.Operations.Add(new OverwriteOperation(x =>
         {
@@ -49,7 +49,7 @@ internal abstract class ImportConfigBuilder<TBuilder>(Import import) : IImportCo
     }
 
     public TBuilder Discard<TComponent>(Func<TComponent, bool> predicate)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         import.Operations.Add(new DiscardOperation(x =>
         {
@@ -61,7 +61,7 @@ internal abstract class ImportConfigBuilder<TBuilder>(Import import) : IImportCo
     }
 
     public TBuilder Modify<TComponent>(Func<TComponent, bool> predicate, Action<TComponent> action)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         import.Operations.Add(new ModifyOperation(x =>
         {
@@ -74,6 +74,4 @@ internal abstract class ImportConfigBuilder<TBuilder>(Import import) : IImportCo
     }
 
     protected abstract TBuilder GetBuilder();
-
-    
 }

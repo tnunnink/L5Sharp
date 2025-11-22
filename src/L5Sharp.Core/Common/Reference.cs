@@ -232,9 +232,9 @@ public sealed class Reference
     /// </summary>
     /// <param name="name">The identifier of the <typeparamref name="TComponent"/> to create a reference for.</param>
     /// <param name="program">Optional program name used to scope the reference. Defaults to null.</param>
-    /// <typeparam name="TComponent">The type of <see cref="LogixComponent"/> for which the reference is being created.</typeparam>
+    /// <typeparam name="TComponent">The type of <see cref="ILogixComponent"/> for which the reference is being created.</typeparam>
     /// <returns>A newly created <see cref="Reference"/> object representing the component and its context.</returns>
-    public static Reference To<TComponent>(string name, string? program = null) where TComponent : LogixComponent
+    public static Reference To<TComponent>(string name, string? program = null) where TComponent : LogixComponent<TComponent>
     {
         var type = ReferenceType.Parse(typeof(TComponent).Name);
 
@@ -255,7 +255,7 @@ public sealed class Reference
     /// <param name="routine">The name of the routine containing the target component.</param>
     /// <typeparam name="TCode">The type of the LogixCode for which the scope is being created.</typeparam>
     /// <returns>A new <see cref="Reference"/> object configured for the provided target and context.</returns>
-    public static Reference To<TCode>(int number, string program, string routine) where TCode : LogixCode
+    public static Reference To<TCode>(int number, string program, string routine) where TCode : LogixCode<TCode>
     {
         var type = ReferenceType.Parse(typeof(TCode).Name);
         

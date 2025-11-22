@@ -10,8 +10,8 @@ namespace L5Sharp.Core;
 /// A comment contains the <see cref="Operand"/> representing the nested tag member the comment is associated with,
 /// as well as the actual comment <see cref="Value"/>.
 /// </remarks>
-[L5XType(L5XName.Comment)]
-public class Comment : LogixObject
+[LogixElement(L5XName.Comment)]
+public class Comment : LogixObject<Comment>
 {
     /// <summary>
     /// Creates a new <see cref="Comment"/> element with the provided operand tag and comment text.

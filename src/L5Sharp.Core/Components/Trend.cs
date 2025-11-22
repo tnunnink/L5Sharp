@@ -14,6 +14,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.Trend)]
 public class Trend : LogixComponent<Trend>
 {
     /// <inheritdoc />
@@ -136,7 +137,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StartTriggerTargetValue1
     {
-        get => GetValue(AtomicData.Parse);
+        get => GetValue(Radix.ParseAtomic);
         set => SetValue(value);
     }
 
@@ -200,7 +201,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StartTriggerTargetValue2
     {
-        get => GetValue(AtomicData.Parse);
+        get => GetValue(Radix.ParseAtomic);
         set => SetValue(value);
     }
 
@@ -281,7 +282,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StopTriggerTargetValue1
     {
-        get => GetValue(AtomicData.Parse);
+        get => GetValue(Radix.ParseAtomic);
         set => SetValue(value);
     }
 
@@ -345,7 +346,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StopTriggerTargetValue2
     {
-        get => GetValue(AtomicData.Parse);
+        get => GetValue(Radix.ParseAtomic);
         set => SetValue(value);
     }
 
@@ -401,5 +402,5 @@ public class Trend : LogixComponent<Trend>
     public override IEnumerable<Reference> Usages() => [];
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies() => [];
+    public override IEnumerable<ILogixEntity> Dependencies() => [];
 }

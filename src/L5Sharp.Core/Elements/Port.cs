@@ -12,6 +12,7 @@ namespace L5Sharp.Core;
 /// or the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
 /// Each port is identifiable by the <see cref="Id"/> property. 
 /// </remarks>
+[LogixElement(L5XName.Port)]
 public class Port : LogixObject<Port>
 {
     /// <summary>

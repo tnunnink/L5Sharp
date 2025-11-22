@@ -15,218 +15,107 @@ namespace L5Sharp.Tests.Core.Enums
         }
 
         [Test]
-        public void Format_Null_ShouldThrowArgumentNullException()
+        [TestCase(false, "0")]
+        [TestCase(true, "1")]
+        public void Format_Bool_ShouldBeExpectedFormat(bool value, string expected)
         {
-            FluentActions.Invoking(() => Radix.Decimal.FormatValue(null!)).Should().Throw<ArgumentNullException>();
+            var result = Radix.Decimal.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
+        [TestCase(0, "0")]
+        [TestCase(1, "1")]
+        [TestCase(20, "20")]
+        public void Format_Byte_ShouldBeExpectedFormat(sbyte value, string expected)
         {
-            FluentActions.Invoking(() => Radix.Decimal.FormatValue(new REAL())).Should().Throw<NotSupportedException>();
+            var result = Radix.Decimal.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_BoolFalse_ShouldBeExpected()
+        [TestCase(0, "0")]
+        [TestCase(1, "1")]
+        [TestCase(20, "20")]
+        public void Format_Short_ShouldBeExpectedFormat(short value, string expected)
         {
-            var result = Radix.Decimal.FormatValue(new BOOL());
+            var result = Radix.Decimal.Format(value);
 
-            result.Should().Be("0");
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_BoolTrue_ShouldBeExpected()
+        [TestCase(0, "0")]
+        [TestCase(1, "1")]
+        [TestCase(-1, "-1")]
+        [TestCase(127, "127")]
+        [TestCase(-127, "-127")]
+        [TestCase(1234567, "1234567")]
+        [TestCase(-1234567, "-1234567")]
+        public void Format_Int_ShouldBeExpectedFormat(int value, string expected)
         {
-            var result = Radix.Decimal.FormatValue(new BOOL(true));
+            var result = Radix.Decimal.Format(value);
 
-            result.Should().Be("1");
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_ValidSint_ShouldBeExpectedFormat()
+        [TestCase(0, "0")]
+        [TestCase(1, "1")]
+        [TestCase(20, "20")]
+        public void Format_Long_ShouldBeExpectedFormat(long value, string expected)
         {
-            var result = Radix.Decimal.FormatValue(new SINT(20));
+            var result = Radix.Decimal.Format(value);
 
-            result.Should().Be("20");
-        }
-
-        [Test]
-        public void Format_ValidInt_ShouldBeExpectedFormat()
-        {
-            var result = Radix.Decimal.FormatValue(new INT(20));
-
-            result.Should().Be("20");
-        }
-
-        [Test]
-        public void Format_ValidDint_ShouldBeExpectedFormat()
-        {
-            var result = Radix.Decimal.FormatValue(new DINT(20));
-
-            result.Should().Be("20");
-        }
-
-        [Test]
-        public void Format_ValidLint_ShouldBeExpectedFormat()
-        {
-            var result = Radix.Decimal.FormatValue(new LINT(20));
-
-            result.Should().Be("20");
+            result.Should().Be(expected);
         }
 
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.ParseValue(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Decimal.Parse<int>(null!))
+                .Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void Parse_Invalid_ShouldThrowArgumentException()
+        public void Parse_Invalid_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.ParseValue("null")).Should().Throw<FormatException>()
-                .WithMessage("Input 'null' does not have expected Decimal format.");
+            FluentActions.Invoking(() => Radix.Decimal.Parse<int>("null"))
+                .Should().Throw<FormatException>();
         }
 
         [Test]
-        public void Parse_InvalidLength_ShouldThrowArgumentOutOfRangeException()
+        public void Parse_FloatNumber_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Decimal.ParseValue("92233720368547758070")).Should()
-                .Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => Radix.Decimal.Parse<int>("123.456"))
+                .Should().Throw<FormatException>();
         }
 
         [Test]
-        public void Parse_sbyte_ShouldBeExpected()
+        public void Parse_InvalidLength_ShouldThrowException()
         {
-            var atomic = (SINT)Radix.Decimal.ParseValue(sbyte.MaxValue.ToString());
-
-            atomic.Should().Be(new SINT(sbyte.MaxValue));
+            FluentActions.Invoking(() => Radix.Decimal.Parse<long>("92233720368547758070"))
+                .Should().Throw<OverflowException>();
         }
 
         [Test]
-        public void Parse_byte_ShouldBeExpected()
+        [TestCase("0", 0)]
+        [TestCase("1", 1)]
+        [TestCase("-1", -1)]
+        [TestCase("127", 127)]
+        [TestCase("-127", -127)]
+        [TestCase("255", 255)]
+        [TestCase("32767", 32767)]
+        [TestCase("-32767", -32767)]
+        [TestCase("2147483647", 2147483647)]
+        [TestCase("-2147483647", -2147483647)]
+        public void Parse_IntValues_ShouldHaveExpectedResult(string value, int expected)
         {
-            var atomic = (USINT)Radix.Decimal.ParseValue(byte.MaxValue.ToString());
+            var result = Radix.Decimal.Parse<int>(value);
 
-            atomic.Should().Be(new USINT(byte.MaxValue));
-        }
-
-        [Test]
-        public void Parse_short_ShouldBeExpected()
-        {
-            var atomic = (INT)Radix.Decimal.ParseValue(short.MaxValue.ToString());
-
-            atomic.Should().Be(new INT(short.MaxValue));
-        }
-
-        [Test]
-        public void Parse_ushort_ShouldBeExpected()
-        {
-            var atomic = (UINT)Radix.Decimal.ParseValue(ushort.MaxValue.ToString());
-
-            atomic.Should().Be(new UINT(ushort.MaxValue));
-        }
-
-        [Test]
-        public void Parse_int_ShouldBeExpected()
-        {
-            var atomic = (DINT)Radix.Decimal.ParseValue(int.MaxValue.ToString());
-
-            atomic.Should().Be(int.MaxValue);
-        }
-
-        [Test]
-        public void Parse_uint_ShouldBeExpected()
-        {
-            var atomic = (UDINT)Radix.Decimal.ParseValue(uint.MaxValue.ToString());
-
-            atomic.Should().Be(uint.MaxValue);
-        }
-
-        [Test]
-        public void Parse_long_ShouldBeExpected()
-        {
-            var atomic = (LINT)Radix.Decimal.ParseValue(long.MaxValue.ToString());
-
-            atomic.Should().Be(long.MaxValue);
-        }
-
-        [Test]
-        public void Parse_ulong_ShouldBeExpected()
-        {
-            var atomic = (ULINT)Radix.Decimal.ParseValue(ulong.MaxValue.ToString());
-
-            atomic.Should().Be(ulong.MaxValue);
-        }
-
-        [Test]
-        public void SupportsType_Bool_ShouldBeTrue()
-        {
-            var type = new BOOL();
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsType_Sint_ShouldBeTrue()
-        {
-            var type = new SINT();
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsType_USint_ShouldBeTrue()
-        {
-            var type = new USINT();
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsType_Int_ShouldBeTrue()
-        {
-            var type = new INT();
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsType_Dint_ShouldBeTrue()
-        {
-            var type = new DINT();
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeTrue();
-        }
-
-
-        [Test]
-        public void SupportsType_Lint_ShouldBeTrue()
-        {
-            var type = new LINT();
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsType_Real_ShouldBeFalse()
-        {
-            var type = new REAL();
-
-            var supported = Radix.Decimal.SupportsType(type);
-
-            supported.Should().BeFalse();
+            result.Should().Be(expected);
         }
     }
 }

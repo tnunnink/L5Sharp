@@ -147,7 +147,7 @@ public class AddOnInstructionTests
 
         var referenceTags = aoi.Parameters
             .Where(p => p.Usage == TagUsage.InOut)
-            .Select(p => new Tag(p.Name, new ComplexData(p.DataType!)));
+            .Select(p => new Tag(p.Name, new StructureData(p.DataType!)));
 
         content.Tags.Add(tag);
         content.Tags.AddRange(referenceTags);
@@ -155,7 +155,7 @@ public class AddOnInstructionTests
 
         tag.Should().NotBeNull();
         tag.Name.Should().Be("MyAoiTag");
-        tag.Value.Should().BeOfType<ComplexData>();
+        tag.Value.Should().BeOfType<StructureData>();
         tag.Value.Name.Should().Be("MyAoi");
         tag.Members().ToList().Should().HaveCount(6);
     }

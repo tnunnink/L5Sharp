@@ -13,14 +13,6 @@ public class LineTests
 
         line.Should().NotBeNull();
     }
-    
-    [Test]
-    public void New_Default_ShouldNotBeAttached()
-    {
-        var sheet = new Line();
-        
-        sheet.Document.Should().BeNull();
-    }
 
     [Test]
     public void New_ValidElement_ShouldNotBeNull()
@@ -31,14 +23,14 @@ public class LineTests
 
         line.Should().NotBeNull();
     }
-    
+
     [Test]
     public void New_ValidElement_ShouldHaveExpectedValues()
     {
         var element = new XElement(L5XName.Line, new XAttribute(L5XName.Number, 1), new XCData("Test"));
 
         var line = new Line(element);
-        
+
         line.Number.Should().Be(1);
         line.Routine.Should().BeNull();
         line.ToString().Should().Be("Test");
@@ -48,7 +40,7 @@ public class LineTests
     public void New_ValidText_ShouldBeExpected()
     {
         var line = new Line("Test");
-        
+
         line.Number.Should().Be(0);
         line.Routine.Should().BeNull();
         line.ToString().Should().Be("Test");

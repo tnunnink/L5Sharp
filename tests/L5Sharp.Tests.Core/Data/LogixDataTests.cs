@@ -8,7 +8,7 @@ public class LogixDataTests
     [Test]
     public void Create_BOOL_ShouldBeExpected()
     {
-        var type = LogixData.Create("BOOL");
+        var type = LogixType.Create("BOOL");
         
         type.Should().NotBeNull();
         type.Should().BeOfType<BOOL>();
@@ -18,7 +18,7 @@ public class LogixDataTests
     [Test]
     public void Create_BIT_ShouldBeExpected()
     {
-        var type = LogixData.Create("BIT");
+        var type = LogixType.Create("BIT");
         
         type.Should().NotBeNull();
         type.Should().BeOfType<BOOL>();
@@ -28,7 +28,7 @@ public class LogixDataTests
     [Test]
     public void Create_SINT_ShouldBeExpected()
     {
-        var type = LogixData.Create("SINT");
+        var type = LogixType.Create("SINT");
 
         type.Should().NotBeNull();
         type.Should().BeOfType<SINT>();
@@ -38,7 +38,7 @@ public class LogixDataTests
     [Test]
     public void Create_INT_ShouldBeExpected()
     {
-        var type = LogixData.Create("INT");
+        var type = LogixType.Create("INT");
 
         type.Should().NotBeNull();
         type.Should().BeOfType<INT>();
@@ -48,7 +48,7 @@ public class LogixDataTests
     [Test]
     public void Create_DINT_ShouldBeExpected()
     {
-        var type = LogixData.Create("DINT");
+        var type = LogixType.Create("DINT");
 
         type.Should().NotBeNull();
         type.Should().BeOfType<DINT>();
@@ -58,7 +58,7 @@ public class LogixDataTests
     [Test]
     public void Create_LINT_ShouldBeExpected()
     {
-        var type = LogixData.Create("LINT");
+        var type = LogixType.Create("LINT");
 
         type.Should().NotBeNull();
         type.Should().BeOfType<LINT>();
@@ -68,7 +68,7 @@ public class LogixDataTests
     [Test]
     public void Create_REAL_ShouldBeExpected()
     {
-        var type = LogixData.Create("REAL");
+        var type = LogixType.Create("REAL");
 
         type.Should().NotBeNull();
         type.Should().BeOfType<REAL>();
@@ -78,7 +78,7 @@ public class LogixDataTests
     [Test]
     public void Create_TIMER_ShouldBeExpected()
     {
-        var type = LogixData.Create("TIMER");
+        var type = LogixType.Create("TIMER");
 
         type.Should().NotBeNull();
         type.Should().BeOfType<TIMER>();

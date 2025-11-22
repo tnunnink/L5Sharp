@@ -14,17 +14,17 @@ namespace L5Sharp.Core;
 /// A logix string type has predefined members <see cref="LEN"/> and <see cref="DATA"/>, which contain the
 /// current string length and set of ASCII characters representing the string value, respectively.
 /// This class is inherited by <see cref="STRING"/>, which is Rockwell's built-in base string type.
-/// Users can derive from this base class to create user defined string types if desired.
+/// Users can derive from this base class to create user-defined string types if desired.
 /// </para>
 /// <para>
 /// <see cref="StringData"/> will not pass the provided element to the base class but rather extract
 /// the data type name and string value and act as a wrapper over that data. The element will be reconstructed
 /// when <see cref="Serialize"/> or <see cref="SerializeStructure"/> is called. We need to do all this due to how
-/// strings are serialized in an L5X which is in a special format. Also, we want to treat strings similar to atomics
-/// as if they are immutable values types.
+/// strings are serialized in an L5X, which is in a special format. Also, we want to treat strings similar to atomics
+/// as if they are immutable value types.
 /// </para>
 /// </remarks>
-public class StringData : StructureData, IEnumerable<SINT>
+public class StringData : LogixData, IEnumerable<SINT>
 {
     /// <summary>
     /// The pattern that extracts the ASCII character segments from a string value.
@@ -46,8 +46,8 @@ public class StringData : StructureData, IEnumerable<SINT>
     /// <summary>
     /// Creates a new <see cref="StringData"/> initialized with the provided string type name and data value. 
     /// </summary>
-    /// <param name="name">The type name of this string data type. If null then defaults to an empty string.</param>
-    /// <param name="value">The value of the string data type. If null then defaults to an empty string.</param>
+    /// <param name="name">The type name of this string data type. If null, then defaults to an empty string.</param>
+    /// <param name="value">The value of the string data type. If null, then defaults to an empty string.</param>
     /// <remarks>
     /// This constructor allows the caller to create a generic string type instance that could represent a
     /// user-defined string type class without having to actually create a custom class.
@@ -83,7 +83,7 @@ public class StringData : StructureData, IEnumerable<SINT>
     /// This property is only here as a helper to allow the caller to conveniently get the SINT array
     /// representation of the underlying string by converting the underlying value.
     /// </remarks>
-    public ArrayData<SINT> DATA => ToDataArray(_value);
+    public SINT[] DATA => ToDataArray(_value);
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
@@ -150,7 +150,7 @@ public class StringData : StructureData, IEnumerable<SINT>
 
     /// <summary>
     /// Gets the value of the string from the provided element object. Where this value exists depends on if the
-    /// element is a root data element or a nested structure or structure member element. If neither is found this
+    /// element is a root data element or a nested structure or structure member element. If neither is found, this
     /// returns and empty string.
     /// </summary>
     private static string GetStringValue(XElement element)
@@ -176,7 +176,7 @@ public class StringData : StructureData, IEnumerable<SINT>
     }
 
     /// <summary>
-    /// Converts the provided string value to a SINT array. Handles empty or null string by returning empty array.
+    /// Converts the provided string value to a SINT array. Handles empty or null string by returning an empty array.
     /// Matches characters using known <see cref="LogixAsciiPattern"/>.
     /// Trims start and end single quotes.
     /// </summary>
@@ -195,8 +195,7 @@ public class StringData : StructureData, IEnumerable<SINT>
 
         foreach (Match match in matches)
         {
-            var parsed = (SINT)Radix.Ascii.ParseValue($"'{match.Value}'");
-            result.Add(new SINT(parsed, Radix.Ascii));
+            result.Add(new SINT($"'{match.Value}'"));
         }
 
         return result.ToArray();

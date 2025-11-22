@@ -70,8 +70,7 @@ public class Argument
     /// <returns>A new instance of <see cref="AtomicData"/> parsed from the argument's value.</returns>
     public AtomicData ToAtomic()
     {
-        var radix = Radix.Infer(_value);
-        return radix.ParseValue(_value);
+        return Radix.ParseAtomic(_value);
     }
 
     /// <summary>
@@ -275,7 +274,7 @@ public class Argument
         var type = ArgumentType.Of(argument);
 
         if (type == ArgumentType.Atomic)
-            return [AtomicData.Parse(argument)];
+            return [Radix.ParseAtomic(argument)];
 
         if (type == ArgumentType.Expression)
             //todo handle nested values in expression

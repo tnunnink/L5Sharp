@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// An element of the <see cref="Tag"/> component that contains properties or configuration
 /// consumer tag types.
 /// </summary>
+[LogixElement(L5XName.ConsumeInfo)]
 public class ConsumeInfo : LogixElement
 {
     /// <summary>

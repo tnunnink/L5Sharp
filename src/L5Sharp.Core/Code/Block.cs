@@ -24,16 +24,16 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.IRef)]
-[L5XType(L5XName.ORef)]
-[L5XType(L5XName.ICon)]
-[L5XType(L5XName.OCon)]
-[L5XType(L5XName.Block)]
-[L5XType(L5XName.Function)]
-[L5XType(L5XName.AddOnInstruction)]
-[L5XType(L5XName.JSR)]
-[L5XType(L5XName.SBR)]
-[L5XType(L5XName.RET)]
+[LogixElement(L5XName.IRef)]
+[LogixElement(L5XName.ORef)]
+[LogixElement(L5XName.ICon)]
+[LogixElement(L5XName.OCon)]
+[LogixElement(L5XName.Block)]
+[LogixElement(L5XName.Function)]
+[LogixElement(L5XName.AddOnInstruction)]
+[LogixElement(L5XName.JSR)]
+[LogixElement(L5XName.SBR)]
+[LogixElement(L5XName.RET)]
 public class Block : LogixObject<Block>
 {
     private static readonly HashSet<string> PinNames = [L5XName.VisiblePins, L5XName.In, L5XName.Ret];
@@ -363,7 +363,7 @@ public class Block : LogixObject<Block>
                 Element.SetAttributeValue(L5XName.Routine, value);
                 break;
             default:
-                throw new NotSupportedException($"Block type '{GetElementType()}' does not support Operand.");
+                throw new NotSupportedException($"Block type '{element.Name.LocalName}' does not support Operand.");
         }
     }
 

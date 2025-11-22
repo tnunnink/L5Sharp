@@ -5,8 +5,9 @@
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built in data type used with counter instructions. 
+/// A predefined or built-in data type used with counter instructions. 
 /// </summary>
+[LogixData(nameof(COUNTER))]
 public sealed class COUNTER : StructureData
 {
     /// <summary>

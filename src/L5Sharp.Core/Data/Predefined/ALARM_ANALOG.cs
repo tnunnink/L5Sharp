@@ -6,9 +6,10 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built in data type in Logix that is a part of the alarm instruction set.
+/// A predefined or built-in data type in Logix that is a part of the alarm instruction set.
 /// </summary>
-[L5XType(L5XName.AlarmAnalogParameters)]
+[LogixElement(L5XName.AlarmAnalogParameters)]
+[LogixData(nameof(ALARM_ANALOG))]
 public sealed class ALARM_ANALOG : StructureData
 {
     /// <summary>

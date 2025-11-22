@@ -1,21 +1,26 @@
 ﻿using System;
+using System.Globalization;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a <b>REAL</b> Logix atomic data type, or a type analogous to a <see cref="float"/>.
+/// Represents a <b>REAL</b> Logix atomic data type or a type analogous to a <see cref="float"/>.
 /// </summary>
-public sealed class REAL : AtomicData, IComparable, IConvertible
+[LogixData(nameof(REAL), true)]
+public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<float>
 {
-    /// <summary>
-    /// The underlying primitive value which is set upon construction and not changed.
-    /// </summary>
-    private readonly float _value;
+    private const string SingleFormat = "0.0######";
+
+    /// <inheritdoc />
+    public REAL(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// Creates a new default <see cref="REAL"/> type.
     /// </summary>
-    public REAL()
+    public REAL() : base(nameof(REAL), "0.0")
     {
     }
 
@@ -23,31 +28,31 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
     /// Creates a new <see cref="REAL"/> with the provided value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    public REAL(float value)
+    public REAL(float value) : this()
     {
-        _value = value;
+        Element.SetAttributeValue(L5XName.Value, value.ToString(SingleFormat, CultureInfo.InvariantCulture));
     }
 
     /// <summary>
-    /// Creates a new <see cref="REAL"/> value with the provided radix format.
-    /// </summary>
-    /// <param name="radix">The <see cref="Core.Radix"/> number format of the value.</param>
-    public REAL(Radix radix) : base(radix)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="REAL"/> with the provided value.
+    /// Creates a new <see cref="REAL"/> from the provided string value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    /// <param name="radix">The optional radix format of the value.</param>
-    public REAL(float value, Radix radix) : base(radix)
+    /// <remarks>
+    /// The radix format will be set based on the format of the provided value.
+    /// </remarks>
+    public REAL(string value) : this()
     {
-        _value = value;
+        var radix = Radix.Infer(value);
+        var converted = radix.Parse<float>(value);
+
+        Element.SetAttributeValue(L5XName.Radix, radix);
+        Element.SetAttributeValue(L5XName.Value, converted);
     }
-    
+
     /// <inheritdoc />
-    public override string Name => nameof(REAL);
+    public float Value => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false
+        ? GetAtomicValue<float>()
+        : float.NaN;
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -55,9 +60,9 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
         return obj switch
         {
             null => 1,
-            REAL typed => _value.CompareTo(typed._value),
-            AtomicData atomic => _value.CompareTo((float)Convert.ChangeType(atomic, typeof(float))),
-            ValueType value => _value.CompareTo((float)Convert.ChangeType(value, typeof(float))),
+            REAL typed => Value.CompareTo(typed.Value),
+            AtomicData atomic => Value.CompareTo((float)Convert.ChangeType(atomic, typeof(float))),
+            ValueType value => Value.CompareTo((float)Convert.ChangeType(value, typeof(float))),
             _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
         };
     }
@@ -67,64 +72,63 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
     {
         return obj switch
         {
-            REAL value => Math.Abs(_value - value._value) < float.Epsilon,
-            AtomicData atomic => _value.Equals((float)Convert.ChangeType(atomic, typeof(float))),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(float))),
+            REAL value => Math.Abs(Value - value.Value) < float.Epsilon,
+            AtomicData atomic => Value.Equals((float)Convert.ChangeType(atomic, typeof(float))),
+            ValueType value => Value.Equals(Convert.ChangeType(value, typeof(float))),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
-    /// Parses a string into a <see cref="REAL"/> value.
+    /// Return the atomic value formatted using the current <see cref="Radix"/> format.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="REAL"/> representing the parsed value.</returns>
-    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public new static REAL Parse(string value)
-    {
-        if (value.Contains("QNAN")) return new REAL(float.NaN);
-        var radix = Radix.Infer(value);
-        var atomic = radix.ParseValue(value);
-        var converted = (float)Convert.ChangeType(atomic, typeof(float));
-        return new REAL(converted, radix);
-    }
+    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
+    public override string ToString() => Radix.Format(Value);
 
     /// <summary>
-    /// Tries to parse a string into a <see cref="REAL"/> value.
+    /// Returns the atomic value formatted in the specified <see cref="Core.Radix"/> format.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>The parsed <see cref="REAL"/> value if successful; Otherwise, <c>null</c>.</returns>
-    public new static REAL? TryParse(string? value)
+    /// <param name="radix">The radix format.</param>
+    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
+    public string ToString(Radix radix) => radix.Format(Value);
+
+    /// <summary>
+    /// Parses the specified string representation of a <see cref="REAL"/> value into its corresponding <see cref="REAL"/> object.
+    /// </summary>
+    /// <param name="value">The string representation of the <see cref="REAL"/> value to parse.</param>
+    /// <returns>A <see cref="REAL"/> object that represents the parsed value.</returns>
+    public static REAL Parse(string value) => new(value);
+
+    /// <summary>
+    /// Attempts to parse a string representation of a <see cref="REAL"/> value and creates an instance of the <see cref="REAL"/> class if successful.
+    /// </summary>
+    /// <param name="value">The string value to be parsed.</param>
+    /// <param name="atomic">When this method returns, contains the <see cref="REAL"/> instance equivalent to the string value, if the parse operation succeeded; otherwise, null.</param>
+    /// <returns>True if the value was successfully parsed; otherwise, false.</returns>
+    public static bool TryParse(string? value, out REAL atomic)
     {
+        atomic = null!;
+
         if (value is null || value.IsEmpty())
-            return null;
+            return false;
 
-        if (value.Contains("QNAN")) return new REAL(float.NaN);
+        if (Radix.TryInfer(value, out var radix))
+        {
+            var typed = radix.Parse<float>(value);
+            atomic = new REAL(typed);
+            return true;
+        }
 
-        if (float.TryParse(value, out var primitive))
-            return new REAL(primitive);
-
-        if (!Radix.TryInfer(value, out var radix))
-            return null;
-
-        var parsed = radix.ParseValue(value);
-        var converted = (float)Convert.ChangeType(parsed, typeof(float));
-        return new REAL(converted, radix);
-    }
-    
-    /// <inheritdoc />
-    public override byte[] GetBytes()
-    {
-        return BitConverter.GetBytes(_value);
+        return false;
     }
 
     /// <inheritdoc />
-    public override ValueType ToValue()
+    public override byte[] ToBytes()
     {
-        return _value;
+        return BitConverter.GetBytes(Value);
     }
 
     // Contains the implicit .NET conversions for the type.
@@ -143,14 +147,14 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="float"/> type value.</returns>
-    public static implicit operator float(REAL atomic) => atomic._value;
+    public static implicit operator float(REAL atomic) => atomic.Value;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="REAL"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="REAL"/> value.</returns>
-    public static implicit operator REAL(string value) => Parse(value);
+    public static implicit operator REAL(string value) => new(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="REAL"/> to a <see cref="string"/> value.
@@ -171,10 +175,10 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value != 0;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => Value != 0;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)_value;
+    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)Value;
 
     /// <inheritdoc />
     char IConvertible.ToChar(IFormatProvider? provider) =>
@@ -189,22 +193,22 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider? provider) => _value;
+    double IConvertible.ToDouble(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider? provider) => (short)_value;
+    short IConvertible.ToInt16(IFormatProvider? provider) => (short)Value;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider? provider) => (int)_value;
+    int IConvertible.ToInt32(IFormatProvider? provider) => (int)Value;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider? provider) => (long)_value;
+    long IConvertible.ToInt64(IFormatProvider? provider) => (long)Value;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)_value;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)Value;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider? provider) => _value;
+    float IConvertible.ToSingle(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
     string IConvertible.ToString(IFormatProvider? provider) => ToString();
@@ -240,13 +244,13 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)_value;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)Value;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)_value;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)Value;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)_value;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)Value;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.
@@ -257,27 +261,27 @@ public sealed class REAL : AtomicData, IComparable, IConvertible
     private object ToAtomic(Type conversionType)
     {
         if (conversionType == typeof(BOOL))
-            return new BOOL(_value != 0);
+            return new BOOL(Value != 0);
         if (conversionType == typeof(SINT))
-            return new SINT((sbyte)_value);
+            return new SINT((sbyte)Value);
         if (conversionType == typeof(INT))
-            return new INT((short)_value);
+            return new INT((short)Value);
         if (conversionType == typeof(DINT))
-            return new DINT((int)_value);
+            return new DINT((int)Value);
         if (conversionType == typeof(LINT))
-            return new LINT((long)_value);
+            return new LINT((long)Value);
         if (conversionType == typeof(REAL))
-            return new REAL(_value);
+            return new REAL(Value);
         if (conversionType == typeof(LREAL))
-            return new LREAL(_value);
+            return new LREAL(Value);
         if (conversionType == typeof(USINT))
-            return new USINT((byte)_value);
+            return new USINT((byte)Value);
         if (conversionType == typeof(UINT))
-            return new UINT((ushort)_value);
+            return new UINT((ushort)Value);
         if (conversionType == typeof(UDINT))
-            return new UDINT((uint)_value);
+            return new UDINT((uint)Value);
         if (conversionType == typeof(ULINT))
-            return new ULINT((ulong)_value);
+            return new ULINT((ulong)Value);
 
         throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
     }

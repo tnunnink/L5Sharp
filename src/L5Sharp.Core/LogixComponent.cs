@@ -5,28 +5,73 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A common logix element that is able to be identified by name.
+/// Represents a common interface for all Logix components within the L5X architecture.
 /// </summary>
 /// <remarks>
-/// <para>
-/// This is the base class for all logix component classes. All components can be identified by a unique name that
-/// is typically subject to some naming constraints defined by a Rockwell. Logix internally may create
-/// components that do not adhere to the naming constraints, which is why the property is a simple string.
-/// Names should be unique any attempt to create duplicated names should fail.
-/// All components also contain a simple string description and <see cref="Core.Use"/> to identify the
-/// purpose of the component.
-/// </para>
-/// <para>
-/// All components also contain some common functionality, such as the ability to find dependencies and references, and
-/// to be exported individually as a new L5X component file. The default equality implementation is also overridden
-/// to determine equality by the component type, name, and scope within the L5X tree.
-/// </para>
+/// This interface defines the core properties and operations that are shared among all Logix components.
+/// Each component is identified by a unique name and may additionally include a description and specific use within the system.
+/// Components supporting the `ILogixComponent` interface can be managed dynamically at runtime, allowing
+/// for operations such as deletion, export, and modifications within an L5X file context.
 /// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer> 
-public abstract class LogixComponent : LogixEntity
+public interface ILogixComponent : ILogixEntity
+{
+    /// <summary>
+    /// The <see cref="Use"/> of the component within the L5X file.
+    /// </summary>
+    /// <remarks>
+    /// Typically used when exporting individual components (DataType, AoiBlock, Module) to indicate whether the component
+    /// is the target of the L5X content or exists solely as a context or dependency of the target component. When
+    /// saving a project as an L5X, the top-level controller component is the target, and all other components will
+    /// not have this property. 
+    /// </remarks>
+    Use? Use { get; set; }
+
+    /// <summary>
+    /// The unique name of the component.
+    /// </summary>
+    /// <value>A <see cref="string"/> representing the component name.</value>
+    /// <remarks>
+    /// The name servers as a unique identifier for various types of components.
+    /// In most cases, the component name should satisfy Logix naming constraints of alphanumeric and
+    /// underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
+    /// Validation is not performed by this library, so importing components with invalid names may fail.
+    /// </remarks>
+    string Name { get; set; }
+
+    /// <summary>
+    /// The description of the component.
+    /// </summary>
+    /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
+    string? Description { get; set; }
+
+    /// <summary>
+    /// Deletes this component and it's references from the current attached L5X file.
+    /// </summary>
+    /// <remarks>
+    /// This method can be helpful for completely scrubbing a component and all its references from an L5X file.
+    /// This is in contrast to simply removing the element from the containing collection,
+    /// If this component is not attached to an L5X, then it will simply return and not throw any exceptions.
+    /// </remarks>
+    void Delete();
+
+    /// <summary>
+    /// Creates a new <see cref="L5X"/> with the provided logix component as the target type.
+    /// </summary>
+    /// <param name="softwareRevision">The optional software revision, or version of Studio to export the component as.</param>
+    /// <returns>A <see cref="L5X"/> containing the component as the target of the L5X.</returns>
+    L5X Export(Revision? softwareRevision = null);
+}
+
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="TComponent"></typeparam>
+public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILogixComponent
+    where TComponent : LogixComponent<TComponent>
 {
     /// <inheritdoc />
     protected LogixComponent(string name) : base(name)
@@ -80,27 +125,31 @@ public abstract class LogixComponent : LogixEntity
         set => SetProperty(value);
     }
 
+    /// <inheritdoc />
+    /// <remarks>This override returns the component name of the type.</remarks>
+    public override string ToString() => Name;
+
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.
     /// </summary>
     /// <remarks>
     /// This method can be helpful for completely scrubbing a L5X file of the specific component, which means removing
-    /// references to it as well as the component itself. This is on contrast to <see cref="LogixObject.Remove()"/>
+    /// references to it as well as the component itself. This is on contrast to <see cref="ILogixObject{TElement}.Remove()"/>
     /// which will simply remove this element from the parent container. If this component is not attached to an L5X
     /// then it will simply return and not throw any exceptions. Use this with caution as you will not be able
     /// to undo the process except for the fact that you have reference to the component being deleted. 
     /// </remarks>
     public virtual void Delete()
     {
-        if (Element.Parent is null) return;
+        if (!TryGetDocument(out var doc)) return;
 
         var references = Usages();
 
         foreach (var reference in references)
         {
-            if (Document?.TryGet(reference, out var element) is true)
+            if (doc.TryGet(reference, out var element))
             {
-                element.Remove();
+                element.Serialize().Remove();
             }
         }
 
@@ -115,7 +164,7 @@ public abstract class LogixComponent : LogixEntity
     public virtual L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;
-        softwareRevision ??= Document?.Info.SoftwareRevision;
+        softwareRevision ??= TryGetDocument(out var doc) ? doc.Info.SoftwareRevision : new Revision();
 
         var info = LogixInfo.Create(this, softwareRevision);
         var content = new L5X(info);
@@ -123,65 +172,12 @@ public abstract class LogixComponent : LogixEntity
 
         foreach (var dependency in Dependencies())
         {
-            dependency.Use = Use.Context;
-            content.Add(dependency);
+            if (dependency is not ILogixComponent component) continue;
+            component.Use = Use.Context;
+            content.Add(component);
         }
 
         return content;
-    }
-
-    /// <inheritdoc />
-    /// <remarks>This override returns the component name of the type.</remarks>
-    public override string ToString() => Name;
-}
-
-/// <summary>
-/// Represents an abstract base class for a Logix component, providing foundational functionality for all derived components.
-/// </summary>
-/// <remarks>
-/// This class serves as a generic extension of the <see cref="LogixComponent"/> class, providing type-specific functionality.
-/// It includes mechanisms to clone, duplicate, and modify Logix components while maintaining the integrity of their properties
-/// and relationships within the Logix environment.
-/// </remarks>
-public abstract class LogixComponent<TComponent> : LogixComponent where TComponent : LogixComponent
-{
-    /// <inheritdoc />
-    protected LogixComponent(string name) : base(name)
-    {
-    }
-
-    /// <inheritdoc />
-    protected LogixComponent(XElement element) : base(element)
-    {
-    }
-
-    /// <summary>
-    /// Returns a new deep-cloned instance as the specified <see cref="LogixElement"/> type.
-    /// </summary>
-    /// <returns>A new instance of the specified element type with the same property values.</returns>
-    public new TComponent Clone() => new XElement(Serialize()).Deserialize<TComponent>();
-
-    /// <summary>
-    /// Creates a duplicate of the current component, applies a specified configuration to the duplicate, tries to add
-    /// it to the current document, and returns the new instance.
-    /// </summary>
-    /// <param name="config">A configuration action to modify the cloned component before it is returned.</param>
-    /// <returns>A new instance of the component with the specified configuration applied.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="config"/> parameter is null.</exception>
-    public TComponent Duplicate(Action<TComponent> config)
-    {
-        if (config is null)
-            throw new ArgumentNullException(nameof(config));
-
-        var instance = new XElement(Serialize()).Deserialize<TComponent>();
-        config.Invoke(instance);
-
-        if (Document is not null)
-        {
-            AddAfter(instance);
-        }
-
-        return instance;
     }
 
     /// <summary>

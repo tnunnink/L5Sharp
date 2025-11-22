@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// <para>
 /// A DataType represents a user-defined type structure that one can define and reuse within a PLC project.
-/// This type inherits <see cref="LogixComponent"/> which specifies <c>Name</c> and <c>Description</c> properties along with other
+/// This type inherits <see cref="ILogixComponent"/> which specifies <c>Name</c> and <c>Description</c> properties along with other
 /// common component functionality. DataTypes also contain <see cref="Members"/> that define the structure of the
 /// complex type. This class does not represent the type value, but rather the configuration of how a tag structure
 /// would look if it referenced this type.
@@ -24,6 +24,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.DataType)]
 public class DataType : LogixComponent<DataType>
 {
     /// <inheritdoc />
@@ -100,9 +101,9 @@ public class DataType : LogixComponent<DataType>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        if (Document is null) return [];
+        if (!TryGetDocument(out var doc)) return [];
 
-        var references = Document.Serialize().Descendants()
+        var references = doc.Serialize().Descendants()
             .Where(e => e.IsTagElement() && e.Attribute(L5XName.DataType)?.Value == Name)
             .Select(Reference.To)
             .Distinct()
@@ -112,13 +113,13 @@ public class DataType : LogixComponent<DataType>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        var dependencies = new List<LogixComponent>();
+        var dependencies = new List<ILogixEntity>();
 
         foreach (var member in Members)
         {
-            if (!TryResolveType(member.DataType, out var type)) continue;
+            if (!this.TryResolveType(member.DataType, out var type)) continue;
             dependencies.Add(type);
             dependencies.AddRange(type.Dependencies());
         }
@@ -199,7 +200,7 @@ public class DataType : LogixComponent<DataType>
     /// <remarks>
     /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
     /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
-    /// are not resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// are not resolved, it will default to creating <see cref="StructureData"/> objects with no members
     /// as there is no way to know the structure. 
     /// </remarks>
     public Tag ToTag(string tagName) => new(tagName, ToData());
@@ -212,7 +213,7 @@ public class DataType : LogixComponent<DataType>
     /// <remarks>
     /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
     /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
-    /// are not resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// are not resolved, it will default to creating <see cref="StructureData"/> objects with no members
     /// as there is no way to know the structure. 
     /// </remarks>
     public LogixData ToData()
@@ -224,14 +225,14 @@ public class DataType : LogixComponent<DataType>
         if (Family is not null && Family == DataTypeFamily.String) return new StringData(Name, string.Empty);
 
         //This will be some predefined type or a complex data instance, depending on whether it is statically defined.
-        var data = LogixData.Create(Name);
+        var data = LogixType.Create(Name);
 
-        //If it is not a complex data, then it was defined, and we can return it.
-        if (data is not ComplexData complexData) return data;
+        //If it is not structure, then it was defined, and we can return it.
+        if (data is not StructureData structure) return data;
 
         //Otherwise, we need to build the members using the configured Members collection.
         var members = Members.Where(m => m.Hidden is not true).Select(m => m.ToMember()).ToList();
-        complexData.AddRange(members);
-        return complexData;
+        structure.AddMany(members);
+        return structure;
     }
 }

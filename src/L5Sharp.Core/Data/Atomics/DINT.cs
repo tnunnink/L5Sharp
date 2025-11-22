@@ -1,21 +1,23 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents a <b>DINT</b> Logix atomic data type, or a type analogous to a <see cref="int"/>.
 /// </summary>
-public sealed class DINT : AtomicData, IComparable, IConvertible
+[LogixData(nameof(DINT), true)]
+public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<int>
 {
-    /// <summary>
-    /// The underlying primitive value which is set upon construction and not changed.
-    /// </summary>
-    private readonly int _value;
+    /// <inheritdoc />
+    public DINT(XElement element) : base(element)
+    {
+    }
 
     /// <summary>
     /// Creates a new default <see cref="DINT"/> type.
     /// </summary>
-    public DINT()
+    public DINT() : base(nameof(DINT))
     {
     }
 
@@ -23,35 +25,29 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
     /// Creates a new <see cref="DINT"/> with the provided value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    public DINT(int value)
+    public DINT(int value) : this()
     {
-        _value = value;
+        Element.SetAttributeValue(L5XName.Value, value.ToString());
     }
 
     /// <summary>
-    /// Creates a new <see cref="DINT"/> value with the provided radix format.
-    /// </summary>
-    /// <param name="radix">The <see cref="Core.Radix"/> number format of the value.</param>
-    /// <exception cref="ArgumentNullException"><c>radix</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>radix</c> is not supported by the atomic type.</exception>
-    public DINT(Radix radix) : base(radix)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="DINT"/> with the provided value and radix format.
+    /// Creates a new <see cref="DINT"/> from the provided string value.
     /// </summary>
     /// <param name="value">The value to initialize the type with.</param>
-    /// <param name="radix">The optional radix format of the value.</param>
-    /// <exception cref="ArgumentNullException"><c>radix</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>radix</c> is not supported by the atomic type.</exception>
-    public DINT(int value, Radix radix) : base(radix)
+    /// <remarks>
+    /// The radix format will be set based on the format of the provided value.
+    /// </remarks>
+    public DINT(string value) : this()
     {
-        _value = value;
+        var radix = Radix.Infer(value);
+        var converted = radix.Parse<int>(value);
+
+        Element.SetAttributeValue(L5XName.Radix, radix);
+        Element.SetAttributeValue(L5XName.Value, converted);
     }
-    
+
     /// <inheritdoc />
-    public override string Name => nameof(DINT);
+    public int Value => GetAtomicValue<int>();
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -59,9 +55,9 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
         return obj switch
         {
             null => 1,
-            DINT typed => _value.CompareTo(typed._value),
-            AtomicData atomic => _value.CompareTo((int)Convert.ChangeType(atomic, typeof(int))),
-            ValueType value => _value.CompareTo((int)Convert.ChangeType(value, typeof(int))),
+            DINT typed => Value.CompareTo(typed.Value),
+            AtomicData atomic => Value.CompareTo((int)Convert.ChangeType(atomic, typeof(int))),
+            ValueType value => Value.CompareTo((int)Convert.ChangeType(value, typeof(int))),
             _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
         };
     }
@@ -71,65 +67,64 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
     {
         return obj switch
         {
-            DINT value => _value == value._value,
-            AtomicData atomic => _value.Equals((int)Convert.ChangeType(atomic, typeof(int))),
-            ValueType value => _value.Equals(Convert.ChangeType(value, typeof(int))),
+            DINT value => Value == value.Value,
+            AtomicData atomic => Value.Equals((int)Convert.ChangeType(atomic, typeof(int))),
+            ValueType value => Value.Equals(Convert.ChangeType(value, typeof(int))),
             string value => ToString(Radix.Infer(value)).Equals(value, StringComparison.OrdinalIgnoreCase),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => Value.GetHashCode();
 
     /// <summary>
-    /// Parses a string into a <see cref="DINT"/> value.
+    /// Return the atomic value formatted using the current <see cref="Radix"/> format.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="DINT"/> representing the parsed value.</returns>
-    /// <exception cref="FormatException">The <see cref="Radix"/> format can not be inferred from <c>value</c>.</exception>
-    public new static DINT Parse(string value)
-    {
-        if (int.TryParse(value, out var result))
-            return new DINT(result);
-
-        var radix = Radix.Infer(value);
-        var atomic = radix.ParseValue(value);
-        var converted = (int)Convert.ChangeType(atomic, typeof(int));
-        return new DINT(converted, radix);
-    }
+    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
+    public override string ToString() => Radix.Format(Value);
 
     /// <summary>
-    /// Tries to parse a string into a <see cref="DINT"/> value.
+    /// Returns the atomic value formatted in the specified <see cref="Core.Radix"/> format.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>The parsed <see cref="DINT"/> value if successful; Otherwise, <c>null</c>.</returns>
-    public new static DINT? TryParse(string? value)
+    /// <param name="radix">The radix format.</param>
+    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
+    public string ToString(Radix radix) => radix.Format(Value);
+
+    /// <summary>
+    /// Parses the specified string representation of a <see cref="DINT"/> value into its corresponding <see cref="DINT"/> object.
+    /// </summary>
+    /// <param name="value">The string representation of the <see cref="DINT"/> value to parse.</param>
+    /// <returns>A <see cref="DINT"/> object that represents the parsed value.</returns>
+    public static DINT Parse(string value) => new(value);
+
+    /// <summary>
+    /// Attempts to parse a string representation of a <see cref="DINT"/> value and creates an instance of the <see cref="DINT"/> class if successful.
+    /// </summary>
+    /// <param name="value">The string value to be parsed.</param>
+    /// <param name="atomic">When this method returns, contains the <see cref="DINT"/> instance equivalent to the string value, if the parse operation succeeded; otherwise, null.</param>
+    /// <returns>True if the value was successfully parsed; otherwise, false.</returns>
+    public static bool TryParse(string? value, out DINT atomic)
     {
+        atomic = null!;
+
         if (value is null || value.IsEmpty())
-            return null;
+            return false;
 
-        if (int.TryParse(value, out var primitive))
-            return new DINT(primitive);
+        if (Radix.TryInfer(value, out var radix))
+        {
+            var typed = radix.Parse<int>(value);
+            atomic = new DINT(typed);
+            return true;
+        }
 
-        if (!Radix.TryInfer(value, out var radix))
-            return null;
-
-        var parsed = radix.ParseValue(value);
-        var converted = (int)Convert.ChangeType(parsed, typeof(int));
-        return new DINT(converted, radix);
+        return false;
     }
 
     /// <inheritdoc />
-    public override byte[] GetBytes()
+    public override byte[] ToBytes()
     {
-        return BitConverter.GetBytes(_value);
-    }
-
-    /// <inheritdoc />
-    public override ValueType ToValue()
-    {
-        return _value;
+        return BitConverter.GetBytes(Value);
     }
 
     // Contains the implicit .NET conversions for the type.
@@ -148,14 +143,14 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
     /// </summary>
     /// <param name="atomic">The value to convert.</param>
     /// <returns>A <see cref="int"/> type value.</returns>
-    public static implicit operator int(DINT atomic) => atomic._value;
+    public static implicit operator int(DINT atomic) => atomic.Value;
 
     /// <summary>
     /// Implicitly converts a <see cref="string"/> to a <see cref="DINT"/> value.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="DINT"/> value.</returns>
-    public static explicit operator DINT(string value) => Parse(value);
+    public static explicit operator DINT(string value) => new(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="DINT"/> to a <see cref="string"/> value.
@@ -176,13 +171,13 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
     TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
 
     /// <inheritdoc />
-    bool IConvertible.ToBoolean(IFormatProvider? provider) => _value != 0;
+    bool IConvertible.ToBoolean(IFormatProvider? provider) => Value != 0;
 
     /// <inheritdoc />
-    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)_value;
+    byte IConvertible.ToByte(IFormatProvider? provider) => (byte)Value;
 
     /// <inheritdoc />
-    char IConvertible.ToChar(IFormatProvider? provider) => (char)_value;
+    char IConvertible.ToChar(IFormatProvider? provider) => (char)Value;
 
     /// <inheritdoc />
     DateTime IConvertible.ToDateTime(IFormatProvider? provider) =>
@@ -193,22 +188,22 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
         throw new InvalidCastException($"Conversion from {Name} to {nameof(Decimal)} is not supported.");
 
     /// <inheritdoc />
-    double IConvertible.ToDouble(IFormatProvider? provider) => _value;
+    double IConvertible.ToDouble(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    short IConvertible.ToInt16(IFormatProvider? provider) => (short)_value;
+    short IConvertible.ToInt16(IFormatProvider? provider) => (short)Value;
 
     /// <inheritdoc />
-    int IConvertible.ToInt32(IFormatProvider? provider) => _value;
+    int IConvertible.ToInt32(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    long IConvertible.ToInt64(IFormatProvider? provider) => _value;
+    long IConvertible.ToInt64(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
-    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)_value;
+    sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)Value;
 
     /// <inheritdoc />
-    float IConvertible.ToSingle(IFormatProvider? provider) => _value;
+    float IConvertible.ToSingle(IFormatProvider? provider) => Value;
 
     /// <inheritdoc />
     string IConvertible.ToString(IFormatProvider? provider) => ToString();
@@ -244,13 +239,13 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
     }
 
     /// <inheritdoc />
-    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)_value;
+    ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)Value;
 
     /// <inheritdoc />
-    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)_value;
+    uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)Value;
 
     /// <inheritdoc />
-    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)_value;
+    ulong IConvertible.ToUInt64(IFormatProvider? provider) => (ulong)Value;
 
     /// <summary>
     /// Converts the current atomic type to the specified atomic type.
@@ -261,27 +256,27 @@ public sealed class DINT : AtomicData, IComparable, IConvertible
     private object ToAtomic(Type conversionType)
     {
         if (conversionType == typeof(BOOL))
-            return new BOOL(_value != 0);
+            return new BOOL(Value != 0);
         if (conversionType == typeof(SINT))
-            return new SINT((sbyte)_value);
+            return new SINT((sbyte)Value);
         if (conversionType == typeof(INT))
-            return new INT((short)_value);
+            return new INT((short)Value);
         if (conversionType == typeof(DINT))
-            return new DINT(_value);
+            return new DINT(Value);
         if (conversionType == typeof(LINT))
-            return new LINT(_value);
+            return new LINT(Value);
         if (conversionType == typeof(REAL))
-            return new REAL(_value);
+            return new REAL(Value);
         if (conversionType == typeof(LREAL))
-            return new LREAL(_value);
+            return new LREAL(Value);
         if (conversionType == typeof(USINT))
-            return new USINT((byte)_value);
+            return new USINT((byte)Value);
         if (conversionType == typeof(UINT))
-            return new UINT((ushort)_value);
+            return new UINT((ushort)Value);
         if (conversionType == typeof(UDINT))
-            return new UDINT((uint)_value);
+            return new UDINT((uint)Value);
         if (conversionType == typeof(ULINT))
-            return new ULINT((ulong)_value);
+            return new ULINT((ulong)Value);
 
         throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
     }

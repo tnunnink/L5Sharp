@@ -13,7 +13,7 @@ internal class ImportRoutineBuilder(Import import) :
         {
             if (x is not Routine routine) return;
             if (!Use.Target.Equals(routine.Use)) return;
-            if (routine.Document is null) return;
+            if (!routine.TryGetDocument(out _)) return;
             if (routine.Program is null) return;
             if (routine.Program.Name == programName) return;
             //This is a bit of a hack but should work if we are just importing a single routine and then discarding

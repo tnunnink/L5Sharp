@@ -8,7 +8,8 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A Logix <c>Rung</c> element containing the properties for a L5X Rung component.
 /// </summary>
-public class Rung : LogixCode
+[LogixElement(L5XName.Rung)]
+public class Rung : LogixCode<Rung>
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -93,6 +94,34 @@ public class Rung : LogixCode
         return Instruction.Split(Text).SelectMany(x => x.Tags);
     }
 
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        return Instructions().Select(x => Reference.ToLogic(x));
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<ILogixEntity> Dependencies()
+    {
+        var dependencies = new List<ILogixEntity>();
+
+        foreach (var tagName in Tags())
+        {
+            if (!this.TryResolve<Tag>(tagName, out var tag)) continue;
+            dependencies.Add(tag);
+            dependencies.AddRange(tag.Dependencies());
+        }
+
+        foreach (var instruction in Instructions())
+        {
+            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            dependencies.Add(aoi);
+            dependencies.AddRange(aoi.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Reference);
+    }
+
     /// <summary>
     /// Returns a flat list of <see cref="Rung"/> representing all base and nested AOI logic in the
     /// current rung instance.
@@ -108,15 +137,12 @@ public class Rung : LogixCode
     /// </remarks>
     public IEnumerable<Rung> Flatten()
     {
-        if (Document is null)
-            throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
-
         var code = new List<Rung>();
 
         foreach (var instruction in Instructions())
         {
             if (instruction.IsNative) continue;
-            if (!TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
             var logic = aoi.LogicFor(instruction);
             code.AddRange(logic);
         }
@@ -162,7 +188,7 @@ public static class RungExtensions
         var code = new List<NeutralText>();
         var collection = rungs.ToList();
 
-        var content = collection.FirstOrDefault()?.Document;
+        var content = collection.FirstOrDefault()?.Document();
         if (content is null)
             throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
 

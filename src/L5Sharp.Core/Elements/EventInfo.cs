@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// Represents the Logix EventInfo element, which encapsulates details about an event trigger,
 /// associated tag, and timeout configuration.
 /// </summary>
+[LogixElement(L5XName.EventInfo)]
 public class EventInfo : LogixElement
 {
     /// <summary>

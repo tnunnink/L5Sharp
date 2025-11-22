@@ -6,7 +6,7 @@ using L5Sharp.Model;
 namespace L5Sharp.CLI.Commands.DataTypes;
 
 [Command("datatype list", Description = "Lists data types found in the target project.")]
-public class DataTypeListCommand : ListCommand<DataType, DataTypeInfo>
+public class DataTypeListCommand : ListCommand<DataTypeInfo>
 {
     protected override IEnumerable<DataTypeInfo> ExecuteQuery(L5X project)
     {

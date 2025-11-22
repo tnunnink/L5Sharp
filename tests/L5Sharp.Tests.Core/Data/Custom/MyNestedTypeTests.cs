@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
-using L5Sharp.Tests.Core.Data.Custom;
 
-namespace L5Sharp.Tests.Core.Types.Custom
+namespace L5Sharp.Tests.Core.Data.Custom
 {
     [TestFixture]
     public class MyNestedTypeTests
@@ -17,12 +16,13 @@ namespace L5Sharp.Tests.Core.Types.Custom
         [Test]
         public Task SetSimpleM4_Valid_ShouldBeValid()
         {
+            // ReSharper disable once UseObjectOrCollectionInitializer
             var type = new MyNestedData();
 
             type.Simple.M4 = 5000;
 
             var xml = type.Serialize().ToString();
-            
+
             return Verify(xml);
         }
 

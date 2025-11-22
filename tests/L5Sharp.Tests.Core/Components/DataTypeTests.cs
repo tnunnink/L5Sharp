@@ -126,7 +126,7 @@ namespace L5Sharp.Tests.Core.Components
             data.Should().NotBeNull();
             data.Name.Should().Be("ComplexType");
             data.Members.Should().HaveCount(9);
-            data.Member("SimpleMember")?.Value.Should().BeOfType<ComplexData>();
+            data.Member("SimpleMember")?.Value.Should().BeOfType<StructureData>();
             data.Member("TimeMember")?.Value.Should().BeOfType<TIMER>();
             data.Member("CounterMember")?.Value.Should().BeOfType<COUNTER>();
         }

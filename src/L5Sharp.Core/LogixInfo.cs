@@ -8,6 +8,7 @@ namespace L5Sharp.Core;
 /// A class containing information regarding the L5X export file. This information is found on the root
 /// RSLogix5000Content element and is used by the Logix software to determine the context of the L5X file.
 /// </summary>
+[LogixElement(L5XName.RSLogix5000Content)]
 public class LogixInfo : LogixElement
 {
     /// <summary>
@@ -140,12 +141,15 @@ public class LogixInfo : LogixElement
     }
 
     /// <summary>
-    /// Creates a new <see cref="LogixInfo"/> instance targeting the provided component instance.
+    /// Creates a new <see cref="LogixInfo"/> instance based on the provided component and optional revision.
     /// </summary>
-    /// <param name="component">The <see cref="LogixComponent"/> representing content target of the new info object.</param>
-    /// <param name="revision">An optional software <see cref="Revision"/> to be applied. If null, it will default to 1.0.</param>
-    /// <returns>A new instance of the <see cref="LogixInfo"/> class with the specified configuration.</returns>
-    public static LogixInfo Create(LogixComponent component, Revision? revision = null)
+    /// <typeparam name="TComponent">The type of the Logix component used to create the <see cref="LogixInfo"/>.</typeparam>
+    /// <param name="component">The Logix component used to initialize the <see cref="LogixInfo"/>. It cannot be null.</param>
+    /// <param name="revision">The optional software revision information. If not provided, a default value will be used.</param>
+    /// <returns>Returns a new instance of <see cref="LogixInfo"/> with metadata populated based on the specified component and revision.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="component"/> parameter is null.</exception>
+    public static LogixInfo Create<TComponent>(LogixComponent<TComponent> component, Revision? revision = null)
+        where TComponent : LogixComponent<TComponent>
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
@@ -154,7 +158,7 @@ public class LogixInfo : LogixElement
         content.Add(new XAttribute(L5XName.SchemaRevision, 1.0));
         content.Add(new XAttribute(L5XName.SoftwareRevision, revision ?? new Revision()));
         content.Add(new XAttribute(L5XName.TargetName, component.Name));
-        content.Add(new XAttribute(L5XName.TargetType, component.GetElementType()));
+        content.Add(new XAttribute(L5XName.TargetType, component.Serialize().Name.LocalName));
         content.Add(new XAttribute(L5XName.ContainsContext, true));
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));

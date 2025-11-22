@@ -18,7 +18,7 @@ public interface ITagBaseTypeBuilder
     /// Configures the tag as a structure tag of the specified data type.
     /// </summary>
     /// <param name="dataType">The name of the structure data type for the tag. If this is a statically defined type, it will
-    /// be instantiated with predefined members. Otherwise, we just generate an empty <see cref="ComplexData"/> object
+    /// be instantiated with predefined members. Otherwise, we just generate an empty <see cref="StructureData"/> object
     /// that would require further configuration if needed.</param>
     /// <returns>
     /// An instance of the <see cref="ITagBaseStructureBuilder"/> for further configuration of the structure tag.

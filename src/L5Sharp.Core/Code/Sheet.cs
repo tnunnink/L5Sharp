@@ -9,7 +9,7 @@ namespace L5Sharp.Core;
 /// A Logix <c>Sheet</c> block containing the properties for a Function Block Diagram (FBD).
 /// </summary>
 /// <remarks>
-/// A <c>Sheet</c> implements <see cref="LogixCode"/> and is the type of content that FBD routines contain.
+/// A <c>Sheet</c> implements <see cref="ILogixCode"/> and is the type of content that FBD routines contain.
 /// <para>
 /// Observe these guidelines when defining a sheet:<br/>
 ///     • The sheets in the routine appear in order in the export file.
@@ -28,10 +28,11 @@ namespace L5Sharp.Core;
 ///         have a unique id number within that sheet.<br/>
 /// </para>
 /// </remarks>
-[L5XType(L5XName.Sheet)]
-public class Sheet : LogixCode
+[LogixElement(L5XName.Sheet)]
+public class Sheet : LogixCode<Sheet>
 {
-    private static readonly HashSet<string> BlockTypes = [..typeof(Block).GetLogixTypeNames()];
+    //todo reimplement this with the source generators
+    private static readonly HashSet<string> BlockTypes = []; //[..typeof(Block).GetLogixTypeNames()];
 
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -88,6 +89,34 @@ public class Sheet : LogixCode
     public override IEnumerable<TagName> Tags()
     {
         return Blocks().Select(b => b.ToInstruction()).SelectMany(i => i.Tags);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        return Instructions().Select(x => Reference.ToLogic(x));
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<ILogixEntity> Dependencies()
+    {
+        var dependencies = new List<ILogixEntity>();
+
+        foreach (var tagName in Tags())
+        {
+            if (!this.TryResolve<Tag>(tagName, out var tag)) continue;
+            dependencies.Add(tag);
+            dependencies.AddRange(tag.Dependencies());
+        }
+
+        foreach (var instruction in Instructions())
+        {
+            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            dependencies.Add(aoi);
+            dependencies.AddRange(aoi.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Reference);
     }
 
     /// <summary>

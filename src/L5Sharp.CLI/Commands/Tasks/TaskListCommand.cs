@@ -7,7 +7,7 @@ using Task = L5Sharp.Core.Task;
 namespace L5Sharp.CLI.Commands.Tasks;
 
 [Command("task list", Description = "Lists tasks found in the target project.")]
-public class TaskListCommand : ListCommand<Task, TaskInfo>
+public class TaskListCommand : ListCommand<TaskInfo>
 {
     protected override IEnumerable<TaskInfo> ExecuteQuery(L5X project)
     {

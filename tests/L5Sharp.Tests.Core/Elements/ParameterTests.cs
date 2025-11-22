@@ -30,6 +30,6 @@ public class ParameterTests
         tag.Should().NotBeNull();
         tag.Name.Should().Be("MyParameterTag");
         tag.DataType.Should().Be("MyDataType");
-        tag.Value.Should().BeOfType<ComplexData>();
+        tag.Value.Should().BeOfType<StructureData>();
     }
 }

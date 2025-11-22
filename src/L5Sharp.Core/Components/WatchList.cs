@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.QuickWatchList)]
+[LogixElement(L5XName.QuickWatchList)]
 public class WatchList : LogixComponent<WatchList>
 {
     /// <inheritdoc />
@@ -91,5 +91,5 @@ public class WatchList : LogixComponent<WatchList>
     public override IEnumerable<Reference> Usages() => [];
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies() => [];
+    public override IEnumerable<ILogixEntity> Dependencies() => [];
 }

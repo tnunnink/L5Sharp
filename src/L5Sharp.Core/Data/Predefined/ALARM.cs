@@ -5,8 +5,9 @@
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built in data type in Logix that is a part of the alarm instruction set.
+/// A predefined or built-in data type in Logix that is a part of the alarm instruction set.
 /// </summary>
+[LogixData(nameof(ALARM))]
 public sealed class ALARM : StructureData
 {
     /// <summary>
@@ -39,7 +40,7 @@ public sealed class ALARM : StructureData
         ROCNegLimitInv = new BOOL();
         ROCPeriodInv = new BOOL();
     }
-    
+
     /// <inheritdoc />
     public ALARM(XElement element) : base(element)
     {

@@ -7,7 +7,8 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
 /// </summary>
-public class Connection : LogixObject
+[LogixElement(L5XName.Connection)]
+public class Connection : LogixObject<Connection>
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -15,7 +16,7 @@ public class Connection : LogixObject
         L5XName.InputTag,
         L5XName.OutputTag
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="Connection"/> with default values.
     /// </summary>
@@ -187,19 +188,11 @@ public class Connection : LogixObject
     /// Gets the Tag that represents the input channel data for the <see cref="Connection"/> element.
     /// </summary>
     /// <value>A <see cref="Tag"/> component containing the module defined data structure for the input connection data.</value>
-    public Tag? InputTag
-    {
-        get => GetComplex<Tag>();
-        set => SetComplex(value?.Convert(L5XName.InputTag));
-    }
+    public Tag? InputTag => GetComplex<Tag>();
 
     /// <summary>
     /// Gets the Tag that represents the output channel data for the <see cref="Connection"/> element.
     /// </summary>
     /// <value>A <see cref="Tag"/> component containing the module defined data structure for the output connection data.</value>
-    public Tag? OutputTag
-    {
-        get => GetComplex<Tag>();
-        set => SetComplex(value?.Convert(L5XName.OutputTag));
-    }
+    public Tag? OutputTag => GetComplex<Tag>();
 }

@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// An element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller redundancy.
 /// </summary>
+[LogixElement(L5XName.RedundancyInfo)]
 public class RedundancyInfo : LogixElement
 {
     

@@ -11,8 +11,8 @@ namespace L5Sharp.CLI.Commands;
 /// Represents a base command to retrieve information about a specific Logix component based on its name
 /// and output the result in a specified format.
 /// </summary>
-/// <typeparam name="TComponent">The type of the Logix component to retrieve, inheriting from <see cref="LogixComponent"/>.</typeparam>
-public abstract class GetCommand<TComponent> : ICommand where TComponent : LogixComponent
+/// <typeparam name="TComponent">The type of the Logix component to retrieve, inheriting from <see cref="ILogixComponent"/>.</typeparam>
+public abstract class GetCommand<TComponent> : ICommand where TComponent : LogixComponent<TComponent>
 {
     /// <summary>
     /// Gets or initializes the name of the Logix component to retrieve. This property is used as a key to

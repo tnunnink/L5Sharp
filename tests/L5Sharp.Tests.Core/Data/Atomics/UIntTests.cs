@@ -86,7 +86,7 @@ public class UIntTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new UINT(123, Radix.Hex);
+        var type = new UINT(123);
 
         var xml = type.Serialize().ToString();
 

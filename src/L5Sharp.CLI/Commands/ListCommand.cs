@@ -10,9 +10,8 @@ namespace L5Sharp.CLI.Commands;
 /// <summary>
 /// Represents a base command for listing components within a Logix project.
 /// </summary>
-/// <typeparam name="TObject">The type of the Logix component to query.</typeparam>
 /// <typeparam name="TRecord">The type of the record that represents the output of the listing operation.</typeparam>
-public abstract class ListCommand<TObject, TRecord> : ICommand where TObject : LogixObject
+public abstract class ListCommand<TRecord> : ICommand
 {
     /// <summary>
     /// Gets or sets the name filter for the command. This property allows users to specify a pattern
@@ -29,7 +28,7 @@ public abstract class ListCommand<TObject, TRecord> : ICommand where TObject : L
     /// </summary>
     [CommandOption("where", 'w', Description = "Filters items based on the expression.")]
     public string? Where { get; init; }
-    
+
     /// <summary>
     /// Gets or sets the expression used to filter items in the command. This property allows users
     /// to define a filtering condition that is applied to the query, enabling more precise control

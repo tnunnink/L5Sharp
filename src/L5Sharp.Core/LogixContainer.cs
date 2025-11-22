@@ -7,50 +7,38 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A generic collection that provides operations over an underlying <see cref="XElement"/> container
-/// of <see cref="LogixObject"/> types.
+/// Represents a strongly typed collection of <typeparamref name="TElement"/>
+/// where <typeparamref name="TElement"/> is a type derived from <see cref="LogixElement"/>.
+/// This class provides functionality for managing, querying, and modifying a collection of Logix elements.
 /// </summary>
-/// <typeparam name="TObject">The type inheriting <see cref="LogixObject"/>.</typeparam>
-/// <remarks>
-/// <para>
-/// This class represents a wrapper around a L5X element that contains a sequence of child elements.
-/// This class exposes collection methods for querying and modifying child elements of the container.
-/// Note that a container could potentially contain more than one type of child element, but this container class will
-/// only operate over the specified element type which is configured via the type's <see cref="L5XTypeAttribute"/>.
-/// </para>
-/// <para>
-/// The class is designed to only offer very basic operations, allowing it to be applicable to all container type elements;
-/// However, the user can extend the API for any container type using extension methods.
-/// See <see cref="ContainerExtensions"/> for examples demonstrating extensions for containers of type <see cref="LogixComponent"/>.
-/// </para>
-/// </remarks>
-public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICollection where TObject : LogixObject
+/// <typeparam name="TElement">The type of elements in the container, constrained to <see cref="LogixElement"/>.</typeparam>
+public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, ICollection where TElement : LogixElement
 {
-    private readonly string _itemType;
-
     /// <summary>
-    /// Creates an empty <see cref="LogixContainer{TObject}"/> with the default type name.
+    /// Creates an empty container. 
     /// </summary>
-    public LogixContainer() : base(typeof(TObject).GetLogixContainerName())
+    /// <remarks>
+    /// The underlying XElement name will be determined by pluralizing the specified generic type parameter type name.
+    /// If you need to override this functionality, use the XElement constructor and provide a custom XElement instance.
+    /// </remarks>
+    public LogixContainer() : base($"{typeof(TElement)}s")
     {
-        _itemType = typeof(TObject).GetLogixTypeName();
     }
 
     /// <summary>
-    /// Creates a new <see cref="LogixContainer{TObject}"/> initialized with the provided <see cref="XElement"/>. 
+    /// Creates a new container initialized with the provided <see cref="XElement"/>. 
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> containing a collection of child elements.</param>
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
     public LogixContainer(XElement element) : base(element)
     {
-        _itemType = typeof(TObject).GetLogixTypeName();
     }
 
     /// <summary>
-    /// Creates a new <see cref="LogixContainer{TComponent}"/> initialized with the provided collection.
+    /// Creates a new container initialized with the provided collection.
     /// </summary>
     /// <param name="elements">The collection of elements to initialize.</param>
-    public LogixContainer(IEnumerable<TObject> elements) : this()
+    public LogixContainer(IEnumerable<TElement> elements) : this()
     {
         if (elements is null)
             throw new ArgumentNullException(nameof(elements));
@@ -60,11 +48,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
             if (element is null)
                 throw new ArgumentException("Can not initialize LogixContainer with null elements.");
 
-            var xml = element.GetElementType() == _itemType
-                ? element.Serialize()
-                : element.Convert<TObject>(_itemType).Serialize();
-
-            Element.Add(xml);
+            Element.Add(element.Serialize());
         }
     }
 
@@ -72,7 +56,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// Gets the number of elements contained in the collection.
     /// </summary>
     /// <returns>A <see cref="int"/> representing the number of elements in the collection.</returns>
-    public int Count => Element.Elements(_itemType).Count();
+    public int Count => Element.Elements().Count();
 
     /// <summary>
     /// Accesses a single element at the specified index of the container collection.
@@ -82,20 +66,16 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of elements in the collection.</exception>
     /// <exception cref="ArgumentNullException"><c>value</c> is null when setting index.</exception>
-    public TObject this[int index]
+    public TElement this[int index]
     {
-        get => Element.Elements(_itemType).ElementAt(index).Deserialize<TObject>();
+        get => Element.Elements().ElementAt(index).Deserialize<TElement>();
         set
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value),
-                    $"Can not set container element of type {typeof(TObject)} null instance.");
+                    $"Can not set container element of type {typeof(TElement)} null instance.");
 
-            var xml = value.GetElementType() == _itemType
-                ? value.Serialize()
-                : value.Convert<TObject>(_itemType).Serialize();
-
-            Element.Elements(_itemType).ElementAt(index).ReplaceWith(xml);
+            Element.Elements().ElementAt(index).ReplaceWith(value.Serialize());
         }
     }
 
@@ -104,16 +84,14 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// </summary>
     /// <param name="element">The element to add.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
-    public void Add(TObject element)
+    public void Add(TElement element)
     {
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var xml = element.GetElementType() == _itemType
-            ? element.Serialize()
-            : element.Convert<TObject>(_itemType).Serialize();
+        var xml = element.Serialize();
 
-        var last = Element.Elements(_itemType).LastOrDefault();
+        var last = Element.Elements().LastOrDefault();
 
         if (last is null)
         {
@@ -129,7 +107,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// </summary>
     public void Clear()
     {
-        Element.Elements(_itemType).Remove();
+        Element.Elements().Remove();
     }
 
     /// <summary>
@@ -137,19 +115,19 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// </summary>
     /// <param name="element">The element to locate in the sequence.</param>
     /// <returns><c>true</c> if the source sequence contains an element that has the specified value; otherwise,<c>false</c></returns>
-    public bool Contains(TObject element)
+    public bool Contains(TElement element)
     {
-        return Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).Contains(element);
+        return Element.Elements().Select(e => e.Deserialize<TElement>()).Contains(element);
     }
 
     /// <summary>
-    /// Copies the entire <see cref="LogixContainer{TObject}"/> to a compatible one-dimensional array,
+    /// Copies the entire <see cref="LogixContainer{TElement}"/> to a compatible one-dimensional array,
     /// starting at the specified index of the target array.
     /// </summary>
     /// <inheritdoc />
-    public void CopyTo(TObject[] array, int arrayIndex)
+    public void CopyTo(TElement[] array, int arrayIndex)
     {
-        var list = Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).ToList();
+        var list = Element.Elements().Select(e => e.Deserialize<TElement>()).ToList();
         list.CopyTo(array, arrayIndex);
     }
 
@@ -158,7 +136,7 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// </summary>
     /// <param name="elements">The collection of elements to add.</param>
     /// <exception cref="ArgumentNullException"><c>elements</c> or any element in <c>elements</c> is null.</exception>
-    public void AddRange(IEnumerable<TObject> elements)
+    public void AddRange(IEnumerable<TElement> elements)
     {
         if (elements is null)
             throw new ArgumentNullException(nameof(elements));
@@ -168,11 +146,8 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
             if (element is null)
                 throw new ArgumentException("Can not add null elements to a LogixContainer.");
 
-            var xml = element.GetElementType() == _itemType
-                ? element.Serialize()
-                : element.Convert<TObject>(_itemType).Serialize();
-
-            var last = Element.Elements(_itemType).LastOrDefault();
+            var xml = element.Serialize();
+            var last = Element.Elements().LastOrDefault();
 
             if (last is null)
             {
@@ -185,11 +160,11 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     }
 
     /// <summary>
-    /// Determines the index of a specific item in the container collection.
+    /// Determines the index of a specific element in the container.
     /// </summary>
-    /// <param name="element">The <see cref="LogixObject"/> to locate the index of.</param>
-    /// <inheritdoc />
-    public int IndexOf(TObject element)
+    /// <param name="element">The element to locate in the container.</param>
+    /// <returns>The zero-based index of the element in the container if found; otherwise, -1.</returns>
+    public int IndexOf(TElement element)
     {
         var index = 0;
         foreach (var item in this)
@@ -213,16 +188,12 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is less than zero or greater than or equal to the
     /// number of elements in the collection.</exception>
-    public void Insert(int index, TObject element)
+    public void Insert(int index, TElement element)
     {
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
-        var xml = element.GetElementType() == _itemType
-            ? element.Serialize()
-            : element.Convert<TObject>(_itemType).Serialize();
-
-        Element.Elements(_itemType).ElementAt(index).AddBeforeSelf(xml);
+        Element.Elements().ElementAt(index).AddBeforeSelf(element.Serialize());
     }
 
     /// <summary>
@@ -230,10 +201,10 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// </summary>
     /// <param name="condition">The condition for which to remove elements.</param>
     /// <exception cref="ArgumentNullException"><c>condition</c> is null.</exception>
-    public void RemoveAll(Func<TObject, bool> condition)
+    public void RemoveAll(Func<TElement, bool> condition)
     {
         if (condition is null) throw new ArgumentNullException(nameof(condition));
-        Element.Elements(_itemType).Where(e => condition.Invoke(e.Deserialize<TObject>())).Remove();
+        Element.Elements().Where(e => condition.Invoke(e.Deserialize<TElement>())).Remove();
     }
 
     /// <summary>
@@ -244,23 +215,22 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// number of elements in the collection.</exception>
     public void RemoveAt(int index)
     {
-        Element.Elements(_itemType).ElementAt(index).Remove();
+        Element.Elements().ElementAt(index).Remove();
     }
 
     /// <summary>
-    /// Removes the first occurrence of a specific object from the <see cref="LogixContainer{TObject}"/>.
+    /// Removes the first occurrence of a specific element from the container.
     /// </summary>
-    /// <param name="element">The <see cref="LogixObject"/> to remove from the collection.</param>
+    /// <param name="element">The element to remove from the container.</param>
     /// <returns>
-    /// <c>true</c> if item was successfully removed from the collection; otherwise, <c>false</c>.
-    /// This method also returns <c>false</c> if item is not found in the original collection.
+    /// <c>true</c> if the element was successfully removed from the container; otherwise, <c>false</c>.
     /// </returns>
-    public bool Remove(TObject element)
+    public bool Remove(TElement element)
     {
         foreach (var item in this)
         {
             if (!item.Equals(element)) continue;
-            item.Remove();
+            item.Serialize().Remove();
             return true;
         }
 
@@ -272,13 +242,13 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// </summary>
     /// <param name="update">An update to apply to each element.</param>
     /// <exception cref="ArgumentNullException"><c>update</c> is null.</exception>
-    public void Update(Action<TObject> update)
+    public void Update(Action<TElement> update)
     {
         if (update is null) throw new ArgumentNullException(nameof(update));
 
-        foreach (var child in Element.Elements(_itemType))
+        foreach (var child in Element.Elements())
         {
-            var element = child.Deserialize<TObject>();
+            var element = child.Deserialize<TElement>();
             update.Invoke(element);
         }
     }
@@ -290,31 +260,33 @@ public sealed class LogixContainer<TObject> : LogixElement, IList<TObject>, ICol
     /// <param name="update">An update to apply to each element.</param>
     /// <param name="condition">The condition for which to update elements.</param>
     /// <exception cref="ArgumentNullException"><c>update</c> or <c>condition</c> is null.</exception>
-    public void Update(Action<TObject> update, Func<TObject, bool> condition)
+    public void Update(Action<TElement> update, Func<TElement, bool> condition)
     {
         if (update is null) throw new ArgumentNullException(nameof(update));
         if (condition is null) throw new ArgumentNullException(nameof(condition));
 
-        foreach (var child in Element.Elements(_itemType))
+        foreach (var child in Element.Elements())
         {
-            var element = child.Deserialize<TObject>();
+            var element = child.Deserialize<TElement>();
             if (condition.Invoke(element))
                 update.Invoke(element);
         }
     }
 
     /// <inheritdoc />
-    public IEnumerator<TObject> GetEnumerator() =>
-        Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).GetEnumerator();
+    public IEnumerator<TElement> GetEnumerator()
+    {
+        return Element.Elements().Select(e => e.Deserialize<TElement>()).GetEnumerator();
+    }
 
     void ICollection.CopyTo(Array array, int index)
     {
-        var source = Element.Elements(_itemType).Select(e => e.Deserialize<TObject>()).ToArray();
+        var source = Element.Elements().Select(e => e.Deserialize<TElement>()).ToArray();
         Array.Copy(source, 0, array, index, source.Length);
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    bool ICollection<TObject>.IsReadOnly => false;
+    bool ICollection<TElement>.IsReadOnly => false;
     bool ICollection.IsSynchronized => true;
     object ICollection.SyncRoot => Element;
 }
@@ -331,7 +303,7 @@ public static class ContainerExtensions
     /// <param name="name">The name of the component to find.</param>
     /// <returns><c>true</c> if a component with the specified name exists; otherwise, <c>false</c>.</returns>
     public static bool Contains<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         return container.Serialize().Elements().Any(e => e.LogixName() == name);
     }
@@ -342,9 +314,9 @@ public static class ContainerExtensions
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to find.</param>
     /// <typeparam name="TComponent">The component type to return.</typeparam>
-    /// <returns>A <see cref="LogixComponent"/> of the specified type if found; Otherwise, <c>null</c>.</returns>
+    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type if found; Otherwise, <c>null</c>.</returns>
     public static TComponent? Find<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         return container.Serialize().Elements().FirstOrDefault(e => e.LogixName() == name)?.Deserialize<TComponent>();
     }
@@ -355,16 +327,17 @@ public static class ContainerExtensions
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to find.</param>
     /// <typeparam name="TComponent">The component type to return.</typeparam>
-    /// <returns>A <see cref="LogixComponent"/> of the specified type.</returns>
+    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type.</returns>
     /// <exception cref="InvalidOperationException">No component having <c>name</c> exists in the container.</exception>
     public static TComponent Get<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
-        var element = container.Serialize();
-        var component = element.Elements().SingleOrDefault(e => e.LogixName() == name);
-        return component is not null
-            ? component.Deserialize<TComponent>()
-            : throw new InvalidOperationException($"No component with name {name} was found in container.");
+        var component = container.Serialize().Elements().SingleOrDefault(e => e.LogixName() == name);
+
+        if (component is null)
+            throw new InvalidOperationException($"No component with name {name} was found in container.");
+
+        return component.Deserialize<TComponent>();
     }
 
     /// <summary>
@@ -373,7 +346,7 @@ public static class ContainerExtensions
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to remove.</param>
     public static void Remove<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         container.Serialize().Elements().SingleOrDefault(c => string.Equals(c.LogixName(), name))?.Remove();
     }

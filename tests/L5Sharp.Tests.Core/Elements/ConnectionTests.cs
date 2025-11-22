@@ -57,8 +57,6 @@ public class ConnectionTests
             EventId = 1,
             InputTagSuffix = "II",
             OutputTagSuffix = "OO",
-            InputTag = new Tag { Value = ArrayData.New<DINT>(100) },
-            OutputTag = new Tag { Value = ArrayData.New<BOOL>(100) }
         };
 
         connection.Should().NotBeNull();
@@ -80,7 +78,7 @@ public class ConnectionTests
         connection.InputTag.Should().NotBeNull();
         connection.OutputTag.Should().NotBeNull();
     }
-    
+
     [Test]
     public Task New_Overridden_ShouldBeVerified()
     {
@@ -101,11 +99,8 @@ public class ConnectionTests
             EventId = 1,
             InputTagSuffix = "II",
             OutputTagSuffix = "OO",
-            InputTag = new Tag { Value = ArrayData.New<DINT>(100) },
-            OutputTag = new Tag { Value = ArrayData.New<BOOL>(100) }
         };
 
         return Verify(connection.Serialize().ToString());
     }
-
 }

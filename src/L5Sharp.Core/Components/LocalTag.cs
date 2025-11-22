@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// uses a different element name for tags in an AOI, so to match this our L5XTypeAttribute implementation, we are
 /// deriving a new specific class.
 /// </remarks>
-[L5XType(L5XName.LocalTag)]
+[LogixElement(L5XName.LocalTag)]
 public class LocalTag : Tag
 {
     /// <inheritdoc />

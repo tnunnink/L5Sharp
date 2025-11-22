@@ -65,7 +65,7 @@ public class L5XBasicTests
         var components = content.Components().ToArray();
 
         components.Should().NotBeEmpty();
-        components.Should().AllSatisfy(c => c.Should().BeAssignableTo<LogixComponent>());
+        components.Should().AllSatisfy(c => c.Should().BeAssignableTo<ILogixComponent>());
     }
 
     [Test]
@@ -87,7 +87,7 @@ public class L5XBasicTests
         var code = content.Code().ToArray();
 
         code.Should().NotBeEmpty();
-        code.Should().AllSatisfy(c => c.Should().BeAssignableTo<LogixCode>());
+        code.Should().AllSatisfy(c => c.Should().BeAssignableTo<ILogixCode>());
     }
 
     [Test]

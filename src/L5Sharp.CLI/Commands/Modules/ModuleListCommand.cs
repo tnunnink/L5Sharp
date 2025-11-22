@@ -6,7 +6,7 @@ using L5Sharp.Model;
 namespace L5Sharp.CLI.Commands.Modules;
 
 [Command("module list", Description = "")]
-public class ModuleListCommand : ListCommand<Module, ModuleInfo>
+public class ModuleListCommand : ListCommand<ModuleInfo>
 {
     protected override IEnumerable<ModuleInfo> ExecuteQuery(L5X project)
     {

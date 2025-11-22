@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq;
+using System.Xml.Linq;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
@@ -9,6 +10,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A predefined data type that is built into Logix and used with PID instructions.
 /// </summary>
+[LogixData(nameof(PID))]
 public sealed class PID : StructureData
 {
     /// <summary>
@@ -66,7 +68,7 @@ public sealed class PID : StructureData
         MINCV = new REAL();
         MINTIE = new REAL();
         MAXTIE = new REAL();
-        DATA = ArrayData.New<REAL>(17);
+        DATA = [17];
     }
 
     /// <inheritdoc />
@@ -577,10 +579,10 @@ public sealed class PID : StructureData
     /// <summary>
     /// Gets the <c>DATA</c> member of the <see cref="PID"/> type.
     /// </summary>
-    /// <value>A <see cref="ArrayData{TLogixType}"/> atomic value.</value>
-    public ArrayData<REAL> DATA
+    /// <value>A <see cref="ArrayData"/> atomic value.</value>
+    public REAL[] DATA
     {
-        get => GetMember<ArrayData<REAL>>();
-        set => SetMember(value);
+        get => GetArray<REAL>();
+        set => SetArray(value);
     }
 }

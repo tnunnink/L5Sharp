@@ -14,6 +14,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.Module)]
 public class Module : LogixComponent<Module>
 {
     /// <inheritdoc />
@@ -321,7 +322,9 @@ public class Module : LogixComponent<Module>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
+        if (!TryGetDocument(out var doc)) return [];
+        
+        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
     }
 
     /// <inheritdoc />
@@ -329,11 +332,9 @@ public class Module : LogixComponent<Module>
     /// For modules, this will return all child modules of the current module. This resembles how logix exports
     /// modules from Studio.
     /// </remarks>
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        if (Document is null) return [];
-
-        var dependencies = new List<LogixComponent>();
+        var dependencies = new List<ILogixEntity>();
 
         foreach (var module in GetModules())
         {
@@ -341,7 +342,7 @@ public class Module : LogixComponent<Module>
             dependencies.AddRange(module.Dependencies());
         }
 
-        return dependencies.Distinct(m => m.Name);
+        return dependencies.Cast<Module>().Distinct(m => m.Name);
     }
 
     /// <summary>

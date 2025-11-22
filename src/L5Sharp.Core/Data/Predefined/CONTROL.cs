@@ -5,8 +5,9 @@
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built in data type used with ... instructions. 
+/// A predefined or built-in data type used with ... instructions. 
 /// </summary>
+[LogixData(nameof(CONTROL))]
 public sealed class CONTROL : StructureData
 {
     /// <summary>

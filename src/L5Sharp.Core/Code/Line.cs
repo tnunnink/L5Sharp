@@ -8,7 +8,8 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A Logix <c>Line</c> element containing the properties for a L5X Line component.
 /// </summary>
-public sealed class Line : LogixCode
+[LogixElement(L5XName.Line)]
+public sealed class Line : LogixCode<Line>
 {
     /// <summary>
     /// Creates a new <see cref="Line"/> with default values.
@@ -45,6 +46,34 @@ public sealed class Line : LogixCode
     public override IEnumerable<TagName> Tags()
     {
         return Instruction.Split(Element.Value).SelectMany(x => x.Tags);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<Reference> Usages()
+    {
+        return Instructions().Select(x => Reference.ToLogic(x));
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<ILogixEntity> Dependencies()
+    {
+        var dependencies = new List<ILogixEntity>();
+
+        foreach (var tagName in Tags())
+        {
+            if (!this.TryResolve<Tag>(tagName, out var tag)) continue;
+            dependencies.Add(tag);
+            dependencies.AddRange(tag.Dependencies());
+        }
+
+        foreach (var instruction in Instructions())
+        {
+            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            dependencies.Add(aoi);
+            dependencies.AddRange(aoi.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Reference);
     }
 
     /// <inheritdoc />

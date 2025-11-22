@@ -1,7 +1,4 @@
-﻿using System;
-using AutoFixture;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using FluentAssertions;
 
 namespace L5Sharp.Tests.Core.Enums
 {
@@ -11,9 +8,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Default_Predefined_ShouldBeNullRadix()
         {
-            var type = new STRING();
-
-            var radix = Radix.Default(type);
+            var radix = Radix.Default(typeof(STRING));
 
             radix.Should().Be(Radix.Null);
         }
@@ -21,9 +16,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Default_Real_ShouldBeDecimalRadix()
         {
-            var type = new REAL();
-
-            var radix = Radix.Default(type);
+            var radix = Radix.Default(typeof(REAL));
 
             radix.Should().Be(Radix.Float);
         }
@@ -31,9 +24,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Default_Bool_ShouldBeDecimalRadix()
         {
-            var type = new BOOL();
-
-            var radix = Radix.Default(type);
+            var radix = Radix.Default(typeof(BOOL));
 
             radix.Should().Be(Radix.Decimal);
         }
@@ -41,9 +32,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Default_Sint_ShouldBeDecimalRadix()
         {
-            var type = new SINT();
-
-            var radix = Radix.Default(type);
+            var radix = Radix.Default(typeof(SINT));
 
             radix.Should().Be(Radix.Decimal);
         }
@@ -52,9 +41,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Default_Int_ShouldBeDecimalRadix()
         {
-            var type = new INT();
-
-            var radix = Radix.Default(type);
+            var radix = Radix.Default(typeof(INT));
 
             radix.Should().Be(Radix.Decimal);
         }
@@ -63,9 +50,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Default_Dint_ShouldBeDecimalRadix()
         {
-            var type = new DINT();
-
-            var radix = Radix.Default(type);
+            var radix = Radix.Default(typeof(DINT));
 
             radix.Should().Be(Radix.Decimal);
         }
@@ -73,49 +58,9 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Default_Lint_ShouldBeDecimalRadix()
         {
-            var type = new LINT();
-
-            var radix = Radix.Default(type);
+            var radix = Radix.Default(typeof(LINT));
 
             radix.Should().Be(Radix.Decimal);
-        }
-
-        [Test]
-        public void SupportsType_Null_ShouldBeFalse()
-        {
-            var result = Radix.Decimal.SupportsType(null!);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsType_NonAtomic_ShouldBeFalse()
-        {
-            var type = new STRING();
-
-            var result = Radix.Decimal.SupportsType(type);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void SupportsType_AtomicAsIDataType_ShouldBeTrue()
-        {
-            var type = (LogixData)new BOOL();
-
-            var result = Radix.Decimal.SupportsType(type);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void SupportsType_ComplexAsIDataType_ShouldBeFalse()
-        {
-            var type = (LogixData)new STRING();
-
-            var result = Radix.Decimal.SupportsType(type);
-
-            result.Should().BeFalse();
         }
 
         [Test]

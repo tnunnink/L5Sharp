@@ -2,11 +2,14 @@
 
 namespace L5Sharp.Core;
 
-internal class ConfigureOperation(Action<LogixComponent> action) : IImportOperation
+/// <summary>
+/// Represents an operation that applies a configuration action to an <see cref="ILogixComponent"/>.
+/// </summary>
+internal class ConfigureOperation(Action<ILogixComponent> action) : IImportOperation
 {
-    public bool ApplyTo(LogixComponent input)
+    public bool ApplyTo(ILogixComponent component)
     {
-        action.Invoke(input);
+        action.Invoke(component);
         return true;
     }
 }

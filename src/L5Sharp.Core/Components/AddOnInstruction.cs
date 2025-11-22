@@ -15,7 +15,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.AddOnInstructionDefinition)]
+[LogixElement(L5XName.AddOnInstructionDefinition)]
 public class AddOnInstruction : LogixComponent<AddOnInstruction>
 {
     private const string DateFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
@@ -279,26 +279,28 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
+        if (!TryGetDocument(out var doc)) return [];
+
+        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference));
 
         //todo any type reference to this AOI (tag or other AOI parameter/local tag).
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        var dependencies = new List<LogixComponent>();
+        var dependencies = new List<ILogixEntity>();
 
         foreach (var parameter in Parameters)
         {
-            if (parameter.DataType is null || !TryResolveType(parameter.DataType, out var type)) continue;
+            if (parameter.DataType is null || !this.TryResolveType(parameter.DataType, out var type)) continue;
             dependencies.Add(type);
             dependencies.AddRange(type.Dependencies());
         }
 
         foreach (var tag in LocalTags)
         {
-            if (!TryResolveType(tag.DataType, out var type)) continue;
+            if (!this.TryResolveType(tag.DataType, out var type)) continue;
             dependencies.Add(type);
             dependencies.AddRange(type.Dependencies());
         }
@@ -334,7 +336,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// Creates a new <see cref="LogixData"/> object given the current AOI configuration.
     /// </summary>
     /// <returns>
-    /// An <see cref="ComplexData"/> instance having the name of the current instruction and members generated
+    /// An <see cref="StructureData"/> instance having the name of the current instruction and members generated
     /// from the configured <see cref="Parameters"/>.
     /// </returns>
     /// <remarks>
@@ -347,10 +349,10 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
             throw new InvalidOperationException("Can not create data with null or empty data type name");
 
         //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
-        var data = LogixData.Create(Name);
+        var data = LogixType.Create(Name);
 
         //If it is not a complex data (meaning more derived), then it was defined, and we can return it.
-        if (data is not ComplexData complexData) return data;
+        if (data is not StructureData structure) return data;
 
         //Generate the members from the parameters that are configured as input/output parameters.
         //These are the only members that are used as members of an AOI tag structure.
@@ -358,8 +360,8 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
             .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Output)
             .Select(p => p.ToMember());
 
-        complexData.AddRange(members.ToList());
-        return complexData;
+        structure.AddMany(members.ToList());
+        return structure;
     }
 
     /// <summary>

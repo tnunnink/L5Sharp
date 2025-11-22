@@ -21,6 +21,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.Task)]
 public sealed class Task : LogixComponent<Task>
 {
     /// <inheritdoc />
@@ -157,7 +158,9 @@ public sealed class Task : LogixComponent<Task>
     /// Therefore, if this task is not attached, it will return and empty collection. Also, if no program exists with the
     /// scheduled name, this will return an empty collection.
     /// </remarks>
-    public IEnumerable<Program> Programs => Document?.Programs.Where(p => Scheduled.Contains(p.Name)) ?? [];
+    public IEnumerable<Program> Programs => TryGetDocument(out var doc)
+        ? doc.Programs.Where(p => Scheduled.Contains(p.Name))
+        : [];
 
     /// <summary>
     /// The collection of program names that are scheduled for the task.
@@ -170,13 +173,15 @@ public sealed class Task : LogixComponent<Task>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true) ?? [];
+        if (!TryGetDocument(out var doc)) return [];
+        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true);
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        return Document?.Programs.Where(p => Scheduled.Contains(p.Name)) ?? [];
+        if (!TryGetDocument(out var doc)) return [];
+        return doc.Programs.Where(p => Scheduled.Contains(p.Name));
     }
 
     /// <inheritdoc />
@@ -189,9 +194,9 @@ public sealed class Task : LogixComponent<Task>
     public override void Delete()
     {
         if (Element.Parent is null) return;
-        if (Document is null) return;
+        if (!TryGetDocument(out var doc)) return;
 
-        Document.Programs
+        doc.Programs
             .Where(p => Scheduled.Contains(p.Name))
             .ToList()
             .ForEach(p => p.Delete());
@@ -239,10 +244,10 @@ public sealed class Task : LogixComponent<Task>
         if (program is null)
             throw new ArgumentNullException(nameof(program));
 
-        if (Document is null)
+        if (!TryGetDocument(out var doc))
             throw new InvalidOperationException("Can not add program to detached Task component.");
 
-        Document.Programs.Add(program);
+        doc.Programs.Add(program);
         Schedule(program.Name);
     }
 }

@@ -6,7 +6,7 @@ using L5Sharp.Model;
 namespace L5Sharp.CLI.Commands.Programs;
 
 [Command("program list", Description = "Lists programs found in the target project.")]
-public class ProgramListCommand : ListCommand<Program, ProgramInfo>
+public class ProgramListCommand : ListCommand<ProgramInfo>
 {
     protected override IEnumerable<ProgramInfo> ExecuteQuery(L5X project)
     {

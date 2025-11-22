@@ -9,6 +9,14 @@ namespace L5Sharp.Tests.Core;
 public class LogixElementTests
 {
     [Test]
+    public void ShouldBeRegisteredInSerializerClass()
+    {
+        /*var element = LogixSerializer.;
+
+        element.Should().NotBeNull();*/
+    }
+
+    [Test]
     public void New_Default_ShouldNotBeNull()
     {
         var element = new TestElement();
@@ -17,12 +25,11 @@ public class LogixElementTests
     }
 
     [Test]
-    public void New_Default_ShouldHaveExpectedValues()
+    public void New_Default_ShouldHaveExpectedElementName()
     {
         var element = new TestElement();
 
-        element.GetElementType().Should().Be("Test");
-        element.Document.Should().BeNull();
+        element.Serialize().Name.LocalName.Should().Be("Test");
     }
 
     [Test]
@@ -581,20 +588,6 @@ public class LogixElementTests
     }
 
     [Test]
-    public void AddAfter_InvalidType_ShouldThrowException()
-    {
-        var container = new XElement("Container",
-            new XElement("Test", new XAttribute("RequiredValue", "Test_1")),
-            new XElement("Test", new XAttribute("RequiredValue", "Test_2"))
-        );
-        var xml = container.FirstNode as XElement;
-        var element = new TestElement(xml!);
-
-        FluentActions.Invoking(() => element.AddAfter(new ChildElement())).Should()
-            .Throw<InvalidOperationException>();
-    }
-
-    [Test]
     public void AddBefore_Null_ShouldThrowException()
     {
         var xml = new XElement("Test", new XAttribute("RequiredValue", "Test_1"));
@@ -641,20 +634,6 @@ public class LogixElementTests
         element.AddBefore(new TestElement(new XElement("Alternate", new XAttribute("RequiredValue", "Test_3"))));
 
         return Verify(container.ToString());
-    }
-
-    [Test]
-    public void AddBefore_InvalidType_ShouldThrowException()
-    {
-        var container = new XElement("Container",
-            new XElement("Test", new XAttribute("RequiredValue", "Test_1")),
-            new XElement("Test", new XAttribute("RequiredValue", "Test_2"))
-        );
-        var xml = container.FirstNode as XElement;
-        var element = new TestElement(xml!);
-
-        FluentActions.Invoking(() => element.AddBefore(new ChildElement())).Should()
-            .Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -707,20 +686,6 @@ public class LogixElementTests
     }
 
     [Test]
-    public void Replace_InvalidType_ShouldThrowException()
-    {
-        var container = new XElement("Container",
-            new XElement("Test", new XAttribute("RequiredValue", "Test_1")),
-            new XElement("Test", new XAttribute("RequiredValue", "Test_2"))
-        );
-        var xml = container.FirstNode as XElement;
-        var element = new TestElement(xml!);
-
-        FluentActions.Invoking(() => element.Replace(new ChildElement())).Should()
-            .Throw<InvalidOperationException>();
-    }
-
-    [Test]
     public void Remove_NoParent_ShouldThrowException()
     {
         var xml = new XElement("Test", new XAttribute("RequiredValue", "Test_1"));
@@ -744,95 +709,6 @@ public class LogixElementTests
 
         return Verify(container.ToString());
     }
-
-    [Test]
-    public void Convert_AsElementNullType_ShouldThrowException()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        FluentActions.Invoking(() => element.Convert(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Convert_AsElementEmptyType_ShouldThrowException()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        FluentActions.Invoking(() => element.Convert(string.Empty)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Convert_AsElementInvalidType_ShouldThrowException()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        FluentActions.Invoking(() => element.Convert("ChildElement")).Should().Throw<InvalidOperationException>();
-    }
-
-    [Test]
-    public void Convert_AsElementAlternateType_ShouldHaveExpectedTypeAndBeDifferentInstance()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        var converted = element.Convert("Alternate");
-
-        converted.GetElementType().Should().Be("Alternate");
-        converted.Should().BeOfType<TestElement>();
-        converted.Should().NotBeSameAs(element);
-    }
-
-    [Test]
-    public void Convert_AsElementSameType_ShouldHaveExpectedTypeAndBeSameInstance()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        var converted = element.Convert("Test");
-
-        converted.GetElementType().Should().Be("Test");
-        converted.Should().BeOfType<TestElement>();
-        converted.Should().BeSameAs(element);
-    }
-
-    [Test]
-    public void Convert_AsTypeInvalidType_ShouldThrowException()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        FluentActions.Invoking(() => element.Convert<ChildElement>()).Should().Throw<InvalidOperationException>();
-    }
-
-    [Test]
-    public void Convert_AsTypeAlternateType_ShouldHaveExpectedTypeAndBeDifferentInstance()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        var converted = element.Convert<TestElement>("Alternate");
-
-        converted.GetElementType().Should().Be("Alternate");
-        converted.Should().BeOfType<TestElement>();
-        converted.Should().NotBeSameAs(element);
-    }
-
-    [Test]
-    public void Convert_AsTypeDefaultType_ShouldHaveExpectedTypeAndBeSameInstance()
-    {
-        var element = new TestElement(new XElement("Test", new XAttribute("RequiredValue", "Test_1")));
-
-        var converted = element.Convert<TestElement>();
-
-        converted.GetElementType().Should().Be("Test");
-        converted.Should().BeOfType<TestElement>();
-        converted.Should().BeSameAs(element);
-    }
-
-    /*[Test]
-    public void Parse_ValidXml_ShouldNotBeNull()
-    {
-
-        var element = LogixElement.Parse("");
-
-        element.Should().NotBeNull();
-    }*/
 
     [Test]
     public void EquivalentTo_AreEquivalent_ShouldBeTrue()
@@ -928,8 +804,8 @@ public class LogixElementTests
     }
 }
 
-[L5XType("Test")]
-[L5XType("Alternate")]
+[LogixElement("Test")]
+[LogixElement("Alternate")]
 public class TestElement : LogixObject<TestElement>
 {
     public TestElement() : base("Test")
@@ -983,7 +859,8 @@ public class TestElement : LogixObject<TestElement>
     }
 }
 
-public class ChildElement : LogixObject
+[LogixElement(nameof(ChildElement))]
+public class ChildElement : LogixObject<ChildElement>
 {
     public ChildElement() : base(nameof(ChildElement))
     {

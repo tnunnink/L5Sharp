@@ -16,7 +16,7 @@ public class BoolTests
         var fixture = new Fixture();
         _random = fixture.Create<bool>();
     }
-        
+
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
@@ -38,7 +38,7 @@ public class BoolTests
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
         var type = new BOOL(_random);
 
@@ -46,47 +46,14 @@ public class BoolTests
     }
 
     [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
+    public void New_StringValue_ShouldHaveExpectedValues()
     {
-        var type = new BOOL(Radix.Binary);
-
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0");
-    }
-
-    [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new BOOL(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new BOOL(Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
-    {
-        var type = new BOOL(true, Radix.Binary);
+        BOOL type = "2#1";
 
         type.Should().Be(true);
         type.Radix.Should().Be(Radix.Binary);
     }
 
-    [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new BOOL(true, null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new BOOL(true, Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
-        
     [Test]
     public void As_AtomicType_ShouldNotBeNull()
     {
@@ -148,7 +115,7 @@ public class BoolTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new BOOL(true, Radix.Binary);
+        BOOL type = "2#1";
 
         var xml = type.Serialize().ToString();
 
@@ -268,7 +235,7 @@ public class BoolTests
 
         result.Should().Be(expected);
     }
-        
+
     [Test]
     public void ToString_WhenCalled_ShouldBeExpectedValue()
     {
@@ -783,7 +750,7 @@ public class BoolTests
         Console.WriteLine(stopwatch.ElapsedMilliseconds);
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     [TestCase(1000)]
     [TestCase(10000)]
@@ -813,7 +780,7 @@ public class BoolTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

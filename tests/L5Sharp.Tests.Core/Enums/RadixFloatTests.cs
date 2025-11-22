@@ -15,49 +15,37 @@ namespace L5Sharp.Tests.Core.Enums
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.Float);
         }
-        
-        [Test]
-        public void Format_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => Radix.Float.FormatValue(null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Format_NonSupportedAtomic_ShouldThrowRadixNotSupportedException()
-        {
-            FluentActions.Invoking(() => Radix.Float.FormatValue(new DINT())).Should().Throw<NotSupportedException>();
-        }
 
         [Test]
         public void Format_Zero_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.FormatValue(new REAL());
+            var result = Radix.Float.Format(0.0);
 
             result.Should().Be("0.0");
         }
-        
+
         [Test]
         public void Format_ValidReal_ShouldBeExpectedFormat()
         {
             var fixture = new Fixture();
             var value = fixture.Create<float>();
-            var result = Radix.Float.FormatValue(new REAL(value));
+            var result = Radix.Float.Format(value);
 
             result.Should().Be(value.ToString("0.0###", CultureInfo.InvariantCulture));
         }
-        
+
         [Test]
         public void Format_CustomRealSevenDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.FormatValue(new REAL(0.1234567f));
+            var result = Radix.Float.Format(0.1234567f);
 
             result.Should().Be("0.1234567");
         }
-        
+
         [Test]
         public void Format_CustomRealMoreThanFourDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.FormatValue(new REAL(0.12345678f));
+            var result = Radix.Float.Format(0.12345678f);
 
             result.Should().Be("0.1234568");
         }
@@ -65,29 +53,31 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Format_CustomRealOneDecimal_ShouldBeExpectedFormat()
         {
-            var result = Radix.Float.FormatValue(new REAL(1234.5f));
+            var result = Radix.Float.Format(1234.5f);
 
             result.Should().Be("1234.5");
         }
-        
+
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Float.ParseValue(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Float.Parse<float>(null!)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Parse_Empty_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Float.ParseValue(string.Empty)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Float.Parse<float>(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Parse_Float_ShouldBeExpected()
         {
-            var result = Radix.Float.ParseValue(1.23.ToString(CultureInfo.InvariantCulture));
+            var value = 1.23.ToString(CultureInfo.InvariantCulture);
 
-            result.As<REAL>().Should().Be(1.23f);
+            var result = Radix.Float.Parse<float>(value);
+
+            result.Should().Be(1.23f);
         }
     }
 }

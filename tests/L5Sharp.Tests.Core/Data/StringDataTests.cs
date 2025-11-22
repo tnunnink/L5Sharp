@@ -68,7 +68,7 @@ public class StringDataTests
         var type = new StringData("MyStringType", "This is the value");
 
         type.LEN.Should().Be(17);
-        type.DATA.Dimensions.Length.Should().Be(17);
+        type.DATA.Length.Should().Be(17);
     }
 
     [Test]

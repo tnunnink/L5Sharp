@@ -10,6 +10,7 @@ namespace L5Sharp.Core;
 /// A component of the <see cref="SafetyInfo"/> element which contains the list of tags configured for the
 /// safety tag map.
 /// </summary>
+[LogixElement(L5XName.SafetyTagMap)]
 public class SafetyTagMap : LogixElement, IList<TagName>
 {
     /// <summary>

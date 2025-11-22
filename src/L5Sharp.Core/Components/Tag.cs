@@ -13,12 +13,12 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.Tag)]
-[L5XType(L5XName.ConfigTag)]
-[L5XType(L5XName.InputTag)]
-[L5XType(L5XName.OutputTag)]
-[L5XType(L5XName.InAliasTag)]
-[L5XType(L5XName.OutAliasTag)]
+[LogixElement(L5XName.Tag)]
+[LogixElement(L5XName.ConfigTag)]
+[LogixElement(L5XName.InputTag)]
+[LogixElement(L5XName.OutputTag)]
+[LogixElement(L5XName.InAliasTag)]
+[LogixElement(L5XName.OutAliasTag)]
 public class Tag : LogixComponent<Tag>
 {
     /// <summary>
@@ -94,14 +94,14 @@ public class Tag : LogixComponent<Tag>
     /// <param name="dataType">The name of the data type of the tag.</param>
     /// <param name="description">The optional description of the tag.</param>
     /// <remarks>
-    /// This constructor will use the <see cref="LogixData.Create(string)"/> factory method to instantiate the <see cref="Value"/>
+    /// This constructor will use the <see cref="LogixType.Create(string)"/> factory method to instantiate the <see cref="Value"/>
     /// data for the tag. If <paramref name="dataType"/> represents a complex type that is not statically defined,
-    /// it will default to creating a <see cref="ComplexData"/> instance having the provided name.
+    /// it will default to creating a <see cref="StructureData"/> instance having the provided name.
     /// </remarks>
     public Tag(string name, string dataType, string? description = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
-        Value = LogixData.Create(dataType);
+        Value = LogixType.Create(dataType);
         SetProperty(description, nameof(Description));
     }
 
@@ -394,7 +394,9 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <value>The <see cref="Tag"/> object that represents the alias if found. If this object is not
     /// attached, or <see cref="AliasFor"/> is not set, then this will return <c>null</c>.</value>
-    public Tag? Alias => AliasFor is not null && Document?.TryGet<Tag>(AliasFor, out var alias) is true ? alias : null;
+    public Tag? Alias => AliasFor is not null && TryGetDocument(out var doc) && doc.TryGet<Tag>(AliasFor, out var alias)
+        ? alias
+        : null;
 
     /// <summary>
     /// The collection of <see cref="Comment"/> configured for this tag.
@@ -441,13 +443,15 @@ public class Tag : LogixComponent<Tag>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        return Document?.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
+        if (!TryGetDocument(out var doc)) return [];
+
+        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference));
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        var dependencies = new List<LogixComponent>();
+        var dependencies = new List<ILogixEntity>();
 
         if (TagType is not null && TagType == TagType.Alias && Alias is not null)
         {
@@ -505,17 +509,17 @@ public class Tag : LogixComponent<Tag>
     /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
     /// <remarks>
     /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexData"/> <c>Add</c> method. Therefore, this is simply a helper to make mutating tag structures
+    /// <see cref="StructureData"/> <c>Add</c> method. Therefore, this is simply a helper to make mutating tag structures
     /// more concise.
     /// </remarks>
     public void Add(string name, LogixData value)
     {
         var member = new Member(name, value);
 
-        if (Value is not ComplexData complexType)
+        if (Value is not StructureData structure)
             throw new InvalidOperationException($"The type {Value.GetType()} is not a mutable data structure.");
 
-        complexType.Add(member);
+        structure.Add(member);
     }
 
     /// <summary>
@@ -525,15 +529,15 @@ public class Tag : LogixComponent<Tag>
     /// <exception cref="InvalidOperationException">The current tag does not contain a mutable complex logix type.</exception>
     /// <remarks>
     /// This will operate relative to the current tag member object, and is simply a call to the underlying
-    /// <see cref="ComplexData"/> <c>Remove</c> method. Therefore, this is simply a helper to make mutating tag structures
+    /// <see cref="StructureData"/> <c>Remove</c> method. Therefore, this is simply a helper to make mutating tag structures
     /// more concise.
     /// </remarks>
     public void Remove(string name)
     {
-        if (Value is not ComplexData complexType)
+        if (Value is not StructureData structure)
             throw new InvalidOperationException($"The type {Value.GetType()} is not a mutable data structure.");
 
-        complexType.Remove(name);
+        structure.Remove(name);
     }
 
     /// <summary>
@@ -681,7 +685,7 @@ public class Tag : LogixComponent<Tag>
     /// <see cref="Value"/> changed to the provided <see cref="LogixData"/>.
     /// </returns>
     /// <exception cref="InvalidOperationException">When this tag is a nested tag member, and it's parent tag's
-    /// <see cref="Value"/> property is not a <see cref="ComplexData"/> object.</exception>
+    /// <see cref="Value"/> property is not a <see cref="StructureData"/> object.</exception>
     /// <remarks>
     /// <para>
     /// This is meant to be a concise way to change the data type of tag while leaving all else the same, since setting
@@ -704,11 +708,12 @@ public class Tag : LogixComponent<Tag>
             return new Tag(Element);
         }
 
-        if (Parent.Value is not ComplexData complexType)
+        if (Parent.Value is not StructureData structure)
             throw new InvalidOperationException(
                 $"Can not mutate tag data for parent type {Parent.DataType} as it is not a complex type object.");
 
-        complexType.Replace(TagName.Member, value);
+        structure[TagName.Member] = value;
+
         return Root[TagName.Path];
     }
 
@@ -716,10 +721,12 @@ public class Tag : LogixComponent<Tag>
     /// Creates a new <see cref="Tag"/> with the provided name and specified type parameter.
     /// </summary>
     /// <param name="name">The name of the tag.</param>
-    /// <typeparam name="TLogixType">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
+    /// <typeparam name="TData">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
     /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
-    public static Tag Create<TLogixType>(string name) where TLogixType : LogixData, new() =>
-        new() { Name = name, Value = new TLogixType() };
+    public static Tag Create<TData>(string name) where TData : LogixData, new()
+    {
+        return new Tag { Name = name, Value = new TData() };
+    }
 
     /// <summary>
     /// Builds a tag using the fluent tag builder API to intuitively construct simple or complex tag objects. 
@@ -825,18 +832,18 @@ public class Tag : LogixComponent<Tag>
         //If there is no indexed context or the corresponding data type is not available, default to inherited description.
         //Note that we need to always use the parent type. If we are here, we know we have a parent and could
         //potentially be some user-defined type.
-        if (Document is null || !Document.TryGet<DataType>(Parent.DataType, out var type))
+        if (!TryGetDocument(out var doc) || !doc.TryGet<DataType>(Parent.DataType, out var type))
             return Parent.Description;
 
         //Here we have the corresponding type definition and can use the description to emulate pass through.
         //Enable means returning the definition description.
-        if (Equals(Document.Controller.PassThroughConfiguration, PassThroughOption.Enabled))
+        if (Equals(doc.Controller.PassThroughConfiguration, PassThroughOption.Enabled))
         {
             return type.Description;
         }
 
         //EnableWithAppend means append the definition description to the parent.
-        if (Equals(Document.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
+        if (Equals(doc.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
         {
             var description = type.Members.FirstOrDefault(m => m.Name == _member.Name)?.Description;
             return Parent.Description + " " + description;
@@ -920,19 +927,19 @@ public class Tag : LogixComponent<Tag>
 
         //We have to have all 3 parts (module name, I/O suffix, and slot number) to find the correct member.
         //If not, then we will default to a virtual member with a no action getter and setter;
-        if (parts.Length != 3 || Document is null)
-            return new Member(tagName, () => LogixData.Null, _ => { });
+        if (parts.Length != 3 || TryGetDocument(out var doc))
+            return new Member(tagName, () => LogixType.Null, _ => { });
 
         var rack = parts[0];
         var slot = parts[1];
         var suffix = parts[2];
 
-        var tag = Document.Query<Module>()
+        var tag = doc.Query<Module>()
             .FirstOrDefault(m => m.Name == rack)
             ?.Tags.FirstOrDefault(t => t.Name.EndsWith(suffix))
             ?.Member($"Slot[{slot}]"); //Not sure if this is all rack connections tag structure, but for now will hard code
 
-        return tag is not null ? tag._member : new Member(tagName, () => LogixData.Null, _ => { });
+        return tag is not null ? tag._member : new Member(tagName, () => LogixType.Null, _ => { });
     }
 
     #endregion

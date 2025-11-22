@@ -23,7 +23,7 @@ public class BlockTests
         block.Inputs.Should().BeEmpty();
         block.Outputs.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.GetElementType().Should().Be(L5XName.IRef);
+        block.Serialize().Name.Should().Be(L5XName.IRef);
     }
 
     [Test]
@@ -31,8 +31,8 @@ public class BlockTests
     {
         var block = Block.OREF("MyTag");
 
-        var another  = Block.ADD("MyAddFunction");
-        
+        var another = Block.ADD("MyAddFunction");
+
 
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
@@ -46,7 +46,7 @@ public class BlockTests
         block.Inputs.Should().BeEmpty();
         block.Outputs.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.GetElementType().Should().Be(L5XName.ORef);
+        block.Serialize().Name.Should().Be(L5XName.ORef);
     }
 
     [Test]
@@ -66,7 +66,7 @@ public class BlockTests
         block.Inputs.Should().BeEmpty();
         block.Outputs.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.GetElementType().Should().Be(L5XName.ICon);
+        block.Serialize().Name.Should().Be(L5XName.ICon);
     }
 
     [Test]
@@ -83,7 +83,7 @@ public class BlockTests
         block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.GetElementType().Should().Be(L5XName.OCon);
+        block.Serialize().Name.Should().Be(L5XName.OCon);
     }
 
     [Test]
@@ -100,7 +100,7 @@ public class BlockTests
         block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.GetElementType().Should().Be(L5XName.Block);
+        block.Serialize().Name.Should().Be(L5XName.Block);
     }
 
     [Test]
@@ -116,8 +116,7 @@ public class BlockTests
         block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();
-        block.Document.Should().BeNull();
-        block.GetElementType().Should().Be(L5XName.Function);
+        block.Serialize().Name.Should().Be(L5XName.Function);
         block.Cell.Should().Be("A1");
     }
 
@@ -134,8 +133,7 @@ public class BlockTests
         block.HideDesc.Should().BeFalse();
         block.Pins.Should().HaveCount(3);
         block.Sheet.Should().BeNull();
-        block.Document.Should().BeNull();
-        block.GetElementType().Should().Be(L5XName.AddOnInstruction);
+        block.Serialize().Name.Should().Be(L5XName.AddOnInstruction);
         block.Cell.Should().Be("A1");
     }
 

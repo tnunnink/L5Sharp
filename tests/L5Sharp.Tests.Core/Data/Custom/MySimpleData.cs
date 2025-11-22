@@ -2,7 +2,7 @@
 
 namespace L5Sharp.Tests.Core.Data.Custom;
 
-public class MySimpleData : ComplexData
+public class MySimpleData : StructureData
 {
     public MySimpleData() : base(nameof(MySimpleData))
     {

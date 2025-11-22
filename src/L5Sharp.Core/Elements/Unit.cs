@@ -10,8 +10,8 @@ namespace L5Sharp.Core;
 /// A comment contains the <see cref="Operand"/> representing the nested tag member the unit is associated with,
 /// as well as the actual unit <see cref="Value"/>.
 /// </remarks>\
-[L5XType(L5XName.EngineeringUnit)]
-public class Unit : LogixObject
+[LogixElement(L5XName.EngineeringUnit)]
+public class Unit : LogixObject<Unit>
 {
     /// <summary>
     /// Creates a new <see cref="Unit"/> element with the provided operand tag and comment text.

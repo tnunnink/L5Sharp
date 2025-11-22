@@ -9,6 +9,7 @@ namespace L5Sharp.Core;
 /// A predefined or built-in data type used with message instructions. Note that the members of this type resemble those
 /// observed from exported L5X and not those of the predefined data type.
 /// </summary>
+[LogixData(nameof(MESSAGE))]
 public sealed class MESSAGE : StructureData
 {
     /// <summary>

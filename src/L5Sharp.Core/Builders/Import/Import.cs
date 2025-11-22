@@ -40,14 +40,14 @@ internal class Import
 
         //Ensure a valid component reference based on the configured target scope.
         var target = Source.Get(targetScope);
-        if (target is not LogixComponent component)
+        if (target is not ILogixComponent component)
             throw new InvalidOperationException($"The target object '{Target}' is not a valid component object.");
 
         //1. Import the target component.
         ImportTarget(component, content);
 
         //2. Import the target's dependencies.
-        var dependencies = component.Dependencies().ToArray();
+        var dependencies = component.Dependencies().Cast<ILogixComponent>().ToArray();
         ImportDependencies(dependencies, content);
     }
 
@@ -57,18 +57,18 @@ internal class Import
     /// </summary>
     /// <param name="import">The Logix component to be imported into the L5X content.</param>
     /// <param name="content">The target L5X content where the Logix component will be processed and added.</param>
-    private void ImportTarget(LogixComponent import, L5X content)
+    private void ImportTarget(ILogixComponent import, L5X content)
     {
         ApplyModification(import);
 
-        if (content.TryGet(import.Reference, out var match) && match is LogixComponent current)
+        if (content.TryGet(import.Reference, out var match) && match is ILogixComponent current)
             HandleConflict(current, import);
         else
             content.Add(import);
 
         //Get the new added instance to configure.
         //This is because the old will still contain a reference to the source L5X.
-        var component = content.Get(import.Reference).As<LogixComponent>();
+        var component = (ILogixComponent)content.Get(import.Reference);
         ApplyConfiguration(component);
     }
 
@@ -78,14 +78,14 @@ internal class Import
     /// </summary>
     /// <param name="imports">The collection of Logix components to be imported into the L5X content.</param>
     /// <param name="content">The target L5X content where the Logix components will be processed and added.</param>
-    private void ImportDependencies(ICollection<LogixComponent> imports, L5X content)
+    private void ImportDependencies(ICollection<ILogixComponent> imports, L5X content)
     {
         foreach (var import in imports)
         {
             if (IsDiscardable(import)) continue;
             ApplyModification(import);
 
-            if (content.TryGet(import.Reference, out var match) && match is LogixComponent current)
+            if (content.TryGet(import.Reference, out var match) && match is ILogixComponent current)
                 HandleConflict(current, import);
             else
                 content.Add(import);
@@ -95,7 +95,7 @@ internal class Import
     /// <summary>
     /// Determines whether the specified component should be discarded based on the applied import rules.
     /// </summary>
-    private bool IsDiscardable(LogixComponent import)
+    private bool IsDiscardable(ILogixComponent import)
     {
         return Operations.Any(o => o is DiscardOperation && o.ApplyTo(import));
     }
@@ -103,7 +103,7 @@ internal class Import
     /// <summary>
     /// Applies update rules to the specified Logix component.
     /// </summary>
-    private void ApplyModification(LogixComponent import)
+    private void ApplyModification(ILogixComponent import)
     {
         var operations = Operations.Where(o => o is ModifyOperation).ToArray();
 
@@ -116,7 +116,7 @@ internal class Import
     /// <summary>
     /// Applies the post-import configuration operations to the target component.
     /// </summary>
-    private void ApplyConfiguration(LogixComponent import)
+    private void ApplyConfiguration(ILogixComponent import)
     {
         var operations = Operations.Where(o => o is ConfigureOperation).ToArray();
 
@@ -129,7 +129,7 @@ internal class Import
     /// <summary>
     /// Handles a conflict between two Logix components during the import process.
     /// </summary>
-    private void HandleConflict(LogixComponent current, LogixComponent import)
+    private void HandleConflict(ILogixComponent current, ILogixComponent import)
     {
         var operations = Operations.Where(o => o is OverwriteOperation && o.ApplyTo(import)).ToArray();
 
@@ -137,7 +137,7 @@ internal class Import
         //Any other type will default to use existing unless it matches a configured overwrite operation predicate.
         if ((import.Use is not null && import.Use == Use.Target) || operations.Length > 0)
         {
-            current.Replace(import);
+            current.Serialize().ReplaceWith(import.Serialize());
         }
     }
 

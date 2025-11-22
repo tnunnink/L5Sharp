@@ -1,0 +1,397 @@
+﻿using System.Xml.Linq;
+using FluentAssertions;
+
+namespace L5Sharp.Tests.Core.Data;
+
+[TestFixture]
+public class StructureDataTests
+{
+    [Test]
+    public void New_NullElement_ShouldThrowArgumentNullException()
+    {
+        FluentActions.Invoking(() => new StructureData(((XElement)null!)!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void New_NullName_ShouldThrowArgumentException()
+    {
+        FluentActions.Invoking(() => new StructureData(null!, new List<Member>())).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void New_NullMembers_ShouldThrowArgumentNullException()
+    {
+        FluentActions.Invoking(() => new StructureData("Test", null!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void New_Default_ShouldHaveExpectedValues()
+    {
+        var dat = new StructureData();
+
+        dat.Should().NotBeNull();
+        dat.Name.Should().Be(nameof(StructureData));
+        dat.Members.Should().BeEmpty();
+    }
+
+    [Test]
+    public void New_NameOverload_ShouldHaveExpectedName()
+    {
+        var data = new StructureData("MyType");
+
+        data.Name.Should().Be("MyType");
+    }
+
+    [Test]
+    public void New_EmptyMembers_ShouldBeEmpty()
+    {
+        var data = new StructureData("Test", []);
+
+        data.Should().BeEmpty();
+    }
+
+    [Test]
+    public void New_WithMembers_ShouldHaveExpectedValues()
+    {
+        var data = new StructureData("Test", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+
+
+        data.Name.Should().Be("Test");
+        data.Should().HaveCount(5);
+    }
+
+    [Test]
+    public void New_CollectionInitializer_ShouldHaveExpectedCount()
+    {
+        var data = new StructureData("Test")
+        {
+            new Member("First", true),
+            new Member("Second", 123),
+            new Member("Third", 1.345)
+        };
+
+        data.Should().HaveCount(3);
+    }
+
+    [Test]
+    public void ToString_WhenCalled_ShouldBeName()
+    {
+        var data = new StructureData("Test", new List<Member>());
+
+        var name = data.ToString();
+
+        name.Should().Be(data.Name);
+    }
+
+    [Test]
+    public void Clone_WhenCalled_ShouldNotBeSameAsButEqual()
+    {
+        var data = new StructureData("MyComplex", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+
+        var clone = data.Clone().As<StructureData>();
+
+        clone.Name.Should().Be(data.Name);
+        clone.Should().BeOfType<StructureData>();
+        clone.Should().NotBeSameAs(data);
+        clone.Should().HaveCount(data.Count);
+    }
+
+    [Test]
+    public void Add_ValidMember_ShouldHaveExpectedCount()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var data = new StructureData();
+
+        data.Add(new Member("Member", 123));
+
+        data.Members.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void Add_ValidMember_ShouldHaveExpectedMember()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var data = new StructureData();
+
+        data.Add(new Member("Member", 123));
+
+        var result = data.Members.First();
+
+        result.Name.Should().Be("Member");
+        result.Value.Should().BeOfType<DINT>();
+        result.Value.Should().Be(123);
+    }
+
+    [Test]
+    public void Add_Null_ShouldThrowArgumentNullException()
+    {
+        var data = new StructureData();
+
+        FluentActions.Invoking(() => data.Add(null!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void Add_NameTypeOverload_ShouldHaveExpectedCount()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var data = new StructureData();
+
+        data.Add("Member", 123);
+
+        data.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void Add_NullName_ShouldThrowException()
+    {
+        // ReSharper disable once CollectionNeverQueried.Local
+        var data = new StructureData();
+
+        FluentActions.Invoking(() => data.Add(null!, 123)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Add_NullValue_ShouldThrowException()
+    {
+        // ReSharper disable once CollectionNeverQueried.Local
+        var data = new StructureData();
+
+        FluentActions.Invoking(() => data.Add("test", null!)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Add_DuplicateName_ShouldThrowException()
+    {
+        // ReSharper disable once CollectionNeverQueried.Local
+        var data = new StructureData { new Member("test", true) };
+
+        FluentActions.Invoking(() => data.Add("test", 123)).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void Add_KeyValuePairOverload_ShouldHaveExpectedCount()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var data = new StructureData();
+
+        data.Add(new KeyValuePair<string, LogixData>("test", 1000));
+
+        data.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void AddMany_ValidMembers_ShouldHaveExpectedCount()
+    {
+        var data = new StructureData();
+
+        data.AddMany(new List<Member>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 }),
+        });
+
+        data.Should().HaveCount(3);
+    }
+
+    [Test]
+    public void AddMany_ValidMembers_ShouldHaveExpectedMembers()
+    {
+        var data = new StructureData();
+
+        var expected = new List<Member>
+        {
+            new("Atomic", 123),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 })
+        };
+
+        data.AddMany(expected);
+
+        var a = data.Member("Atomic");
+        a?.Name.Should().Be("Atomic");
+        a?.Value.Should().BeOfType<DINT>();
+        a?.Value.Should().Be(123);
+
+        var b = data.Member("String");
+        b?.Name.Should().Be("String");
+        b?.Value.Should().BeOfType<STRING>();
+        b?.Value.Should().Be("Test Value");
+
+        var c = data.Member("Structure");
+        c?.Name.Should().Be("Structure");
+        c?.Value.Should().BeOfType<TIMER>();
+        c?.Value.As<TIMER>().PRE.Should().Be(2000);
+    }
+
+    [Test]
+    public void AddMany_NullMembers_ShouldThrowArgumentNullException()
+    {
+        var data = new StructureData();
+        var members = new Member[] { null!, null!, null! };
+
+        FluentActions.Invoking(() => data.AddMany(members)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void Clear_WhenCalled_ShouldHaveExpectedCount()
+    {
+        var data = new StructureData("Test", new List<Member> { new("Test", 123) });
+
+        data.Clear();
+
+        data.Members.Should().BeEmpty();
+    }
+
+    [Test]
+    public void Remove_ByName_ShouldHaveExpectedCount()
+    {
+        var data = new StructureData("Test", new List<Member>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 })
+        });
+
+        var result = data.Remove("String");
+
+        result.Should().BeTrue();
+        data.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void Remove_NonExistingName_ShouldHaveExpectedCount()
+    {
+        var data = new StructureData("Test", new List<Member>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 })
+        });
+
+        var result = data.Remove("Fake");
+
+        result.Should().BeFalse();
+        data.Should().HaveCount(3);
+    }
+
+    [Test]
+    public Task Serialize_Default_ShouldBeVerified()
+    {
+        var type = new StructureData();
+
+        var xml = type.Serialize().ToString();
+
+        return Verify(xml);
+    }
+
+    [Test]
+    public Task Serialize_Test_ShouldBeVerified()
+    {
+        var type = new StructureData("Test", new List<Member>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 })
+        });
+
+        var xml = type.Serialize().ToString();
+
+        return Verify(xml);
+    }
+
+    [Test]
+    public void EquivalentTo_AreEqual_ShouldBeTrue()
+    {
+        var first = new StructureData("Test", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+
+        var second = new StructureData("Test", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+
+
+        var result = first.EquivalentTo(second);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void EquivalentTo_AreNotEqualByValue_ShouldBeFalse()
+    {
+        var first = new StructureData("Test", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+
+        var second = new StructureData("Test", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.45f),
+            new("Member5", new TIMER())
+        });
+
+
+        var result = first.EquivalentTo(second);
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void EquivalentTo_AreNotEqualByName_ShouldBeFalse()
+    {
+        var first = new StructureData("Test", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member5", new TIMER())
+        });
+
+        var second = new StructureData("Test", new List<Member>
+        {
+            new("Member1", true),
+            new("Member2", (byte)255),
+            new("Member3", 1000),
+            new("Member4", 4.5f),
+            new("Member6", new TIMER())
+        });
+
+
+        var result = first.EquivalentTo(second);
+
+        result.Should().BeFalse();
+    }
+}

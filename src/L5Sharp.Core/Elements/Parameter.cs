@@ -11,6 +11,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.Parameter)]
 public class Parameter : LogixObject<Parameter>
 {
     /// <inheritdoc />
@@ -235,8 +236,8 @@ public class Parameter : LogixObject<Parameter>
             throw new InvalidOperationException("Can not generate Tag with null or empty DataType name.");
 
         var isArray = Dimension is not null && Dimension.Length > 0;
-        var data = Default is not NullData ? Default : LogixData.Create(DataType);
-        var value = !isArray ? data.As<LogixData>() : new ArrayData<LogixData>(data, Dimension!);
+        var data = Default is not NullData ? Default : LogixType.Create(DataType);
+        var value = !isArray ? data.As<LogixData>() : new ArrayData(data, Dimension!);
         return new Tag(tagName, value);
     }
 
@@ -261,7 +262,7 @@ public class Parameter : LogixObject<Parameter>
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)
             throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
 
-        var value = Default is not NullData ? Default : AtomicData.Default(DataType);
+        var value = Default is not NullData ? Default : LogixType.Create(DataType);
         return new Member(Name, value);
     }
 

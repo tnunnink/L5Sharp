@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -12,28 +13,16 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// <para>
 /// This type is a building block for all <c>Predefined</c> data types. Inherit from this class to create custom
-/// user defined data types that can be used to create in memory representation of the tags for those types.
-/// Inherit from <see cref="ComplexData"/> if you want the ability to mutate the member structure after instantiation.
+/// user-defined data types that can be used to create in memory representation of the tags for those types.
+/// Inherit from <see cref="StructureData"/> if you want the ability to mutate the member structure after instantiation.
 /// </para>
 /// </remarks>
-public abstract class StructureData : LogixData
+public class StructureData : LogixData, IDictionary<string, LogixData>
 {
     /// <summary>
-    /// Creates a new <see cref="StructureData"/> instance.
+    /// Creates a new default <see cref="StructureData"/> instance.
     /// </summary>
-    /// <param name="name">The name of the type.</param>
-    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    protected StructureData(string name) : base(CreateStructure(name, []))
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="StructureData"/> with the provided name and collection of <see cref="Member"/> objects.
-    /// </summary>
-    /// <param name="name">The name of the structure type.</param>
-    /// <param name="members">The members of the structure type.</param>
-    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    protected StructureData(string name, IEnumerable<Member> members) : base(CreateStructure(name, members))
+    public StructureData() : base(nameof(StructureData))
     {
     }
 
@@ -43,57 +32,275 @@ public abstract class StructureData : LogixData
     /// <param name="element">The element to parse as the new member object.</param>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     /// <exception cref="InvalidOperationException"><c>element</c> does not have required attributes or child elements.</exception>
-    protected StructureData(XElement element) : base(element)
+    public StructureData(XElement element) : base(element)
+    {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="StructureData"/> instance.
+    /// </summary>
+    /// <param name="name">The name of the type.</param>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    public StructureData(string name) : base(CreateStructure(name, []))
+    {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="StructureData"/> with the provided name and collection of <see cref="Member"/> objects.
+    /// </summary>
+    /// <param name="name">The name of the structure type.</param>
+    /// <param name="members">The members of the structure type.</param>
+    /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
+    public StructureData(string name, IEnumerable<Member> members) : base(CreateStructure(name, members))
     {
     }
 
     /// <inheritdoc />
     public override IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
 
+    /// <inheritdoc />
+    public int Count => Element.Elements().Count();
+
+    /// <inheritdoc />
+    bool ICollection<KeyValuePair<string, LogixData>>.IsReadOnly => false;
+
+    /// <inheritdoc />
+    public ICollection<string> Keys => Element.Elements().Select(e => e.MemberName()).ToArray();
+
+    /// <inheritdoc />
+    public ICollection<LogixData> Values => Element.Elements().Select(e => e.Deserialize<Member>().Value).ToArray();
+
+    /// <inheritdoc />
+    public LogixData this[string name]
+    {
+        get => GetMember<LogixData>();
+        set => SetMember(value, name);
+    }
+
     /// <summary>
-    /// Gets the logix type for the specified member. 
+    /// Adds the specified <see cref="Member"/> to the current <see cref="StructureData"/> type.
+    /// </summary>
+    /// <param name="member">The <see cref="Member"/> to add to the structure.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="member"/> is null.</exception>
+    public void Add(Member member)
+    {
+        AddMember(member);
+    }
+
+    /// <summary>
+    /// Adds a new member with the provided name and <see cref="LogixData"/> value to the <see cref="StructureData"/> type.
+    /// </summary>
+    /// <param name="name">The name of the member to be added.</param>
+    /// <param name="value">The <see cref="LogixData"/> value of the member to be added.</param>
+    public void Add(string name, LogixData value)
+    {
+        AddMember(new Member(name, value));
+    }
+
+    /// <summary>
+    /// Adds a new member with the provided key value pair to the <see cref="StructureData"/> type. 
+    /// </summary>
+    /// <param name="item">The key value pair that containers the name and value of the member to add.</param>
+    public void Add(KeyValuePair<string, LogixData> item)
+    {
+        AddMember(new Member(item.Key, item.Value));
+    }
+
+    /// <summary>
+    /// Adds the provided collection of members to the structure type.
+    /// </summary>
+    /// <param name="members">The collection of members to add.</param>
+    /// <exception cref="ArgumentNullException"><c>members</c> is null or any member in <c>members</c> is null.</exception>
+    public void AddMany(ICollection<Member> members)
+    {
+        if (members is null) throw new ArgumentNullException(nameof(members));
+
+        foreach (var member in members)
+        {
+            AddMember(member);
+        }
+    }
+
+    /// <summary>
+    /// Clears all members from the structure type.
+    /// </summary>
+    public void Clear() => Element.RemoveNodes();
+
+    /// <summary>
+    /// Determines whether the <see cref="StructureData"/> contains member instance using the provide key value pair.
+    /// </summary>
+    /// <param name="item">The key-value pair to locate in the <see cref="StructureData"/>.</param>
+    /// <returns><c>true</c> if the specified key-value pair exists; otherwise, <c>false</c>.</returns>
+    /// <remarks>This method only considers the key of the provided key value pair.</remarks>
+    public bool Contains(KeyValuePair<string, LogixData> item)
+    {
+        return Element.Elements().Any(e => e.MemberName() == item.Key);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public bool ContainsKey(string name)
+    {
+        return Element.Elements().Any(e => e.MemberName() == name);
+    }
+
+    /// <summary>
+    /// Copies the elements of the <see cref="StructureData"/> to the specified array, starting at the specified array index.
+    /// </summary>
+    /// <param name="array">The one-dimensional array that is the destination of the elements copied from the collection. It must have zero-based indexing.</param>
+    /// <param name="arrayIndex">The zero-based index in the array at which copying begins.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the provided array is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified arrayIndex is less than 0.</exception>
+    /// <exception cref="ArgumentException">Thrown when the destination array is not long enough to contain all elements of the collection.</exception>
+    public void CopyTo(KeyValuePair<string, LogixData>[] array, int arrayIndex)
+    {
+        if (array == null)
+            throw new ArgumentNullException(nameof(array));
+
+        if (arrayIndex < 0)
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+
+        if (array.Length - arrayIndex < Count)
+            throw new ArgumentException("Destination array is not long enough to copy all elements.");
+
+        foreach (var member in Members)
+        {
+            array[arrayIndex++] = new KeyValuePair<string, LogixData>(member.Name, member.Value);
+        }
+    }
+
+    /// <summary>
+    /// Attempts to get the value associated with the specified member name in the <see cref="StructureData"/>.
+    /// </summary>
+    /// <param name="name">The name of the member to attempt to retrieve.</param>
+    /// <param name="value">When this method returns, contains the value associated with the specified member name,
+    /// if the member is found; otherwise, the default value for the type of the <see cref="LogixData"/> object.</param>
+    /// <returns><c>true</c> if the member was found; otherwise, <c>false</c>.</returns>
+    public bool TryGetValue(string name, out LogixData value)
+    {
+        var element = Element.Elements().SingleOrDefault(e => e.MemberName() == name);
+
+        if (element is null)
+        {
+            value = null!;
+            return false;
+        }
+
+        value = element.Deserialize<Member>().Value;
+        return true;
+    }
+
+    /// <summary>
+    /// Removes a member with the specified name from the structure data.
+    /// </summary>
+    /// <param name="name">The name of the element to remove.</param>
+    /// <returns>true if the element was successfully removed; otherwise, false.</returns>
+    public bool Remove(string name)
+    {
+        var element = Element.Elements().SingleOrDefault(e => e.MemberName() == name);
+
+        if (element is null)
+            return false;
+
+        element.Remove();
+        return true;
+    }
+
+    /// <summary>
+    /// Removes the member with the specified key-value pair from the structure.
+    /// </summary>
+    /// <param name="item">The key-value pair containing the key to remove.</param>
+    /// <returns>True if the member was found and removed; otherwise, false.</returns>
+    /// <remarks>Only the key is used for matching - the value is ignored.</remarks>
+    public bool Remove(KeyValuePair<string, LogixData> item)
+    {
+        var element = Element.Elements().SingleOrDefault(e => e.MemberName() == item.Key);
+
+        if (element == null)
+            return false;
+
+        element.Remove();
+        return true;
+    }
+
+    /// <inheritdoc />
+    public IEnumerator<KeyValuePair<string, LogixData>> GetEnumerator()
+    {
+        return Members.Select(m => new KeyValuePair<string, LogixData>(m.Name, m.Value)).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    /// <summary>
+    /// Gets the logix data value for the specified member. 
     /// </summary>
     /// <param name="name">The member name to find.</param>
-    /// <typeparam name="TLogixType">The logix type to return.</typeparam>
+    /// <typeparam name="TData">The logix type to return.</typeparam>
     /// <returns>A <see cref="LogixData"/> representing the data of the specified member.</returns>
     /// <exception cref="InvalidOperationException">A member with the specified name was not found in the member collection.</exception>
     /// <remarks>
-    /// This method is for users implementing custom user defined or predefined types.
+    /// This method is for users implementing custom user-defined types.
     /// Use this as the getter for all member's logix types.
     /// The user of CallerMemberName allows the member name to be omitted assuming it matches the name of the calling property.
     /// </remarks>
-    protected TLogixType GetMember<TLogixType>([CallerMemberName] string? name = null) where TLogixType : LogixData
+    protected TData GetMember<TData>([CallerMemberName] string? name = null) where TData : LogixData
     {
         var element = Element.Elements().SingleOrDefault(m => m.MemberName() == name);
 
         if (element is null)
             throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
-        
-        return element.Deserialize<TLogixType>();
+
+        return element.Deserialize<TData>();
     }
 
     /// <summary>
-    /// Adds or updates the specified member's logix type with the provided value. 
+    /// Retrieves an array of elements of type <typeparamref name="TData"/> from the structure data element.
     /// </summary>
-    /// <param name="value">The logix type value to set.</param>
-    /// <param name="name">The name of the member to set.</param>
-    /// <typeparam name="TLogixType">The logix type parameter of the member.</typeparam>
+    /// <typeparam name="TData">The specific type of elements to retrieve.</typeparam>
+    /// <param name="name">The name of the array member associated with the data. Defaults to the caller's member name.</param>
+    /// <returns>An array of elements of type <typeparamref name="TData"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no member with the specified <paramref name="name"/> exists or when the member is not an array.</exception>
+    protected TData[] GetArray<TData>([CallerMemberName] string? name = null) where TData : LogixData
+    {
+        var element = Element.Elements().SingleOrDefault(m => m.MemberName() == name);
+
+        if (element is null)
+            throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
+
+        if (element.Name.LocalName is not L5XName.ArrayMember)
+            throw new InvalidOperationException($"Member '{name}' is not an array member element.");
+
+        return element.Deserialize<ArrayData>().Cast<TData>().ToArray();
+    }
+
+    /// <summary>
+    /// Adds or updates the value for the specified member of the <see cref="StructureData"/> type.  
+    /// </summary>
+    /// <param name="value">The value to set.</param>
+    /// <param name="name">The name of the structure member to set. Defaults to the caller member name.</param>
+    /// <typeparam name="TData">The <see cref="LogixData"/> parameter of the member.</typeparam>
     /// <exception cref="ArgumentNullException"><c>name</c> or <c>value</c> is null.</exception>
     /// <remarks>
     /// <para>
-    /// This method is for users implementing custom user defined or predefined types.
-    /// Use this as the setter for all members of the type.
+    /// This method meant for classes deriving from <see cref="StructureData"/>. This sett allows deriving classes
+    /// to implement member properties and get/set member values. 
     /// </para>
     /// <para>
-    /// Internally this will update the underlying member collection.
-    /// If the member already exists, the data type value will be set to the provided value,
-    /// otherwise a new member will be added at the end of the member collection.
+    /// This method also handles member initialization. If the member already exists, the data value will be set
+    /// to the provided value, otherwise a new member will be added to the underling XML structure.
     /// This allows the user to initialize member properties in a default constructor in the derived class.
     /// Note that the order in which members exist in the underlying collection matters when importing logix type tag data.
     /// </para>
     /// </remarks>
-    protected void SetMember<TLogixType>(TLogixType value, [CallerMemberName] string? name = null)
-        where TLogixType : LogixData
+    protected void SetMember<TData>(TData value, [CallerMemberName] string? name = null)
+        where TData : LogixData
     {
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (value is null or NullData) throw new ArgumentNullException(nameof(value));
@@ -111,86 +318,70 @@ public abstract class StructureData : LogixData
     }
 
     /// <summary>
-    /// Adds the provided member to the structure type.
+    /// Adds or updates the array for the specified member of the <see cref="StructureData"/> type.
     /// </summary>
-    /// <param name="member">The member to add.</param>
-    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    protected void AddMember(Member member)
+    /// <typeparam name="TData">The data type of the elements in the array, derived from <see cref="LogixData"/>.</typeparam>
+    /// <param name="array">The array of elements to assign to the structure member.</param>
+    /// <param name="name">The name of the structure member to set. Defaults to the caller member name.</param>
+    /// <exception cref="ArgumentNullException"><c>array</c> is null or contains null data, or <c>name</c> is null.</exception>
+    /// <remarks>
+    /// <para>
+    /// This method meant for classes deriving from <see cref="StructureData"/>. This sett allows deriving classes
+    /// to implement member properties and get/set member values. 
+    /// </para>
+    /// <para>
+    /// This method also handles member initialization. If the member already exists, the data value will be set
+    /// to the provided value, otherwise a new member will be added to the underling XML structure.
+    /// This allows the user to initialize member properties in a default constructor in the derived class.
+    /// Note that the order in which members exist in the underlying collection matters when importing logix type tag data.
+    /// </para>
+    /// </remarks>
+    protected void SetArray<TData>(TData[] array, [CallerMemberName] string? name = null) where TData : LogixData
+    {
+        if (name is null) throw new ArgumentNullException(nameof(name));
+        if (array is null) throw new ArgumentNullException(nameof(array));
+
+        var existing = Element.Elements().SingleOrDefault(m => m.MemberName() == name)?.ToMember();
+
+        if (existing is null)
+        {
+            var member = new Member(name, array);
+            Element.Add(member.Serialize());
+            return;
+        }
+
+        existing.Value = array;
+    }
+
+    /// <summary>
+    /// Adds a specified member to the structure.
+    /// </summary>
+    /// <param name="member">The <see cref="Member"/> instance to add to the structure.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the <paramref name="member"/> is null.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when a member with the same name already exists in the structure.
+    /// </exception>
+    private void AddMember(Member member)
     {
         if (member is null)
-            throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
+            throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type.");
+
+        if (Element.Elements().Any(e => e.MemberName() == member.Name))
+            throw new InvalidOperationException($"Member already exists in structure type: '{member.Name}'");
 
         Element.Add(member.Serialize());
     }
 
     /// <summary>
-    /// Adds the provided collection of members to the structure type.
+    /// 
     /// </summary>
-    /// <param name="members">The collection of members to add.</param>
-    /// <exception cref="ArgumentNullException"><c>members</c> is null or any member in <c>members</c> is null.</exception>
-    protected void AddMembers(ICollection<Member> members)
-    {
-        if (members is null) throw new ArgumentNullException(nameof(members));
-
-        foreach (var member in members)
-        {
-            if (member is null)
-                throw new ArgumentNullException(nameof(members),
-                    "Can not add a null member to a structure type object.");
-
-            Element.Add(member.Serialize());
-        }
-    }
-
-    /// <summary>
-    /// Clears all members from the structure type.
-    /// </summary>
-    protected void ClearMembers() => Element.RemoveNodes();
-
-    /// <summary>
-    /// Inserts the provided member at the specified index of the structure type. 
-    /// </summary>
-    /// <param name="index">The zero-based index at which item should be inserted.</param>
-    /// <param name="member">The member to insert.</param>
-    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">index is less than 0. -or- index is greater than the length of
-    /// the member collection.</exception>
-    protected void InsertMember(int index, Member member)
-    {
-        if (member is null)
-            throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
-
-        var target = Element.Elements().ElementAt(index);
-        target.AddBeforeSelf(member.Serialize());
-    }
-
-    /// <summary>
-    /// Removes a member with the specified name from the structure type.
-    /// </summary>
-    /// <param name="name">The name of the member to remove.</param>
-    protected void RemoveMember(string name)
-    {
-        Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name))?.Remove();
-    }
-
-    /// <summary>
-    /// Removes a member at the specified index from the structure type.
-    /// </summary>
-    /// <param name="index">The zero-based index of the member to remove.</param>
-    protected void RemoveMember(int index)
-    {
-        var target = Element.Elements().ElementAt(index);
-        target.Remove();
-    }
-
-    /// <summary>
-    /// Replaces a member having the specified name with the provided member instance.
-    /// </summary>
-    /// <param name="name">The name of the member to replace.</param>
-    /// <param name="member">The member to replace the current member with.</param>
-    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
-    protected void ReplaceMember(string name, Member member)
+    /// <param name="name"></param>
+    /// <param name="member"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    private void ReplaceMember(string name, Member member)
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
@@ -199,43 +390,6 @@ public abstract class StructureData : LogixData
 
         if (target is null)
             throw new ArgumentException($"No member with name {name} was found in the structure.");
-
-        target.ReplaceWith(member.Serialize());
-    }
-
-    /// <summary>
-    /// Replaces a member having the specified name with a new member instance of the same name and provided <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="name">The name of the member to replace.</param>
-    /// <param name="data">The <see cref="LogixData"/> data to update the specified member with.</param>
-    /// <exception cref="ArgumentNullException"><c>type</c> is null.</exception>
-    /// <exception cref="ArgumentException"><c>name</c> does not exists in the structure type.</exception>
-    protected void ReplaceMember(string name, LogixData data)
-    {
-        if (data is null or NullData)
-            throw new ArgumentNullException(nameof(data), "Can not replace member with null data.");
-
-        var target = Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name));
-
-        if (target is null)
-            throw new ArgumentException($"No member with name {name} was found in the structure.");
-
-        var member = new Member(name, data);
-        target.ReplaceWith(member.Serialize());
-    }
-
-    /// <summary>
-    /// Replaces a member at the specified index with the provided member instance.
-    /// </summary>
-    /// <param name="index">The zer-based index at which to replace the member.</param>
-    /// <param name="member">The member to replace the current member with.</param>
-    /// <exception cref="ArgumentNullException"><c>member</c> is null.</exception>
-    protected void ReplaceMember(int index, Member member)
-    {
-        if (member is null)
-            throw new ArgumentNullException(nameof(member), "Structure type does not allow null members.");
-
-        var target = Element.Elements().ElementAt(index);
 
         target.ReplaceWith(member.Serialize());
     }
@@ -247,6 +401,9 @@ public abstract class StructureData : LogixData
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Can not create structure type with null or empty name.");
+
+        if (members is null)
+            throw new ArgumentNullException(nameof(members));
 
         var element = new XElement(L5XName.Structure);
         element.Add(new XAttribute(L5XName.DataType, name));

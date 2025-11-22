@@ -148,7 +148,7 @@ public class RoutineTests
         var program = new Program { Name = "TestProgram" };
         program.Tags.Add(new Tag { Name = "InputTag", Value = new DINT(101) });
         program.Tags.Add(new Tag { Name = "OutputTag", Value = 0 });
-        program.Tags.Add(new Tag { Name = "Add_Block", Value = new ComplexData("FBD_MATH") });
+        program.Tags.Add(new Tag { Name = "Add_Block", Value = new StructureData("FBD_MATH") });
 
         var routine = new Routine(RoutineType.FBD)
         {

@@ -10,7 +10,7 @@ namespace L5Sharp.Tests.Core.Data.Custom
     /// A test type used to test nested complex data structure code
     /// </summary>
     //inheriting from complex type allows me to change structure after instantiated.
-    public class MyNestedData : ComplexData
+    public class MyNestedData : StructureData
     {
         public MyNestedData() : base(nameof(MyNestedData))
         {
@@ -18,9 +18,9 @@ namespace L5Sharp.Tests.Core.Data.Custom
             Str = new STRING();
             Tmr = new TIMER();
             Simple = new MySimpleData();
-            Flags = ArrayData.New<BOOL>(10);
-            Counters = ArrayData.New<COUNTER>(3);
-            Names = ArrayData.New<STRING>(5);
+            Flags = new BOOL[10];
+            Counters = new COUNTER[3];
+            Names = new STRING[5];
         }
 
         public MyNestedData(XElement element) : base(element)
@@ -66,29 +66,28 @@ namespace L5Sharp.Tests.Core.Data.Custom
         /// <summary>
         /// A nested array of atomic values.
         /// </summary>
-        public ArrayData<BOOL> Flags
+        public BOOL[] Flags
         {
-            //All arrays are deserialized as generic ArrayType<LogixType> but can be casted like this to get ArrayType<TType>
-            get => GetMember<ArrayData<LogixData>>().Cast<BOOL>();
-            set => SetMember(value);
+            get => GetArray<BOOL>();
+            set => SetArray(value);
         }
 
         /// <summary>
         /// A nested array of structure types.
         /// </summary>
-        public ArrayData<COUNTER> Counters
+        public COUNTER[] Counters
         {
-            get => GetMember<ArrayData<LogixData>>().Cast<COUNTER>();
-            set => SetMember(value);
+            get => GetArray<COUNTER>();
+            set => SetArray(value);
         }
 
         /// <summary>
         /// A nested array of atomic values.
         /// </summary>
-        public ArrayData<STRING> Names
+        public STRING[] Names
         {
-            get => GetMember<ArrayData<LogixData>>().Cast<STRING>();
-            set => SetMember(value);
+            get => GetArray<STRING>();
+            set => SetArray(value);
         }
     }
 }

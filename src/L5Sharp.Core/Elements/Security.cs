@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// A element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller security.
 /// </summary>
+[LogixElement(L5XName.Security)]
 public class Security : LogixElement
 {
     /// <summary>

@@ -15,9 +15,6 @@ namespace L5Sharp.Core;
 /// This is the primary entry point for interacting with the L5X file.
 /// Provides access to query and manipulate logix components, elements, containers, and more. 
 /// </summary>
-/// <remarks>
-/// </remarks>
-[L5XType(L5XName.RSLogix5000Content)]
 public sealed class L5X : LogixElement
 {
     /// <summary>
@@ -185,30 +182,35 @@ public sealed class L5X : LogixElement
     public static L5X Empty() => new(LogixInfo.Empty());
 
     /// <summary>
-    /// Retrieves a collection of <see cref="LogixComponent"/> objects based on the provided filter predicate.
+    /// Retrieves a collection of <see cref="ILogixComponent"/> objects from the L5X content, optionally filtered by a specified predicate.
     /// </summary>
-    /// <param name="predicate">A function to filter the <see cref="LogixComponent"/> objects.
-    /// If null, all components are returned.</param>
-    /// <returns>An enumerable collection of <see cref="LogixComponent"/> objects that satisfy the specified predicate.</returns>
-    public IEnumerable<LogixComponent> Components(Func<LogixComponent, bool>? predicate = null)
+    /// <param name="predicate">
+    /// A function to test each <see cref="ILogixComponent"/> for a condition.
+    /// If null, all components are returned.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="ILogixComponent"/> objects from the L5X content that match the specified predicate, if provided.
+    /// </returns>
+    public IEnumerable<ILogixComponent> Components(Func<ILogixComponent, bool>? predicate = null)
     {
         return Element.Descendants()
             .Where(x => x.IsComponentElement() || x.IsModuleTagElement())
-            .Select(e => e.Deserialize<LogixComponent>())
+            .Select(e => e.Deserialize())
+            .Cast<ILogixComponent>()
             .Where(c => predicate is null || predicate.Invoke(c));
     }
 
     /// <summary>
-    /// Retrieves a collection of <see cref="LogixCode"/> elements that match the provided predicate.
+    /// Retrieves a collection of <see cref="ILogixCode"/> elements from the content, optionally filtered by a specified predicate.
     /// </summary>
-    /// <param name="predicate">A function to filter the <see cref="LogixCode"/> elements.
-    /// If null, all <see cref="LogixCode"/> elements are returned.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> containing the <see cref="LogixCode"/> elements that satisfy the predicate condition.</returns>
-    public IEnumerable<LogixCode> Code(Func<LogixCode, bool>? predicate = null)
+    /// <param name="predicate">An optional function to filter the elements. The function takes an <see cref="ILogixCode"/> as input and returns a boolean indicating whether the item should be included.</param>
+    /// <returns>A filtered collection of <see cref="ILogixCode"/> elements satisfying the given predicate, or the entire collection if no predicate is provided.</returns>
+    public IEnumerable<ILogixCode> Code(Func<ILogixCode, bool>? predicate = null)
     {
         return Element.Descendants()
             .Where(x => x.IsCodeElement())
-            .Select(e => e.Deserialize<LogixCode>())
+            .Select(e => e.Deserialize())
+            .Cast<ILogixCode>()
             .Where(c => predicate is null || predicate.Invoke(c));
     }
 
@@ -230,7 +232,7 @@ public sealed class L5X : LogixElement
     /// This is in contrast to something list <see cref="Tags"/>, which just returns controller scoped tags.
     /// </para>
     /// </remarks>
-    public IEnumerable<LogixElement> Query(string type)
+    public IEnumerable<ILogixElement> Query(string type)
     {
         if (string.IsNullOrEmpty(type))
             throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
@@ -256,12 +258,12 @@ public sealed class L5X : LogixElement
     /// This is in contrast to something list <see cref="Tags"/>, which just returns controller scoped tags.
     /// </para>
     /// </remarks>
-    public IEnumerable<LogixElement> Query(Type type)
+    public IEnumerable<ILogixElement> Query(Type type)
     {
         if (type is null)
             throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
 
-        var types = new HashSet<string>(type.GetLogixTypeNames());
+        var types = LogixSerializer.NamesFor(type).ToLookup(x => x);
 
         return Element.Descendants()
             .Where(e => types.Contains(e.Name.LocalName))
@@ -271,7 +273,7 @@ public sealed class L5X : LogixElement
     /// <summary>
     /// Finds elements of the specified type across the entire L5X as a flat collection of objects.
     /// </summary>
-    /// <typeparam name="TObject">The element type to find.</typeparam>
+    /// <typeparam name="TEntity">The element type to find.</typeparam>
     /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects of the specified type.</returns>
     /// <remarks>
     /// <para>
@@ -280,20 +282,20 @@ public sealed class L5X : LogixElement
     /// more complex queries.
     ///</para>
     /// </remarks>
-    public IEnumerable<TObject> Query<TObject>() where TObject : LogixObject
+    public IEnumerable<TEntity> Query<TEntity>() where TEntity : LogixEntity<TEntity>
     {
-        var types = new HashSet<string>(typeof(TObject).GetLogixTypeNames());
+        var types = LogixSerializer.NamesFor(typeof(TEntity)).ToLookup(x => x);
 
         return Element.Descendants()
             .Where(e => types.Contains(e.Name.LocalName))
-            .Select(e => e.Deserialize<TObject>());
+            .Select(e => e.Deserialize<TEntity>());
     }
 
     /// <summary>
     /// Executes a query on the content of the L5X file, filtering elements based on the provided predicate.
     /// </summary>
     /// <param name="predicate">A function that defines the criteria for the elements to be included in the result.</param>
-    /// <typeparam name="TObject">The type of LogixElement to query for.</typeparam>
+    /// <typeparam name="TEntity">The type of LogixElement to query for.</typeparam>
     /// <returns>An enumerable collection of elements of type TElement that satisfy the predicate.</returns>
     /// <remarks>
     /// <para>
@@ -302,13 +304,13 @@ public sealed class L5X : LogixElement
     /// more complex queries.
     ///</para>
     /// </remarks>
-    public IEnumerable<TObject> Query<TObject>(Func<TObject, bool> predicate) where TObject : LogixObject
+    public IEnumerable<TEntity> Query<TEntity>(Func<TEntity, bool> predicate) where TEntity : LogixEntity<TEntity>
     {
-        var types = new HashSet<string>(typeof(TObject).GetLogixTypeNames());
+        var types = LogixSerializer.NamesFor(typeof(TEntity)).ToLookup(x => x);
 
         return Element.Descendants()
             .Where(e => types.Contains(e.Name.LocalName))
-            .Select(e => e.Deserialize<TObject>())
+            .Select(e => e.Deserialize<TEntity>())
             .Where(predicate);
     }
 
@@ -344,13 +346,13 @@ public sealed class L5X : LogixElement
     }
 
     /// <summary>
-    /// Retrieves a <see cref="LogixEntity"/> from the L5X content using the specified <see cref="Reference"/>.
+    /// Retrieves a <see cref="ILogixEntity"/> from the L5X content using the specified <see cref="Reference"/>.
     /// </summary>
     /// <param name="reference">The <see cref="Reference"/> used to locate the specific entity within the L5X content.</param>
-    /// <returns>The <see cref="LogixEntity"/> that corresponds to the specified <see cref="Reference"/>.</returns>
+    /// <returns>The <see cref="ILogixEntity"/> that corresponds to the specified <see cref="Reference"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> is null.</exception>
     /// <exception cref="KeyNotFoundException">Thrown when no element matching the provided <paramref name="reference"/> is found.</exception>
-    public LogixEntity Get(Reference reference)
+    public ILogixEntity Get(Reference reference)
     {
         if (reference is null)
             throw new ArgumentNullException(nameof(reference));
@@ -358,21 +360,21 @@ public sealed class L5X : LogixElement
         var element = Element.XPathSelectElement(reference);
 
         if (element is null)
-            throw new KeyNotFoundException($"No element with the provided scope was found: {reference}");
+            throw new KeyNotFoundException($"No element with the provided reference was found: '{reference}'");
 
-        var result = element.Deserialize<LogixEntity>();
+        var result = element.Deserialize<ILogixEntity>();
         return result is Tag tag ? tag[reference.Location.ToTagName().Path] : result;
     }
 
     /// <summary>
-    /// Retrieves a <see cref="LogixComponent"/> of the specified type based on the provided name and optional program context.
+    /// Retrieves a <typeparamref name="TComponent"/> instance from the L5X content using the specified name and optional program.
     /// </summary>
-    /// <typeparam name="TComponent">The type of the <see cref="LogixComponent"/> to retrieve.</typeparam>
+    /// <typeparam name="TComponent">The type of the component to retrieve.</typeparam>
     /// <param name="name">The name of the component to retrieve.</param>
-    /// <param name="program">The optional name of the program that contains the component.</param>
-    /// <returns>The retrieved <see cref="LogixComponent"/> of the specified type.</returns>
-    /// <exception cref="KeyNotFoundException">Thrown when no component matching the reference is found.</exception>
-    public TComponent Get<TComponent>(string name, string? program = null) where TComponent : LogixComponent
+    /// <param name="program">An optional program name to locate the component in its specific program scope.</param>
+    /// <returns>The retrieved <typeparamref name="TComponent"/> instance.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown when no element with the specified name and program is found in the L5X content.</exception>
+    public TComponent Get<TComponent>(string name, string? program = null) where TComponent : LogixComponent<TComponent>
     {
         var reference = Reference.To<TComponent>(name, program);
 
@@ -382,19 +384,19 @@ public sealed class L5X : LogixElement
             throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
 
         var result = element.Deserialize<TComponent>();
-        return result is Tag tag ? (TComponent)(LogixObject)tag[reference.Location.ToTagName().Path] : result;
+        return result is Tag tag ? (TComponent)(LogixElement)tag[reference.Location.ToTagName().Path] : result;
     }
 
     /// <summary>
-    /// Retrieves an instance of <typeparamref name="TCode"/> from the specified location within the project's structure.
+    /// Retrieves an instance of the specified Logix code type from the element with the provided reference information.
     /// </summary>
-    /// <param name="number">The unique numeric identifier associated with the target code element.</param>
-    /// <param name="program">The name of the program containing the desired code element.</param>
-    /// <param name="routine">The name of the routine within the program where the code element resides.</param>
-    /// <typeparam name="TCode">The type of the code element to retrieve, which must inherit from <see cref="LogixCode"/>.</typeparam>
-    /// <returns>An instance of <typeparamref name="TCode"/> corresponding to the specified parameters.</returns>
-    /// <exception cref="KeyNotFoundException">Thrown if no element is found for the given reference parameters.</exception>
-    public TCode Get<TCode>(int number, string program, string routine) where TCode : LogixCode
+    /// <typeparam name="TCode">The type of the Logix code object to retrieve.</typeparam>
+    /// <param name="number">The numeric identifier of the Logix code object.</param>
+    /// <param name="program">The name of the program containing the Logix code object.</param>
+    /// <param name="routine">The name of the routine within the program where the Logix code object resides.</param>
+    /// <returns>The deserialized instance of the specified <typeparamref name="TCode"/>.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown when no element with the given reference is found.</exception>
+    public TCode Get<TCode>(int number, string program, string routine) where TCode : LogixCode<TCode>
     {
         var reference = Reference.To<TCode>(number, program, routine);
 
@@ -407,13 +409,13 @@ public sealed class L5X : LogixElement
     }
 
     /// <summary>
-    /// Retrieves a <see cref="LogixEntity"/> based on the provided reference builder action.
+    /// Retrieves an <see cref="ILogixEntity"/> from the L5X content based on the provided reference builder action.
     /// </summary>
-    /// <param name="action">The action that configures the <see cref="IReferenceTypeBuilder"/> to specify the desired reference path.</param>
-    /// <returns>The <see cref="LogixEntity"/> that corresponds to the specified reference.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="action"/> is null.</exception>
-    /// <exception cref="KeyNotFoundException">Thrown if no matching element is found for the specified reference.</exception>
-    public LogixEntity Get(Action<IReferenceTypeBuilder> action)
+    /// <param name="action">An action used to configure the <see cref="IReferenceTypeBuilder"/> to define the reference of the target entity.</param>
+    /// <returns>An <see cref="ILogixEntity"/> that matches the specified reference.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown when no element matching the specified reference is found in the L5X content.</exception>
+    public ILogixEntity Get(Action<IReferenceTypeBuilder> action)
     {
         if (action is null)
             throw new ArgumentNullException(nameof(action));
@@ -424,19 +426,19 @@ public sealed class L5X : LogixElement
         if (element is null)
             throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
 
-        var result = element.Deserialize<LogixEntity>();
+        var result = element.Deserialize<ILogixEntity>();
         return result is Tag tag ? tag[reference.Location.ToTagName().Path] : result;
     }
 
     /// <summary>
     /// Retrieves an instance of the specified <typeparamref name="TEntity"/> type using the provided reference location builder action.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to retrieve, which must inherit from <see cref="LogixEntity"/>.</typeparam>
+    /// <typeparam name="TEntity">The type of the entity to retrieve, which must inherit from <see cref="ILogixEntity"/>.</typeparam>
     /// <param name="action">An <see cref="Action{T}"/> that sets up the reference location for the desired entity via the <see cref="IReferenceLocationBuilder"/>.</param>
     /// <returns>An instance of <typeparamref name="TEntity"/> representing the retrieved entity.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
     /// <exception cref="KeyNotFoundException">Thrown when no element matching the specified reference is found.</exception>
-    public TEntity Get<TEntity>(Action<IReferenceLocationBuilder> action) where TEntity : LogixEntity
+    public TEntity Get<TEntity>(Action<IReferenceLocationBuilder> action) where TEntity : class, ILogixEntity
     {
         if (action is null)
             throw new ArgumentNullException(nameof(action));
@@ -452,22 +454,22 @@ public sealed class L5X : LogixElement
             throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
 
         var result = element.Deserialize<TEntity>();
-        return result is Tag tag ? (TEntity)(LogixObject)tag[reference.Location.ToTagName().Path] : result;
+        return result is Tag tag ? tag[reference.Location.ToTagName().Path].As<TEntity>() : result;
     }
 
     /// <summary>
-    /// Attempts to retrieve a <see cref="LogixEntity"/> based on the given <see cref="Reference"/>.
+    /// Attempts to retrieve an <see cref="ILogixEntity"/> from the current <see cref="L5X"/> based on the specified <see cref="Reference"/>.
     /// </summary>
-    /// <param name="reference">The <see cref="Reference"/> that specifies the location of the entity within the L5X structure.</param>
-    /// <param name="entity">When this method returns, contains the <see cref="LogixEntity"/> if found; otherwise, null.</param>
-    /// <returns>True if the entity is successfully retrieved; otherwise, false.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="reference"/> is null.</exception>
-    public bool TryGet(Reference reference, out LogixEntity entity)
+    /// <param name="reference">The <see cref="Reference"/> object that identifies the location of the desired entity.</param>
+    /// <param name="entity">When this method returns, contains the retrieved <see cref="ILogixEntity"/> if the operation is successful; otherwise, contains null.</param>
+    /// <returns><c>true</c> if the entity was successfully retrieved; otherwise, <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> parameter is null.</exception>
+    public bool TryGet(Reference reference, out ILogixEntity entity)
     {
         if (reference is null)
             throw new ArgumentNullException(nameof(reference));
 
-        var result = Element.XPathSelectElement(reference)?.Deserialize<LogixEntity>();
+        var result = Element.XPathSelectElement(reference)?.Deserialize<ILogixEntity>();
 
         if (result is null)
         {
@@ -480,18 +482,14 @@ public sealed class L5X : LogixElement
     }
 
     /// <summary>
-    /// Attempts to retrieve a component of the specified type with the given name.
+    /// Attempts to retrieve a component of the specified type from the L5X instance by its name.
     /// </summary>
+    /// <typeparam name="TComponent">The type of the component to retrieve.</typeparam>
     /// <param name="name">The name of the component to retrieve.</param>
-    /// <param name="component">
-    /// When this method returns, contains the component of the specified type if the retrieval was successful; otherwise,
-    /// contains the default value for the component type.
-    /// </param>
-    /// <typeparam name="TComponent">The type of the component to retrieve, inheriting from <see cref="LogixComponent"/>.</typeparam>
-    /// <returns>
-    /// <c>true</c> if the component was found and successfully retrieved; otherwise, <c>false</c>.
-    /// </returns>
-    public bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent
+    /// <param name="component">When this method returns, contains the component of the specified type if found,
+    /// or null if the component does not exist.</param>
+    /// <returns>True if the component is found; otherwise, false.</returns>
+    public bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent<TComponent>
     {
         var reference = Reference.To<TComponent>(name);
 
@@ -503,20 +501,20 @@ public sealed class L5X : LogixElement
             return false;
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
-        return (target as TComponent).IsNull(out component);
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<TComponent>() : result;
+        return target.IsNull(out component);
     }
 
     /// <summary>
     /// Attempts to retrieve a <typeparamref name="TComponent"/> by the given name and optional program context.
     /// </summary>
-    /// <typeparam name="TComponent">The type of <see cref="LogixComponent"/> to retrieve.</typeparam>
+    /// <typeparam name="TComponent">The type of <see cref="ILogixComponent"/> to retrieve.</typeparam>
     /// <param name="name">The name of the component to retrieve.</param>
     /// <param name="program">The optional program context in which the component resides.</param>
     /// <param name="component">The output parameter that will contain the retrieved component if the operation succeeds.</param>
     /// <returns>True if the component is successfully retrieved; otherwise, false.</returns>
     public bool TryGet<TComponent>(string name, string program, out TComponent component)
-        where TComponent : LogixComponent
+        where TComponent : LogixComponent<TComponent>
     {
         var reference = Reference.To<TComponent>(name, program);
 
@@ -528,20 +526,20 @@ public sealed class L5X : LogixElement
             return false;
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
-        return (target as TComponent).IsNull(out component);
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<TComponent>() : result;
+        return target.IsNull(out component);
     }
 
     /// <summary>
-    /// Attempts to retrieve a <typeparamref name="TCode"/> from the L5X content using the specified parameters.
+    /// Attempts to retrieve a code element from the L5X content using the specified parameters.
     /// </summary>
-    /// <typeparam name="TCode">The type of <see cref="LogixCode"/> to retrieve.</typeparam>
+    /// <typeparam name="TCode">The type of <see cref="ILogixCode"/> to retrieve.</typeparam>
     /// <param name="number">The identifying number related to the code reference.</param>
     /// <param name="program">The name of the program containing the desired code.</param>
     /// <param name="routine">The name of the routine containing the desired code.</param>
     /// <param name="code">When this method returns, contains the retrieved <typeparamref name="TCode"/> if the operation is successful, or null if unsuccessful.</param>
     /// <returns><c>true</c> if the <typeparamref name="TCode"/> is retrieved; otherwise, <c>false</c>.</returns>
-    public bool TryGet<TCode>(int number, string program, string routine, out TCode code) where TCode : LogixCode
+    public bool TryGet<TCode>(int number, string program, string routine, out TCode code) where TCode : LogixCode<TCode>
     {
         var reference = Reference.To<TCode>(number, program, routine);
 
@@ -557,20 +555,20 @@ public sealed class L5X : LogixElement
     }
 
     /// <summary>
-    /// Attempts to retrieve a <see cref="LogixEntity"/> based on the provided reference action.
+    /// Attempts to retrieve a <see cref="ILogixEntity"/> based on the provided reference action.
     /// </summary>
     /// <param name="action">An <see cref="Action{T}"/> that defines the reference to locate the entity.</param>
-    /// <param name="entity">When this method returns, contains the <see cref="LogixEntity"/> if found; otherwise, null.</param>
+    /// <param name="entity">When this method returns, contains the <see cref="ILogixEntity"/> if found; otherwise, null.</param>
     /// <returns><c>true</c> if the entity was found; otherwise, <c>false</c>.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
-    public bool TryGet(Action<IReferenceTypeBuilder> action, out LogixEntity entity)
+    public bool TryGet(Action<IReferenceTypeBuilder> action, out ILogixEntity entity)
     {
         if (action is null)
             throw new ArgumentNullException(nameof(action));
 
         var reference = Reference.Build(action);
         var element = Element.XPathSelectElement(reference);
-        var result = element?.Deserialize<LogixEntity>();
+        var result = element?.Deserialize<ILogixEntity>();
 
         if (result is null)
         {
@@ -585,13 +583,13 @@ public sealed class L5X : LogixElement
     /// <summary>
     /// Attempts to retrieve an element of the specified type <typeparamref name="TEntity"/> from the L5X structure based on the provided reference location builder action.
     /// </summary>
-    /// <typeparam name="TEntity">The type of element to retrieve, which must derive from <see cref="LogixEntity"/>.</typeparam>
+    /// <typeparam name="TEntity">The type of element to retrieve.</typeparam>
     /// <param name="action">An action that defines the reference location using the <see cref="IReferenceLocationBuilder"/>.</param>
     /// <param name="entity">When this method returns, contains the retrieved entity if successful; otherwise, null if no matching entity is found.</param>
     /// <returns>True if the entity was successfully retrieved; otherwise, false if no matching entity exists.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> parameter is null.</exception>
     public bool TryGet<TEntity>(Action<IReferenceLocationBuilder> action, out TEntity entity)
-        where TEntity : LogixEntity
+        where TEntity : class, ILogixEntity
     {
         if (action is null)
             throw new ArgumentNullException(nameof(action));
@@ -602,7 +600,7 @@ public sealed class L5X : LogixElement
         var reference = builder.Build();
 
         var element = Element.XPathSelectElement(reference);
-        var result = element?.Deserialize<LogixEntity>();
+        var result = element?.Deserialize<TEntity>();
 
         if (result is null)
         {
@@ -610,58 +608,61 @@ public sealed class L5X : LogixElement
             return false;
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<LogixEntity>() : result;
-        return (target as TEntity).IsNull(out entity);
+        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<TEntity>() : result;
+        return target.IsNull(out entity);
     }
 
     /// <summary>
-    /// Adds the provided <see cref="LogixComponent"/> to the first found container within the L5X file. 
+    /// Adds the specified <see cref="ILogixComponent"/> to the current L5X content.
     /// </summary>
-    /// <param name="component">The component to add to the L5X.</param>
+    /// <param name="component">The <see cref="ILogixComponent"/> to be added to the L5X content.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="component"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the L5X container corresponding to the <paramref name="component"/> could not be found for adding.
+    /// </exception>
     /// <remarks>
     /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top-level
     /// container, it will work most of the time. If the provided component has a defined scope, then this method will
     /// attempt to find the corresponding container to add this component to the correct scope. If this component is not
-    /// scoped, then we will build a simple global relative scope using the type and name. If you want to be explicit about
-    /// where this component should be added, then use the <seealso cref="Add(L5Sharp.Core.LogixComponent, string)"/> overload.
+    /// scoped, then we will build a simple global relative scope using the type and name.
     /// </remarks>
-    public void Add(LogixComponent component)
+    public void Add(ILogixComponent component)
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
         var container = Element
-            .Descendants(component.GetType().GetLogixContainerName())
+            .Descendants($"{component.GetType()}s")
             .FirstOrDefault(e => Scope.Of(e).IsLocalTo(component.Reference));
 
         if (container is null)
-            throw new InvalidOperationException($"Could not find container type '{component.GetElementType()}'");
+            throw new InvalidOperationException($"Could not find container type {component.GetType()}");
 
         container.Add(component.Serialize());
     }
 
     /// <summary>
-    /// Adds the provided <see cref="LogixComponent"/> to the specified container within the L5X file. 
+    /// Adds a specified <see cref="ILogixComponent"/> to the container associated with the specified program name.
     /// </summary>
-    /// <param name="component">The component to add to the L5X.</param>
-    /// <param name="programName">The program name in which to add the component.</param>
-    /// <exception cref="InvalidOperationException">No container was found in the L5X for the specified type and container name.</exception>
-    /// <remarks>
-    /// This provides a more dynamic way to add content to an L5X file. This method will look for a container element
-    /// within the specified container/scope name.
-    /// </remarks>
-    public void Add(LogixComponent component, string programName)
+    /// <param name="component">The <see cref="ILogixComponent"/> to be added.</param>
+    /// <param name="programName">The name of the program that contains the target container.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="component"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when a container for the <paramref name="component"/> type cannot be found
+    /// within the specified program scope.
+    /// </exception>
+    public void Add(ILogixComponent component, string programName)
     {
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
         var container = Element
-            .Descendants(component.GetType().GetLogixContainerName())
+            .Descendants($"{component.GetType()}s")
             .FirstOrDefault(e => Scope.Of(e).Container == programName);
 
         if (container is null)
             throw new InvalidOperationException(
-                $"Could not find container type '{component.GetElementType()}' in scope: '{programName}'");
+                $"Could not find container type {component.GetType()} in scope: '{programName}'");
 
         container.Add(component.Serialize());
     }
@@ -678,7 +679,7 @@ public sealed class L5X : LogixElement
 
         var element = Get(action);
 
-        element.Remove();
+        element.Serialize().Remove();
     }
 
     /// <summary>
@@ -699,14 +700,14 @@ public sealed class L5X : LogixElement
     /// and finding references or dependents.
     /// </para>
     /// </remarks>
-    public void Remove<TComponent>(string name) where TComponent : LogixComponent
+    public void Remove<TComponent>(string name) where TComponent : LogixComponent<TComponent>
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var reference = Reference.To<TComponent>(name);
         var element = Get(reference);
-        element.Remove();
+        element.Serialize().Remove();
     }
 
     /// <summary>

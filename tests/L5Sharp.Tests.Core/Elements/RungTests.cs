@@ -31,7 +31,6 @@ public class RungTests
         rung.Comment.Should().BeNull();
         rung.Program.Should().BeNull();
         rung.Routine.Should().BeNull();
-        rung.Document.Should().BeNull();
         rung.Reference.Should().Be("Rung[@Number='0']");
         rung.Scope.Level.Should().Be(ScopeLevel.None);
         rung.Scope.Container.Should().BeEmpty();
@@ -47,22 +46,6 @@ public class RungTests
         rung.Comment.Should().Be("This is a test rung");
         rung.Type.Should().Be(RungType.Normal);
     }
-
-    /*[Test]
-    public void IsBalanced_ValidText_ShouldBeTrue()
-    {
-        var text = new NeutralText(Test00);
-
-        text.IsBalanced.Should().BeTrue();
-    }
-
-    [Test]
-    public void IsBalanced_Unbalanced_ShouldBeFalse()
-    {
-        var text = new NeutralText("XIC(SomeTag");
-
-        text.IsBalanced.Should().BeFalse();
-    }*/
 
     [Test]
     public void Instructions_DefaultRung_ShouldBeEmpty()
@@ -97,7 +80,8 @@ public class RungTests
     [Test]
     public void Instructions_CustomInstructions_ReturnsExpected()
     {
-        var text = new Rung("[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+        var text = new Rung(
+            "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
 
         var instructions = text.Instructions();
 

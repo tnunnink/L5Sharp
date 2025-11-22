@@ -4,7 +4,7 @@
 public class L5XImportTests
 {
     [Test]
-    public Task Import_ComplexDataTypeWithNotConfiguration_ShouldBeVerified()
+    public Task Import_StructureDataTypeWithNotConfiguration_ShouldBeVerified()
     {
         var content = L5X.Load(Known.Empty);
 
@@ -18,7 +18,7 @@ public class L5XImportTests
     }
 
     [Test]
-    public Task Import_ComplexDataTypeDiscardSimpleType_ShouldBeVerified()
+    public Task Import_StructureDataTypeDiscardSimpleType_ShouldBeVerified()
     {
         var content = L5X.Load(Known.Empty);
 
@@ -32,7 +32,7 @@ public class L5XImportTests
     }
 
     [Test]
-    public Task Import_ComplexDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified()
+    public Task Import_StructureDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified()
     {
         var content = L5X.Load(Known.Empty);
 

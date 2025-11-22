@@ -8,12 +8,85 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
+/// Represents a contract for all elements within the L5X serialization library.
+/// Implementing classes serve as representations of specific elements in the L5X schema,
+/// providing access to the underlying <see cref="XElement"/> for reading, writing, and serialization of data.
+/// </summary>
+public interface ILogixElement
+{
+    /// <summary>
+    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
+    /// </summary>
+    /// <returns>A <see cref="XElement"/> representing the serialized logix element.</returns>
+    /// <remarks>
+    /// <para>
+    /// All logix elements are backed by an underlying <see cref="XElement"/> through which derived classes
+    /// get and set properties. This means all classes in this library can be viewed as wrapper around an
+    /// <see cref="XElement"/> or segment of XML, and use deferred execution for retrieving and setting data.
+    /// </para>
+    /// <para>
+    /// This method exposes the underlying element for extension and serialization purposes.
+    /// Take care not to mutate the underlying element in a way that makes the schema invalid and non-importable.
+    /// </para>
+    /// </remarks>
+    XElement Serialize();
+
+    /// <summary>
+    /// Tries to retrieve the associated <see cref="L5X"/> document for the current element if available.
+    /// </summary>
+    /// <param name="document">
+    /// When this method returns, contains the <see cref="L5X"/> document associated with the element,
+    /// if the operation succeeded. Otherwise, it will be null.</param>
+    /// <returns>True if the <see cref="L5X"/> document was successfully retrieved; otherwise, false.</returns>
+    bool TryGetDocument(out L5X document);
+
+    /// <summary>
+    /// Casts this element instance to the specified type TElement.
+    /// </summary>
+    /// <typeparam name="TElement">The type to which you want to cast.</typeparam>
+    /// <returns>The current instance, cast to the specified type.</returns>
+    /// <exception cref="InvalidCastException">Thrown if the cast isn't valid.</exception>    
+    TElement As<TElement>() where TElement : ILogixElement;
+
+    /// <summary>
+    /// Converts the current <see cref="LogixElement"/> instance to the specified type parameter.
+    /// </summary>
+    /// <typeparam name="TElement">The type of <see cref="ILogixElement"/> to which the instance should be converted.</typeparam>
+    /// <returns>An instance of the specified type parameter <typeparamref name="TElement"/> representing the converted element.</returns>
+    TElement To<TElement>() where TElement : ILogixElement;
+
+    /// <summary>
+    /// Creates a new instance of the current <see cref="ILogixElement"/> that is a deep clone of this instance.
+    /// </summary>
+    /// <returns>A new <see cref="ILogixElement"/> instance that is a deep copy of the current instance.</returns>
+    /// <remarks>
+    /// This method performs a deep clone of the underlying element, ensuring that all data structures and properties
+    /// are retained in the cloned object. The returned object is of the same type as the original but does not share
+    /// any references with it, meaning modifications to the clone will not affect the original instance.
+    /// </remarks>
+    ILogixElement Clone();
+
+    /// <summary>
+    /// Determines if the provided element is structurally or deeply equal to another by performing a compare
+    /// of the underlying XML data for the objects. 
+    /// </summary>
+    /// <param name="other">The other <see cref="ILogixElement"/> to compare.</param>
+    /// <returns><c>ture</c> if the objects are equivalent; Otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This internally compares the underlying XML nodes of the two elements to determine if all their
+    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e., it
+    /// compares the entire XML structure).
+    /// </remarks>
+    bool EquivalentTo(ILogixElement other);
+}
+
+/// <summary>
 /// A base class for all types that can be serialized and deserialized from a L5X file.
 /// Deriving classes will have access to the underlying element and  methods for easily getting and setting data.
 /// Implementing classes should provide a constructor taking a single <see cref="XElement"/> and pass it to the
 /// base constructor to be deserializable by the library.
 /// </summary>
-public abstract class LogixElement
+public abstract class LogixElement : ILogixElement
 {
     /// <summary>
     /// Creates a new <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
@@ -44,87 +117,37 @@ public abstract class LogixElement
     /// <summary>
     /// A list containing the order of any child elements for the current logix element.
     /// By default, this is an empty collection, but derived classes can override this. When this collection contains names,
-    /// any adds of properties, containers, or complex types will then use this list to sort the order of the elements
+    /// any adding of properties, containers, or complex types will then use this list to sort the order of the elements
     /// in the underlying parent element. 
     /// </summary>
     protected virtual List<string> ElementOrder { get; } = [];
 
-    /// <summary>
-    /// Returns the <see cref="L5X"/> instance this <see cref="LogixElement"/> is attached to if it is attached. 
-    /// </summary>
-    /// <returns>
-    /// If the current element is attached to a L5X document (i.e., has the root content element),
-    /// then the <see cref="L5X"/> instance; Otherwise, <c>null</c>.
-    /// </returns>
-    /// <remarks>
-    /// This allows attached logix elements to reach up to the L5X root to traverse or retrieve
-    /// other elements in the L5X. This is helpful/used for other extensions and cross-referencing functions.
-    /// </remarks>
-    public L5X? Document => Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
+    /// <inheritdoc />
+    public virtual XElement Serialize() => Element;
 
-    /// <summary>
-    /// Retrieves the element type based on the local name of the associated <see cref="XElement"/>.
-    /// </summary>
-    /// <returns>A string representation of the element type derived from the <see cref="Element"/> name.</returns>
-    /// <remarks>This will typically represent or map to the object type name.</remarks>
-    public string GetElementType() => Element.Name.LocalName;
-
-    /// <summary>
-    /// Casts this element instance to the specified type TElement.
-    /// </summary>
-    /// <typeparam name="TElement">The type to which you want to cast. This must be a type that derives from LogixElement.</typeparam>
-    /// <returns>The current instance, cast to the specified type.</returns>
-    /// <exception cref="InvalidCastException">Thrown if the cast isn't valid.</exception>    
-    public TElement As<TElement>() where TElement : LogixElement => (TElement)this;
-
-    /// <summary>
-    /// Converts the current <see cref="LogixElement"/> instance to the specified type parameter.
-    /// </summary>
-    /// <typeparam name="TElement">The type of <see cref="LogixElement"/> to which the instance should be converted.</typeparam>
-    /// <returns>An instance of the specified type parameter <typeparamref name="TElement"/> representing the converted element.</returns>
-    public TElement To<TElement>() where TElement : LogixElement => Element.Deserialize<TElement>();
-
-    /// <summary>
-    /// Determines if the provided element is structurally or deeply equal to another by performing a compare
-    /// of the underlying XML data for the objects. 
-    /// </summary>
-    /// <param name="other">The other <see cref="LogixElement"/> to compare.</param>
-    /// <returns><c>ture</c> if the objects are equivalent; Otherwise, <c>false</c>.</returns>
-    /// <remarks>
-    /// This internally compares the underlying XML nodes of the two elements to determine if all their
-    /// elements, attributes, and values are equal. This includes all nested or descendant elements (i.e., it
-    /// compares the entire XML structure).
-    /// </remarks>
-    public bool EquivalentTo(LogixElement other)
+    /// <inheritdoc />
+    public bool TryGetDocument(out L5X document)
     {
-        return XNode.DeepEquals(Serialize(), other.Serialize());
+        document = null!;
+
+        var l5X = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<L5X>();
+        if (l5X is null) return false;
+
+        document = l5X;
+        return true;
     }
 
-    /// <summary>
-    /// Returns a new deep-cloned instance of the current type.
-    /// </summary>
-    /// <returns>A new <see cref="LogixElement"/> type with the same property values.</returns>
-    /// <exception cref="InvalidOperationException">The object being cloned does not have a constructor accepting a
-    /// single <see cref="XElement"/> argument.</exception>
-    /// <remarks>This method will simply deserialize a new instance using the current underlying element data.</remarks>
-    public LogixElement Clone() => new XElement(Serialize()).Deserialize();
+    /// <inheritdoc />
+    public TElement As<TElement>() where TElement : ILogixElement => (TElement)(object)this;
 
-    /// <summary>
-    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
-    /// </summary>
-    /// <returns>A <see cref="XElement"/> representing the serialized logix element.</returns>
-    /// <remarks>
-    /// <para>
-    /// All logix elements are backed by an underlying <see cref="XElement"/> through which derived classes
-    /// get and set properties. This means all classes in this library can be viewed as wrapper around an
-    /// <see cref="XElement"/> or segment of XML, and use deferred execution for retrieving and setting data.
-    /// </para>
-    /// <para>
-    /// This method exposes the underlying element for extension and serialization purposes.
-    /// Take care not to mutate the underlying element in a way that makes the schema invalid and non-importable.
-    /// </para>
-    /// </remarks>
-    public virtual XElement Serialize() => Element;
+    /// <inheritdoc />
+    public TElement To<TElement>() where TElement : ILogixElement => Element.Deserialize<TElement>();
+
+    /// <inheritdoc />
+    public ILogixElement Clone() => new XElement(Element).Deserialize();
+
+    /// <inheritdoc />
+    public bool EquivalentTo(ILogixElement other) => XNode.DeepEquals(Serialize(), other.Serialize());
 
     /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter if it exists.
@@ -171,35 +194,9 @@ public abstract class LogixElement
     }
 
     /// <summary>
-    /// Gets the value of the selected attribute parsed as the specified generic type parameter if it exists.
-    /// If the attribute does not exist, returns <c>default</c> value of the generic type parameter.
-    /// </summary>
-    /// <param name="selector">A selection delegate that allows custom selection of an element relative to <see cref="Element"/>.
-    /// Use this to reach down the element hierarchy for nested values.</param>
-    /// <param name="name">The name of the attribute.</param>
-    /// <typeparam name="T">The return type of the value.</typeparam>
-    /// <returns>
-    /// If found, the value of attribute parsed as the generic type parameter.
-    /// If not found, returns <c>default</c>.
-    /// </returns>
-    /// <remarks>
-    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
-    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
-    /// the property name (assuming it's the name matches the underlying element property).
-    /// </remarks>
-    protected string? GetValue(Func<XElement, XElement?> selector, [CallerMemberName] string? name = null)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty", nameof(name));
-
-        return selector.Invoke(Element)?.Attribute(name)?.Value;
-    }
-
-    /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter.
     /// </summary>
     /// <param name="name">The name of the attribute.</param>
-    /// <typeparam name="T">The return type of the value.</typeparam>
     /// <returns>The value of attribute parsed as the generic type parameter.</returns>
     /// <exception cref="InvalidOperationException">No attribute with the provided name was found on <see cref="Element"/>.</exception>
     /// <remarks>
@@ -309,7 +306,7 @@ public abstract class LogixElement
     /// collection of contained elements.
     /// </summary>
     /// <param name="name">The name of the child container collection (e.g., Members).</param>
-    /// <typeparam name="TObject">The child element type.</typeparam>
+    /// <typeparam name="TElement">The child element type.</typeparam>
     /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
     /// <exception cref="InvalidOperationException">A child element with <c>name</c> does not exist.</exception>
     /// <remarks>
@@ -317,8 +314,8 @@ public abstract class LogixElement
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected LogixContainer<TObject> GetContainer<TObject>([CallerMemberName] string? name = null)
-        where TObject : LogixObject
+    protected LogixContainer<TElement> GetContainer<TElement>([CallerMemberName] string? name = null)
+        where TElement : LogixElement
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
@@ -328,7 +325,7 @@ public abstract class LogixElement
         if (container is null)
             throw Element.L5XError(name);
 
-        return new LogixContainer<TObject>(container);
+        return new LogixContainer<TElement>(container);
     }
 
     /// <summary>
@@ -336,22 +333,22 @@ public abstract class LogixElement
     /// the root of a collection of contained elements. Returns null if not found (instead of throwing an exception).
     /// </summary>
     /// <param name="name">The name of the child container collection (e.g., Members).</param>
-    /// <typeparam name="TObject">The child element type.</typeparam>
+    /// <typeparam name="TElement">The child element type.</typeparam>
     /// <returns>A <see cref="LogixContainer{TEntity}"/> containing all the child elements of the specified type.</returns>
     /// <remarks>
     /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
     /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
     /// the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected LogixContainer<TObject>? TryGetContainer<TObject>([CallerMemberName] string? name = null)
-        where TObject : LogixObject
+    protected LogixContainer<TElement>? TryGetContainer<TElement>([CallerMemberName] string? name = null)
+        where TElement : LogixElement
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         var container = Element.Element(name);
 
-        return container is not null ? new LogixContainer<TObject>(container) : null;
+        return container is not null ? new LogixContainer<TElement>(container) : null;
     }
 
     /// <summary>
@@ -494,7 +491,7 @@ public abstract class LogixElement
             DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
 
         //Return that or Null of not found.
-        return data is not null ? data.Deserialize<LogixData>() : LogixData.Null;
+        return data is not null ? data.Deserialize<LogixData>() : LogixType.Null;
     }
 
     /// <summary>
@@ -564,7 +561,7 @@ public abstract class LogixElement
     /// <typeparam name="T">The value type.</typeparam>
     /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// This method is only available to make getting/setting data on <see cref="Element"/> as concise
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming the name matches the underlying element property).
     /// This method will throw an exception if the <c>value</c> is null.
@@ -587,9 +584,8 @@ public abstract class LogixElement
     /// <param name="value">The value to assign to the child element. The child element is removed if the value is null.
     /// Otherwise, the value is converted to its string representation, wrapped in a <see cref="XCData"/> object,
     /// and assigned to the Value property of the child element.</param>
-    /// <typeparam name="T">The value type.</typeparam>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// This method is only available to make getting/setting data on <see cref="Element"/> as concise
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming the name matches the underlying element property).
     /// </remarks>
@@ -625,7 +621,7 @@ public abstract class LogixElement
     /// Otherwise, the value is serialized and added as a child element to the current type's element.</param>
     /// <typeparam name="TElement">The value type.</typeparam>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// This method is only available to make getting/setting data on <see cref="Element"/> as concise
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming the name matches the underlying element property).
     /// </remarks>
@@ -659,14 +655,14 @@ public abstract class LogixElement
     /// <param name="value">The <see cref="LogixContainer{TComponent}"/> value to set. The child container is removed
     /// if the value is null. Otherwise, the value is serialized and added (or replaces the existing) to an underlying parent element.</param>
     /// <param name="name">The name of the child container collection (e.g., Members).</param>
-    /// <typeparam name="TObject">The container type parameter.</typeparam>
+    /// <typeparam name="TElement">The container type parameter.</typeparam>
     /// <remarks>
-    /// This method it only available to make getting/setting data on <see cref="Element"/> as concise
+    /// This method is only available to make getting/setting data on <see cref="Element"/> as concise
     /// as possible from derived classes. This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving
     /// classes don't have to specify the property name (assuming the name matches the underlying element property).
     /// </remarks>
-    protected void SetContainer<TObject>(LogixContainer<TObject>? value, [CallerMemberName] string? name = null)
-        where TObject : LogixObject
+    protected void SetContainer<TElement>(LogixContainer<TElement>? value, [CallerMemberName] string? name = null)
+        where TElement : LogixElement
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
@@ -749,10 +745,10 @@ public abstract class LogixElement
     protected virtual void SetData(LogixData? data)
     {
         //Parameter and LocalTag have the element DefaultData instead of Data.
-        var name = GetElementType() is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
+        var name = Element.Name.LocalName is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
 
         //Always use our Null type instead of actual null.
-        data ??= LogixData.Null;
+        data ??= LogixType.Null;
 
         var formatted = GenerateDataElement(name, data);
 

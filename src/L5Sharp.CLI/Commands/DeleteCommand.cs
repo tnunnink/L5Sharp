@@ -11,7 +11,7 @@ namespace L5Sharp.CLI.Commands;
 /// 
 /// </summary>
 /// <typeparam name="TEntity"></typeparam>
-public abstract class DeleteCommand<TEntity> : ICommand where TEntity : LogixEntity
+public abstract class DeleteCommand<TEntity> : ICommand where TEntity : LogixEntity<TEntity>
 {
     [CommandOption("name", 'n',
         Description = "The name pattern to match for deletion (supports wildcards '*' and '?')")]
@@ -31,7 +31,7 @@ public abstract class DeleteCommand<TEntity> : ICommand where TEntity : LogixEnt
             var project = await console.ReadXmlAsync();
 
             project.Query<TEntity>()
-                .FilterByPattern(e => e is LogixComponent c ? c.Name : string.Empty, Name)
+                .FilterByPattern(e => e is ILogixComponent c ? c.Name : string.Empty, Name)
                 .FilterByExpression(Where)
                 .FilterBySwitch(e => !e.Usages().Any(), Unused)
                 .ToList()

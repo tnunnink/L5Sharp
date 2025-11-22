@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A predefined data type that is built into Logix and used with timer instructions.
 /// </summary>
+[LogixData(nameof(TIMER))]
 public sealed class TIMER : StructureData
 {
     /// <summary>

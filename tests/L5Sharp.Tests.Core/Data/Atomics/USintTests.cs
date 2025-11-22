@@ -29,63 +29,35 @@ public class USintTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var type = new USINT();
+        var atomic = new USINT();
 
-        type.Should().NotBeNull();
-        type.Should().Be(0);
-        type.Name.Should().Be(nameof(USINT).ToUpper());
-        type.Members.Should().BeEmpty();
-        type.Radix.Should().Be(Radix.Decimal);
+        atomic.Name.Should().Be(nameof(USINT).ToUpper());
+        atomic.Members.Should().BeEmpty();
+        atomic.Value.Should().Be(0);
+        atomic.Radix.Should().Be(Radix.Decimal);
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var type = new USINT(_random);
+        var atomic = new USINT(_random);
 
-        type.Should().Be(_random);
+        atomic.Should().Be(_random);
     }
 
     [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
+    public void New_StringValue_ShouldHaveExpectedValue()
     {
-        var type = new USINT(Radix.Binary);
+        var atomic = new USINT("16#007b");
 
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0000_0000");
+        atomic.Value.Should().Be(123);
+        atomic.Radix.Should().Be(Radix.Hex);
     }
 
     [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
+    public void New_NullString_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new USINT(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new USINT(Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
-    {
-        var type = new USINT(123, Radix.Hex);
-
-        type.Should().Be(123);
-        type.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new USINT(123, null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new USINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => new USINT((string)null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -179,7 +151,7 @@ public class USintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new USINT(123, Radix.Hex);
+        var type = new USINT(123);
 
         var xml = type.Serialize().ToString();
 
@@ -819,7 +791,7 @@ public class USintTests
 
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
@@ -830,7 +802,7 @@ public class USintTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

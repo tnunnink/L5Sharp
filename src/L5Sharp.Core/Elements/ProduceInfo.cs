@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// An element of the <see cref="Tag"/> component that contains properties or configuration
 /// producer tag types.
 /// </summary>
+[LogixElement(L5XName.ProduceInfo)]
 public class ProduceInfo : LogixElement
 {
     /// <summary>

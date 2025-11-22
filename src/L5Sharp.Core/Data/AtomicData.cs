@@ -1,9 +1,33 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
+
+/// <summary>
+/// Represents a contract for atomic value types that encapsulate a strongly typed value.
+/// </summary>
+/// <typeparam name="TValue">
+/// The type of the value represented by the atomic type. This must be a value type (struct).
+/// </typeparam>
+/// <remarks>
+/// Implementations of this interface are used to encapsulate single, immutable value types with predefined semantics.
+/// These types generally support operations like comparisons, format transformations, and value extraction.
+/// </remarks>
+public interface IAtomicValue<out TValue> where TValue : struct
+{
+    /// <summary>
+    /// Retrieves the value associated with the current instance.
+    /// </summary>
+    /// <remarks>
+    /// This method is used to get the internal value stored within the instance. The returned value
+    /// will depend on the specific implementation of the method in the derived or base class.
+    /// </remarks>
+    /// <returns>
+    /// The value associated with the current instance.
+    /// </returns>
+    public TValue Value { get; }
+}
 
 /// <summary>
 /// A <see cref="LogixData"/> that represents a value type object.
@@ -27,31 +51,20 @@ namespace L5Sharp.Core;
 public abstract class AtomicData : LogixData
 {
     /// <inheritdoc />
-    /// <remarks>
-    /// We are passing a fake XElement to the base class. Atomics are seen as in-memory immutable value types. 
-    /// To be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
-    /// don't use the backing element but will create it when the Serialize is called.
-    /// </remarks>
-    protected internal AtomicData() : base(new XElement(L5XName.DataValue))
+    protected internal AtomicData(XElement element) : base(element)
     {
-        Radix = Radix.Default(this);
     }
 
-    /// <inheritdoc />
-    /// <remarks>
-    /// We are passing a fake XElement to the base class. Atomics are seen as in-memory immutable value types. 
-    /// To be performant, we need to just wrap simple .NET primitive types. Therefore, atomics are unique in that they
-    /// don't use the backing element but will create it when the Serialize is called.
-    /// </remarks>
-    protected internal AtomicData(Radix radix) : base(new XElement(L5XName.DataValue))
+    /// <summary>
+    /// Creates a new <see cref="AtomicData"/> instance with the provided name and default value and radix for the type.
+    /// </summary>
+    /// <param name="name">The name of the atomic data type.</param>
+    /// <param name="value">The default value for the atomic data type.</param>
+    protected internal AtomicData(string name, string value = "0") : this(new XElement(L5XName.DataValue))
     {
-        if (radix is null)
-            throw new ArgumentNullException(nameof(radix));
-
-        if (!radix.SupportsType(this))
-            throw new ArgumentException($"{GetType()} is not supported by {radix.Name} Radix.");
-
-        Radix = radix;
+        Element.SetAttributeValue(L5XName.DataType, name);
+        Element.SetAttributeValue(L5XName.Radix, Radix.Default(GetType()));
+        Element.SetAttributeValue(L5XName.Value, value);
     }
 
     /// <summary>
@@ -65,7 +78,7 @@ public abstract class AtomicData : LogixData
     /// element upon creation of an <see cref="AtomicData"/> and should never be changed. Radix and Value are immutable
     /// properties.
     /// </remarks>
-    public Radix Radix { get; }
+    public Radix Radix => GetValue(Radix.Parse) ?? Radix.Default(GetType());
 
     /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
@@ -73,140 +86,109 @@ public abstract class AtomicData : LogixData
     /// <param name="bit">The zero-based bit index of the value to get.</param>
     /// <returns>A <see cref="BOOL"/> representing the value of the specified bit value (0/1).</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>bit</c> is out of range of the atomic type bit length.</exception>
-    public BOOL this[int bit] => new BitArray(GetBytes())[bit];
-
-    /// <summary>
-    /// Determines if the provided data type name represents an <see cref="AtomicData"/> type which is defined in this
-    /// assembly.
-    /// </summary>
-    /// <param name="dataType">The name of the data type to check.</param>
-    /// <returns><c>true</c> if the data type name represents an atomic data type; otherwise, <c>false</c>.</returns>
-    public static bool IsAtomic(string? dataType)
-    {
-        return dataType is
-            nameof(BOOL) or nameof(SINT) or nameof(INT) or nameof(DINT) or nameof(LINT) or nameof(REAL)
-            or "BIT" or nameof(USINT) or nameof(UINT) or nameof(UDINT) or nameof(ULINT) or nameof(LREAL);
-    }
-
-    /// <summary>
-    /// Creates a new default <see cref="AtomicData"/> instance using the provided atomic type name (e.g., DINT, dint).
-    /// </summary>
-    /// <param name="dataType">The name of the atomic type to instantiate.</param>
-    /// <returns>A new <see cref="AtomicData"/> instnace of the specified type name with default data.</returns>
-    /// <exception cref="ArgumentException"><paramref name="dataType"/> is not a valid atomic type.</exception>
-    public static AtomicData Default(string dataType)
-    {
-        dataType = dataType.ToUpper();
-
-        return dataType switch
-        {
-            nameof(BOOL) => new BOOL(),
-            "BIT" => new BOOL(),
-            nameof(SINT) => new SINT(),
-            nameof(INT) => new INT(),
-            nameof(DINT) => new DINT(),
-            nameof(LINT) => new LINT(),
-            nameof(REAL) => new REAL(),
-            nameof(USINT) => new USINT(),
-            nameof(UINT) => new UINT(),
-            nameof(UDINT) => new UDINT(),
-            nameof(ULINT) => new ULINT(),
-            nameof(LREAL) => new LREAL(),
-            _ => throw new ArgumentException(
-                $"The name '{dataType}' does not represent a known {typeof(AtomicData)} type.")
-        };
-    }
-
-    /// <summary>
-    /// Parses the provided string value into an atomic type value.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>An <see cref="AtomicData"/> representing the parsed value and format of the provided string.</returns>
-    /// <exception cref="FormatException"><c>value</c> does not have a valid Radix format to be parsed as an
-    /// atomic type.</exception>
-    public static AtomicData Parse(string value)
-    {
-        if (value.IsEquivalent("true")) return new BOOL(true);
-        if (value.IsEquivalent("false")) return new BOOL(false);
-
-        var radix = Radix.Infer(value);
-        return radix.ParseValue(value);
-    }
-
-    /// <summary>
-    /// Tries to parse the provided string value into an atomic type value.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>An <see cref="AtomicData"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
-    public static AtomicData? TryParse(string? value)
-    {
-        if (value is null || value.IsEmpty()) return null;
-        if (value.IsEquivalent("true")) return new BOOL(true);
-        if (value.IsEquivalent("false")) return new BOOL(false);
-        return Radix.TryInfer(value, out var radix) ? radix.ParseValue(value) : null;
-    }
+    public bool this[int bit] => new BitArray(ToBytes())[bit];
 
     /// <summary>
     /// Returns the value of the <see cref="AtomicData"/> as a byte array.
     /// </summary>
     /// <returns>An array of <see cref="byte"/> representing the binary value of the atomic type.</returns>
     /// <remarks>This is needed for formatting the atomic value in the proper radix format.</remarks>
-    public abstract byte[] GetBytes();
-
-    /// <summary>
-    /// Converts the current atomic data to its corresponding .NET value type representation.
-    /// </summary>
-    /// <returns>A <see cref="ValueType"/> representing the .NET equivalent of the atomic data.</returns>
-    public abstract ValueType ToValue();
+    public abstract byte[] ToBytes();
 
     /// <summary>
     /// Gets the array of bit representing the value of the atomic type.
     /// </summary>
     /// <returns>A <see cref="BitArray"/> containing the array bit values</returns>
     // ReSharper disable once ReturnTypeCanBeEnumerable.Global no I want an array
-    public BitArray ToBitArray() => new(GetBytes());
+    public BitArray ToBitArray() => new(ToBytes());
 
     /// <summary>
-    /// Return the atomic value formatted using the current <see cref="Radix"/> format.
+    /// Converts the provided <see cref="bool"/> to a <see cref="AtomicData"/>.
     /// </summary>
-    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public override string ToString() => Radix.FormatValue(this);
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(bool value) => new BOOL(value);
 
     /// <summary>
-    /// Returns the atomic value formatted in the specified <see cref="Core.Radix"/> format.
+    /// Converts the provided <see cref="sbyte"/> to a <see cref="AtomicData"/>.
     /// </summary>
-    /// <param name="radix">The radix format.</param>
-    /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.FormatValue(this);
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(sbyte value) => new SINT(value);
 
-    /// <inheritdoc />
-    /// <remarks>
-    /// An <see cref="AtomicData"/> is special in that it does not use the base Element for storing its
-    /// information. All atomic types values are set in the derived classes. This method will generate a new
-    /// <see cref="XElement"/> when called. This is because atomic needs the value types to be performant. We don't
-    /// want to have to box the atomic value as an object, but rather let it wrap a simple .NET primitive type.
-    /// </remarks>
-    public override XElement Serialize()
+    /// <summary>
+    /// Converts the provided <see cref="short"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(short value) => new INT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="int"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(int value) => new DINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="long"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(long value) => new LINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="float"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(float value) => new REAL(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="double"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(double value) => new LREAL(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="byte"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(byte value) => new USINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="ushort"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(ushort value) => new UINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="uint"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(uint value) => new UDINT(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="ulong"/> to a <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="AtomicData"/> representing the converted value.</returns>
+    public static implicit operator AtomicData(ulong value) => new ULINT(value);
+
+    /// <summary>
+    /// Retrieves the atomic value of the current instance of <see cref="AtomicData"/>.
+    /// </summary>
+    /// <typeparam name="TValue">The value type to parse and return. Must be a value type.</typeparam>
+    /// <returns>The parsed value of type <typeparamref name="TValue"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the atomic value cannot be retrieved or parsed.</exception>
+    protected TValue GetAtomicValue<TValue>() where TValue : struct
     {
-        var element = new XElement(L5XName.DataValue);
-        element.Add(new XAttribute(L5XName.DataType, Name));
-        element.Add(new XAttribute(L5XName.Radix, Radix));
-        element.Add(new XAttribute(L5XName.Value, this));
-        return element;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    private IEnumerable<Member> GenerateBitMembers()
-    {
-        var bits = new BitArray(GetBytes());
-
-        for (var i = 0; i < bits.Length; i++)
-        {
-            var index = i;
-            yield return new Member(index.ToString(), () => bits[index],
-                _ => throw new NotSupportedException("Can do this."));
-        }
+        var value = Element.Attribute(L5XName.Value)?.Value ?? throw Element.L5XError(L5XName.Value);
+        var radix = Radix.Infer(value);
+        return radix.Parse<TValue>(value);
     }
 }

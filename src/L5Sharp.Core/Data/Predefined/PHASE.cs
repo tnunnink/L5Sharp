@@ -7,6 +7,7 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A predefined data type that is built into Logix and used with PID instructions.
 /// </summary>
+[LogixData(nameof(PHASE))]
 public sealed class PHASE : StructureData
 {
     /// <summary>

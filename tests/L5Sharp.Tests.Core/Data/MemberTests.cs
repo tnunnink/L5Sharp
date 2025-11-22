@@ -129,7 +129,7 @@ public class MemberTests
         var member = new Member("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<ComplexData>();
+        member.Value.Should().BeOfType<StructureData>();
         member.Value.Name.Should().Be("CustomType");
         member.Value.Member("PRE")!.Value.Should().Be(1000);
         member.Value.Member("ACC")!.Value.Should().Be(2000);
@@ -159,12 +159,16 @@ public class MemberTests
     [Test]
     public void New_ArrayOfAtomicMemberElement_ShouldHaveExpectedProperties()
     {
-        const string xml = @"<ArrayMember Name=""Test"" DataType=""REAL"" Dimensions=""4"" Radix=""Float"">
-            <Element Index=""[0]"" Value=""1.1"" />
-            <Element Index=""[1]"" Value=""2.2"" />
-            <Element Index=""[2]"" Value=""3.3"" />
-            <Element Index=""[3]"" Value=""4.4"" />
-            </ArrayMember>";
+        const string xml =
+            """
+            <ArrayMember Name="Test" DataType="REAL" Dimensions="4" Radix="Float">
+                <Element Index="[0]" Value="1.1" />
+                <Element Index="[1]" Value="2.2" />
+                <Element Index="[2]" Value="3.3" />
+                <Element Index="[3]" Value="4.4" />
+            </ArrayMember>
+            """;
+        
         var element = XElement.Parse(xml);
         var type = element.Deserialize<LogixData>();
 
@@ -333,7 +337,7 @@ public class MemberTests
     {
         var member = new Member("Test", 123);
 
-        FluentActions.Invoking(() => member.Value = LogixData.Null).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => member.Value = LogixType.Null).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -351,24 +355,22 @@ public class MemberTests
     [Test]
     public void SetValue_SINT_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new SINT(12, Radix.Binary));
+        var member = new Member("Test", new SINT(12));
 
         member.Value = 21;
 
         member.Value.Should().BeOfType<SINT>();
-        member.Value.As<SINT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(21);
     }
 
     [Test]
     public void SetValue_INT_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new INT(1234, Radix.Binary));
+        var member = new Member("Test", new INT(1234));
 
         member.Value = 4321;
 
         member.Value.Should().BeOfType<INT>();
-        member.Value.As<INT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(4321);
     }
 
@@ -387,36 +389,33 @@ public class MemberTests
     [Test]
     public void SetValue_LINT_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new LINT(long.MaxValue, Radix.Hex));
+        var member = new Member("Test", new LINT(long.MaxValue));
 
-        member.Value = new DINT(1000, Radix.Ascii);
+        member.Value = new DINT(1000);
 
         member.Value.Should().BeOfType<LINT>();
-        member.Value.As<LINT>().Radix.Should().Be(Radix.Hex);
         member.Value.Should().Be(1000);
     }
 
     [Test]
     public void SetValue_USINT_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new USINT(12, Radix.Binary));
+        var member = new Member("Test", new USINT(12));
 
         member.Value = 21;
 
         member.Value.Should().BeOfType<USINT>();
-        member.Value.As<USINT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(21);
     }
 
     [Test]
     public void SetValue_UINT_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new UINT(1234, Radix.Binary));
+        var member = new Member("Test", new UINT(1234));
 
         member.Value = 4321;
 
         member.Value.Should().BeOfType<UINT>();
-        member.Value.As<UINT>().Radix.Should().Be(Radix.Binary);
         member.Value.Should().Be(4321);
     }
 
@@ -428,31 +427,28 @@ public class MemberTests
         member.Value = 321;
 
         member.Value.Should().BeOfType<UDINT>();
-        member.Value.As<UDINT>().Radix.Should().Be(Radix.Decimal);
         member.Value.Should().Be(321);
     }
 
     [Test]
     public void SetValue_ULINT_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new ULINT(long.MaxValue, Radix.Hex));
+        var member = new Member("Test", new ULINT(long.MaxValue));
 
-        member.Value = new DINT(1000, Radix.Ascii);
+        member.Value = new DINT(1000);
 
         member.Value.Should().BeOfType<ULINT>();
-        member.Value.As<ULINT>().Radix.Should().Be(Radix.Hex);
         member.Value.Should().Be(1000);
     }
 
     [Test]
     public void SetValue_REAL_ShouldBeExpectedValue()
     {
-        var member = new Member("Test", new REAL(float.MaxValue, Radix.Exponential));
+        var member = new Member("Test", new REAL(float.MaxValue));
 
         member.Value = 123.123f;
 
         member.Value.Should().BeOfType<REAL>();
-        member.Value.As<REAL>().Radix.Should().Be(Radix.Exponential);
         member.Value.Should().Be(123.123f);
     }
 
@@ -464,7 +460,6 @@ public class MemberTests
         member.Value = 123.123;
 
         member.Value.Should().BeOfType<LREAL>();
-        member.Value.As<LREAL>().Radix.Should().Be(Radix.Float);
         member.Value.Should().Be(123.123);
     }
 
@@ -495,7 +490,7 @@ public class MemberTests
     {
         var member = new Member("Test", new TIMER());
 
-        member.Value = new ComplexData("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) });
+        member.Value = new StructureData("TIMER", new List<Member> { new("PRE", 5000), new("EN", true) });
 
         member.Value.As<TIMER>().PRE.Should().Be(5000);
         member.Value.As<TIMER>().EN.Should().Be(true);

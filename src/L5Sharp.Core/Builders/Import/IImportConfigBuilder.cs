@@ -19,12 +19,11 @@ public interface IImportConfigBuilder<out TBuilder>
     /// <summary>
     /// Configures the import process to rename a component of the specified type from its current name to a new name.
     /// </summary>
-    /// <typeparam name="TComponent">The type of the component to be renamed, inheriting from <see cref="LogixComponent"/>.</typeparam>
+    /// <typeparam name="TComponent">The type of the component to be renamed.</typeparam>
     /// <param name="current">The current name of the component to be renamed.</param>
     /// <param name="updated">The new name to assign to the specified component.</param>
     /// <returns>The updated instance of the builder configuration.</returns>
-    TBuilder Rename<TComponent>(string current, string updated)
-        where TComponent : LogixComponent;
+    TBuilder Rename<TComponent>(string current, string updated) where TComponent : LogixComponent<TComponent>;
 
     /// <summary>
     /// Configures the import process to overwrite all existing components with the same name and type.
@@ -38,8 +37,7 @@ public interface IImportConfigBuilder<out TBuilder>
     /// <typeparam name="TComponent">The type of the components to be evaluated for overwriting.</typeparam>
     /// <param name="predicate">A function that determines whether a specific component instance should be overwritten.</param>
     /// <returns>The updated instance of the builder configuration.</returns>
-    TBuilder Overwrite<TComponent>(Func<TComponent, bool> predicate)
-        where TComponent : LogixComponent;
+    TBuilder Overwrite<TComponent>(Func<TComponent, bool> predicate) where TComponent : LogixComponent<TComponent>;
 
     /// <summary>
     /// Configures the import process to discard the specified components that match the provided predicate.
@@ -47,16 +45,15 @@ public interface IImportConfigBuilder<out TBuilder>
     /// <typeparam name="TComponent">The type of the Logix component to evaluate.</typeparam>
     /// <param name="predicate">A function that determines which components to discard.</param>
     /// <returns>The updated instance of the builder configuration.</returns>
-    TBuilder Discard<TComponent>(Func<TComponent, bool> predicate)
-        where TComponent : LogixComponent;
+    TBuilder Discard<TComponent>(Func<TComponent, bool> predicate) where TComponent : LogixComponent<TComponent>;
 
     /// <summary>
     /// Modifies components of the specified type that satisfy the given predicate with the provided configuration logic.
     /// </summary>
-    /// <typeparam name="TComponent">The type of the component to modify. Must inherit from <see cref="LogixComponent"/>.</typeparam>
+    /// <typeparam name="TComponent">The type of the component to modify.</typeparam>
     /// <param name="predicate">A function defining the condition to identify the components to modify.</param>
     /// <param name="action">An action specifying the configuration or modification to apply to the matched components.</param>
     /// <returns>The updated instance of the builder configuration.</returns>
     TBuilder Modify<TComponent>(Func<TComponent, bool> predicate, Action<TComponent> action)
-        where TComponent : LogixComponent;
+        where TComponent : LogixComponent<TComponent>;
 }

@@ -72,451 +72,371 @@ public abstract class Radix : LogixEnum<Radix, string>
     public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
     /// <summary>
-    /// Gets the default <see cref="Radix"/> value for the provided logix type.
+    /// Gets the default <see cref="Radix"/> value for the specified type.
     /// </summary>
-    /// <param name="data">The logix type to evaluate.</param>
+    /// <param name="type">The type for which to determine the default <see cref="Radix"/>.</param>
     /// <returns>
-    /// <see cref="Null"/> for all non-atomic types.
-    /// <see cref="Float"/> for <see cref="REAL"/> types.
-    /// <see cref="Decimal"/> for all other atomic types.
+    /// <see cref="Radix.Float"/> for <see cref="REAL"/> or <see cref="LREAL"/> types.
+    /// <see cref="Radix.Decimal"/> for all other <see cref="AtomicData"/> types.
+    /// <see cref="Radix.Null"/> for all other types.
     /// </returns>
-    public static Radix Default(LogixData data)
+    public static Radix Default(Type type)
     {
-        if (data is not AtomicData atomicType)
-            return Null;
+        if (type == typeof(REAL) || type == typeof(LREAL))
+            return Float;
 
-        return atomicType is REAL or LREAL ? Float : Decimal;
+        if (typeof(AtomicData).IsAssignableFrom(type))
+            return Decimal;
+
+        return Null;
     }
 
     /// <summary>
-    /// Determines if the current <see cref="Radix"/> supports the provided data type instance.
+    /// Infers the appropriate <see cref="Radix"/> type from the specified string value.
     /// </summary>
-    /// <param name="data">The logix type instance to evaluate.</param>
-    /// <returns>true if the current radix value is valid for the given data type instance; otherwise, false.</returns>
-    public bool SupportsType(LogixData data)
+    /// <param name="value">The string value from which to determine the <see cref="Radix"/> type.</param>
+    /// <returns>
+    /// The <see cref="Radix"/> instance corresponding to the input value.
+    /// </returns>
+    /// <exception cref="FormatException">
+    /// Thrown when the input value does not match any known <see cref="Radix"/> format.
+    /// </exception>
+    public static Radix Infer(string value)
     {
-        if (data is not AtomicData atomicType)
-            return Equals(Null);
+        var radix = All().FirstOrDefault(r => r.IsValidFormat(value));
 
-        return atomicType switch
+        if (radix is null)
         {
-            BOOL => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex),
-            LINT => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii) ||
-                    Equals(DateTime) || Equals(DateTimeNs),
-            REAL => Equals(Float) || Equals(Exponential),
-            LREAL => Equals(Float) || Equals(Exponential),
-            _ => Equals(Binary) || Equals(Octal) || Equals(Decimal) || Equals(Hex) || Equals(Ascii)
-        };
+            throw new FormatException($"Could not determine Radix from value: {value}");
+        }
+
+        return radix;
     }
 
     /// <summary>
-    /// Determines the radix format from a string representing a formatted atomic value.
+    /// Attempts to determine the correct <see cref="Radix"/> for the provided value.
     /// </summary>
-    /// <param name="input">The string for which to infer the format.</param>
-    /// <returns>A <see cref="Radix"/> format enum value.</returns>
-    /// <exception cref="FormatException">A radix cannot be determined from the format of <c>value</c>.</exception>
-    public static Radix Infer(string input)
+    /// <param name="value">The string value to analyze for possible radix inference.</param>
+    /// <param name="radix">
+    /// When the method returns, contains the inferred <see cref="Radix"/> if the operation succeeds,
+    /// or <see cref="Radix.Null"/> if no matching radix is found.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if a matching <see cref="Radix"/> is successfully inferred from the value; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool TryInfer(string? value, out Radix radix)
     {
-        var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
-
-        if (name is null)
-            throw new FormatException(
-                $"Could not determine Radix from input '{input}'. Verify that the input string is an accepted Radix format.");
-
-        return Parse(name);
-    }
-
-    /// <summary>
-    /// Tries to infer the radix format from a string representing a formatted atomic value.
-    /// </summary>
-    /// <param name="input">The string input for which to infer the radix format.</param>
-    /// <param name="radix">If parsed successfully, then the <see cref="Radix"/> representing the format of the input;
-    /// Otherwise, a <see cref="Null"/> radix format.</param>
-    /// <returns><c>true</c> if a <c>Radix</c> format was inferred from the string input; Otherwise, <c>false</c>.</returns>
-    public static bool TryInfer(string input, out Radix radix)
-    {
-        var name = Identifiers.FirstOrDefault(i => i.Value.Invoke(input)).Key;
-        radix = name is not null ? Parse(name) : Null;
+        radix = All().FirstOrDefault(r => r.IsValidFormat(value)) ?? Null;
         return radix != Null;
     }
 
     /// <summary>
-    /// The specifier prefix of the Radix string format.
+    /// Parses the specified string value into an <see cref="AtomicData"/> instance.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the text that identifies the format of the Radix.</value>
-    /// <remarks>
-    /// Most <see cref="Radix"/> will have a specifier prefix, such as '#2' for Binary, '#16' for Hex, and so on.
-    /// By default, this property is used by <see cref="HasFormat"/> to determine if an input string has the specified
-    /// Radix format, and further by <see cref="Infer"/> to determine a Radix from a string value.
-    /// However, some Radix options are overriden as they do not have specifiers (e.g., Decimal, Float).
-    /// </remarks>
-    protected abstract string Specifier { get; }
-
-    /// <summary>
-    /// Returns an indication whether the current string input value has the format of the current Radix type.
-    /// </summary>
-    /// <param name="input">The input text value to examine.</param>
-    /// <returns><c>true</c> if <c>input</c> qualifies as a valid format for the Radix type; otherwise, <c>false</c>.</returns>
-    protected virtual bool HasFormat(string input) => !input.IsEmpty() && input.StartsWith(Specifier);
-
-    /// <summary>
-    /// Converts an atomic value to the current radix base format. 
-    /// </summary>
-    /// <param name="atomic">The current atomic type to convert.</param>
+    /// <param name="value">The string value to be parsed into an <see cref="AtomicData"/>.</param>
     /// <returns>
-    /// A string that represents the value of the atomic type in the current radix base number style.
+    /// An <see cref="AtomicData"/> instance representing the parsed value.
+    /// Returns an instance created as either a floating-point or integral type depending on the inferred <see cref="Radix"/>.
     /// </returns>
-    public abstract string FormatValue(AtomicData atomic);
-
-    /// <summary>
-    /// Parses a string input of a given Radix formatted value into an atomic value type. 
-    /// </summary>
-    /// <param name="input">The string value to parse.</param>
-    /// <returns>An <see cref="AtomicData"/> representing the value of the formatted string.</returns>
-    public abstract AtomicData ParseValue(string input);
-
-    /// <summary>
-    /// Converts the provided <see cref="AtomicData"/> to the specified base number.
-    /// </summary>
-    /// <param name="data">The atomic type to convert.</param>
-    /// <param name="baseNumber">The base of the return value, which must be 2, 8, 10, or 16.</param>
-    /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
-    /// <exception cref="ArgumentException">the baseNumber is not 2, 8, 10, or 16.</exception>
-    private static string ToBase(AtomicData data, int baseNumber)
+    /// <exception cref="FormatException">
+    /// Thrown when the specified value cannot be parsed into the expected data format.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the specified value is outside the allowable range for the inferred <see cref="Radix"/>.
+    /// </exception>
+    public static AtomicData ParseAtomic(string value)
     {
-        var bitsPerByte = baseNumber switch
-        {
-            2 => 8,
-            8 => 3,
-            _ => 2
-        };
+        var radix = Infer(value);
 
-        var bytes = data.GetBytes();
-        var builder = new StringBuilder();
-
-        for (var ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
+        if (radix == Float || radix == Exponential)
         {
-            var byteString = Convert.ToString(bytes[ctr], baseNumber).PadLeft(bitsPerByte, '0');
-            builder.Append(byteString);
+            return radix.Parse<double>(value);
         }
 
-        return builder.ToString();
+        return radix.Parse<long>(value);
     }
 
     /// <summary>
-    /// Converts the provided <see cref="string"/> to a <see cref="AtomicData"/> given the provided bitsPerByte and baseNumber.
+    /// Determines whether the specified string value matches the expected format for the <see cref="Radix"/>.
     /// </summary>
-    /// <param name="value">The string value to convert.</param>
-    /// <param name="charsPerByte">The number of chars in <c>value</c> that represented a single byte of data.</param>
-    /// <param name="baseNumber">The base number of the return value, which must be 2, 8, 10, or 16.</param>
-    /// <returns>A <see cref="string"/> value representing the value in the specified base.</returns>
-    /// <exception cref="ArgumentException">the baseNumber is not 2, 8, 10, or 16.</exception>
-    private static AtomicData ToAtomic(string value, int charsPerByte, int baseNumber)
+    /// <param name="value">
+    /// The string value to validate against the specific format of the <see cref="Radix"/>.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the specified value matches the expected format of the <see cref="Radix"/>; otherwise, <c>false</c>.
+    /// </returns>
+    public virtual bool IsValidFormat(string? value)
     {
-        if (value.IsEmpty())
-            throw new ArgumentException("Value can not be empty.");
-
-        var byteLength = value.Length / charsPerByte;
-
-        return byteLength switch
-        {
-            0 => new BOOL(value == "1"),
-            > 0 and <= 1 => new SINT(Convert.ToSByte(value, baseNumber)),
-            > 1 and <= 2 => new INT(Convert.ToInt16(value, baseNumber)),
-            > 2 and <= 4 => new DINT(Convert.ToInt32(value, baseNumber)),
-            > 4 and <= 8 => new LINT(Convert.ToInt64(value, baseNumber)),
-            _ => throw new ArgumentOutOfRangeException(nameof(byteLength),
-                $"The provided value '{value}' is out of range for atomic conversion. Must be between 0 and 8 bytes.")
-        };
+        return false;
     }
 
-    private void ValidateFormat(string input)
+    /// <summary>
+    /// Formats the provided value type using the current radix.
+    /// </summary>
+    /// <param name="value">The value to format.</param>
+    /// <returns>The formatted string representation of the atomic data.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the current radix does not support formatting the given atomic data type.</exception>
+    public virtual string Format<TValue>(TValue value) where TValue : struct
     {
-        if (string.IsNullOrEmpty(input))
-            throw new ArgumentException("Input can not be null or empty.", nameof(input));
-
-        if (!Identifiers[Name].Invoke(input))
-            throw new FormatException($"Input '{input}' does not have expected {Name} format.");
+        throw new NotSupportedException($"{Name} does not support formatting {typeof(TValue).Name}.");
     }
 
-    private void ValidateType(AtomicData atomic)
+    /// <summary>
+    /// Parses the specified string value into an instance of the defined value type.
+    /// </summary>
+    /// <typeparam name="TValue">The type of value to which the string will be parsed.</typeparam>
+    /// <param name="value">The string value to parse into the specified type.</param>
+    /// <returns>A value of type <typeparamref name="TValue"/> parsed from the provided string.</returns>
+    /// <exception cref="NotSupportedException">Thrown when parsing for the specific <see cref="Radix"/> and <typeparamref name="TValue"/> is not supported.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="value"/> provided is null or empty.</exception>
+    /// <exception cref="FormatException">Thrown when the <paramref name="value"/> does not match the expected format for the current <see cref="Radix"/>.</exception>
+    public virtual TValue Parse<TValue>(string value) where TValue : struct
     {
-        if (atomic is null)
-            throw new ArgumentNullException(nameof(atomic));
-
-        if (!SupportsType(atomic))
-            throw new NotSupportedException($"{atomic.GetType()} is not supported by {Name} Radix.");
+        throw new NotSupportedException($"{Name} does not support parsing to {typeof(TValue).Name}.");
     }
 
-    private static readonly Dictionary<string, Func<string, bool>> Identifiers = new()
-    {
-        { nameof(Binary), s => Binary.HasFormat(s) },
-        { nameof(Octal), s => Octal.HasFormat(s) },
-        { nameof(Decimal), s => Decimal.HasFormat(s) },
-        { nameof(Hex), s => Hex.HasFormat(s) },
-        { nameof(Float), s => Float.HasFormat(s) },
-        { nameof(Exponential), s => Exponential.HasFormat(s) },
-        { nameof(Ascii), s => Ascii.HasFormat(s) },
-        { nameof(DateTime), s => DateTime.HasFormat(s) },
-        { nameof(DateTimeNs), s => DateTimeNs.HasFormat(s) }
-    };
 
-    private class NullRadix() : Radix("NullType", "NullType")
-    {
-        protected override string Specifier => string.Empty;
+    #region RadixTypes
 
-        protected override bool HasFormat(string input) =>
-            throw new NotSupportedException($"{Name} Radix does not support formatting atomic values");
+    /// <summary>
+    /// Represents a null or uninitialized radix type within the LogixEnum structure.
+    /// </summary>
+    private class NullRadix() : Radix("NullType", "NullType");
 
-        public override string FormatValue(AtomicData atomic) =>
-            throw new NotSupportedException($"{Name} Radix does not support formatting atomic values");
-
-        public override AtomicData ParseValue(string input) =>
-            throw new NotSupportedException($"{Name} Radix does not support parsing atomic values");
-    }
-
+    /// <summary>
+    /// Represents a binary number base, typically used for formatting and parsing binary values.
+    /// </summary>
+    /// <remarks>
+    /// This class extends the <see cref="Radix"/> abstraction to provide specific handling
+    /// for binary-based numeric representations, including operations such as formatting
+    /// atomic data into binary strings and parsing binary string values into their corresponding data types.
+    /// </remarks>
     private class BinaryRadix() : Radix(nameof(Binary), nameof(Binary))
     {
+        private const string Specifier = "2#";
         private const int BaseNumber = 2;
-        private const int CharsPerByte = 8;
-        private const string ByteSeparator = "_";
-        private const string Pattern = @"(?<=\d)(?=(\d\d\d\d)+(?!\d))";
+        private const int SegmentSize = 4;
+        private const string Separator = "_";
 
-        protected override string Specifier => "2#";
-
-        protected override bool HasFormat(string input) => !input.IsEmpty() && input.StartsWith(Specifier);
-
-        public override string FormatValue(AtomicData atomic)
+        public override bool IsValidFormat(string? value)
         {
-            ValidateType(atomic);
+            return value is not null && value.StartsWith(Specifier);
+        }
 
-            var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
-
-            var formatted = Regex.Replace(converted, Pattern, ByteSeparator);
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            var formatted = FormatValue(value, BaseNumber).SeparateWith(Separator, SegmentSize);
 
             return $"{Specifier}{formatted}";
         }
 
-        public override AtomicData ParseValue(string input)
+        public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(input);
+            ValidateFormat(value);
 
-            var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
+            var data = value.Remove(0, Specifier.Length).Replace(Separator, string.Empty);
 
-            return ToAtomic(value, CharsPerByte, BaseNumber);
+            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+                return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
+
+            return base.Parse<TValue>(value);
         }
     }
 
+    /// <summary>
+    /// Represents the octal number base for formatting and parsing Logix atomic data types.
+    /// </summary>
+    /// <remarks>
+    /// Octal is a base-8 numeral system that uses the digits 0 through 7. This class provides functionality
+    /// to format Logix atomic data types in octal representation and parse octal strings back into data types.
+    /// </remarks>
     private class OctalRadix() : Radix(nameof(Octal), nameof(Octal))
     {
+        private const string Specifier = "8#";
         private const int BaseNumber = 8;
-        private const int CharsPerByte = 3;
-        private const string ByteSeparator = "_";
-        private const string Pattern = @"(?<=\d)(?=(\d\d\d)+(?!\d))";
+        private const int SegmentSize = 3;
+        private const string Separator = "_";
 
-        protected override string Specifier => "8#";
-
-        public override string FormatValue(AtomicData atomic)
+        public override bool IsValidFormat(string? value)
         {
-            ValidateType(atomic);
+            return value is not null && value.StartsWith(Specifier);
+        }
 
-            var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
-
-            var formatted = Regex.Replace(converted, Pattern, ByteSeparator);
-
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            var formatted = FormatValue(value, BaseNumber).SeparateWith(Separator, SegmentSize);
             return $"{Specifier}{formatted}";
         }
 
-        public override AtomicData ParseValue(string input)
+        public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(input);
+            ValidateFormat(value);
 
-            var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
+            var data = value.Remove(0, Specifier.Length).Replace(Separator, string.Empty);
 
-            return ToAtomic(value, CharsPerByte, BaseNumber);
+            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+                return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
+
+            return base.Parse<TValue>(value);
         }
     }
 
+    /// <summary>
+    /// Represents the decimal radix used to specify base-10 numeric formatting and parsing for atomic data types.
+    /// </summary>
     private class DecimalRadix() : Radix(nameof(Decimal), nameof(Decimal))
     {
-        protected override string Specifier => string.Empty;
+        private const int BaseNumber = 10;
 
-        protected override bool HasFormat(string input)
+        public override bool IsValidFormat(string? value)
         {
-            if (input.StartsWith('+') || input.StartsWith('-'))
+            if (value is null) return false;
+
+            if (value.StartsWith('+') || value.StartsWith('-'))
             {
-                input = input.Remove(0, 1);
+                value = value.Remove(0, 1);
             }
 
-            return !input.IsEmpty() && input.All(char.IsDigit);
+            return !value.IsEmpty() && value.All(char.IsDigit);
         }
 
-        public override string FormatValue(AtomicData atomic)
+        public override string Format<TValue>(TValue value) where TValue : struct
         {
-            ValidateType(atomic);
+            return FormatValue(value, BaseNumber);
+        }
 
-            return atomic switch
+        public override TValue Parse<TValue>(string value)
+        {
+            ValidateFormat(value);
+
+            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+                return ((Func<string, int, TValue>)converter).Invoke(value, BaseNumber);
+
+            return base.Parse<TValue>(value);
+        }
+    }
+
+    /// <summary>
+    /// Represents the hexadecimal radix system for formatting and parsing data values.
+    /// Provides functionality to format atomic data types into hexadecimal representation
+    /// and parse hexadecimal strings back to their original data types.
+    /// </summary>
+    private class HexRadix() : Radix(nameof(Hex), nameof(Hex))
+    {
+        private const string Specifier = "16#";
+        private const int BaseNumber = 16;
+        private const int SegmentSize = 4;
+        private const string Separator = "_";
+
+        public override bool IsValidFormat(string? value)
+        {
+            return value is not null && value.StartsWith(Specifier);
+        }
+
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            var formatted = FormatValue(value, BaseNumber).SeparateWith(Separator, SegmentSize);
+            return $"{Specifier}{formatted}";
+        }
+
+        public override TValue Parse<TValue>(string value)
+        {
+            ValidateFormat(value);
+
+            var data = value.Remove(0, Specifier.Length).Replace(Separator, string.Empty);
+
+            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+                return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
+
+            return base.Parse<TValue>(value);
+        }
+    }
+
+    /// <summary>
+    /// Represents a radix type used for floating-point values in Logix systems.
+    /// </summary>
+    private class FloatRadix() : Radix(nameof(Float), nameof(Float))
+    {
+        private const string DoubleFormat = "0.0##############";
+        private const string SingleFormat = "0.0######";
+
+        public override bool IsValidFormat(string? value)
+        {
+            if (value is null) return false;
+
+            //we don't care if it is positive or negative
+            if (value.StartsWith("+") || value.StartsWith("-"))
             {
-                BOOL v => v ? "1" : "0",
-                SINT v => ((sbyte)v).ToString(),
-                INT v => ((short)v).ToString(),
-                DINT v => ((int)v).ToString(),
-                LINT v => ((int)v).ToString(),
-                USINT v => ((byte)v).ToString(),
-                UINT v => ((ushort)v).ToString(),
-                UDINT v => ((uint)v).ToString(),
-                ULINT v => ((ulong)v).ToString(),
-                _ => throw new ArgumentOutOfRangeException(nameof(atomic), atomic, null)
+                value = value.Remove(0, 1);
+            }
+
+            return value.Contains('.') && value.Replace(".", string.Empty).All(char.IsDigit);
+        }
+
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            return value switch
+            {
+                float a => a.ToString(SingleFormat, CultureInfo.InvariantCulture),
+                double a => a.ToString(DoubleFormat, CultureInfo.InvariantCulture),
+                _ => base.Format(value)
             };
         }
 
-        public override AtomicData ParseValue(string input)
+        public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(input);
+            ValidateFormat(value);
 
-            if (sbyte.TryParse(input, out var sbyteValue))
-                return new SINT(sbyteValue, this);
+            if (FloatConverters.TryGetValue(typeof(TValue), out var converter))
+                return ((Func<string, TValue>)converter).Invoke(value);
 
-            if (byte.TryParse(input, out var byteValue))
-                return new USINT(byteValue, this);
-
-            if (short.TryParse(input, out var shortValue))
-                return new INT(shortValue, this);
-
-            if (ushort.TryParse(input, out var ushortValue))
-                return new UINT(ushortValue, this);
-
-            if (int.TryParse(input, out var intValue))
-                return new DINT(intValue, this);
-
-            if (uint.TryParse(input, out var uintValue))
-                return new UDINT(uintValue, this);
-
-            if (long.TryParse(input, out var longValue))
-                return new LINT(longValue, this);
-
-            if (ulong.TryParse(input, out var ulongValue))
-                return new ULINT(ulongValue, this);
-
-            throw new ArgumentOutOfRangeException(nameof(input),
-                $"Input '{input}' is out of range for the {Name} Radix.");
+            return base.Parse<TValue>(value);
         }
     }
 
-    private class HexRadix() : Radix(nameof(Hex), nameof(Hex))
-    {
-        private const int BaseNumber = 16;
-        private const int BitsPerByte = 2;
-        private const string ByteSeparator = "_";
-        private const string Pattern = @"(?<=\w)(?=(\w\w\w\w)+(?!\w))";
-
-        protected override string Specifier => "16#";
-
-        public override string FormatValue(AtomicData atomic)
-        {
-            ValidateType(atomic);
-
-            var converted = atomic is not BOOL b ? ToBase(atomic, BaseNumber) : b ? "1" : "0";
-
-            var formatted = Regex.Replace(converted, Pattern, ByteSeparator);
-
-            return $"{Specifier}{formatted}";
-        }
-
-        public override AtomicData ParseValue(string input)
-        {
-            ValidateFormat(input);
-
-            var value = input.Replace(Specifier, string.Empty).Replace(ByteSeparator, string.Empty);
-
-            return ToAtomic(value, BitsPerByte, BaseNumber);
-        }
-    }
-
-    private class FloatRadix() : Radix(nameof(Float), nameof(Float))
-    {
-        protected override string Specifier => string.Empty;
-
-        protected override bool HasFormat(string input)
-        {
-            //we don't care if it is positive or negative
-            if (input.StartsWith("+") || input.StartsWith("-"))
-            {
-                input = input.Remove(0, 1);
-            }
-
-            return input.Contains('.') && input.Replace(".", string.Empty).All(char.IsDigit);
-        }
-
-        public override string FormatValue(AtomicData atomic)
-        {
-            ValidateType(atomic);
-
-            if (atomic is LREAL lreal)
-            {
-                return ((double)lreal).ToString("0.0##############", CultureInfo.InvariantCulture);
-            }
-
-            return ((float)(REAL)atomic).ToString("0.0######", CultureInfo.InvariantCulture);
-        }
-
-        public override AtomicData ParseValue(string input)
-        {
-            ValidateFormat(input);
-
-            if (float.TryParse(input, out var floatValue))
-                return new REAL(floatValue, this);
-
-            if (double.TryParse(input, out var doubleValue))
-                return new LREAL(doubleValue, this);
-
-            throw new ArgumentOutOfRangeException(nameof(input),
-                $"Input '{input}' is out of range for the {Name} Radix.");
-        }
-    }
-
+    /// <summary>
+    /// Represents an exponential base radix for use in formatting and parsing numeric data types.
+    /// </summary>
     private class ExponentialRadix() : Radix(nameof(Exponential), nameof(Exponential))
     {
-        protected override string Specifier => "";
+        private const string DoubleExponent = "e16";
+        private const string SingleExponent = "e8";
 
-        protected override bool HasFormat(string input)
+        public override bool IsValidFormat(string? value)
         {
+            if (value is null) return false;
+
             //we don't care if it is positive or negative, so remove it.
-            if (input.StartsWith("+") || input.StartsWith("-"))
+            if (value.StartsWith("+") || value.StartsWith("-"))
             {
-                input = input.Remove(0, 1);
+                value = value.Remove(0, 1);
             }
 
-            return !input.IsEmpty() && input.Contains(".")
-                                    && input.IndexOf("e", StringComparison.OrdinalIgnoreCase) >= 0
-                                    && ReplaceAll(input, [".", "e", "E", "+", "-"], string.Empty)
-                                        .All(char.IsDigit);
+            return !value.IsEmpty() &&
+                   value.Contains(".") &&
+                   value.IndexOf("e", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                   ReplaceAll(value, [".", "e", "E", "+", "-"], string.Empty).All(char.IsDigit);
         }
 
-        public override string FormatValue(AtomicData atomic)
+        public override string Format<TValue>(TValue value) where TValue : struct
         {
-            ValidateType(atomic);
-
-            if (atomic is LREAL lreal)
+            return value switch
             {
-                return ((double)lreal).ToString("e16", CultureInfo.InvariantCulture);
-            }
-
-            return ((float)(REAL)atomic).ToString("e8", CultureInfo.InvariantCulture);
+                float a => a.ToString(SingleExponent, CultureInfo.InvariantCulture),
+                double a => a.ToString(DoubleExponent, CultureInfo.InvariantCulture),
+                _ => base.Format(value)
+            };
         }
 
-        public override AtomicData ParseValue(string input)
+        public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(input);
+            ValidateFormat(value);
 
-            if (float.TryParse(input, out var floatValue))
-                return new REAL(floatValue, this);
+            if (FloatConverters.TryGetValue(typeof(TValue), out var converter))
+                return ((Func<string, TValue>)converter).Invoke(value);
 
-            if (double.TryParse(input, out var doubleValue))
-                return new LREAL(doubleValue, this);
-
-            throw new ArgumentOutOfRangeException(nameof(input),
-                $"Input '{input}' is out of range for the {Name} Radix.");
+            return base.Parse<TValue>(value);
         }
 
         private static string ReplaceAll(string value, IEnumerable<string> items, string replacement) =>
@@ -525,10 +445,11 @@ public abstract class Radix : LogixEnum<Radix, string>
 
     private class AsciiRadix() : Radix(nameof(Ascii), nameof(Ascii).ToUpper())
     {
+        private const string Specifier = "'";
         private const int BaseNumber = 16;
-        private const int BitsPerByte = 2;
+        private const int ByteWidth = 2;
         private const char SpecifierChar = '\'';
-        private const char ByteSeparator = '$';
+        private const char Separator = '$';
 
         private static readonly Regex AsciiPattern =
             new(@"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]", RegexOptions.Compiled);
@@ -543,36 +464,37 @@ public abstract class Radix : LogixEnum<Radix, string>
             { "$'", "27" }
         };
 
-        protected override string Specifier => "'";
-
-        protected override bool HasFormat(string input) =>
-            input.StartsWith(Specifier) && input.EndsWith(Specifier) && AsciiPattern.IsMatch(input);
-
-        public override string FormatValue(AtomicData atomic)
+        public override bool IsValidFormat(string? value)
         {
-            ValidateType(atomic);
-
-            var converted = ToBase(atomic, BaseNumber);
-
-            var formatted = GenerateAscii(converted);
-
-            return $"{Specifier}{formatted}{Specifier}";
+            return value is not null &&
+                   value.StartsWith(Specifier) &&
+                   value.EndsWith(Specifier) &&
+                   AsciiPattern.IsMatch(value);
         }
 
-        public override AtomicData ParseValue(string input)
+        public override string Format<TValue>(TValue value) where TValue : struct
         {
-            ValidateFormat(input);
+            var formatted = FormatValue(value, BaseNumber);
+            return $"{Specifier}{GenerateAscii(formatted)}{Specifier}";
+        }
 
-            var value = GenerateHex(input.TrimSingle(SpecifierChar));
+        public override TValue Parse<TValue>(string value)
+        {
+            ValidateFormat(value);
 
-            return ToAtomic(value, BitsPerByte, BaseNumber);
+            var data = GenerateHex(value.TrimSingle(SpecifierChar));
+
+            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+                return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
+
+            return base.Parse<TValue>(value);
         }
 
         private static string GenerateAscii(string str)
         {
             var builder = new StringBuilder();
 
-            var segments = Segment(str, BitsPerByte);
+            var segments = Segment(str, ByteWidth);
 
             foreach (var segment in segments)
             {
@@ -593,7 +515,7 @@ public abstract class Radix : LogixEnum<Radix, string>
                 }
 
                 //Everything else is represented as Hex with the '$' escape character.
-                builder.Append(ByteSeparator);
+                builder.Append(Separator);
                 builder.Append(segment.ToUpper());
             }
 
@@ -610,7 +532,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             {
                 var value = match.Value.Length switch
                 {
-                    3 => match.Value.TrimStart(ByteSeparator),
+                    3 => match.Value.TrimStart(Separator),
                     2 => SpecialCharacters[match.Value],
                     1 => $"{Convert.ToInt32(char.Parse(match.Value)):X}",
                     _ => string.Empty
@@ -637,19 +559,24 @@ public abstract class Radix : LogixEnum<Radix, string>
 
     private class DateTimeRadix() : Radix(nameof(DateTime), "Date/Time")
     {
+        private const string Specifier = "DT#";
         private const string Separator = "_";
         private const string Suffix = "Z";
-        private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
+        private const string DateTimeFormat = "yyyy-MM-dd-HH:mm:ss.ffffff";
         private const long TicksPerMicrosecond = TimeSpan.TicksPerMillisecond / 1000;
         private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly Func<long, long> ValueConverter = l => l;
 
-        protected override string Specifier => "DT#";
 
-        public override string FormatValue(AtomicData atomic)
+        public override bool IsValidFormat(string? value)
         {
-            ValidateType(atomic);
+            return value is not null && value.StartsWith(Specifier);
+        }
 
-            var timestamp = (long)(LINT)atomic;
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            if (value is not long timestamp)
+                return base.Format(value);
 
             var milliseconds = timestamp / 1000;
             var microseconds = timestamp % 1000;
@@ -657,69 +584,309 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             var time = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks);
 
-            var formatted = time.ToString("yyyy-MM-dd-HH:mm:ss.ffffff");
-
-            var str = Regex.Replace(formatted, InsertPattern, Separator);
-
-            return $"{Specifier}{str}{Suffix}";
+            var formatted = time.ToString(DateTimeFormat);
+            //var str = Regex.Replace(formatted, InsertPattern, Separator);
+            return $"{Specifier}{formatted}{Suffix}";
         }
 
-        public override AtomicData ParseValue(string input)
+        public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(input);
+            ValidateFormat(value);
 
-            var value = input.Replace(Specifier, string.Empty)
+            //Exit early if the caller doesn't specify a 'long' as the value type.
+            if (typeof(TValue) != typeof(long))
+                return base.Parse<TValue>(value);
+
+            //Trim any formatting characters we don't need.
+            var formatted = value
+                .Remove(0, Specifier.Length)
                 .Replace(Separator, string.Empty)
                 .Replace(Suffix, string.Empty);
 
-            var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.ffffff",
-                CultureInfo.InvariantCulture);
+            var dateTime = System.DateTime.ParseExact(
+                formatted,
+                DateTimeFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal
+            );
 
-            var timestamp = (time.Ticks - UnixEpoch.Ticks) / TicksPerMicrosecond;
+            var timestamp = (dateTime.Ticks - UnixEpoch.Ticks) / TicksPerMicrosecond;
 
-            return new LINT(timestamp);
+            return ((Func<long, TValue>)(object)ValueConverter).Invoke(timestamp);
         }
     }
 
     private class DateTimeNsRadix() : Radix(nameof(DateTimeNs), "Date/Time (ns)")
     {
+        private const string Specifier = "LDT#";
         private const string Separator = "_";
-        private const string InsertPattern = @"(?<=\d\d\d)(?=(\d\d\d)+(?!\d))";
+        private const string Suffix = "00Z";
+        private const string DateTimeFormat = "yyyy-MM-dd-HH:mm:ss.fffffff";
+        private const long NanosecondsPerTick = 100;
         private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly Func<long, long> ValueConverter = l => l;
 
-        protected override string Specifier => "LDT#";
 
-        public override string FormatValue(AtomicData atomic)
+        public override bool IsValidFormat(string? value)
         {
-            ValidateType(atomic);
+            return value is not null && value.StartsWith(Specifier);
+        }
 
-            var timestamp = (long)(LINT)atomic;
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            if (value is not long timestamp)
+                return base.Format(value);
 
             var milliseconds = timestamp / 1000000;
             var microseconds = timestamp % 1000000;
             var ticks = microseconds / 100;
 
-            var localTime = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks).ToLocalTime();
+            var dateTime = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks);
 
-            var formatted = localTime.ToString("yyyy-MM-dd-HH:mm:ss.fffffff00(UTCzzz)");
-
-            var str = Regex.Replace(formatted, InsertPattern, Separator);
-
-            return $"{Specifier}{str}";
+            return $"{Specifier}{dateTime.ToString(DateTimeFormat)}{Suffix}";
         }
 
-        public override AtomicData ParseValue(string input)
+        public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(input);
+            ValidateFormat(value);
 
-            var value = input.Replace(Specifier, string.Empty).Replace(Separator, string.Empty);
+            //Exit early if the caller doesn't specify a 'long' as the value type.
+            if (typeof(TValue) != typeof(long))
+                return base.Parse<TValue>(value);
 
-            var time = System.DateTime.ParseExact(value, "yyyy-MM-dd-HH:mm:ss.fffffff00(UTCzzz)",
-                CultureInfo.InvariantCulture).ToUniversalTime();
+            //Trim any formatting characters we don't need.
+            var formatted = value
+                .Remove(0, Specifier.Length)
+                .Replace(Separator, string.Empty)
+                .Replace(Suffix, string.Empty);
 
-            var timestamp = (time.Ticks - UnixEpoch.Ticks) * 100;
+            var dateTime = System.DateTime.ParseExact(
+                formatted,
+                DateTimeFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal
+            );
 
-            return new LINT(timestamp);
+            var timestamp = (dateTime.Ticks - UnixEpoch.Ticks) * NanosecondsPerTick;
+
+            return ((Func<long, TValue>)(object)ValueConverter).Invoke(timestamp);
         }
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Formats the specified <see cref="AtomicData"/> value according to the provided base.
+    /// </summary>
+    /// <param name="atomic">The <see cref="AtomicData"/> instance to be formatted.</param>
+    /// <param name="baseNumber">The base to be used during formatting.</param>
+    /// <returns>
+    /// A string representation of the <see cref="AtomicData"/> value formatted according to the specified base.
+    /// </returns>
+    /// <exception cref="NotSupportedException">
+    /// Thrown when the provided <see cref="AtomicData"/> type is not supported for formatting.
+    /// </exception>
+    private string FormatValue<TValue>(TValue atomic, int baseNumber) where TValue : struct
+    {
+        return atomic switch
+        {
+            bool x => FormatValue(x),
+            sbyte x => FormatValue(x, baseNumber),
+            byte x => FormatValue(x, baseNumber),
+            short x => FormatValue(x, baseNumber),
+            ushort x => FormatValue(x, baseNumber),
+            int x => FormatValue(x, baseNumber),
+            uint x => FormatValue(x, baseNumber),
+            long x => FormatValue(x, baseNumber),
+            ulong x => FormatValue(x, baseNumber),
+            _ => throw new NotSupportedException($"{Name} does not support formatting {atomic.GetType().Name}.")
+        };
+    }
+
+    /// <summary>
+    /// Formats the specified <see cref="BOOL"/> value into its equivalent string representation.
+    /// </summary>
+    /// <param name="value">The <see cref="BOOL"/> value to be formatted.</param>
+    /// <returns>
+    /// A string representation of the <see cref="BOOL"/> value,
+    /// where "1" represents <c>true</c> and "0" represents <c>false</c>.
+    /// </returns>
+    private static string FormatValue(bool value)
+    {
+        return value ? "1" : "0";
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(sbyte value, int baseNumber)
+    {
+        var width = ComputeWidth(8, baseNumber);
+        var converted = Convert.ToString((byte)value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(byte value, int baseNumber)
+    {
+        var width = ComputeWidth(8, baseNumber);
+        var converted = Convert.ToString(value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(short value, int baseNumber)
+    {
+        var width = ComputeWidth(16, baseNumber);
+        var converted = Convert.ToString(value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(ushort value, int baseNumber)
+    {
+        var width = ComputeWidth(16, baseNumber);
+        var converted = Convert.ToString((short)value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(int value, int baseNumber)
+    {
+        var width = ComputeWidth(32, baseNumber);
+        var converted = Convert.ToString(value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(uint value, int baseNumber)
+    {
+        var width = ComputeWidth(32, baseNumber);
+        var converted = Convert.ToString((int)value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(long value, int baseNumber)
+    {
+        var width = ComputeWidth(64, baseNumber);
+        var converted = Convert.ToString(value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// Formats the specified value into a string representation based on the provided base number.
+    /// </summary>
+    /// <param name="value">The atomic data instance to format.</param>
+    /// <param name="baseNumber">The base (radix) to be used for formatting the value.</param>
+    /// <returns>
+    /// A string representation of the formatted value based on the specified base.
+    /// </returns>
+    private static string FormatValue(ulong value, int baseNumber)
+    {
+        var width = ComputeWidth(64, baseNumber);
+        var converted = Convert.ToString((long)value, baseNumber);
+        return converted.PadLeft(width, '0');
+    }
+
+    /// <summary>
+    /// These let us convert a provided string to a numeric integer value type and return the value unboxed.
+    /// </summary>
+    private static readonly Dictionary<Type, Delegate> IntegerConverters = new()
+    {
+        { typeof(bool), new Func<string, int, bool>((s, _) => s == "1") },
+        { typeof(sbyte), new Func<string, int, sbyte>(Convert.ToSByte) },
+        { typeof(byte), new Func<string, int, byte>(Convert.ToByte) },
+        { typeof(short), new Func<string, int, short>(Convert.ToInt16) },
+        { typeof(ushort), new Func<string, int, ushort>(Convert.ToUInt16) },
+        { typeof(int), new Func<string, int, int>(Convert.ToInt32) },
+        { typeof(uint), new Func<string, int, uint>(Convert.ToUInt32) },
+        { typeof(long), new Func<string, int, long>(Convert.ToInt64) },
+        { typeof(ulong), new Func<string, int, ulong>(Convert.ToUInt64) }
+    };
+
+    /// <summary>
+    /// These let us convert a provided string to a floating point value type and return the value unboxed.
+    /// </summary>
+    private static readonly Dictionary<Type, Delegate> FloatConverters = new()
+    {
+        { typeof(float), new Func<string, float>(s => Convert.ToSingle(s, CultureInfo.InvariantCulture)) },
+        { typeof(double), new Func<string, double>(s => Convert.ToDouble(s, CultureInfo.InvariantCulture)) }
+    };
+
+    /// <summary>
+    /// Computes the width required to represent a value of a given size using the specified base number.
+    /// </summary>
+    /// <param name="size">The size of the value in bits.</param>
+    /// <param name="baseNumber">The base number to be used for representation (e.g., 2 for binary, 10 for decimal).</param>
+    /// <returns>The computed width required to represent the value in the given base.</returns>
+    private static int ComputeWidth(int size, int baseNumber)
+    {
+        if (baseNumber == 10)
+            return 0;
+
+        return (int)Math.Ceiling(size * Math.Log(2) / Math.Log(baseNumber));
+    }
+
+    /// <summary>
+    /// Validates whether the specified value conforms to the expected format for the current <see cref="Radix"/>.
+    /// </summary>
+    /// <param name="value">The string value to validate.</param>
+    /// <exception cref="ArgumentException">Thrown when the specified value is null or empty.</exception>
+    /// <exception cref="FormatException">Thrown when the specified value does not match the expected format for the current <see cref="Radix"/>.</exception>
+    private void ValidateFormat(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty.", nameof(value));
+
+        if (!IsValidFormat(value))
+            throw new FormatException($"Invalid {Name} format: '{value}' ");
     }
 }

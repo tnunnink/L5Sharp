@@ -21,6 +21,9 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.DataValueMember)]
+[LogixElement(L5XName.StructureMember)]
+[LogixElement(L5XName.ArrayMember)]
 public sealed class Member : LogixElement
 {
     /// <summary>
@@ -41,6 +44,11 @@ public sealed class Member : LogixElement
     /// </summary>
     private readonly Action<LogixData>? _setter;
 
+    /// <inheritdoc />
+    public Member(XElement element) : base(element)
+    {
+    }
+
     /// <summary>
     /// Creates a new <see cref="Member"/> object with the provided name and logix type.
     /// </summary>
@@ -48,20 +56,6 @@ public sealed class Member : LogixElement
     /// <param name="data">The <see cref="LogixData"/> contianing the member's data.</param>
     /// <exception cref="ArgumentException"><paramref name="name"/> or <paramref name="data"/> is null or empty.</exception>
     public Member(string name, LogixData data) : base(CreateMember(name, data))
-    {
-    }
-
-    /// <inheritdoc />
-    /// <remarks>
-    /// Internal will make <see cref="Member"/> not something that is deserializable since we only look for public
-    /// constructors. This library should handle all complex data structure deserialization internally, so this is fine.
-    /// This is also a class that is the basis for how Tag traverses its hierarchy. Also, this would not work in our
-    /// LogixSerializer implementation since there are no mappings of the elements to it that are not already used for
-    /// other types. Meaning, even data value, structure, and array members should be deserialized to the
-    /// <see cref="LogixData"/> class and not the <see cref="Member"/>. So this is kind of a special internal class
-    /// that helps build the logix data structure.
-    /// </remarks>
-    internal Member(XElement element) : base(element)
     {
     }
 
@@ -101,7 +95,7 @@ public sealed class Member : LogixElement
     /// <see cref="Member"/> has special internal methods for setting the underlying value of the data elements.
     /// Note that setting a member value will not change the "type" of the member but rather simply update the underlying
     /// value. This is to prevent the type structure from being inadvertently overwritten. You can change the type
-    /// structure to replace members using a <see cref="ComplexData"/> for custom types.
+    /// structure to replace members using a <see cref="StructureData"/> for custom types.
     /// </para>
     /// <para>
     /// Also note that you must set the value with the correct corresponding logix type
@@ -127,7 +121,14 @@ public sealed class Member : LogixElement
     /// </remarks>
     protected override LogixData GetData()
     {
-        return _getter is not null ? _getter() ?? LogixData.Null : Element.Deserialize<LogixData>();
+        //Always use the custom getter if provided.
+        if (_getter is not null)
+        {
+            return _getter.Invoke() ?? LogixType.Null;
+        }
+
+        //The LogixSerializer can handle all other data deserialization methods.
+        return Element.Deserialize<LogixData>();
     }
 
     /// <inheritdoc />
@@ -155,20 +156,16 @@ public sealed class Member : LogixElement
         switch (Value)
         {
             case AtomicData:
-                var atomicType = (AtomicData)data;
-                SetAtomic(atomicType);
+                SetAtomic(data.As<AtomicData>());
                 break;
             case StringData:
-                var stringType = (StringData)data;
-                SetString(stringType);
+                SetString(data.As<StringData>());
                 break;
             case ArrayData:
-                var arrayType = (ArrayData)data;
-                SetStructure(arrayType);
+                SetStructure(data.As<ArrayData>());
                 break;
             case StructureData:
-                var structureType = (StructureData)data;
-                SetStructure(structureType);
+                SetStructure(data.As<StructureData>());
                 break;
         }
     }
@@ -181,8 +178,9 @@ public sealed class Member : LogixElement
     private void SetAtomic(AtomicData atomic)
     {
         var current = (AtomicData)Value;
-        var value = (AtomicData)Convert.ChangeType(atomic, current.GetType());
-        Element.SetAttributeValue(L5XName.Value, value.ToString(current.Radix));
+        //todo var value = (AtomicData)Convert.ChangeType(atomic, current.GetType());
+        // todo should this just be a method on AtomicData?
+        Element.SetAttributeValue(L5XName.Value, current);
     }
 
     /// <summary>
@@ -238,18 +236,14 @@ public sealed class Member : LogixElement
         if (data is null or NullData)
             throw new ArgumentException("Can not create member with null data type.");
 
-        //Get either the normal data element or if a string, then the "Structure" element
+        //Intercept string types to serialize as a nested structure element, otherwise default to normal serializer.
         var element = data is StringData stringType ? stringType.SerializeStructure() : data.Serialize();
 
-        //If it happens that the data already contains a member element, then return that with an updated name.
-        if (element.Name.LocalName.Contains(nameof(Member)))
-        {
-            element.SetAttributeValue(L5XName.Name, name);
-            return element;
-        }
+        var elementName = element.Name.LocalName.EndsWith(L5XName.Member)
+            ? element.Name.LocalName
+            : $"{element.Name.LocalName}{L5XName.Member}";
 
-        //Otherwise create a new member element with the same data and name.
-        var member = new XElement($"{element.Name}Member", new XAttribute(L5XName.Name, name));
+        var member = new XElement(elementName, new XAttribute(L5XName.Name, name));
         member.Add(element.Attributes());
         member.Add(element.Elements());
         return member;
