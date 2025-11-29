@@ -46,21 +46,6 @@ public class USintTests
     }
 
     [Test]
-    public void New_StringValue_ShouldHaveExpectedValue()
-    {
-        var atomic = new USINT("16#007b");
-
-        atomic.Value.Should().Be(123);
-        atomic.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
-    public void New_NullString_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => new USINT((string)null!)).Should().Throw<ArgumentNullException>();
-    }
-
-    [Test]
     public void Member_InvalidMember_ShouldBeNull()
     {
         var type = new USINT(123);
@@ -151,7 +136,7 @@ public class USintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new USINT(123);
+        USINT type = Radix.Hex.Format(123);
 
         var xml = type.Serialize().ToString();
 

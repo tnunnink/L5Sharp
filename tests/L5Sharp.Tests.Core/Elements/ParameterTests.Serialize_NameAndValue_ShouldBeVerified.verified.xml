@@ -1,0 +1,5 @@
+﻿<Parameter Name="Test" TagType="Base" DataType="DINT" Dimension="0" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read/Write" Constant="false">
+  <DefaultData Format="Decorated">
+    <DataValue DataType="DINT" Radix="Decimal" Value="123" />
+  </DefaultData>
+</Parameter>

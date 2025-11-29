@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO.Compression;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
@@ -15,7 +18,7 @@ namespace L5Sharp.Core;
 public interface ILogixElement
 {
     /// <summary>
-    /// Returns the underlying <see cref="XElement"/> for the <see cref="LogixElement"/>.
+    /// Returns the underlying <see cref="XElement"/> for the <see cref="ILogixElement"/>.
     /// </summary>
     /// <returns>A <see cref="XElement"/> representing the serialized logix element.</returns>
     /// <remarks>
@@ -23,10 +26,6 @@ public interface ILogixElement
     /// All logix elements are backed by an underlying <see cref="XElement"/> through which derived classes
     /// get and set properties. This means all classes in this library can be viewed as wrapper around an
     /// <see cref="XElement"/> or segment of XML, and use deferred execution for retrieving and setting data.
-    /// </para>
-    /// <para>
-    /// This method exposes the underlying element for extension and serialization purposes.
-    /// Take care not to mutate the underlying element in a way that makes the schema invalid and non-importable.
     /// </para>
     /// </remarks>
     XElement Serialize();
@@ -41,19 +40,17 @@ public interface ILogixElement
     bool TryGetDocument(out L5X document);
 
     /// <summary>
-    /// Casts this element instance to the specified type TElement.
+    /// Casts the current instance into the specified <typeparamref name="TElement"/> type,
+    /// which must implement <see cref="ILogixElement"/>.
     /// </summary>
-    /// <typeparam name="TElement">The type to which you want to cast.</typeparam>
-    /// <returns>The current instance, cast to the specified type.</returns>
-    /// <exception cref="InvalidCastException">Thrown if the cast isn't valid.</exception>    
+    /// <typeparam name="TElement">The target type implementing <see cref="ILogixElement"/> to cast to.</typeparam>
+    /// <returns>An instance of type <typeparamref name="TElement"/> representing the cast element.</returns>
+    /// <remarks>
+    /// This method allows casting of the current element to a specific <see cref="ILogixElement"/> type, enabling
+    /// operations or access specific to that type. The target type must be compatible with the current instance,
+    /// and a runtime exception may occur if the cast is invalid.
+    /// </remarks>
     TElement As<TElement>() where TElement : ILogixElement;
-
-    /// <summary>
-    /// Converts the current <see cref="LogixElement"/> instance to the specified type parameter.
-    /// </summary>
-    /// <typeparam name="TElement">The type of <see cref="ILogixElement"/> to which the instance should be converted.</typeparam>
-    /// <returns>An instance of the specified type parameter <typeparamref name="TElement"/> representing the converted element.</returns>
-    TElement To<TElement>() where TElement : ILogixElement;
 
     /// <summary>
     /// Creates a new instance of the current <see cref="ILogixElement"/> that is a deep clone of this instance.
@@ -88,6 +85,13 @@ public interface ILogixElement
 /// </summary>
 public abstract class LogixElement : ILogixElement
 {
+    /// <summary>
+    /// A thread-safe dictionary used to store and retrieve factory methods for creating instances of
+    /// <see cref="ILogixElement"/> objects. Each entry in this dictionary maps a type to a factory function
+    /// capable of constructing that type from an <see cref="XElement"/>.
+    /// </summary>
+    private static readonly ConcurrentDictionary<Type, Func<XElement, ILogixElement>> Factories = [];
+
     /// <summary>
     /// Creates a new <see cref="LogixElement"/> initialized with an <see cref="XElement"/> having the
     /// provided element name.
@@ -138,10 +142,33 @@ public abstract class LogixElement : ILogixElement
     }
 
     /// <inheritdoc />
-    public TElement As<TElement>() where TElement : ILogixElement => (TElement)(object)this;
+    public TElement As<TElement>() where TElement : ILogixElement
+    {
+        if (this is TElement element) return element;
 
-    /// <inheritdoc />
-    public TElement To<TElement>() where TElement : ILogixElement => Element.Deserialize<TElement>();
+        if (!GetType().IsAssignableFrom(typeof(TElement)))
+            throw new InvalidCastException($"Unable to cast {GetType()} to type {typeof(TElement)}");
+
+        //This lets us down cast logix data derivatives to more specific types
+        var factory = Factories.GetOrAdd(typeof(TElement), GenerateFactory);
+        return (TElement)factory.Invoke(Element);
+
+        Func<XElement, ILogixElement> GenerateFactory(Type t)
+        {
+            var constructor = t.GetConstructor(
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(XElement)],
+                null);
+
+            if (constructor is null)
+                throw new InvalidOperationException($"Type '{t.Name}' has no public constructor accepting XElement");
+
+            var parameter = Expression.Parameter(typeof(XElement), "e");
+            var expression = Expression.New(constructor, parameter);
+            return Expression.Lambda<Func<XElement, ILogixElement>>(expression, parameter).Compile();
+        }
+    }
 
     /// <inheritdoc />
     public ILogixElement Clone() => new XElement(Element).Deserialize();
@@ -223,6 +250,9 @@ public abstract class LogixElement : ILogixElement
     /// <exception cref="InvalidOperationException">Thrown if the required attribute is not found in the element.</exception>
     protected T GetRequiredValue<T>(Func<string, T> parser, [CallerMemberName] string? name = null)
     {
+        if (parser is null)
+            throw new ArgumentNullException(nameof(parser));
+
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
@@ -248,7 +278,7 @@ public abstract class LogixElement : ILogixElement
     /// </remarks>
     protected IEnumerable<string> GetValues(char separator = ' ', [CallerMemberName] string? name = null)
     {
-        if (name is null || name.IsEmpty())
+        if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         var value = Element.Attribute(name)?.Value;
@@ -371,11 +401,11 @@ public abstract class LogixElement : ILogixElement
         return Element.Ancestors(ancestor).FirstOrDefault()?.Deserialize<TElement>();
     }
 
-
     /// <summary>
     /// Retrieves a boolean value from the element attribute specified by the property name.
     /// </summary>
-    /// <param name="name">The name of the attribute to retrieve the boolean value from. Defaults to the caller's name if not provided.</param>
+    /// <param name="name">The name of the attribute to retrieve the boolean value from.
+    /// Defaults to the caller's name if not provided.</param>
     /// <returns>
     /// A nullable boolean value parsed from the attribute. Returns true for "1" or "true",
     /// false for "0" or "false", or null if the attribute is not found.
@@ -384,12 +414,15 @@ public abstract class LogixElement : ILogixElement
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if the attribute value cannot be parsed into a boolean type.
     /// </exception>
-    protected bool GetBool([CallerMemberName] string? name = null)
+    protected bool GetRequiredBool([CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         var value = Element.Attribute(name)?.Value.ToLower();
+
+        if (value is null)
+            throw Element.L5XError(name);
 
         return value switch
         {
@@ -402,12 +435,16 @@ public abstract class LogixElement : ILogixElement
     }
 
     /// <summary>
-    /// 
+    /// Retrieves an optional boolean value from the underlying <see cref="XElement"/> based on the specified attribute name.
     /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    protected bool? TryGetBool([CallerMemberName] string? name = null)
+    /// <param name="name">The attribute name to retrieve the boolean value from.
+    /// Defaults to the calling member name if not specified.</param>
+    /// <returns>
+    /// A <see cref="bool"/> that represents the parsed boolean value. Returns <c>true</c> for "1" or "true",
+    /// <c>false</c> for "0" or "false", and <c>null</c> if the attribute does not exist or is not a valid boolean representation.
+    /// </returns>
+    /// <exception cref="ArgumentException">Thrown if the specified name is null or empty.</exception>
+    protected bool? GetOptionalBool([CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
@@ -473,28 +510,6 @@ public abstract class LogixElement : ILogixElement
     }
 
     /// <summary>
-    /// Gets the element's <see cref="LogixData"/> representing the tag data structure. 
-    /// </summary>
-    /// <returns>
-    /// A <see cref="LogixData"/> object representing the simple or complex data structure for the element.
-    /// </returns>
-    /// <remarks>
-    /// This is a specialized helper used to get a tag or parameter <see cref="LogixData"/> data structure.
-    /// This method will get the first data element with a supported data format and deserialize the object as a
-    /// concrete <see cref="LogixData"/> using the logix serializer. This will work for either Data or DefaultData
-    /// elements. This helper is meant for <c>Tag</c> and <c>Parameter</c>.
-    /// </remarks>
-    protected virtual LogixData GetData()
-    {
-        //This assumes the element is a tag or parameter object and has the child Data element with a supported format.
-        var data = Element.Elements().FirstOrDefault(e =>
-            DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
-
-        //Return that or Null of not found.
-        return data is not null ? data.Deserialize<LogixData>() : LogixType.Null;
-    }
-
-    /// <summary>
     /// Sets the value of an attribute, adds an attribute, or removes an attribute.
     /// </summary>
     /// <param name="name">The name of the attribute to set.</param>
@@ -512,45 +527,6 @@ public abstract class LogixElement : ILogixElement
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         Element.SetAttributeValue(name, value);
-    }
-
-    /// <summary>
-    /// Sets the value of an attribute, adds an attribute, or removes an attribute for a nested element
-    /// specified by the provided element name.
-    /// </summary>
-    /// <param name="name">The name of the attribute to set.</param>
-    /// <param name="child">The name of the child <see cref="XElement"/> for which to set the attribute.
-    /// If the element does not exist and attribute is not null, will create the element and add to the parent <see cref="Element"/>.</param>
-    /// <param name="value">The value to assign to the attribute. The attribute is removed if the value is null.
-    /// Otherwise, the value is converted to its string representation and assigned to the Value property of the attribute.</param>
-    /// <typeparam name="T">The value type.</typeparam>
-    /// <remarks>
-    /// This method makes getting/setting data on <see cref="Element"/> as concise as possible from derived classes.
-    /// This method uses the <see cref="CallerMemberNameAttribute"/> so the deriving classes don't have to specify
-    /// the property name (assuming the name matches the underlying element property).
-    /// </remarks>
-    protected void SetValue<T>(T? value, XName child, [CallerMemberName] string? name = null)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty", nameof(name));
-
-        if (value is null)
-        {
-            Element.Element(child)?.Attribute(name)?.Remove();
-            return;
-        }
-
-        var element = Element.Element(child);
-
-        if (element is not null)
-        {
-            element.SetAttributeValue(name, value);
-            return;
-        }
-
-        element = new XElement(child, new XAttribute(name, value));
-        Element.Add(element);
-        EnsureOrder();
     }
 
     /// <summary>
@@ -650,6 +626,34 @@ public abstract class LogixElement : ILogixElement
     }
 
     /// <summary>
+    /// Adds or updates the specified <see cref="XElement"/> within the current element.
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> to be added or updated within the current element.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="element"/> is null.</exception>
+    /// <remarks>
+    /// If an element with the same name as the specified <see cref="XElement"/> already exists, it will be replaced with
+    /// the new element. Otherwise, the new element will be added. The order of child elements is ensured after the operation
+    /// by invoking <c>EnsureOrder</c>.
+    /// </remarks>
+    protected void SetElement(XElement element)
+    {
+        if (element is null)
+            throw new ArgumentNullException(nameof(element));
+
+        var existing = Element.Element(element.Name.LocalName);
+
+        if (existing is not null)
+        {
+            existing.ReplaceWith(element);
+            return;
+        }
+
+        Element.Add(element);
+        EnsureOrder();
+    }
+
+
+    /// <summary>
     /// Sets the value of a child container, adds a child container, or removes a child container.
     /// </summary>
     /// <param name="value">The <see cref="LogixContainer{TComponent}"/> value to set. The child container is removed
@@ -730,54 +734,6 @@ public abstract class LogixElement : ILogixElement
         format ??= "ddd MMM d HH:mm:ss yyyy";
         var formatted = value.ToString(format);
         Element.SetAttributeValue(name, formatted);
-    }
-
-    /// <summary>
-    /// Add or updates the child data element with the data of the provided <see cref="LogixData"/> object.
-    /// </summary>
-    /// <param name="data">The <see cref="LogixData"/> data to update.</param>
-    /// <remarks>
-    /// This is a specialized helper that will generate the new formatted data element to wrap the provided type element
-    /// if needed. It will also determine which XName to use based on whether this is a tag, local tag, or parameter.
-    /// This is only intended for use with Tag and Parameter and will completely add or replace the existing root data
-    /// element.
-    /// </remarks>
-    protected virtual void SetData(LogixData? data)
-    {
-        //Parameter and LocalTag have the element DefaultData instead of Data.
-        var name = Element.Name.LocalName is L5XName.Parameter or L5XName.LocalTag ? L5XName.DefaultData : L5XName.Data;
-
-        //Always use our Null type instead of actual null.
-        data ??= LogixType.Null;
-
-        var formatted = GenerateDataElement(name, data);
-
-        //Try to get the existing child data element.
-        var existing = Element.Elements(name).FirstOrDefault(e =>
-            DataFormat.Supported.Any(f => f == e.Attribute(L5XName.Format)?.Value));
-
-        //If existing is null, then add the new data.
-        if (existing is null)
-        {
-            Element.Add(formatted);
-            return;
-        }
-
-        //If found, then replace the existing element.
-        existing.ReplaceWith(formatted);
-        return;
-
-        //Local function to generate a new formatted data element for the given type.
-        XElement GenerateDataElement(string n, LogixData t)
-        {
-            //First check for a string type since there is no child element (Data is the element in this case)
-            if (t is StringData str) return str.Serialize();
-
-            //All other format types are wrapped in a containing data element with a format attribute.
-            var f = new XElement(n, new XAttribute(L5XName.Format, DataFormat.FromData(t)));
-            f.Add(t.Serialize());
-            return f;
-        }
     }
 
     /// <summary>

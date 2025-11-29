@@ -115,9 +115,9 @@ public class BoolTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        BOOL type = "2#1";
+        BOOL atomic = Radix.Hex.Format(true);
 
-        var xml = type.Serialize().ToString();
+        var xml = atomic.Serialize().ToString();
 
         return Verify(xml);
     }
@@ -458,7 +458,7 @@ public class BoolTests
     public void ToType_UInt64_ShouldBeExpectedValue()
     {
         const ulong expected = 1;
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (ulong)type.ToType(typeof(ulong), CultureInfo.InvariantCulture);
 
@@ -468,7 +468,7 @@ public class BoolTests
     [Test]
     public void ToType_BOOL_ShouldBeExpectedValue()
     {
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (BOOL)type.ToType(typeof(BOOL), CultureInfo.InvariantCulture);
 
@@ -479,7 +479,7 @@ public class BoolTests
     public void ToType_SINT_ShouldBeExpectedValue()
     {
         var expected = new SINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (SINT)type.ToType(typeof(SINT), CultureInfo.InvariantCulture);
 
@@ -490,7 +490,7 @@ public class BoolTests
     public void ToType_INT_ShouldBeExpectedValue()
     {
         var expected = new BOOL(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (INT)type.ToType(typeof(INT), CultureInfo.InvariantCulture);
 
@@ -501,7 +501,7 @@ public class BoolTests
     public void ToType_DINT_ShouldBeExpectedValue()
     {
         var expected = new DINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (DINT)type.ToType(typeof(DINT), CultureInfo.InvariantCulture);
 
@@ -512,7 +512,7 @@ public class BoolTests
     public void ToType_LINT_ShouldBeExpectedValue()
     {
         var expected = new LINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (LINT)type.ToType(typeof(LINT), CultureInfo.InvariantCulture);
 
@@ -523,7 +523,7 @@ public class BoolTests
     public void ToType_REAL_ShouldBeExpectedValue()
     {
         var expected = new REAL(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (REAL)type.ToType(typeof(REAL), CultureInfo.InvariantCulture);
 
@@ -534,7 +534,7 @@ public class BoolTests
     public void ToType_USINT_ShouldBeExpectedValue()
     {
         var expected = new USINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (USINT)type.ToType(typeof(USINT), CultureInfo.InvariantCulture);
 

@@ -25,7 +25,7 @@ internal class TagBaseTypeBuilder(string name) : ITagBaseTypeBuilder
 
     public ITagBaseStructureArrayBuilder AsArray(string dataType, Dimensions dimensions)
     {
-        var value = new ArrayData(dataType, dimensions);
+        var value = ArrayData.New(dataType, dimensions);
         var instance = new Tag(name, value);
         return new TagBaseStructureArrayBuilder(instance);
     }

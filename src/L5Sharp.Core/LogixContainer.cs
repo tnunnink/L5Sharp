@@ -21,7 +21,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// The underlying XElement name will be determined by pluralizing the specified generic type parameter type name.
     /// If you need to override this functionality, use the XElement constructor and provide a custom XElement instance.
     /// </remarks>
-    public LogixContainer() : base($"{typeof(TElement)}s")
+    public LogixContainer() : base($"{LogixSerializer.NamesFor(typeof(TElement)).First()}s")
     {
     }
 

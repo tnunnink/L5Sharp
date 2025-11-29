@@ -45,27 +45,6 @@ public class LrealTests
     }
 
     [Test]
-    public void New_StringValue_ShouldHaveExpectedValues()
-    {
-        var atomic = new LREAL("1.2300000000000000e+000");
-
-        atomic.Value.Should().Be(1.23);
-        atomic.Radix.Should().Be(Radix.Exponential);
-    }
-
-    [Test]
-    public void New_NullString_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new LREAL((string)null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_NonSupportedFormat_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new LREAL("^16#007b")).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
     public void As_AtomicType_ShouldNotBeNull()
     {
         var type = new LREAL();
@@ -126,7 +105,7 @@ public class LrealTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new LREAL("1.2300000000000000e+000");
+        LREAL type = "1.2300000000000000e+000";
 
         var xml = type.Serialize().ToString();
 
@@ -136,7 +115,7 @@ public class LrealTests
     [Test]
     public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
     {
-        var type = new LREAL() as IConvertible;
+        IConvertible type = new LREAL();
 
         var result = type.ToBoolean(CultureInfo.InvariantCulture);
 

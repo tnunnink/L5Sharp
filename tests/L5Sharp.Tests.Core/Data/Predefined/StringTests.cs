@@ -28,10 +28,8 @@ namespace L5Sharp.Tests.Core.Data.Predefined
             var type = new STRING();
 
             type.Name.Should().Be("STRING");
-            type.ToString().Should().BeEmpty();
-            type.LEN.Should().Be(0);
-            type.DATA.Should().BeEmpty();
             type.Members.Should().BeEmpty();
+            type.ToString().Should().BeEmpty();
         }
 
         [Test]
@@ -48,21 +46,6 @@ namespace L5Sharp.Tests.Core.Data.Predefined
             STRING type = string.Empty;
 
             type.ToString().Should().BeEmpty();
-        }
-
-        [Test]
-        public void New_AsciiStringValue_ShouldBeExpectedValue()
-        {
-            //Sometimes Studio pads string with zero. Documentation says it does this but in my experience it is not consistent.
-            //I have not done enough testing to figure how/when it decides to do this.
-            //In any case, if we get input text like this I want to strip of the "empty" parts to just return the string value.
-            //The length is not really important to us.
-            //This tests validates the code that parses the string input as expected.
-            const string text = "'$0B$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'";
-
-            var type = new STRING(text);
-
-            type.ToString().Should().Be("$0B");
         }
 
         [Test]

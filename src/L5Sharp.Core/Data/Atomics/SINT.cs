@@ -30,22 +30,6 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
         Element.SetAttributeValue(L5XName.Value, value);
     }
 
-    /// <summary>
-    /// Creates a new <see cref="SINT"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public SINT(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<sbyte>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
-    }
-
     /// <inheritdoc />
     public sbyte Value => GetAtomicValue<sbyte>();
 
@@ -76,7 +60,7 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
 
     /// <inheritdoc />
     public override int GetHashCode() => Value.GetHashCode();
-    
+
     /// <summary>
     /// Return the atomic value formatted using the current <see cref="Radix"/> format.
     /// </summary>
@@ -88,7 +72,7 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
 
     /// <inheritdoc />
@@ -96,13 +80,23 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     {
         return [(byte)Value];
     }
-    
+
     /// <summary>
     /// Parses the specified string representation of a <see cref="SINT"/> value into its corresponding <see cref="SINT"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="SINT"/> value to parse.</param>
     /// <returns>A <see cref="SINT"/> object that represents the parsed value.</returns>
-    public static SINT Parse(string value) => new(value);
+    public static SINT Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<sbyte>(value);
+        var formatted = radix.Format(typed);
+
+        return new SINT(CreateDataElement(nameof(SINT), radix, formatted));
+    }
 
     /// <summary>
     /// Attempts to parse a string representation of a <see cref="SINT"/> value and creates an instance of the <see cref="SINT"/> class if successful.
@@ -150,7 +144,7 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="SINT"/> value.</returns>
-    public static implicit operator SINT(string value) => new(value);
+    public static implicit operator SINT(string value) => Parse(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="SINT"/> to a <see cref="string"/> value.

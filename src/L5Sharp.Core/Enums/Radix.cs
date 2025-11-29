@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a number base for a given value type or atomic type.
+/// Represents a number base for a given primitive value type.
 /// </summary>
 public abstract class Radix : LogixEnum<Radix, string>
 {
@@ -107,7 +107,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         if (radix is null)
         {
-            throw new FormatException($"Could not determine Radix from value: {value}");
+            throw new FormatException($"Could not determine radix from value: {value}");
         }
 
         return radix;
@@ -144,6 +144,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when the specified value is outside the allowable range for the inferred <see cref="Radix"/>.
     /// </exception>
+    //todo is there a better way to handle this?
     public static AtomicData ParseAtomic(string value)
     {
         var radix = Infer(value);
@@ -174,9 +175,9 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// Formats the provided value type using the current radix.
     /// </summary>
     /// <param name="value">The value to format.</param>
-    /// <returns>The formatted string representation of the atomic data.</returns>
+    /// <returns>The formatted string representation of the value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
-    /// <exception cref="NotSupportedException">Thrown when the current radix does not support formatting the given atomic data type.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the current radix does not support formatting the given value type.</exception>
     public virtual string Format<TValue>(TValue value) where TValue : struct
     {
         throw new NotSupportedException($"{Name} does not support formatting {typeof(TValue).Name}.");

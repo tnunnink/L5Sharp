@@ -217,6 +217,32 @@ internal static class L5XExtensions
     }
 
     /// <summary>
+    /// Attempts to retrieve the last supported (non-L5K) formatted data element from the specified XElement.
+    /// </summary>
+    /// <param name="element">The XElement from which to extract the formatted data.</param>
+    /// <param name="data">When this method returns, contains the formatted data if found; otherwise, null.</param>
+    /// <returns>True if formatted data is successfully found and assigned to the out parameter; otherwise, false.</returns>
+    internal static bool TryGetFormattedData(this XElement element, out XElement data)
+    {
+        //We get the last data element found since Rockwell documentation states that data is applied in document order.
+        //L5K is not a supported format.
+        var formatted = element.Elements().LastOrDefault(e =>
+            e.Name.LocalName is L5XName.Data or L5XName.DefaultData &&
+            e.Attribute(L5XName.Format) is not null &&
+            e.Attribute(L5XName.Format)?.Value != DataFormat.L5K
+        );
+
+        if (formatted is not null)
+        {
+            data = formatted;
+            return true;
+        }
+
+        data = null!;
+        return false;
+    }
+
+    /// <summary>
     /// Generates an identifier for the specified XML element based on its attributes and type.
     /// </summary>
     /// <param name="element">The XML element for which the identifier is generated.</param>
@@ -301,16 +327,6 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines whether the specified XElement represents a reference element.
-    /// </summary>
-    /// <param name="element">The XElement to evaluate.</param>
-    /// <returns>True if the element is a reference element; otherwise, false.</returns>
-    internal static bool IsReferenceElement(this XElement element)
-    {
-        return element.IsComponentElement() || element.IsCodeElement() || element.IsTagElement();
-    }
-
-    /// <summary>
     /// Determines if the current element represents an element, we would deserialize as a <see cref="Tag"/> component.
     /// </summary>
     /// <param name="element">The element to check.</param>
@@ -341,7 +357,6 @@ internal static class L5XExtensions
             or L5XName.InAliasTag
             or L5XName.OutAliasTag;
     }
-
 
     /// <summary>
     /// Determines if the current element represents an element, we would deserialize as a <see cref="Tag"/> component.
@@ -412,7 +427,7 @@ internal static class L5XExtensions
     /// <param name="enumerable">The collection to combine.</param>
     /// <param name="separator">The character to separate the items of the collection.</param>
     /// <returns>A <see cref="string"/> containing all the items of the collection separated by the provided character.</returns>
-    /// <remarks>This was added to assign with supporting net standard and making the syntax nicer than using string.Join.</remarks>
+    /// <remarks>This was added to assign with supporting .net standard and making the syntax nicer than using string.Join.</remarks>
     internal static string Combine(this IEnumerable<object>? enumerable, char separator)
     {
         return enumerable is not null ? string.Join(separator.ToString(), enumerable) : string.Empty;

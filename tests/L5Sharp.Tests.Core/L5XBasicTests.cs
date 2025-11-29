@@ -166,7 +166,7 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void Query_PreidcateOverload_ShouldReturnExpected()
+    public void Query_PredicateOverload_ShouldReturnExpected()
     {
         var content = L5X.Load(Known.Test);
 
@@ -211,7 +211,7 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Test);
 
-        var result = content.Contains(x => x.Tag("FakeTag"));
+        var result = content.Contains(r => r.Tag("FakeTag"));
 
         result.Should().BeFalse();
     }

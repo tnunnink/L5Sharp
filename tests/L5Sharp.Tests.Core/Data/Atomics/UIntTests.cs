@@ -14,34 +14,13 @@ public class UIntTests
         var fixture = new Fixture();
         _random = fixture.Create<ushort>();
     }
-        
+
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
         var type = new UINT();
 
         type.Should().NotBeNull();
-    }
-
-    [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
-    {
-        var type = new UINT(Radix.Binary);
-
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0000_0000_0000_0000");
-    }
-
-    [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new UINT((Radix)null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new UINT(Radix.Exponential)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -82,11 +61,11 @@ public class UIntTests
 
         return Verify(xml);
     }
-        
+
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new UINT(123);
+        UINT type = Radix.Hex.Format(123);
 
         var xml = type.Serialize().ToString();
 
@@ -219,7 +198,7 @@ public class UIntTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void Equals_DifferentAtomicNotEqualValue_ShouldBeFalse()
     {
@@ -231,7 +210,7 @@ public class UIntTests
 
         result.Should().BeFalse();
     }
-        
+
     [Test]
     public void Equals_InvalidType_ShouldBeFalse()
     {
@@ -242,7 +221,7 @@ public class UIntTests
 
         result.Should().BeFalse();
     }
-        
+
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
@@ -253,7 +232,7 @@ public class UIntTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {
@@ -434,7 +413,7 @@ public class UIntTests
         var b = new UINT(1);
 
         var result = a > b;
-            
+
         result.Should().BeTrue();
     }
 
@@ -445,7 +424,7 @@ public class UIntTests
         var b = new UINT(2);
 
         var result = a > b;
-            
+
         result.Should().BeFalse();
     }
 
@@ -456,7 +435,7 @@ public class UIntTests
         var b = new UINT(1);
 
         var result = a < b;
-            
+
         result.Should().BeFalse();
     }
 
@@ -467,7 +446,7 @@ public class UIntTests
         var b = new UINT(2);
 
         var result = a < b;
-            
+
         result.Should().BeTrue();
     }
 
@@ -478,7 +457,7 @@ public class UIntTests
         var b = new UINT(1);
 
         var result = a >= b;
-            
+
         result.Should().BeTrue();
     }
 
@@ -489,7 +468,7 @@ public class UIntTests
         var b = new UINT(2);
 
         var result = a >= b;
-            
+
         result.Should().BeFalse();
     }
 
@@ -500,7 +479,7 @@ public class UIntTests
         var b = new UINT(1);
 
         var result = a <= b;
-            
+
         result.Should().BeFalse();
     }
 
@@ -511,7 +490,7 @@ public class UIntTests
         var b = new UINT(2);
 
         var result = a <= b;
-            
+
         result.Should().BeTrue();
     }
 }

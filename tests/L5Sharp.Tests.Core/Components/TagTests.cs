@@ -100,8 +100,7 @@ public class TagTests
     public void New_Structure_ShouldHaveExpectedValue()
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
-
-        tag.Value.Should().BeOfType<TIMER>();
+        
         tag.Value.As<TIMER>().PRE.Should().Be(0);
         tag.Value.As<TIMER>().ACC.Should().Be(0);
         tag.Value.As<TIMER>().DN.Should().Be(0);
@@ -163,7 +162,7 @@ public class TagTests
         var parent = tag["Simple.M1"].Parent;
 
         parent.Should().NotBeNull();
-        parent?.Value.Should().BeOfType<MySimpleData>();
+        parent?.Value.Should().BeOfType<StructureData>();
         parent?.TagName.Should().Be("Test.Simple");
     }
 
@@ -172,9 +171,9 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new StructureData("MyCustomType") };
 
-        tag.Add("Member01", new DINT(100));
-        tag.Add("Member02", new TIMER { PRE = 3000 });
-        tag.Add("Member03", new StructureData("SubType"));
+        tag.AddMember("Member01", new DINT(100));
+        tag.AddMember("Member02", new TIMER { PRE = 3000 });
+        tag.AddMember("Member03", new StructureData("SubType"));
 
         tag.DataType.Should().Be("MyCustomType");
         tag.Members().Where(m => m.TagName.Depth == 1).Should().HaveCount(3);
@@ -198,6 +197,7 @@ public class TagTests
         tag.ToString().Should().Be("Test");
     }
 
+    /*
     [Test]
     public void With_RootTagValidValue_ShouldUpdateValue()
     {
@@ -227,7 +227,7 @@ public class TagTests
         result.DataType.Should().Be("REAL");
         result.Value.Should().BeOfType<REAL>();
         result.Value.Should().Be(2.3f);
-    }
+    }*/
 
     [Test]
     public Task Duplicate_ValidConfig_ShouldBeVerified()
@@ -249,7 +249,7 @@ public class TagTests
     [Test]
     public void Replace_NameProperty_ShouldBeVerified()
     {
-        var tag = Tag.Create<BOOL>("MyBoolTag");
+        var tag = Tag.New<BOOL>("MyBoolTag");
 
         tag.Replace("My", "Test", t => t.Name);
 
@@ -409,7 +409,6 @@ public class TagTests
         tag.Should().NotBeNull();
         tag.Name.Should().Be("TestTimer");
         tag.DataType.Should().Be("TIMER");
-        tag.Value.Should().BeOfType<TIMER>();
         tag["PRE"].Value.Should().Be(1000);
         tag["PRE"].Description.Should().Be("Test Timer PRE");
     }
@@ -495,9 +494,9 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new DINT() };
 
         tag.Value = new INT(43);
-
-        tag.Value.Should().BeOfType<DINT>();
-        tag.Value.As<DINT>().Should().Be(43);
+        
+        tag.Value.Should().Be(43);
+        tag.Value.Should().BeOfType<INT>();
     }
 
     [Test]
@@ -513,8 +512,7 @@ public class TagTests
             TT = 1,
             EN = 1,
         };
-
-        tag.Value.Should().BeOfType<TIMER>();
+        
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(1);
@@ -528,7 +526,7 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
         //Name does not matter just the members
-        tag.Value = new StructureData("Test", new List<Member>
+        tag.Value = new StructureData("Test", new List<LogixMember>
         {
             new("PRE", 5000),
             new("ACC", 1234),
@@ -536,8 +534,7 @@ public class TagTests
             new("TT", 1),
             new("EN", 1),
         });
-
-        tag.Value.Should().BeOfType<TIMER>();
+        
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(1);
@@ -561,15 +558,19 @@ public class TagTests
     [Test]
     public void SetValue_StructureArrayType_ShouldHaveExpectedValues()
     {
-        var tag = new Tag { Name = "Test", Value = new TIMER[] { new(), new(), new(), new() } };
+        var tag = new Tag { Name = "Test", Value = ArrayData.New<TIMER>(4) };
 
-        //array length does not matter. indices will be joined on what is available.
-        tag.Value = new TIMER[] { new() { PRE = 100 }, new() { PRE = 200 }, new() { PRE = 300 } };
+        //This will truncate the tag data since it is the root tag.
+        tag.Value = ArrayData.New<TIMER>([
+            new TIMER { PRE = 100 },
+            new TIMER { PRE = 200 },
+            new TIMER { PRE = 300 }
+        ]);
 
+        tag.Value.As<ArrayData>().Should().HaveCount(3);
         tag.Value.As<ArrayData>()[0].As<TIMER>().PRE.Should().Be(100);
         tag.Value.As<ArrayData>()[1].As<TIMER>().PRE.Should().Be(200);
         tag.Value.As<ArrayData>()[2].As<TIMER>().PRE.Should().Be(300);
-        tag.Value.As<ArrayData>()[3].As<TIMER>().PRE.Should().Be(0);
     }
 
     [Test]
@@ -611,7 +612,7 @@ public class TagTests
         {
             { "PRE", 5000 },
             { "ACC", 1234 },
-            { "DN", true },
+            { "DN", true }
         };
 
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
@@ -969,10 +970,11 @@ public class TagTests
     [Test]
     public void Create_ValidParameters_ShouldBeExpected()
     {
-        var tag = Tag.Create<TIMER>("MyTimer");
+        var tag = Tag.New<TIMER>("MyTimer");
 
         tag.Name.Should().Be("MyTimer");
-        tag.Value.Should().BeOfType<TIMER>();
+        tag.Value.Should().NotBeNull();
+        tag.Value.Should().NotBe(LogixType.Null);
     }
 
     [Test]

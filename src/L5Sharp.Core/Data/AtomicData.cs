@@ -89,6 +89,14 @@ public abstract class AtomicData : LogixData
     public bool this[int bit] => new BitArray(ToBytes())[bit];
 
     /// <summary>
+    /// Returns a string representation of the current <see cref="AtomicData"/> object in the specified
+    /// <paramref name="radix"/> format.
+    /// </summary>
+    /// <param name="radix">The <see cref="Radix"/> format in which the data should be represented.</param>
+    /// <returns>A string representation of the <see cref="AtomicData"/> object in the specified radix format.</returns>
+    public abstract string ToString(Radix radix);
+
+    /// <summary>
     /// Returns the value of the <see cref="AtomicData"/> as a byte array.
     /// </summary>
     /// <returns>An array of <see cref="byte"/> representing the binary value of the atomic type.</returns>
@@ -190,5 +198,51 @@ public abstract class AtomicData : LogixData
         var value = Element.Attribute(L5XName.Value)?.Value ?? throw Element.L5XError(L5XName.Value);
         var radix = Radix.Infer(value);
         return radix.Parse<TValue>(value);
+    }
+
+    /// <summary>
+    /// Creates a new XML data element with the specified name, radix, and value.
+    /// </summary>
+    /// <param name="name">The name of the data type to associate with the element.</param>
+    /// <param name="radix">The radix of the data, representing its numerical base or format.</param>
+    /// <param name="value">The value to assign to the created data element.</param>
+    /// <returns>A new instance of <see cref="XElement"/> representing the created data element.</returns>
+    protected static XElement CreateDataElement(string name, Radix radix, string value)
+    {
+        var element = new XElement(L5XName.DataValue);
+        element.Add(new XAttribute(L5XName.DataType, name));
+        element.Add(new XAttribute(L5XName.Radix, radix));
+        element.Add(new XAttribute(L5XName.Value, value));
+        return element;
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public static class AtomicDataExtensions
+{
+    /// <summary>
+    /// Retrieves the underlying value of the provided <see cref="AtomicData"/> instance.
+    /// </summary>
+    /// <param name="data">The <see cref="AtomicData"/> instance from which to retrieve the value.</param>
+    /// <returns>The underlying value of the specified <see cref="AtomicData"/>, or throws an exception if the data type is not supported.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the provided <see cref="AtomicData"/> is of an unsupported type.</exception>
+    public static object GetValue(this AtomicData data)
+    {
+        return data switch
+        {
+            IAtomicValue<sbyte> x => x.Value,
+            IAtomicValue<byte> x => x.Value,
+            IAtomicValue<short> x => x.Value,
+            IAtomicValue<ushort> x => x.Value,
+            IAtomicValue<int> x => x.Value,
+            IAtomicValue<uint> x => x.Value,
+            IAtomicValue<long> x => x.Value,
+            IAtomicValue<ulong> x => x.Value,
+            IAtomicValue<float> x => x.Value,
+            IAtomicValue<double> x => x.Value,
+            _ => throw new ArgumentOutOfRangeException(nameof(data), data, null)
+        };
     }
 }

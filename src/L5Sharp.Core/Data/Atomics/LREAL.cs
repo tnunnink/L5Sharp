@@ -33,22 +33,6 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
         Element.SetAttributeValue(L5XName.Value, value.ToString(DoubleFormat, CultureInfo.InvariantCulture));
     }
 
-    /// <summary>
-    /// Creates a new <see cref="LREAL"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public LREAL(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<double>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
-    }
-
     /// <inheritdoc />
     public double Value => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false
         ? GetAtomicValue<double>()
@@ -93,14 +77,27 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
     /// Parses the specified string representation of a <see cref="LREAL"/> value into its corresponding <see cref="LREAL"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="LREAL"/> value to parse.</param>
     /// <returns>A <see cref="LREAL"/> object that represents the parsed value.</returns>
-    public static LREAL Parse(string value) => new(value);
+    public static LREAL Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+        
+        if (value.Contains("QNAN"))
+            return new LREAL(double.NaN);
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<double>(value);
+        var formatted = radix.Format(typed);
+
+        return new LREAL(CreateDataElement(nameof(LREAL), radix, formatted));
+    }
 
     /// <summary>
     /// Attempts to parse a string representation of a <see cref="LREAL"/> value and creates an instance of the <see cref="LREAL"/> class if successful.
@@ -115,10 +112,17 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
         if (value is null || value.IsEmpty())
             return false;
 
+        if (value.Contains("QNAN"))
+        {
+            atomic = new LREAL(double.NaN);
+            return true;
+        }
+
         if (Radix.TryInfer(value, out var radix))
         {
             var typed = radix.Parse<double>(value);
-            atomic = new LREAL(typed);
+            var formatted = radix.Format(typed);
+            atomic = new LREAL(CreateDataElement(nameof(LREAL), radix, formatted));
             return true;
         }
 

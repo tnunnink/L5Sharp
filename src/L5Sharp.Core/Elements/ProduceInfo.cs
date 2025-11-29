@@ -42,7 +42,7 @@ public class ProduceInfo : LogixElement
     /// <value><c>true</c> when the tag is configured to send the event trigger; Otherwise, <c>false</c>.</value>
     public bool ProgrammaticallySendEventTrigger
     {
-        get => GetBool();
+        get => GetRequiredBool();
         set => SetValue(value);
     }
 
@@ -52,7 +52,7 @@ public class ProduceInfo : LogixElement
     /// <value><c>true</c> when the tag is configured enable multiple consumers; Otherwise, <c>false</c>.</value>
     public bool UnicastPermitted
     {
-        get => GetBool();
+        get => GetRequiredBool();
         set => SetValue(value);
     }
 

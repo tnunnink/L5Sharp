@@ -22,7 +22,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj" />
         <ProjectReference Include="..\..\src\L5Sharp.Core.Generators\L5Sharp.Core.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-        <ProjectReference Include="..\..\src\L5Sharp.Core.Analyzers\L5Sharp.Core.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
         <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
 
@@ -236,12 +235,6 @@
       <None Update="LogixElementTests.AddAfter_ValidElement_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
-      <None Update="LogixElementTests.AddAfter_AlternateType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixElementTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixElementTests.AddBefore_AlternateType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixElementTests.cs</DependentUpon>
-      </None>
       <None Update="LogixElementTests.Replace_ValidElement_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
@@ -412,6 +405,33 @@
       </None>
       <None Update="L5XBasicTests.New_ValidNameAndProcessor_ShouldBeVerified.verified.xml">
         <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixContainerTests.Add_ValidType_ShouldBeVerified.verified.xml">
+        <DependentUpon>LogixContainerTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.Serialize_WithValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.Serialize_NameAndValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.SerializeStructure_NameWithValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.SerializeStructure_NameEmpty_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.SerializeStructure_EmptyNameAndValue_ShouldBeVerified.verified.txt">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ParameterTests.Serialize_NameAndValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>ParameterTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ParameterTests.Serialize_OverrideParameters_ShouldBeVerified.verified.xml">
+        <DependentUpon>ParameterTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixSerializerTests.Serialize_WhenCalled_ShouldBeVerified.verified.xml">
+        <DependentUpon>LogixSerializerTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

@@ -99,7 +99,7 @@ public sealed class Instruction
             throw new ArgumentException("Instruction text can not be null or empty.", nameof(text));
 
         //Open parenthesis must not be the first character and string must end with close parenthesis.
-        if (text.IndexOf(Open) < 1 || !text.EndsWith(Close))
+        if (text != "UNK" && (text.IndexOf(Open) < 1 || !text.EndsWith(Close)))
             throw new ArgumentException($"Instruction text '{text}' is not a valid neutral text instruction.");
 
         _text = text;
@@ -1760,7 +1760,7 @@ public sealed class Instruction
         var index = _text.IndexOf(Open);
 
         if (index < 1)
-            throw new InvalidOperationException($"Could not parse key from current instruction text '{_text}'.");
+            return _text;
 
         return _text.Substring(0, index);
     }

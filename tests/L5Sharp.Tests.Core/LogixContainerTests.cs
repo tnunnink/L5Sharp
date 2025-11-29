@@ -24,4 +24,24 @@ public class LogixContainerTests
         collection.Should().HaveCount(3);
         collection.Count.Should().Be(3);
     }
+
+    [Test]
+    public void Add_DefaultType_ShouldHaveExpectedCount()
+    {
+        var container = new LogixContainer<TestElement>();
+
+        container.Add(new TestElement());
+
+        container.Should().HaveCount(1);
+    }
+
+    [Test]
+    public Task Add_ValidType_ShouldBeVerified()
+    {
+        var container = new LogixContainer<TestElement>();
+
+        container.Add(new TestElement());
+
+        return Verify(container.Serialize());
+    }
 }

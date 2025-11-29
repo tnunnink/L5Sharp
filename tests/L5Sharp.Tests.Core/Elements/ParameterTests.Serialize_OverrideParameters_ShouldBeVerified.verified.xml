@@ -1,0 +1,3 @@
+﻿<Parameter Name="Test" TagType="Base" DataType="MyType" Dimension="0" Usage="InOut" Radix="NullType" Required="true" Visible="true" ExternalAccess="Read/Write" Constant="true" AliasFor="TestTag">
+  <Description><![CDATA[This is a test]]></Description>
+</Parameter>

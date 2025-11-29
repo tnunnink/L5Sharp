@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming I want to keep the naming consistent with Logix (for now).
 
 namespace L5Sharp.Core;

@@ -283,7 +283,7 @@ public class Program : LogixComponent<Program>
         Task?.Cancel(Name);
         if (taskName is null || taskName.IsEmpty()) return;
 
-        if (TryGetDocument(out var doc))
+        if (!TryGetDocument(out var doc))
             throw new InvalidOperationException("The current program instance is not attached to a L5X document");
 
         if (doc.TryGet<Task>(taskName, out var task))

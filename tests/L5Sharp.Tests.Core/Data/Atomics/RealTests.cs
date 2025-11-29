@@ -16,7 +16,7 @@ public class RealTests
         var fixture = new Fixture();
         _random = fixture.Create<float>();
     }
-        
+
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
@@ -28,9 +28,9 @@ public class RealTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var atomic = new LREAL();
+        var atomic = new REAL();
 
-        atomic.Name.Should().Be(nameof(LREAL).ToUpper());
+        atomic.Name.Should().Be(nameof(REAL).ToUpper());
         atomic.Members.Should().HaveCount(0);
         atomic.Value.Should().Be(0);
         atomic.Radix.Should().Be(Radix.Float);
@@ -39,30 +39,9 @@ public class RealTests
     [Test]
     public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var atomic = new LREAL(_random);
+        var atomic = new REAL(_random);
 
         atomic.Should().Be(_random);
-    }
-
-    [Test]
-    public void New_StringValue_ShouldHaveExpectedValues()
-    {
-        var atomic = new LREAL("1.2300000000000000e+000");
-
-        atomic.Value.Should().Be(1.23);
-        atomic.Radix.Should().Be(Radix.Exponential);
-    }
-
-    [Test]
-    public void New_NullString_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => new LREAL((string)null!)).Should().Throw<FormatException>();
-    }
-
-    [Test]
-    public void New_NonSupportedFormat_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => new LREAL("^16#007b")).Should().Throw<FormatException>();
     }
 
     [Test]
@@ -126,7 +105,7 @@ public class RealTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new REAL("1.234567e2");
+        REAL type = "1.234567e2";
 
         var xml = type.Serialize().ToString();
 
@@ -136,7 +115,7 @@ public class RealTests
     [Test]
     public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
     {
-        var type = new REAL() as IConvertible;
+        IConvertible type = new REAL();
 
         var result = type.ToBoolean(CultureInfo.InvariantCulture);
 
@@ -250,7 +229,7 @@ public class RealTests
 
         result.Should().Be(expected);
     }
-        
+
     [Test]
     public void ToString_WhenCalled_ShouldBeExpectedValue()
     {
@@ -320,7 +299,7 @@ public class RealTests
     public void ToType_Char_ShouldBeExpectedValue()
     {
         var type = new REAL(1) as IConvertible;
-            
+
         FluentActions.Invoking(() => type.ToType(typeof(char), CultureInfo.InvariantCulture))
             .Should().Throw<InvalidCastException>();
     }
@@ -762,7 +741,7 @@ public class RealTests
 
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
@@ -773,7 +752,7 @@ public class RealTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

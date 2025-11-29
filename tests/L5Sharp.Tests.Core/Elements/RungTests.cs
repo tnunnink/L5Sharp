@@ -95,7 +95,7 @@ public class RungTests
 
         var result = rung.Instructions();
 
-        result.First().Should().Be(rung);
+        result.First().Should().Be("XIC(SomeBit)");
     }
 
     /*[Test]

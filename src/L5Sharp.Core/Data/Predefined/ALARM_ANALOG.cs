@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
-
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming Logix naming
+// ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Core;
 
@@ -68,19 +69,19 @@ public sealed class ALARM_ANALOG : StructureData
         HHLimit = 0;
         HHSeverity = 500;
         HLimit = 0;
-        HSeverity = new DINT();
+        HSeverity = 0;
         LLimit = 0;
-        LSeverity = new DINT();
+        LSeverity = 0;
         LLLimit = 0;
-        LLSeverity = new DINT();
-        MinDurationPRE = new DINT();
-        ShelveDuration = new DINT();
-        MaxShelveDuration = new DINT();
+        LLSeverity = 0;
+        MinDurationPRE = 0;
+        ShelveDuration = 0;
+        MaxShelveDuration = 0;
         Deadband = 0;
         ROCPosLimit = 0;
-        ROCPosSeverity = new DINT();
+        ROCPosSeverity = 0;
         ROCNegLimit = 0;
-        ROCNegSeverity = new DINT();
+        ROCNegSeverity = 0;
         ROCPeriod = 0;
     }
 
@@ -98,7 +99,7 @@ public sealed class ALARM_ANALOG : StructureData
     /// All values are stored as local attributes on the data element. When using this type with a tag, you must cast
     /// the tag <c>Value</c> as the message type and set these properties statically.
     /// </remarks>
-    public override IEnumerable<Member> Members => GenerateVirtualMembers();
+    public override IEnumerable<LogixMember> Members => GenerateVirtualMembers();
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_ANALOG"/> data type.
@@ -688,83 +689,15 @@ public sealed class ALARM_ANALOG : StructureData
     /// <summary>
     /// Creates the collection of virtual members for this custom predefined type.
     /// </summary>
-    private IEnumerable<Member> GenerateVirtualMembers()
+    private IEnumerable<LogixMember> GenerateVirtualMembers()
     {
-        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
-        yield return new Member(nameof(In), () => In, t => { In = t.As<REAL>(); });
-        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
-        yield return new Member(nameof(HHEnabled), () => HHEnabled, t => { HHEnabled = t.As<BOOL>(); });
-        yield return new Member(nameof(HEnabled), () => HEnabled, t => { HEnabled = t.As<BOOL>(); });
-        yield return new Member(nameof(LEnabled), () => LEnabled, t => { LEnabled = t.As<BOOL>(); });
-        yield return new Member(nameof(LLEnabled), () => LLEnabled, t => { LLEnabled = t.As<BOOL>(); });
-        yield return new Member(nameof(AckRequired), () => AckRequired, t => { AckRequired = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgAckAll), () => ProgAckAll, t => { ProgAckAll = t.As<BOOL>(); });
-        yield return new Member(nameof(OperAckAll), () => OperAckAll, t => { OperAckAll = t.As<BOOL>(); });
-        yield return new Member(nameof(HHProgAck), () => HHProgAck, t => { HHProgAck = t.As<BOOL>(); });
-        yield return new Member(nameof(HHOperAck), () => HHOperAck, t => { HHOperAck = t.As<BOOL>(); });
-        yield return new Member(nameof(HProgAck), () => HProgAck, t => { HProgAck = t.As<BOOL>(); });
-        yield return new Member(nameof(HOperAck), () => HOperAck, t => { HOperAck = t.As<BOOL>(); });
-        yield return new Member(nameof(LProgAck), () => LProgAck, t => { LProgAck = t.As<BOOL>(); });
-        yield return new Member(nameof(LOperAck), () => LOperAck, t => { LOperAck = t.As<BOOL>(); });
-        yield return new Member(nameof(LLProgAck), () => LLProgAck, t => { LLProgAck = t.As<BOOL>(); });
-        yield return new Member(nameof(LLOperAck), () => LLOperAck, t => { LLOperAck = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCPosProgAck), () => ROCPosProgAck, t => { ROCPosProgAck = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCPosOperAck), () => ROCPosOperAck, t => { ROCPosOperAck = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCNegProgAck), () => ROCNegProgAck, t => { ROCNegProgAck = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCNegOperAck), () => ROCNegOperAck, t => { ROCNegOperAck = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgSuppress), () => ProgSuppress, t => { ProgSuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(OperSuppress), () => OperSuppress, t => { OperSuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgUnsuppress), () => ProgUnsuppress, t => { ProgUnsuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(OperUnsuppress), () => OperUnsuppress, t => { OperUnsuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(HHOperShelve), () => HHOperShelve, t => { HHOperShelve = t.As<BOOL>(); });
-        yield return new Member(nameof(HOperShelve), () => HOperShelve, t => { HOperShelve = t.As<BOOL>(); });
-        yield return new Member(nameof(LOperShelve), () => LOperShelve, t => { LOperShelve = t.As<BOOL>(); });
-        yield return new Member(nameof(LLOperShelve), () => LLOperShelve, t => { LLOperShelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCPosOperShelve), () => ROCPosOperShelve,
-            t => { ROCPosOperShelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCNegOperShelve), () => ROCNegOperShelve,
-            t => { ROCNegOperShelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgUnshelveAll), () => ProgUnshelveAll,
-            t => { ProgUnshelveAll = t.As<BOOL>(); });
-        yield return new Member(nameof(HHOperUnshelve), () => HHOperUnshelve, t => { HHOperUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(HOperUnshelve), () => HOperUnshelve, t => { HOperUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(LOperUnshelve), () => LOperUnshelve, t => { LOperUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(LLOperUnshelve), () => LLOperUnshelve, t => { LLOperUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCPosOperUnshelve), () => ROCPosOperUnshelve,
-            t => { ROCPosOperUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ROCNegOperUnshelve), () => ROCNegOperUnshelve,
-            t => { ROCNegOperUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgDisable), () => ProgDisable, t => { ProgDisable = t.As<BOOL>(); });
-        yield return new Member(nameof(OperDisable), () => OperDisable, t => { OperDisable = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgEnable), () => ProgEnable, t => { ProgEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(OperEnable), () => OperEnable, t => { OperEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(AlarmCountReset), () => AlarmCountReset,
-            t => { AlarmCountReset = t.As<BOOL>(); });
-        yield return new Member(nameof(HHMinDurationEnable), () => HHMinDurationEnable,
-            t => { HHMinDurationEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(HMinDurationEnable), () => HMinDurationEnable,
-            t => { HMinDurationEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(LMinDurationEnable), () => LMinDurationEnable,
-            t => { LMinDurationEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(LLMinDurationEnable), () => LLMinDurationEnable,
-            t => { LLMinDurationEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(HHLimit), () => HHLimit, t => { HHLimit = t.As<REAL>(); });
-        yield return new Member(nameof(HHSeverity), () => HHSeverity, t => { HHSeverity = t.As<DINT>(); });
-        yield return new Member(nameof(HLimit), () => HLimit, t => { HLimit = t.As<REAL>(); });
-        yield return new Member(nameof(HSeverity), () => HSeverity, t => { HSeverity = t.As<DINT>(); });
-        yield return new Member(nameof(LLimit), () => LLimit, t => { LLimit = t.As<REAL>(); });
-        yield return new Member(nameof(LSeverity), () => LSeverity, t => { LSeverity = t.As<DINT>(); });
-        yield return new Member(nameof(LLLimit), () => LLLimit, t => { LLLimit = t.As<REAL>(); });
-        yield return new Member(nameof(LLSeverity), () => LLSeverity, t => { LLSeverity = t.As<DINT>(); });
-        yield return new Member(nameof(MinDurationPRE), () => MinDurationPRE, t => { MinDurationPRE = t.As<DINT>(); });
-        yield return new Member(nameof(ShelveDuration), () => ShelveDuration, t => { ShelveDuration = t.As<DINT>(); });
-        yield return new Member(nameof(MaxShelveDuration), () => MaxShelveDuration,
-            t => { MaxShelveDuration = t.As<DINT>(); });
-        yield return new Member(nameof(Deadband), () => Deadband, t => { Deadband = t.As<REAL>(); });
-        yield return new Member(nameof(ROCPosLimit), () => ROCPosLimit, t => { ROCPosLimit = t.As<REAL>(); });
-        yield return new Member(nameof(ROCPosSeverity), () => ROCPosSeverity, t => { ROCPosSeverity = t.As<DINT>(); });
-        yield return new Member(nameof(ROCNegLimit), () => ROCNegLimit, t => { ROCNegLimit = t.As<REAL>(); });
-        yield return new Member(nameof(ROCNegSeverity), () => ROCNegSeverity, t => { ROCNegSeverity = t.As<DINT>(); });
-        yield return new Member(nameof(ROCPeriod), () => ROCPeriod, t => { ROCPeriod = t.As<REAL>(); });
+        var members = new List<LogixMember>();
+
+        foreach (var attribute in Element.Attributes())
+        {
+            members.Add(new LogixMember(attribute));
+        }
+
+        return members;
     }
 }

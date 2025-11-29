@@ -29,9 +29,9 @@ public class SintTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var atomic = new DINT();
-        
-        atomic.Name.Should().Be(nameof(DINT).ToUpper());
+        var atomic = new SINT();
+
+        atomic.Name.Should().Be(nameof(SINT).ToUpper());
         atomic.Members.Should().BeEmpty();
         atomic.Value.Should().Be(0);
         atomic.Radix.Should().Be(Radix.Decimal);
@@ -40,24 +40,9 @@ public class SintTests
     [Test]
     public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var atomic = new DINT(_random);
+        var atomic = new SINT(_random);
 
         atomic.Should().Be(_random);
-    }
-
-    [Test]
-    public void New_StringValue_ShouldHaveExpectedValue()
-    {
-        var atomic = new DINT("16#007b");
-
-        atomic.Value.Should().Be(123);
-        atomic.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
-    public void New_NullString_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => new DINT((string)null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -83,7 +68,7 @@ public class SintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new SINT(123);
+        SINT type = Radix.Hex.Format(123);
 
         var xml = type.Serialize().ToString();
 
@@ -515,7 +500,7 @@ public class SintTests
 
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
@@ -526,7 +511,7 @@ public class SintTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

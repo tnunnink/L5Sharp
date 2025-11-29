@@ -46,21 +46,6 @@ public class LintTests
     }
 
     [Test]
-    public void New_ValidStringValue_ShouldHaveExpectedValues()
-    {
-        var atomic = new LINT("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000");
-
-        atomic.Value.Should().Be(0);
-        atomic.Radix.Should().Be(Radix.Binary);
-    }
-
-    [Test]
-    public void New_NullStringValue_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new LINT((string)null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
     public void As_AtomicType_ShouldNotBeNull()
     {
         var atomic = new LINT();
@@ -141,7 +126,7 @@ public class LintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var atomic = new LINT("16#007b");
+        LINT atomic = Radix.Hex.Format(123);
 
         var xml = atomic.Serialize().ToString();
 
@@ -151,7 +136,7 @@ public class LintTests
     [Test]
     public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
     {
-        var atomic = new LINT() as IConvertible;
+        IConvertible atomic = new LINT();
 
         var result = atomic.ToBoolean(CultureInfo.InvariantCulture);
 

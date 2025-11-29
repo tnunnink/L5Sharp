@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// Provides functionality to create, retrieve, and use Logix data types within the system.
 /// This class offers mechanisms to interact with Logix-specific data structures and type information.
 /// </summary>
-public static partial class LogixType
+public static class LogixType
 {
     /// <summary>
     /// A dictionary mapping .NET <see cref="Type"/> instances to their corresponding Logix type names.
@@ -28,25 +28,42 @@ public static partial class LogixType
     private static readonly List<string> Atomics = [];
 
     /// <summary>
-    /// Calls static registration for logix types. Registration methods are implemented using generators that
-    /// scan for types implementing <see cref="LogixDataAttribute"/>.
-    /// </summary>
-    static LogixType()
-    {
-        RegisterTypes();
-    }
-
-    /// <summary>
-    /// Executes registration of all <see cref="LogixData"/> elements using source generation. This method will call
-    /// <see cref="Register"/> to initialize local collections with type name mappings and factory methods for creating
-    /// default instances of strongly typed data elements.
-    /// </summary>
-    static partial void RegisterTypes();
-
-    /// <summary>
     /// Returns the singleton null <see cref="LogixData"/> object.
     /// </summary>
     public static LogixData Null => NullData.Instance;
+
+    /// <summary>
+    /// Registers a new <see cref="LogixData"/> type with the specified name and factory method.
+    /// </summary>
+    /// <param name="name">The unique name associated with the <see cref="LogixData"/> type being registered.</param>
+    /// <param name="factory">A factory method used to create instances of the specified <see cref="LogixData"/> type.</param>
+    /// <typeparam name="TData">The type of <see cref="LogixData"/> being registered.</typeparam>
+    /// <exception cref="ArgumentNullException">Thrown when the name or factory parameter is null.</exception>
+    public static void Register<TData>(string name, Func<TData> factory) where TData : LogixData
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.");
+        
+        Names[typeof(TData)] = name;
+        Factories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
+    }
+
+    /// <summary>
+    /// Registers a new <see cref="AtomicData"/> type with the specified name and factory method.
+    /// </summary>
+    /// <param name="name">The unique name associated with the <see cref="AtomicData"/> type being registered.</param>
+    /// <param name="factory">A factory method used to create instances of the specified <see cref="AtomicData"/> type.</param>
+    /// <typeparam name="TAtomic">The type of <see cref="AtomicData"/> being registered.</typeparam>
+    /// <exception cref="ArgumentNullException">Thrown when the name or factory parameter is null.</exception>
+    internal static void RegisterAtomic<TAtomic>(string name, Func<TAtomic> factory) where TAtomic : AtomicData
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.");
+        
+        Names[typeof(TAtomic)] = name;
+        Factories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
+        Atomics.Add(name);
+    }
 
     /// <summary>
     /// Creates an instance of <see cref="LogixData"/> based on the specified type name.
@@ -197,21 +214,5 @@ public static partial class LogixType
     public static bool IsRegistered(string typeName)
     {
         return Factories.ContainsKey(typeName);
-    }
-
-    /// <summary>
-    /// Registers a specified type with its associated name, atomicity, and factory method.
-    /// This method updates internal collections to map types to their string representations,
-    /// determine atomic data types, and associate a factory method for type instantiation.
-    /// </summary>
-    /// <param name="type">The type to be registered.</param>
-    /// <param name="name">The name associated with the type.</param>
-    /// <param name="isAtomic">A boolean indicating whether the type is considered atomic.</param>
-    /// <param name="factory">A factory method for creating instances of the specified type.</param>
-    private static void Register(Type type, string name, bool isAtomic, Func<LogixData> factory)
-    {
-        Names[type] = name;
-        Factories[name] = factory;
-        if (isAtomic) Atomics.Add(name);
     }
 }

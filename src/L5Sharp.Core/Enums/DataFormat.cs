@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
@@ -37,25 +37,31 @@ public class DataFormat : LogixEnum<DataFormat, string>
     public static readonly DataFormat L5K = new(nameof(L5K), nameof(L5K));
 
     /// <summary>
-    /// A list of all data formats that are supported for deserialization by this library (everything but L5K).
+    /// Wraps the provided <see cref="LogixData"/> instance in the proper data formatted XML element based on the type
+    /// of the data instance provided.
     /// </summary>
-    public static readonly IEnumerable<DataFormat> Supported = new List<DataFormat>
-        { Decorated, String, Alarm, Message };
-
-    /// <summary>
-    /// Returns the corresponding <see cref="DataFormat"/> for the provided <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="data">The <see cref="LogixData"/> to get the data format for.</param>
-    /// <returns>The <see cref="DataFormat"/> option indicating how the type's data is formatted in the L5X.</returns>
-    public static DataFormat FromData(LogixData data)
+    /// <param name="data">The <see cref="LogixData"/> instance to be formatted into the XML element.</param>
+    /// <param name="name">The name of the XML element to be created. Defaults to the value of <see cref="L5XName.Data"/>.</param>
+    /// <returns>An <see cref="XElement"/> representing the formatted data with the appropriate format attribute and child elements.</returns>
+    public static XElement Format(LogixData? data, string name = L5XName.Data)
     {
-        return data switch
+        data ??= LogixType.Null;
+
+        //First check for a string type since there is no child element (Data is the element in this case)
+        if (data is StringData stringData)
+            return stringData.Serialize();
+
+        var format = data switch
         {
             StringData => String,
-            ALARM_ANALOG => Alarm,
-            ALARM_DIGITAL => Alarm,
+            ALARM_ANALOG or ALARM_DIGITAL => Alarm,
             MESSAGE => Message,
             _ => Decorated
         };
+
+        //All other format types are wrapped in a containing data element with a format attribute.
+        var formatted = new XElement(name, new XAttribute(L5XName.Format, format));
+        formatted.Add(data.Serialize());
+        return formatted;
     }
 }

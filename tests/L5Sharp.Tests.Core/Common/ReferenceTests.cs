@@ -128,7 +128,7 @@ public class ReferenceTests
     public void To_InstructionTextTarget_ShouldBeExpectedScope()
     {
         const string path =
-            "Controller/Programs/Program[@Name='MyProgram']/Routines/Routine[@Name='MyRoutine']/RLLContent/Rung[@Number='1']/Text[contains(text(), 'XIC(LocalTag)')]";
+            "Controller/Programs/Program[@Name='MyProgram']/Routines/Routine[@Name='MyRoutine']/RLLContent/Rung[@Number='1']/Text[contains(text(), \"XIC(LocalTag)\")]";
 
         var reference = Reference.To(path);
 
@@ -381,7 +381,7 @@ public class ReferenceTests
     }
 
     [Test]
-    public void PerformanceOfGettingAllTagMemberScopesShouldBeNotTerrible()
+    public void PerformanceOfGettingAllTagMemberReferencesShouldBeNotTerrible()
     {
         var content = L5X.Load(Known.Example);
 

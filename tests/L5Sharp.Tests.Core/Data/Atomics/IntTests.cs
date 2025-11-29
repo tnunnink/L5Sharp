@@ -45,15 +45,6 @@ public class IntTests
     }
 
     [Test]
-    public void New_StringValue_ShouldHaveExpectedValue()
-    {
-        var atomic = new INT("16#007b");
-
-        atomic.Value.Should().Be(123);
-        atomic.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
     public void As_AtomicType_ShouldNotBeNull()
     {
         var type = new INT();
@@ -134,9 +125,9 @@ public class IntTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new INT("16#007b");
+        INT atomic = Radix.Hex.Format(123);
 
-        var xml = type.Serialize().ToString();
+        var xml = atomic.Serialize().ToString();
 
         return Verify(xml);
     }
@@ -144,7 +135,7 @@ public class IntTests
     [Test]
     public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
     {
-        var type = new INT() as IConvertible;
+        IConvertible type = new INT();
 
         var result = type.ToBoolean(CultureInfo.InvariantCulture);
 

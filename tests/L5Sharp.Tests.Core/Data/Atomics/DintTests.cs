@@ -29,7 +29,7 @@ public class DintTests
     public void New_Default_ShouldHaveExpectedValues()
     {
         var atomic = new DINT();
-        
+
         atomic.Name.Should().Be(nameof(DINT).ToUpper());
         atomic.Members.Should().BeEmpty();
         atomic.Value.Should().Be(0);
@@ -42,21 +42,6 @@ public class DintTests
         var atomic = new DINT(_random);
 
         atomic.Should().Be(_random);
-    }
-
-    [Test]
-    public void New_StringValue_ShouldHaveExpectedValue()
-    {
-        var atomic = new DINT("16#007b");
-
-        atomic.Value.Should().Be(123);
-        atomic.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
-    public void New_NullString_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => new DINT((string)null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -169,7 +154,7 @@ public class DintTests
     [Test]
     public Task Serialize_Value_ShouldBeValid()
     {
-        var atomic = new DINT(123);
+        DINT atomic = 123;
 
         var xml = atomic.Serialize().ToString();
 
@@ -179,7 +164,7 @@ public class DintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var atomic = new DINT("16#0000_007b");
+        DINT atomic = Radix.Hex.Format(123);
 
         var xml = atomic.Serialize().ToString();
 

@@ -125,7 +125,7 @@ public class Connection : LogixObject<Connection>
     /// </summary>
     public bool? OutputRedundantOwner
     {
-        get => TryGetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -143,7 +143,7 @@ public class Connection : LogixObject<Connection>
     /// </summary>
     public bool? Unicast
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 

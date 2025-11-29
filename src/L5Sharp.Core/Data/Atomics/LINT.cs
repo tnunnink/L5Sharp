@@ -30,22 +30,6 @@ public sealed class LINT : AtomicData, IComparable, IConvertible, IAtomicValue<l
         Element.SetAttributeValue(L5XName.Value, value.ToString());
     }
 
-    /// <summary>
-    /// Creates a new <see cref="LINT"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public LINT(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<long>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
-    }
-
     /// <inheritdoc />
     public long Value => GetAtomicValue<long>();
 
@@ -88,22 +72,37 @@ public sealed class LINT : AtomicData, IComparable, IConvertible, IAtomicValue<l
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
     /// Parses the specified string representation of a <see cref="LINT"/> value into its corresponding <see cref="LINT"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="LINT"/> value to parse.</param>
     /// <returns>A <see cref="LINT"/> object that represents the parsed value.</returns>
-    public static LINT Parse(string value) => new(value);
+    public static LINT Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<long>(value);
+        var formatted = radix.Format(typed);
+
+        return new LINT(CreateDataElement(nameof(LINT), radix, formatted));
+    }
 
     /// <summary>
-    /// Attempts to parse a string representation of a <see cref="LINT"/> value and creates an instance of the <see cref="LINT"/> class if successful.
+    /// Attempts to parse the specified string representation of a LINT value
+    /// and returns a value indicating whether the conversion succeeded.
     /// </summary>
-    /// <param name="value">The string value to be parsed.</param>
-    /// <param name="atomic">When this method returns, contains the <see cref="LINT"/> instance equivalent to the string value,
-    /// if the parse operation succeeded; otherwise, null.</param>
-    /// <returns>True if the value was successfully parsed; otherwise, false.</returns>
+    /// <param name="value">The string representation of the LINT to parse.</param>
+    /// <param name="atomic">
+    /// When this method returns, contains the LINT equivalent of the parsed value if the conversion succeeded;
+    /// otherwise, it is null. This parameter is passed uninitialized.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the value was parsed successfully into a LINT; otherwise, <c>false</c>.
+    /// </returns>
     public static bool TryParse(string? value, out LINT atomic)
     {
         atomic = null!;
@@ -114,7 +113,8 @@ public sealed class LINT : AtomicData, IComparable, IConvertible, IAtomicValue<l
         if (Radix.TryInfer(value, out var radix))
         {
             var typed = radix.Parse<long>(value);
-            atomic = new LINT(typed);
+            var formatted = radix.Format(typed);
+            atomic = new LINT(CreateDataElement(nameof(LINT), radix, formatted));
             return true;
         }
 
@@ -150,7 +150,7 @@ public sealed class LINT : AtomicData, IComparable, IConvertible, IAtomicValue<l
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="LINT"/> value.</returns>
-    public static implicit operator LINT(string value) => new(value);
+    public static implicit operator LINT(string value) => Parse(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="LINT"/> to a <see cref="string"/> value.

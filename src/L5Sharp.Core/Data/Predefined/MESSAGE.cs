@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Core;
@@ -9,6 +10,7 @@ namespace L5Sharp.Core;
 /// A predefined or built-in data type used with message instructions. Note that the members of this type resemble those
 /// observed from exported L5X and not those of the predefined data type.
 /// </summary>
+[LogixElement(L5XName.MessageParameters)]
 [LogixData(nameof(MESSAGE))]
 public sealed class MESSAGE : StructureData
 {
@@ -22,10 +24,10 @@ public sealed class MESSAGE : StructureData
         ConnectedFlag = new INT();
         ConnectionPath = new STRING();
         CommTypeCode = new INT();
-        ServiceCode = new INT(Radix.Hex);
-        ObjectType = new INT(Radix.Hex);
+        ServiceCode = Radix.Hex.Format(0);
+        ObjectType = Radix.Hex.Format(0);
         TargetObject = new INT();
-        AttributeNumber = new INT(Radix.Hex);
+        AttributeNumber = Radix.Hex.Format(0);
         LocalIndex = new INT();
         DestinationTag = new STRING();
         CacheConnections = new BOOL();
@@ -41,7 +43,7 @@ public sealed class MESSAGE : StructureData
     public override string Name => nameof(MESSAGE);
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => GenerateVirtualMembers();
+    public override IEnumerable<LogixMember> Members => GenerateVirtualMembers();
 
     /// <summary>
     /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> data object.
@@ -160,29 +162,15 @@ public sealed class MESSAGE : StructureData
         set => SetValue(value);
     }
 
-    private IEnumerable<Member> GenerateVirtualMembers()
+    private IEnumerable<LogixMember> GenerateVirtualMembers()
     {
-        yield return new Member(nameof(MessageType), 
-            () => new STRING(MessageType?.Value ?? string.Empty),
-            t => { MessageType = MessageType.Parse(t.ToString()); });
-        
-        yield return new Member(nameof(RequestedLength),
-            () => RequestedLength,
-            t => { RequestedLength = (INT)t; });
-        
-        yield return new Member(nameof(ConnectionPath),
-            () => ConnectionPath,
-            t => { ConnectionPath = t.As<STRING>(); });
-        
-        yield return new Member(nameof(ConnectedFlag), () => ConnectedFlag, t => { ConnectedFlag = (INT)t; });
-        yield return new Member(nameof(CommTypeCode), () => CommTypeCode, t => { CommTypeCode = (INT)t; });
-        yield return new Member(nameof(ServiceCode), () => ServiceCode, t => { ServiceCode = (INT)t; });
-        yield return new Member(nameof(ObjectType), () => ObjectType, t => { ObjectType = (INT)t; });
-        yield return new Member(nameof(TargetObject), () => TargetObject, t => { TargetObject = (INT)t; });
-        yield return new Member(nameof(AttributeNumber), () => AttributeNumber, t => { AttributeNumber = (INT)t; });
-        yield return new Member(nameof(LocalIndex), () => LocalIndex, t => { LocalIndex = (INT)t; });
-        yield return new Member(nameof(DestinationTag), () => DestinationTag, t => { DestinationTag = (STRING)t; });
-        yield return new Member(nameof(CacheConnections), () => CacheConnections, t => { CacheConnections = (BOOL)t; });
-        yield return new Member(nameof(LargePacketUsage), () => LargePacketUsage, t => { LargePacketUsage = (BOOL)t; });
+        var members = new List<LogixMember>();
+
+        foreach (var attribute in Element.Attributes())
+        {
+            members.Add(new LogixMember(attribute));
+        }
+
+        return members;
     }
 }

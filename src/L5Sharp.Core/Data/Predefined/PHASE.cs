@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Core;

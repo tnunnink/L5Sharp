@@ -7,7 +7,10 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// This attribute associates a class with a Logix data type by defining the type name and optionally
-/// indicating if the type is atomic. The attribute is not inherited by derived classes.
+/// indicating if the type is atomic. The attribute is not inherited by derived classes. Applying this attribute
+/// will automatically register the type with the <see cref="LogixType"/> factory class, allowing us to instantiate
+/// default instances of the type by name. Users implementing custom <see cref="StructureData"/> derivatives should
+/// decorate their class with this attribute and provide the name of the type as the argument.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class LogixDataAttribute : Attribute
@@ -21,7 +24,7 @@ public class LogixDataAttribute : Attribute
     {
         if (string.IsNullOrEmpty(typeName))
             throw new ArgumentException("TypeName is required for attribute");
-        
+
         TypeName = typeName;
     }
 
@@ -35,7 +38,7 @@ public class LogixDataAttribute : Attribute
     {
         if (string.IsNullOrEmpty(typeName))
             throw new ArgumentException("TypeName is required for attribute");
-        
+
         TypeName = typeName;
         IsAtomic = isAtomic;
     }

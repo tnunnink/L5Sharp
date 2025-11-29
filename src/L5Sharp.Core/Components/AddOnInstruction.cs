@@ -229,7 +229,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value><c>true</c> if the instruction is encrypted; otherwise, <c>false</c>.</value>
     public bool? IsEncrypted
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -348,11 +348,8 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         if (string.IsNullOrEmpty(Name))
             throw new InvalidOperationException("Can not create data with null or empty data type name");
 
-        //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
-        var data = LogixType.Create(Name);
-
-        //If it is not a complex data (meaning more derived), then it was defined, and we can return it.
-        if (data is not StructureData structure) return data;
+        if (LogixType.TryCreate(Name, out var registered))
+            return registered;
 
         //Generate the members from the parameters that are configured as input/output parameters.
         //These are the only members that are used as members of an AOI tag structure.
@@ -360,6 +357,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
             .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Output)
             .Select(p => p.ToMember());
 
+        var structure = new StructureData(Name);
         structure.AddMany(members.ToList());
         return structure;
     }

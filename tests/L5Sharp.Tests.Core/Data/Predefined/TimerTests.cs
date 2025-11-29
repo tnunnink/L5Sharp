@@ -1,11 +1,22 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Types.Predefined
+namespace L5Sharp.Tests.Core.Data.Predefined
 {
     [TestFixture]
     public class TimerTests
     {
+        private const string Example =
+            """
+            <Structure DataType="TIMER">
+                <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="5000"/>
+                <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="1234"/>
+                <DataValueMember Name="EN" DataType="BOOL" Value="1"/>
+                <DataValueMember Name="TT" DataType="BOOL" Value="1"/>
+                <DataValueMember Name="DN" DataType="BOOL" Value="1"/>
+            </Structure>
+            """;
+
         [Test]
         public void New_Default_ShouldNotBeNull()
         {
@@ -58,7 +69,7 @@ namespace L5Sharp.Tests.Core.Types.Predefined
         {
             const string xml = @"<StructureMember Name=""TimeMember"" DataType=""TIMER""/>";
             var element = XElement.Parse(xml);
-            
+
             var type = new TIMER(element);
 
             type.Should().NotBeNull();
@@ -67,15 +78,8 @@ namespace L5Sharp.Tests.Core.Types.Predefined
         [Test]
         public void New_RealElement_ShouldHaveExpectedValues()
         {
-            const string xml = @"<StructureMember Name=""TimeMember"" DataType=""TIMER"">
-                <DataValueMember Name=""PRE"" DataType=""DINT"" Radix=""Decimal"" Value=""5000""/>
-                <DataValueMember Name=""ACC"" DataType=""DINT"" Radix=""Decimal"" Value=""1234""/>
-                <DataValueMember Name=""EN"" DataType=""BOOL"" Value=""1""/>
-                <DataValueMember Name=""TT"" DataType=""BOOL"" Value=""1""/>
-                <DataValueMember Name=""DN"" DataType=""BOOL"" Value=""1""/>
-                </StructureMember>";
-            var element = XElement.Parse(xml);
-            
+            var element = XElement.Parse(Example);
+
             var type = new TIMER(element);
 
             type.Should().NotBeNull();
@@ -87,15 +91,27 @@ namespace L5Sharp.Tests.Core.Types.Predefined
         }
 
         [Test]
+        public void As_DeserializedStructureToTimer_ShouldNotBeNull()
+        {
+            var element = XElement.Parse(Example);
+            var instance = element.Deserialize<LogixElement>();
+
+            var timer = instance.As<TIMER>();
+
+            timer.Should().NotBeNull();
+            timer.Should().BeOfType<TIMER>();
+        }
+
+        [Test]
         public void Clone_WhenCalled_ShouldBeOfSameType()
         {
             var type = new TIMER();
 
-            var clone = type.Clone();
-
+            var clone = type.Clone().As<TIMER>();
+            
             clone.Should().BeOfType<TIMER>();
         }
-        
+
         [Test]
         public void Clone_WhenCalled_ShouldNotBeSameInstance()
         {
@@ -110,7 +126,7 @@ namespace L5Sharp.Tests.Core.Types.Predefined
         public Task Serialize_Default_ShouldBeVerified()
         {
             var type = new TIMER();
-            
+
             var xml = type.Serialize().ToString();
 
             return Verify(xml);

@@ -30,22 +30,6 @@ public sealed class ULINT : AtomicData, IComparable, IConvertible, IAtomicValue<
         Element.SetAttributeValue(L5XName.Value, value);
     }
 
-    /// <summary>
-    /// Creates a new <see cref="ULINT"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public ULINT(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<ulong>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
-    }
-
     /// <inheritdoc />
     public ulong Value => GetAtomicValue<ulong>();
 
@@ -88,14 +72,24 @@ public sealed class ULINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
     /// Parses the specified string representation of a <see cref="ULINT"/> value into its corresponding <see cref="ULINT"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="ULINT"/> value to parse.</param>
     /// <returns>A <see cref="ULINT"/> object that represents the parsed value.</returns>
-    public static ULINT Parse(string value) => new(value);
+    public static ULINT Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<ulong>(value);
+        var formatted = radix.Format(typed);
+
+        return new ULINT(CreateDataElement(nameof(ULINT), radix, formatted));
+    }
 
     /// <summary>
     /// Attempts to parse a string representation of a <see cref="ULINT"/> value and creates an instance of the <see cref="ULINT"/> class if successful.

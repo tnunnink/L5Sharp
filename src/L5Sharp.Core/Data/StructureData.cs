@@ -17,12 +17,13 @@ namespace L5Sharp.Core;
 /// Inherit from <see cref="StructureData"/> if you want the ability to mutate the member structure after instantiation.
 /// </para>
 /// </remarks>
+[LogixElement(L5XName.Structure)]
 public class StructureData : LogixData, IDictionary<string, LogixData>
 {
     /// <summary>
     /// Creates a new default <see cref="StructureData"/> instance.
     /// </summary>
-    public StructureData() : base(nameof(StructureData))
+    public StructureData() : base(CreateStructure(nameof(StructureData), []))
     {
     }
 
@@ -46,17 +47,17 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     }
 
     /// <summary>
-    /// Creates a new <see cref="StructureData"/> with the provided name and collection of <see cref="Member"/> objects.
+    /// Creates a new <see cref="StructureData"/> with the provided name and collection of <see cref="LogixMember"/> objects.
     /// </summary>
     /// <param name="name">The name of the structure type.</param>
     /// <param name="members">The members of the structure type.</param>
     /// <exception cref="ArgumentException"><c>name</c> is null or empty.</exception>
-    public StructureData(string name, IEnumerable<Member> members) : base(CreateStructure(name, members))
+    public StructureData(string name, IEnumerable<LogixMember> members) : base(CreateStructure(name, members))
     {
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Member> Members => Element.Elements().Select(e => new Member(e));
+    public override IEnumerable<LogixMember> Members => Element.Elements().Select(e => new LogixMember(e));
 
     /// <inheritdoc />
     public int Count => Element.Elements().Count();
@@ -65,10 +66,16 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     bool ICollection<KeyValuePair<string, LogixData>>.IsReadOnly => false;
 
     /// <inheritdoc />
-    public ICollection<string> Keys => Element.Elements().Select(e => e.MemberName()).ToArray();
+    public ICollection<string> Keys
+    {
+        get { return Element.Elements().Select(e => e.MemberName()).ToArray(); }
+    }
 
     /// <inheritdoc />
-    public ICollection<LogixData> Values => Element.Elements().Select(e => e.Deserialize<Member>().Value).ToArray();
+    public ICollection<LogixData> Values
+    {
+        get { return Element.Elements().Select(e => e.Deserialize<LogixMember>().Value).ToArray(); }
+    }
 
     /// <inheritdoc />
     public LogixData this[string name]
@@ -78,11 +85,11 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     }
 
     /// <summary>
-    /// Adds the specified <see cref="Member"/> to the current <see cref="StructureData"/> type.
+    /// Adds the specified <see cref="LogixMember"/> to the current <see cref="StructureData"/> type.
     /// </summary>
-    /// <param name="member">The <see cref="Member"/> to add to the structure.</param>
+    /// <param name="member">The <see cref="LogixMember"/> to add to the structure.</param>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="member"/> is null.</exception>
-    public void Add(Member member)
+    public void Add(LogixMember member)
     {
         AddMember(member);
     }
@@ -94,7 +101,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// <param name="value">The <see cref="LogixData"/> value of the member to be added.</param>
     public void Add(string name, LogixData value)
     {
-        AddMember(new Member(name, value));
+        AddMember(new LogixMember(name, value));
     }
 
     /// <summary>
@@ -103,7 +110,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// <param name="item">The key value pair that containers the name and value of the member to add.</param>
     public void Add(KeyValuePair<string, LogixData> item)
     {
-        AddMember(new Member(item.Key, item.Value));
+        AddMember(new LogixMember(item.Key, item.Value));
     }
 
     /// <summary>
@@ -111,7 +118,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// </summary>
     /// <param name="members">The collection of members to add.</param>
     /// <exception cref="ArgumentNullException"><c>members</c> is null or any member in <c>members</c> is null.</exception>
-    public void AddMany(ICollection<Member> members)
+    public void AddMany(ICollection<LogixMember> members)
     {
         if (members is null) throw new ArgumentNullException(nameof(members));
 
@@ -177,12 +184,12 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// Attempts to get the value associated with the specified member name in the <see cref="StructureData"/>.
     /// </summary>
     /// <param name="name">The name of the member to attempt to retrieve.</param>
-    /// <param name="value">When this method returns, contains the value associated with the specified member name,
+    /// <param name="value">When this method returns, contains the value associated with the specified member name
     /// if the member is found; otherwise, the default value for the type of the <see cref="LogixData"/> object.</param>
     /// <returns><c>true</c> if the member was found; otherwise, <c>false</c>.</returns>
     public bool TryGetValue(string name, out LogixData value)
     {
-        var element = Element.Elements().SingleOrDefault(e => e.MemberName() == name);
+        var element = Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name));
 
         if (element is null)
         {
@@ -190,7 +197,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
             return false;
         }
 
-        value = element.Deserialize<Member>().Value;
+        value = element.Deserialize<LogixMember>().Value;
         return true;
     }
 
@@ -252,12 +259,12 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// </remarks>
     protected TData GetMember<TData>([CallerMemberName] string? name = null) where TData : LogixData
     {
-        var element = Element.Elements().SingleOrDefault(m => m.MemberName() == name);
+        var element = Element.Elements().SingleOrDefault(m => m.MemberName().IsEquivalent(name));
 
         if (element is null)
             throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
 
-        return element.Deserialize<TData>();
+        return element.Deserialize<LogixMember>().Value.As<TData>();
     }
 
     /// <summary>
@@ -269,7 +276,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// <exception cref="InvalidOperationException">Thrown when no member with the specified <paramref name="name"/> exists or when the member is not an array.</exception>
     protected TData[] GetArray<TData>([CallerMemberName] string? name = null) where TData : LogixData
     {
-        var element = Element.Elements().SingleOrDefault(m => m.MemberName() == name);
+        var element = Element.Elements().SingleOrDefault(m => m.MemberName().IsEquivalent(name));
 
         if (element is null)
             throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
@@ -277,7 +284,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
         if (element.Name.LocalName is not L5XName.ArrayMember)
             throw new InvalidOperationException($"Member '{name}' is not an array member element.");
 
-        return element.Deserialize<ArrayData>().Cast<TData>().ToArray();
+        return element.Deserialize<LogixMember>().Value.As<ArrayData>().Cast<TData>().ToArray();
     }
 
     /// <summary>
@@ -305,11 +312,13 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (value is null or NullData) throw new ArgumentNullException(nameof(value));
 
-        var existing = Element.Elements().SingleOrDefault(m => m.MemberName() == name)?.ToMember();
+        var existing = Element.Elements()
+            .SingleOrDefault(m => m.MemberName().IsEquivalent(name))
+            ?.Deserialize<LogixMember>();
 
         if (existing is null)
         {
-            var member = new Member(name, value);
+            var member = new LogixMember(name, value);
             Element.Add(member.Serialize());
             return;
         }
@@ -336,39 +345,43 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// Note that the order in which members exist in the underlying collection matters when importing logix type tag data.
     /// </para>
     /// </remarks>
-    protected void SetArray<TData>(TData[] array, [CallerMemberName] string? name = null) where TData : LogixData
+    protected void SetArray<TData>(TData[] array, [CallerMemberName] string? name = null) where TData : LogixData, new()
     {
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (array is null) throw new ArgumentNullException(nameof(array));
 
-        var existing = Element.Elements().SingleOrDefault(m => m.MemberName() == name)?.ToMember();
+        var existing = Element.Elements()
+            .SingleOrDefault(m => m.MemberName().IsEquivalent(name))
+            ?.Deserialize<LogixMember>();
+
+        var data = array.ToArrayData();
 
         if (existing is null)
         {
-            var member = new Member(name, array);
+            var member = new LogixMember(name, data);
             Element.Add(member.Serialize());
             return;
         }
 
-        existing.Value = array;
+        existing.Value = data;
     }
 
     /// <summary>
     /// Adds a specified member to the structure.
     /// </summary>
-    /// <param name="member">The <see cref="Member"/> instance to add to the structure.</param>
+    /// <param name="member">The <see cref="LogixMember"/> instance to add to the structure.</param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when the <paramref name="member"/> is null.
     /// </exception>
     /// <exception cref="InvalidOperationException">
     /// Thrown when a member with the same name already exists in the structure.
     /// </exception>
-    private void AddMember(Member member)
+    private void AddMember(LogixMember member)
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type.");
 
-        if (Element.Elements().Any(e => e.MemberName() == member.Name))
+        if (Element.Elements().Any(e => e.MemberName().IsEquivalent(member.Name)))
             throw new InvalidOperationException($"Member already exists in structure type: '{member.Name}'");
 
         Element.Add(member.Serialize());
@@ -381,7 +394,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// <param name="member"></param>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    private void ReplaceMember(string name, Member member)
+    private void ReplaceMember(string name, LogixMember member)
     {
         if (member is null)
             throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
@@ -397,7 +410,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// <summary>
     /// Creates the default <see cref="XElement"/> representing the underlying structure type.
     /// </summary>
-    private static XElement CreateStructure(string? name, IEnumerable<Member> members)
+    private static XElement CreateStructure(string? name, IEnumerable<LogixMember> members)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Can not create structure type with null or empty name.");

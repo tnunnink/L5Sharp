@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <para>
 /// <see cref="LogixData"/> is a special type of <see cref="LogixElement"/> which models the tag data structure found
 /// in L5X files. This class contains a <see cref="Name"/> and <see cref="Members"/> which comprise the hierarchy of
-/// data for a given type. This class has built in conversion for implicitly converting .NET primitives and collections
+/// data for a given type. This class has built-in conversion for implicitly converting .NET primitives and collections
 /// (arrays and dictionaries) to the corresponding <see cref="LogixData"/> derived class.
 /// </para>
 /// <para>
@@ -23,7 +23,7 @@ namespace L5Sharp.Core;
 /// </para>
 /// <para>
 /// If you wish to create in memory complex data structures, use the <see cref="StructureData"/> class which exposes
-/// methods for adding, removing, replacing, and inserting <see cref="Core.Member"/> objects for the data structure.
+/// methods for adding, removing, replacing, and inserting <see cref="LogixMember"/> objects for the data structure.
 /// </para>
 /// </remarks>
 /// <seealso cref="AtomicData"/>
@@ -54,26 +54,26 @@ public abstract class LogixData : LogixElement
     public virtual string Name => Element.DataType() ?? throw Element.L5XError(L5XName.DataType);
 
     /// <summary>
-    /// The collection of <see cref="Core.Member"/> objects that make up the structure of the data.
+    /// The collection of <see cref="LogixMember"/> objects that make up the structure of the data.
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Core.Member"/> objects.</value>
+    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="LogixMember"/> objects.</value>
     /// <remarks>
     /// Complex data structures such as <see cref="StructureData"/> and <see cref="ArrayData"/> will return
     /// members. <see cref="AtomicData"/> will not return the bit members since they are not present in the underlying
     /// XML and having them would exponentially increase the number of members given tags have.
     /// </remarks>
-    public virtual IEnumerable<Member> Members => [];
+    public virtual IEnumerable<LogixMember> Members => [];
 
     /// <summary>
-    /// Gets a <see cref="Core.Member"/> with the specified name if it exists for the <see cref="LogixData"/>;
+    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
     /// Otherwise, returns <c>null</c>.
     /// </summary>
     /// <param name="name">The name of the member to get.</param>
-    /// <returns>A <see cref="Core.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
     /// <remarks>This performs a case-insensitive comparison for the member name.</remarks>
-    public Member? Member(string name)
+    public LogixMember? Member(string name)
     {
-        return Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+        return Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
     }
 
     /// <inheritdoc />
@@ -246,27 +246,83 @@ public abstract class LogixData : LogixElement
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(string value) => new STRING(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(BOOL[] value) => ArrayData.New(value);
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator LogixData(LogixData[] value) => ArrayData.New(value);
-
+    public static implicit operator LogixData(SINT[] value) => ArrayData.New(value);
+    
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator LogixData(LogixData[,] value) => ArrayData.New(value);
-
+    public static implicit operator LogixData(USINT[] value) => ArrayData.New(value);
+    
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator LogixData(LogixData[,,] value) => ArrayData.New(value);
+    public static implicit operator LogixData(INT[] value) => ArrayData.New(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(UINT[] value) => ArrayData.New(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(DINT[] value) => ArrayData.New(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(UDINT[] value) => ArrayData.New(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LINT[] value) => ArrayData.New(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(ULINT[] value) => ArrayData.New(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(REAL[] value) => ArrayData.New(value);
+    
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LREAL[] value) => ArrayData.New(value);
 
     /// <summary>
     /// Converts the provided <see cref="Dictionary{TKey,TValue}"/> to a <see cref="LogixData"/>.
@@ -275,6 +331,6 @@ public abstract class LogixData : LogixElement
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(Dictionary<string, LogixData> value)
     {
-        return new StructureData(nameof(StructureData), value.Select(m => new Member(m.Key, m.Value)));
+        return new StructureData(nameof(StructureData), value.Select(m => new LogixMember(m.Key, m.Value)));
     }
 }

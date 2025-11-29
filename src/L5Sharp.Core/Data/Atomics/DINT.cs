@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a <b>DINT</b> Logix atomic data type, or a type analogous to a <see cref="int"/>.
+/// Represents a <b>DINT</b> Logix atomic data type or a type analogous to a <see cref="int"/>.
 /// </summary>
 [LogixData(nameof(DINT), true)]
 public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<int>
@@ -28,22 +28,6 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     public DINT(int value) : this()
     {
         Element.SetAttributeValue(L5XName.Value, value.ToString());
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="DINT"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public DINT(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<int>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
     }
 
     /// <inheritdoc />
@@ -89,14 +73,24 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
     /// Parses the specified string representation of a <see cref="DINT"/> value into its corresponding <see cref="DINT"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="DINT"/> value to parse.</param>
     /// <returns>A <see cref="DINT"/> object that represents the parsed value.</returns>
-    public static DINT Parse(string value) => new(value);
+    public static DINT Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<int>(value);
+        var formatted = radix.Format(typed);
+
+        return new DINT(CreateDataElement(nameof(DINT), radix, formatted));
+    }
 
     /// <summary>
     /// Attempts to parse a string representation of a <see cref="DINT"/> value and creates an instance of the <see cref="DINT"/> class if successful.
@@ -114,7 +108,8 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
         if (Radix.TryInfer(value, out var radix))
         {
             var typed = radix.Parse<int>(value);
-            atomic = new DINT(typed);
+            var formatted = radix.Format(typed);
+            atomic = new DINT(CreateDataElement(nameof(DINT), radix, formatted));
             return true;
         }
 
@@ -150,7 +145,7 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="DINT"/> value.</returns>
-    public static explicit operator DINT(string value) => new(value);
+    public static implicit operator DINT(string value) => Parse(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="DINT"/> to a <see cref="string"/> value.
@@ -162,7 +157,7 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     #endregion
 
     // Contains the IConvertible implementation for the type. I am explicitly implementing this interface for each
-    // atomic type to avoid polluting the API, and to have the implementation as performant as possible.
+    // atomic type to avoid polluting the API and to have the implementation as performant as possible.
     // To perform conversion, use the recommended .NET Convert.ChangeType() method and specify the target type.
 
     #region Convertible

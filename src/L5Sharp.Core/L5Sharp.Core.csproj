@@ -35,6 +35,5 @@
 
     <ItemGroup>
         <ProjectReference Include="..\L5Sharp.Core.Generators\L5Sharp.Core.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\L5Sharp.Core.Analyzers\L5Sharp.Core.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
     </ItemGroup>
 </Project>

@@ -65,27 +65,9 @@ public class Argument
     public IReadOnlyList<AtomicData> Values => ExtractValues(_value).ToArray();
 
     /// <summary>
-    /// Converts the argument value to an equivalent <see cref="AtomicData"/> representation based on the inferred radix.
-    /// </summary>
-    /// <returns>A new instance of <see cref="AtomicData"/> parsed from the argument's value.</returns>
-    public AtomicData ToAtomic()
-    {
-        return Radix.ParseAtomic(_value);
-    }
-
-    /// <summary>
-    /// Converts the current <see cref="Argument"/> to a <see cref="TagName"/> instance.
-    /// </summary>
-    /// <returns>A <see cref="TagName"/> representation of the current <see cref="Argument"/>.</returns>
-    public TagName ToTag()
-    {
-        return TagName.Parse(_value);
-    }
-
-    /// <summary>
     /// Represents an unknown argument that can be found in certain instruction text.
     /// </summary>
-    /// <remarks>This is literally the '?' character, as often seen in the timer and counter instructions.</remarks>
+    /// <remarks>This is literally the '?' character, as often seen in the Timer and Counter instructions.</remarks>
     public static Argument Unknown => new(UnknownValue);
 
     /// <summary>

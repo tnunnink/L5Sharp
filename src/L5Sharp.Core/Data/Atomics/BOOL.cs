@@ -83,26 +83,37 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
-    /// Parses the specified string representation of a <see cref="BOOL"/> value into its corresponding <see cref="BOOL"/> object.
+    /// Parses the specified string representation of a <see cref="BOOL"/> value into its
+    /// corresponding <see cref="BOOL"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="BOOL"/> value to parse.</param>
     /// <returns>A <see cref="BOOL"/> object that represents the parsed value.</returns>
     public static BOOL Parse(string value)
     {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        //This will intercept any true/false value as radix does not recognize that format.
+        if (bool.TryParse(value, out var result))
+            return new BOOL(result);
+
         var radix = Radix.Infer(value);
         var typed = radix.Parse<bool>(value);
+        var formatted = radix.Format(typed);
 
-        return new BOOL(typed);
+        return new BOOL(CreateDataElement(nameof(BOOL), radix, formatted));
     }
 
     /// <summary>
-    /// Attempts to parse a string representation of a <see cref="BOOL"/> value and creates an instance of the <see cref="BOOL"/> class if successful.
+    /// Attempts to parse a string representation of a <see cref="BOOL"/> value and creates an instance of
+    /// the <see cref="BOOL"/> if successful.
     /// </summary>
     /// <param name="value">The string value to be parsed.</param>
-    /// <param name="atomic">When this method returns, contains the <see cref="BOOL"/> instance equivalent to the string value, if the parse operation succeeded; otherwise, null.</param>
+    /// <param name="atomic">When this method returns, contains the <see cref="BOOL"/> instance equivalent to the
+    /// string value, if the parse operation succeeded; otherwise, null.</param>
     /// <returns>True if the value was successfully parsed; otherwise, false.</returns>
     public static bool TryParse(string? value, out BOOL atomic)
     {
@@ -111,10 +122,15 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
         if (value is null || value.IsEmpty())
             return false;
 
+        //This will intercept any true/false value as radix does not recognize that format.
+        if (bool.TryParse(value, out var result))
+            return new BOOL(result);
+
         if (Radix.TryInfer(value, out var radix))
         {
             var typed = radix.Parse<bool>(value);
-            atomic = new BOOL(typed);
+            var formatted = radix.Format(typed);
+            atomic = new BOOL(CreateDataElement(nameof(BOOL), radix, formatted));
             return true;
         }
 
@@ -226,7 +242,7 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
     /// <inheritdoc />
     object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
     {
-        var convertible = (IConvertible)this;
+        IConvertible convertible = this;
 
         return Type.GetTypeCode(conversionType) switch
         {
@@ -278,7 +294,7 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
             return new INT(Value ? (short)1 : default);
         if (conversionType == typeof(DINT))
             return new DINT(Value ? 1 : 0);
-        if (conversionType == typeof(BOOL))
+        if (conversionType == typeof(LINT))
             return new LINT(Value ? (long)1 : 0);
         if (conversionType == typeof(REAL))
             return new REAL(Value ? (float)1 : 0);

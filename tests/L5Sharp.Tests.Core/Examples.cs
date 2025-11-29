@@ -119,7 +119,7 @@ namespace L5Sharp.Tests.Core
             var content = L5X.Load(Known.Test);
 
             var results = content.Query<Rung>()
-                .SelectMany(r => r.Instructions().Where(i => i.Key == "MOVE").SelectMany(x => x.Tags))
+                .SelectMany(r => r.Instructions().Where(i => i.Key == "MOV").SelectMany(x => x.Tags))
                 .ToList();
 
             results.Should().NotBeEmpty();

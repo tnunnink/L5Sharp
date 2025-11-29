@@ -57,7 +57,7 @@ public sealed class TIMER : StructureData
     /// Gets the <see cref="EN"/> member of the <see cref="TIMER"/> data type.
     /// </summary>
     /// <remarks>
-    /// The enable bit indicates that the Timer instruction is enabled.
+    /// The enabled bit indicates that the Timer instruction is enabled.
     /// </remarks>
     public BOOL EN
     {

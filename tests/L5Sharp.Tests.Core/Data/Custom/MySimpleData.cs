@@ -2,6 +2,7 @@
 
 namespace L5Sharp.Tests.Core.Data.Custom;
 
+[LogixData(nameof(MySimpleData))]
 public class MySimpleData : StructureData
 {
     public MySimpleData() : base(nameof(MySimpleData))

@@ -3,7 +3,7 @@
     <DataTypes />
     <Modules>
       <Module Use="Target" Name="RackIO" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="11" Minor="1" ParentModule="Local" ParentModPortId="2" Inhibited="false" MajorFault="false">
-        <Description>This is a test EN2T module</Description>
+        <Description><![CDATA[This is a test EN2T module]]></Description>
         <EKey State="CompatibleModule" />
         <Ports>
           <Port Id="1" Address="0" Type="ICP" Upstream="false">
@@ -126,7 +126,7 @@
                 </Data>
               </InputTag>
               <OutputTag ExternalAccess="Read/Write">
-                <Data Format="L5K">[0,[[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0]]]</Data>
+                <Data Format="L5K"><![CDATA[[0,[[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0]]]]]></Data>
                 <Data Format="Decorated">
                   <Structure DataType="AB:1756_ENET_17SLOT:O:0">
                     <ArrayMember Name="Slot" DataType="AB:1756_ENET_SLOT:O:0" Dimensions="17">
@@ -237,7 +237,7 @@
         </Ports>
         <Communications CommMethod="1073741824">
           <ConfigTag ConfigSize="24" ExternalAccess="Read/Write">
-            <Data Format="L5K">[28,16,0,0,0,0,1,1,1,1,1,1,1,1,-1,-1]</Data>
+            <Data Format="L5K"><![CDATA[[28,16,0,0,0,0,1,1,1,1,1,1,1,1,-1,-1]]]></Data>
             <Data Format="Decorated">
               <Structure DataType="AB:1756_DI:C:1">
                 <DataValueMember Name="FilterOffOn_0_7" DataType="SINT" Radix="Decimal" Value="1" />
@@ -267,21 +267,21 @@
         </ExtendedProperties>
       </Module>
       <Module Name="Rack_Mod_2" CatalogNumber="1756-IF8/A" Vendor="1" ProductType="10" ProductCode="7" Major="1" Minor="1" ParentModule="RackIO" ParentModPortId="1" Inhibited="false" MajorFault="false">
-        <Description>Ths is a test IF8</Description>
+        <Description><![CDATA[Ths is a test IF8]]></Description>
         <EKey State="CompatibleModule" />
         <Ports>
           <Port Id="1" Address="2" Type="ICP" Upstream="true" />
         </Ports>
         <Communications CommMethod="536870913">
           <ConfigTag ConfigSize="196" ExternalAccess="Read/Write">
-            <Data Format="L5K">[200,36,1,2,100,[0,3,0,0.00000000e+000,0.00000000e+000,2.00000000e+001,0.00000000e+000,1.00000000e+002
+            <Data Format="L5K"><![CDATA[[200,36,1,2,100,[0,3,0,0.00000000e+000,0.00000000e+000,2.00000000e+001,0.00000000e+000,1.00000000e+002
 		,-1.00000000e+001,1.00000000e+001,-1.00000000e+001,1.00000000e+001,0.00000000e+000,0.00000000e+000
 		],[0,3,0,0.00000000e+000,0.00000000e+000,2.00000000e+001,0.00000000e+000,1.00000000e+002,-1.00000000e+001
 		,1.00000000e+001,-1.00000000e+001,1.00000000e+001,0.00000000e+000,0.00000000e+000],[0,3,0,0.00000000e+000
 		,0.00000000e+000,2.00000000e+001,0.00000000e+000,1.00000000e+002,-1.00000000e+001,1.00000000e+001
 		,-1.00000000e+001,1.00000000e+001,0.00000000e+000,0.00000000e+000],[0,3,0,0.00000000e+000,0.00000000e+000
 		,2.00000000e+001,0.00000000e+000,1.00000000e+002,-1.00000000e+001,1.00000000e+001,-1.00000000e+001
-		,1.00000000e+001,0.00000000e+000,0.00000000e+000]]</Data>
+		,1.00000000e+001,0.00000000e+000,0.00000000e+000]]]]></Data>
             <Data Format="Decorated">
               <Structure DataType="AB:1756_IF4_Float:C:0">
                 <DataValueMember Name="ModuleFilter" DataType="SINT" Radix="Decimal" Value="2" />
@@ -436,7 +436,7 @@
         </Ports>
         <Communications CommMethod="1073741824">
           <ConfigTag ConfigSize="24" ExternalAccess="Read/Write">
-            <Data Format="L5K">[28,16,0,0,0,0,1,1,1,1,1,1,1,1,-1,-1]</Data>
+            <Data Format="L5K"><![CDATA[[28,16,0,0,0,0,1,1,1,1,1,1,1,1,-1,-1]]]></Data>
             <Data Format="Decorated">
               <Structure DataType="AB:1756_DI:C:1">
                 <DataValueMember Name="FilterOffOn_0_7" DataType="SINT" Radix="Decimal" Value="1" />
@@ -456,7 +456,7 @@
             <RackConnection>
               <InAliasTag>
                 <Comments>
-                  <Comment Operand=".DATA.0">IO Description</Comment>
+                  <Comment Operand=".DATA.0"><![CDATA[IO Description]]></Comment>
                 </Comments>
               </InAliasTag>
             </RackConnection>

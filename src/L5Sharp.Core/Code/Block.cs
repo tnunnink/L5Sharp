@@ -412,8 +412,7 @@ public class Block : LogixObject<Block>
         var sheet = element.Parent;
 
         if (sheet is null || sheet.Name.LocalName != L5XName.Sheet)
-            throw new InvalidOperationException(
-                $"No parent sheet element was found for element type '{element.Name.LocalName}'.");
+            return [];
 
         var inputWires = sheet.Elements(L5XName.Wire)
             .Where(w => w.Attribute(L5XName.ToID)?.Value == element.Attribute(L5XName.ID)?.Value)
@@ -445,8 +444,7 @@ public class Block : LogixObject<Block>
         var sheet = element.Parent;
 
         if (sheet is null || sheet.Name.LocalName != L5XName.Sheet)
-            throw new InvalidOperationException(
-                $"No parent sheet element was found for element type '{element.Name.LocalName}'.");
+            return [];
 
         var outputWires = sheet.Elements(L5XName.Wire)
             .Where(w => w.Attribute(L5XName.FromID)?.Value == element.Attribute(L5XName.ID)?.Value)

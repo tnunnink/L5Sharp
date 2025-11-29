@@ -221,18 +221,22 @@ public class DataType : LogixComponent<DataType>
         if (string.IsNullOrEmpty(Name))
             throw new InvalidOperationException("Can not create data with null or empty data type name");
 
+        //Need to intercept the BIT types and make them booleans.
+        if (Name == "BIT")
+            return new BOOL();
+
+        //Try to instantiate the type if registered
+        if (LogixType.TryCreate(Name, out var registered))
+            return registered;
+
         //We need to handle strings types specifically to match a Logix custom format.
-        if (Family is not null && Family == DataTypeFamily.String) return new StringData(Name, string.Empty);
-
-        //This will be some predefined type or a complex data instance, depending on whether it is statically defined.
-        var data = LogixType.Create(Name);
-
-        //If it is not structure, then it was defined, and we can return it.
-        if (data is not StructureData structure) return data;
+        if (Family is not null && Family == DataTypeFamily.String)
+            return new StringData(Name, string.Empty);
 
         //Otherwise, we need to build the members using the configured Members collection.
+        var data = new StructureData(Name);
         var members = Members.Where(m => m.Hidden is not true).Select(m => m.ToMember()).ToList();
-        structure.AddMany(members);
-        return structure;
+        data.AddMany(members);
+        return data;
     }
 }

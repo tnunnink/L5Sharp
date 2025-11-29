@@ -26,7 +26,7 @@ public class AddOnInstructionTests
         instruction.EditedBy.Should().Be(Environment.UserName);
         instruction.SoftwareRevision.Should().BeNull();
         instruction.AdditionalHelpText.Should().BeNull();
-        instruction.IsEncrypted.Should().BeFalse();
+        instruction.IsEncrypted.Should().BeNull();
         instruction.Parameters.Should().HaveCount(2);
         instruction.LocalTags.Should().BeEmpty();
         instruction.Routines.Should().HaveCount(1);
@@ -141,7 +141,7 @@ public class AddOnInstructionTests
         var aoi = new AddOnInstruction("MyAoi");
         aoi.Parameters.Add(new Parameter("Param01", new DINT(123)));
         aoi.Parameters.Add(new Parameter("Param02", new BOOL(true)));
-        aoi.Parameters.Add(new Parameter("Param02", new REAL(1.23f)));
+        aoi.Parameters.Add(new Parameter("Param03", new REAL(1.23f)));
 
         var tag = aoi.ToTag("MyAoiTag");
 
@@ -166,7 +166,7 @@ public class AddOnInstructionTests
         var aoi = new AddOnInstruction("MyAoi");
         aoi.Parameters.Add(new Parameter("Param01", new DINT(123)));
         aoi.Parameters.Add(new Parameter("Param02", new BOOL(true)));
-        aoi.Parameters.Add(new Parameter("Param02", new REAL(1.23f)));
+        aoi.Parameters.Add(new Parameter("Param03", new REAL(1.23f)));
 
         var data = aoi.ToData();
 

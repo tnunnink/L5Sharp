@@ -1,0 +1,1 @@
+﻿<Data DataType="MyStringType" Format="String" Length="24"><![CDATA['This is the string value']]></Data>

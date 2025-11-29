@@ -171,29 +171,26 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     public DataType Definition => GetDefinition();
 
     /// <summary>
-    /// Converts the current instance of <see cref="DataTypeMember"/> to a <see cref="Member"/>.
+    /// Converts the current instance of <see cref="DataTypeMember"/> to a <see cref="LogixMember"/>.
     /// </summary>
-    /// <returns>A new instance of <see cref="Member"/> based on the properties of the <see cref="DataTypeMember"/>.</returns>
+    /// <returns>A new instance of <see cref="LogixMember"/> based on the properties of the <see cref="DataTypeMember"/>.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the Name or DataType is null or empty.</exception>
-    public Member ToMember()
+    public LogixMember ToMember()
     {
         var isArray = Dimension is not null && Dimension.Length > 0;
 
-        //Create the data type using the static factory method.
-        var data = LogixType.Create(DataType);
-
-        //If it's a known type (i.e., not StructureData), we can just return that.
-        if (data is not StructureData)
+        //If the type is registered, we can create the instance using the registered factory.
+        if (LogixType.IsRegistered(DataType))
         {
-            var value = !isArray ? data : new ArrayData(data, Dimension!);
-            return new Member(Name, value);
+            var value = !isArray ? LogixType.Create(DataType) : ArrayData.New(DataType, Dimension!);
+            return new LogixMember(Name, value);
         }
 
         //If not, we can try to get the data type definition from the l5X if attached
         //and use that to recursively build up the complex type.
         var definition = GetDefinition();
-        var structure = !isArray ? definition.ToData() : new ArrayData(definition.ToData(), Dimension!);
-        return new Member(Name, structure);
+        var structure = !isArray ? definition.ToData() : ArrayData.New(definition.ToData(), Dimension!);
+        return new LogixMember(Name, structure);
     }
 
     /// <summary>
@@ -203,12 +200,10 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// <exception cref="InvalidOperationException"></exception>
     private DataType GetDefinition()
     {
-        //Just going to return a fake DataType here since it is atomic or not able to be retrieved.
-        if (LogixType.IsAtomic(DataType) || !TryGetDocument(out var doc))
-            return new DataType(DataType);
-
-        if (doc.TryGet<DataType>(DataType, out var definition))
+        if (TryGetDocument(out var doc) && doc.TryGet<DataType>(DataType, out var definition))
+        {
             return definition;
+        }
 
         return new DataType(DataType);
     }

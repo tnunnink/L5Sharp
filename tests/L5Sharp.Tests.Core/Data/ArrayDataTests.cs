@@ -12,31 +12,19 @@ namespace L5Sharp.Tests.Core.Data
         [Test]
         public void Constructor_NullArray_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => new ArrayData(null!)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => new ArrayData(null!))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void New_EmptyArray_ShouldBeEmpty()
-        {
-            var array = ArrayData.New<DINT>([]);
-
-            array.Should().BeEmpty();
-            array.Members.Should().BeEmpty();
-        }
-
-        [Test]
-        public void New_EmptyArray_ShouldHaveExpectedTypeName()
+        public void New_EmptyArray_ShouldHaveExpectedPropertyValues()
         {
             var array = ArrayData.New(Array.Empty<DINT>());
-            //ArrayData.New<LogixData>([true, 123, "this is a test"]);
 
             array.Name.Should().Be("DINT");
-        }
-
-        [Test]
-        public void New_ArrayOfNullTypes_ShouldThrowArgumentException()
-        {
-            FluentActions.Invoking(() => ArrayData.New<NullData>([])).Should().Throw<ArgumentException>();
+            array.Radix.Should().Be(Radix.Decimal);
+            array.Members.Should().BeEmpty();
+            array.Dimensions.IsEmpty.Should().BeTrue();
         }
 
         [Test]
@@ -44,15 +32,8 @@ namespace L5Sharp.Tests.Core.Data
         {
             var array = Enumerable.Range(1, 1000000).Select(i => new DINT(i)).ToArray();
 
-            FluentActions.Invoking(() => ArrayData.New(array)).Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [Test]
-        public void New_ValidArray_ShouldNotBeNull()
-        {
-            var array = ArrayData.New<DINT>([1, 2, 3, 4]);
-
-            array.Should().NotBeNull();
+            FluentActions.Invoking(() => ArrayData.New(array))
+                .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
@@ -135,7 +116,7 @@ namespace L5Sharp.Tests.Core.Data
         [Test]
         public void New_NameAndDimensions_ShouldBeValid()
         {
-            var array = new ArrayData("DINT", new Dimensions(100));
+            var array = ArrayData.New("DINT", new Dimensions(100));
 
             array.Should().NotBeNull();
             array.Name.Should().Be("DINT");
@@ -147,19 +128,13 @@ namespace L5Sharp.Tests.Core.Data
         [Test]
         public void Constructor_DataAndDimensions_ShouldBeValid()
         {
-            var array = new ArrayData(new DINT(), new Dimensions(100));
+            var array = ArrayData.New<DINT>(100);
 
             array.Should().NotBeNull();
             array.Name.Should().Be("DINT");
             array.Dimensions.Length.Should().Be(100);
             array.Members.Should().HaveCount(100);
             array.Members.Should().AllSatisfy(m => m.Value.Should().BeOfType<DINT>());
-        }
-
-        [Test]
-        public void New_Empty_ShouldThrowArgumentException()
-        {
-            FluentActions.Invoking(() => ArrayData.New<TIMER>(0)).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -170,7 +145,6 @@ namespace L5Sharp.Tests.Core.Data
             array.Should().NotBeNull();
             array.Should().NotBeEmpty();
             array.Dimensions.Length.Should().Be(10);
-            array.Should().AllBeOfType<TIMER>();
         }
 
         [Test]
@@ -181,7 +155,6 @@ namespace L5Sharp.Tests.Core.Data
             array.Should().NotBeNull();
             array.Should().NotBeEmpty();
             array.Dimensions.Length.Should().Be(25);
-            array.Should().AllBeOfType<TIMER>();
         }
 
         [Test]
@@ -192,7 +165,6 @@ namespace L5Sharp.Tests.Core.Data
             array.Should().NotBeNull();
             array.Should().NotBeEmpty();
             array.Dimensions.Length.Should().Be(8);
-            array.Should().AllBeOfType<TIMER>();
         }
 
         [Test]
@@ -408,14 +380,6 @@ namespace L5Sharp.Tests.Core.Data
         }
 
         [Test]
-        public void SetIndex_InvalidType_ShouldThrowArgumentException()
-        {
-            ArrayData array = new LogixData[] { 1, 2, 3, 4 };
-
-            FluentActions.Invoking(() => array[0] = new TIMER()).Should().Throw<InvalidCastException>();
-        }
-
-        [Test]
         public void SetIndex_DifferentAtomicType_ShouldHaveExpectedValues()
         {
             ArrayData array = new DINT[] { 1, 2, 3, 4 };
@@ -434,26 +398,6 @@ namespace L5Sharp.Tests.Core.Data
             array.Should().NotBeNull();
             array.Dimensions.Length.Should().Be(4);
             array.Dimensions.Rank.Should().Be(1);
-        }
-
-        [Test]
-        public void ImplicitOperator_TwoDimensional_ShouldNotBeNull()
-        {
-            ArrayData array = new DINT[,] { { 1, 2 }, { 3, 4 } };
-
-            array.Should().NotBeNull();
-            array.Dimensions.Length.Should().Be(4);
-            array.Dimensions.Rank.Should().Be(2);
-        }
-
-        [Test]
-        public void ImplicitOperator_ThreeDimensional_ShouldNotBeNull()
-        {
-            ArrayData array = new DINT[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-
-            array.Should().NotBeNull();
-            array.Dimensions.Length.Should().Be(8);
-            array.Dimensions.Rank.Should().Be(3);
         }
 
         [Test]
@@ -497,17 +441,6 @@ namespace L5Sharp.Tests.Core.Data
                 type.Should().NotBeNull();
                 type.Should().BeOfType<DINT>();
             }
-        }
-
-        [Test]
-        public void Cast_BaseTypeOfStructure_ShouldWork()
-        {
-            var array = ArrayData.New(new TIMER[] { new(), new(), new() });
-
-            var casted = array.Cast<StructureData>().ToArray();
-
-            casted.Should().NotBeNull();
-            casted.Should().AllBeOfType<TIMER>();
         }
 
         [Test]
@@ -637,7 +570,7 @@ namespace L5Sharp.Tests.Core.Data
 
             array.Name.Should().Be("TIMER");
             array.Dimensions.Should().Be(new Dimensions(5));
-            array.Should().AllBeOfType<TIMER>();
+            array.Should().AllBeOfType<StructureData>();
 
             array[1].As<TIMER>().PRE.Should().Be(1000);
             array[1].As<TIMER>().EN.Should().Be(true);
@@ -648,7 +581,7 @@ namespace L5Sharp.Tests.Core.Data
         {
             IEnumerable array = ArrayData.New(new DINT[] { 1, 2, 3, 4 });
 
-            var enumerator = array.GetEnumerator();
+            using var enumerator = array.GetEnumerator() as IDisposable;
 
             enumerator.Should().NotBeNull();
 

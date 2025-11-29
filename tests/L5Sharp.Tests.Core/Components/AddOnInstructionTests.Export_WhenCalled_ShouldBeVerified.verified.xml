@@ -1,4 +1,4 @@
-﻿<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="1.0" TargetName="" TargetType="AddOnInstructionDefinition" ContainsContext="true" Owner="Scrubbed" ExportDate="Scrubbed">
+﻿<RSLogix5000Content SchemaRevision="1" SoftwareRevision="1.0" TargetName="" TargetType="AddOnInstructionDefinition" ContainsContext="true" Owner="Scrubbed" ExportDate="Scrubbed">
   <Controller Name="Context" MajorRev="1" MinorRev="0" ProjectCreationDate="Scrubbed" LastModifiedDate="Scrubbed">
     <DataTypes />
     <Modules />
@@ -6,13 +6,13 @@
       <AddOnInstructionDefinition Name="" Revision="1.0" ExecutePreScan="false" ExecutePostScan="false" ExecuteEnableInFalse="false" CreatedDate="Scrubbed" CreatedBy="Scrubbed" EditedDate="Scrubbed" EditedBy="Scrubbed" Use="Target">
         <Parameters>
           <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Dimension="0" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
-            <Description>Enable Input - System Defined Parameter</Description>
+            <Description><![CDATA[Enable Input - System Defined Parameter]]></Description>
             <DefaultData Format="Decorated">
               <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
             </DefaultData>
           </Parameter>
           <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Dimension="0" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
-            <Description>Enable Output - System Defined Parameter</Description>
+            <Description><![CDATA[Enable Output - System Defined Parameter]]></Description>
             <DefaultData Format="Decorated">
               <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
             </DefaultData>

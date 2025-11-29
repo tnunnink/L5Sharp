@@ -299,13 +299,12 @@ public class Sheet : LogixCode<Sheet>
     /// </summary>
     private uint NextAvailableId()
     {
-        var ids = Element.Elements().Select(e =>
-        {
-            var id = e.Attribute(L5XName.ID)?.Value;
-            return id is not null ? int.Parse(id) : -1;
-        });
+        var ids = Element.Elements()
+            .Select(e => e.Attribute(L5XName.ID)?.Value ?? "-1")
+            .Select(int.Parse)
+            .ToArray();
 
-        return (uint)ids.Max() + 1;
+        return ids.Length > 0 ? (uint)ids.Max() + 1 : 0;
     }
 
     /// <summary>

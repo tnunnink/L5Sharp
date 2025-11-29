@@ -30,22 +30,6 @@ public sealed class UINT : AtomicData, IComparable, IConvertible, IAtomicValue<u
         Element.SetAttributeValue(L5XName.Value, value);
     }
 
-    /// <summary>
-    /// Creates a new <see cref="UINT"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public UINT(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<ushort>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
-    }
-
     /// <inheritdoc />
     public ushort Value => GetAtomicValue<ushort>();
 
@@ -88,14 +72,24 @@ public sealed class UINT : AtomicData, IComparable, IConvertible, IAtomicValue<u
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
     /// Parses the specified string representation of a <see cref="UINT"/> value into its corresponding <see cref="UINT"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="UINT"/> value to parse.</param>
     /// <returns>A <see cref="UINT"/> object that represents the parsed value.</returns>
-    public static UINT Parse(string value) => new(value);
+    public static UINT Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<ushort>(value);
+        var formatted = radix.Format(typed);
+
+        return new UINT(CreateDataElement(nameof(UINT), radix, formatted));
+    }
 
     /// <summary>
     /// Attempts to parse a string representation of a <see cref="UINT"/> value and creates an instance of the <see cref="UINT"/> class if successful.

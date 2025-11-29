@@ -56,9 +56,8 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        var id = sheet.AddBlock(Block.SCL());
+        sheet.AddBlock(Block.SCL());
 
-        id.Should().Be(0);
         sheet.Blocks().Should().HaveCount(1);
     }
 

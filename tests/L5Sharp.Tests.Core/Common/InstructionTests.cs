@@ -45,6 +45,19 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
+        public void Unknown_WhenCalled_ShouldBeExpected()
+        {
+            var instruction = Instruction.Unkown;
+
+            instruction.Should().Be("UNK");
+            instruction.Key.Should().Be("UNK");
+            instruction.Arguments.Should().BeEmpty();
+            instruction.IsConditional.Should().BeFalse();
+            instruction.IsDesctructive.Should().BeTrue();
+            instruction.IsNative.Should().BeFalse();
+        }
+
+        [Test]
         public void XIC_WhenCalled_ShouldBeExpectedProperties()
         {
             var instruction = Instruction.XIC("MyTag");

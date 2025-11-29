@@ -33,22 +33,6 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
         Element.SetAttributeValue(L5XName.Value, value.ToString(SingleFormat, CultureInfo.InvariantCulture));
     }
 
-    /// <summary>
-    /// Creates a new <see cref="REAL"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public REAL(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<float>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
-    }
-
     /// <inheritdoc />
     public float Value => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false
         ? GetAtomicValue<float>()
@@ -93,14 +77,27 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
     /// Parses the specified string representation of a <see cref="REAL"/> value into its corresponding <see cref="REAL"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="REAL"/> value to parse.</param>
     /// <returns>A <see cref="REAL"/> object that represents the parsed value.</returns>
-    public static REAL Parse(string value) => new(value);
+    public static REAL Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        if (value.Contains("QNAN"))
+            return new REAL(float.NaN);
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<float>(value);
+        var formatted = radix.Format(typed);
+
+        return new REAL(CreateDataElement(nameof(REAL), radix, formatted));
+    }
 
     /// <summary>
     /// Attempts to parse a string representation of a <see cref="REAL"/> value and creates an instance of the <see cref="REAL"/> class if successful.
@@ -114,6 +111,12 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
 
         if (value is null || value.IsEmpty())
             return false;
+
+        if (value.Contains("QNAN"))
+        {
+            atomic = new REAL(float.NaN);
+            return true;
+        }
 
         if (Radix.TryInfer(value, out var radix))
         {
@@ -154,7 +157,7 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="REAL"/> value.</returns>
-    public static implicit operator REAL(string value) => new(value);
+    public static implicit operator REAL(string value) => Parse(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="REAL"/> to a <see cref="string"/> value.

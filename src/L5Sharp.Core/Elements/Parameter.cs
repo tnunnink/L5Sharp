@@ -28,10 +28,10 @@ public class Parameter : LogixObject<Parameter>
     {
         Name = string.Empty;
         TagType = TagType.Base;
-        DataType = nameof(DINT);
+        DataType = string.Empty;
         Dimension = Dimensions.Empty;
         Usage = TagUsage.Input;
-        Radix = Radix.Decimal;
+        Radix = Radix.Null;
         Required = false;
         Visible = false;
         ExternalAccess = ExternalAccess.ReadWrite;
@@ -175,7 +175,7 @@ public class Parameter : LogixObject<Parameter>
     /// <c>true</c> if the <c>Parameter</c> is required; otherwise, false. Default is <c>false</c>.</value>
     public bool? Required
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -185,7 +185,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value><c>true</c> if the <c>Parameter</c> is visible; otherwise, false. Default is <c>false</c>.</value>
     public bool? Visible
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -203,10 +203,10 @@ public class Parameter : LogixObject<Parameter>
     /// A default value of the <c>Parameter</c> when instantiated.
     /// </summary>
     /// <value>An <see cref="AtomicData"/> representing the default value/data. Default is <c>null</c>.</value>
-    public LogixData Default
+    public AtomicData? Default
     {
-        get => GetData();
-        set => SetData(value);
+        get => Element.TryGetFormattedData(out var data) ? data.Deserialize<AtomicData>() : null;
+        set => SetElement(DataFormat.Format(value, L5XName.DefaultData));
     }
 
     /// <summary>
@@ -216,7 +216,7 @@ public class Parameter : LogixObject<Parameter>
     /// <remarks>Only value type tags can be set as a constant. Default is <c>false</c>.</remarks>
     public bool? Constant
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -236,25 +236,30 @@ public class Parameter : LogixObject<Parameter>
             throw new InvalidOperationException("Can not generate Tag with null or empty DataType name.");
 
         var isArray = Dimension is not null && Dimension.Length > 0;
-        var data = Default is not NullData ? Default : LogixType.Create(DataType);
-        var value = !isArray ? data.As<LogixData>() : new ArrayData(data, Dimension!);
+
+        var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
+            ? registered
+            : new StructureData(DataType));
+
+        var value = !isArray ? data : ArrayData.New(data, Dimension!);
+
         return new Tag(tagName, value);
     }
 
     /// <summary>
-    /// Creates a new <see cref="Member"/> from the given <see cref="Parameter"/> configuration, which uses the
+    /// Creates a new <see cref="LogixMember"/> from the given <see cref="Parameter"/> configuration, which uses the
     /// <see cref="DataType"/> <see cref="Default"/> and <see cref="Name"/> in order to generate a new member instance.
     /// </summary>
     /// <exception cref="InvalidOperationException"><see cref="DataType"/> is null or empty -or- <see cref="Usage"/>
     /// is not configured as Input or Output.</exception>
-    /// <returns>A <see cref="Member"/> instance with the name and default value of the current parameter.</returns>
+    /// <returns>A <see cref="LogixMember"/> instance with the name and default value of the current parameter.</returns>
     /// <remarks>
     /// This is a helper to allow us to generate default tag members from a given parameter so that we
     /// can easily build up an in memory instance of an AOI tag component. Note that this method is intended to only be
     /// called on Input or Output parameters, which Logix requires to be atomic type parameters.
     /// These are the only parameter types that are available on an AOI tag instance.
     /// </remarks>
-    public Member ToMember()
+    public LogixMember ToMember()
     {
         if (DataType is null || DataType.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
             throw new InvalidOperationException("Can not generate Member with null or empty DataType name.");
@@ -262,8 +267,11 @@ public class Parameter : LogixObject<Parameter>
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)
             throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
 
-        var value = Default is not NullData ? Default : LogixType.Create(DataType);
-        return new Member(Name, value);
+        var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
+            ? registered
+            : new StructureData(DataType));
+
+        return new LogixMember(Name, data);
     }
 
     /// <inheritdoc />

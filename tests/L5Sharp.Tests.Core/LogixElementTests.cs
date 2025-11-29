@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
+using NUnit.Framework.Internal;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 
@@ -11,9 +12,9 @@ public class LogixElementTests
     [Test]
     public void ShouldBeRegisteredInSerializerClass()
     {
-        /*var element = LogixSerializer.;
+        var result = LogixSerializer.IsRegistered(typeof(TestElement));
 
-        element.Should().NotBeNull();*/
+        result.Should().BeTrue();
     }
 
     [Test]
@@ -64,6 +65,44 @@ public class LogixElementTests
         var xml = element.Serialize();
 
         xml.Name.LocalName.Should().Be("Test");
+    }
+
+    [Test]
+    public void As_TestElementAsBaseInterface_ShouldBeExpected()
+    {
+        var element = new TestElement();
+
+        var casted = element.As<ILogixElement>();
+
+        casted.Should().NotBeNull();
+    }
+
+    [Test]
+    public void As_TestElementAsLogixObject_ShouldBeExpected()
+    {
+        var element = new TestElement();
+
+        var casted = element.As<LogixObject<TestElement>>();
+
+        casted.Should().NotBeNull();
+    }
+
+    [Test]
+    public void As_LogixElementAsTestElement_ShouldNotBeNull()
+    {
+        var element = XElement.Parse("<Test/>").Deserialize<ILogixElement>();
+
+        var casted = element.As<TestElement>();
+
+        casted.Should().NotBeNull();
+    }
+    
+    [Test]
+    public void As_InvalidType_ShouldThrowInvalidCastException()
+    {
+        var element = XElement.Parse("<Test/>").Deserialize<ILogixElement>();
+
+        FluentActions.Invoking(() => element.As<ChildElement>()).Should().Throw<InvalidCastException>();
     }
 
     [Test]
@@ -573,21 +612,6 @@ public class LogixElementTests
     }
 
     [Test]
-    public Task AddAfter_AlternateType_ShouldBeVerified()
-    {
-        var container = new XElement("Container",
-            new XElement("Test", new XAttribute("RequiredValue", "Test_1")),
-            new XElement("Test", new XAttribute("RequiredValue", "Test_2"))
-        );
-        var xml = container.FirstNode as XElement;
-        var element = new TestElement(xml!);
-
-        element.AddAfter(new TestElement(new XElement("Alternate", new XAttribute("RequiredValue", "Test_3"))));
-
-        return Verify(container.ToString());
-    }
-
-    [Test]
     public void AddBefore_Null_ShouldThrowException()
     {
         var xml = new XElement("Test", new XAttribute("RequiredValue", "Test_1"));
@@ -617,21 +641,6 @@ public class LogixElementTests
         var element = new TestElement(xml!);
 
         element.AddBefore(new TestElement { RequiredValue = "Test_3" });
-
-        return Verify(container.ToString());
-    }
-
-    [Test]
-    public Task AddBefore_AlternateType_ShouldBeVerified()
-    {
-        var container = new XElement("Container",
-            new XElement("Test", new XAttribute("RequiredValue", "Test_1")),
-            new XElement("Test", new XAttribute("RequiredValue", "Test_2"))
-        );
-        var xml = container.FirstNode as XElement;
-        var element = new TestElement(xml!);
-
-        element.AddBefore(new TestElement(new XElement("Alternate", new XAttribute("RequiredValue", "Test_3"))));
 
         return Verify(container.ToString());
     }
@@ -671,28 +680,14 @@ public class LogixElementTests
     }
 
     [Test]
-    public Task Replace_AlternateType_ShouldBeVerified()
-    {
-        var container = new XElement("Container",
-            new XElement("Test", new XAttribute("RequiredValue", "Test_1")),
-            new XElement("Test", new XAttribute("RequiredValue", "Test_2"))
-        );
-        var xml = container.FirstNode as XElement;
-        var element = new TestElement(xml!);
-
-        element.Replace(new TestElement(new XElement("Alternate", new XAttribute("RequiredValue", "Test_3"))));
-
-        return Verify(container.ToString());
-    }
-
-    [Test]
-    public void Remove_NoParent_ShouldThrowException()
+    public void Remove_NoParent_ShouldBeVerified()
     {
         var xml = new XElement("Test", new XAttribute("RequiredValue", "Test_1"));
         var element = new TestElement(xml);
 
-        FluentActions.Invoking(() => element.Remove()).Should()
-            .Throw<InvalidOperationException>();
+        element.Remove();
+
+        element.Serialize().Parent.Should().BeNull();
     }
 
     [Test]

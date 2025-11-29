@@ -166,7 +166,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? ShareUnusedTimeSlice
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetBit(value);
     }
 
@@ -303,7 +303,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? InhibitAutomaticFirmwareUpdate
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value is true ? 1 : 0);
     }
 
@@ -340,7 +340,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? CanUseRPIFromProducer
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -359,7 +359,7 @@ public sealed class Controller : LogixElement
     /// </summary>
     public bool? DownloadProjectDocumentationAndExtendedProperties
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -374,7 +374,7 @@ public sealed class Controller : LogixElement
     /// </remarks>
     public bool? DownloadProjectCustomProperties
     {
-        get => GetBool();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 

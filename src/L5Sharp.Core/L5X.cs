@@ -631,8 +631,10 @@ public sealed class L5X : LogixElement
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
+        var containerName = $"{LogixSerializer.NamesFor(component.GetType()).First()}s";
+
         var container = Element
-            .Descendants($"{component.GetType()}s")
+            .Descendants(containerName)
             .FirstOrDefault(e => Scope.Of(e).IsLocalTo(component.Reference));
 
         if (container is null)
@@ -656,8 +658,10 @@ public sealed class L5X : LogixElement
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
+        var containerName = $"{LogixSerializer.NamesFor(component.GetType()).First()}s";
+
         var container = Element
-            .Descendants($"{component.GetType()}s")
+            .Descendants(containerName)
             .FirstOrDefault(e => Scope.Of(e).Container == programName);
 
         if (container is null)
@@ -677,9 +681,9 @@ public sealed class L5X : LogixElement
         if (action is null)
             throw new ArgumentNullException(nameof(action));
 
-        var element = Get(action);
-
-        element.Serialize().Remove();
+        var reference = Reference.Build(action);
+        var element = Element.XPathSelectElement(reference);
+        element?.Remove();
     }
 
     /// <summary>
@@ -706,8 +710,8 @@ public sealed class L5X : LogixElement
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var reference = Reference.To<TComponent>(name);
-        var element = Get(reference);
-        element.Serialize().Remove();
+        var element = Element.XPathSelectElement(reference);
+        element?.Remove();
     }
 
     /// <summary>

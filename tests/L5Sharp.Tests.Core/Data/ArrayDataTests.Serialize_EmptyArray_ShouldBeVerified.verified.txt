@@ -1,1 +1,1 @@
-﻿<Array DataType="DINT" Dimensions="0" />
+﻿<Array DataType="DINT" Dimensions="0" Radix="Decimal" />

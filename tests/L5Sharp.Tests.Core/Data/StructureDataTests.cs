@@ -15,7 +15,8 @@ public class StructureDataTests
     [Test]
     public void New_NullName_ShouldThrowArgumentException()
     {
-        FluentActions.Invoking(() => new StructureData(null!, new List<Member>())).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => new StructureData(null!, new List<LogixMember>())).Should()
+            .Throw<ArgumentException>();
     }
 
     [Test]
@@ -27,11 +28,13 @@ public class StructureDataTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var dat = new StructureData();
+        var data = new StructureData();
 
-        dat.Should().NotBeNull();
-        dat.Name.Should().Be(nameof(StructureData));
-        dat.Members.Should().BeEmpty();
+        data.Should().NotBeNull();
+        data.Name.Should().Be(nameof(StructureData));
+        data.Members.Should().BeEmpty();
+        data.Keys.Should().BeEmpty();
+        data.Values.Should().BeEmpty();
     }
 
     [Test]
@@ -53,7 +56,7 @@ public class StructureDataTests
     [Test]
     public void New_WithMembers_ShouldHaveExpectedValues()
     {
-        var data = new StructureData("Test", new List<Member>
+        var data = new StructureData("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -64,6 +67,8 @@ public class StructureDataTests
 
 
         data.Name.Should().Be("Test");
+        data.Keys.Should().HaveCount(5);
+        data.Values.Should().HaveCount(5);
         data.Should().HaveCount(5);
     }
 
@@ -72,9 +77,9 @@ public class StructureDataTests
     {
         var data = new StructureData("Test")
         {
-            new Member("First", true),
-            new Member("Second", 123),
-            new Member("Third", 1.345)
+            new LogixMember("First", true),
+            new LogixMember("Second", 123),
+            new LogixMember("Third", 1.345)
         };
 
         data.Should().HaveCount(3);
@@ -83,7 +88,7 @@ public class StructureDataTests
     [Test]
     public void ToString_WhenCalled_ShouldBeName()
     {
-        var data = new StructureData("Test", new List<Member>());
+        var data = new StructureData("Test", new List<LogixMember>());
 
         var name = data.ToString();
 
@@ -93,7 +98,7 @@ public class StructureDataTests
     [Test]
     public void Clone_WhenCalled_ShouldNotBeSameAsButEqual()
     {
-        var data = new StructureData("MyComplex", new List<Member>
+        var data = new StructureData("MyComplex", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -116,7 +121,7 @@ public class StructureDataTests
         // ReSharper disable once UseObjectOrCollectionInitializer
         var data = new StructureData();
 
-        data.Add(new Member("Member", 123));
+        data.Add(new LogixMember("Member", 123));
 
         data.Members.Should().HaveCount(1);
     }
@@ -127,7 +132,7 @@ public class StructureDataTests
         // ReSharper disable once UseObjectOrCollectionInitializer
         var data = new StructureData();
 
-        data.Add(new Member("Member", 123));
+        data.Add(new LogixMember("Member", 123));
 
         var result = data.Members.First();
 
@@ -177,7 +182,7 @@ public class StructureDataTests
     public void Add_DuplicateName_ShouldThrowException()
     {
         // ReSharper disable once CollectionNeverQueried.Local
-        var data = new StructureData { new Member("test", true) };
+        var data = new StructureData { new LogixMember("test", true) };
 
         FluentActions.Invoking(() => data.Add("test", 123)).Should().Throw<InvalidOperationException>();
     }
@@ -198,7 +203,7 @@ public class StructureDataTests
     {
         var data = new StructureData();
 
-        data.AddMany(new List<Member>
+        data.AddMany(new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -213,7 +218,7 @@ public class StructureDataTests
     {
         var data = new StructureData();
 
-        var expected = new List<Member>
+        var expected = new List<LogixMember>
         {
             new("Atomic", 123),
             new("String", "Test Value"),
@@ -229,12 +234,10 @@ public class StructureDataTests
 
         var b = data.Member("String");
         b?.Name.Should().Be("String");
-        b?.Value.Should().BeOfType<STRING>();
         b?.Value.Should().Be("Test Value");
 
         var c = data.Member("Structure");
         c?.Name.Should().Be("Structure");
-        c?.Value.Should().BeOfType<TIMER>();
         c?.Value.As<TIMER>().PRE.Should().Be(2000);
     }
 
@@ -242,7 +245,7 @@ public class StructureDataTests
     public void AddMany_NullMembers_ShouldThrowArgumentNullException()
     {
         var data = new StructureData();
-        var members = new Member[] { null!, null!, null! };
+        var members = new LogixMember[] { null!, null!, null! };
 
         FluentActions.Invoking(() => data.AddMany(members)).Should().Throw<ArgumentNullException>();
     }
@@ -250,7 +253,7 @@ public class StructureDataTests
     [Test]
     public void Clear_WhenCalled_ShouldHaveExpectedCount()
     {
-        var data = new StructureData("Test", new List<Member> { new("Test", 123) });
+        var data = new StructureData("Test", new List<LogixMember> { new("Test", 123) });
 
         data.Clear();
 
@@ -258,9 +261,89 @@ public class StructureDataTests
     }
 
     [Test]
+    public void Contains_ExistingKeyValuePair_ShouldBeTrue()
+    {
+        var data = new StructureData("MyType")
+        {
+            { "AtomicMember", 123 }
+        };
+
+        var result = data.Contains(new KeyValuePair<string, LogixData>("AtomicMember", 123));
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void Contains_ExistingKeyDifferentValue_ShouldBeTrue()
+    {
+        var data = new StructureData("MyType")
+        {
+            { "AtomicMember", 123 }
+        };
+
+        var result = data.Contains(new KeyValuePair<string, LogixData>("AtomicMember", 321));
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void Contains_NoMatchingKey_ShouldBeFalse()
+    {
+        var data = new StructureData("MyType")
+        {
+            { "AtomicMember", 123 }
+        };
+
+        var result = data.Contains(new KeyValuePair<string, LogixData>("Member", 321));
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void ContainsKey_HasKey_ShouldBeTrue()
+    {
+        var data = new StructureData("Test") { { "MemberName", 123 } };
+
+        var result = data.ContainsKey("MemberName");
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void ContainsKey_HasNoKey_ShouldBeFalse()
+    {
+        var data = new StructureData("Test");
+
+        var result = data.ContainsKey("MemberName");
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void TryGetValue_ContainsKey_ShouldBeTrueAndHaveValue()
+    {
+        var data = new StructureData("Test") { { "Member", 123 } };
+
+        var result = data.TryGetValue("Member", out var value);
+
+        result.Should().BeTrue();
+        value.Should().Be(123);
+    }
+
+    [Test]
+    public void TryGetValue_NoMatchingKey_ShouldBeFalse()
+    {
+        var data = new StructureData("Test") { { "Member", 123 } };
+
+        var result = data.TryGetValue("SomeName", out var _);
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
     public void Remove_ByName_ShouldHaveExpectedCount()
     {
-        var data = new StructureData("Test", new List<Member>
+        var data = new StructureData("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -276,7 +359,7 @@ public class StructureDataTests
     [Test]
     public void Remove_NonExistingName_ShouldHaveExpectedCount()
     {
-        var data = new StructureData("Test", new List<Member>
+        var data = new StructureData("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -287,6 +370,22 @@ public class StructureDataTests
 
         result.Should().BeFalse();
         data.Should().HaveCount(3);
+    }
+
+    [Test]
+    public void Remove_KeyValuePair_ShouldHaveExpectedCount()
+    {
+        var data = new StructureData("Test", new List<LogixMember>
+        {
+            new("Atomic", 1),
+            new("String", "Test Value"),
+            new("Structure", new TIMER { PRE = 2000 })
+        });
+
+        var result = data.Remove(new KeyValuePair<string, LogixData>("String", "Testing"));
+
+        result.Should().BeTrue();
+        data.Should().HaveCount(2);
     }
 
     [Test]
@@ -302,7 +401,7 @@ public class StructureDataTests
     [Test]
     public Task Serialize_Test_ShouldBeVerified()
     {
-        var type = new StructureData("Test", new List<Member>
+        var type = new StructureData("Test", new List<LogixMember>
         {
             new("Atomic", 1),
             new("String", "Test Value"),
@@ -317,7 +416,7 @@ public class StructureDataTests
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
-        var first = new StructureData("Test", new List<Member>
+        var first = new StructureData("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -326,7 +425,7 @@ public class StructureDataTests
             new("Member5", new TIMER())
         });
 
-        var second = new StructureData("Test", new List<Member>
+        var second = new StructureData("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -344,7 +443,7 @@ public class StructureDataTests
     [Test]
     public void EquivalentTo_AreNotEqualByValue_ShouldBeFalse()
     {
-        var first = new StructureData("Test", new List<Member>
+        var first = new StructureData("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -353,7 +452,7 @@ public class StructureDataTests
             new("Member5", new TIMER())
         });
 
-        var second = new StructureData("Test", new List<Member>
+        var second = new StructureData("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -371,7 +470,7 @@ public class StructureDataTests
     [Test]
     public void EquivalentTo_AreNotEqualByName_ShouldBeFalse()
     {
-        var first = new StructureData("Test", new List<Member>
+        var first = new StructureData("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),
@@ -380,7 +479,7 @@ public class StructureDataTests
             new("Member5", new TIMER())
         });
 
-        var second = new StructureData("Test", new List<Member>
+        var second = new StructureData("Test", new List<LogixMember>
         {
             new("Member1", true),
             new("Member2", (byte)255),

@@ -30,22 +30,6 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
         Element.SetAttributeValue(L5XName.Value, value.ToString());
     }
 
-    /// <summary>
-    /// Creates a new <see cref="INT"/> from the provided string value.
-    /// </summary>
-    /// <param name="value">The value to initialize the type with.</param>
-    /// <remarks>
-    /// The radix format will be set based on the format of the provided value.
-    /// </remarks>
-    public INT(string value) : this()
-    {
-        var radix = Radix.Infer(value);
-        var converted = radix.Parse<short>(value);
-
-        Element.SetAttributeValue(L5XName.Radix, radix);
-        Element.SetAttributeValue(L5XName.Value, converted);
-    }
-
     /// <inheritdoc />
     public short Value => GetAtomicValue<short>();
 
@@ -88,14 +72,24 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     /// </summary>
     /// <param name="radix">The radix format.</param>
     /// <returns>A <see cref="string"/> representing the formatted atomic value.</returns>
-    public string ToString(Radix radix) => radix.Format(Value);
+    public override string ToString(Radix radix) => radix.Format(Value);
 
     /// <summary>
     /// Parses the specified string representation of a <see cref="INT"/> value into its corresponding <see cref="INT"/> object.
     /// </summary>
     /// <param name="value">The string representation of the <see cref="INT"/> value to parse.</param>
     /// <returns>A <see cref="INT"/> object that represents the parsed value.</returns>
-    public static INT Parse(string value) => new(value);
+    public static INT Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value can not be null or empty");
+
+        var radix = Radix.Infer(value);
+        var typed = radix.Parse<short>(value);
+        var formatted = radix.Format(typed);
+
+        return new INT(CreateDataElement(nameof(INT), radix, formatted));
+    }
 
     /// <summary>
     /// Attempts to parse a string representation of a <see cref="INT"/> value and creates an instance of the <see cref="INT"/> class if successful.
@@ -114,7 +108,8 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
         if (Radix.TryInfer(value, out var radix))
         {
             var typed = radix.Parse<short>(value);
-            atomic = new INT(typed);
+            var formatted = radix.Format(typed);
+            atomic = new INT(CreateDataElement(nameof(INT), radix, formatted));
             return true;
         }
 
@@ -150,7 +145,7 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A new <see cref="INT"/> value.</returns>
-    public static implicit operator INT(string value) => new(value);
+    public static implicit operator INT(string value) => Parse(value);
 
     /// <summary>
     /// Implicitly converts the provided <see cref="INT"/> to a <see cref="string"/> value.

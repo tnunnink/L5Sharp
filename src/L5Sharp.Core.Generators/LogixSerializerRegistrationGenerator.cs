@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -8,24 +7,20 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace L5Sharp.Core.Generators;
 
 [Generator]
-public class LogixRegistrationGenerator : IIncrementalGenerator
+public class LogixSerializerRegistrationGenerator : IIncrementalGenerator
 {
     private const string LogixElementAttribute = "L5Sharp.Core.LogixElementAttribute";
-    private const string LogixDataAttribute = "L5Sharp.Core.LogixDataAttribute";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var provider = GetElementRegistrations(context).Collect()
-            .Combine(GetDataRegistrations(context).Collect())
-            .Combine(context.AnalyzerConfigOptionsProvider);
+        var provider = GetElementRegistrations(context).Collect().Combine(context.AnalyzerConfigOptionsProvider);
 
         context.RegisterSourceOutput(provider, (ctx, source) =>
         {
-            var ((elements, dataTypes), options) = source;
-            if (elements.IsDefaultOrEmpty && dataTypes.IsDefaultOrEmpty) return;
+            var (registrations, options) = source;
+            if (registrations.IsDefaultOrEmpty) return;
 
             options.GlobalOptions.TryGetValue("build_property.RootNamespace", out var nameSpace);
-            var registrations = elements.Concat(dataTypes);
 
             var code = GenerateSource(registrations, nameSpace);
             ctx.AddSource("LogixSerializer.Registration.g.cs", code);
@@ -52,31 +47,7 @@ public class LogixRegistrationGenerator : IIncrementalGenerator
                 var symbol = (INamedTypeSymbol)ctx.TargetSymbol;
                 var type = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                 var arguments = symbol.GetAttributeArguments(LogixElementAttribute).ToArray();
-                return new Registration(type, RegistrationType.Element, arguments);
-            });
-    }
-
-    /// <summary>
-    /// Retrieves an incremental provider that generates registrations for classes annotated with the [LogixData] attribute.
-    /// </summary>
-    /// <param name="context">
-    /// The initialization context provided by the incremental generator, used to configure and register syntax providers for handling class declarations with relevant attributes.
-    /// </param>
-    /// <returns>
-    /// An incremental values provider that produces registrations associating class names with their corresponding data attributes.
-    /// </returns>
-    private static IncrementalValuesProvider<Registration> GetDataRegistrations(
-        IncrementalGeneratorInitializationContext context)
-    {
-        return context.SyntaxProvider.ForAttributeWithMetadataName(
-            LogixDataAttribute,
-            static (node, _) => node is ClassDeclarationSyntax,
-            static (ctx, _) =>
-            {
-                var symbol = (INamedTypeSymbol)ctx.TargetSymbol;
-                var type = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-                var arguments = symbol.GetAttributeArguments(LogixDataAttribute).ToArray();
-                return new Registration(type, RegistrationType.DataType, arguments);
+                return new Registration(type, arguments);
             });
     }
 
@@ -105,7 +76,7 @@ public class LogixRegistrationGenerator : IIncrementalGenerator
         builder.AppendLine("/// <summary>");
         builder.AppendLine("/// Generated class for registering decorated types with the LogixSerializer.");
         builder.AppendLine("/// </summary>");
-        builder.AppendLine("internal static class LogixRegistration");
+        builder.AppendLine("internal static class LogixSerializerRegistration");
         builder.AppendLine("{");
         builder.AppendLine("    /// <summary>");
         builder.AppendLine(
@@ -117,33 +88,9 @@ public class LogixRegistrationGenerator : IIncrementalGenerator
 
         foreach (var registration in registrations)
         {
-            var typeName = registration.Name;
-            string code;
-
-            switch (registration.Type)
-            {
-                case RegistrationType.Element:
-                {
-                    //All the arguments we receive for element types are element names.
-                    var elements = string.Join(", ", registration.Arguments.Select(n => $"\"{n}\""));
-                    code = $"LogixSerializer.Register<{typeName}>(e => new {typeName}(e), {elements});";
-                    break;
-                }
-                case RegistrationType.DataType:
-                {
-                    //The arguments for the logix data attribute are the data type name and the isAtomic flag
-                    //We only need the data type name for serialization registration.
-                    var dataType = registration.Arguments.FirstOrDefault();
-                    code = $"LogixSerializer.Register<{typeName}>(e => new {typeName}(e), \"{dataType}\");";
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(registration.Type), "Registration type not defined.");
-            }
-
-            if (string.IsNullOrEmpty(code))
-                continue;
-
+            var type = registration.Type;
+            var names = string.Join(", ", registration.Arguments.Select(n => $"\"{n}\""));
+            var code = $"LogixSerializer.Register<{type}>(e => new {type}(e), {names});";
             builder.AppendLine($"        {code}");
         }
 
@@ -157,19 +104,9 @@ public class LogixRegistrationGenerator : IIncrementalGenerator
     /// Represents a registration that associates a type name with its corresponding element names.
     /// This struct is primarily used for handling serializer registration in Logix generation processes.
     /// </summary>
-    private readonly struct Registration(string name, RegistrationType type, string[] arguments)
+    private readonly struct Registration(string type, string[] arguments)
     {
-        public string Name { get; } = name;
-        public RegistrationType Type { get; } = type;
+        public string Type { get; } = type;
         public string[] Arguments { get; } = arguments;
-    }
-
-    /// <summary>
-    /// An enumeration to distinguish between element and data type registrations.
-    /// </summary>
-    private enum RegistrationType
-    {
-        Element,
-        DataType
     }
 }

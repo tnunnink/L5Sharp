@@ -34,20 +34,6 @@ public sealed class STRING : StringData
     }
 
     /// <summary>
-    /// Parses the provided string into a <see cref="STRING"/> value.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="STRING"/> representing the parsed value.</returns>
-    public static STRING Parse(string value) => new(value);
-
-    /// <summary>
-    /// Tries to parse the provided string into a <see cref="STRING"/> value.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="STRING"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
-    public static STRING? TryParse(string? value) => value is not null ? new STRING(value) : null;
-
-    /// <summary>
     /// Converts the provided <see cref="string"/> to a <see cref="STRING"/> value.
     /// </summary>
     /// <param name="input">The value to convert.</param>

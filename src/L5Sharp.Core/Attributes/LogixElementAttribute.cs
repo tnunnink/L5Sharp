@@ -9,14 +9,11 @@ namespace L5Sharp.Core;
 /// L5X document structure to enable serialization and deserialization.
 /// </summary>
 /// <remarks>
-/// When applied to a class, the <see cref="LogixElementAttribute"/> specifies the XML element name in the
-/// L5X structure that the class corresponds to. This enables clear mapping between domain objects and
-/// their respective XML representations.
+/// When applied to a class, the <see cref="LogixElementAttribute"/> will automatically register the type with the
+/// specified XML element name in the <see cref="LogixSerializer"/> using source generators. If you need to perform
+/// custom registration, use the <see cref="LogixSerializer"/> to specify which element(s) the type corresponds to
+/// and how the type should be created.
 /// </remarks>
-/// <example>
-/// This attribute can be used to annotate classes such as data types, comments, or instructions
-/// in a Logix-based system to define their relationship to corresponding L5X XML elements.
-/// </example>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public class LogixElementAttribute : Attribute
 {
