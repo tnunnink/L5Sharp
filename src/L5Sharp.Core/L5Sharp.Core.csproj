@@ -16,8 +16,8 @@
         <Authors>Timothy Nunnink</Authors>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <Version>6.0.0-beta.1</Version>
-        <AssemblyVersion>$(Version).0</AssemblyVersion>
-        <AssemblyFileVersion>$(Version).0</AssemblyFileVersion>
+        <AssemblyVersion>6.0.0.0</AssemblyVersion>
+        <AssemblyFileVersion>6.0.0.0</AssemblyFileVersion>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
