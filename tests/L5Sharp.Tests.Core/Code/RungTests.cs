@@ -27,7 +27,7 @@ public class RungTests
 
         rung.Number.Should().Be(0);
         rung.Type.Should().Be(RungType.Normal);
-        rung.Text.Should().BeEmpty();
+        rung.Text.Should().Be(";");
         rung.Comment.Should().BeNull();
         rung.Program.Should().BeNull();
         rung.Routine.Should().BeNull();

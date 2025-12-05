@@ -29,7 +29,7 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
         if (value.StartsWith('\'') && value.EndsWith('\'')) return String;
         if (Radix.TryInfer(value, out _)) return Atomic;
         if (TagName.IsTag(value)) return Tag;
-        if (value.IndexOfAny([' ', '=', '>', '<', '+', '-', '*', '/', '(', ')']) >= 0) return Expression;
+        if (value.IndexOfAny(['=', '>', '<', '+', '-', '*', '/', '(', ')']) >= 0) return Expression;
         return Unknown;
     }
 

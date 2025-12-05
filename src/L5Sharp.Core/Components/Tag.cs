@@ -746,7 +746,7 @@ public class Tag : LogixComponent<Tag>
             return;
         }
         
-        Element.Add(L5XName.Data, DataFormat.Format(value));
+        Element.Add(L5XName.Data, DataFormat.Format(value, GetType()));
         EnsureOrder();
         UpdateDataAttributes(value);
     }

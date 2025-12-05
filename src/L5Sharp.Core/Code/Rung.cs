@@ -25,7 +25,7 @@ public class Rung : LogixCode<Rung>
     {
         Element.Add(new XAttribute(L5XName.Number, 0));
         Type = RungType.Normal;
-        Text = string.Empty;
+        Text = ";";
     }
 
     /// <summary>
@@ -107,14 +107,14 @@ public class Rung : LogixCode<Rung>
 
         foreach (var tagName in Tags())
         {
-            if (!this.TryResolve<Tag>(tagName, out var tag)) continue;
+            if (!TryResolve<Tag>(tagName, out var tag)) continue;
             dependencies.Add(tag);
             dependencies.AddRange(tag.Dependencies());
         }
 
         foreach (var instruction in Instructions())
         {
-            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            if (!TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
             dependencies.Add(aoi);
             dependencies.AddRange(aoi.Dependencies());
         }

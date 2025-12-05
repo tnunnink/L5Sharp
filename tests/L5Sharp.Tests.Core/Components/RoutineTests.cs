@@ -116,7 +116,7 @@ public class RoutineTests
 
         routines.Should().NotBeEmpty();
     }
-    
+
     [Test]
     public void ListAllRoutinesInProjectWithRoutinesOfSameNameShouldReturnNoneEmptyCollection()
     {
@@ -126,7 +126,7 @@ public class RoutineTests
 
         routines.Should().NotBeEmpty();
     }
-    
+
     [Test]
     [Description("GitHub Issue #54: All routines should get correct parent program reference")]
     public void AllRoutinesParentProgramShouldMatchScopeProgramName()
@@ -158,19 +158,21 @@ public class RoutineTests
         };
 
         var sheet = new Sheet { Number = 1 };
-        /*var id1 = sheet.AddAt(100, 100, Block.IREF("InputTag"));
-        var id2 = sheet.AddAt(100, 200, Block.IREF(100));
-        var id3 = sheet.AddAt(200, 100, Block.ADD("Add_Block"));
-        var id4 = sheet.AddAt(300, 100, Block.OREF("OutputTag"));
-        sheet.AddBlock(new Wire { FromID = id1, ToID = id3, ToParam = "SourceA" });
-        sheet.AddBlock(new Wire { FromID = id2, ToID = id3, ToParam = "SourceB" });
-        sheet.AddBlock(new Wire { FromID = id3, ToID = id4, FromParam = "Destination" });*/
 
-        routine.Content<Sheet>().Add(sheet);
+        sheet
+            .AddInput("InputTag", b => b.MoveTo(100, 100))
+            .AddInput("100", c => c.MoveTo(100, 200).WithDesc("This is a test"))
+            .AddOutput("OutputTag", b => b.MoveTo(300, 100))
+            .AddBlock(Block.ADD("Add_Block"), b => b
+                .MoveTo(200, 100)
+                .WireFrom("InputTag", "SourceA")
+                .WireFrom("100", "SourceB")
+                .WireTo("OutputTag", "Destination")
+            );
+
+        routine.Sheets.Add(sheet);
         program.Routines.Add(routine);
 
-        /*var content = program.Export();
-        content.Save(@"C:\Users\tnunnink\Documents\Temp\L5X\TestRoutine.L5X");*/
         return Verify(program.Serialize().ToString());
     }
 

@@ -1,0 +1,9 @@
+﻿<Sheet Number="1">
+  <IRef ID="0" X="100" Y="100" Operand="InputTag" />
+  <IRef ID="1" X="100" Y="200" Operand="100" />
+  <ORef ID="2" X="300" Y="100" Operand="OutputTag" />
+  <Block Type="ADD" ID="3" X="200" Y="100" Operand="Add_Block" VisiblePins="SourceA SourceB Destination" />
+  <Wire FromID="0" ToID="3" ToParam="SourceA" />
+  <Wire FromID="1" ToID="3" ToParam="SourceB" />
+  <Wire FromID="3" ToID="2" FromParam="Destination" />
+</Sheet>

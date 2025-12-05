@@ -176,58 +176,75 @@ public class Sheet : LogixCode<Sheet>
     }
 
     /// <summary>
-    /// 
+    /// Adds an input block to the sheet with the specified argument and optional builder action.
     /// </summary>
-    /// <param name="operand"></param>
-    /// <returns></returns>
-    public Sheet AddInput(TagName operand)
+    /// <param name="operand">The <see cref="Argument"/> to be used for creating the input block.</param>
+    /// <param name="builder">An optional action to configure the block during creation.</param>
+    /// <returns>The current <see cref="Sheet"/> instance with the added block.</returns>
+    public Sheet AddInput(Argument operand, Action<Block>? builder = null)
     {
-        var block = Core.Block.IREF(operand);
+        var block = Block.IREF(operand);
 
+        //We need to embed the block into the sheet before we invoke the configuration
+        //since the block config could attempt to wire the block to other blocks (requires ID first).
         var element = block.Serialize();
         element.SetAttributeValue(L5XName.ID, NextAvailableId());
-
         Element.Add(element);
         EnsureOrder();
+
+        //Once the block is embedded, apply the config action if provided.
+        builder?.Invoke(block);
 
         return this;
     }
 
     /// <summary>
-    /// 
+    /// Adds an output to the current <see cref="Sheet"/> instance using the specified operand
+    /// and optional configuration action.
     /// </summary>
-    /// <param name="operand"></param>
-    /// <returns></returns>
-    public Sheet AddOutput(TagName operand)
+    /// <param name="operand">The <see cref="Argument"/> used to create the output block for the sheet.</param>
+    /// <param name="builder">An optional action to configure the created <see cref="Block"/> once it is embedded
+    /// in the sheet.</param>
+    /// <returns>The current <see cref="Sheet"/> instance with the added block.</returns>
+    public Sheet AddOutput(Argument operand, Action<Block>? builder = null)
     {
-        var block = Core.Block.OREF(operand);
+        var block = Block.OREF(operand);
 
+        //We need to embed the block into the sheet before we invoke the configuration
+        //since the block config could attempt to wire the block to other blocks (requires ID first).
         var element = block.Serialize();
         element.SetAttributeValue(L5XName.ID, NextAvailableId());
-        element.SetAttributeValue(L5XName.X, NextAvailableId());
-
         Element.Add(element);
         EnsureOrder();
+
+        //Once the block is embedded, apply the config action if provided.
+        builder?.Invoke(block);
 
         return this;
     }
 
     /// <summary>
-    /// Adds a <see cref="Core.Block"/> to the current <see cref="Sheet"/>.
+    /// Adds a new <see cref="Block"/> to the current <see cref="Sheet"/> and optionally applies
+    /// configuration to the block using a provided action.
     /// </summary>
-    /// <param name="block">The <see cref="Core.Block"/> to be added to the <see cref="Sheet"/>. Must not be null.</param>
-    /// <returns>Returns the current <see cref="Sheet"/> instance after the block has been added.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="block"/> parameter is null.</exception>
-    public Sheet AddBlock(Block block)
+    /// <param name="block">The <see cref="Block"/> to be added to the sheet.</param>
+    /// <param name="builder">An optional action to configure the <see cref="Block"/> after it has been added.</param>
+    /// <returns>The current instance of the <see cref="Sheet"/> allowing method chaining.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="block"/> is null.</exception>
+    public Sheet AddBlock(Block block, Action<Block>? builder = null)
     {
         if (block is null)
             throw new ArgumentNullException(nameof(block));
 
+        //We need to embed the block into the sheet before we invoke the configuration
+        //since the block config could attempt to wire the block to other blocks (requires ID first).
         var element = block.Serialize();
         element.SetAttributeValue(L5XName.ID, NextAvailableId());
-
         Element.Add(element);
         EnsureOrder();
+
+        //Once the block is embedded, apply the config action if provided.
+        builder?.Invoke(block);
 
         return this;
     }
@@ -237,9 +254,10 @@ public class Sheet : LogixCode<Sheet>
     /// </summary>
     /// <param name="operand">The <see cref="TagName"/> representing the block to remove.</param>
     /// <returns>The updated <see cref="Sheet"/> with the block removed.</returns>
-    public Sheet RemoveBlock(TagName operand)
+    public Sheet RemoveBlock(Argument operand)
     {
-        if (operand is null) throw new ArgumentNullException(nameof(operand));
+        if (operand is null)
+            throw new ArgumentNullException(nameof(operand));
 
         Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == operand)?.Remove();
 
@@ -326,10 +344,13 @@ public class Sheet : LogixCode<Sheet>
         var wire = new XElement(L5XName.Wire);
 
         wire.SetAttributeValue(L5XName.FromID, fromId);
-        wire.SetAttributeValue(L5XName.FromParam, fromParam);
-
         wire.SetAttributeValue(L5XName.ToID, toId);
-        wire.SetAttributeValue(L5XName.ToParam, toParam);
+
+        if (fromParam is not null && !fromParam.IsEmpty)
+            wire.SetAttributeValue(L5XName.FromParam, fromParam);
+
+        if (toParam is not null && !toParam.IsEmpty)
+            wire.SetAttributeValue(L5XName.ToParam, toParam);
 
         Element.Add(wire);
         EnsureOrder();

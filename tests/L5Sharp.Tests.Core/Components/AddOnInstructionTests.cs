@@ -122,7 +122,7 @@ public class AddOnInstructionTests
         aoi.Logic.Content<Rung>().Add(new Rung("XIC(Test)OTL(Test);"));
         aoi.Logic.Content<Rung>().Add(new Rung("XIC(Test)OTL(Test);"));
         aoi.Logic.Content<Rung>().Add(new Rung("XIC(Test)OTL(Test);"));
-        aoi.LocalTags.Add(new LocalTag { Name = "Test", Value = true });
+        aoi.LocalTags.Add(new LocalTag("Test", true));
 
         var xml = aoi.Serialize().ToString();
 

@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
@@ -41,10 +42,19 @@ public class DataFormat : LogixEnum<DataFormat, string>
     /// of the data instance provided.
     /// </summary>
     /// <param name="data">The <see cref="LogixData"/> instance to be formatted into the XML element.</param>
-    /// <param name="name">The name of the XML element to be created. Defaults to the value of <see cref="L5XName.Data"/>.</param>
+    /// <param name="type">
+    /// The element type that the data is formatting for. This is used to determine the name of the data element.
+    /// <see cref="Parameter"/> and <see cref="LocalTag"/> must have name <c>DefaultData</c>, and everything else
+    /// (<see cref="Tag"/>), will have the normal <c>Data</c> name.
+    /// </param>
     /// <returns>An <see cref="XElement"/> representing the formatted data with the appropriate format attribute and child elements.</returns>
-    public static XElement Format(LogixData? data, string name = L5XName.Data)
+    public static XElement Format(LogixData? data, Type type)
     {
+        //Determine the proper data element name from the specified element type.
+        var name = type == typeof(Parameter) || type == typeof(LocalTag)
+            ? L5XName.DefaultData
+            : L5XName.Data;
+
         data ??= LogixType.Null;
 
         //First check for a string type since there is no child element (Data is the element in this case)
@@ -53,7 +63,6 @@ public class DataFormat : LogixEnum<DataFormat, string>
 
         var format = data switch
         {
-            StringData => String,
             ALARM_ANALOG or ALARM_DIGITAL => Alarm,
             MESSAGE => Message,
             _ => Decorated

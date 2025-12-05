@@ -79,6 +79,34 @@ public class Argument
     public static Argument Empty => new(string.Empty);
 
     /// <summary>
+    /// Converts the current <see cref="Argument"/> to a <see cref="TagName"/> instance.
+    /// </summary>
+    /// <returns>A <see cref="TagName"/> representing the current argument value.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the <see cref="Argument.Type"/> is <see cref="ArgumentType.Expression"/> or
+    /// <see cref="ArgumentType.Atomic"/>, as these types cannot be converted to a tag name.
+    /// </exception>
+    public TagName ToTagName()
+    {
+        if (Type == ArgumentType.Expression || Type == ArgumentType.Atomic)
+            throw new InvalidOperationException($"Can not convert argument value '{_value}' to tag name");
+
+        return new TagName(_value);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public AtomicData ToAtomic()
+    {
+        if (Type != ArgumentType.Atomic)
+            throw new InvalidOperationException($"Can not convert argument value '{_value}' to atomic value");
+        
+        return AtomicData.Parse(_value);
+    }
+
+    /// <summary>
     /// Parses the provided string into a <see cref="Argument"/> value.
     /// </summary>
     /// <param name="value">Teh string to parse.</param>
@@ -238,14 +266,21 @@ public class Argument
     /// <summary>
     /// Extracts all tag names from the provided text based on a predefined search pattern.
     /// </summary>
-    private static IEnumerable<TagName> ExtractTags(string text)
+    private static IEnumerable<TagName> ExtractTags(string argument)
     {
-        var matches = Regex.Matches(text, TagName.Pattern);
+        var type = ArgumentType.Of(argument);
 
-        foreach (Match match in matches)
+        if (type == ArgumentType.Tag)
+            return [argument];
+
+        if (type == ArgumentType.Expression)
         {
-            yield return new TagName(match.Value);
+            return Regex.Matches(argument, TagName.Pattern)
+                .Cast<Match>()
+                .Select(m => new TagName(m.Value));
         }
+
+        return [];
     }
 
     /// <summary>

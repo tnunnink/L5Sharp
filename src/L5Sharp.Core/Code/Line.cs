@@ -61,14 +61,14 @@ public sealed class Line : LogixCode<Line>
 
         foreach (var tagName in Tags())
         {
-            if (!this.TryResolve<Tag>(tagName, out var tag)) continue;
+            if (!TryResolve<Tag>(tagName, out var tag)) continue;
             dependencies.Add(tag);
             dependencies.AddRange(tag.Dependencies());
         }
 
         foreach (var instruction in Instructions())
         {
-            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            if (!TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
             dependencies.Add(aoi);
             dependencies.AddRange(aoi.Dependencies());
         }
@@ -80,16 +80,16 @@ public sealed class Line : LogixCode<Line>
     public override string ToString() => Element.Value;
 
     /// <summary>
-    /// 
+    /// Defines an implicit conversion operator from a <see cref="Line"/> instance to its corresponding <see cref="string"/> representation.
     /// </summary>
-    /// <param name="rung"></param>
-    /// <returns></returns>
+    /// <param name="rung">The <see cref="Line"/> instance to be converted.</param>
+    /// <returns>The string value of the <see cref="Line"/> element.</returns>
     public static implicit operator string(Line rung) => rung.Element.Value;
 
     /// <summary>
-    /// 
+    /// Defines an implicit conversion from <see langword="string"/> to <see cref="Line"/>.
     /// </summary>
-    /// <param name="text"></param>
-    /// <returns></returns>
+    /// <param name="text">The string value to be converted into a <see cref="Line"/> instance.</param>
+    /// <returns>A new <see cref="Line"/> instance initialized with the provided string value.</returns>
     public static implicit operator Line(string text) => new(text);
 }

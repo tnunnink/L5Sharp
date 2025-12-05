@@ -403,7 +403,10 @@
       <None Update="LogixSerializerTests.Serialize_WhenCalled_ShouldBeVerified.verified.xml">
         <DependentUpon>LogixSerializerTests.cs</DependentUpon>
       </None>
-      <None Update="Code\SheetTests.AddBlock_BlocksOutOfOrder_ShouldBeVerified.verified.txt">
+      <None Update="Code\SheetTests.AddBlock_BlocksOutOfOrder_ShouldBeVerified.verified.xml">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Code\SheetTests.BuildSheet_Example1_ShouldBeVerified.verified.xml">
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
     </ItemGroup>

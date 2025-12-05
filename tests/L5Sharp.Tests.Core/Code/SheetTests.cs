@@ -37,10 +37,10 @@ public class SheetTests
     [Test]
     public void Blocks_HasCollection_ShouldHaveExpectedCount()
     {
-        var sheet = new Sheet();
-        sheet.AddBlock(Block.IREF("InputReference"));
-        sheet.AddBlock(Block.ADD());
-        sheet.AddBlock(Block.OREF("OutputReference"));
+        var sheet = new Sheet()
+            .AddBlock(Block.IREF("InputReference"))
+            .AddBlock(Block.ADD())
+            .AddBlock(Block.OREF("OutputReference"));
 
         var blocks = sheet.Blocks();
 
@@ -50,9 +50,8 @@ public class SheetTests
     [Test]
     public void GetBlock_ValidId_ShouldNotBeNull()
     {
-        var sheet = new Sheet();
-
-        sheet.AddBlock(Block.IREF("InputReference"))
+        var sheet = new Sheet()
+            .AddBlock(Block.IREF("InputReference"))
             .AddBlock(Block.ADD())
             .AddBlock(Block.OREF("OutputReference"));
 
@@ -109,7 +108,8 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        sheet.AddBlock(Block.IREF("MyTagName"))
+        sheet
+            .AddBlock(Block.IREF("MyTagName"))
             .AddBlock(Block.IREF("MyTagName"))
             .AddBlock(Block.IREF("MyTagName"));
 
@@ -121,10 +121,30 @@ public class SheetTests
     {
         var sheet = new Sheet();
 
-        sheet.AddBlock(Block.IREF("InputReference"))
+        sheet
+            .AddBlock(Block.IREF("InputReference"))
             .AddBlock(Block.SCL())
             .AddBlock(Block.IREF("OutputReference"));
 
-        return Verify(sheet.Serialize().ToString());
+        return VerifyXml(sheet.Serialize().ToString());
+    }
+
+    [Test]
+    public Task BuildSheet_Example1_ShouldBeVerified()
+    {
+        var sheet = new Sheet { Number = 1 };
+
+        sheet
+            .AddInput("InputTag", b => b.MoveTo(100, 100))
+            .AddInput("100", c => c.MoveTo(100, 200).WithDesc("This is a test"))
+            .AddOutput("OutputTag", b => b.MoveTo(300, 100))
+            .AddBlock(Block.ADD("Add_Block"), b => b
+                .MoveTo(200, 100)
+                .WireFrom("InputTag", "SourceA")
+                .WireFrom("100", "SourceB")
+                .WireTo("OutputTag", "Destination")
+            );
+
+        return VerifyXml(sheet.Serialize().ToString());
     }
 }

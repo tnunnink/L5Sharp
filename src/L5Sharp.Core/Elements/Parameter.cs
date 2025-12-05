@@ -206,7 +206,7 @@ public class Parameter : LogixObject<Parameter>
     public AtomicData? Default
     {
         get => Element.TryGetFormattedData(out var data) ? data.Deserialize<AtomicData>() : null;
-        set => SetElement(DataFormat.Format(value, L5XName.DefaultData));
+        set => SetElement(DataFormat.Format(value, GetType()));
     }
 
     /// <summary>

@@ -50,10 +50,4 @@ public class LocalTag : Tag
         Value = value;
         SetProperty(description, nameof(Description));
     }
-
-    /// <summary>
-    /// Returns a new deep-cloned instance as the specified <see cref="LogixElement"/> type.
-    /// </summary>
-    /// <returns>A new instance of the specified element type with the same property values.</returns>
-    public new LocalTag Clone() => new XElement(Serialize()).Deserialize<LocalTag>();
 }

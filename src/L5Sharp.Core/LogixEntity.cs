@@ -4,9 +4,8 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents the base interface for Logix entities in a Logix project. This interface defines the essential
-/// properties and methods that are common across all Logix entities, enabling consistent handling and
-/// interaction with entities within the L5X environment.
+/// Represents a type that is uniquely referencable by name (component elements) or number (code elements),
+/// and that provides the ability to query for usages and dependencies of the entity in the current L5X context. 
 /// </summary>
 public interface ILogixEntity : ILogixElement
 {
@@ -29,41 +28,34 @@ public interface ILogixEntity : ILogixElement
     Reference Reference { get; }
 
     /// <summary>
-    /// Gets a <see cref="Scope"/> object representing the hierarchical or functional context of the current entity in the Logix project.
+    /// Gets a <see cref="Scope"/> object representing the hierarchical context of the current entity in the Logix project.
     /// </summary>
     /// <value>A <see cref="Scope"/> created from the underlying <see cref="XElement"/> of the entity.</value>
     /// <remarks>
     /// The <see cref="Scope"/> defines the logical container or boundary in which the entity resides, such as a program,
-    /// routine, or global context. It provides critical functionality to assess the visibility, accessibility, and
+    /// routine, or global context. It provides functionality to assess the visibility, accessibility, and
     /// hierarchical relationships of the current entity within the L5X file.
-    /// This property is essential for determining the scope's level, whether global or local, and provides insights
-    /// into its container details. The <see cref="Scope"/> also facilitates operations such as peer or visibility checks,
-    /// enabling robust scope management within the Logix environment.
     /// </remarks>
     Scope Scope { get; }
 
     /// <summary>
-    /// Retrieves a collection of <see cref="Reference"/> that identify other entities that use this <see cref="ILogixEntity"/>.
+    /// Retrieves a collection of <see cref="Reference"/> that indicate where this entity is used within the current project.
     /// </summary>
-    /// <returns>
-    /// A collection of <see cref="Reference"/> representing the usages of the entity.
-    /// </returns>
+    /// <returns>A collection of <see cref="Reference"/> representing the usages of this entity.</returns>
     /// <remarks>
-    /// Usages represent places where this entity is used. These are often references by name in some other element
-    /// property. Each deriving type must implement logic as needed to find all usages of this entity withing an L5X document.
+    /// Usages represent references to other entities that use this entity. This is similar to the cross-referencing
+    /// mechanism in Studio 5k and is meant to resemble it at some level. Each deriving type must implement
+    /// logic as needed to find all usages of this entity withing an L5X document.
     /// </remarks>
     IEnumerable<Reference> Usages();
 
     /// <summary>
-    /// Retrieves a collection of <see cref="ILogixComponent"/> representing the dependencies of this entity.
+    /// Retrieves a collection of <see cref="ILogixEntity"/> that this entity depends on to be valid within the current project.
     /// </summary>
-    /// <returns>
-    /// A collection of <see cref="ILogixComponent"/> that the current entity requires to function. These components may
-    /// represent relationships, references, or other entities that this entity depends on.
-    /// </returns>
+    /// <returns>A collection of <see cref="ILogixEntity"/> that the current entity depends on.</returns>
     /// <remarks>
-    /// Dependencies are other entities that must exist or be available for this entity to fully function or define its context.
-    /// Each implementation must provide the logic to resolve and return these dependencies as appropriate within a Logix application.
+    /// Dependencies are other entities that must exist for this entity to be resolved/function within a L5X project.
+    /// Each implementation must provide the logic to resolve and return these dependencies as appropriate.
     /// </remarks>
     IEnumerable<ILogixEntity> Dependencies();
 }
@@ -105,7 +97,7 @@ public abstract class LogixEntity<TEntity> : LogixObject<TEntity>, ILogixEntity 
     /// Attempts to resolve a component of the specified type and location within the context of the current entity instance.
     /// </summary>
     /// <param name="name">The string representing the location of the component to resolve.</param>
-    /// <param name="component">The output parameter that will contain the resolved component of type <typeparamref name="TComponent"/> if successful.</param>
+    /// <param name="component">The resolved component of type <typeparamref name="TComponent"/> if successful.</param>
     /// <typeparam name="TComponent">The type of the component to resolve.</typeparam>
     /// <returns>True if the component was successfully resolved; otherwise, false.</returns>
     /// <remarks>
@@ -141,21 +133,15 @@ public abstract class LogixEntity<TEntity> : LogixObject<TEntity>, ILogixEntity 
     /// Attempts to resolve the specified type name to a corresponding <see cref="ILogixComponent"/> instance
     /// within the context of the provided <see cref="ILogixEntity"/>.
     /// </summary>
-    /// <param name="typeName">
-    /// The name of the type to resolve. This is typically the name of a user-defined type (UDT)
-    /// or Add-On Instruction (AOI) within the Logix document.
-    /// </param>
-    /// <param name="type">
-    /// An output parameter that will contain the resolved <see cref="ILogixComponent"/> instance if the resolution succeeds.
-    /// The value will be <c>null</c> if the resolution fails.
-    /// </param>
+    /// <param name="typeName">The name of the type to resolve. This is the name of a user-defined type (UDT) or Add-On Instruction (AOI).</param>
+    /// <param name="type">The resolved <see cref="ILogixComponent"/> instance if the resolution succeeds.</param>
     /// <returns>
     /// <c>true</c> if the specified type name was successfully resolved to a corresponding <see cref="ILogixComponent"/>;
     /// otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
     /// This method attempts to locate and resolve the specified type name by searching the relevant Logix document.
-    /// It supports resolving both user-defined data types (UDTs) and Add-On Instructions (AOIs).
+    /// It supports resolving both DataType and AddOnInstruction components.
     /// </remarks>
     protected bool TryResolveType(string typeName, out ILogixComponent type)
     {

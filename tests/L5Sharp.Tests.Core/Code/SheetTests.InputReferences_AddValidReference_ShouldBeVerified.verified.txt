@@ -1,3 +1,0 @@
-﻿<Sheet Number="0">
-  <IRef ID="0" X="100" Y="100" Operand="Test" HideDesc="true" />
-</Sheet>

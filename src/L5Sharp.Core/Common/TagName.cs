@@ -133,11 +133,27 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     public static TagName Parse(string value) => new(value);
 
     /// <summary>
-    /// Tries to parse the provided string into a <see cref="TagName"/> value.
+    /// Attempts to parse the provided string value into a <see cref="TagName"/> object.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="TagName"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
-    public static TagName? TryParse(string? value) => value is not null ? new TagName(value) : null;
+    /// <param name="value">The string value to parse into a <see cref="TagName"/>.</param>
+    /// <param name="tagName">
+    /// When this method returns, contains the <see cref="TagName"/> object parsed from the input string,
+    /// if the parsing succeeded. If the parsing fails, this will contain null.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the string is successfully parsed into a <see cref="TagName"/> object;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    public static bool TryParse(string? value, out TagName tagName)
+    {
+        tagName = null!;
+
+        if (value is null || value.IsEmpty()) return false;
+        if (!IsQualifiedTagName(value)) return false;
+
+        tagName = new TagName(value);
+        return true;
+    }
 
     /// <summary>
     /// Determines if the provided string value is a valid tag name.
@@ -348,7 +364,11 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// </summary>
     private static string GetRoot(string tagName)
     {
-        if (tagName.IsEmpty() || tagName.StartsWith(MemberSeparator)) return string.Empty;
+        if (tagName.IsEmpty() || tagName.StartsWith(MemberSeparator))
+        {
+            return string.Empty;
+        }
+
         if (tagName.StartsWith(ArrayOpenSeparator))
         {
             return tagName.Substring(0, tagName.IndexOf(ArrayCloseSeparator) + 1);
@@ -375,8 +395,10 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
     /// of tag names this can get called on.
     /// </summary>
-    private static IEnumerable<string> GetMembers(string tagName) =>
-        NormalizeDelimiter(tagName).Split(MemberSeparator, StringSplitOptions.RemoveEmptyEntries);
+    private static IEnumerable<string> GetMembers(string tagName)
+    {
+        return NormalizeDelimiter(tagName).Split(MemberSeparator, StringSplitOptions.RemoveEmptyEntries);
+    }
 
     /// <summary>
     /// Gets the zero-based depth or number of members between this member and the root.
@@ -423,7 +445,8 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
                     return false;
             }
 
-            if (i == members.Count - 1 && char.IsDigit(members[i][0]) && !IsValidBit(members[i])) return false;
+            if (i == members.Count - 1 && char.IsDigit(members[i][0]) && !IsValidBit(members[i]))
+                return false;
         }
 
         return true;

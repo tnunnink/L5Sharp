@@ -6,6 +6,7 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents the content for Sequential Function Chart (SFC) elements.
+/// This class is currently not supported. It's mostly here to prevent deserialization issues with SFCContent.
 /// </summary>
 [LogixElement(L5XName.SFCContent)]
 public class Chart : LogixCode<Chart>

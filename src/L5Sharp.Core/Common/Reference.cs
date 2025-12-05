@@ -484,7 +484,7 @@ public sealed class Reference
         var start = segment.IndexOf('"') + 1;
         var length = segment.LastIndexOf('"') - start;
         var text = (start > 0 && length > 0) ? segment.Substring(start, length) : string.Empty;
-        return !text.IsEmpty() ? new Instruction(text) : Instruction.Unkown;
+        return !text.IsEmpty() ? Instruction.Parse(text) : Instruction.Unkown;
     }
     
     /// <summary>

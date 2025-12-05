@@ -158,11 +158,10 @@ public class Block : LogixObject<Block>
     public IEnumerable<TagName> Outputs => GetBlockOutputs(Element);
 
     /// <summary>
-    /// The <see cref="Core.Sheet"/> that this block is contained within.
+    /// Gets the <see cref="Core.Sheet"/> that this block is contained in.
     /// </summary>
     /// <value>A <see cref="Core.Sheet"/></value>
     public Sheet? Sheet => GetAncestor<Sheet>();
-
 
     /// <summary>
     /// Establishes a connection from this block to the specified target block, optionally using a specified pin.
@@ -198,12 +197,87 @@ public class Block : LogixObject<Block>
     }
 
     /// <summary>
-    /// 
+    /// Wires the current <see cref="Block"/> to a target block using the specified target and optional source tag names.
     /// </summary>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    public Block WireTo(TagName target)
+    /// <param name="target">The <see cref="TagName"/> representing the target block to wire to. Cannot be null or empty.</param>
+    /// <param name="from">The optional <see cref="TagName"/> representing the source pin to wire from. Can be null or empty.</param>
+    /// <returns>The current <see cref="Block"/> instance after the wire operation is completed.</returns>
+    /// <exception cref="ArgumentException">Thrown when the <paramref name="target"/> is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the target block specified by <paramref name="target"/> could not be found.</exception>
+    public Block WireTo(TagName target, TagName? from = null)
     {
+        if (target is null || target.IsEmpty)
+            throw new ArgumentException("Can not wire block with null or empty target tag name.");
+
+        var operand = target.Root;
+        var pin = target.Path;
+
+        var to = Element.Parent?.Elements().FirstOrDefault(e =>
+            e.GetBlockOperand() == operand
+            && (pin.IsEmpty() || e.Attribute(L5XName.VisiblePins)?.Value.Contains(pin) is true)
+        )?.Deserialize<Block>();
+
+        if (to is null)
+            throw new InvalidOperationException($"Could not find target block: '{target}'");
+
+        var wire = new XElement(L5XName.Wire);
+        wire.SetAttributeValue(L5XName.FromID, ID);
+        wire.SetAttributeValue(L5XName.ToID, to.ID);
+
+        if (from is not null && !from.IsEmpty && Pins.Contains(from))
+            wire.SetAttributeValue(L5XName.FromParam, from);
+
+        if (!pin.IsEmpty())
+            wire.SetAttributeValue(L5XName.ToParam, pin);
+
+        Element.Parent?.Add(wire);
+        return this;
+    }
+
+    /// <summary>
+    /// Establishes a wire connection between the current <see cref="Block"/> instance and the specified target <see cref="TagName"/>.
+    /// </summary>
+    /// <param name="source">
+    /// The <see cref="TagName"/> representing the source of the wire connection. This can be a dot nation tag path to
+    /// specify both the operand and pin name of the source block. I can also be a single numeric value represnting an
+    /// immediate input/output reference.
+    /// </param>
+    /// <param name="to">
+    /// An optional <see cref="TagName"/> representing the specific parameter of the current block to connect to.
+    /// If not provided, the wire connects without specifying a parameter.
+    /// </param>
+    /// <returns>The current <see cref="Block"/> instance for method chaining.</returns>
+    /// <exception cref="ArgumentException"><paramref name="source"/> is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// The target block specified by <paramref name="source"/> could not be found.
+    /// </exception>
+    public Block WireFrom(TagName source, TagName? to = null)
+    {
+        if (source is null || source.IsEmpty)
+            throw new ArgumentException("Can not wire block with null or empty target tag name.");
+
+        var operand = source.Root;
+        var pin = source.Path;
+
+        var from = Element.Parent?.Elements().FirstOrDefault(e =>
+            e.GetBlockOperand() == operand
+            && (pin.IsEmpty() || e.Attribute(L5XName.VisiblePins)?.Value.Contains(pin) is true)
+        )?.Deserialize<Block>();
+
+        if (from is null)
+            throw new InvalidOperationException($"Could not find target block: '{source}'");
+
+        var wire = new XElement(L5XName.Wire);
+        wire.SetAttributeValue(L5XName.FromID, from.ID);
+        wire.SetAttributeValue(L5XName.ToID, ID);
+
+        if (!pin.IsEmpty())
+            wire.SetAttributeValue(L5XName.FromParam, pin);
+
+        if (to is not null && !to.IsEmpty && Pins.Contains(to))
+            wire.SetAttributeValue(L5XName.ToParam, to);
+
+        Element.Parent?.Add(wire);
         return this;
     }
 
@@ -271,6 +345,16 @@ public class Block : LogixObject<Block>
         Element.SetAttributeValue(L5XName.X, x);
         Element.SetAttributeValue(L5XName.Y, y);
 
+        return this;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public Block WithDesc(string text)
+    {
         return this;
     }
 
