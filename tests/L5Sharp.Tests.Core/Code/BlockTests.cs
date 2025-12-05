@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Elements;
+namespace L5Sharp.Tests.Core.Code;
 
 [TestFixture]
 public class BlockTests
@@ -29,8 +29,6 @@ public class BlockTests
     public void New_ORef_ShouldHaveExpectedValues()
     {
         var block = Block.OREF("MyTag");
-
-        var another = Block.ADD("MyAddFunction");
 
         block.ID.Should().Be(0);
         block.X.Should().Be(0);
@@ -106,7 +104,7 @@ public class BlockTests
         block.X.Should().Be(0);
         block.Y.Should().Be(0);
         block.Type.Should().Be("ADD__F");
-        block.Operand.Should().BeNull();
+        block.Operand.Should().Be(Argument.Empty);
         block.HideDesc.Should().BeFalse();
         block.Pins.Should().BeEmpty();
         block.Sheet.Should().BeNull();

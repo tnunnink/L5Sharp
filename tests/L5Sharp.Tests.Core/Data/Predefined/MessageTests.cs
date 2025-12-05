@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Types.Predefined
+namespace L5Sharp.Tests.Core.Data.Predefined
 {
     [TestFixture]
     public class MessageTests
@@ -20,7 +20,7 @@ namespace L5Sharp.Tests.Core.Types.Predefined
             var type = new MESSAGE();
 
             type.Name.Should().Be(nameof(MESSAGE));
-            type.Members.Should().HaveCount(13);
+            type.Members.Should().BeEmpty();
             type.MessageType.Should().Be(MessageType.Unconfigured);
             type.RequestedLength.Should().BeEquivalentTo(0);
             type.ConnectedFlag.Should().BeEquivalentTo(0);

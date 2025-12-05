@@ -97,6 +97,9 @@ public sealed class Instruction
     {
         if (string.IsNullOrEmpty(text))
             throw new ArgumentException("Instruction text can not be null or empty.", nameof(text));
+        
+        //Remove the rung terminator if present.
+        text = text.TrimEnd(';');
 
         //Open parenthesis must not be the first character and string must end with close parenthesis.
         if (text != "UNK" && (text.IndexOf(Open) < 1 || !text.EndsWith(Close)))
@@ -121,19 +124,19 @@ public sealed class Instruction
     /// A collection of  <see cref="Argument"/> value objects.
     /// These could represent literal values, tag names, or nested expressions.
     /// </value>
-    public IReadOnlyList<Argument> Arguments => ParseArguments();
+    public Argument[] Arguments => ParseArguments();
 
     /// <summary>
     /// Retrieves all referenced tag name values found in this instruction.
     /// </summary>
     /// <returns>A collection of <see cref="TagName"/> values cotnained by the instruction.</returns>
-    public IReadOnlyList<TagName> Tags => ParseTags();
+    public TagName[] Tags => ParseTags();
 
     /// <summary>
     /// Retrieves all immediate atomic type values found in this instruction.
     /// </summary>
     /// <returns>A collection of <see cref="AtomicData"/> values cotnained by the instruction.</returns>
-    public IReadOnlyList<AtomicData> Values => ParseValues();
+    public AtomicData[] Values => ParseValues();
 
     /// <summary>
     /// Indicates whether the instruction is a native Rockwell built-in instruction.
@@ -174,7 +177,7 @@ public sealed class Instruction
     /// </summary>
     /// <param name="text">The neutral text to parse.</param>
     /// <returns>A <see cref="Instruction"/> object representing the parsed text.</returns>
-    /// <exception cref="ArgumentException"><c>text</c> is null, empty, or open/close parenthesis are not in valid
+    /// <exception cref="ArgumentException"><c>text</c> is null, empty, or open/close parenthesis is not in valid
     /// locations in the provided text.</exception>
     public static Instruction Parse(string text)
     {
@@ -217,7 +220,8 @@ public sealed class Instruction
     /// </returns>
     public static Instruction[] Split(string text)
     {
-        if (string.IsNullOrEmpty(text)) return [];
+        if (string.IsNullOrEmpty(text))
+            return [];
 
         return Regex.Matches(text, Pattern).Cast<Match>().Select(m => Parse(m.Value)).ToArray();
     }
@@ -286,6 +290,21 @@ public sealed class Instruction
     /// <param name="right">The right <see cref="Instruction"/> to compare.</param>
     /// <returns><c>true</c> if the values are not equal; Otherwise, <c>false</c>.</returns>
     public static bool operator !=(Instruction? left, Instruction? right) => !Equals(left, right);
+
+    /// <summary>
+    /// Defines an implicit conversion operator that allows an <see cref="Instruction"/>
+    /// instance to be converted to its string representation.
+    /// </summary>
+    /// <param name="instruction">The <see cref="Instruction"/> instance to convert.</param>
+    /// <returns>A string representing the <see cref="Instruction"/>.</returns>
+    public static implicit operator string(Instruction instruction) => instruction._text;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public static implicit operator Instruction(string text) => new(text);
 
     #region Factories
 
@@ -1774,9 +1793,9 @@ public sealed class Instruction
         var start = _text.IndexOf(Open) + 1;
         var length = _text.LastIndexOf(Close) - start;
 
-        var signature = length > 0 ? _text.Substring(start, length) : string.Empty;
+        if (length <= 0) return [];
 
-        if (signature.IsEmpty()) return [];
+        var signature = _text.Substring(start, length);
 
         return Regex.Split(signature, ArgumentSplitPattern).Select(Argument.TryParse).ToArray();
     }
@@ -1813,11 +1832,7 @@ public sealed class Instruction
         return arguments.SelectMany(a => a.Values).ToArray();
     }
 
-    /// <summary>
-    /// Determines the component references for each argument in the instruction and returns the relative scope
-    /// representation of the component object.
-    /// </summary>
-    private Reference[] GetReferences()
+    /*private Reference[] GetReferences()
     {
         var references = new List<Reference>();
 
@@ -1825,7 +1840,7 @@ public sealed class Instruction
         {
             case nameof(GSV) or nameof(SSV) when Arguments.Count >= 2:
             {
-                //For GSV/SSV the firt 2 args might refer to a component.
+                //For GSV/SSV the first 2 args might refer to a component.
                 var component = Reference.To($"{Arguments[0]}[@Name='{Arguments[1]}']");
                 if (component.Type != ReferenceType.Null) references.Add(component);
                 //The last arg is a reference to a destination tag.
@@ -1849,7 +1864,7 @@ public sealed class Instruction
             default:
             {
                 //All other instructions we just want to parse any tag references
-                references.AddRange(Arguments.SelectMany(a => a.Tags).Select(a => Reference.To<Tag>(a)));
+                .AddRange(Arguments.SelectMany(a => a.Tags).Select(a => Reference.To<Tag>(a)));
 
                 //If this insturuction is not known, then we assume it is an AOI
                 //(I'm not sure if this is a fair assumption but going with it for now).
@@ -1860,7 +1875,7 @@ public sealed class Instruction
         }
 
         return references.ToArray();
-    }
+    }*/
 
     /// <summary>
     /// Determines whether the current instruction contains a reference to a specified component based on
@@ -1954,8 +1969,9 @@ public sealed class Instruction
 
         foreach (var method in methods)
         {
-            var arguments = method.GetParameters()
-                .Select(p => Expression.TypeAs(Expression.Constant(null), p.ParameterType));
+            var arguments = method.GetParameters().Select(p =>
+                Expression.TypeAs(Expression.Constant(null), p.ParameterType)
+            );
             var function = Expression.Call(method, arguments);
             var lambda = Expression.Lambda<Func<Instruction>>(function);
             yield return new KeyValuePair<string, Func<Instruction>>(method.Name, lambda.Compile());

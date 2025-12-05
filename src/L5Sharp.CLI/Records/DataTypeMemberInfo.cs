@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using L5Sharp.Core;
 
-namespace L5Sharp.Model;
+namespace L5Sharp.CLI.Records;
 
 public record DataTypeMemberInfo()
 {

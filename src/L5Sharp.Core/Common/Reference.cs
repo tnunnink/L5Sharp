@@ -12,9 +12,13 @@ using System.Xml.XPath;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a structured reference within a system, providing properties and methods
-/// for identifying and manipulating its type, location, context, and associated components.
+/// Represents a unique path to a logix entity in the L5X context. This type provides properties to help analyze or
+/// identify the reference type and location, including scope and id information.
 /// </summary>
+/// <remarks>
+/// This type is a simple wrapper around an  <see cref="XPathExpression"/> which can be used to select the
+/// specific element from the L5X document.
+/// </remarks>
 public sealed class Reference
 {
     /// <summary>
@@ -39,7 +43,7 @@ public sealed class Reference
     }
 
     /// <summary>
-    /// Gets the complete XPath expression representing the full location of the element within the L5X structure.
+    /// The full XPath to the element this reference represents. 
     /// </summary>
     public string Path => _path.Expression;
 
@@ -47,8 +51,8 @@ public sealed class Reference
     /// Gets the <see cref="ReferenceType"/> that identifies which element type the path is referencing.
     /// </summary>
     /// <remarks>
-    /// Only specific elements support reference paths, including components and code type elements.
-    /// This enumeration gives some static typing and helper methods for working with references.
+    /// Only logix entity elements support reference paths. This enumeration gives some static typing and helper
+    /// methods for working with references.
     /// </remarks>
     public ReferenceType Type => ParseType(_path.Expression);
 
@@ -82,10 +86,10 @@ public sealed class Reference
     public Instruction Logic => ParseInstruction(_path.Expression);
     
     /// <summary>
-    /// Indicates whether this is a type contained in a controller scope.
+    /// Indicates whether this is a controller scope reference.
     /// </summary>
     /// <returns>
-    /// <c>true</c> if the current type is a program scope type; otherwise, <c>false</c>.
+    /// <c>true</c> if the current type is a global scope type; otherwise, <c>false</c>.
     /// </returns>
     public bool IsGlobal => Container == string.Empty;
 
@@ -279,9 +283,31 @@ public sealed class Reference
     /// <returns>A <see cref="Reference"/> instance representing the provided XML element.</returns>
     public static Reference To(XElement element)
     {
-       return new Reference(element.LogixPath());
-    }
+        //Handle module tags specifically we need to view these as controller tags.
+        if (element.IsModuleTagElement())
+        {
+            var moduleTag = $"Controller/Tags/Tag[@Name='{element.ModuleTagName()}']";
+            return new Reference(moduleTag);
+        }
 
+        var builder = new StringBuilder();
+
+        var elements = element.AncestorsAndSelf()
+            .TakeWhile(x => x.Name.LocalName != L5XName.RSLogix5000Content)
+            .ToArray();
+
+        //Iterate in reverse to build the path from root down to this element.
+        for (var i = elements.Length - 1; i >= 0; i--)
+        {
+            if (i < elements.Length - 1) builder.Append('/');
+            var identifier = Identifier(elements[i]);
+            builder.Append(identifier);
+        }
+
+        var path = builder.ToString();
+        return new Reference(path);
+    }
+    
     /// <summary>
     /// Constructs a new <see cref="Reference"/> using the action provided to configure the builder.
     /// </summary>
@@ -458,7 +484,37 @@ public sealed class Reference
         var start = segment.IndexOf('"') + 1;
         var length = segment.LastIndexOf('"') - start;
         var text = (start > 0 && length > 0) ? segment.Substring(start, length) : string.Empty;
-        return !text.IsEmpty() ? Instruction.Parse(text) : Instruction.Unkown;
+        return !text.IsEmpty() ? new Instruction(text) : Instruction.Unkown;
+    }
+    
+    /// <summary>
+    /// Generates an identifier for the specified XML element based on its attributes and type.
+    /// </summary>
+    /// <param name="element">The XML element for which the identifier is generated.</param>
+    /// <returns>A string representing the identifier for the XML element.</returns>
+    private static string Identifier(XElement element)
+    {
+        if (element.IsTagElement() || element.Name.LocalName.EndsWith(L5XName.Member))
+        {
+            return $"Tag[@Name='{element.TagName()}']";
+        }
+
+        if (element.IsComponentElement())
+        {
+            return $"{element.Name.LocalName}[@Name='{element.LogixName()}']";
+        }
+
+        if (element.IsCodeElement())
+        {
+            return $"{element.Name.LocalName}[@Number='{element.Attribute(L5XName.Number)?.Value ?? string.Empty}']";
+        }
+
+        if (element.Attribute(L5XName.ID) is not null)
+        {
+            return $"{element.Name.LocalName}[@ID='{element.Attribute(L5XName.ID)?.Value ?? string.Empty}']";
+        }
+
+        return element.Name.LocalName;
     }
 
     #endregion

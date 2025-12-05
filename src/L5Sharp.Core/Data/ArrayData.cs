@@ -19,6 +19,7 @@ namespace L5Sharp.Core;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [LogixElement(L5XName.Array)]
+[LogixElement(L5XName.ArrayMember)]
 public sealed class ArrayData : LogixData, IEnumerable<LogixData>
 {
     /// <inheritdoc />
@@ -78,6 +79,28 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
         set => SetElement($"[{x},{y},{z}]", value);
     }
 
+    /// <inheritdoc />
+    public override void Update(LogixData data)
+    {
+        if (data is null)
+            throw new ArgumentNullException(nameof(data));
+
+        if (data is not ArrayData array)
+            throw new ArgumentException($"Can not update array with data of type '{data.GetType()}'");
+
+        var matches = Members.Join(array.Members,
+            m => m.Name,
+            m => m.Name,
+            (x, y) => new { Target = x.Value, Source = y.Value },
+            StringComparer.OrdinalIgnoreCase
+        );
+
+        foreach (var match in matches)
+        {
+            match.Target.Update(match.Source);
+        }
+    }
+
     /// <summary>
     /// Creates a new instance of <see cref="ArrayData"/> with the specified data type and dimensions.
     /// </summary>
@@ -90,7 +113,7 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
         if (dimensions is null)
             throw new ArgumentNullException(nameof(dimensions));
 
-        var seed = LogixType.Create(dataType);
+        var seed = LogixType.CreateOrDefault(dataType);
 
         return new ArrayData(CreateArray(seed, dimensions));
     }
@@ -255,13 +278,13 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
     private LogixData GetElement(string index)
     {
-        var member = Element.Elements().SingleOrDefault(m => m.MemberName() == index)?.Deserialize<LogixMember>();
+        var element = Element.Elements().SingleOrDefault(m => m.MemberName() == index);
 
-        if (member is null)
+        if (element is null)
             throw new ArgumentOutOfRangeException(nameof(index),
                 $"The index '{index}' is outside the bound of the array.");
 
-        return member.Value;
+        return element.Deserialize<LogixData>();
     }
 
     /// <summary>
@@ -275,13 +298,13 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
         if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-        var member = Element.Elements().SingleOrDefault(m => m.MemberName() == index)?.Deserialize<LogixMember>();
+        var element = Element.Elements().SingleOrDefault(m => m.MemberName() == index);
 
-        if (member is null)
+        if (element is null)
             throw new ArgumentOutOfRangeException(nameof(index),
                 $"The index '{index}' is outside the bound of the array.");
 
-        member.Value = value;
+        element.Deserialize<LogixData>().Update(value);
     }
 
     /// <summary>

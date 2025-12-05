@@ -1,5 +1,5 @@
 ﻿using CliFx.Attributes;
-using L5Sharp.Model;
+using L5Sharp.CLI.Records;
 
 namespace L5Sharp.CLI.Commands.Modules;
 

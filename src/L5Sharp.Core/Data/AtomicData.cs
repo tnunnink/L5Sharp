@@ -72,13 +72,25 @@ public abstract class AtomicData : LogixData
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> representing the format of the atomic type value.</value>
     /// <remarks>
-    /// This value is not read from the underlying XML element but instead inferred from the value
-    /// of the underlying data element. This is because some elements were observed to show the incorrect format
-    /// which could cause runtime errors when trying to parse the string value. The Radix will however be written to the
-    /// element upon creation of an <see cref="AtomicData"/> and should never be changed. Radix and Value are immutable
-    /// properties.
+    /// Radix may not always represent the actual value format, so use this property with caution. When we parse the atomic value,
+    /// we are inferring the radix from the actual string value. This Radix property is read from the underlying XElement
+    /// for the data object. 
     /// </remarks>
     public Radix Radix => GetValue(Radix.Parse) ?? Radix.Default(GetType());
+
+    /// <inheritdoc />
+    public override void Update(LogixData data)
+    {
+        if (data is null)
+            throw new ArgumentNullException(nameof(data));
+
+        if (data is not AtomicData atomic)
+            throw new ArgumentException($"Can not update atomic with data of type '{data.GetType()}'.");
+
+        var converted = (AtomicData)Convert.ChangeType(atomic, GetType());
+        var formatted = converted.ToString(Radix);
+        Element.SetAttributeValue(L5XName.Value, formatted);
+    }
 
     /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
@@ -109,6 +121,34 @@ public abstract class AtomicData : LogixData
     /// <returns>A <see cref="BitArray"/> containing the array bit values</returns>
     // ReSharper disable once ReturnTypeCanBeEnumerable.Global no I want an array
     public BitArray ToBitArray() => new(ToBytes());
+
+    /// <summary>
+    /// Parses the specified string value and returns an instance of <see cref="AtomicData"/>.
+    /// </summary>
+    /// <param name="value">The string representation of the atomic data to parse.</param>
+    /// <returns>An instance of <see cref="AtomicData"/> corresponding to the parsed value.</returns>
+    /// <exception cref="ArgumentException">Thrown when the provided value is null or empty.</exception>
+    public static AtomicData Parse(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Can not parse null or empty value");
+
+        //Radix can't handle true/false values, but we could parse those as BOOL. 
+        if (bool.TryParse(value, out var bit))
+            return new BOOL(bit);
+
+        //Floating point values can have NAN value which we want to intercept since no Radix will match that value.
+        if (value.Contains("QNAN"))
+            return new LREAL(double.NaN);
+
+        //All other formats should be detectable.
+        var radix = Radix.Infer(value);
+
+        if (radix == Radix.Float || radix == Radix.Exponential)
+            return new LREAL(radix.Parse<double>(value));
+
+        return new LINT(radix.Parse<long>(value));
+    }
 
     /// <summary>
     /// Converts the provided <see cref="bool"/> to a <see cref="AtomicData"/>.

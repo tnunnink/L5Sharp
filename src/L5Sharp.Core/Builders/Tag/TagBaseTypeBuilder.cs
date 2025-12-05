@@ -11,7 +11,7 @@ internal class TagBaseTypeBuilder(string name) : ITagBaseTypeBuilder
 
     public ITagBaseStructureBuilder AsStructure(string dataType)
     {
-        var value = LogixType.Create(dataType);
+        var value = LogixType.CreateOrDefault(dataType);
         var instance = new Tag(name, value);
         return new TagBaseStructureBuilder(instance);
     }

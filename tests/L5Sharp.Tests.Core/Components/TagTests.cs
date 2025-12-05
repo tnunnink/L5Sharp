@@ -37,7 +37,7 @@ public class TagTests
         tag.AliasFor.Should().BeNull();
         tag.Alias.Should().BeNull();
         tag.Unit.Should().BeNull();
-        tag.Root.Should().BeSameAs(tag);
+        tag.Base.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
         tag.TagName.Should().Be(TagName.Empty);
         tag.Comments.Should().BeNull();
@@ -73,7 +73,7 @@ public class TagTests
         tag.AliasFor.Should().Be("SomeOtherTag");
         tag.TagName.Should().Be("Test");
         tag.Unit.Should().BeNull();
-        tag.Root.Should().BeSameAs(tag);
+        tag.Base.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
     }
 
@@ -100,7 +100,7 @@ public class TagTests
     public void New_Structure_ShouldHaveExpectedValue()
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
-        
+
         tag.Value.As<TIMER>().PRE.Should().Be(0);
         tag.Value.As<TIMER>().ACC.Should().Be(0);
         tag.Value.As<TIMER>().DN.Should().Be(0);
@@ -126,7 +126,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        var root = tag["DN"].Root;
+        var root = tag["DN"].Base;
 
         root.Should().NotBeNull();
         root.Should().BeSameAs(tag);
@@ -137,7 +137,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
-        var root = tag["Simple.M1"].Root;
+        var root = tag["Simple.M1"].Base;
 
         root.Should().NotBeNull();
         root.Should().BeSameAs(tag);
@@ -494,9 +494,9 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new DINT() };
 
         tag.Value = new INT(43);
-        
+
         tag.Value.Should().Be(43);
-        tag.Value.Should().BeOfType<INT>();
+        tag.Value.Should().BeOfType<DINT>();
     }
 
     [Test]
@@ -512,7 +512,7 @@ public class TagTests
             TT = 1,
             EN = 1,
         };
-        
+
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(1);
@@ -534,7 +534,7 @@ public class TagTests
             new("TT", 1),
             new("EN", 1),
         });
-        
+
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(1);
@@ -560,14 +560,13 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = ArrayData.New<TIMER>(4) };
 
-        //This will truncate the tag data since it is the root tag.
         tag.Value = ArrayData.New<TIMER>([
             new TIMER { PRE = 100 },
             new TIMER { PRE = 200 },
             new TIMER { PRE = 300 }
         ]);
 
-        tag.Value.As<ArrayData>().Should().HaveCount(3);
+        tag.Value.As<ArrayData>().Should().HaveCount(4);
         tag.Value.As<ArrayData>()[0].As<TIMER>().PRE.Should().Be(100);
         tag.Value.As<ArrayData>()[1].As<TIMER>().PRE.Should().Be(200);
         tag.Value.As<ArrayData>()[2].As<TIMER>().PRE.Should().Be(300);
@@ -578,7 +577,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidCastException>();
+        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<ArgumentException>();
     }
 
     [Test]

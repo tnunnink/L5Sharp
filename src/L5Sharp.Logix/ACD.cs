@@ -1,7 +1,7 @@
 ﻿using L5Sharp.Core;
 using RockwellAutomation.LogixDesigner;
 
-namespace L5Sharp.Extensions.Logix;
+namespace L5Sharp.Logix;
 
 public static class ACD
 {
@@ -9,8 +9,6 @@ public static class ACD
     /// Loads the specified ACD file and returns the contents as a new <see cref="L5X"/> instance.
     /// </summary>
     /// <param name="filePath">The path referencing the ACD file to load.</param>
-    /// <param name="options">The <see cref="L5XOptions"/> that control how the L5X is initialized.
-    /// The default is none, meaning no extra initialization steps are performed.</param>
     /// <param name="token">A token that can be used to request cancellation of the asynchronous operation.</param>
     /// <returns>A new <see cref="L5X"/> containing the contents of the specified file.</returns>
     /// <remarks>

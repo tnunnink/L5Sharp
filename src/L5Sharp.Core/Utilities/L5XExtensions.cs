@@ -54,38 +54,6 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Retrieves the full Logix path of the specified XML element within an L5X file hierarchy.
-    /// This path will always start from the controller element and descend to the current element specified.
-    /// This path resembles the XPath syntax required to get an element relative to the controller.
-    /// </summary>
-    /// <param name="element">The XML element for which to retrieve the Logix path.</param>
-    /// <returns>A string representing the full Logix path for the specified XML element.</returns>
-    internal static string LogixPath(this XElement element)
-    {
-        //Handle module tags specifically we need to view these as controller tags.
-        if (element.IsModuleTagElement())
-        {
-            return $"Controller/Tags/Tag[@Name='{element.ModuleTagName()}']";
-        }
-
-        var builder = new StringBuilder();
-
-        var elements = element.AncestorsAndSelf()
-            .TakeWhile(x => x.Name.LocalName != L5XName.RSLogix5000Content)
-            .ToArray();
-
-        //Iterate in reverse to build the path from root down to this element.
-        for (var i = elements.Length - 1; i >= 0; i--)
-        {
-            if (i < elements.Length - 1) builder.Append('/');
-            var identifier = elements[i].Identifier();
-            builder.Append(identifier);
-        }
-
-        return builder.ToString();
-    }
-
-    /// <summary>
     /// Gets the <c>Name</c> attribute value for the current <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> instance.</param>
@@ -100,19 +68,25 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Gets the name value of the current member <see cref="XElement"/> object. This can be either the <c>Name</c> or
-    /// <c>Index</c> attribute depending on what member type it is.
+    /// Retrieves the name of a member from the specified <see cref="XObject"/>.
     /// </summary>
-    /// <param name="element">The element object for which to get the name.</param>
-    /// <returns>A <see cref="string"/> containing the value of the name or index attribute. If neither attribute is
-    /// found, then this returns an empty string.</returns>
-    internal static string MemberName(this XElement element)
+    /// <param name="obj">The <see cref="XObject"/> representing the XML element or attribute.</param>
+    /// <returns>
+    /// The name of the member as a string if it exists. If the object is an <see cref="XElement"/>,
+    /// it retrieves the "Name" or "Index" attribute value if present, otherwise an empty string.
+    /// For an <see cref="XAttribute"/>, it returns the local name of the attribute.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the provided <see cref="XObject"/> is neither an <see cref="XElement"/> nor an <see cref="XAttribute"/>.
+    /// </exception>
+    internal static string MemberName(this XObject obj)
     {
-        var name = element.Attribute(L5XName.Name)?.Value;
-        if (name is not null) return name;
-
-        var index = element.Attribute(L5XName.Index)?.Value;
-        return index ?? string.Empty;
+        return obj switch
+        {
+            XElement e => e.Attribute(L5XName.Name)?.Value ?? e.Attribute(L5XName.Index)?.Value ?? string.Empty,
+            XAttribute a => a.Name.LocalName,
+            _ => throw new ArgumentException($"the provided object is not a valid XObject: '{obj.GetType()}'.")
+        };
     }
 
     /// <summary>
@@ -128,21 +102,17 @@ internal static class L5XExtensions
     /// </remarks>
     internal static string? DataType(this XElement element)
     {
-        //first check the provided element and return if found.
-        var local = element.Attribute(L5XName.DataType)?.Value;
-        if (local is not null) return local;
-
-        //then check the parent element and return if found.
-        var parent = element.Parent?.Attribute(L5XName.DataType)?.Value;
-        return parent ?? null;
+        return element.Attribute(L5XName.DataType)?.Value
+               ?? element.Parent?.Attribute(L5XName.DataType)?.Value
+               ?? null;
     }
 
     /// <summary>
-    /// Gets the full <see cref="TagName"/> path for the provided element. 
+    /// Gets the full <see cref="Core.TagName"/> path for the provided element. 
     /// </summary>
     /// <param name="element">The element for which to determine the tag name.
     /// This can be a tag element or nested data member element.</param>
-    /// <returns>A <see cref="TagName"/> that represents the full path to the element.</returns>
+    /// <returns>A <see cref="Core.TagName"/> that represents the full path to the element.</returns>
     /// <remarks>
     /// This is handy since it will determine the "TagName" for any deeply nested data member. This also
     /// supports the LocalTag and Module tag elements.
@@ -183,7 +153,7 @@ internal static class L5XExtensions
     /// </summary>
     /// <param name="element">The <see cref="XElement"/> representing the module defined IO tag
     /// (InputTag, OutputTag, or ConfigTag, InAliasTag, or OutAliasTag).</param>
-    /// <returns>A <see cref="TagName"/> representing the name of the module IO tag.</returns>
+    /// <returns>A <see cref="Core.TagName"/> representing the name of the module IO tag.</returns>
     /// <remarks>
     /// This is a helper extension since the logic is somewhat complex and used in more than one class.
     /// We look up the L5X tree for module name and parent name, as well as back down to find the potential slot of the module.
@@ -240,36 +210,6 @@ internal static class L5XExtensions
 
         data = null!;
         return false;
-    }
-
-    /// <summary>
-    /// Generates an identifier for the specified XML element based on its attributes and type.
-    /// </summary>
-    /// <param name="element">The XML element for which the identifier is generated.</param>
-    /// <returns>A string representing the identifier for the XML element.</returns>
-    private static string Identifier(this XElement element)
-    {
-        if (element.IsTagElement() || element.IsDataMemberElement())
-        {
-            return $"Tag[@Name='{element.TagName()}']";
-        }
-
-        if (element.IsComponentElement())
-        {
-            return $"{element.Name.LocalName}[@Name='{element.LogixName()}']";
-        }
-
-        if (element.IsCodeElement())
-        {
-            return $"{element.Name.LocalName}[@Number='{element.Attribute(L5XName.Number)?.Value ?? string.Empty}']";
-        }
-
-        if (element.Attribute(L5XName.ID) is not null)
-        {
-            return $"{element.Name.LocalName}[@ID='{element.Attribute(L5XName.ID)?.Value ?? string.Empty}']";
-        }
-
-        return element.Name.LocalName;
     }
 
     /// <summary>

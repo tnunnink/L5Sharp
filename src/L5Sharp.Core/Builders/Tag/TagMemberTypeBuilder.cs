@@ -15,7 +15,7 @@ internal class TagMemberTypeBuilder<TBuilder>(Tag instance, string name, TBuilde
 
     public TBuilder AsStructure(string dataType, Action<ITagMemberStructureBuilder> action)
     {
-        var value = LogixType.Create(dataType);
+        var value = LogixType.CreateOrDefault(dataType);
         instance.AddMember(name, value);
         var member = instance[name];
         var builder = new TagMemberStructureBuilder(member);

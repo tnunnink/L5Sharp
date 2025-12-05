@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Types.Predefined
+namespace L5Sharp.Tests.Core.Data.Predefined
 {
     [TestFixture]
     public class CounterTests

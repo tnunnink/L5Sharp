@@ -4,9 +4,15 @@ using System.Collections.Generic;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Provides functionality to create, retrieve, and use Logix data types within the system.
-/// This class offers mechanisms to interact with Logix-specific data structures and type information.
+/// A global registry and factory for <see cref="LogixData"/> classes and their deriviatives. This class provides the
+/// ability to create new default instances of data structures by name. It also has helpers for determining the type
+/// name for a given <see cref="LogixData"/> type and if a given type name is an atomic type.
 /// </summary>
+/// <remarks>
+/// This class will contain all registered <see cref="LogixData"/> implementation decorated with
+/// the <see cref="LogixDataAttribute"/>. You can use the <see cref="Register{TData}"/> method manually if you prefer to
+/// register a custom factory delegate.
+/// </remarks>
 public static class LogixType
 {
     /// <summary>
@@ -43,7 +49,13 @@ public static class LogixType
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.");
-        
+
+        if (factory is null)
+            throw new ArgumentNullException(nameof(factory));
+
+        if (Names.ContainsKey(typeof(TData)))
+            throw new InvalidOperationException($"Type already registered: '{typeof(TData)}'");
+
         Names[typeof(TData)] = name;
         Factories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
     }
@@ -59,7 +71,7 @@ public static class LogixType
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.");
-        
+
         Names[typeof(TAtomic)] = name;
         Factories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
         Atomics.Add(name);
@@ -69,44 +81,44 @@ public static class LogixType
     /// Creates an instance of <see cref="LogixData"/> based on the specified type name.
     /// Throws an exception if no registered factory exists for the provided type name.
     /// </summary>
-    /// <param name="typeName">The name of the data type for which to create an instance.</param>
+    /// <param name="dataType">The name of the data type for which to create an instance.</param>
     /// <returns>An instance of <see cref="LogixData"/> corresponding to the provided type name.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the specified type name does not have a registered factory.</exception>
-    public static LogixData Create(string typeName)
+    public static LogixData Create(string dataType)
     {
-        if (Factories.TryGetValue(typeName, out var factory))
+        if (Factories.TryGetValue(dataType, out var factory))
         {
             return factory();
         }
 
-        throw new InvalidOperationException($"No registered type found for '{typeName}'");
+        throw new InvalidOperationException($"No registered type found for '{dataType}'");
     }
 
     /// <summary>
     /// Creates a new instance of the specified Logix data type.
     /// </summary>
     /// <typeparam name="TData">The type of Logix data to create. Must inherit from <see cref="LogixData"/>.</typeparam>
-    /// <param name="typeName">The name of the type to create.</param>
+    /// <param name="dataType">The name of the type to create.</param>
     /// <returns>A new instance of the specified Logix data type.</returns>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the specified type name has not been registered in the system.
     /// </exception>
-    public static TData Create<TData>(string? typeName = null) where TData : LogixData
+    public static TData Create<TData>(string? dataType = null) where TData : LogixData
     {
-        typeName ??= typeof(TData).Name;
+        dataType ??= typeof(TData).Name;
 
-        if (Factories.TryGetValue(typeName, out var factory))
+        if (Factories.TryGetValue(dataType, out var factory))
         {
             return factory().As<TData>();
         }
 
-        throw new InvalidOperationException($"No registered type found for '{typeName}'");
+        throw new InvalidOperationException($"No registered type found for '{dataType}'");
     }
 
     /// <summary>
     /// Attempts to create an instance of <see cref="LogixData"/> based on the specified type name.
     /// </summary>
-    /// <param name="typeName">The name of the type for which a <see cref="LogixData"/> instance should be created.</param>
+    /// <param name="dataType">The name of the type for which a <see cref="LogixData"/> instance should be created.</param>
     /// <param name="data">
     /// When this method returns, contains the created <see cref="LogixData"/> instance if the type name exists,
     /// or null if the creation fails.
@@ -114,11 +126,11 @@ public static class LogixType
     /// <returns>
     /// <c>true</c> if an instance of <see cref="LogixData"/> could be created successfully; otherwise, <c>false</c>.
     /// </returns>
-    public static bool TryCreate(string typeName, out LogixData data)
+    public static bool TryCreate(string dataType, out LogixData data)
     {
         data = null!;
 
-        if (Factories.TryGetValue(typeName, out var factory))
+        if (Factories.TryGetValue(dataType, out var factory))
         {
             data = factory();
             return true;
@@ -128,18 +140,23 @@ public static class LogixType
     }
 
     /// <summary>
-    /// Tries to create an instance of the specified type name as a strongly-typed <see cref="LogixData"/> object.
-    /// The type name must match a registered LogixData type.
+    /// Attempts to create an instance of the specified <see cref="LogixData"/> type using the provided data type name.
     /// </summary>
-    /// <typeparam name="TData">The desired type of the <see cref="LogixData"/> instance.</typeparam>
-    /// <param name="typeName">The name of the type to be created.</param>
-    /// <param name="data">The output parameter that will hold the created instance if the creation is successful; otherwise, it will be null.</param>
-    /// <returns>True if the creation was successful; otherwise, false.</returns>
-    public static bool TryCreate<TData>(string typeName, out TData data) where TData : LogixData
+    /// <typeparam name="TData">The type of <see cref="LogixData"/> to create.</typeparam>
+    /// <param name="data">
+    /// When this method returns, contains the created instance of <typeparamref name="TData"/>, if successful;
+    /// otherwise, contains the default value for the type.
+    /// </param>
+    /// <param name="dataType">
+    /// The name of the data type to create, or null to use the type name of <typeparamref name="TData"/>.
+    /// </param>
+    /// <returns><c>true</c> if the instance was successfully created; otherwise, <c>false</c>.</returns>
+    public static bool TryCreate<TData>(out TData data, string? dataType = null) where TData : LogixData
     {
+        dataType ??= typeof(TData).Name;
         data = null!;
 
-        if (Factories.TryGetValue(typeName, out var factory))
+        if (Factories.TryGetValue(dataType, out var factory))
         {
             data = factory().As<TData>();
             return true;
@@ -149,23 +166,46 @@ public static class LogixType
     }
 
     /// <summary>
-    /// Attempts to create an instance of the specified <typeparamref name="TData"/> type using a registered factory.
+    /// Creates a new instance of a <see cref="LogixData"/> type based on the specified data type name,
+    /// or returns a default <see cref="StructureData"/> if the type is not registered.
     /// </summary>
-    /// <param name="data">The output parameter that will contain the created <typeparamref name="TData"/> instance if successful, or default if not.</param>
-    /// <typeparam name="TData">The type of <see cref="LogixData"/> to be created.</typeparam>
-    /// <returns>True if the specified type was successfully created; otherwise, false.</returns>
-    public static bool TryCreate<TData>(out TData data) where TData : LogixData
+    /// <param name="dataType">The name of the data type to create an instance for.</param>
+    /// <returns>
+    /// A new instance of the <see cref="LogixData"/> type if the data type is found,
+    /// otherwise a default instance of <see cref="StructureData"/> having the specified type name.
+    /// </returns>
+    public static LogixData CreateOrDefault(string dataType)
     {
-        var typeName = typeof(TData).Name;
-        data = null!;
-
-        if (Factories.TryGetValue(typeName, out var factory))
+        if (Factories.TryGetValue(dataType, out var factory))
         {
-            data = factory().As<TData>();
-            return true;
+            return factory();
         }
 
-        return false;
+        return new StructureData(dataType);
+    }
+
+    /// <summary>
+    /// Creates an instance of the specified <see cref="LogixData"/> type using a registered factory method,
+    /// or returns a default instance if no factory is found for the given data type.
+    /// </summary>
+    /// <param name="dataType">
+    /// The name of the <see cref="LogixData"/> type to create. If null, the type name of <typeparamref name="TData"/> is used.
+    /// </param>
+    /// <typeparam name="TData">The type of <see cref="LogixData"/> to create.</typeparam>
+    /// <returns>
+    /// An instance of <typeparamref name="TData"/> created by a factory method if registered, otherwise a default
+    /// instance of <see cref="StructureData"/> cast to <typeparamref name="TData"/>
+    /// .</returns>
+    public static TData CreateOrDefault<TData>(string? dataType = null) where TData : LogixData
+    {
+        dataType ??= typeof(TData).Name;
+
+        if (Factories.TryGetValue(dataType, out var factory))
+        {
+            return factory().As<TData>();
+        }
+
+        return new StructureData(dataType).As<TData>();
     }
 
     /// <summary>

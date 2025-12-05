@@ -3,7 +3,6 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using L5Sharp.CLI.Internal;
 using L5Sharp.Core;
-using L5Sharp.Model;
 
 namespace L5Sharp.CLI.Commands;
 

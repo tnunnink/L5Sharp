@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace L5Sharp.Core.Generators;
+namespace L5Sharp.Generators;
 
 /// <summary>
 /// A source generator that adds the <c>ModuleInitializerAttribute</c> to assemblies that do not have it.

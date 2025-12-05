@@ -53,6 +53,42 @@ public class BoolTests
         type.Should().Be(true);
         type.Radix.Should().Be(Radix.Binary);
     }
+    
+    [Test]
+    public void Update_Null_ShouldThrowException()
+    {
+        var atomic = new BOOL();
+        
+        FluentActions.Invoking(() => atomic.Update(null!)).Should().Throw<ArgumentNullException>();
+    }
+    
+    [Test]
+    public void Update_InvalidType_ShouldThrowException()
+    {
+        var atomic = new BOOL();
+        
+        FluentActions.Invoking(() => atomic.Update(new TIMER())).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Update_MatchingValueType_ShouldBeUpdated()
+    {
+        var atomic = new BOOL();
+
+        atomic.Update(new BOOL(true));
+
+        atomic.Value.Should().Be(true);
+    }
+
+    [Test]
+    public void Update_DifferentType_ShouldBeUpdated()
+    {
+        var atomic = new BOOL();
+
+        atomic.Update(new INT(short.MaxValue));
+
+        atomic.Value.Should().Be(true);
+    }
 
     [Test]
     public void As_AtomicType_ShouldNotBeNull()

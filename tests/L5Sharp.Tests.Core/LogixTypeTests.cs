@@ -19,9 +19,9 @@ public class LogixTypeTests
     [Test]
     public void Register_ValidType_ShouldBeRegistered()
     {
-        LogixType.Register("MyType", () => new MySimpleData());
+        LogixType.Register("MyTypeName", () => new MyUnregisteredType());
 
-        var result = LogixType.IsRegistered("MyType");
+        var result = LogixType.IsRegistered("MyTypeName");
 
         result.Should().BeTrue();
     }

@@ -49,7 +49,6 @@ public class ReferenceTests
     {
         var reference = Reference.To("/Tags/Tag[@Name='my_tag_name']");
 
-
         reference.Path.Should().Be("/Tags/Tag[@Name='my_tag_name']");
         reference.Type.Should().Be(ReferenceType.Tag);
         reference.Location.Should().Be("my_tag_name");

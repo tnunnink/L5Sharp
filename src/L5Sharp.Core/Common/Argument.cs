@@ -105,7 +105,7 @@ public class Argument
     #region Equality
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => _value.Equals(obj);
+    public override bool Equals(object? obj) => _value.Equals(obj?.ToString());
 
     /// <inheritdoc />
     public override int GetHashCode() => _value.GetHashCode();
@@ -240,7 +240,7 @@ public class Argument
     /// </summary>
     private static IEnumerable<TagName> ExtractTags(string text)
     {
-        var matches = Regex.Matches(text, TagName.SearchPattern);
+        var matches = Regex.Matches(text, TagName.Pattern);
 
         foreach (Match match in matches)
         {
@@ -256,7 +256,7 @@ public class Argument
         var type = ArgumentType.Of(argument);
 
         if (type == ArgumentType.Atomic)
-            return [Radix.ParseAtomic(argument)];
+            return [AtomicData.Parse(argument)];
 
         if (type == ArgumentType.Expression)
             //todo handle nested values in expression

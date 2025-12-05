@@ -131,33 +131,6 @@ public abstract class Radix : LogixEnum<Radix, string>
     }
 
     /// <summary>
-    /// Parses the specified string value into an <see cref="AtomicData"/> instance.
-    /// </summary>
-    /// <param name="value">The string value to be parsed into an <see cref="AtomicData"/>.</param>
-    /// <returns>
-    /// An <see cref="AtomicData"/> instance representing the parsed value.
-    /// Returns an instance created as either a floating-point or integral type depending on the inferred <see cref="Radix"/>.
-    /// </returns>
-    /// <exception cref="FormatException">
-    /// Thrown when the specified value cannot be parsed into the expected data format.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the specified value is outside the allowable range for the inferred <see cref="Radix"/>.
-    /// </exception>
-    //todo is there a better way to handle this?
-    public static AtomicData ParseAtomic(string value)
-    {
-        var radix = Infer(value);
-
-        if (radix == Float || radix == Exponential)
-        {
-            return radix.Parse<double>(value);
-        }
-
-        return radix.Parse<long>(value);
-    }
-
-    /// <summary>
     /// Determines whether the specified string value matches the expected format for the <see cref="Radix"/>.
     /// </summary>
     /// <param name="value">

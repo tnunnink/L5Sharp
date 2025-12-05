@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\L5Sharp.Extensions.Logix\L5Sharp.Extensions.Logix.csproj" />
+      <ProjectReference Include="..\..\src\L5Sharp.Logix\L5Sharp.Logix.csproj" />
       <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
 

@@ -1,4 +1,4 @@
-using L5Sharp.Extensions.Logix;
+using L5Sharp.Logix;
 using L5Sharp.Samples;
 
 namespace L5Sharp.Tests.Logix;

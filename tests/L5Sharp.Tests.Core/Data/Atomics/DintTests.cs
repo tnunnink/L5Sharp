@@ -45,6 +45,52 @@ public class DintTests
     }
 
     [Test]
+    public void Update_Null_ShouldThrowException()
+    {
+        var atomic = new DINT();
+
+        FluentActions.Invoking(() => atomic.Update(null!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void Update_InvalidType_ShouldThrowException()
+    {
+        var atomic = new DINT();
+
+        FluentActions.Invoking(() => atomic.Update(new TIMER())).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Update_MatchingValueType_ShouldBeUpdated()
+    {
+        var atomic = new DINT();
+
+        atomic.Update(new DINT(123));
+
+        atomic.Value.Should().Be(123);
+    }
+
+    [Test]
+    public void Update_DifferentTypeValidSize_ShouldBeUpdated()
+    {
+        var atomic = new DINT();
+
+        atomic.Update(new INT(short.MaxValue));
+
+        atomic.Value.Should().Be(short.MaxValue);
+    }
+
+    [Test]
+    public void Update_DifferentTypeTooLarge_ShouldCauseOverflow()
+    {
+        var atomic = new DINT();
+
+        atomic.Update(new LINT(long.MaxValue));
+
+        atomic.Value.Should().NotBe(int.MinValue);
+    }
+
+    [Test]
     public void GetBits_WhenCalled_ShouldHaveExpectedCount()
     {
         var atomic = new DINT(123);

@@ -31,8 +31,7 @@ namespace L5Sharp.Core;
 [LogixElement(L5XName.Sheet)]
 public class Sheet : LogixCode<Sheet>
 {
-    //todo reimplement this with the source generators
-    private static readonly HashSet<string> BlockTypes = []; //[..typeof(Block).GetLogixTypeNames()];
+    private static readonly HashSet<string> BlockTypes = LogixSerializer.NamesFor(typeof(Block));
 
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -104,14 +103,14 @@ public class Sheet : LogixCode<Sheet>
 
         foreach (var tagName in Tags())
         {
-            if (!this.TryResolve<Tag>(tagName, out var tag)) continue;
+            if (!TryResolve<Tag>(tagName, out var tag)) continue;
             dependencies.Add(tag);
             dependencies.AddRange(tag.Dependencies());
         }
 
         foreach (var instruction in Instructions())
         {
-            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
+            if (!TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
             dependencies.Add(aoi);
             dependencies.AddRange(aoi.Dependencies());
         }
@@ -151,7 +150,7 @@ public class Sheet : LogixCode<Sheet>
     /// <param name="id">The identifier of the block to retrieve.</param>
     /// <returns>The <see cref="Core.Block"/> that matches the specified ID.</returns>
     /// <exception cref="KeyNotFoundException">Thrown if no block with the specified ID is found.</exception>
-    public Block Block(uint id)
+    public Block GetBlock(uint id)
     {
         var element = Element.Elements()
             .SingleOrDefault(e => e.Attribute(L5XName.ID)?.Value == id.ToString());
@@ -167,7 +166,7 @@ public class Sheet : LogixCode<Sheet>
     /// <remarks>
     /// 
     /// </remarks>
-    public Block? Block(string operand)
+    public Block? GetBlock(string operand)
     {
         return Element.Elements()
             .FirstOrDefault(e =>

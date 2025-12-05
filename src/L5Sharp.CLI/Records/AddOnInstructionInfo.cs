@@ -1,6 +1,6 @@
 ﻿using L5Sharp.Core;
 
-namespace L5Sharp.Model;
+namespace L5Sharp.CLI.Records;
 
 /// <summary>
 /// A record structure for the <see cref="AddOnInstruction"/> component.

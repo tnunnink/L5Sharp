@@ -8,7 +8,7 @@ public static class App
     public static async Task<int> Main()
     {
         return await new CliApplicationBuilder()
-            .SetTitle("L5Sharp.Cli")
+            .SetTitle("Logix.Cli")
             .SetDescription("Console application providing CLI for Logix projects.")
             .SetExecutableName("logix")
             .UseConsole(new SystemConsole())

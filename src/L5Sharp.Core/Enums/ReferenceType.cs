@@ -5,11 +5,6 @@
 /// a framework for defining specific types of Logix references such as tags,
 /// programs, routines, and other classifications.
 /// </summary>
-/// <remarks>
-/// The <see cref="ReferenceType"/> class facilitates the creation and management
-/// of reference types by inheriting from the <see cref="LogixEnum{TEnum, TValue}"/>
-/// base class and encapsulating additional behavior relevant to Logix references.
-/// </remarks>
 public abstract class ReferenceType : LogixEnum<ReferenceType, string>
 {
     private ReferenceType(string name, string value) : base(name, value)

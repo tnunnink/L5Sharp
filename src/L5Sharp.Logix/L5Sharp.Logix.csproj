@@ -16,7 +16,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>Initial release</PackageReleaseNotes>
-        <PackageId>L5Sharp.Extensions.Logix</PackageId>
+        <PackageId>L5Sharp.Logix</PackageId>
         <PackageProjectUrl>https://github.com/tnunnink/L5Sharp</PackageProjectUrl>
     </PropertyGroup>
 

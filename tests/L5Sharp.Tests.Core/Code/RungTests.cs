@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Elements;
+namespace L5Sharp.Tests.Core.Code;
 
 [TestFixture]
 public class RungTests
@@ -78,107 +78,38 @@ public class RungTests
     }
 
     [Test]
-    public void Instructions_CustomInstructions_ReturnsExpected()
+    [TestCase(Test01, 4)]
+    [TestCase(Test02, 6)]
+    [TestCase(Test03, 5)]
+    public void Instructions_SimpleTextExample_ReturnsExpected(string text, int count)
     {
-        var text = new Rung(
-            "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),aoiTIMER(Timer,?,?)];");
+        var rung = new Rung(text);
 
-        var instructions = text.Instructions();
+        var result = rung.Instructions();
 
-        instructions.Should().HaveCount(4);
+        result.Should().HaveCount(count);
     }
 
     [Test]
-    public void Instructions_SingleInstruction_ShouldEqualOriginal()
+    public void Instructions_SingleInstruction_ShouldContainExpectedText()
     {
         var rung = new Rung("XIC(SomeBit)");
 
         var result = rung.Instructions();
 
-        result.First().Should().Be("XIC(SomeBit)");
-    }
-
-    /*[Test]
-    public void InstructionsBy_WithExistingInstructionPresent_ShouldContainExpectedText()
-    {
-        var text = new NeutralText(
-            "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
-
-        var result = text.Instructions("XIC").ToList();
-
-        result.Should().Contain(Instruction.Parse("XIC(Tag.Status.Active)"));
-        result.Should().Contain(Instruction.Parse("XIC(Tag.Status.Enabled)"));
+        result.Should().Contain("XIC(SomeBit)");
     }
 
     [Test]
-    public void InstructionsBy_WithExistingInstructionPresent_ShouldHaveExpectedCount()
+    public void Instructions_FilterByKey_ShouldContainExpectedText()
     {
-        var text = new NeutralText(
-            "[XIC(Tag.Status.Active),XIC(Tag.Status.Enabled)][MOV(15000,Timer.PRE),TON(Timer,?,?)];");
+        var rung = new Rung(Test01);
 
-        var result = text.Instructions(Instruction.XIC("Tag.Status.Active"));
+        var result = rung.Instructions().Where(i => i.Key == "XIC").ToList();
 
-        result.Should().HaveCount(1);
+        result.Should().Contain("XIC(Tag.Status.Active)");
+        result.Should().Contain("XIC(Tag.Status.Enabled)");
     }
-
-    [Test]
-    public void Keywords_TextWithKeywords_ShouldHaveExpectedCount()
-    {
-        var text = new NeutralText("if Tag >= 10 then");
-
-        var keywords = text.Keywords().ToList();
-
-        keywords.Should().HaveCount(2);
-    }
-
-    [Test]
-    public void Keywords_TextWithNoKeywords_ShouldBeEmpty()
-    {
-        var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
-
-        var keywords = text.Keywords().ToList();
-
-        keywords.Should().BeEmpty();
-    }
-
-    [Test]
-    public void Tags_SimpleTextWithMultipleTags_ShouldHaveExpectedCount()
-    {
-        var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
-
-        var tagNames = text.Tags();
-
-        tagNames.Should().HaveCount(3);
-    }
-
-    [Test]
-    public void TagsIn_OTE_ShouldHaveExpectedTagName()
-    {
-        var text = new NeutralText("[XIC(SomeBit),XIO(AnotherBit)]OTE(OutputBit);");
-
-        var tagNames = text.TagsIn("OTE");
-
-        tagNames.Should().HaveCount(1);
-    }
-
-    [Test]
-    public void StructuredText_New_ShouldNotBeNull()
-    {
-        var text = new NeutralText("SimpleBool := TestComplexTag.SimpleMember.BoolMember;");
-
-        text.Should().NotBeNull();
-    }
-
-    [Test]
-    public void StructuredText_ShouldHaveExpected()
-    {
-        var text = new NeutralText("SimpleBool := TestComplexTag.SimpleMember.BoolMember;");
-
-        text.IsEmpty.Should().BeFalse();
-        text.IsBalanced.Should().BeTrue();
-        text.Instructions().Should().BeEmpty();
-        text.Tags().Should().HaveCount(2);
-    }*/
 
     [Test]
     [Description("GitHub Issue #52: A tag with a bit index reference tag should parse correctly")]

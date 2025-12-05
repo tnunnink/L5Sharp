@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace L5Sharp.Core.Generators;
+namespace L5Sharp.Generators;
 
 [Generator]
 public class LogixTypeRegistrationGenerator : IIncrementalGenerator
@@ -94,7 +94,7 @@ public class LogixTypeRegistrationGenerator : IIncrementalGenerator
 
     /// <summary>
     /// Represents a data structure for storing information about a registration
-    /// in the context of Logix data types within the L5Sharp.Core.Generators namespace.
+    /// in the context of Logix data types within the L5Sharp.Generators namespace.
     /// </summary>
     /// <remarks>
     /// This struct encapsulates information about the type name, corresponding data type,

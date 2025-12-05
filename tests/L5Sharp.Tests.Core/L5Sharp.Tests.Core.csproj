@@ -21,7 +21,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj" />
-        <ProjectReference Include="..\..\src\L5Sharp.Core.Generators\L5Sharp.Core.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\..\src\L5Sharp.Generators\L5Sharp.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
         <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
 
@@ -199,33 +199,6 @@
         <DependentUpon>DataTypeMemberTests.cs</DependentUpon>
         <ParentFile>DataTypeMemberTests</ParentFile>
       </None>
-      <None Update="Elements\SheetTests.InputReferences_AddValidReference_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.OutputReferences_AddValidReference_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.InputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.OutputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.InputConnectors_AddValidConnector_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.InputConnectors_AddAfterConnector_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.Add_BlocksOutOfOrder_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\BlockTests.New_Overriden_ShouldBeVerified.verified.txt">
-        <DependentUpon>BlockTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.Wire_ValidOperands_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
       <None Update="LogixElementTests.SetValue_ToValueHasValue_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
@@ -264,9 +237,6 @@
       </None>
       <None Update="Components\TagTests.Class_SetValidValue_ShouldBeVerified.verified.xml">
         <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\RungTests.SetTextToNullThenCommentThenTextAgainShouldBeValid.verified.xml">
-        <DependentUpon>RungTests.cs</DependentUpon>
       </None>
       <None Update="Types\MemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt">
         <DependentUpon>MemberTests.cs</DependentUpon>
@@ -432,6 +402,9 @@
       </None>
       <None Update="LogixSerializerTests.Serialize_WhenCalled_ShouldBeVerified.verified.xml">
         <DependentUpon>LogixSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Code\SheetTests.AddBlock_BlocksOutOfOrder_ShouldBeVerified.verified.txt">
+        <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

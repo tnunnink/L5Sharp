@@ -3,7 +3,6 @@ using CliFx.Infrastructure;
 using JetBrains.Annotations;
 using L5Sharp.CLI.Internal;
 using L5Sharp.Core;
-using L5Sharp.Model;
 
 namespace L5Sharp.CLI.Commands.Programs;
 

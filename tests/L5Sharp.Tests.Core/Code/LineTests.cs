@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Elements;
+namespace L5Sharp.Tests.Core.Code;
 
 [TestFixture]
 public class LineTests

@@ -74,6 +74,31 @@ public class StringData : LogixData, IEnumerable<char>
     public int Length => GetString().Length;
 
     /// <inheritdoc />
+    public override void Update(LogixData data)
+    {
+        if (data is null)
+            throw new ArgumentNullException(nameof(data));
+
+        if (data is not StringData stringData)
+            throw new ArgumentException($"Can not update string with data of type '{data.GetType()}'.");
+
+        if (Element.Name.LocalName is L5XName.Data)
+        {
+            Element.SetAttributeValue(L5XName.Length, stringData.Length);
+            Element.ReplaceNodes(new XCData($"'{stringData}'"));
+            return;
+        }
+
+        Element.Elements()
+            .First(e => e.MemberName() == "LEN")
+            .SetAttributeValue(L5XName.Value, stringData.Length);
+
+        Element.Elements()
+            .First(e => e.MemberName() == "DATA")
+            .ReplaceNodes(new XCData($"'{stringData}'"));
+    }
+
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj switch

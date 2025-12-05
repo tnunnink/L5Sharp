@@ -137,7 +137,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StartTriggerTargetValue1
     {
-        get => GetValue(Radix.ParseAtomic);
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 
@@ -201,7 +201,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StartTriggerTargetValue2
     {
-        get => GetValue(Radix.ParseAtomic);
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 
@@ -282,7 +282,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StopTriggerTargetValue1
     {
-        get => GetValue(Radix.ParseAtomic);
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 
@@ -346,7 +346,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>Type a binary, octal, decimal, or hexadecimal integer number or type a floating point number.</remarks>
     public AtomicData? StopTriggerTargetValue2
     {
-        get => GetValue(Radix.ParseAtomic);
+        get => GetValue(AtomicData.Parse);
         set => SetValue(value);
     }
 

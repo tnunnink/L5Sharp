@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace L5Sharp.Core.Generators;
+namespace L5Sharp.Generators;
 
 [Generator]
 public class LogixSerializerRegistrationGenerator : IIncrementalGenerator

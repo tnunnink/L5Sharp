@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace L5Sharp.Core;
 
@@ -21,6 +21,10 @@ public sealed class NullData : LogixData
 
     /// <inheritdoc />
     public override IEnumerable<LogixMember> Members => [];
+
+    /// <inheritdoc />
+    public override void Update(LogixData data) =>
+        throw new InvalidOperationException("Can not update data for the null data instnace.");
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullData"/> logix type.

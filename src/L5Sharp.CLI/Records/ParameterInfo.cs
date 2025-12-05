@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Model;
+﻿namespace L5Sharp.CLI.Records;
 
 public class ParameterInfo
 {

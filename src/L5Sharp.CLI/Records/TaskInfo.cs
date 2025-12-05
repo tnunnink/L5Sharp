@@ -1,7 +1,7 @@
 ﻿using L5Sharp.Core;
 using Task = L5Sharp.Core.Task;
 
-namespace L5Sharp.Model;
+namespace L5Sharp.CLI.Records;
 
 /// <summary>
 /// A record structure for the <see cref="Task"/> component.

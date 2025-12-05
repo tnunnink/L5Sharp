@@ -1,9 +1,10 @@
-﻿using L5Sharp.Core;
+﻿using L5Sharp.CLI.Records;
+using L5Sharp.Core;
 using Task = L5Sharp.Core.Task;
 
-namespace L5Sharp.Model;
+namespace L5Sharp.CLI.Internal;
 
-public static class Extensions
+public static class RecordExtensions
 {
     /// <summary>
     /// Converts the specified <see cref="ILogixComponent"/> instance to its corresponding information object.

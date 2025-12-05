@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -32,7 +33,9 @@ public static class LogixSerializer
     static LogixSerializer()
     {
         RegisterFormattedData();
-        RegisterAtomics();
+        RegisterAtomicData();
+        RegisterStructureData();
+        RegisterArrayElementData();
     }
 
     /// <summary>
@@ -52,20 +55,15 @@ public static class LogixSerializer
         if (names.Length == 0)
             throw new ArgumentException($"At least one name is required to register type {typeof(TElement)}");
 
-        if (Types.ContainsKey(typeof(TElement)))
-            throw new InvalidOperationException($"Type '{typeof(TElement)} already registered");
+        var type = typeof(TElement);
+        var keys = names.ToList();
 
-        //There should not be duplicate names in the provided set.
-        var set = new HashSet<string>(names);
+        if (Types.TryGetValue(type, out var set))
+            keys.ForEach(k => set.Add(k));
+        else
+            Types[type] = [..keys];
 
-        //Register the provided names with the type.
-        Types[typeof(TElement)] = set;
-
-        //Register the deserializer function for each name key.
-        foreach (var key in set)
-        {
-            Deserializers[key] = deserializer;
-        }
+        keys.ForEach(k => Deserializers[k] = deserializer);
     }
 
     /// <summary>
@@ -175,25 +173,104 @@ public static class LogixSerializer
     /// such as BOOL, SINT, and REAL, based on the type name provided within the <see cref="XElement"/> instance.
     /// </summary>
     /// <exception cref="NotSupportedException">Thrown when attempting to register an unsupported atomic data type.</exception>
-    private static void RegisterAtomics()
+    private static void RegisterAtomicData()
     {
         Register<AtomicData>(e =>
-        {
-            return e.DataType() switch
             {
-                nameof(BOOL) => new BOOL(e),
-                nameof(SINT) => new SINT(e),
-                nameof(USINT) => new USINT(e),
-                nameof(INT) => new INT(e),
-                nameof(UINT) => new UINT(e),
-                nameof(DINT) => new DINT(e),
-                nameof(UDINT) => new UDINT(e),
-                nameof(LINT) => new LINT(e),
-                nameof(ULINT) => new ULINT(e),
-                nameof(REAL) => new REAL(e),
-                nameof(LREAL) => new LREAL(e),
-                _ => throw new NotSupportedException($"The type '{e.DataType()}' is not a supported atomic data value.")
-            };
-        }, L5XName.DataValue);
+                return e.DataType() switch
+                {
+                    nameof(BOOL) => new BOOL(e),
+                    nameof(SINT) => new SINT(e),
+                    nameof(USINT) => new USINT(e),
+                    nameof(INT) => new INT(e),
+                    nameof(UINT) => new UINT(e),
+                    nameof(DINT) => new DINT(e),
+                    nameof(UDINT) => new UDINT(e),
+                    nameof(LINT) => new LINT(e),
+                    nameof(ULINT) => new ULINT(e),
+                    nameof(REAL) => new REAL(e),
+                    nameof(LREAL) => new LREAL(e),
+                    _ => throw new NotSupportedException(
+                        $"The type '{e.DataType()}' is not a supported atomic data value.")
+                };
+            },
+            L5XName.DataValue,
+            L5XName.DataValueMember
+        );
+    }
+
+    /// <summary>
+    /// Registers the custom structure data deserializer function to handle string data elements.
+    /// If not a string structure, we will always return the base <see cref="StructureData"/> instance.
+    /// This type can be cast down to more concrete types using As method on <see cref="ILogixElement"/>   
+    /// </summary>
+    private static void RegisterStructureData()
+    {
+        Register<StructureData>(e =>
+            {
+                //Detect if the structure element contains a nested string value (CData node)
+                //so that we can deserialize as string data.
+                if (e.Elements().Any(m => m.FirstNode is XCData))
+                {
+                    return new StringData(e);
+                }
+
+                return new StructureData(e);
+            },
+            L5XName.Structure,
+            L5XName.StructureMember
+        );
+    }
+
+    /// <summary>
+    /// Registers a custom deserialization function for array element data.
+    /// The method ensures proper handling of different types of element structures,
+    /// including those with nested string values or CDATA sections.
+    /// This method dynamically maps the corresponding data type for deserialization purposes.
+    /// </summary>
+    /// <exception cref="NotSupportedException">
+    /// Thrown when the provided XML structure or attributes are not supported for deserialization.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the structure of the provided XElement is invalid or incomplete.
+    /// </exception>
+    private static void RegisterArrayElementData()
+    {
+        Register<LogixData>(e =>
+            {
+                if (e.Attribute(L5XName.Value) is not null)
+                {
+                    return e.DataType() switch
+                    {
+                        nameof(BOOL) => new BOOL(e),
+                        nameof(SINT) => new SINT(e),
+                        nameof(USINT) => new USINT(e),
+                        nameof(INT) => new INT(e),
+                        nameof(UINT) => new UINT(e),
+                        nameof(DINT) => new DINT(e),
+                        nameof(UDINT) => new UDINT(e),
+                        nameof(LINT) => new LINT(e),
+                        nameof(ULINT) => new ULINT(e),
+                        nameof(REAL) => new REAL(e),
+                        nameof(LREAL) => new LREAL(e),
+                        _ => throw new NotSupportedException(
+                            $"The type '{e.DataType()}' is not a supported atomic data value.")
+                    };
+                }
+
+                if (e.FirstNode is not XElement structure)
+                    throw e.L5XError(L5XName.Structure);
+
+                //Detect if the structure element contains a nested string value (CData node)
+                //so that we can deserialize as string data.
+                if (structure.Elements().Any(m => m.FirstNode is XCData))
+                {
+                    return new StringData(structure);
+                }
+
+                return new StructureData(structure);
+            },
+            L5XName.Element
+        );
     }
 }

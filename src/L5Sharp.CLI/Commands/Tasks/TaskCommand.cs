@@ -1,5 +1,4 @@
 ﻿using CliFx.Attributes;
-using L5Sharp.Model;
 using Task = L5Sharp.Core.Task;
 
 namespace L5Sharp.CLI.Commands.Tasks;

@@ -9,18 +9,17 @@
 
     <ItemGroup>
         <ProjectReference Include="..\L5Sharp.Core\L5Sharp.Core.csproj"/>
-        <ProjectReference Include="..\L5Sharp.Model\L5Sharp.Model.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CliFx" Version="2.3.6"/>
-        <PackageReference Include="CsvHelper" Version="33.1.0" />
+        <PackageReference Include="CsvHelper" Version="33.1.0"/>
         <PackageReference Include="JetBrains.Annotations" Version="2025.2.2"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9"/>
         <PackageReference Include="RockwellAutomation.LogixDesigner.CSClient" Version="2.1.974"/>
-        <PackageReference Include="Spectre.Console" Version="0.52.0" />
-        <PackageReference Include="Spectre.Console.Json" Version="0.52.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.9" />
+        <PackageReference Include="Spectre.Console" Version="0.52.0"/>
+        <PackageReference Include="Spectre.Console.Json" Version="0.52.0"/>
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.9"/>
     </ItemGroup>
 
 </Project>

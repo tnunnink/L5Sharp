@@ -76,6 +76,15 @@ public abstract class LogixData : LogixElement
         return Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
     }
 
+    /// <summary>
+    /// Updates the current instance of the <see cref="LogixData"/> with the data from the specified instance.
+    /// </summary>
+    /// <param name="data">The <see cref="LogixData"/> instance containing the data to update from.</param>
+    /// <remarks>
+    /// 
+    /// </remarks>
+    public abstract void Update(LogixData data);
+
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {

@@ -24,18 +24,11 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     private const char ArrayCloseSeparator = ']';
 
     /// <summary>
-    /// A regex pattern for a Logix tag name with starting and ending anchors.
-    /// Use this pattern to match a string and ensure it is only a tag name and nothing else.
-    /// </summary>
-    public const string AnchorPattern =
-        @"^[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?$";
-
-    /// <summary>
     /// The regex pattern for Logix tag names without starting and ending anchors.
     /// This pattern also includes a negative lookahead for removing text prior to parenthesis (i.e., instruction keys)
     /// Use this pattern for tag names within a text, such as longer
     /// </summary>
-    public const string SearchPattern =
+    public const string Pattern =
         @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?";
 
     /// <summary>

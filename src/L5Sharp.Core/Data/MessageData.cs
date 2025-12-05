@@ -1,47 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Xml.Linq;
-
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable InconsistentNaming RSLogix naming
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built-in data type used with message instructions.
-/// This type will not return members since the data exported in the L5X does not represent the actual MESSAGE
-/// data tag structure. However, the properties of this type will update the underlying configuration. 
+/// 
 /// </summary>
 [LogixElement(L5XName.MessageParameters)]
-[LogixData(nameof(MESSAGE))]
-public sealed class MESSAGE : StructureData
+[LogixData(TypeName)]
+public class MessageData : LogixData
 {
-    /// <summary>
-    /// Creates a new <see cref="MESSAGE"/> data type instance.
-    /// </summary>
-    public MESSAGE() : base(new XElement(L5XName.MessageParameters))
-    {
-        MessageType = MessageType.Unconfigured;
-        RequestedLength = new INT();
-        ConnectedFlag = new INT();
-        ConnectionPath = new STRING();
-        CommTypeCode = new INT();
-        ServiceCode = Radix.Hex.Format(0);
-        ObjectType = Radix.Hex.Format(0);
-        TargetObject = new INT();
-        AttributeNumber = Radix.Hex.Format(0);
-        LocalIndex = new INT();
-        DestinationTag = new STRING();
-        CacheConnections = new BOOL();
-        LargePacketUsage = new BOOL();
-    }
+    private const string TypeName = "MESSAGE";
 
     /// <inheritdoc />
-    public MESSAGE(XElement element) : base(element)
+    public MessageData() : base(L5XName.MessageParameters)
     {
     }
 
     /// <inheritdoc />
-    public override string Name => nameof(MESSAGE);
+    public MessageData(XElement element) : base(element)
+    {
+    }
+
+    /// <inheritdoc />
+    public override void Update(LogixData data)
+    {
+        if (data is not MessageData other)
+            throw new ArgumentException("Can not update message data with type");
+
+        MessageType = other.MessageType;
+    }
 
     /// <summary>
     /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> data object.
@@ -55,27 +43,27 @@ public sealed class MESSAGE : StructureData
     /// <summary>
     /// Gets the <see cref="RequestedLength"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT? RequestedLength
+    public int? RequestedLength
     {
-        get => GetValue(INT.Parse);
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ConnectedFlag"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public INT? ConnectedFlag
+    public bool? ConnectedFlag
     {
-        get => GetValue(INT.Parse);
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the <see cref="ConnectionPath"/> value of the <see cref="MESSAGE"/> parameters.
     /// </summary>
-    public STRING? ConnectionPath
+    public string? ConnectionPath
     {
-        get => GetValue() ?? new STRING();
+        get => GetValue();
         set => SetValue(value);
     }
 
