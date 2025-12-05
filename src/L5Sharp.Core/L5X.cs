@@ -27,8 +27,7 @@ public sealed class L5X : LogixElement
         Controller = new Controller(Element.Element(L5XName.Controller)!);
 
         //This stores the L5X object as an in-memory object for the root XElement,
-        //allowing child elements to retrieve the object locally without creating a new instance and potentially
-        //reindexing of the XML content if requested.
+        //allowing child elements to retrieve the object locally without creating a new instance.
         //This allows them to reference to root L5X for cross-referencing or other lookup-based operations.
         Element.AddAnnotation(this);
     }

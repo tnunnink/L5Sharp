@@ -81,7 +81,9 @@ public abstract class LogixData : LogixElement
     /// </summary>
     /// <param name="data">The <see cref="LogixData"/> instance containing the data to update from.</param>
     /// <remarks>
-    /// 
+    /// This method can be used to update data without changing the type structure for complex types. This is the primary
+    /// means through which we mutate data values once they are created. Each deriving type is responsible for implementing
+    /// this method as necessary.
     /// </remarks>
     public abstract void Update(LogixData data);
 
@@ -255,7 +257,7 @@ public abstract class LogixData : LogixElement
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(string value) => new STRING(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
@@ -269,63 +271,63 @@ public abstract class LogixData : LogixElement
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(SINT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(USINT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(INT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(UINT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(DINT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(UDINT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(LINT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(ULINT[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(REAL[] value) => ArrayData.New(value);
-    
+
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>

@@ -92,12 +92,14 @@ public sealed class LogixMember : LogixElement
 
 
     /// <summary>
-    /// 
+    /// Creates a new XML member element based on the specified name and data.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="name">The name of the member to create. This value must not be null or empty.</param>
+    /// <param name="data">The data used to generate the member. This value must not be null or of a null data type.</param>
+    /// <returns>An <see cref="XElement"/> representing the created member element.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the <paramref name="name"/> is null or empty, or when <paramref name="data"/> is null or invalid.
+    /// </exception>
     private static XElement CreateMember(string name, LogixData data)
     {
         if (string.IsNullOrEmpty(name))

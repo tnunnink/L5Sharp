@@ -83,8 +83,6 @@ public interface ILogixObject<TElement> where TElement : ILogixElement
     /// </summary>
     /// <param name="element">The new element that will replace the existing one.</param>
     /// <remarks>
-    /// This method provides a mechanism for dynamic replacement of components or elements,
-    /// allowing for updates or modifications to the Logix structure without creating a new instance.
     /// This method requires the element be attached to an <see cref="L5X"/>,
     /// as it will access the parent of the underlying <see cref="XElement"/> to perform the function.
     /// </remarks>
@@ -105,16 +103,11 @@ public interface ILogixObject<TElement> where TElement : ILogixElement
     void Replace(string find, string replace, string[]? properties = null);
 
     /// <summary>
-    /// Removes the current element from its parent in the underlying L5X structure.
+    /// Removes the current element object from the underlying L5X structure.
     /// </summary>
     /// <remarks>
-    /// This method detaches the element from the XML document it is part of. If the element is not attached
-    /// to a parent (i.e., it is not part of a loaded L5X structure), an <see cref="InvalidOperationException"/>
-    /// will be thrown.
+    /// If the object is not attached to an L5X context, this method will return without error.
     /// </remarks>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown if the element is not attached to a parent element within the L5X structure.
-    /// </exception>
     void Remove();
 }
 

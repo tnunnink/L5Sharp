@@ -168,10 +168,33 @@ namespace L5Sharp.Tests.Core.Common
         {
             var instruction = Instruction.XIC("MyTag");
 
-            instruction = instruction.With("NewTag");
+            var updated = instruction.With("NewTag");
 
-            instruction.Should().Be("XIC(NewTag)");
-            instruction.Arguments.Should().HaveCount(1);
+            updated.Should().Be("XIC(NewTag)");
+            updated.Arguments.Should().Contain("NewTag");
+        }
+
+        [Test]
+        public void Append_ValidArgument_ShouldBeExpected()
+        {
+            var test = new Instruction("Test");
+
+            var result = test.Append("arg1");
+
+            result.Arguments.Should().HaveCount(1);
+            result.Arguments.Should().Contain("arg1");
+        }
+        
+        [Test]
+        public void Append_MultipleArgs_ShouldBeExpected()
+        {
+            var test = new Instruction("Test");
+
+            var result = test.Append("arg1").Append(123);
+
+            result.Arguments.Should().HaveCount(2);
+            result.Arguments.Should().Contain("arg1");
+            result.Arguments.Should().Contain(123);
         }
 
         [Test]

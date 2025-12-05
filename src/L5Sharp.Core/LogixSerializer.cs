@@ -27,8 +27,7 @@ public static class LogixSerializer
 
     /// <summary>
     /// Register custom functions statically once the class is initialized.
-    /// AtomicData is the one type where we want to map multiple types to a single element, so we are handling that in
-    /// the deserialization function itself. Everything else is registered via source generators.
+    /// Everything else is registered via source generators.
     /// </summary>
     static LogixSerializer()
     {
