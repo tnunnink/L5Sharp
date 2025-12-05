@@ -1,0 +1,22 @@
+﻿<RSLogix5000Content SchemaRevision="1" SoftwareRevision="36.1" TargetName="Test" TargetType="Controller" ContainsContext="false" Owner="Scrubbed" ExportDate="DateTime_1">
+  <Controller Name="Test" MajorRev="36" MinorRev="1" ProjectCreationDate="DateTime_1" LastModifiedDate="DateTime_1" ProcessorType="1756-L83E">
+    <DataTypes />
+    <Modules>
+      <Module Name="Local" CatalogNumber="1756-L83E" Major="36" Minor="1" Vendor="1" ProductType="14" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="false" SafetyEnabled="false" ProductCode="166">
+        <Description><![CDATA[ControlLogix® 5580 Controller]]></Description>
+        <EKey State="CompatibleModule" />
+        <Ports>
+          <Port Id="1" Type="ICP" Upstream="false" Address="0" />
+          <Port Id="2" Type="Ethernet" Upstream="false" Address="192.168.0.1" />
+        </Ports>
+      </Module>
+    </Modules>
+    <AddOnInstructionDefinitions />
+    <Tags />
+    <Programs />
+    <Tasks />
+    <ParameterConnections />
+    <Trends />
+    <QuickWatchLists />
+  </Controller>
+</RSLogix5000Content>
