@@ -99,27 +99,13 @@ public class DataType : LogixComponent<DataType>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
-    {
-        if (!TryGetDocument(out var doc)) return [];
-
-        var references = doc.Serialize().Descendants()
-            .Where(e => e.IsTagElement() && e.Attribute(L5XName.DataType)?.Value == Name)
-            .Select(Reference.To)
-            .Distinct()
-            .ToArray();
-
-        return references;
-    }
-
-    /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {
         var dependencies = new List<ILogixEntity>();
 
         foreach (var member in Members)
         {
-            if (!this.TryResolveType(member.DataType, out var type)) continue;
+            if (!TryResolveType(member.DataType, out var type)) continue;
             dependencies.Add(type);
             dependencies.AddRange(type.Dependencies());
         }

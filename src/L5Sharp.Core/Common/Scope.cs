@@ -118,6 +118,17 @@ public sealed class Scope
     }
 
     /// <summary>
+    /// Determines whether the current scope is visible to the specified reference.
+    /// </summary>
+    /// <param name="reference">The reference to evaluate visibility against.</param>
+    /// <returns>True if the current scope is visible to the provided reference; otherwise, false.</returns>
+    public bool IsVisibleTo(Reference reference)
+    {
+        if (IsController || reference.IsGlobal) return true;
+        return Container == reference.Container;
+    }
+
+    /// <summary>
     /// Determines if the current Scope is a peer to the provided scope instance. A peer scope simply means in the
     /// same exact scope (i.e., both have the same container name).
     /// </summary>
@@ -129,7 +140,8 @@ public sealed class Scope
     }
 
     /// <summary>
-    /// Determines whether the current scope is local to the specified reference scope.
+    /// Determines whether the current scope is local to the specified reference scope. This will check both controller
+    /// scope and local program/routine scope.
     /// </summary>
     /// <param name="reference">The reference to compare the current scope against.</param>
     /// <returns>

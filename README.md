@@ -59,12 +59,16 @@ var results = content.Query<Tag>()
     .ToList();
 ```
 
-### Fast Component Lookup
+### Entity Lookup API
+
 To index the L5X on load or parse, you must supply the `L5XOptions.Index`.
+
 ```csharp
 var content = L5X.Load("MyTestFile.L5X");
 ```
+
 Then use `ILogixLookup` API `Get`, `TryGet`, `Find`, or `Contains`.
+
 ``` csharp
 // Get controller scoped tag.
 Tag controlelrTag = content.Get<Tag>("MyTagName")
@@ -111,6 +115,7 @@ content.Save("C:\\PathToMyOutputFile\\UpdatedFile.L5X");
 ## Component Types
 
 L5Sharp provides support for all primary Logix components:
+
 - Controller
 - DataType
 - AddOnInstruction
@@ -123,30 +128,38 @@ L5Sharp provides support for all primary Logix components:
 - WatchList
 
 ## Use Cases
+
 - Automation of PLC development tasks
 - Consistency checks across multiple PLC projects
 - Tag documentation and reporting
 - PLC code generation
 - Automation tool development.
- 
+
 ## DeepWiki Documentation
-DeepWiki is an AI-powered platform that automatically generates comprehensive, Wikipedia-style documentation for any public GitHub repository, complete with interactive diagrams and a conversational assistant to answer technical questions about the codebase.
+
+DeepWiki is an AI-powered platform that automatically generates comprehensive, Wikipedia-style documentation for any
+public GitHub repository, complete with interactive diagrams and a conversational assistant to answer technical
+questions about the codebase.
 (From Perplexity)
 
 [https://deepwiki.com/tnunnink/L5Sharp](https://deepwiki.com/tnunnink/L5Sharp)
 
 ## Requirements
+
 - .NET Standard 2.0 or .NET 8.0 compatible framework
 - C# 12.0 support
 
 ## License
+
 This project is licensed under the MIT License.
 
 ## Contributing
-Contributions are welcome! If you find issues or have suggestions for improvements, 
+
+Contributions are welcome! If you find issues or have suggestions for improvements,
 please create an issue or submit a pull request to the [GitHub repository](https://github.com/tnunnink/L5Sharp).
 
 ## Feedback
-If you find this library useful, please consider leaving a star on the GitHub repository. 
+
+If you find this library useful, please consider leaving a star on the GitHub repository.
 Any feedback or questions can be submitted via the [issues](https://github.com/tnunnink/L5Sharp/issues) section.
 

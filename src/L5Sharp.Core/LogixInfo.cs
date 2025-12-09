@@ -166,7 +166,7 @@ public class LogixInfo : LogixElement
         return new LogixInfo(content);
     }
 
-    /// <summary>
+    /*/// <summary>
     /// Creates a new instance of the <see cref="LogixInfo"/> class with metadata and contextual information
     /// constructed from the provided <see cref="Rung"/> instance and optional <see cref="Revision"/>.
     /// </summary>
@@ -174,22 +174,22 @@ public class LogixInfo : LogixElement
     /// <param name="revision">The optional software revision used to specify the target schema version. If not provided, a default revision is used.</param>
     /// <returns>A new <see cref="LogixInfo"/> instance populated with metadata based on the provided parameters.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="rung"/> parameter is null.</exception>
-    public static LogixInfo Create(Rung rung, Revision? revision = null)
+    public static LogixInfo Create(ILogixCode code, Revision? revision = null)
     {
-        if (rung is null)
-            throw new ArgumentNullException(nameof(rung));
+        if (code is null)
+            throw new ArgumentNullException(nameof(code));
 
         var content = new XElement(L5XName.RSLogix5000Content);
         content.Add(new XAttribute(L5XName.SchemaRevision, new Revision()));
         content.Add(new XAttribute(L5XName.SoftwareRevision, revision ?? new Revision()));
-        content.Add(new XAttribute(L5XName.TargetType, nameof(Rung)));
-        content.Add(new XAttribute(L5XName.TargetCount, rung.Number));
+        content.Add(new XAttribute(L5XName.TargetType, LogixSerializer.NamesFor(code.GetType()).First()));
+        content.Add(new XAttribute(L5XName.TargetCount, code.Number));
         content.Add(new XAttribute(L5XName.ContainsContext, true));
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
 
         return new LogixInfo(content);
-    }
+    }*/
 
     /// <summary>
     /// If no root controller element exists, adds a new context controller and moves all root elements into that controller

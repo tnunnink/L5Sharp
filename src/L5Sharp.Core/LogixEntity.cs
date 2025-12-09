@@ -39,17 +39,6 @@ public interface ILogixEntity : ILogixElement
     Scope Scope { get; }
 
     /// <summary>
-    /// Retrieves a collection of <see cref="Reference"/> that indicate where this entity is used within the current project.
-    /// </summary>
-    /// <returns>A collection of <see cref="Reference"/> representing the usages of this entity.</returns>
-    /// <remarks>
-    /// Usages represent references to other entities that use this entity. This is similar to the cross-referencing
-    /// mechanism in Studio 5k and is meant to resemble it at some level. Each deriving type must implement
-    /// logic as needed to find all usages of this entity withing an L5X document.
-    /// </remarks>
-    IEnumerable<Reference> Usages();
-
-    /// <summary>
     /// Retrieves a collection of <see cref="ILogixEntity"/> that this entity depends on to be valid within the current project.
     /// </summary>
     /// <returns>A collection of <see cref="ILogixEntity"/> that the current entity depends on.</returns>
@@ -88,9 +77,6 @@ public abstract class LogixEntity<TEntity> : LogixObject<TEntity>, ILogixEntity 
     public Scope Scope => Scope.Of(Element);
 
     /// <inheritdoc />
-    public abstract IEnumerable<Reference> Usages();
-
-    /// <inheritdoc />
     public abstract IEnumerable<ILogixEntity> Dependencies();
 
     /// <summary>
@@ -109,8 +95,8 @@ public abstract class LogixEntity<TEntity> : LogixObject<TEntity>, ILogixEntity 
         where TComponent : LogixComponent<TComponent>
     {
         component = null!;
-        if (!TryGetDocument(out var doc)) return false;
         if (string.IsNullOrEmpty(name)) return false;
+        if (!TryGetDocument(out var doc)) return false;
 
         var reference = Reference.To<TComponent>(name);
 

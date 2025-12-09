@@ -415,14 +415,6 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
-    {
-        if (!TryGetDocument(out var doc)) return [];
-
-        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference));
-    }
-
-    /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {
         var dependencies = new List<ILogixEntity>();
@@ -709,7 +701,7 @@ public class Tag : LogixComponent<Tag>
         //If we get here, we should be at the base tag element.
         if (Element.TryGetFormattedData(out var data))
         {
-            return data.Deserialize<LogixData>();
+            return data;
         }
 
         return LogixType.Null;
@@ -742,10 +734,10 @@ public class Tag : LogixComponent<Tag>
         //If we get here, we should be at the base tag element.
         if (Element.TryGetFormattedData(out var formatted))
         {
-            formatted.Deserialize<LogixData>().Update(value);
+            formatted.Update(value);
             return;
         }
-        
+
         Element.Add(L5XName.Data, DataFormat.Format(value, GetType()));
         EnsureOrder();
         UpdateDataAttributes(value);

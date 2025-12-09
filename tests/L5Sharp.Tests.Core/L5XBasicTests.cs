@@ -22,7 +22,7 @@ public class L5XBasicTests
     {
         var content = L5X.New("Test", "1756-L83E");
 
-        return VerifyXml(content.Serialize().ToString())
+        return VerifyXml(content.ToString())
             .ScrubInlineDateTimes("ddd MMM d HH:mm:ss yyyy")
             .ScrubMember("Owner");
     }
@@ -101,7 +101,8 @@ public class L5XBasicTests
         code.Should().AllSatisfy(c => c.Reference.Container.Should().Be("MainProgram"));
     }
 
-    [Test]
+    //todo is this still something we would want from code?
+    /*[Test]
     public void Code_SelectUsagesInSpecificRoutine_ShouldReturnExpected()
     {
         var content = L5X.Load(Known.Example);
@@ -123,7 +124,7 @@ public class L5XBasicTests
             .ToArray();
 
         usages.Should().NotBeEmpty();
-    }
+    }*/
 
     [Test]
     public void Query_TypeNameOverload_ShouldNotBeEmpty()
@@ -435,21 +436,11 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void Serialize_WhenCalled_ShouldNotBeNull()
+    public Task ToString_WhenCalled_ShouldBeValid()
     {
         var content = L5X.Load(Known.Empty);
 
-        var result = content.Serialize();
-
-        result.Should().NotBeNull();
-    }
-
-    [Test]
-    public Task Serialize_WhenCalled_ShouldBeValid()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        var result = content.Serialize().ToString();
+        var result = content.ToString();
 
         return VerifyXml(result)
             .ScrubMember("ExportDate")

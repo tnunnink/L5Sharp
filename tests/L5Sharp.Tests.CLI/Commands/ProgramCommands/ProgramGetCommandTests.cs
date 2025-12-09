@@ -15,7 +15,7 @@ public class ProgramGetCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var content = await L5X.LoadAsync(Known.Test);
-        console.WriteInput(content.Serialize().ToString());
+        console.WriteInput(content.ToString());
 
         var command = new ProgramGetCommand
         {

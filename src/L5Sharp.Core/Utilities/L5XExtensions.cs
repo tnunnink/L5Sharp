@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -17,7 +18,10 @@ internal static class L5XExtensions
     /// </summary>
     /// <param name="value">The string input to analyze.</param>
     /// <returns>True if the string is empty. Otherwise, false.</returns>
-    internal static bool IsEmpty(this string value) => value.Equals(string.Empty);
+    internal static bool IsEmpty(this string value)
+    {
+        return value.Equals(string.Empty);
+    }
 
     /// <summary>
     /// Determines if this string is the same as, meaning equal to regardless of case, another string.
@@ -28,8 +32,10 @@ internal static class L5XExtensions
     /// equality comparer, Otherwise <c>false</c>.</returns>
     /// <remarks>This is a simplified way of calling the string comparer equals method since it is a little verbose.
     /// This could be used a lot since Logix naming is case agnostic.</remarks>
-    internal static bool IsEquivalent(this string value, string? other) =>
-        StringComparer.OrdinalIgnoreCase.Equals(value, other);
+    internal static bool IsEquivalent(this string value, string? other)
+    {
+        return StringComparer.OrdinalIgnoreCase.Equals(value, other);
+    }
 
     /// <summary>
     /// Creates and configures a <see cref="InvalidOperationException"/> to be thrown for required properties of complex
@@ -51,6 +57,27 @@ internal static class L5XExtensions
         exception.Data.Add("line", line);
         exception.Data.Add("element", element.ToString());
         return exception;
+    }
+    
+    /// <summary>
+    /// Attempts to retrieve the value of the specified attribute from the given XML element.
+    /// </summary>
+    /// <param name="element">The XML element to search for the attribute.</param>
+    /// <param name="name">The name of the attribute to look for.</param>
+    /// <param name="value">The output parameter that will contain the value of the attribute if found, or null if not found.</param>
+    /// <returns>True if the attribute is found and the value is retrieved; otherwise, false.</returns>
+    internal static bool TryGetAttribute(this XElement element, XName name, out string value)
+    {
+        var attribute = element.Attribute(name);
+
+        if (attribute is null)
+        {
+            value = null!;
+            return false;
+        }
+
+        value = attribute.Value;
+        return true;
     }
 
     /// <summary>
@@ -105,6 +132,19 @@ internal static class L5XExtensions
         return element.Attribute(L5XName.DataType)?.Value
                ?? element.Parent?.Attribute(L5XName.DataType)?.Value
                ?? null;
+    }
+
+    /// <summary>
+    /// Computes a SHA-256 hash of the provided XML element in string form and encodes it as a Base64 string.
+    /// </summary>
+    /// <param name="element">The XML element to compute the hash for.</param>
+    /// <returns>A Base64-encoded string representing the SHA-256 hash of the XML element.</returns>
+    internal static string ComputeHash(this XElement element)
+    {
+        var xml = element.ToString();
+        using var sha = SHA256.Create();
+        var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(xml));
+        return Convert.ToBase64String(hash);
     }
 
     /// <summary>
@@ -190,9 +230,9 @@ internal static class L5XExtensions
     /// Attempts to retrieve the last supported (non-L5K) formatted data element from the specified XElement.
     /// </summary>
     /// <param name="element">The XElement from which to extract the formatted data.</param>
-    /// <param name="data">When this method returns, contains the formatted data if found; otherwise, null.</param>
+    /// <param name="data">When this method returns, contains the formatted <see cref="LogixData"/> if found; otherwise, null.</param>
     /// <returns>True if formatted data is successfully found and assigned to the out parameter; otherwise, false.</returns>
-    internal static bool TryGetFormattedData(this XElement element, out XElement data)
+    internal static bool TryGetFormattedData(this XElement element, out LogixData data)
     {
         //We get the last data element found since Rockwell documentation states that data is applied in document order.
         //L5K is not a supported format.
@@ -204,7 +244,7 @@ internal static class L5XExtensions
 
         if (formatted is not null)
         {
-            data = formatted;
+            data = formatted.Deserialize<LogixData>();
             return true;
         }
 
@@ -296,39 +336,6 @@ internal static class L5XExtensions
             or L5XName.OutputTag
             or L5XName.InAliasTag
             or L5XName.OutAliasTag;
-    }
-
-    /// <summary>
-    /// Determines if the current element represents an element, we would deserialize as a <see cref="Tag"/> component.
-    /// </summary>
-    /// <param name="element">The element to check.</param>
-    /// <returns><c>true</c> if the element name is a tag element; otherwise, <c>false</c></returns>
-    private static bool IsDataMemberElement(this XElement element)
-    {
-        return element.Name.LocalName
-            is L5XName.DataValueMember
-            or L5XName.ArrayMember
-            or L5XName.StructureMember;
-    }
-
-    /// <summary>
-    /// Determines if the specified XElement represents a block element within the L5X structure.
-    /// </summary>
-    /// <param name="element">The XElement to analyze.</param>
-    /// <returns>True if the XElement is a block element. Otherwise, false.</returns>
-    internal static bool IsBlockElement(this XElement element)
-    {
-        return element.Name.LocalName
-            is L5XName.IRef
-            or L5XName.ORef
-            or L5XName.ICon
-            or L5XName.OCon
-            or L5XName.Block
-            or L5XName.Function
-            or L5XName.AddOnInstruction
-            or L5XName.JSR
-            or L5XName.SBR
-            or L5XName.RET;
     }
 
     /// <summary>

@@ -57,8 +57,5 @@ public class Chart : LogixCode<Chart>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages() => [];
-
-    /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies() => [];
 }

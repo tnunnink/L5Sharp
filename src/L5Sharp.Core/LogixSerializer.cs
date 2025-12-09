@@ -35,6 +35,7 @@ public static class LogixSerializer
         RegisterAtomicData();
         RegisterStructureData();
         RegisterArrayElementData();
+        RegisterEncodedData();
     }
 
     /// <summary>
@@ -270,6 +271,34 @@ public static class LogixSerializer
                 return new StructureData(structure);
             },
             L5XName.Element
+        );
+    }
+
+    /// <summary>
+    /// Register the encoded data element with the custom deserializer. This function will use the encoded type attribute
+    /// as the means for mapping to the correct class type. 
+    /// </summary>
+    private static void RegisterEncodedData()
+    {
+        Register<ILogixComponent>(e =>
+            {
+                e.TryGetAttribute(L5XName.EncodedType, out var type);
+
+                //I'm not sure of all the type values that are possible here, just doing the common component types.
+                //If one is missing, we can add it.
+                return type switch
+                {
+                    L5XName.DataType => new DataType(e),
+                    L5XName.AddOnInstructionDefinition => new AddOnInstruction(e),
+                    L5XName.Module => new Module(e),
+                    L5XName.Tag => new Tag(e),
+                    L5XName.Program => new Program(e),
+                    L5XName.Routine => new Routine(e),
+                    L5XName.Task => new Task(e),
+                    _ => throw new NotSupportedException($"The encoded data type is not currently supported: '{type}'")
+                };
+            },
+            L5XName.EncodedData
         );
     }
 }

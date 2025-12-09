@@ -173,8 +173,7 @@ public sealed class Task : LogixComponent<Task>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        if (!TryGetDocument(out var doc)) return [];
-        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic?.HasReference(Reference) is true);
+        return base.Usages().Where(x => x.IsLogic && x.Logic.Key == nameof(Instruction.EVENT));
     }
 
     /// <inheritdoc />

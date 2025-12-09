@@ -81,8 +81,12 @@ public sealed class Reference
     public string Routine => ParseRoutine(_path.Expression);
 
     /// <summary>
-    /// Attempts to parse the instruction text of the reference path if it exists. 
+    /// Attempts to parse the instruction text of the reference path if it exists.
     /// </summary>
+    /// <remarks>
+    /// The instruction text is embedded in the XPath using the text contains function.
+    /// Embedding this additional data allows provides more info regarding the location of a code reference.
+    /// </remarks>
     public Instruction Logic => ParseInstruction(_path.Expression);
     
     /// <summary>
@@ -169,7 +173,7 @@ public sealed class Reference
             throw new ArgumentNullException(nameof(logic));
 
         if (!IsLogic)
-            throw new InvalidOperationException("This operation is only support by Logic type references");
+            throw new InvalidOperationException("This operation is only valid for Logic type references");
         
         var builder = new StringBuilder();
         builder.Append(Path).Append($"/Text[contains(text(), \"{logic}\")]");
@@ -191,7 +195,7 @@ public sealed class Reference
             throw new ArgumentNullException(nameof(tagName));
 
         if (!IsTag)
-            throw new InvalidOperationException("This operation is only support by Tag type references");
+            throw new InvalidOperationException("This operation is only valid for Tag type references");
         
         var path = Path.Replace(Location, tagName);
         return Reference.To(path);

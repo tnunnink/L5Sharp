@@ -14,8 +14,8 @@ public class ProgramDeleteCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var content = L5X.Empty();
-        console.WriteInput(content.Serialize().ToString());
-        
+        console.WriteInput(content.ToString());
+
         var command = new ProgramDeleteCommand { Name = "Test" };
 
         await command.ExecuteAsync(console);
@@ -34,8 +34,8 @@ public class ProgramDeleteCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var content = await L5X.LoadAsync(Known.Test);
-        console.WriteInput(content.Serialize().ToString());
-        
+        console.WriteInput(content.ToString());
+
         var command = new ProgramDeleteCommand { Name = name };
 
         await command.ExecuteAsync(console);

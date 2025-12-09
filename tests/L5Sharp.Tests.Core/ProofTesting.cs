@@ -1,17 +1,18 @@
-﻿namespace L5Sharp.Tests.Core;
+﻿using FluentAssertions;
+
+namespace L5Sharp.Tests.Core;
 
 [TestFixture]
 public class ProofTesting
 {
     [Test]
-    public void ScopeDic()
+    public void Indexing()
     {
-        /*var content = XElement.Load(Known.Example);
+        var content = L5X.Load(Known.Example);
+        var index = new LogixIndex(content);
+        
+        var result = index.GetEntity<Tag>(Known.Tag);
 
-        var lookup = content.Descendants()
-            .Where(e => e.IsReferenceElement() && e.IsIdentifiable())
-            .ToDictionary(Reference.To);
-
-        lookup.Should().NotBeEmpty();*/
+        result.Should().NotBeNull();
     }
 }

@@ -322,9 +322,9 @@ public class Module : LogixComponent<Module>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        if (!TryGetDocument(out var doc)) return [];
-        
-        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference)) ?? [];
+        return base.Usages().Where(x =>
+            x.IsLogic && x.Logic.Key == nameof(Instruction.GSV) || x.Logic.Key == nameof(Instruction.SSV)
+        );
     }
 
     /// <inheritdoc />

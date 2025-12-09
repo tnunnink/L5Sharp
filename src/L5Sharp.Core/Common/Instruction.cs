@@ -97,9 +97,6 @@ public sealed class Instruction
     {
         if (string.IsNullOrEmpty(text))
             throw new ArgumentException("Instruction text can not be null or empty.", nameof(text));
-        
-        //Remove the rung terminator if present.
-        text = text.TrimEnd(';');
 
         //Open parenthesis must not be the first character and string must end with close parenthesis.
         if (text != "UNK" && (text.IndexOf(Open) < 1 || !text.EndsWith(Close)))
@@ -190,24 +187,23 @@ public sealed class Instruction
     }
 
     /// <summary>
-    /// Attempts to parse the provided text into an <see cref="Instruction"/> instance.
-    /// Returns null if the text is null, empty, or does not contain the required delimiters.
+    /// Attempts to parse the specified text into an <see cref="Instruction"/> object.
     /// </summary>
-    /// <param name="text">The string representation of an instruction to parse.</param>
-    /// <returns>
-    /// An <see cref="Instruction"/> object if the parsing is successful; otherwise, null.
-    /// </returns>
-    public static Instruction? TryParse(string? text)
+    /// <param name="text">The string representation of the instruction to parse. Null or empty values are invalid.</param>
+    /// <param name="parsed">When the method returns, contains the parsed <see cref="Instruction"/> object if the parsing is successful; otherwise, null.</param>
+    /// <returns>True if the parsing succeeds and an <see cref="Instruction"/> object is created; otherwise, false.</returns>
+    public static bool TryParse(string? text, out Instruction parsed)
     {
-        if (text is null || text.IsEmpty())
-            return null;
+        parsed = null!;
 
-        text = text.Trim(';');
+        //Rung line terminators may be present, and we should trim those to get just the instruction text.
+        text = text?.TrimEnd(';') ?? string.Empty;
 
-        if (text.IndexOf(Open) < 1 || !text.EndsWith(Close))
-            return null;
+        if (text.IsEmpty()) return false;
+        if (text.IndexOf(Open) < 1 || !text.EndsWith(Close)) return false;
 
-        return new Instruction(text);
+        parsed = new Instruction(text);
+        return true;
     }
 
     /// <summary>
@@ -244,16 +240,6 @@ public sealed class Instruction
     public Instruction With(params Argument[] arguments)
     {
         return new Instruction(Key, arguments);
-    }
-
-    /// <summary>
-    /// Determines whether the instruction contains the specified reference.
-    /// </summary>
-    /// <param name="reference">The reference to check for within the instruction.</param>
-    /// <returns>A boolean value indicating whether the reference is contained in the instruction.</returns>
-    public bool HasReference(Reference reference)
-    {
-        return ContainsReference(reference.Type, reference.Location);
     }
 
     /// <inheritdoc />
@@ -1830,117 +1816,6 @@ public sealed class Instruction
         var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
 
         return arguments.SelectMany(a => a.Values).ToArray();
-    }
-
-    /*private Reference[] GetReferences()
-    {
-        var references = new List<Reference>();
-
-        switch (Key)
-        {
-            case nameof(GSV) or nameof(SSV) when Arguments.Count >= 2:
-            {
-                //For GSV/SSV the first 2 args might refer to a component.
-                var component = Reference.To($"{Arguments[0]}[@Name='{Arguments[1]}']");
-                if (component.Type != ReferenceType.Null) references.Add(component);
-                //The last arg is a reference to a destination tag.
-                references.Add(Reference.To<Tag>(Arguments.Last()));
-                break;
-            }
-            case nameof(EVENT) when Arguments.Count == 1:
-            {
-                //EVENT refers to a task component by name.
-                references.Add(Reference.To<Task>(Arguments[0]));
-                break;
-            }
-            case nameof(JSR) or nameof(JXR) or nameof(SFR) or nameof(SFP) or nameof(FOR) when Arguments.Count >= 1:
-            {
-                //These all contain references to routines by name as the first argument.
-                references.Add(Reference.To<Routine>(Arguments[0]));
-                //The remaining arguments should be tags or immediate values, so we will grab any tags found.
-                references.AddRange(Arguments.Skip(1).Where(a => a.Type.IsTag).Select(a => Reference.To<Tag>(a)));
-                break;
-            }
-            default:
-            {
-                //All other instructions we just want to parse any tag references
-                .AddRange(Arguments.SelectMany(a => a.Tags).Select(a => Reference.To<Tag>(a)));
-
-                //If this insturuction is not known, then we assume it is an AOI
-                //(I'm not sure if this is a fair assumption but going with it for now).
-                if (!_known.ContainsKey(Key)) references.Add(Reference.To<AddOnInstruction>(Key));
-
-                break;
-            }
-        }
-
-        return references.ToArray();
-    }*/
-
-    /// <summary>
-    /// Determines whether the current instruction contains a reference to a specified component based on
-    /// the provided type and name.
-    /// </summary>
-    /// <param name="type">The type of reference to evaluate, such as Tag, Task, Routine, or Aoi.</param>
-    /// <param name="name">The name of the component to match against the instruction's arguments.</param>
-    /// <returns>True if the instruction references the specified component; otherwise, false.</returns>
-    private bool ContainsReference(ReferenceType type, string name)
-    {
-        //For AOI references we don't need to check arguments, just the key/name and if it is known or not.
-        if (type == ReferenceType.Aoi && !_known.ContainsKey(Key) && Key == name) return true;
-
-        var arguments = Arguments.ToArray();
-
-        return Key switch
-        {
-            nameof(GSV) when HasComponentMatch(arguments) => true,
-            nameof(SSV) when HasComponentMatch(arguments) => true,
-            nameof(EVENT) when HasTaskMatch(arguments) => true,
-            nameof(JSR) when HasRoutineMatch(arguments) => true,
-            nameof(JXR) when HasRoutineMatch(arguments) => true,
-            nameof(SFR) when HasRoutineMatch(arguments) => true,
-            nameof(SFP) when HasRoutineMatch(arguments) => true,
-            nameof(FOR) when HasRoutineMatch(arguments) => true,
-            _ => HasTagMatch(arguments)
-        };
-
-        bool HasComponentMatch(Argument[] args)
-        {
-            var hasComponent = args.Length >= 2
-                               && args[0].ToString().IsEquivalent(type.Name)
-                               && args[1].ToString().IsEquivalent(name);
-
-            var hasTag = type.Name == ReferenceType.Tag
-                         && args.Length == 4
-                         && args[4].ToString().IsEquivalent(name);
-
-            return hasComponent || hasTag;
-        }
-
-        bool HasTaskMatch(Argument[] args)
-        {
-            return type.Name == ReferenceType.Task
-                   && args.Length == 1
-                   && args[0].ToString().IsEquivalent(name);
-        }
-
-        bool HasRoutineMatch(Argument[] args)
-        {
-            var hasRoutine = type == ReferenceType.Routine
-                             && args.Length >= 1
-                             && args[0].ToString().IsEquivalent(name);
-
-            var hasTag = type == ReferenceType.Tag
-                         && args.Length >= 1
-                         && arguments.Skip(1).Any(a => a.ToString().IsEquivalent(name));
-
-            return hasRoutine || hasTag;
-        }
-
-        bool HasTagMatch(Argument[] args)
-        {
-            return type == ReferenceType.Tag && args.SelectMany(a => a.Tags).Any(t => t == name);
-        }
     }
 
     /// <summary>

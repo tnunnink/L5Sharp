@@ -11,6 +11,7 @@ namespace L5Sharp.Samples
         public static readonly string TestAcd = Path.Combine(Directory, "Test.ACD");
         public static readonly string Empty = Path.Combine(Directory, "Empty.L5X");
         public static readonly string LotOfTags = Path.Combine(Directory, "LotOfTags.L5X");
+        public static readonly string AoiSignedExport = Path.Combine(Directory, "Instructions", "aoiSigned_AOI.L5X");
         public static readonly string ModuleExport = Path.Combine(Directory, "Modules", "TestCard.L5X");
         public static readonly string ModuleRackIoExport = Path.Combine(Directory, "Modules", "RackIO.L5X");
         public static readonly string DataTypeExport = Path.Combine(Directory, "DataTypes", "ComplexType.L5X");

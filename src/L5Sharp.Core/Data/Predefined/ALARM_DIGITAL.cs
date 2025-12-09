@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming
@@ -48,25 +50,23 @@ public sealed class ALARM_DIGITAL : StructureData
     }
 
     /// <inheritdoc />
-    /// <remarks>
-    /// This constructor will convert the provided element to a structure format so that it will work with
-    /// how the data classes are set up, and we won't need special code to generate virtual members or handle
-    /// getting and setting the element attributes.
-    /// </remarks>
-    public ALARM_DIGITAL(XElement element) : base(ToStructure<ALARM_DIGITAL>(element))
+    public ALARM_DIGITAL(XElement element) : base(element)
     {
     }
 
     /// <inheritdoc />
     public override string Name => nameof(ALARM_DIGITAL);
 
+    /// <inheritdoc />
+    public override IEnumerable<LogixMember> Members => Element.Attributes().Select(a => new LogixMember(Element, a));
+
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.
     /// </summary>
     public BOOL EnableIn
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -74,8 +74,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL In
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -83,8 +83,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL InFault
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -92,8 +92,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL Condition
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -101,8 +101,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL AckRequired
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -110,8 +110,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL Latched
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -119,8 +119,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgAck
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -128,8 +128,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperAck
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -137,8 +137,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgReset
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -146,8 +146,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperReset
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -155,8 +155,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgSuppress
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -164,8 +164,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperSuppress
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -173,8 +173,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgUnsuppress
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -182,8 +182,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperUnsuppress
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -191,8 +191,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperShelve
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -200,8 +200,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgUnshelve
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -209,8 +209,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperUnshelve
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -218,8 +218,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgDisable
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -227,8 +227,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperDisable
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -236,8 +236,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgEnable
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -245,8 +245,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperEnable
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -254,8 +254,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL AlarmCountReset
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -263,8 +263,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL UseProgTime
     {
-        get => GetMember<BOOL>();
-        set => SetMember(value);
+        get => GetRequiredValue(BOOL.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -272,8 +272,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public LINT ProgTime
     {
-        get => GetMember<LINT>();
-        set => SetMember(value);
+        get => GetRequiredValue(LINT.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -281,8 +281,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT Severity
     {
-        get => GetMember<DINT>();
-        set => SetMember(value);
+        get => GetRequiredValue(DINT.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -290,8 +290,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT MinDurationPRE
     {
-        get => GetMember<DINT>();
-        set => SetMember(value);
+        get => GetRequiredValue(DINT.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -299,8 +299,8 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT ShelveDuration
     {
-        get => GetMember<DINT>();
-        set => SetMember(value);
+        get => GetRequiredValue(DINT.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -308,22 +308,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT MaxShelveDuration
     {
-        get => GetMember<DINT>();
-        set => SetMember(value);
-    }
-
-    /// <inheritdoc />
-    /// <remarks>
-    /// When we serialize the ....
-    /// </remarks>
-    public override XElement Serialize()
-    {
-        foreach (var member in Members)
-        {
-            Element.SetAttributeValue(member.Name, member.Value.ToString());
-        }
-
-        Element.RemoveNodes();
-        return Element;
+        get => GetRequiredValue(DINT.Parse);
+        set => SetRequiredValue(value);
     }
 }

@@ -102,7 +102,7 @@ public class AddOnInstructionTests
 
         var content = instruction.Export();
 
-        return VerifyXml(content.Serialize().ToString())
+        return VerifyXml(content.ToString())
             .ScrubMember("ProjectCreationDate")
             .ScrubMember("LastModifiedDate")
             .ScrubMember("CreatedDate")
@@ -183,5 +183,15 @@ public class AddOnInstructionTests
         var result = type.Instantiate("TestAoiTag", "Param1", "Param2", 123, 0);
 
         result.Should().Be("TestAOI(TestAoiTag,Param1,Param2,123,0)");
+    }
+
+    [Test]
+    public void Deserialize_SignedAoi_ShouldBeExpected()
+    {
+        var content = L5X.Load(Known.AoiSignedExport);
+
+        var result = content.AddOnInstructions.First();
+
+        result.Should().NotBeNull();
     }
 }

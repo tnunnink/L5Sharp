@@ -15,7 +15,7 @@ public class ProgramListCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var content = await L5X.LoadAsync(Known.Test);
-        console.WriteInput(content.Serialize().ToString());
+        console.WriteInput(content.ToString());
 
         var command = new ProgramListCommand
         {
@@ -37,7 +37,7 @@ public class ProgramListCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var content = await L5X.LoadAsync(Known.Test);
-        console.WriteInput(content.Serialize().ToString());
+        console.WriteInput(content.ToString());
 
         var command = new ProgramListCommand
         {
@@ -59,7 +59,7 @@ public class ProgramListCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var content = await L5X.LoadAsync(Known.Test);
-        console.WriteInput(content.Serialize().ToString());
+        console.WriteInput(content.ToString());
 
         var command = new ProgramListCommand
         {
@@ -80,7 +80,7 @@ public class ProgramListCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var project = await L5X.LoadAsync(Known.Test);
-        console.WriteInput(project.Serialize().ToString());
+        console.WriteInput(project.ToString());
 
         var command = new ProgramListCommand
         {
@@ -92,7 +92,7 @@ public class ProgramListCommandTests
 
         await VerifyJson(console.ReadOutputString());
     }
-    
+
     [Test]
     [TestCase(1)]
     [TestCase(10)]
@@ -102,7 +102,7 @@ public class ProgramListCommandTests
     {
         using var console = new FakeInMemoryConsole();
         var project = await L5X.LoadAsync(Known.Test);
-        console.WriteInput(project.Serialize().ToString());
+        console.WriteInput(project.ToString());
 
         var command = new ProgramListCommand
         {

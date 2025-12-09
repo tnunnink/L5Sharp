@@ -208,25 +208,17 @@ public class Program : LogixComponent<Program>
     /// </remarks>
     public Task? Task => GetScheduledTask();
 
-
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        if (!TryGetDocument(out var doc)) return [];
-
-        var usages = new List<Reference>();
+        //Will get all scoped code usages.
+        var usages = base.Usages().ToList();
 
         //Programs are "used" by tasks that they are scheduled in.
         if (Task is not null)
         {
             usages.Add(Task.Reference);
         }
-
-        //Programs can be references in system instruction code references
-        var codeReferences = doc.Code()
-            .SelectMany(c => c.Usages())
-            .Where(r => r.Logic.HasReference(Reference));
-        usages.AddRange(codeReferences);
 
         return usages;
     }

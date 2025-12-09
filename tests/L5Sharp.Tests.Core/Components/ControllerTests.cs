@@ -47,7 +47,7 @@ public class ControllerTests
         controller.Security.Should().BeNull();
         controller.RedundancyInfo.Should().BeNull();
         controller.DataTypes.Should().BeEmpty();
-        controller.Instructions.Should().BeEmpty();
+        controller.AddOnInstructions.Should().BeEmpty();
         controller.Modules.Should().BeEmpty();
         controller.Tags.Should().BeEmpty();
         controller.Programs.Should().BeEmpty();

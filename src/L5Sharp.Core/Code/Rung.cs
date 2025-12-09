@@ -95,12 +95,6 @@ public class Rung : LogixCode<Rung>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
-    {
-        return Instructions().Select(x => Reference.ToLogic(x));
-    }
-
-    /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {
         var dependencies = new List<ILogixEntity>();

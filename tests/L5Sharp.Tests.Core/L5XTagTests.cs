@@ -56,7 +56,7 @@ public class L5XTagTests
 
         inAliasTag.Should().NotBeNull();
         inAliasTag?.Value.Should().NotBeNull();
-        
+
         var member = inAliasTag?.Member("Data");
         member.Should().NotBeNull();
         member?.Value.Should().Be(0);
@@ -67,10 +67,10 @@ public class L5XTagTests
     {
         var content = L5X.Load(Known.ModuleRackIoExport);
         var member = content.Query<Tag>().First(t => t.Name == "RackIO:1:I")["Data"];
-        
+
         member.Value = 1234;
 
-        return VerifyXml(content.Serialize().ToString())
+        return VerifyXml(content.ToString())
             .ScrubMembersWithType<DateTime>()
             .ScrubMember("ProjectCreationDate")
             .ScrubMember("LastModifiedDate");

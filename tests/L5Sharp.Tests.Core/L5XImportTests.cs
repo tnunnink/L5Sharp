@@ -14,7 +14,7 @@ public class L5XImportTests
             .Force()
         );
 
-        return VerifyXml(content.Serialize().ToString());
+        return VerifyXml(content.ToString());
     }
 
     [Test]
@@ -28,7 +28,7 @@ public class L5XImportTests
             .Discard<DataType>(d => d.Name == "SimpleType")
         );
 
-        return VerifyXml(content.Serialize().ToString());
+        return VerifyXml(content.ToString());
     }
 
     [Test]
@@ -46,7 +46,7 @@ public class L5XImportTests
             )
         );
 
-        return VerifyXml(content.Serialize().ToString());
+        return VerifyXml(content.ToString());
     }
 
     [Test]
@@ -59,7 +59,7 @@ public class L5XImportTests
             .Module()
         );
 
-        return VerifyXml(content.Serialize().ToString());
+        return VerifyXml(content.ToString());
     }
 
     [Test]
@@ -78,7 +78,7 @@ public class L5XImportTests
             })
         );
 
-        return VerifyXml(content.Serialize().ToString());
+        return VerifyXml(content.ToString());
     }
 
     [Test]
@@ -91,6 +91,6 @@ public class L5XImportTests
             .DataType("ComplexType")
         );
 
-        return VerifyXml(content.Serialize().ToString());
+        return VerifyXml(content.ToString());
     }
 }

@@ -409,7 +409,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
         foreach (var attribute in element.Attributes())
         {
             var name = attribute.Name.LocalName;
-            
+
             //Use the type registry to get the name. These should all be atomic types.
             var dataType = LogixType.NameFor(propertyLookup[name]);
 
@@ -455,26 +455,6 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
             throw new InvalidOperationException($"Member already exists in structure type: '{member.Name}'");
 
         Element.Add(member.Serialize());
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="member"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="ArgumentException"></exception>
-    private void ReplaceMember(string name, LogixMember member)
-    {
-        if (member is null)
-            throw new ArgumentNullException(nameof(member), "Can not add a null member to a structure type object.");
-
-        var target = Element.Elements().SingleOrDefault(e => e.MemberName().IsEquivalent(name));
-
-        if (target is null)
-            throw new ArgumentException($"No member with name {name} was found in the structure.");
-
-        target.ReplaceWith(member.Serialize());
     }
 
     /// <summary>

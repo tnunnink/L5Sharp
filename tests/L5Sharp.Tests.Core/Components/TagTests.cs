@@ -1221,4 +1221,28 @@ public class TagTests
     }
 
     #endregion
+
+    #region UsageTests
+
+    [Test]
+    public void Usages_ForAllTagsExampleFile_ShouldNotTakeForever()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var result = content.Query<Tag>().SelectMany(t => t.Usages()).ToList();
+
+        result.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void TagCount()
+    {
+        var content = L5X.Load(Known.Example);
+
+        var tags = content.Query<Tag>().ToList();
+        
+        Console.WriteLine(tags.Count);
+    }
+
+    #endregion
 }

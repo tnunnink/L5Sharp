@@ -156,7 +156,7 @@ namespace L5Sharp.Tests.Core.Components
             var program = new Program("Program1");
             task.AddProgram(program);
 
-            var xml = content.Serialize().ToString();
+            var xml = content.ToString();
 
             return VerifyXml(xml)
                 .IgnoreMember("ProjectCreationDate")
@@ -170,7 +170,7 @@ namespace L5Sharp.Tests.Core.Components
         {
             var content = L5X.Load(Known.Test);
             var task = content.Get<LTask>("Event");
-            
+
             var references = task.Usages().ToArray();
 
             references.Should().HaveCount(1);

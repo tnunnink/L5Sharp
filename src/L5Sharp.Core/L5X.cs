@@ -1,9 +1,11 @@
 ﻿// ReSharper disable RedundantUsingDirective
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -15,16 +17,29 @@ namespace L5Sharp.Core;
 /// This is the primary entry point for interacting with the L5X file.
 /// Provides access to query and manipulate logix components, elements, containers, and more. 
 /// </summary>
-public sealed class L5X : LogixElement
+public sealed class L5X
 {
+    /// <summary>
+    /// The root <see cref="XElement"/> instance representing the serialized structure of the L5X object.
+    /// This property provides access to the underlying XML content of the RSLogix5000 project,
+    /// enabling operations such as querying, serialization, and other element-based manipulations.
+    /// </summary>
+    private XElement Element => Info.Serialize();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private readonly LogixIndex _index;
+
     /// <summary>
     /// Creates a new <see cref="L5X"/> from the provided <see cref="LogixInfo"/>.
     /// </summary>
     /// <param name="info">The <see cref="LogixInfo"/> object that represents the L5X content.</param>
-    public L5X(LogixInfo info) : base(info.Serialize())
+    public L5X(LogixInfo info)
     {
         Info = info;
         Controller = new Controller(Element.Element(L5XName.Controller)!);
+        _index = new LogixIndex(this);
 
         //This stores the L5X object as an in-memory object for the root XElement,
         //allowing child elements to retrieve the object locally without creating a new instance.
@@ -55,7 +70,7 @@ public sealed class L5X : LogixElement
     /// Gets the collection of <see cref="AddOnInstruction"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="AddOnInstruction"/> components.</value>
-    public LogixContainer<AddOnInstruction> Instructions => Controller.Instructions;
+    public LogixContainer<AddOnInstruction> AddOnInstructions => Controller.AddOnInstructions;
 
     /// <summary>
     /// Gets the collection of <see cref="Module"/> components found in the L5X file.
@@ -192,11 +207,11 @@ public sealed class L5X : LogixElement
     /// </returns>
     public IEnumerable<ILogixComponent> Components(Func<ILogixComponent, bool>? predicate = null)
     {
-        return Element.Descendants()
+        var results = Element.Descendants()
             .Where(x => x.IsComponentElement() || x.IsModuleTagElement())
-            .Select(e => e.Deserialize())
-            .Cast<ILogixComponent>()
-            .Where(c => predicate is null || predicate.Invoke(c));
+            .Select(e => e.Deserialize<ILogixComponent>());
+
+        return predicate is not null ? results.Where(predicate) : results;
     }
 
     /// <summary>
@@ -206,11 +221,11 @@ public sealed class L5X : LogixElement
     /// <returns>A filtered collection of <see cref="ILogixCode"/> elements satisfying the given predicate, or the entire collection if no predicate is provided.</returns>
     public IEnumerable<ILogixCode> Code(Func<ILogixCode, bool>? predicate = null)
     {
-        return Element.Descendants()
+        var results = Element.Descendants()
             .Where(x => x.IsCodeElement())
-            .Select(e => e.Deserialize())
-            .Cast<ILogixCode>()
-            .Where(c => predicate is null || predicate.Invoke(c));
+            .Select(e => e.Deserialize<ILogixCode>());
+
+        return predicate is not null ? results.Where(predicate) : results;
     }
 
     /// <summary>
@@ -262,7 +277,7 @@ public sealed class L5X : LogixElement
         if (type is null)
             throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
 
-        var types = LogixSerializer.NamesFor(type).ToLookup(x => x);
+        var types = LogixSerializer.NamesFor(type);
 
         return Element.Descendants()
             .Where(e => types.Contains(e.Name.LocalName))
@@ -283,7 +298,7 @@ public sealed class L5X : LogixElement
     /// </remarks>
     public IEnumerable<TEntity> Query<TEntity>() where TEntity : LogixEntity<TEntity>
     {
-        var types = LogixSerializer.NamesFor(typeof(TEntity)).ToLookup(x => x);
+        var types = LogixSerializer.NamesFor(typeof(TEntity));
 
         return Element.Descendants()
             .Where(e => types.Contains(e.Name.LocalName))
@@ -305,7 +320,7 @@ public sealed class L5X : LogixElement
     /// </remarks>
     public IEnumerable<TEntity> Query<TEntity>(Func<TEntity, bool> predicate) where TEntity : LogixEntity<TEntity>
     {
-        var types = LogixSerializer.NamesFor(typeof(TEntity)).ToLookup(x => x);
+        var types = LogixSerializer.NamesFor(typeof(TEntity));
 
         return Element.Descendants()
             .Where(e => types.Contains(e.Name.LocalName))
@@ -356,13 +371,9 @@ public sealed class L5X : LogixElement
         if (reference is null)
             throw new ArgumentNullException(nameof(reference));
 
-        var element = Element.XPathSelectElement(reference);
+        var entity = _index.GetEntity<ILogixEntity>(reference);
 
-        if (element is null)
-            throw new KeyNotFoundException($"No element with the provided reference was found: '{reference}'");
-
-        var result = element.Deserialize<ILogixEntity>();
-        return result is Tag tag ? tag[reference.Location.ToTagName().Path] : result;
+        return entity is Tag tag ? tag[reference.Location.ToTagName().Path] : entity;
     }
 
     /// <summary>
@@ -740,5 +751,5 @@ public sealed class L5X : LogixElement
     }
 
     /// <inheritdoc />
-    public override string ToString() => Info.ToString();
+    public override string ToString() => Element.ToString();
 }

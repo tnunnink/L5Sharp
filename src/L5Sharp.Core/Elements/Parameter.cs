@@ -205,7 +205,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>An <see cref="AtomicData"/> representing the default value/data. Default is <c>null</c>.</value>
     public AtomicData? Default
     {
-        get => Element.TryGetFormattedData(out var data) ? data.Deserialize<AtomicData>() : null;
+        get => Element.TryGetFormattedData(out var data) ? data.As<AtomicData>() : null;
         set => SetElement(DataFormat.Format(value, GetType()));
     }
 

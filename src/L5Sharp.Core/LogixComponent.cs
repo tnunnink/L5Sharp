@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
@@ -47,6 +49,17 @@ public interface ILogixComponent : ILogixEntity
     /// </summary>
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     string? Description { get; set; }
+
+    /// <summary>
+    /// Retrieves a collection of <see cref="Reference"/> that indicate where this component is used within the current project.
+    /// </summary>
+    /// <returns>A collection of <see cref="Reference"/> representing the usages of this entity.</returns>
+    /// <remarks>
+    /// Usages represent references to other elements (typically code or tags) that use/reference this component by name.
+    /// This is similar to the cross-referencing mechanism in Studio 5k and is meant to resemble it at some level.
+    /// Each deriving type must implement logic as needed to find all usages of this entity withing an L5X document.
+    /// </remarks>
+    IEnumerable<Reference> Usages();
 
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.
@@ -128,6 +141,17 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     /// <inheritdoc />
     /// <remarks>This override returns the component name of the type.</remarks>
     public override string ToString() => Name;
+
+    /// <inheritdoc />
+    public virtual IEnumerable<Reference> Usages()
+    {
+        var index = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<LogixIndex>();
+
+        if (index is null)
+            return [];
+
+        return index.FindUsages(Name).Where(r => Scope.IsVisibleTo(r));
+    }
 
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.

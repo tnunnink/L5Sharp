@@ -279,10 +279,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <inheritdoc />
     public override IEnumerable<Reference> Usages()
     {
-        if (!TryGetDocument(out var doc)) return [];
-
-        return doc.Code().SelectMany(c => c.Usages()).Where(r => r.Logic.HasReference(Reference));
-
+        return base.Usages().ToList();
         //todo any type reference to this AOI (tag or other AOI parameter/local tag).
     }
 
@@ -293,14 +290,14 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
 
         foreach (var parameter in Parameters)
         {
-            if (parameter.DataType is null || !this.TryResolveType(parameter.DataType, out var type)) continue;
+            if (parameter.DataType is null || !TryResolveType(parameter.DataType, out var type)) continue;
             dependencies.Add(type);
             dependencies.AddRange(type.Dependencies());
         }
 
         foreach (var tag in LocalTags)
         {
-            if (!this.TryResolveType(tag.DataType, out var type)) continue;
+            if (!TryResolveType(tag.DataType, out var type)) continue;
             dependencies.Add(type);
             dependencies.AddRange(type.Dependencies());
         }

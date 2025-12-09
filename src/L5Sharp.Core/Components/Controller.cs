@@ -68,7 +68,7 @@ public sealed class Controller : LogixElement
         LastModifiedDate = DateTime.Now;
 
         DataTypes = [];
-        Instructions = [];
+        AddOnInstructions = [];
         Modules = [];
         Tags = [];
         Programs = [];
@@ -428,7 +428,7 @@ public sealed class Controller : LogixElement
     /// <summary>
     /// The collection of <see cref="AddOnInstruction"/> objects defined for the controller component.
     /// </summary>
-    public LogixContainer<AddOnInstruction> Instructions
+    public LogixContainer<AddOnInstruction> AddOnInstructions
     {
         // ReSharper disable once ExplicitCallerInfoArgument
         get => GetContainer<AddOnInstruction>(L5XName.AddOnInstructionDefinitions);

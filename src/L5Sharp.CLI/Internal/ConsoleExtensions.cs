@@ -79,10 +79,10 @@ public static class ConsoleExtensions
     /// Writes the specified <see cref="L5X"/> project to the console output in its serialized format.
     /// </summary>
     /// <param name="console">The console instance to which the serialized L5X project will be written.</param>
-    /// <param name="element">The <see cref="L5X"/> project to serialize and write to the console.</param>
-    public static void WriteXml(this IConsole console, LogixElement element)
+    /// <param name="project">The <see cref="L5X"/> project to serialize and write to the console.</param>
+    public static void WriteXml(this IConsole console, L5X project)
     {
-        console.Output.Write(element.Serialize().ToString());
+        console.Output.Write(project.ToString());
     }
 
     /// <summary>
@@ -99,7 +99,7 @@ public static class ConsoleExtensions
         if (item is null)
             throw new ArgumentNullException(nameof(item));
 
-        //If not format is specified use JSON if the output is piped or table for display otherwise.
+        //If no format is specified use JSON if the output is piped or table for display otherwise.
         format ??= console.IsOutputRedirected ? Format.Json : Format.Table;
 
         switch (format)
@@ -269,8 +269,8 @@ public static class ConsoleExtensions
             {
                 if (!map.TryGetValue(p, out var getter))
                     throw new ArgumentException("");
-                
-                kvp[p] = getter(x); 
+
+                kvp[p] = getter(x);
             });*/
             foreach (var property in properties)
             {
