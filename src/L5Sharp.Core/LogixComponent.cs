@@ -59,7 +59,7 @@ public interface ILogixComponent : ILogixEntity
     /// This is similar to the cross-referencing mechanism in Studio 5k and is meant to resemble it at some level.
     /// Each deriving type must implement logic as needed to find all usages of this entity withing an L5X document.
     /// </remarks>
-    IEnumerable<Reference> Usages();
+    IEnumerable<Reference> References();
 
     /// <summary>
     /// Deletes this component and it's references from the current attached L5X file.
@@ -143,14 +143,12 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     public override string ToString() => Name;
 
     /// <inheritdoc />
-    public virtual IEnumerable<Reference> Usages()
+    public virtual IEnumerable<Reference> References()
     {
-        var index = Element.Ancestors(L5XName.RSLogix5000Content).FirstOrDefault()?.Annotation<LogixIndex>();
-
-        if (index is null)
+        if (!TryGetDocument(out var document))
             return [];
 
-        return index.FindUsages(Name).Where(r => Scope.IsVisibleTo(r));
+        return document.References(Name).Where(r => r.IsVisibleTo(Scope));
     }
 
     /// <summary>
@@ -167,7 +165,7 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     {
         if (!TryGetDocument(out var doc)) return;
 
-        var references = Usages();
+        var references = References();
 
         foreach (var reference in references)
         {
@@ -188,9 +186,9 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     public virtual L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;
-        softwareRevision ??= TryGetDocument(out var doc) ? doc.Info.SoftwareRevision : new Revision();
+        softwareRevision ??= TryGetDocument(out var doc) ? doc.Content.SoftwareRevision : new Revision();
 
-        var info = LogixInfo.Create(this, softwareRevision);
+        var info = LogixContent.Create(this, softwareRevision);
         var content = new L5X(info);
         content.Add(this);
 

@@ -109,9 +109,9 @@ namespace L5Sharp.Tests.Core.Common
         [Test]
         public void EVENT_WhenCalled_ShouldBeExpectedProperties()
         {
-            var instruction = Instruction.EVENT("MyTask");
+            var instruction = Instruction.EVENT("Event");
 
-            instruction.Should().Be("EVENT(MyTask)");
+            instruction.Should().Be("EVENT(Event)");
             instruction.Key.Should().Be("EVENT");
             instruction.Arguments.Should().HaveCount(1);
             instruction.IsDesctructive.Should().BeTrue();

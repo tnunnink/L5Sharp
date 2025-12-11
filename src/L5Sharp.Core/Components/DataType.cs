@@ -126,7 +126,7 @@ public class DataType : LogixComponent<DataType>
     /// <exception cref="InvalidOperationException">
     /// Thrown if a member with the given <paramref name="name"/> already exists in the <see cref="DataType"/>.
     /// </exception>
-    public DataTypeMember AddMember(string name, string dataType, Action<DataTypeMember>? config = null)
+    public DataType AddMember(string name, string dataType, Action<DataTypeMember>? config = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Member property 'Name' can not be null or empty");
@@ -140,7 +140,7 @@ public class DataType : LogixComponent<DataType>
         var member = new DataTypeMember { Name = name, DataType = dataType };
         config?.Invoke(member);
         Members.Add(member);
-        return member;
+        return this;
     }
 
     /// <summary>

@@ -13,8 +13,8 @@ public class L5XBasicTests
         var content = L5X.Empty();
 
         content.Should().NotBeNull();
-        content.Info.TargetName.Should().BeEmpty();
-        content.Info.TargetType.Should().Be("Controller");
+        content.Content.TargetName.Should().BeEmpty();
+        content.Content.TargetType.Should().Be("Controller");
     }
 
     [Test]
@@ -35,12 +35,12 @@ public class L5XBasicTests
         var content = L5X.Parse(xml);
 
         content.Should().NotBeNull();
-        content.Info.SchemaRevision.Should().Be("1.0");
-        content.Info.SoftwareRevision.Should().Be("32.02");
-        content.Info.TargetName.Should().Be("TestController");
-        content.Info.TargetType.Should().Be("Controller");
-        content.Info.ContainsContext.Should().Be(false);
-        content.Info.ExportDate.Should().BeAfter(default);
+        content.Content.SchemaRevision.Should().Be("1.0");
+        content.Content.SoftwareRevision.Should().Be("32.02");
+        content.Content.TargetName.Should().Be("TestController");
+        content.Content.TargetType.Should().Be("Controller");
+        content.Content.ContainsContext.Should().Be(false);
+        content.Content.ExportDate.Should().BeAfter(default);
     }
 
     [Test]
@@ -49,12 +49,12 @@ public class L5XBasicTests
         var content = L5X.Load(Known.Test);
 
         content.Should().NotBeNull();
-        content.Info.SchemaRevision.Should().Be("1.0");
-        content.Info.SoftwareRevision.Should().Be("32.02");
-        content.Info.TargetName.Should().Be("TestController");
-        content.Info.TargetType.Should().Be("Controller");
-        content.Info.ContainsContext.Should().Be(false);
-        content.Info.ExportDate.Should().BeAfter(default);
+        content.Content.SchemaRevision.Should().Be("1.0");
+        content.Content.SoftwareRevision.Should().Be("32.02");
+        content.Content.TargetName.Should().Be("TestController");
+        content.Content.TargetType.Should().Be("Controller");
+        content.Content.ContainsContext.Should().Be(false);
+        content.Content.ExportDate.Should().BeAfter(default);
     }
 
     [Test]
@@ -95,36 +95,11 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Test);
 
-        var code = content.Code(c => c.Scope.IsLocalTo("MainProgram")).ToArray();
+        var code = content.Code(c => c.Scope.IsIn("MainProgram")).ToArray();
 
         code.Should().NotBeEmpty();
         code.Should().AllSatisfy(c => c.Reference.Container.Should().Be("MainProgram"));
     }
-
-    //todo is this still something we would want from code?
-    /*[Test]
-    public void Code_SelectUsagesInSpecificRoutine_ShouldReturnExpected()
-    {
-        var content = L5X.Load(Known.Example);
-
-        var usages = content.Code().SelectMany(c => c.Usages()).Where(r => r.Routine == "Main").ToArray();
-
-        usages.Should().NotBeEmpty();
-        usages.Should().AllSatisfy(r => r.Routine.Should().Be("Main"));
-    }
-
-    [Test]
-    public void Code_SelectUsagesWithStringArguments_ShouldReturnExpected()
-    {
-        var content = L5X.Load(Known.Example);
-
-        var usages = content.Code()
-            .SelectMany(c => c.Usages())
-            .Where(r => r.Logic.Arguments.Any(a => a.Type == ArgumentType.String))
-            .ToArray();
-
-        usages.Should().NotBeEmpty();
-    }*/
 
     [Test]
     public void Query_TypeNameOverload_ShouldNotBeEmpty()

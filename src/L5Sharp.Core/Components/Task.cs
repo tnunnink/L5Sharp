@@ -171,9 +171,9 @@ public sealed class Task : LogixComponent<Task>
     public IEnumerable<string> Scheduled => Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
+    public override IEnumerable<Reference> References()
     {
-        return base.Usages().Where(x => x.IsLogic && x.Logic.Key == nameof(Instruction.EVENT));
+        return base.References().Where(r => r.IsLogic && r.Logic.Supports(r.Type));
     }
 
     /// <inheritdoc />

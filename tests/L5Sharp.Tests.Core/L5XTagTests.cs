@@ -32,7 +32,7 @@ public class L5XTagTests
         var content = L5X.Load(Known.Test);
         var tag = content.Tags.Get(Known.Tag);
 
-        var references = tag.Usages();
+        var references = tag.References();
 
         references.Should().NotBeEmpty();
     }

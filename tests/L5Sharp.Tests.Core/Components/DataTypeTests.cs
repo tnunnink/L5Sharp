@@ -103,6 +103,18 @@ namespace L5Sharp.Tests.Core.Components
         }
 
         [Test]
+        public Task AddMember_ChainMembers_ShouldBeVerified()
+        {
+            var type = new DataType("Test");
+
+            type.AddMember("First", "BOOL")
+                .AddMember("Second", "DINT")
+                .AddMember("Third", "TIMER");
+
+            return VerifyXml(type.Serialize().ToString());
+        }
+
+        [Test]
         public void ToData_SimpleType_ShouldHaveExpectedStructure()
         {
             var content = L5X.Load(Known.Test);

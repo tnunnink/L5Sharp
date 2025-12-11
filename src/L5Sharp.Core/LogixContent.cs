@@ -9,7 +9,7 @@ namespace L5Sharp.Core;
 /// RSLogix5000Content element and is used by the Logix software to determine the context of the L5X file.
 /// </summary>
 [LogixElement(L5XName.RSLogix5000Content)]
-public class LogixInfo : LogixElement
+public class LogixContent : LogixElement
 {
     /// <summary>
     /// The date/time format for the L5X content.
@@ -23,7 +23,7 @@ public class LogixInfo : LogixElement
     /// This class encapsulates key details such as schema and software revisions, owner information, export date, and options.
     /// It derives from <see cref="LogixElement"/>, which provides the base functionality for handling XML elements.
     /// </remarks>
-    public LogixInfo(XElement element) : base(element)
+    public LogixContent(XElement element) : base(element)
     {
         if (element.Name.LocalName != L5XName.RSLogix5000Content)
             throw new InvalidOperationException("Expecting root content element to have name 'RSLogix5000Content'");
@@ -84,13 +84,13 @@ public class LogixInfo : LogixElement
     }
 
     /// <summary>
-    /// Creates an empty <see cref="LogixInfo"/> instance with default attributes and values.
+    /// Creates an empty <see cref="LogixContent"/> instance with default attributes and values.
     /// </summary>
     /// <returns>
-    /// A new <see cref="LogixInfo"/> instance representing an empty RSLogix 5000 content element constructed with default schema revision,
+    /// A new <see cref="LogixContent"/> instance representing an empty RSLogix 5000 content element constructed with default schema revision,
     /// software revision, and other attributes.
     /// </returns>
-    public static LogixInfo Empty()
+    public static LogixContent Empty()
     {
         var content = new XElement(L5XName.RSLogix5000Content);
         content.Add(new XAttribute(L5XName.SchemaRevision, new Revision()));
@@ -101,21 +101,21 @@ public class LogixInfo : LogixElement
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
 
-        return new LogixInfo(content);
+        return new LogixContent(content);
     }
 
     /// <summary>
-    /// Creates a new instance of the <see cref="LogixInfo"/> class with the specified name, processor, and revision.
+    /// Creates a new instance of the <see cref="LogixContent"/> class with the specified name, processor, and revision.
     /// </summary>
     /// <param name="name">The name of the controller being created.</param>
     /// <param name="processor">The processor type to be associated with the created controller.</param>
     /// <param name="revision">The software revision of the controller. If not provided, the latest revision for the
     /// specified processor is used (if found).</param>
-    /// <returns>A new instance of the <see cref="LogixInfo"/> class that represents the configured controller metadata.</returns>
+    /// <returns>A new instance of the <see cref="LogixContent"/> class that represents the configured controller metadata.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="name"/> or <paramref name="processor"/>
     /// parameter is null or empty.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the provided processor type is not found in the </exception>
-    public static LogixInfo Create(string name, string processor, Revision? revision = null)
+    public static LogixContent Create(string name, string processor, Revision? revision = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentNullException(nameof(name));
@@ -137,18 +137,18 @@ public class LogixInfo : LogixElement
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
         content.Add(controller.Serialize());
 
-        return new LogixInfo(content);
+        return new LogixContent(content);
     }
 
     /// <summary>
-    /// Creates a new <see cref="LogixInfo"/> instance based on the provided component and optional revision.
+    /// Creates a new <see cref="LogixContent"/> instance based on the provided component and optional revision.
     /// </summary>
-    /// <typeparam name="TComponent">The type of the Logix component used to create the <see cref="LogixInfo"/>.</typeparam>
-    /// <param name="component">The Logix component used to initialize the <see cref="LogixInfo"/>. It cannot be null.</param>
+    /// <typeparam name="TComponent">The type of the Logix component used to create the <see cref="LogixContent"/>.</typeparam>
+    /// <param name="component">The Logix component used to initialize the <see cref="LogixContent"/>. It cannot be null.</param>
     /// <param name="revision">The optional software revision information. If not provided, a default value will be used.</param>
-    /// <returns>Returns a new instance of <see cref="LogixInfo"/> with metadata populated based on the specified component and revision.</returns>
+    /// <returns>Returns a new instance of <see cref="LogixContent"/> with metadata populated based on the specified component and revision.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the <paramref name="component"/> parameter is null.</exception>
-    public static LogixInfo Create<TComponent>(LogixComponent<TComponent> component, Revision? revision = null)
+    public static LogixContent Create<TComponent>(LogixComponent<TComponent> component, Revision? revision = null)
         where TComponent : LogixComponent<TComponent>
     {
         if (component is null)
@@ -163,7 +163,7 @@ public class LogixInfo : LogixElement
         content.Add(new XAttribute(L5XName.Owner, Environment.UserName));
         content.Add(new XAttribute(L5XName.ExportDate, DateTime.Now.ToString(DateTimeFormat)));
 
-        return new LogixInfo(content);
+        return new LogixContent(content);
     }
 
     /*/// <summary>
@@ -205,7 +205,7 @@ public class LogixInfo : LogixElement
         //The default constructor already handles the initialization we want, so we are leveraging that here.
         var controller = new Controller { Name = "Context" }.Serialize();
 
-        //So far the only outlier is modules. Modules can export without even a container element.
+        //So far the only outlier is modules. Modules can export without a container ("Modules") element.
         //This is the only special case we will handle here until we learn otherwise.
         if (element.Attribute(L5XName.TargetType)?.Value == nameof(Module))
         {

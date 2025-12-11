@@ -24,22 +24,23 @@ public sealed class L5X
     /// This property provides access to the underlying XML content of the RSLogix5000 project,
     /// enabling operations such as querying, serialization, and other element-based manipulations.
     /// </summary>
-    private XElement Element => Info.Serialize();
+    private XElement Element => Content.Serialize();
 
     /// <summary>
-    /// 
+    /// Internal index of L5X elements and references to components within the document for fast lookups.
+    /// This class
     /// </summary>
     private readonly LogixIndex _index;
 
     /// <summary>
-    /// Creates a new <see cref="L5X"/> from the provided <see cref="LogixInfo"/>.
+    /// Creates a new <see cref="L5X"/> from the provided <see cref="LogixContent"/>.
     /// </summary>
-    /// <param name="info">The <see cref="LogixInfo"/> object that represents the L5X content.</param>
-    public L5X(LogixInfo info)
+    /// <param name="content">The <see cref="LogixContent"/> object that represents the L5X content.</param>
+    public L5X(LogixContent content)
     {
-        Info = info;
+        Content = content;
         Controller = new Controller(Element.Element(L5XName.Controller)!);
-        _index = new LogixIndex(this);
+        _index = new LogixIndex(Element);
 
         //This stores the L5X object as an in-memory object for the root XElement,
         //allowing child elements to retrieve the object locally without creating a new instance.
@@ -48,11 +49,11 @@ public sealed class L5X
     }
 
     /// <summary>
-    /// The <see cref="LogixInfo"/> instance representing the metadata and descriptive information of the L5X object.
-    /// This property provides essential context and details about the RSLogix5000 content, such as target name, type,
+    /// The <see cref="LogixContent"/> instance representing the metadata and descriptive information of the L5X file.
+    /// This property provides context and details about the RSLogix5000 content, such as target name, type,
     /// and other key attributes.
     /// </summary>
-    public LogixInfo Info { get; }
+    public LogixContent Content { get; }
 
     /// <summary>
     /// Represents the primary controller within a Logix project.
@@ -116,7 +117,7 @@ public sealed class L5X
     public LogixContainer<WatchList> WatchLists => Controller.WatchLists;
 
     /// <summary>
-    /// Creates a new <see cref="L5X"/> by loading the contents of the provide file name.
+    /// Creates a new <see cref="L5X"/> by loading the contents of the provided file name.
     /// </summary>
     /// <param name="fileName">A URI string referencing the file to load.</param>
     /// <returns>A new <see cref="L5X"/> containing the contents of the specified file.</returns>
@@ -129,8 +130,8 @@ public sealed class L5X
     public static L5X Load(string fileName)
     {
         var element = XElement.Load(fileName);
-        var info = new LogixInfo(element);
-        return new L5X(info);
+        var content = new LogixContent(element);
+        return new L5X(content);
     }
 
     /// <summary>
@@ -151,7 +152,8 @@ public sealed class L5X
         token.ThrowIfCancellationRequested();
 
         var element = XElement.Parse(xml);
-        return new L5X(new LogixInfo(element));
+        var content = new LogixContent(element);
+        return new L5X(content);
     }
 
     /// <summary>
@@ -168,8 +170,8 @@ public sealed class L5X
     public static L5X Parse(string xml)
     {
         var element = XElement.Parse(xml);
-        var info = new LogixInfo(element);
-        return new L5X(info);
+        var content = new LogixContent(element);
+        return new L5X(content);
     }
 
     /// <summary>
@@ -185,15 +187,15 @@ public sealed class L5X
     /// <exception cref="InvalidOperationException">No module info is defined for the provided processor type.</exception>
     public static L5X New(string name, string processor, Revision? revision = null)
     {
-        var info = LogixInfo.Create(name, processor, revision);
-        return new L5X(info);
+        var content = LogixContent.Create(name, processor, revision);
+        return new L5X(content);
     }
 
     /// <summary>
-    /// Creates a new, empty <see cref="L5X"/> instance with a default <see cref="LogixInfo"/> configuration.
+    /// Creates a new, empty <see cref="L5X"/> instance with a default <see cref="LogixContent"/> configuration.
     /// </summary>
     /// <returns>An empty <see cref="L5X"/> instance with no additional content.</returns>
-    public static L5X Empty() => new(LogixInfo.Empty());
+    public static L5X Empty() => new(LogixContent.Empty());
 
     /// <summary>
     /// Retrieves a collection of <see cref="ILogixComponent"/> objects from the L5X content, optionally filtered by a specified predicate.
@@ -336,11 +338,7 @@ public sealed class L5X
     /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="reference"/> is <c>null</c>.</exception>
     public bool Contains(Reference reference)
     {
-        if (reference is null)
-            throw new ArgumentNullException(nameof(reference));
-
-        var element = Element.XPathSelectElement(reference);
-        return element is not null;
+        return _index.ContainsElement(reference);
     }
 
     /// <summary>
@@ -355,8 +353,7 @@ public sealed class L5X
             throw new ArgumentNullException(nameof(action));
 
         var reference = Reference.Build(action);
-        var element = Element.XPathSelectElement(reference);
-        return element is not null;
+        return _index.ContainsElement(reference);
     }
 
     /// <summary>
@@ -368,12 +365,8 @@ public sealed class L5X
     /// <exception cref="KeyNotFoundException">Thrown when no element matching the provided <paramref name="reference"/> is found.</exception>
     public ILogixEntity Get(Reference reference)
     {
-        if (reference is null)
-            throw new ArgumentNullException(nameof(reference));
-
-        var entity = _index.GetEntity<ILogixEntity>(reference);
-
-        return entity is Tag tag ? tag[reference.Location.ToTagName().Path] : entity;
+        var element = _index.GetElement<ILogixEntity>(reference);
+        return element is Tag tag ? tag[reference.Location.ToTagName().Path] : element;
     }
 
     /// <summary>
@@ -387,14 +380,8 @@ public sealed class L5X
     public TComponent Get<TComponent>(string name, string? program = null) where TComponent : LogixComponent<TComponent>
     {
         var reference = Reference.To<TComponent>(name, program);
-
-        var element = Element.XPathSelectElement(reference);
-
-        if (element is null)
-            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
-
-        var result = element.Deserialize<TComponent>();
-        return result is Tag tag ? (TComponent)(LogixElement)tag[reference.Location.ToTagName().Path] : result;
+        var element = _index.GetElement<TComponent>(reference);
+        return element is Tag tag ? (TComponent)(LogixElement)tag[reference.Location.ToTagName().Path] : element;
     }
 
     /// <summary>
@@ -409,13 +396,7 @@ public sealed class L5X
     public TCode Get<TCode>(int number, string program, string routine) where TCode : LogixCode<TCode>
     {
         var reference = Reference.To<TCode>(number, program, routine);
-
-        var element = Element.XPathSelectElement(reference);
-
-        if (element is null)
-            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
-
-        return element.Deserialize<TCode>();
+        return _index.GetElement<TCode>(reference);
     }
 
     /// <summary>
@@ -431,13 +412,8 @@ public sealed class L5X
             throw new ArgumentNullException(nameof(action));
 
         var reference = Reference.Build(action);
-        var element = Element.XPathSelectElement(reference);
-
-        if (element is null)
-            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
-
-        var result = element.Deserialize<ILogixEntity>();
-        return result is Tag tag ? tag[reference.Location.ToTagName().Path] : result;
+        var element = _index.GetElement<ILogixEntity>(reference);
+        return element is Tag tag ? tag[reference.Location.ToTagName().Path] : element;
     }
 
     /// <summary>
@@ -458,13 +434,8 @@ public sealed class L5X
         action.Invoke(builder);
         var reference = builder.Build();
 
-        var element = Element.XPathSelectElement(reference);
-
-        if (element is null)
-            throw new KeyNotFoundException($"No element with the provided reference was found: {reference}");
-
-        var result = element.Deserialize<TEntity>();
-        return result is Tag tag ? tag[reference.Location.ToTagName().Path].As<TEntity>() : result;
+        var element = _index.GetElement<TEntity>(reference);
+        return element is Tag tag ? tag[reference.Location.ToTagName().Path].As<TEntity>() : element;
     }
 
     /// <summary>
@@ -476,19 +447,14 @@ public sealed class L5X
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> parameter is null.</exception>
     public bool TryGet(Reference reference, out ILogixEntity entity)
     {
-        if (reference is null)
-            throw new ArgumentNullException(nameof(reference));
-
-        var result = Element.XPathSelectElement(reference)?.Deserialize<ILogixEntity>();
-
-        if (result is null)
+        if (_index.TryGetElement<ILogixEntity>(reference, out var element))
         {
-            entity = null!;
-            return false;
+            var target = element is Tag tag ? tag.Member(reference.Location.ToTagName().Path) : element;
+            return target.IsNull(out entity);
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path) : result;
-        return target.IsNull(out entity);
+        entity = null!;
+        return false;
     }
 
     /// <summary>
@@ -503,16 +469,16 @@ public sealed class L5X
     {
         var reference = Reference.To<TComponent>(name);
 
-        var result = Element.XPathSelectElement(reference)?.Deserialize<TComponent>();
-
-        if (result is null)
+        if (_index.TryGetElement<TComponent>(reference, out var element))
         {
-            component = null!;
-            return false;
+            var target = element is Tag tag
+                ? tag.Member(reference.Location.ToTagName().Path)?.As<TComponent>()
+                : element;
+            return target.IsNull(out component);
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<TComponent>() : result;
-        return target.IsNull(out component);
+        component = null!;
+        return false;
     }
 
     /// <summary>
@@ -528,16 +494,16 @@ public sealed class L5X
     {
         var reference = Reference.To<TComponent>(name, program);
 
-        var result = Element.XPathSelectElement(reference)?.Deserialize<TComponent>();
-
-        if (result is null)
+        if (_index.TryGetElement<TComponent>(reference, out var element))
         {
-            component = null!;
-            return false;
+            var target = element is Tag tag
+                ? tag.Member(reference.Location.ToTagName().Path)?.As<TComponent>()
+                : element;
+            return target.IsNull(out component);
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<TComponent>() : result;
-        return target.IsNull(out component);
+        component = null!;
+        return false;
     }
 
     /// <summary>
@@ -553,15 +519,13 @@ public sealed class L5X
     {
         var reference = Reference.To<TCode>(number, program, routine);
 
-        var result = Element.XPathSelectElement(reference)?.Deserialize<TCode>();
-
-        if (result is null)
+        if (_index.TryGetElement(reference, out code))
         {
-            code = null!;
-            return false;
+            return true;
         }
 
-        return result.IsNull(out code);
+        code = null!;
+        return false;
     }
 
     /// <summary>
@@ -577,17 +541,15 @@ public sealed class L5X
             throw new ArgumentNullException(nameof(action));
 
         var reference = Reference.Build(action);
-        var element = Element.XPathSelectElement(reference);
-        var result = element?.Deserialize<ILogixEntity>();
 
-        if (result is null)
+        if (_index.TryGetElement<ILogixEntity>(reference, out var element))
         {
-            entity = null!;
-            return false;
+            var target = element is Tag tag ? tag.Member(reference.Location.ToTagName().Path) : element;
+            return target.IsNull(out entity);
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path) : result;
-        return target.IsNull(out entity);
+        entity = null!;
+        return false;
     }
 
     /// <summary>
@@ -609,17 +571,30 @@ public sealed class L5X
         action.Invoke(builder);
         var reference = builder.Build();
 
-        var element = Element.XPathSelectElement(reference);
-        var result = element?.Deserialize<TEntity>();
-
-        if (result is null)
+        if (_index.TryGetElement<TEntity>(reference, out var element))
         {
-            entity = null!;
-            return false;
+            var target = element is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<TEntity>() : element;
+            return target.IsNull(out entity);
         }
 
-        var target = result is Tag tag ? tag.Member(reference.Location.ToTagName().Path)?.As<TEntity>() : result;
-        return target.IsNull(out entity);
+        entity = null!;
+        return false;
+    }
+
+    /// <summary>
+    /// Retrieves a collection of <see cref="Reference"/> objects that match the specified name.
+    /// </summary>
+    /// <param name="name">The name of the references to search for.</param>
+    /// <returns>A collection of <see cref="Reference"/> objects that match the specified name.</returns>
+    /// <remarks>
+    /// The name should represent a named logix component such as a <c>Tag</c>, <c>DataType</c>, <c>AOI</c>, etc.
+    /// This method relies on internal indexing of the L5X project file to function. While this method is optimized for
+    /// repeated lookups in read-only scenarios, frequent modifications to the underlying XML will trigger reindexing,
+    /// which may impact performance.
+    /// </remarks>
+    public IEnumerable<Reference> References(string name)
+    {
+        return _index.FindReferences(name);
     }
 
     /// <summary>
@@ -645,7 +620,7 @@ public sealed class L5X
 
         var container = Element
             .Descendants(containerName)
-            .FirstOrDefault(e => Scope.Of(e).IsLocalTo(component.Reference));
+            .FirstOrDefault(e => component.Reference.IsScopedTo(Scope.Of(e)));
 
         if (container is null)
             throw new InvalidOperationException($"Could not find container type {component.GetType()}");

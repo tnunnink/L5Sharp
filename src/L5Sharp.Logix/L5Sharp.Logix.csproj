@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Title>L5Sharp.Logix</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>1.1.0-beta.1</Version>
+        <Version>1.1.0-beta.2</Version>
         <AssemblyVersion>1.1.0</AssemblyVersion>
         <AssemblyFileVersion>1.1.0.0</AssemblyFileVersion>
         <Description>Adds support to load L5X files from ACD file using Logix SDK.</Description>

@@ -1229,7 +1229,7 @@ public class TagTests
     {
         var content = L5X.Load(Known.Example);
 
-        var result = content.Query<Tag>().SelectMany(t => t.Usages()).ToList();
+        var result = content.Query<Tag>().SelectMany(t => t.References()).ToList();
 
         result.Should().NotBeEmpty();
     }

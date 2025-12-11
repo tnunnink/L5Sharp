@@ -58,7 +58,7 @@ internal static class L5XExtensions
         exception.Data.Add("element", element.ToString());
         return exception;
     }
-    
+
     /// <summary>
     /// Attempts to retrieve the value of the specified attribute from the given XML element.
     /// </summary>
@@ -132,19 +132,6 @@ internal static class L5XExtensions
         return element.Attribute(L5XName.DataType)?.Value
                ?? element.Parent?.Attribute(L5XName.DataType)?.Value
                ?? null;
-    }
-
-    /// <summary>
-    /// Computes a SHA-256 hash of the provided XML element in string form and encodes it as a Base64 string.
-    /// </summary>
-    /// <param name="element">The XML element to compute the hash for.</param>
-    /// <returns>A Base64-encoded string representing the SHA-256 hash of the XML element.</returns>
-    internal static string ComputeHash(this XElement element)
-    {
-        var xml = element.ToString();
-        using var sha = SHA256.Create();
-        var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(xml));
-        return Convert.ToBase64String(hash);
     }
 
     /// <summary>

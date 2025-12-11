@@ -7,90 +7,110 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A class that encapsulates the code we need to index the L5X for values that we can look up and find references to.
+/// A class that encapsulates the code required to index the L5X for values that we can look up and find all existing
+/// references to. This class is internal and is exposed through the API of the <see cref="L5X"/>
+/// and <see cref="ILogixComponent"/> types.
 /// </summary>
-public class LogixIndex
+internal class LogixIndex
 {
     /// <summary>
-    /// The L5X file to index for fast lookups of references and usages.
+    /// Indicates whether the L5X content has been successfully indexed for element lookups and reference searches.
     /// </summary>
-    private readonly L5X _file;
+    private bool _isIndexed;
 
     /// <summary>
-    /// Internal cache of all indexed entity references (components and code elements). This lets us find/lookup components
-    /// in constant time and not have to traverse the document. Although more of a micro optimization compared to usages,
-    /// as long as we are indexing the document, it seems that we might as well index these references.
+    /// The L5X content to index for lookup of elements and references.
     /// </summary>
-    private readonly ConcurrentDictionary<Reference, XElement> _references = [];
+    private readonly XElement _content;
 
     /// <summary>
-    /// Internal cache of all indexed usages. These are values/names found in properties in the L5X project that represent
-    /// a usage of another component element. Each value will have an associated list of references that identify
-    /// where in the project the usage was found. The reference object will contain addition information,
-    /// including logic for tag/component usages, so we can further inspect the context of the reference.
-    /// That context will allow components to evaluate which references are applicable
-    /// (since the string key of this dictionary does not make it clear which component type it refers to).
+    /// Internal cache of all referencable elements (components and code elements). This lets us find/lookup elements
+    /// in constant time and not have to traverse the document. This is somewhat of a micro optimization, but since we are
+    /// traversing the document to index references, we might as well index these elements.
     /// </summary>
-    private readonly ConcurrentDictionary<string, List<Reference>> _usages = [];
+    private readonly ConcurrentDictionary<Reference, XElement> _elements = [];
+
+    /// <summary>
+    /// Internal cache of all entity references. These are values/names found in the L5X project that refer to some
+    /// component element. Each value maps to a list of associated references that identify where in the project
+    /// the value is found/referenced. The reference object will contain addition information, including logic for
+    /// tag/component references, so we can further inspect the context of the reference.
+    /// </summary>
+    private readonly ConcurrentDictionary<string, List<Reference>> _references = [];
 
     /// <summary>
     /// Creates a new <see cref="LogixIndex"/> with the provided root content element.
     /// </summary>
     /// <param name="content">The element to index for values and used for lookup operations.</param>
     /// <exception cref="ArgumentNullException">element is null</exception>
-    public LogixIndex(L5X content)
+    public LogixIndex(XElement content)
     {
-        _file = content ?? throw new ArgumentNullException(nameof(content));
+        _content = content ?? throw new ArgumentNullException(nameof(content));
 
-        //Wire up a changed event handler to clear our internal cache when changes are detected to ensure the
-        //validity of the dictionaries.
-        _file.Info.Serialize().Changed += OnContentChanged;
+        //Wire up a changed event handler to reset the local cache when changes are detected.
+        _content.Changed += OnContentChanged;
     }
 
     /// <summary>
-    /// Retrieves an entity of the specified type that corresponds to the provided reference.
+    /// Determines whether the specified <see cref="Reference"/> exists within the indexed elements.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to retrieve. Must implement <see cref="ILogixEntity"/>.</typeparam>
-    /// <param name="reference">The reference associated with the entity to retrieve.</param>
-    /// <returns>The entity of type <typeparamref name="TEntity"/> associated with the given reference.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="reference"/> is null.</exception>
-    /// <exception cref="KeyNotFoundException">Thrown when the <paramref name="reference"/> cannot be found in the index.</exception>
-    public TEntity GetEntity<TEntity>(Reference reference) where TEntity : ILogixEntity
+    /// <param name="reference">The <see cref="Reference"/> to locate in the indexed elements.</param>
+    /// <returns>True if the specified <see cref="Reference"/> exists in the indexed elements; otherwise, false.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="reference"/> parameter is null.</exception>
+    public bool ContainsElement(Reference reference)
     {
         if (reference is null)
             throw new ArgumentNullException(nameof(reference));
 
         IndexIfRequired();
 
-        if (!_references.TryGetValue(reference, out var element))
+        return _elements.ContainsKey(reference);
+    }
+
+    /// <summary>
+    /// Retrieves an entity of the specified type that corresponds to the provided reference.
+    /// </summary>
+    /// <typeparam name="TElement">The type of the element to retrieve. Must implement <see cref="ILogixElement"/>.</typeparam>
+    /// <param name="reference">The reference associated with the entity to retrieve.</param>
+    /// <returns>The entity of type <typeparamref name="TElement"/> associated with the given reference.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="reference"/> is null.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown when the <paramref name="reference"/> cannot be found in the index.</exception>
+    public TElement GetElement<TElement>(Reference reference) where TElement : ILogixElement
+    {
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
+
+        IndexIfRequired();
+
+        if (!_elements.TryGetValue(reference, out var element))
             throw new KeyNotFoundException($"Reference was not found in project: '{reference}'");
 
-        return element.Deserialize<TEntity>();
+        return element.Deserialize<TElement>();
     }
 
     /// <summary>
     /// Attempts to retrieve an entity of the specified type from the index using the given reference.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to retrieve. Must implement <see cref="ILogixEntity"/>.</typeparam>
+    /// <typeparam name="TElement">The type of the entity to retrieve. Must implement <see cref="ILogixElement"/>.</typeparam>
     /// <param name="reference">The reference used to identify the entity in the index.</param>
     /// <param name="result">
-    /// When the method returns, contains the entity of type <typeparamref name="TEntity"/> if found;
+    /// When the method returns, contains the entity of type <typeparamref name="TElement"/> if found;
     /// otherwise, the default value for the type of the <paramref name="result"/> parameter.
     /// </param>
     /// <returns>
     /// <c>true</c> if an entity matching the provided reference was found in the index; otherwise, <c>false</c>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="reference"/> is null.</exception>
-    public bool TryGetEntity<TEntity>(Reference reference, out TEntity result) where TEntity : ILogixEntity
+    public bool TryGetElement<TElement>(Reference reference, out TElement result) where TElement : ILogixElement
     {
         if (reference is null)
             throw new ArgumentNullException(nameof(reference));
 
         IndexIfRequired();
 
-        if (_references.TryGetValue(reference, out var element))
+        if (_elements.TryGetValue(reference, out var element))
         {
-            result = element.Deserialize<TEntity>();
+            result = element.Deserialize<TElement>();
             return true;
         }
 
@@ -99,22 +119,22 @@ public class LogixIndex
     }
 
     /// <summary>
-    /// Finds and returns all references (usages) to the specified name within the index.
+    /// Retrieves all references associated with the specified name.
     /// </summary>
-    /// <param name="name">The name of the element for which to find usages.</param>
+    /// <param name="name">The name for which references are to be found. Must not be null or empty.</param>
     /// <returns>
-    /// A collection of <see cref="Reference"/> objects representing the usages of the specified name.
-    /// Returns an empty collection if no usages are found.
+    /// A collection of <see cref="Reference"/> objects representing the references associated with the given name.
+    /// If no references are found, an empty collection is returned.
     /// </returns>
-    /// <exception cref="ArgumentException">Thrown when the provided name is null or an empty string.</exception>
-    public IEnumerable<Reference> FindUsages(string name)
+    /// <exception cref="ArgumentException">Thrown when the provided name is null or empty.</exception>
+    public IEnumerable<Reference> FindReferences(string name)
     {
         if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("");
+            throw new ArgumentException("Name cannot be null or empty.", nameof(name));
 
         IndexIfRequired();
 
-        return _usages.TryGetValue(name, out var references) ? references : [];
+        return _references.TryGetValue(name, out var references) ? references : [];
     }
 
     /// <summary>
@@ -123,10 +143,11 @@ public class LogixIndex
     /// </summary>
     private void IndexIfRequired()
     {
-        if (_references.Count + _usages.Count > 0)
+        if (_isIndexed)
             return;
 
-        IndexContent(_file.Info.Serialize());
+        IndexContent(_content);
+        _isIndexed = true;
     }
 
     /// <summary>
@@ -166,28 +187,27 @@ public class LogixIndex
         if (element.Name.LocalName is not L5XName.DataType) return;
 
         var reference = Reference.To(element);
-
-        AddOrUpdateReference(reference, element);
+        AddOrUpdateElement(reference, element);
 
         var members = element.Elements(L5XName.Member);
 
         foreach (var member in members)
         {
             if (!member.TryGetAttribute(L5XName.DataType, out var dataType)) continue;
-            AddOrUpdateUsages(dataType, reference);
+            AddOrUpdateReference(dataType, reference);
         }
     }
 
     /// <summary>
     /// Index the provided module element reference.
-    /// Modules also contain tag data that we want to index. Each
+    /// Modules also contain tag data that we want to index.
     /// </summary>
     private void IndexModuleElement(XElement element)
     {
         if (element.Name.LocalName is not L5XName.Module) return;
 
         var reference = Reference.To(element);
-        AddOrUpdateReference(reference, element);
+        AddOrUpdateElement(reference, element);
 
         element.Descendants().Where(e => e.IsTagElement()).ToList().ForEach(IndexTagElement);
     }
@@ -200,7 +220,7 @@ public class LogixIndex
         if (element.Name.LocalName is not L5XName.AddOnInstructionDefinition) return;
 
         var reference = Reference.To(element);
-        AddOrUpdateReference(reference, element);
+        AddOrUpdateElement(reference, element);
 
         element.Element(L5XName.LocalTags)?.Elements(L5XName.LocalTag).ToList().ForEach(IndexTagElement);
         element.Element(L5XName.Parameters)?.Elements(L5XName.Parameter).ToList().ForEach(IndexTagElement);
@@ -215,13 +235,13 @@ public class LogixIndex
         if (element.Name.LocalName is not L5XName.Program) return;
 
         var reference = Reference.To(element);
-        AddOrUpdateReference(reference, element);
+        AddOrUpdateElement(reference, element);
 
         if (element.TryGetAttribute(L5XName.MainRoutineName, out var mainRoutine))
-            AddOrUpdateUsages(mainRoutine, reference);
+            AddOrUpdateReference(mainRoutine, reference);
 
         if (element.TryGetAttribute(L5XName.FaultRoutineName, out var faultRoutine))
-            AddOrUpdateUsages(faultRoutine, reference);
+            AddOrUpdateReference(faultRoutine, reference);
 
         element.Element(L5XName.Tags)?.Elements(L5XName.Tag).ToList().ForEach(IndexTagElement);
         element.Element(L5XName.Routines)?.Elements(L5XName.Routine).ToList().ForEach(IndexRoutineElement);
@@ -235,18 +255,20 @@ public class LogixIndex
     /// </summary>
     private void IndexTagElement(XElement element)
     {
-        if (!element.IsTagElement() || element.Name.LocalName != L5XName.Parameter) return;
+        if (!element.IsTagElement() && element.Name.LocalName != L5XName.Parameter) return;
 
         var reference = Reference.To(element);
-        AddOrUpdateReference(reference, element);
+        AddOrUpdateElement(reference, element);
 
         if (element.TryGetAttribute(L5XName.DataType, out var dataType))
-            AddOrUpdateUsages(dataType, reference);
+            AddOrUpdateReference(dataType, reference);
 
         if (element.TryGetAttribute(L5XName.AliasFor, out var alias))
-            AddOrUpdateUsages(alias, reference);
+            AddOrUpdateReference(alias, reference);
 
         //todo is this right? Is the reference to the tag or the instruction where it is configured. This is so confusing by Rockwell.
+        //todo this was slowing down index quite a bit. I will need to probably figure out to be more explicit/use XElement only.
+        //  I do think this might be the only reference we are missing from the current implementation...
         /*if (element.TryGetFormattedData(out var data) && data is MESSAGE { DestinationTag: not null } message)
             AddOrUpdateUsages(message.DestinationTag, reference);*/
     }
@@ -260,7 +282,7 @@ public class LogixIndex
         if (element.Name.LocalName is not L5XName.Routine) return;
 
         var reference = Reference.To(element);
-        AddOrUpdateReference(reference, element);
+        AddOrUpdateElement(reference, element);
 
         element.Descendants().Where(e => e.IsCodeElement()).ToList().ForEach(IndexCodeElement);
     }
@@ -274,16 +296,16 @@ public class LogixIndex
         if (!element.IsCodeElement()) return;
 
         var code = element.Deserialize<ILogixCode>();
-        AddOrUpdateReference(code.Reference, element);
+        AddOrUpdateElement(code.Reference, element);
 
         foreach (var instruction in code.Instructions())
         {
             var reference = code.Reference.ToLogic(instruction);
 
-            AddOrUpdateUsages(reference.Logic.Key, reference);
+            AddOrUpdateReference(reference.Logic.Key, reference);
 
             foreach (var tag in reference.Logic.Tags)
-                AddOrUpdateUsages(tag, reference);
+                AddOrUpdateReference(tag, reference);
         }
     }
 
@@ -296,34 +318,31 @@ public class LogixIndex
         if (element.Name.LocalName is not L5XName.Task) return;
 
         var reference = Reference.To(element);
-        AddOrUpdateReference(reference, element);
+        AddOrUpdateElement(reference, element);
 
         element.Element(L5XName.ScheduledPrograms)?.Elements(L5XName.ScheduledProgram).ToList().ForEach(e =>
         {
             if (!e.TryGetAttribute(L5XName.Name, out var scheduled)) return;
-            AddOrUpdateUsages(scheduled, reference);
+            AddOrUpdateReference(scheduled, reference);
         });
     }
 
     /// <summary>
-    /// Adds a new reference and its associated element to the collection, or updates the element if the reference already exists.
+    /// Adds a new reference and its associated element to the collection,
+    /// or updates the element if the reference already exists.
     /// </summary>
-    /// <param name="reference">The reference key used for indexing the element.</param>
-    /// <param name="element">The XML element associated with the reference to be added or updated.</param>
-    private void AddOrUpdateReference(Reference reference, XElement element)
+    private void AddOrUpdateElement(Reference reference, XElement element)
     {
-        _references.AddOrUpdate(reference, _ => element, (_, _) => element);
+        _elements.AddOrUpdate(reference, _ => element, (_, _) => element);
     }
 
     /// <summary>
     /// Adds a new reference to the internal usage dictionary if the specified key does not exist,
     /// or updates the existing collection of references associated with the key by appending the new reference.
     /// </summary>
-    /// <param name="key">The key associated with the references in the usage dictionary.</param>
-    /// <param name="reference">The reference to add or update in the collection associated with the specified key.</param>
-    private void AddOrUpdateUsages(string key, Reference reference)
+    private void AddOrUpdateReference(string key, Reference reference)
     {
-        _usages.AddOrUpdate(key, _ => [reference], (_, r) =>
+        _references.AddOrUpdate(key, _ => [reference], (_, r) =>
         {
             r.Add(reference);
             return r;
@@ -332,13 +351,12 @@ public class LogixIndex
 
     /// <summary>
     /// Handles the event when the content of the underlying L5X file changes.
-    /// Clears all cached references and usages to ensure the index remains accurate.
+    /// Clears all cached elements and references to ensure the index remains accurate.
     /// </summary>
-    /// <param name="sender">The source of the event, typically the L5X file content object.</param>
-    /// <param name="e">Provides data about the change event of an <see cref="XObject"/>.</param>
     private void OnContentChanged(object sender, XObjectChangeEventArgs e)
     {
+        _elements.Clear();
         _references.Clear();
-        _usages.Clear();
+        _isIndexed = false;
     }
 }

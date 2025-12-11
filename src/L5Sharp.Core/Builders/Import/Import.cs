@@ -151,21 +151,21 @@ internal class Import
     /// </exception>
     private static Reference GenerateTargetScope(L5X source)
     {
-        if (source.Info.TargetType is null || source.Info.TargetName is null)
+        if (source.Content.TargetType is null || source.Content.TargetName is null)
             throw new InvalidOperationException(
                 "No target type/name information is configured in the specified source.");
 
-        if (source.Info.TargetType == nameof(Routine))
+        if (source.Content.TargetType == nameof(Routine))
         {
             var program = source.Programs.FirstOrDefault(p => Use.Context.Equals(p.Use));
 
             if (program is null)
                 throw new InvalidOperationException("Could not determine scope for import process.");
 
-            return Reference.To<Routine>(source.Info.TargetName, program.Name);
+            return Reference.To<Routine>(source.Content.TargetName, program.Name);
         }
 
-        var type = ReferenceType.Parse(source.Info.TargetType);
-        return Reference.Build(b => b.Type(type).Named(source.Info.TargetName));
+        var type = ReferenceType.Parse(source.Content.TargetType);
+        return Reference.Build(b => b.Type(type).Named(source.Content.TargetName));
     }
 }

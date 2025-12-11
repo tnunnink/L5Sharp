@@ -242,6 +242,27 @@ public sealed class Instruction
         return new Instruction(Key, arguments);
     }
 
+    /// <summary>
+    /// Determines if the instruction supports the specified <see cref="ReferenceType"/>.
+    /// </summary>
+    /// <param name="type">The <see cref="ReferenceType"/> to check for support.</param>
+    /// <returns>
+    /// True if the instruction supports the specified <see cref="ReferenceType"/>; otherwise, false.
+    /// </returns>
+    public bool Supports(ReferenceType type)
+    {
+        if (IsSystemCall)
+            return type == ReferenceType.Program ||
+                   type == ReferenceType.Routine ||
+                   type == ReferenceType.Aoi ||
+                   type == ReferenceType.Module ||
+                   type == ReferenceType.Task;
+
+        if (IsTaskCall) return type == ReferenceType.Task;
+        if (IsRoutineCall) return type == ReferenceType.Routine;
+        return type == ReferenceType.Tag;
+    }
+
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {

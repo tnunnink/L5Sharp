@@ -185,17 +185,14 @@ public class Routine : LogixComponent<Routine>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
+    public override IEnumerable<Reference> References()
     {
-        var usages = base.Usages().ToList();
+        if (!TryGetDocument(out var document))
+            return [];
 
-        //1. Programs reference routines in their RoutineName properties.
-        if (Program is not null && (Program.MainRoutineName == Name || Program.FaultRoutineName == Name))
-        {
-            usages.Add(Program.Reference);
-        }
-
-        return usages;
+        //The container to scope returns programs that reference this routine.
+        //The rest should be logic instructions (JSR, FOR, etc).
+        return document.References(Name).Where(r => r.IsContainerTo(Scope) || (r.IsLogic && r.Logic.Supports(r.Type)));
     }
 
     /// <inheritdoc />

@@ -171,7 +171,7 @@ namespace L5Sharp.Tests.Core.Components
             var content = L5X.Load(Known.Test);
             var task = content.Get<LTask>("Event");
 
-            var references = task.Usages().ToArray();
+            var references = task.References().ToArray();
 
             references.Should().HaveCount(1);
         }

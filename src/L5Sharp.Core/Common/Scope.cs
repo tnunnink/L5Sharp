@@ -31,14 +31,15 @@ public sealed class Scope
     /// <summary>
     /// Gets the <see cref="ScopeLevel"/> of the current <see cref="Scope"/> object.
     /// </summary>
-    /// <remarks>
-    /// The level is determined based on the XML structure of the associated element and
-    /// its ancestors, matching the valid scope levels defined in the Logix system.
-    /// </remarks>
     /// <returns>
     /// A <see cref="ScopeLevel"/> representing the hierarchical level of the scope,
     /// such as Controller, Program, Routine, or None.
     /// </returns>
+    /// <remarks>
+    /// The level is determined based on the XML structure of the underlying element and
+    /// its ancestors. The only elements that are considered are <c>Controller</c>, <c>Program</c>, and
+    /// <c>AddOnInstructionDefinition</c> (Routine) elements.
+    /// </remarks>
     public ScopeLevel Level => DetermineLevel();
 
     /// <summary>
@@ -105,54 +106,6 @@ public sealed class Scope
     public bool IsLocal => Level == ScopeLevel.Program || Level == ScopeLevel.Routine;
 
     /// <summary>
-    /// Determines if this scope instance can be seen or is accessible to the provided scope instance.
-    /// This means that either one of the scopes is a controller scope path or they are both in the same local program scoped path,
-    /// indicating that components within the scope can reference each other without errors
-    /// </summary>
-    /// <param name="scope">The scope to evaluate visibility against.</param>
-    /// <returns>True if the current Scope is visible to the provided Scope; otherwise, false.</returns>
-    public bool IsVisibleTo(Scope scope)
-    {
-        if (IsController || scope.IsController) return true;
-        return Container == scope.Container;
-    }
-
-    /// <summary>
-    /// Determines whether the current scope is visible to the specified reference.
-    /// </summary>
-    /// <param name="reference">The reference to evaluate visibility against.</param>
-    /// <returns>True if the current scope is visible to the provided reference; otherwise, false.</returns>
-    public bool IsVisibleTo(Reference reference)
-    {
-        if (IsController || reference.IsGlobal) return true;
-        return Container == reference.Container;
-    }
-
-    /// <summary>
-    /// Determines if the current Scope is a peer to the provided scope instance. A peer scope simply means in the
-    /// same exact scope (i.e., both have the same container name).
-    /// </summary>
-    /// <param name="other">The other Scope to compare against.</param>
-    /// <returns>True if the current Scope is a peer to the provided Scope; otherwise, false.</returns>
-    public bool IsLocalTo(Scope other)
-    {
-        return Level == other.Level && Container == other.Container;
-    }
-
-    /// <summary>
-    /// Determines whether the current scope is local to the specified reference scope. This will check both controller
-    /// scope and local program/routine scope.
-    /// </summary>
-    /// <param name="reference">The reference to compare the current scope against.</param>
-    /// <returns>
-    /// True if the current scope is local to the provided reference; otherwise, false.
-    /// </returns>
-    public bool IsLocalTo(Reference reference)
-    {
-        return (IsController && reference.Container.IsEmpty()) || Container == reference.Container;
-    }
-
-    /// <summary>
     /// Determines if the current <see cref="Scope"/> is local to the specified container.
     /// </summary>
     /// <param name="container">The name of the container to compare against.</param>
@@ -160,10 +113,10 @@ public sealed class Scope
     /// True if the current scope is the controller and the container is empty,
     /// or if the container matches the current scope's container name. Returns false otherwise.
     /// </returns>
-    public bool IsLocalTo(string container)
+    public bool IsIn(string container)
     {
         if (IsController && container.IsEmpty()) return true;
-        return string.Equals(Container, container, StringComparison.OrdinalIgnoreCase);
+        return Container.IsEquivalent(container);
     }
 
     /// <summary>

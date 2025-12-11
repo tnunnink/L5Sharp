@@ -209,21 +209,6 @@ public class Program : LogixComponent<Program>
     public Task? Task => GetScheduledTask();
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
-    {
-        //Will get all scoped code usages.
-        var usages = base.Usages().ToList();
-
-        //Programs are "used" by tasks that they are scheduled in.
-        if (Task is not null)
-        {
-            usages.Add(Task.Reference);
-        }
-
-        return usages;
-    }
-
-    /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {
         return Tags.SelectMany(t => t.Dependencies())

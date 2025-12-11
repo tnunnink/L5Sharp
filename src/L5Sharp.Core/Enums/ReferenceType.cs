@@ -27,7 +27,12 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     /// Gets a value indicating whether the reference type can be defined in different scopes/containers within
     /// the L5X context (e.g., Tag, Routine, Rung).
     /// </summary>
-    public virtual bool SupportsScope => false;
+    public virtual bool IsContainable => false;
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public virtual bool IsContainer => false;
 
     /// <summary>
     /// Represents a Null <see cref="ReferenceType"/> value.
@@ -115,7 +120,7 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
         public override string Container => "Tags";
 
         public override string Identifier => "@Name";
-        public override bool SupportsScope => true;
+        public override bool IsContainable => true;
     }
 
     private class ProgramReferenceType() : ReferenceType(nameof(Program), "Program")
@@ -128,7 +133,7 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     {
         public override string Container => "Routines";
         public override string Identifier => "@Name";
-        public override bool SupportsScope => true;
+        public override bool IsContainable => true;
     }
 
     private class TaskReferenceType() : ReferenceType(nameof(Task), "Task")
@@ -141,14 +146,14 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     {
         public override string Container => "RLLContent";
         public override string Identifier => "@Number";
-        public override bool SupportsScope => true;
+        public override bool IsContainable => true;
     }
 
     private class LineReferenceType() : ReferenceType(nameof(Line), "Line")
     {
         public override string Container => "STContent";
         public override string Identifier => "@Number";
-        public override bool SupportsScope => true;
+        public override bool IsContainable => true;
     }
 
     private class SheetReferenceType() : ReferenceType(nameof(Sheet), "Sheet")
@@ -156,6 +161,6 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
         public override string Container => "FBDContent";
         public override string Identifier => "@Number";
 
-        public override bool SupportsScope => true;
+        public override bool IsContainable => true;
     }
 }

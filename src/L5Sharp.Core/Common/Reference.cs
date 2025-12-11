@@ -114,6 +114,97 @@ public sealed class Reference
     /// Indicates whether the reference type represents a tag.
     /// </summary>
     public bool IsTag => Type == ReferenceType.Tag;
+
+    /// <summary>
+    /// Determines if the reference is scoped to the specified scope, based on the scope's level and container.
+    /// </summary>
+    /// <param name="scope">The scope to check the reference against.</param>
+    /// <returns>
+    /// <c>true</c> if both the reference <c>and</c> the scope instance are globally (controller) scoped, or if they are both
+    /// locally (program or routine) scoped and have the same container name; otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided scope is null.</exception>
+    public bool IsScopedTo(Scope scope)
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        if (scope.IsController && IsGlobal) return true;
+        if (scope.IsLocal && IsLocal && scope.Container.IsEquivalent(Container)) return true;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Determines whether the reference is visible to the specified scope, based on the scope's level and container.
+    /// </summary>
+    /// <param name="scope">The scope to check visibility against.</param>
+    /// <returns>
+    /// <c>true</c> if either the reference <c>or</c> the scope instance are globally (controller) scoped, or if they are both
+    /// locally (program or routine) scoped and have the same container name; otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided scope is null.</exception>
+    /// <remarks>
+    /// Note the difference here is that if either is globally scoped, then it is visible to the other. Otherwise,
+    /// they need to be in the same local scope.
+    /// </remarks>
+    public bool IsVisibleTo(Scope scope)
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        if (scope.IsController || IsGlobal) return true;
+        if (scope.IsLocal && IsLocal && scope.Container.IsEquivalent(Container)) return true;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Determines whether the reference is local to the specified scope, based on the scope's level and container.
+    /// </summary>
+    /// <param name="scope">The scope to check the reference against.</param>
+    /// <returns>
+    /// <c>true</c> if the reference and the scope are both locally (program or routine) scoped and have the same
+    /// container name; otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided scope is null.</exception>
+    /// <remarks>If the provided scope or reference is globally scoped this will return false.</remarks>
+    public bool IsLocalTo(Scope scope)
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+        
+        return scope.IsLocal && IsLocal && scope.Container.IsEquivalent(Container);
+    }
+
+    /// <summary>
+    /// Determines whether the reference is a container to the specified scope, based on the scope level, container, and
+    /// the reference <see cref="Location"/>.
+    /// </summary>
+    /// <param name="scope">The scope to check the reference against.</param>
+    /// <returns>
+    /// <c>true</c> when the scope is program scoped, the reference type is program, and the scope container
+    /// matches the reference location -or- the scope is routine scoped, the reference type is AOI, and the scope container
+    /// matches the reference location; otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided scope is null.</exception>
+    /// <remarks>
+    /// This just lets us determine if this is a reference to a container element (Program or AOI) that contains
+    /// the provided scope instance (which could come from any other element).
+    /// </remarks>
+    public bool IsContainerTo(Scope scope)
+    {
+        if (scope is null)
+            throw new ArgumentNullException(nameof(scope));
+
+        if (scope.IsProgram && Type == ReferenceType.Program)
+            return scope.Container.IsEquivalent(Location);
+        
+        if (scope.IsRoutine && Type == ReferenceType.Aoi)
+            return scope.Container.IsEquivalent(Location);
+
+        return false;
+    }
     
     /// <summary>
     /// Converts this reference to a new reference scoped to the same container as the provided reference instance.

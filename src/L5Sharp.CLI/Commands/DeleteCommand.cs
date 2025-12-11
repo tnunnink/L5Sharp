@@ -33,7 +33,7 @@ public abstract class DeleteCommand<TEntity> : ICommand where TEntity : LogixEnt
             project.Query<TEntity>()
                 .FilterByPattern(e => e is ILogixComponent c ? c.Name : string.Empty, Name)
                 .FilterByExpression(Where)
-                .FilterBySwitch(e => e is ILogixComponent c && !c.Usages().Any(), Unused)
+                .FilterBySwitch(e => e is ILogixComponent c && !c.References().Any(), Unused)
                 .ToList()
                 .ForEach(r => r.Remove());
 

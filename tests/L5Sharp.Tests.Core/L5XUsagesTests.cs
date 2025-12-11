@@ -14,7 +14,7 @@ public class L5XUsagesTests
         var content = L5X.Load(Known.Test);
         var tag = content.Get<Tag>(Known.Tag);
 
-        var usages = tag.Usages().ToList();
+        var usages = tag.References().ToList();
 
         usages.Should().NotBeEmpty();
     }
@@ -25,7 +25,7 @@ public class L5XUsagesTests
         var content = L5X.Load(Known.Test);
         var dataType = content.DataTypes.Get(Known.DataType);
 
-        var usages = dataType.Usages().ToList();
+        var usages = dataType.References().ToList();
 
         usages.Should().NotBeEmpty();
     }
@@ -36,7 +36,7 @@ public class L5XUsagesTests
         var content = L5X.Load(Known.Test);
         var instruction = content.Get<AddOnInstruction>(Known.AddOnInstruction);
 
-        var usages = instruction.Usages().ToList();
+        var usages = instruction.References().ToList();
 
         usages.Should().NotBeEmpty();
     }
@@ -46,7 +46,7 @@ public class L5XUsagesTests
     {
         var content = L5X.Load(Known.Test);
 
-        var usages = content.DataTypes.Select(d => new { d.Name, References = d.Usages().ToList() }).ToList();
+        var usages = content.DataTypes.Select(d => new { d.Name, References = d.References().ToList() }).ToList();
 
         usages.Should().NotBeEmpty();
     }
@@ -56,7 +56,7 @@ public class L5XUsagesTests
     {
         var content = L5X.Load(Known.Test);
 
-        var usages = content.Query<Tag>().Select(t => new { t.TagName, Refernces = t.Usages().ToList() })
+        var usages = content.Query<Tag>().Select(t => new { t.TagName, Refernces = t.References().ToList() })
             .ToList();
 
         usages.Should().NotBeEmpty();
@@ -69,7 +69,7 @@ public class L5XUsagesTests
 
         var usages = content.Query<Routine>()
             .Where(r => r.Program is not null)
-            .Select(r => r.Usages())
+            .Select(r => r.References())
             .ToList();
 
         usages.Should().NotBeEmpty();
@@ -85,7 +85,7 @@ public class L5XUsagesTests
         var content = L5X.Load(Known.Test);
 
         var unused = content.Query<DataType>()
-            .Select(d => new { d.Name, References = d.Usages().ToList() })
+            .Select(d => new { d.Name, References = d.References().ToList() })
             .Where(d => d.References.Count == 0)
             .ToList();
 
@@ -99,7 +99,7 @@ public class L5XUsagesTests
 
         var tags = content.Query<Tag>().ToList();
 
-        var usages = tags.Select(t => new { t.TagName, Refernces = t.Usages() }).ToList();
+        var usages = tags.Select(t => new { t.TagName, Refernces = t.References() }).ToList();
 
         usages.Should().NotBeEmpty();
     }

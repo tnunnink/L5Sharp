@@ -43,7 +43,7 @@ public interface ILogixEntity : ILogixElement
     /// </summary>
     /// <returns>A collection of <see cref="ILogixEntity"/> that the current entity depends on.</returns>
     /// <remarks>
-    /// Dependencies are other entities that must exist for this entity to be resolved/function within a L5X project.
+    /// Dependencies are other entities that must exist for this entity to be resolved within a L5X project.
     /// Each implementation must provide the logic to resolve and return these dependencies as appropriate.
     /// </remarks>
     IEnumerable<ILogixEntity> Dependencies();
@@ -100,7 +100,7 @@ public abstract class LogixEntity<TEntity> : LogixObject<TEntity>, ILogixEntity 
 
         var reference = Reference.To<TComponent>(name);
 
-        if (reference.Type.SupportsScope && doc.TryGet<TComponent>(reference.ToScope(Scope), out var local))
+        if (reference.Type.IsContainable && doc.TryGet<TComponent>(reference.ToScope(Scope), out var local))
         {
             component = local;
             return true;

@@ -320,11 +320,9 @@ public class Module : LogixComponent<Module>
     public Tag? Config => Communications?.ConfigTag;
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
+    public override IEnumerable<Reference> References()
     {
-        return base.Usages().Where(x =>
-            x.IsLogic && x.Logic.Key == nameof(Instruction.GSV) || x.Logic.Key == nameof(Instruction.SSV)
-        );
+        return base.References().Where(r => r.IsLogic && r.Logic.Supports(r.Type));
     }
 
     /// <inheritdoc />

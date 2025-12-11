@@ -267,21 +267,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// This is an extension to make accessing the code for the instruction easier. All instructions have at
     /// least a single routine called Logic which contains the code for the instruction.
     /// </remarks>
-    public Routine Logic
-    {
-        get
-        {
-            return Routines.SingleOrDefault(r => r.Name == nameof(Logic)) ??
-                   throw new InvalidOperationException("No Logic routine is defined for AOI.");
-        }
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<Reference> Usages()
-    {
-        return base.Usages().ToList();
-        //todo any type reference to this AOI (tag or other AOI parameter/local tag).
-    }
+    public Routine Logic => Routines.Single(r => r.Name == nameof(Logic));
 
     /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()

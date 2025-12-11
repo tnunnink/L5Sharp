@@ -409,6 +409,12 @@
       <None Update="Code\SheetTests.BuildSheet_Example1_ShouldBeVerified.verified.xml">
         <DependentUpon>SheetTests.cs</DependentUpon>
       </None>
+      <None Update="L5XBasicTests.ToString_WhenCalled_ShouldBeValid.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\DataTypeTests.AddMember_ChainMembers_ShouldBeVerified.verified.xml">
+        <DependentUpon>DataTypeTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

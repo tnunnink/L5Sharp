@@ -88,7 +88,7 @@ public class WatchList : LogixComponent<WatchList>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<Reference> Usages() => [];
+    public override IEnumerable<Reference> References() => [];
 
     /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies() => [];
