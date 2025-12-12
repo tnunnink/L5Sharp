@@ -86,7 +86,7 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     /// </summary>
     /// <param name="value">The string representation of the <see cref="SINT"/> value to parse.</param>
     /// <returns>A <see cref="SINT"/> object that represents the parsed value.</returns>
-    public static SINT Parse(string value)
+    public new static SINT Parse(string value)
     {
        var radix = Radix.Infer(value);
         var typed = radix.Parse<sbyte>(value);

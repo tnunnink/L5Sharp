@@ -79,7 +79,7 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     /// </summary>
     /// <param name="value">The string representation of the <see cref="INT"/> value to parse.</param>
     /// <returns>A <see cref="INT"/> object that represents the parsed value.</returns>
-    public static INT Parse(string value)
+    public new static INT Parse(string value)
     {
         var radix = Radix.Infer(value);
         var typed = radix.Parse<short>(value);

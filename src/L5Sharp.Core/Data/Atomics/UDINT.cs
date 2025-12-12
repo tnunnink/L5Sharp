@@ -79,7 +79,7 @@ public sealed class UDINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// </summary>
     /// <param name="value">The string representation of the <see cref="UDINT"/> value to parse.</param>
     /// <returns>A <see cref="UDINT"/> object that represents the parsed value.</returns>
-    public static UDINT Parse(string value)
+    public new static UDINT Parse(string value)
     {
         var radix = Radix.Infer(value);
         var typed = radix.Parse<uint>(value);

@@ -80,7 +80,7 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     /// </summary>
     /// <param name="value">The string representation of the <see cref="DINT"/> value to parse.</param>
     /// <returns>A <see cref="DINT"/> object that represents the parsed value.</returns>
-    public static DINT Parse(string value)
+    public new static DINT Parse(string value)
     {
         var radix = Radix.Infer(value);
         var typed = radix.Parse<int>(value);

@@ -79,7 +79,7 @@ public sealed class LINT : AtomicData, IComparable, IConvertible, IAtomicValue<l
     /// </summary>
     /// <param name="value">The string representation of the <see cref="LINT"/> value to parse.</param>
     /// <returns>A <see cref="LINT"/> object that represents the parsed value.</returns>
-    public static LINT Parse(string value)
+    public new static LINT Parse(string value)
     {
         var radix = Radix.Infer(value);
         var typed = radix.Parse<long>(value);

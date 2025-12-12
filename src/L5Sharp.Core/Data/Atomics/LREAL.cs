@@ -84,7 +84,7 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// </summary>
     /// <param name="value">The string representation of the <see cref="LREAL"/> value to parse.</param>
     /// <returns>A <see cref="LREAL"/> object that represents the parsed value.</returns>
-    public static LREAL Parse(string value)
+    public new static LREAL Parse(string value)
     {
         var radix = Radix.Infer(value);
         var typed = radix.Parse<double>(value);

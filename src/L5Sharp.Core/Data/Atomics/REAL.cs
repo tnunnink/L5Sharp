@@ -84,7 +84,7 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
     /// </summary>
     /// <param name="value">The string representation of the <see cref="REAL"/> value to parse.</param>
     /// <returns>A <see cref="REAL"/> object that represents the parsed value.</returns>
-    public static REAL Parse(string value)
+    public new static REAL Parse(string value)
     {
         var radix = Radix.Infer(value);
         var typed = radix.Parse<float>(value);
