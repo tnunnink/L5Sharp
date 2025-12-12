@@ -310,7 +310,12 @@ public sealed class Instruction
     /// <returns>A string representing the <see cref="Instruction"/>.</returns>
     public static implicit operator string(Instruction instruction) => instruction._text;
 
-    
+    /// <summary>
+    /// Defines an implicit conversion operator that allows a string
+    /// to be converted to an <see cref="Instruction"/> instance.
+    /// </summary>
+    /// <param name="text">The string text to convert to an <see cref="Instruction"/>.</param>
+    /// <returns>An <see cref="Instruction"/> created from the provided text.</returns>
     public static implicit operator Instruction(string text) => new(text);
 
     #region Factories
