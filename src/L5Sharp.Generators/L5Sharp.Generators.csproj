@@ -17,6 +17,8 @@
         <AssemblyVersion>$(Version).0</AssemblyVersion>
         <AssemblyFileVersion>$(Version).0</AssemblyFileVersion>
         <Description>Includes source generators for registration of logix elements.</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     
     <ItemGroup>
@@ -31,6 +33,10 @@
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
 </Project>
