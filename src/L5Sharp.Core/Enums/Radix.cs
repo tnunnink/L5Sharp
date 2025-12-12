@@ -131,20 +131,6 @@ public abstract class Radix : LogixEnum<Radix, string>
     }
 
     /// <summary>
-    /// Determines whether the specified string value matches the expected format for the <see cref="Radix"/>.
-    /// </summary>
-    /// <param name="value">
-    /// The string value to validate against the specific format of the <see cref="Radix"/>.
-    /// </param>
-    /// <returns>
-    /// <c>true</c> if the specified value matches the expected format of the <see cref="Radix"/>; otherwise, <c>false</c>.
-    /// </returns>
-    public virtual bool IsValidFormat(string? value)
-    {
-        return false;
-    }
-
-    /// <summary>
     /// Formats the provided value type using the current radix.
     /// </summary>
     /// <param name="value">The value to format.</param>
@@ -170,6 +156,35 @@ public abstract class Radix : LogixEnum<Radix, string>
         throw new NotSupportedException($"{Name} does not support parsing to {typeof(TValue).Name}.");
     }
 
+    /// <summary>
+    /// Determines whether the specified string value matches the expected format for the <see cref="Radix"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The string value to validate against the specific format of the <see cref="Radix"/>.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the specified value matches the expected format of the <see cref="Radix"/>; otherwise, <c>false</c>.
+    /// </returns>
+    protected virtual bool IsValidFormat(string? value)
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// Determines whether the specified type is supported by the current <see cref="Radix"/>.
+    /// </summary>
+    /// <param name="type">The type to evaluate for compatibility with the <see cref="Radix"/>.</param>
+    /// <returns>
+    /// true if the specified type is supported; otherwise, false.
+    /// </returns>
+    protected virtual bool IsSupportedType(Type type)
+    {
+        return type == typeof(bool) ||
+               type == typeof(sbyte) || type == typeof(byte) ||
+               type == typeof(short) || type == typeof(ushort) ||
+               type == typeof(int) || type == typeof(uint) ||
+               type == typeof(long) || type == typeof(ulong);
+    }
 
     #region RadixTypes
 
@@ -193,25 +208,30 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int SegmentSize = 4;
         private const string Separator = "_";
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
         {
-            var formatted = FormatValue(value, BaseNumber).SeparateWith(Separator, SegmentSize);
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Format(value);
 
+            var formatted = FormatValue(value, BaseNumber).SeparateWith(Separator, SegmentSize);
             return $"{Specifier}{formatted}";
         }
 
         public override TValue Parse<TValue>(string value)
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
             ValidateFormat(value);
 
             var data = value.Remove(0, Specifier.Length).Replace(Separator, string.Empty);
 
-            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+            if (Converters.TryGetValue(typeof(TValue), out var converter))
                 return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
 
             return base.Parse<TValue>(value);
@@ -232,24 +252,30 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int SegmentSize = 3;
         private const string Separator = "_";
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Format(value);
+
             var formatted = FormatValue(value, BaseNumber).SeparateWith(Separator, SegmentSize);
             return $"{Specifier}{formatted}";
         }
 
         public override TValue Parse<TValue>(string value)
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
             ValidateFormat(value);
 
             var data = value.Remove(0, Specifier.Length).Replace(Separator, string.Empty);
 
-            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+            if (Converters.TryGetValue(typeof(TValue), out var converter))
                 return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
 
             return base.Parse<TValue>(value);
@@ -263,28 +289,35 @@ public abstract class Radix : LogixEnum<Radix, string>
     {
         private const int BaseNumber = 10;
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
-            if (value is null) return false;
+            if (value is null)
+                return false;
 
-            if (value.StartsWith('+') || value.StartsWith('-'))
+            return value.ToLower() switch
             {
-                value = value.Remove(0, 1);
-            }
-
-            return !value.IsEmpty() && value.All(char.IsDigit);
+                "true" => true,
+                "false" => true,
+                _ => value.All(c => char.IsDigit(c) || c == '+' || c == '-')
+            };
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Format(value);
+
             return FormatValue(value, BaseNumber);
         }
 
         public override TValue Parse<TValue>(string value)
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
             ValidateFormat(value);
 
-            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+            if (Converters.TryGetValue(typeof(TValue), out var converter))
                 return ((Func<string, int, TValue>)converter).Invoke(value, BaseNumber);
 
             return base.Parse<TValue>(value);
@@ -303,24 +336,30 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int SegmentSize = 4;
         private const string Separator = "_";
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Format(value);
+
             var formatted = FormatValue(value, BaseNumber).SeparateWith(Separator, SegmentSize);
             return $"{Specifier}{formatted}";
         }
 
         public override TValue Parse<TValue>(string value)
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
             ValidateFormat(value);
 
             var data = value.Remove(0, Specifier.Length).Replace(Separator, string.Empty);
 
-            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+            if (Converters.TryGetValue(typeof(TValue), out var converter))
                 return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
 
             return base.Parse<TValue>(value);
@@ -332,27 +371,35 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     private class FloatRadix() : Radix(nameof(Float), nameof(Float))
     {
+        private const string QNAN = "1.#QNAN";
         private const string DoubleFormat = "0.0##############";
         private const string SingleFormat = "0.0######";
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
-            if (value is null) return false;
-
-            //we don't care if it is positive or negative
-            if (value.StartsWith("+") || value.StartsWith("-"))
+            return value switch
             {
-                value = value.Remove(0, 1);
-            }
+                null => false,
+                QNAN => true,
+                _ => value.All(c => char.IsDigit(c) || c == '.' || c == '+' || c == '-')
+            };
+        }
 
-            return value.Contains('.') && value.Replace(".", string.Empty).All(char.IsDigit);
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(float) || type == typeof(double);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Format(value);
+
             return value switch
             {
+                float.NaN => QNAN,
                 float a => a.ToString(SingleFormat, CultureInfo.InvariantCulture),
+                double.NaN => QNAN,
                 double a => a.ToString(DoubleFormat, CultureInfo.InvariantCulture),
                 _ => base.Format(value)
             };
@@ -360,9 +407,12 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         public override TValue Parse<TValue>(string value)
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
             ValidateFormat(value);
 
-            if (FloatConverters.TryGetValue(typeof(TValue), out var converter))
+            if (Converters.TryGetValue(typeof(TValue), out var converter))
                 return ((Func<string, TValue>)converter).Invoke(value);
 
             return base.Parse<TValue>(value);
@@ -374,27 +424,31 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     private class ExponentialRadix() : Radix(nameof(Exponential), nameof(Exponential))
     {
+        private const string QNAN = "1.#QNAN";
         private const string DoubleExponent = "e16";
         private const string SingleExponent = "e8";
+        private static readonly HashSet<char> ValidCharacters = ['.', '+', '-', 'e', 'E'];
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
-            if (value is null) return false;
-
-            //we don't care if it is positive or negative, so remove it.
-            if (value.StartsWith("+") || value.StartsWith("-"))
+            return value switch
             {
-                value = value.Remove(0, 1);
-            }
+                null => false,
+                QNAN => true,
+                _ => value.All(c => char.IsDigit(c) || ValidCharacters.Contains(c))
+            };
+        }
 
-            return !value.IsEmpty() &&
-                   value.Contains(".") &&
-                   value.IndexOf("e", StringComparison.OrdinalIgnoreCase) >= 0 &&
-                   ReplaceAll(value, [".", "e", "E", "+", "-"], string.Empty).All(char.IsDigit);
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(float) || type == typeof(double);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Format(value);
+
             return value switch
             {
                 float a => a.ToString(SingleExponent, CultureInfo.InvariantCulture),
@@ -405,16 +459,16 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         public override TValue Parse<TValue>(string value)
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
             ValidateFormat(value);
 
-            if (FloatConverters.TryGetValue(typeof(TValue), out var converter))
+            if (Converters.TryGetValue(typeof(TValue), out var converter))
                 return ((Func<string, TValue>)converter).Invoke(value);
 
             return base.Parse<TValue>(value);
         }
-
-        private static string ReplaceAll(string value, IEnumerable<string> items, string replacement) =>
-            items.Aggregate(value, (str, cItem) => str.Replace(cItem, replacement));
     }
 
     private class AsciiRadix() : Radix(nameof(Ascii), nameof(Ascii).ToUpper())
@@ -438,7 +492,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             { "$'", "27" }
         };
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
             return value is not null &&
                    value.StartsWith(Specifier) &&
@@ -446,19 +500,33 @@ public abstract class Radix : LogixEnum<Radix, string>
                    AsciiPattern.IsMatch(value);
         }
 
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(sbyte) || type == typeof(byte) ||
+                   type == typeof(short) || type == typeof(ushort) ||
+                   type == typeof(int) || type == typeof(uint) ||
+                   type == typeof(long) || type == typeof(ulong);
+        }
+
         public override string Format<TValue>(TValue value) where TValue : struct
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Format(value);
+
             var formatted = FormatValue(value, BaseNumber);
             return $"{Specifier}{GenerateAscii(formatted)}{Specifier}";
         }
 
         public override TValue Parse<TValue>(string value)
         {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
             ValidateFormat(value);
 
             var data = GenerateHex(value.TrimSingle(SpecifierChar));
 
-            if (IntegerConverters.TryGetValue(typeof(TValue), out var converter))
+            if (Converters.TryGetValue(typeof(TValue), out var converter))
                 return ((Func<string, int, TValue>)converter).Invoke(data, BaseNumber);
 
             return base.Parse<TValue>(value);
@@ -542,9 +610,14 @@ public abstract class Radix : LogixEnum<Radix, string>
         private static readonly Func<long, long> ValueConverter = l => l;
 
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
+        }
+
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(long);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
@@ -565,11 +638,10 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(value);
-
-            //Exit early if the caller doesn't specify a 'long' as the value type.
-            if (typeof(TValue) != typeof(long))
+            if (!IsSupportedType(typeof(TValue)))
                 return base.Parse<TValue>(value);
+
+            ValidateFormat(value);
 
             //Trim any formatting characters we don't need.
             var formatted = value
@@ -585,7 +657,6 @@ public abstract class Radix : LogixEnum<Radix, string>
             );
 
             var timestamp = (dateTime.Ticks - UnixEpoch.Ticks) / TicksPerMicrosecond;
-
             return ((Func<long, TValue>)(object)ValueConverter).Invoke(timestamp);
         }
     }
@@ -601,9 +672,14 @@ public abstract class Radix : LogixEnum<Radix, string>
         private static readonly Func<long, long> ValueConverter = l => l;
 
 
-        public override bool IsValidFormat(string? value)
+        protected override bool IsValidFormat(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
+        }
+
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(long);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
@@ -622,11 +698,10 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         public override TValue Parse<TValue>(string value)
         {
-            ValidateFormat(value);
-
-            //Exit early if the caller doesn't specify a 'long' as the value type.
-            if (typeof(TValue) != typeof(long))
+            if (!IsSupportedType(typeof(TValue)))
                 return base.Parse<TValue>(value);
+
+            ValidateFormat(value);
 
             //Trim any formatting characters we don't need.
             var formatted = value
@@ -642,7 +717,6 @@ public abstract class Radix : LogixEnum<Radix, string>
             );
 
             var timestamp = (dateTime.Ticks - UnixEpoch.Ticks) * NanosecondsPerTick;
-
             return ((Func<long, TValue>)(object)ValueConverter).Invoke(timestamp);
         }
     }
@@ -811,29 +885,154 @@ public abstract class Radix : LogixEnum<Radix, string>
     }
 
     /// <summary>
-    /// These let us convert a provided string to a numeric integer value type and return the value unboxed.
+    /// These let us convert a provided string to a value type without boxing it as an object.
     /// </summary>
-    private static readonly Dictionary<Type, Delegate> IntegerConverters = new()
+    private static readonly Dictionary<Type, Delegate> Converters = new()
     {
-        { typeof(bool), new Func<string, int, bool>((s, _) => s == "1") },
-        { typeof(sbyte), new Func<string, int, sbyte>(Convert.ToSByte) },
-        { typeof(byte), new Func<string, int, byte>(Convert.ToByte) },
-        { typeof(short), new Func<string, int, short>(Convert.ToInt16) },
-        { typeof(ushort), new Func<string, int, ushort>(Convert.ToUInt16) },
-        { typeof(int), new Func<string, int, int>(Convert.ToInt32) },
-        { typeof(uint), new Func<string, int, uint>(Convert.ToUInt32) },
-        { typeof(long), new Func<string, int, long>(Convert.ToInt64) },
-        { typeof(ulong), new Func<string, int, ulong>(Convert.ToUInt64) }
+        { typeof(bool), new Func<string, int, bool>((s, _) => ConvertToBool(s)) },
+        { typeof(sbyte), new Func<string, int, sbyte>(ConvertToSByte) },
+        { typeof(byte), new Func<string, int, byte>(ConvertToByte) },
+        { typeof(short), new Func<string, int, short>(ConvertToInt16) },
+        { typeof(ushort), new Func<string, int, ushort>(ConvertToUInt16) },
+        { typeof(int), new Func<string, int, int>(ConvertToInt32) },
+        { typeof(uint), new Func<string, int, uint>(ConvertToUInt32) },
+        { typeof(long), new Func<string, int, long>(ConvertToInt64) },
+        { typeof(ulong), new Func<string, int, ulong>(ConvertToUInt64) },
+        { typeof(float), new Func<string, float>(ConvertToSingle) },
+        { typeof(double), new Func<string, double>(ConvertToDouble) }
     };
 
     /// <summary>
-    /// These let us convert a provided string to a floating point value type and return the value unboxed.
+    /// Converts the specified string value to its boolean equivalent.
     /// </summary>
-    private static readonly Dictionary<Type, Delegate> FloatConverters = new()
+    /// <param name="value">The string value to convert to a boolean.</param>
+    /// <returns>
+    /// A boolean value derived from the string input. Returns <c>true</c> for "1",
+    /// <c>false</c> for "0", and uses <see cref="Convert.ToBoolean(string)"/> for all other cases.
+    /// </returns>
+    private static bool ConvertToBool(string value)
     {
-        { typeof(float), new Func<string, float>(s => Convert.ToSingle(s, CultureInfo.InvariantCulture)) },
-        { typeof(double), new Func<string, double>(s => Convert.ToDouble(s, CultureInfo.InvariantCulture)) }
-    };
+        return value switch
+        {
+            "1" => true,
+            "0" => false,
+            _ => Convert.ToBoolean(value)
+        };
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="sbyte"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="sbyte"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static sbyte ConvertToSByte(string value, int baseNumber)
+    {
+        return Convert.ToSByte(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="byte"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="byte"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static byte ConvertToByte(string value, int baseNumber)
+    {
+        return Convert.ToByte(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="short"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="short"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static short ConvertToInt16(string value, int baseNumber)
+    {
+        return Convert.ToInt16(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="int"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="int"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static int ConvertToInt32(string value, int baseNumber)
+    {
+        return Convert.ToInt32(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="long"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="long"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static long ConvertToInt64(string value, int baseNumber)
+    {
+        return Convert.ToInt64(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="ushort"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="ushort"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static ushort ConvertToUInt16(string value, int baseNumber)
+    {
+        return Convert.ToUInt16(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="uint"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="uint"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static uint ConvertToUInt32(string value, int baseNumber)
+    {
+        return Convert.ToUInt32(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="ulong"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="ulong"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static ulong ConvertToUInt64(string value, int baseNumber)
+    {
+        return Convert.ToUInt64(value, baseNumber);
+    }
+
+    /// <summary>
+    /// Converts the specified string value to a single-precision floating-point number.
+    /// </summary>
+    /// <param name="value">The string representation of a number to be converted.</param>
+    /// <returns>
+    /// The <see cref="float"/> representation of the specified string, or <see cref="float.NaN"/> if the value
+    /// is "1.#QNAN", which is the Rockwell representation of "not a number".
+    /// </returns>
+    private static float ConvertToSingle(string value)
+    {
+        return value == "1.#QNAN" ? float.NaN : Convert.ToSingle(value, CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// Converts the specified string value to a double-precision floating-point number.
+    /// </summary>
+    /// <param name="value">The string representation of a number to be converted.</param>
+    /// <returns>
+    /// The <see cref="double"/> representation of the specified string, or <see cref="double.NaN"/> if the value
+    /// is "1.#QNAN", which is the Rockwell representation of "not a number".
+    /// </returns>
+    private static double ConvertToDouble(string value)
+    {
+        return value == "1.#QNAN" ? double.NaN : Convert.ToDouble(value, CultureInfo.InvariantCulture);
+    }
 
     /// <summary>
     /// Computes the width required to represent a value of a given size using the specified base number.

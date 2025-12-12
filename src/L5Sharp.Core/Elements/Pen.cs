@@ -41,7 +41,7 @@ public class Pen : LogixObject<Pen>
     public Pen(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// The unique name of the <c>Pen</c>.
     /// </summary>
@@ -72,7 +72,7 @@ public class Pen : LogixObject<Pen>
     }
 
     /// <summary>
-    /// Specify whether or not the line should be visible
+    /// Specify whether the line should be visible.
     /// </summary>
     /// <value><c>true</c> if the pen is visible; otherwise, false.</value>
     public bool? Visible
@@ -115,7 +115,7 @@ public class Pen : LogixObject<Pen>
         get => GetValue(int.Parse);
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the line marker (0...83)
     /// </summary>
@@ -124,7 +124,7 @@ public class Pen : LogixObject<Pen>
         get => GetValue(int.Parse);
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the minimum value for the pen. The minimum cannot be greater than or equal to the maximum.
     /// </summary>
@@ -132,8 +132,8 @@ public class Pen : LogixObject<Pen>
     {
         get => GetValue(int.Parse);
         set => SetValue(value);
-    } 
-    
+    }
+
     /// <summary>
     /// Specify the maximum value for the pen. The maximum cannot be less than or equal to the minimum.
     /// </summary>
@@ -141,8 +141,8 @@ public class Pen : LogixObject<Pen>
     {
         get => GetValue(int.Parse);
         set => SetValue(value);
-    } 
-    
+    }
+
     /// <summary>
     /// Specify engineering units. For example, rpm, gallon, fps, and degrees.
     /// </summary>

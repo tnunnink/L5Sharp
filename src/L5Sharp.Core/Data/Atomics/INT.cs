@@ -81,13 +81,9 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     /// <returns>A <see cref="INT"/> object that represents the parsed value.</returns>
     public static INT Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<short>(value);
         var formatted = radix.Format(typed);
-
         return new INT(CreateDataElement(nameof(INT), radix, formatted));
     }
 

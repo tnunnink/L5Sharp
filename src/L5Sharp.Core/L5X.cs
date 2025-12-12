@@ -553,12 +553,13 @@ public sealed class L5X
     }
 
     /// <summary>
-    /// Attempts to retrieve an element of the specified type <typeparamref name="TEntity"/> from the L5X structure based on the provided reference location builder action.
+    /// Attempts to retrieve an element of the specified type from the L5X based on the provided reference builder action.
     /// </summary>
     /// <typeparam name="TEntity">The type of element to retrieve.</typeparam>
-    /// <param name="action">An action that defines the reference location using the <see cref="IReferenceLocationBuilder"/>.</param>
-    /// <param name="entity">When this method returns, contains the retrieved entity if successful; otherwise, null if no matching entity is found.</param>
-    /// <returns>True if the entity was successfully retrieved; otherwise, false if no matching entity exists.</returns>
+    /// <param name="action">A builder action that defines the reference of the entity to get.</param>
+    /// <param name="entity">When this method returns, contains the retrieved entity if successful;
+    /// otherwise, null if no matching entity is found.</param>
+    /// <returns><c>true</c> if the entity was successfully retrieved; otherwise, <c>false</c>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> parameter is null.</exception>
     public bool TryGet<TEntity>(Action<IReferenceLocationBuilder> action, out TEntity entity)
         where TEntity : class, ILogixEntity
@@ -582,12 +583,13 @@ public sealed class L5X
     }
 
     /// <summary>
-    /// Retrieves a collection of <see cref="Reference"/> objects that match the specified name.
+    /// Retrieves a collection of <see cref="Reference"/> representing elements in the project that reference the
+    /// provided string name.
     /// </summary>
-    /// <param name="name">The name of the references to search for.</param>
-    /// <returns>A collection of <see cref="Reference"/> objects that match the specified name.</returns>
+    /// <param name="name">The name ot find references for in the project.</param>
+    /// <returns>A collection of <see cref="Reference"/> objects that represent references to the name.</returns>
     /// <remarks>
-    /// The name should represent a named logix component such as a <c>Tag</c>, <c>DataType</c>, <c>AOI</c>, etc.
+    /// The name typically represents a logix component such as a <c>Tag</c>, <c>DataType</c>, <c>AOI</c>, etc.
     /// This method relies on internal indexing of the L5X project file to function. While this method is optimized for
     /// repeated lookups in read-only scenarios, frequent modifications to the underlying XML will trigger reindexing,
     /// which may impact performance.
@@ -616,10 +618,8 @@ public sealed class L5X
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
-        var containerName = $"{LogixSerializer.NamesFor(component.GetType()).First()}s";
-
         var container = Element
-            .Descendants(containerName)
+            .Descendants(component.Reference.Type.Container)
             .FirstOrDefault(e => component.Reference.IsScopedTo(Scope.Of(e)));
 
         if (container is null)
@@ -643,11 +643,9 @@ public sealed class L5X
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
-        var containerName = $"{LogixSerializer.NamesFor(component.GetType()).First()}s";
-
         var container = Element
-            .Descendants(containerName)
-            .FirstOrDefault(e => Scope.Of(e).Container == programName);
+            .Descendants(component.Reference.Type.Container)
+            .FirstOrDefault(e => Scope.Of(e).IsIn(programName));
 
         if (container is null)
             throw new InvalidOperationException(

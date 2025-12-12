@@ -91,19 +91,11 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
     /// </summary>
     /// <param name="value">The string representation of the <see cref="BOOL"/> value to parse.</param>
     /// <returns>A <see cref="BOOL"/> object that represents the parsed value.</returns>
-    public new static BOOL Parse(string value)
+    public static BOOL Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
-        //This will intercept any true/false value as radix does not recognize that format.
-        if (bool.TryParse(value, out var result))
-            return new BOOL(result);
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<bool>(value);
         var formatted = radix.Format(typed);
-
         return new BOOL(CreateDataElement(nameof(BOOL), radix, formatted));
     }
 
@@ -121,10 +113,6 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
 
         if (value is null || value.IsEmpty())
             return false;
-
-        //This will intercept any true/false value as radix does not recognize that format.
-        if (bool.TryParse(value, out var result))
-            return new BOOL(result);
 
         if (Radix.TryInfer(value, out var radix))
         {

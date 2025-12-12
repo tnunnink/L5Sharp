@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming RSLogix naming

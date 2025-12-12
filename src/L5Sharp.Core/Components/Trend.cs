@@ -152,7 +152,7 @@ public class Trend : LogixComponent<Trend>
     }
 
     /// <summary>
-    /// Specify a logical operation (AND or OR) that is performed on StartTriggerXXX1 and StartTriggerXXX2.
+    /// Specify a logical operation (AND/OR) that is performed on StartTriggerXXX1 and StartTriggerXXX2.
     /// </summary>
     /// <remarks>StartTriggerXXX1 consists of StartTriggerTag1, StartTriggerOperation1, StartTriggerTargetType1, and 
     /// StartTriggerTargetValue1 or StartTriggerTargetTag1. StartTriggerXXX2 consists of StartTriggerTag2, 

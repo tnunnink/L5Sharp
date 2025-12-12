@@ -81,13 +81,9 @@ public sealed class USINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// <returns>A <see cref="USINT"/> object that represents the parsed value.</returns>
     public static USINT Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<byte>(value);
         var formatted = radix.Format(typed);
-
         return new USINT(CreateDataElement(nameof(USINT), radix, formatted));
     }
 

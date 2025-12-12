@@ -99,13 +99,13 @@ public sealed class TagName : IComparable<TagName>, IEquatable<TagName>
     public IEnumerable<string> Members => GetMembers(_tagName);
 
     /// <summary>
-    /// A zero-based number representing the depth of the tag name value. In other words, the number of members
-    /// between this tag name and the root.
+    /// A zero-based number representing the depth of the tag name. In other words, the number of members
+    /// after the root portion of the tag name.
     /// </summary>
     /// <remarks>
-    /// This value represents the number of members between the root tag and the last member name (i.e., one less than
+    /// This value represents the number of members between the root name and the last member name (i.e., one less than
     /// the number of members in the tag name). This is helpful for filtering tag descendents. Note that array
-    /// indices are also considered a member. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
+    /// indices are also considered a member name. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
     /// are descendent member names of the root tag 'MyTag' member.
     /// </remarks>
     public int Depth => GetDepth(_tagName);

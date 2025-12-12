@@ -74,7 +74,7 @@ public abstract class AtomicData : LogixData
     /// <remarks>
     /// Radix may not always represent the actual value format, so use this property with caution. When we parse the atomic value,
     /// we are inferring the radix from the actual string value. This Radix property is read from the underlying XElement
-    /// for the data object. 
+    /// for the data object if available. If not, it will return the default radix format for the atomic type. 
     /// </remarks>
     public Radix Radix => GetValue(Radix.Parse) ?? Radix.Default(GetType());
 
@@ -90,6 +90,10 @@ public abstract class AtomicData : LogixData
         var converted = (AtomicData)Convert.ChangeType(atomic, GetType());
         var formatted = converted.ToString(Radix);
         Element.SetAttributeValue(L5XName.Value, formatted);
+
+        //Check if the underlying element contains an attribute annotation which can be injected as a "backing field" for the value.
+        //This is to support updating underlying XAttribute of custom data formats (ALARM_ANALOG and ALARM_DIGITAL)
+        Element.Annotation<XAttribute>()?.SetValue(formatted);
     }
 
     /// <summary>
@@ -130,24 +134,13 @@ public abstract class AtomicData : LogixData
     /// <exception cref="ArgumentException">Thrown when the provided value is null or empty.</exception>
     public static AtomicData Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Can not parse null or empty value");
-
-        //Radix can't handle true/false values, but we could parse those as BOOL. 
-        if (bool.TryParse(value, out var bit))
-            return new BOOL(bit);
-
-        //Floating point values can have NAN value which we want to intercept since no Radix will match that value.
-        if (value.Contains("QNAN"))
-            return new LREAL(double.NaN);
-
-        //All other formats should be detectable.
+        //todo is there a better way to determine the size? Or should we even have this method?
         var radix = Radix.Infer(value);
 
         if (radix == Radix.Float || radix == Radix.Exponential)
-            return new LREAL(radix.Parse<double>(value));
+            return new REAL(radix.Parse<float>(value));
 
-        return new LINT(radix.Parse<long>(value));
+        return new DINT(radix.Parse<int>(value));
     }
 
     /// <summary>

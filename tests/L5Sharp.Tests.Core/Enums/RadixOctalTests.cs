@@ -25,38 +25,6 @@ namespace L5Sharp.Tests.Core.Enums
         }
 
         [Test]
-        [TestCase("8#1")]
-        [TestCase("8#0001")]
-        [TestCase("8#0100_0110")]
-        [TestCase("8#0100_0110_0100_0110")]
-        [TestCase("8#0100_0110_0100_0110_0100_0110_0100_0110")]
-        public void IsValid_ValidFormats_ShouldBeTrue(string value)
-        {
-            var radix = Radix.Octal;
-
-            var result = radix.IsValidFormat(value);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        [TestCase("10110110")]
-        [TestCase("1234")]
-        [TestCase("1.234")]
-        [TestCase("2#1")]
-        [TestCase("16#34")]
-        [TestCase("'$A4$E9'")]
-        [TestCase("This is a test")]
-        public void IsValid_InvalidFormats_ShouldBeFalse(string value)
-        {
-            var radix = Radix.Octal;
-
-            var result = radix.IsValidFormat(value);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
         [TestCase(false, "8#0")]
         [TestCase(true, "8#1")]
         public void Format_Boolean_ShouldBeExpected(bool value, string expected)

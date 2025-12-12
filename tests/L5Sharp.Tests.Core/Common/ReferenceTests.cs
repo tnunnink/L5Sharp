@@ -388,6 +388,7 @@ public class ReferenceTests
 
         var references = content.Query<Tag>()
             .SelectMany(t => t.Members())
+            .Select(t => t.Reference)
             .ToList();
 
         stopwatch.Stop();

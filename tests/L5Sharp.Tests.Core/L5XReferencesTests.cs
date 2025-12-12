@@ -4,12 +4,12 @@
 namespace L5Sharp.Tests.Core;
 
 [TestFixture]
-public class L5XUsagesTests
+public class L5XReferencesTests
 {
     #region TestFile
 
     [Test]
-    public void Usages_FromKnownTagInstanceWithUsagesShouldNotBeEmpty()
+    public void References_FromKnownTagInstanceWithUsagesShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test);
         var tag = content.Get<Tag>(Known.Tag);
@@ -20,7 +20,7 @@ public class L5XUsagesTests
     }
 
     [Test]
-    public void Usages_KnownDataType_ShouldReturnElementsWithExpectedDataType()
+    public void References_KnownDataType_ShouldReturnElementsWithExpectedDataType()
     {
         var content = L5X.Load(Known.Test);
         var dataType = content.DataTypes.Get(Known.DataType);
@@ -31,7 +31,7 @@ public class L5XUsagesTests
     }
 
     [Test]
-    public void Usages_KnownInstruction_ShouldNotBeEmpty()
+    public void References_KnownInstruction_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test);
         var instruction = content.Get<AddOnInstruction>(Known.AddOnInstruction);
@@ -42,7 +42,7 @@ public class L5XUsagesTests
     }
 
     [Test]
-    public void Usages_AllDataTypes_DoesThatWork()
+    public void References_AllDataTypes_DoesThatWork()
     {
         var content = L5X.Load(Known.Test);
 
@@ -52,7 +52,7 @@ public class L5XUsagesTests
     }
 
     [Test]
-    public void Usages_AllTags_ShouldNotBeEmpty()
+    public void References_AllTags_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test);
 
@@ -63,7 +63,7 @@ public class L5XUsagesTests
     }
 
     [Test]
-    public void Usages_AllRoutines_ShouldNotBeEmpty()
+    public void References_AllRoutines_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test);
 
@@ -80,7 +80,7 @@ public class L5XUsagesTests
     #region ExampleFile
 
     [Test]
-    public void Usages_ExampleDataType_ShouldHaveNoUnused()
+    public void References_ExampleDataType_ShouldHaveNoUnused()
     {
         var content = L5X.Load(Known.Test);
 
@@ -93,7 +93,7 @@ public class L5XUsagesTests
     }
 
     [Test]
-    public void Usages_ExampleAgainstAllTags_ShouldNotBeEmpty()
+    public void References_ExampleAgainstAllTags_ShouldNotBeEmpty()
     {
         var content = L5X.Load(Known.Test);
 

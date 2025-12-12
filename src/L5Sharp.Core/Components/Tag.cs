@@ -134,8 +134,7 @@ public class Tag : LogixComponent<Tag>
     /// </remarks>
     public override string Name
     {
-        get => _member is not null ? _member.Name :
-            Element.IsModuleTagElement() ? Element.ModuleTagName() : Element.LogixName();
+        get => _member?.Name ?? (Element.IsModuleTagElement() ? Element.ModuleTagName() : Element.LogixName());
         set => SetValue(value);
     }
 
@@ -472,8 +471,7 @@ public class Tag : LogixComponent<Tag>
                     $"No member with name '{tagName.Root}' exists in the tag data structure for type {DataType}.");
 
             var tag = new Tag(member, this);
-            var remaining = TagName.Combine(tagName.Members.Skip(1));
-            return remaining.IsEmpty ? tag : tag[remaining];
+            return tagName.Depth == 0 ? tag : tag[tagName.Path];
         }
     }
 
@@ -536,8 +534,7 @@ public class Tag : LogixComponent<Tag>
         if (member is null) return null;
 
         var tag = new Tag(member, this);
-        var remaining = TagName.Combine(tagName.Members.Skip(1));
-        return remaining.IsEmpty ? tag : tag.Member(remaining);
+        return tagName.Depth == 0 ? tag : tag.Member(tagName.Path);
     }
 
     /// <summary>
@@ -696,23 +693,13 @@ public class Tag : LogixComponent<Tag>
     private LogixData GetData()
     {
         //This is a member tag, forward the call to the member instance.
-        //This will handle custom types...
-        if (_member is not null)
-        {
-            return _member.Value;
-        }
+        if (_member is not null) return _member.Value;
 
         //Handle module-defined tags that have alias data in the parent module element.
-        if (Element.Name.LocalName is L5XName.InAliasTag or L5XName.OutAliasTag)
-        {
-            return GetModuleAliasData();
-        }
+        if (Element.Name.LocalName is L5XName.InAliasTag or L5XName.OutAliasTag) return GetModuleAliasData();
 
         //If we get here, we should be at the base tag element.
-        if (Element.TryGetFormattedData(out var data))
-        {
-            return data;
-        }
+        if (Element.TryGetFormattedData(out var data)) return data;
 
         return LogixType.Null;
     }

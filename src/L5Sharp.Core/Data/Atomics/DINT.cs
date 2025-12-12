@@ -82,13 +82,9 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     /// <returns>A <see cref="DINT"/> object that represents the parsed value.</returns>
     public static DINT Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<int>(value);
         var formatted = radix.Format(typed);
-
         return new DINT(CreateDataElement(nameof(DINT), radix, formatted));
     }
 

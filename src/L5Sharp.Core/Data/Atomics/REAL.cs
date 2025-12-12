@@ -86,16 +86,9 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
     /// <returns>A <see cref="REAL"/> object that represents the parsed value.</returns>
     public static REAL Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
-        if (value.Contains("QNAN"))
-            return new REAL(float.NaN);
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<float>(value);
         var formatted = radix.Format(typed);
-
         return new REAL(CreateDataElement(nameof(REAL), radix, formatted));
     }
 
@@ -111,12 +104,6 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
 
         if (value is null || value.IsEmpty())
             return false;
-
-        if (value.Contains("QNAN"))
-        {
-            atomic = new REAL(float.NaN);
-            return true;
-        }
 
         if (Radix.TryInfer(value, out var radix))
         {

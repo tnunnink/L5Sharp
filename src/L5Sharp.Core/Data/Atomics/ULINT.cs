@@ -81,13 +81,9 @@ public sealed class ULINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// <returns>A <see cref="ULINT"/> object that represents the parsed value.</returns>
     public static ULINT Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<ulong>(value);
         var formatted = radix.Format(typed);
-
         return new ULINT(CreateDataElement(nameof(ULINT), radix, formatted));
     }
 

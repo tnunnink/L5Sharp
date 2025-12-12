@@ -86,16 +86,9 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// <returns>A <see cref="LREAL"/> object that represents the parsed value.</returns>
     public static LREAL Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-        
-        if (value.Contains("QNAN"))
-            return new LREAL(double.NaN);
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<double>(value);
         var formatted = radix.Format(typed);
-
         return new LREAL(CreateDataElement(nameof(LREAL), radix, formatted));
     }
 
@@ -111,12 +104,6 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
 
         if (value is null || value.IsEmpty())
             return false;
-
-        if (value.Contains("QNAN"))
-        {
-            atomic = new LREAL(double.NaN);
-            return true;
-        }
 
         if (Radix.TryInfer(value, out var radix))
         {

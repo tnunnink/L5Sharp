@@ -14,13 +14,16 @@ using System.Text.RegularExpressions;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a Logix instruction in neutral text notation. This class provides functionality to analyze and parse
-/// instruction text, as well as creating new instruction instances using provided factory methods.
+/// Represents a programmable logic controller (PLC) instruction defined in structured or relay logic notation.
+/// This class provides parsing, creation, and manipulation of instructions within a given control project.
 /// </summary>
 /// <remarks>
-/// An instrcution is a fundamental building block for logix code found in RLL and ST type routines (most common PLC languages).
-/// This  class also supports conversion between function blocks so that we can provide a single abstraction over most
-/// coding elements in a L5X project.
+/// Instructions are essential components of programmable logic control systems, designed to encapsulate operations
+/// executed by the PLC. This class includes functionality for parsing instruction text, appending or modifying
+/// arguments, and converting instructions to their textual representation.
+/// It includes support for native instructions as well as user-defined ones, with built-in methods for verifying
+/// specific properties such as conditionality, destructiveness, and reference compatibility. Additionally,
+/// common instructions like mathematical or control logic operations are provided as factory methods for easy instantiation.
 /// </remarks>
 public sealed class Instruction
 {
@@ -256,10 +259,11 @@ public sealed class Instruction
                    type == ReferenceType.Routine ||
                    type == ReferenceType.Aoi ||
                    type == ReferenceType.Module ||
-                   type == ReferenceType.Task;
+                   type == ReferenceType.Task ||
+                   type == ReferenceType.Tag;
 
         if (IsTaskCall) return type == ReferenceType.Task;
-        if (IsRoutineCall) return type == ReferenceType.Routine;
+        if (IsRoutineCall) return type == ReferenceType.Routine || type == ReferenceType.Tag;
         return type == ReferenceType.Tag;
     }
 
@@ -306,11 +310,7 @@ public sealed class Instruction
     /// <returns>A string representing the <see cref="Instruction"/>.</returns>
     public static implicit operator string(Instruction instruction) => instruction._text;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="text"></param>
-    /// <returns></returns>
+    
     public static implicit operator Instruction(string text) => new(text);
 
     #region Factories
@@ -1776,7 +1776,6 @@ public sealed class Instruction
         new(nameof(EXPT), source_A, source_B, destination);
 
     #endregion
-
 
     /// <summary>
     /// Parses the key of the current instruction text. This is the text substring up to the first opening parenthesis.

@@ -88,10 +88,7 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     /// <returns>A <see cref="SINT"/> object that represents the parsed value.</returns>
     public static SINT Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
-        var radix = Radix.Infer(value);
+       var radix = Radix.Infer(value);
         var typed = radix.Parse<sbyte>(value);
         var formatted = radix.Format(typed);
 

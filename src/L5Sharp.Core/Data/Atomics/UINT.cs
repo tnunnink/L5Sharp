@@ -81,13 +81,9 @@ public sealed class UINT : AtomicData, IComparable, IConvertible, IAtomicValue<u
     /// <returns>A <see cref="UINT"/> object that represents the parsed value.</returns>
     public static UINT Parse(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Value can not be null or empty");
-
         var radix = Radix.Infer(value);
         var typed = radix.Parse<ushort>(value);
         var formatted = radix.Format(typed);
-
         return new UINT(CreateDataElement(nameof(UINT), radix, formatted));
     }
 

@@ -23,29 +23,9 @@ namespace L5Sharp.Core;
 /// </footer>
 public sealed class LogixMember : LogixElement
 {
-    /// <summary>
-    /// The backing attribute for the member. This is only used for custom data formats like alarm and message, where
-    /// the data members are attributes of a single element as opposed to child data value or structure elements.
-    /// We will support this internally in our LogixMember class by first checking if this field is not null, and if not,
-    /// extracting the name and value from it. If this field is null, then we assume the standard decorated member format.
-    /// </summary>
-    private readonly XAttribute? _attribute;
-
     /// <inheritdoc />
     public LogixMember(XElement element) : base(element)
     {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="LogixMember"/> for the provided element and attribute.
-    /// The attribute represents the attribute of the provided member to use for parsing name and value.
-    /// This constructor is here to support custom data formats like alarm, message, etc.
-    /// </summary>
-    /// <param name="element">The root data element.</param>
-    /// <param name="attribute">The attribute containing the name/value pair for the member.</param>
-    internal LogixMember(XElement element, XAttribute attribute) : base(element)
-    {
-        _attribute = attribute;
     }
 
     /// <summary>
@@ -66,8 +46,7 @@ public sealed class LogixMember : LogixElement
     /// All member names are immutable. To change the name of a member for a given tag or data structure, you
     /// must remove and add a new member element. This can only be done for <c>ComplexType</c> objects.
     /// </remarks>
-    public string Name =>
-        _attribute is not null ? _attribute.MemberName() : Element.MemberName();
+    public string Name => Element.MemberName();
 
     /// <summary>
     /// The value of the <see cref="LogixMember"/>, containing the simple or complex data value for this element.
@@ -87,9 +66,7 @@ public sealed class LogixMember : LogixElement
     /// hierarchy to set complex object values.
     /// </para>
     /// </remarks>
-    public LogixData Value =>
-        _attribute is not null ? AtomicData.Parse(_attribute.Value) : Element.Deserialize<LogixData>();
-
+    public LogixData Value => Element.Deserialize<LogixData>();
 
     /// <summary>
     /// Creates a new XML member element based on the specified name and data.
