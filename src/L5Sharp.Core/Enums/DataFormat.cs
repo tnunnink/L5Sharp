@@ -63,8 +63,8 @@ public class DataFormat : LogixEnum<DataFormat, string>
 
         var format = data switch
         {
-            ALARM_ANALOG or ALARM_DIGITAL => Alarm,
-            MESSAGE => Message,
+            AlarmData => Alarm,
+            MessageData => Message,
             _ => Decorated
         };
 

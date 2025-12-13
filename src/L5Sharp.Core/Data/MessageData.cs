@@ -15,6 +15,16 @@ public class MessageData : LogixData
     /// <inheritdoc />
     public MessageData() : base(L5XName.MessageParameters)
     {
+        MessageType = MessageType.Unconfigured;
+        RequestedLength = 0;
+        ConnectedFlag = 0;
+        ConnectionPath = string.Empty;
+        CommTypeCode = 0;
+        ServiceCode = Radix.Hex.Format(0);
+        ObjectType = Radix.Hex.Format(0);
+        TargetObject = 0;
+        AttributeNumber = Radix.Hex.Format(0);
+        LocalIndex = 0;
     }
 
     /// <inheritdoc />
@@ -23,16 +33,34 @@ public class MessageData : LogixData
     }
 
     /// <inheritdoc />
+    public override string Name => TypeName;
+
+    /// <inheritdoc />
     public override void Update(LogixData data)
     {
-        if (data is not MessageData other)
-            throw new ArgumentException("Can not update message data with type");
+        if (data is null)
+            throw new ArgumentNullException(nameof(data));
 
-        MessageType = other.MessageType;
+        if (data is not MessageData message)
+            throw new ArgumentException($"Can not update message data with type: '{data.GetType()}'");
+
+        Element.SetAttributeValue(nameof(MessageType), message.MessageType);
+        Element.SetAttributeValue(nameof(RequestedLength), message.RequestedLength);
+        Element.SetAttributeValue(nameof(ConnectedFlag), message.ConnectedFlag);
+        Element.SetAttributeValue(nameof(ConnectionPath), message.ConnectionPath);
+        Element.SetAttributeValue(nameof(CommTypeCode), message.CommTypeCode);
+        Element.SetAttributeValue(nameof(ServiceCode), message.ServiceCode);
+        Element.SetAttributeValue(nameof(ObjectType), message.ObjectType);
+        Element.SetAttributeValue(nameof(TargetObject), message.TargetObject);
+        Element.SetAttributeValue(nameof(AttributeNumber), message.AttributeNumber);
+        Element.SetAttributeValue(nameof(LocalIndex), message.LocalIndex);
+        Element.SetAttributeValue(nameof(DestinationTag), message.DestinationTag);
+        Element.SetAttributeValue(nameof(CacheConnections), message.CacheConnections);
+        Element.SetAttributeValue(nameof(LargePacketUsage), message.LargePacketUsage);
     }
 
     /// <summary>
-    /// Gets the <see cref="MessageType"/> value of the <see cref="MESSAGE"/> data object.
+    /// Gets or sets the <see cref="MessageType"/> value for the <see cref="MessageData"/> object.
     /// </summary>
     public MessageType? MessageType
     {
@@ -41,7 +69,7 @@ public class MessageData : LogixData
     }
 
     /// <summary>
-    /// Gets the <see cref="RequestedLength"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="RequestedLength"/> value for the <see cref="MessageData"/> object.
     /// </summary>
     public int? RequestedLength
     {
@@ -50,16 +78,16 @@ public class MessageData : LogixData
     }
 
     /// <summary>
-    /// Gets the <see cref="ConnectedFlag"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="ConnectedFlag"/> value for the <see cref="MessageData"/> object.
     /// </summary>
-    public bool? ConnectedFlag
+    public int? ConnectedFlag
     {
-        get => GetValue(bool.Parse);
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Gets the <see cref="ConnectionPath"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="ConnectionPath"/> value for the <see cref="MessageData"/> object.
     /// </summary>
     public string? ConnectionPath
     {
@@ -68,16 +96,16 @@ public class MessageData : LogixData
     }
 
     /// <summary>
-    /// Gets the <see cref="CommTypeCode"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="CommTypeCode"/> value for the <see cref="MessageData"/> object.
     /// </summary>
-    public INT? CommTypeCode
+    public int? CommTypeCode
     {
-        get => GetValue(INT.Parse);
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Gets the <see cref="ServiceCode"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="ServiceCode"/> value for the <see cref="MessageData"/> object.
     /// </summary>
     public INT? ServiceCode
     {
@@ -86,7 +114,7 @@ public class MessageData : LogixData
     }
 
     /// <summary>
-    /// Gets the <see cref="ObjectType"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="ObjectType"/> value for the <see cref="MessageData"/> object.
     /// </summary>
     public INT? ObjectType
     {
@@ -95,16 +123,16 @@ public class MessageData : LogixData
     }
 
     /// <summary>
-    /// Gets the <see cref="TargetObject"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="TargetObject"/> value for the <see cref="MessageData"/> object.
     /// </summary>
-    public INT? TargetObject
+    public int? TargetObject
     {
-        get => GetValue(INT.Parse);
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Gets the <see cref="AttributeNumber"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="AttributeNumber"/> value for the <see cref="MessageData"/> object.
     /// </summary>
     public INT? AttributeNumber
     {
@@ -113,38 +141,38 @@ public class MessageData : LogixData
     }
 
     /// <summary>
-    /// Gets the <see cref="LocalIndex"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="LocalIndex"/> value for the <see cref="MessageData"/> object.
     /// </summary>
-    public INT? LocalIndex
+    public int? LocalIndex
     {
-        get => GetValue(INT.Parse);
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Gets the <see cref="DestinationTag"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="DestinationTag"/> value for the <see cref="MessageData"/> object.
     /// </summary>
-    public STRING? DestinationTag
+    public TagName? DestinationTag
     {
         get => GetValue() ?? new STRING();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Gets the <see cref="CacheConnections"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="CacheConnections"/> value for the <see cref="MessageData"/> object.
     /// </summary>
-    public BOOL CacheConnections
+    public bool? CacheConnections
     {
-        get => GetValue(BOOL.Parse) ?? false;
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Gets the <see cref="LargePacketUsage"/> value of the <see cref="MESSAGE"/> parameters.
+    /// Gets or sets the <see cref="LargePacketUsage"/> value for the <see cref="MessageData"/> object.
     /// </summary>
-    public BOOL LargePacketUsage
+    public bool? LargePacketUsage
     {
-        get => GetValue(BOOL.Parse) ?? false;
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 }
