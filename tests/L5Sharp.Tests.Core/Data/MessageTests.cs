@@ -24,7 +24,7 @@ namespace L5Sharp.Tests.Core.Data
             type.MessageType.Should().Be(MessageType.Unconfigured);
             type.RequestedLength.Should().Be(0);
             type.ConnectedFlag.Should().Be(0);
-            type.ConnectionPath.Should().BeNull();
+            type.ConnectionPath.Should().BeEmpty();
             type.CommTypeCode.Should().Be(0);
             type.ServiceCode.Should().Be(0);
             type.ObjectType.Should().Be(0);
