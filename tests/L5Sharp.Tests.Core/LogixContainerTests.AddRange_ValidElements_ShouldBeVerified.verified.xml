@@ -1,0 +1,5 @@
+﻿<Tests>
+  <Test RequiredValue="first" />
+  <Test RequiredValue="second" />
+  <Test RequiredValue="third" />
+</Tests>

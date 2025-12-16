@@ -827,7 +827,7 @@ public class Tag : LogixComponent<Tag>
         //Child descriptions are set in the 'Comments' element of a tag.
         if (value is null || value.IsEmpty())
         {
-            Comments?.RemoveAll(c => TagName.HasOperand(c.Operand));
+            Comments?.RemoveIf(c => TagName.HasOperand(c.Operand));
             return;
         }
 
@@ -858,7 +858,7 @@ public class Tag : LogixComponent<Tag>
     {
         if (value is null || value.IsEmpty())
         {
-            Units?.RemoveAll(x => TagName.HasOperand(x.Operand));
+            Units?.RemoveIf(x => TagName.HasOperand(x.Operand));
             return;
         }
 

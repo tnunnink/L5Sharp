@@ -415,6 +415,9 @@
       <None Update="Components\DataTypeTests.AddMember_ChainMembers_ShouldBeVerified.verified.xml">
         <DependentUpon>DataTypeTests.cs</DependentUpon>
       </None>
+      <None Update="LogixContainerTests.AddRange_ValidElements_ShouldBeVerified.verified.xml">
+        <DependentUpon>LogixContainerTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

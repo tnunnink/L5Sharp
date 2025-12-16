@@ -1,4 +1,6 @@
-﻿namespace L5Sharp.Tests.Core;
+﻿using System.Xml.Linq;
+
+namespace L5Sharp.Tests.Core;
 
 [TestFixture]
 public class ScratchTesting
@@ -6,6 +8,8 @@ public class ScratchTesting
     [Test]
     public void Scratch()
     {
-        Assert.Pass();
+        var element = new XElement("Test");
+        
+        element.Add(null!);
     }
 }
