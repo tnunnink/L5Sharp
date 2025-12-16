@@ -193,5 +193,7 @@ public class AddOnInstructionTests
         var result = content.AddOnInstructions.First();
 
         result.Should().NotBeNull();
+        result.SignatureID.Should().Be("B9E26BEF");
+        result.SignatureTimestamp.Should().Be(DateTime.Parse("2025-12-08T19:51:23.108Z"));
     }
 }

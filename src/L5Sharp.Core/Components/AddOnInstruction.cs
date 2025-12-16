@@ -234,6 +234,26 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
+    /// The signature ID of the signed Add On Instruction.
+    /// </summary>
+    /// <value>A <see cref="string"/> containing the signature ID of the signed Add On Instruction</value>
+    public string? SignatureID
+    {
+        get => GetValue();
+        set => SetValue(value);
+    }
+    
+    /// <summary>
+    /// The signature timestamp of the signed Add On Instruction.
+    /// </summary>
+    /// <value>A <see cref="DateTime"/> containing the signature timestamp of the signed Add On Instruction</value>
+    public DateTime SignatureTimestamp
+    {
+        get => GetDateTime(DateFormat);
+        set => SetDateTime(value, DateFormat);
+    }
+
+    /// <summary>
     /// The collection of <see cref="Parameter"/> that make up the structure of the instruction component.
     /// </summary>
     public LogixContainer<Parameter> Parameters
