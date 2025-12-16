@@ -234,9 +234,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
 
     /// <summary>
-    /// The signature ID of the signed Add On Instruction.
+    /// The signature ID of the signed Add-On Instruction.
     /// </summary>
-    /// <value>A <see cref="string"/> containing the signature ID of the signed Add On Instruction</value>
+    /// <value>A <see cref="string"/> containing the signature ID of the signed Add-On Instruction</value>
     public string? SignatureID
     {
         get => GetValue();
@@ -244,9 +244,9 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     }
     
     /// <summary>
-    /// The signature timestamp of the signed Add On Instruction.
+    /// The signature timestamp of the signed Add-On Instruction.
     /// </summary>
-    /// <value>A <see cref="DateTime"/> containing the signature timestamp of the signed Add On Instruction</value>
+    /// <value>A <see cref="DateTime"/> containing the signature timestamp of the signed Add-On Instruction</value>
     public DateTime SignatureTimestamp
     {
         get => GetDateTime(DateFormat);
