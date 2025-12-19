@@ -3,6 +3,7 @@ using CliFx.Infrastructure;
 using JetBrains.Annotations;
 using L5Sharp.CLI.Internal;
 using RockwellAutomation.LogixDesigner;
+using RockwellAutomation.LogixDesigner.Logging;
 using Spectre.Console;
 
 namespace L5Sharp.CLI.Commands.Projects;
@@ -55,10 +56,11 @@ public class ConvertCommand : ProjectCommand
                     //Most info will be based on catching the exceptions it will throw.
                     using var project = await LogixProject.OpenLogixProjectAsync(
                         projectPath,
-                        cancellationToken: cancellation
+                        new StdOutEventLogger(),
+                        cancellation
                     );
 
-                    await project.SaveAsAsync(savePath, Force, cancellationToken: cancellation);
+                    await project.SaveAsAsync(savePath, Force, Detailed, cancellationToken: cancellation);
                 });
         }
         catch (Exception e)

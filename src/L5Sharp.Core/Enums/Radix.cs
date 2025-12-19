@@ -10,8 +10,13 @@ using System.Text.RegularExpressions;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a number base for a given primitive value type.
+/// Represents a fundamental enumeration of various radix types, used for defining number formats for atomic data values.
 /// </summary>
+/// <remarks>
+/// Radix is a key part of this library in that it is how we format and parse tag data values in the L5X.
+/// Each radix type has specific formatting and parsing logic to handle conversions. You can also use the static methods
+/// on this class to infer the radix format from a given string value, since in some cases that information is not otherwise defined. 
+/// </remarks>
 public abstract class Radix : LogixEnum<Radix, string>
 {
     private Radix(string name, string value) : base(name, value)
@@ -22,7 +27,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// Represents a Null radix, or absence of a Radix value.
     /// </summary>
     /// <remarks>
-    /// Only <see cref="AtomicData"/> types have non-null Radix. <see cref="StructureData"/> types all have null Radix.
+    /// All non value/atomic type data elements will have a null radix format.
     /// </remarks>
     public static readonly Radix Null = new NullRadix();
 
@@ -57,38 +62,61 @@ public abstract class Radix : LogixEnum<Radix, string>
     public static readonly Radix Float = new FloatRadix();
 
     /// <summary>
-    /// Represents an Ascii number base format.
+    /// Represents a radix format for ASCII encided character values.
+    /// This format supports all integer-based atomic data values.
     /// </summary>
     public static readonly Radix Ascii = new AsciiRadix();
 
     /// <summary>
-    /// Represents a DateTime number base format.
+    /// Represents a radix format for Date/Time values having microsecond precision.
+    /// This format only supports 64-bit value types such as <c>LINT</c>, <c>DT</c>, or <c>LDT</c>.
     /// </summary>
     public static readonly Radix DateTime = new DateTimeRadix();
 
     /// <summary>
-    /// Represents a DateTimeNs number base format.
+    /// Represents a radix format for Date/Time values having nanosecond precision.
+    /// This format only supports 64-bit value types such as <c>LINT</c>, <c>DT</c>, or <c>LDT</c>.
     /// </summary>
     public static readonly Radix DateTimeNs = new DateTimeNsRadix();
 
     /// <summary>
-    /// Gets the default <see cref="Radix"/> value for the specified type.
+    /// Represents a radix format for 32-bit time-based values measured in microseconds.
+    /// This radix format is specific to the <c>TIME32</c> data type in newer versions of Logix.
     /// </summary>
-    /// <param name="type">The type for which to determine the default <see cref="Radix"/>.</param>
+    public static readonly Radix Time32 = new Time32Radix();
+
+    /// <summary>
+    /// Represents a radix format for 64-bit time-based values measured in microseconds.
+    /// This radix format is specific to the <c>TIME</c> data type in newer versions of Logix.
+    /// </summary>
+    public static readonly Radix Time = new TimeRadix();
+
+    /// <summary>
+    /// Represents a radix format for 64-bit time-based values measured in nanoseconds.
+    /// This radix format is specific to the <c>LTIME</c> data type in newer versions of Logix.
+    /// </summary>
+    public static readonly Radix TimeNs = new TimeNsRadix();
+
+    /// <summary>
+    /// Determines the default <see cref="Radix"/> type for the specified data type.
+    /// </summary>
+    /// <param name="type">The <see cref="Type"/> for which to determine the default <see cref="Radix"/>.</param>
     /// <returns>
-    /// <see cref="Radix.Float"/> for <see cref="REAL"/> or <see cref="LREAL"/> types.
-    /// <see cref="Radix.Decimal"/> for all other <see cref="AtomicData"/> types.
-    /// <see cref="Radix.Null"/> for all other types.
+    /// The default <see cref="Radix"/> instance corresponding to the provided data type.
     /// </returns>
     public static Radix Default(Type type)
     {
-        if (type == typeof(REAL) || type == typeof(LREAL))
-            return Float;
-
-        if (typeof(AtomicData).IsAssignableFrom(type))
-            return Decimal;
-
-        return Null;
+        return type switch
+        {
+            _ when type == typeof(REAL) || type == typeof(LREAL) => Float,
+            _ when type == typeof(DT) => DateTime,
+            _ when type == typeof(LDT) => DateTimeNs,
+            _ when type == typeof(TIME32) => Time32,
+            _ when type == typeof(TIME) => Time,
+            _ when type == typeof(LTIME) => TimeNs,
+            _ when typeof(AtomicData).IsAssignableFrom(type) => Decimal,
+            _ => Null
+        };
     }
 
     /// <summary>
@@ -149,7 +177,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <param name="value">The string value to parse into the specified type.</param>
     /// <returns>A value of type <typeparamref name="TValue"/> parsed from the provided string.</returns>
     /// <exception cref="NotSupportedException">Thrown when parsing for the specific <see cref="Radix"/> and <typeparamref name="TValue"/> is not supported.</exception>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="value"/> provided is null or empty.</exception>
+    /// <exception cref="ArgumentException">Thrown when the <paramref name="value"/> provided is null or empty.</exception>
     /// <exception cref="FormatException">Thrown when the <paramref name="value"/> does not match the expected format for the current <see cref="Radix"/>.</exception>
     public virtual TValue Parse<TValue>(string value) where TValue : struct
     {
@@ -721,22 +749,277 @@ public abstract class Radix : LogixEnum<Radix, string>
         }
     }
 
+    private class Time32Radix() : Radix(nameof(Time32), "Time32 (us)")
+    {
+        private const string Specifier = "T32#";
+        private const string Separator = "_";
+        private static readonly Func<int, int> ValueConverter = l => l;
+
+        protected override bool IsValidFormat(string? value)
+        {
+            return value is not null && value.StartsWith(Specifier);
+        }
+
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(int);
+        }
+
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            if (value is not int timestamp)
+                return base.Format(value);
+
+            // Handle the zero case immediately
+            if (timestamp == 0) return $"{Specifier}0us";
+
+            var signed = timestamp < 0;
+            var milliseconds = Math.Abs(timestamp / 1000);
+            var microseconds = Math.Abs(timestamp % 1000);
+            var time = TimeSpan.FromMilliseconds(milliseconds);
+
+            var builder = new StringBuilder();
+            builder.Append(Specifier);
+            if (signed) builder.Append('-');
+
+            //Logix only shows the time value of parts that are not zero.
+            if (time.Minutes != 0) builder.Append(time.Minutes).Append('m').Append(Separator);
+            if (time.Seconds != 0) builder.Append(time.Seconds).Append('s').Append(Separator);
+            if (time.Milliseconds != 0) builder.Append(time.Milliseconds).Append("ms").Append(Separator);
+            if (microseconds != 0) builder.Append(microseconds).Append("us").Append(Separator);
+
+            // Remove the trailing separator, where ever it may be.
+            if (builder.Length > Specifier.Length)
+                builder.Length--;
+
+            return builder.ToString();
+        }
+
+        public override TValue Parse<TValue>(string value)
+        {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
+            ValidateFormat(value);
+
+            var stripped = value.Substring(Specifier.Length);
+            var signed = stripped.StartsWith('-');
+
+            var parts = stripped
+                .TrimStart('-')
+                .Split([Separator], StringSplitOptions.RemoveEmptyEntries);
+
+            var timestamp = 0;
+
+            foreach (var part in parts)
+            {
+                if (part.EndsWith("us"))
+                    timestamp += int.Parse(part.Substring(0, part.Length - 2));
+                else if (part.EndsWith("ms"))
+                    timestamp += int.Parse(part.Substring(0, part.Length - 2)) * 1000;
+                else if (part.EndsWith("s"))
+                    timestamp += int.Parse(part.Substring(0, part.Length - 1)) * 1000000;
+                else if (part.EndsWith("m"))
+                    timestamp += int.Parse(part.Substring(0, part.Length - 1)) * 60000000;
+            }
+
+            var result = signed ? -timestamp : timestamp;
+            return ((Func<int, TValue>)(object)ValueConverter).Invoke(result);
+        }
+    }
+
+    private class TimeRadix() : Radix(nameof(Time), "Time (us)")
+    {
+        private const string Specifier = "T#";
+        private const string Separator = "_";
+        private static readonly Func<long, long> ValueConverter = l => l;
+
+        protected override bool IsValidFormat(string? value)
+        {
+            return value is not null && value.StartsWith(Specifier);
+        }
+
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(long);
+        }
+
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            if (value is not long timestamp)
+                return base.Format(value);
+
+            // Handle the zero case immediately
+            if (timestamp == 0) return $"{Specifier}0us";
+
+            var signed = timestamp < 0;
+            var milliseconds = Math.Abs(timestamp / 1000);
+            var microseconds = Math.Abs(timestamp % 1000);
+            var time = TimeSpan.FromMilliseconds(milliseconds);
+
+            var builder = new StringBuilder();
+            builder.Append(Specifier);
+            if (signed) builder.Append('-');
+
+            //Logix only shows the time value of parts that are not zero.
+            if (time.Days != 0) builder.Append(time.Days).Append('d').Append(Separator);
+            if (time.Hours != 0) builder.Append(time.Hours).Append('h').Append(Separator);
+            if (time.Minutes != 0) builder.Append(time.Minutes).Append('m').Append(Separator);
+            if (time.Seconds != 0) builder.Append(time.Seconds).Append('s').Append(Separator);
+            if (time.Milliseconds != 0) builder.Append(time.Milliseconds).Append("ms").Append(Separator);
+            if (microseconds != 0) builder.Append(microseconds).Append("us").Append(Separator);
+
+            // Remove the trailing separator, where ever it may be.
+            if (builder.Length > Specifier.Length)
+                builder.Length--;
+
+            return builder.ToString();
+        }
+
+        public override TValue Parse<TValue>(string value)
+        {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
+            ValidateFormat(value);
+
+            var stripped = value.Substring(Specifier.Length);
+            var signed = stripped.StartsWith('-');
+
+            var parts = stripped
+                .TrimStart('-')
+                .Split([Separator], StringSplitOptions.RemoveEmptyEntries);
+
+            long timestamp = 0;
+
+            foreach (var part in parts)
+            {
+                if (part.EndsWith("us"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 2));
+                else if (part.EndsWith("ms"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 2)) * 1000;
+                else if (part.EndsWith("s"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 1000000;
+                else if (part.EndsWith("m"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 60000000;
+                else if (part.EndsWith("h"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 3600000000;
+                else if (part.EndsWith("d"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 86400000000;
+            }
+
+            var result = signed ? -timestamp : timestamp;
+            return ((Func<long, TValue>)(object)ValueConverter).Invoke(result);
+        }
+    }
+
+    private class TimeNsRadix() : Radix(nameof(TimeNs), "LTime (ns)")
+    {
+        private const string Specifier = "LT#";
+        private const string Separator = "_";
+        private static readonly Func<long, long> ValueConverter = l => l;
+
+        protected override bool IsValidFormat(string? value)
+        {
+            return value is not null && value.StartsWith(Specifier);
+        }
+
+        protected override bool IsSupportedType(Type type)
+        {
+            return type == typeof(long);
+        }
+
+        public override string Format<TValue>(TValue value) where TValue : struct
+        {
+            if (value is not long timestamp)
+                return base.Format(value);
+
+            // Handle the zero case immediately
+            if (timestamp == 0) return $"{Specifier}0ns";
+
+            var signed = timestamp < 0;
+            var milliseconds = Math.Abs(timestamp / 1000000);
+            var microseconds = Math.Abs(timestamp % 1000000) / 1000;
+            var nanoseconds = Math.Abs(timestamp % 1000);
+            var time = TimeSpan.FromMilliseconds(milliseconds);
+
+            var builder = new StringBuilder();
+            builder.Append(Specifier);
+            if (signed) builder.Append('-');
+
+            //Logix only shows the time value of parts that are not zero.
+            if (time.Days != 0) builder.Append(time.Days).Append('d').Append(Separator);
+            if (time.Hours != 0) builder.Append(time.Hours).Append('h').Append(Separator);
+            if (time.Minutes != 0) builder.Append(time.Minutes).Append('m').Append(Separator);
+            if (time.Seconds != 0) builder.Append(time.Seconds).Append('s').Append(Separator);
+            if (time.Milliseconds != 0) builder.Append(time.Milliseconds).Append("ms").Append(Separator);
+            if (microseconds != 0) builder.Append(microseconds).Append("us").Append(Separator);
+            if (nanoseconds != 0) builder.Append(nanoseconds).Append("ns").Append(Separator);
+
+            // Remove the trailing separator, where ever it may be.
+            if (builder.Length > Specifier.Length)
+                builder.Length--;
+
+            return builder.ToString();
+        }
+
+        public override TValue Parse<TValue>(string value)
+        {
+            if (!IsSupportedType(typeof(TValue)))
+                return base.Parse<TValue>(value);
+
+            ValidateFormat(value);
+
+            var stripped = value.Substring(Specifier.Length);
+            var signed = stripped.StartsWith('-');
+
+            var parts = stripped
+                .TrimStart('-')
+                .Split([Separator], StringSplitOptions.RemoveEmptyEntries);
+
+            long timestamp = 0;
+
+            foreach (var part in parts)
+            {
+                if (part.EndsWith("ns"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 2));
+                else if (part.EndsWith("us"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 2)) * 1000;
+                else if (part.EndsWith("ms"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 2)) * 1000000;
+                else if (part.EndsWith("s"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 1000000000;
+                else if (part.EndsWith("m"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 60000000000;
+                else if (part.EndsWith("h"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 3600000000000;
+                else if (part.EndsWith("d"))
+                    timestamp += long.Parse(part.Substring(0, part.Length - 1)) * 86400000000000;
+            }
+
+            var result = signed ? -timestamp : timestamp;
+
+            return ((Func<long, TValue>)(object)ValueConverter).Invoke(result);
+        }
+    }
+
     #endregion
 
     /// <summary>
-    /// Formats the specified <see cref="AtomicData"/> value according to the provided base.
+    /// Formats the specified value according to the provided base number.
     /// </summary>
-    /// <param name="atomic">The <see cref="AtomicData"/> instance to be formatted.</param>
-    /// <param name="baseNumber">The base to be used during formatting.</param>
+    /// <typeparam name="TValue">The type of the value to format, restricted to struct types.</typeparam>
+    /// <param name="value">The value to be formatted.</param>
+    /// <param name="baseNumber">The base number used for formatting the value (e.g., 2 for binary, 8 for octal).</param>
     /// <returns>
-    /// A string representation of the <see cref="AtomicData"/> value formatted according to the specified base.
+    /// A string representation of the value formatted in the specified base number.
     /// </returns>
     /// <exception cref="NotSupportedException">
-    /// Thrown when the provided <see cref="AtomicData"/> type is not supported for formatting.
+    /// Thrown when the type of <paramref name="value"/> is not supported for formatting.
     /// </exception>
-    private string FormatValue<TValue>(TValue atomic, int baseNumber) where TValue : struct
+    private string FormatValue<TValue>(TValue value, int baseNumber) where TValue : struct
     {
-        return atomic switch
+        return value switch
         {
             bool x => FormatValue(x),
             sbyte x => FormatValue(x, baseNumber),
@@ -747,17 +1030,16 @@ public abstract class Radix : LogixEnum<Radix, string>
             uint x => FormatValue(x, baseNumber),
             long x => FormatValue(x, baseNumber),
             ulong x => FormatValue(x, baseNumber),
-            _ => throw new NotSupportedException($"{Name} does not support formatting {atomic.GetType().Name}.")
+            _ => throw new NotSupportedException($"{Name} does not support formatting {value.GetType().Name}.")
         };
     }
 
     /// <summary>
-    /// Formats the specified <see cref="BOOL"/> value into its equivalent string representation.
+    /// Formats the specified value into a string representation based on the given number base.
     /// </summary>
-    /// <param name="value">The <see cref="BOOL"/> value to be formatted.</param>
+    /// <param name="value">The value to be formatted.</param>
     /// <returns>
-    /// A string representation of the <see cref="BOOL"/> value,
-    /// where "1" represents <c>true</c> and "0" represents <c>false</c>.
+    /// A string representation of the value formatted according to the specified base.
     /// </returns>
     private static string FormatValue(bool value)
     {

@@ -1,0 +1,158 @@
+﻿using System.Xml.Linq;
+// Auto-generated file
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+
+namespace L5Sharp.Core;
+
+/// <summary>
+/// Represents a <c>P_RUN_TIME</c> data type structure.
+/// </summary>
+[LogixData("P_RUN_TIME")]
+public sealed partial class P_RUN_TIME : StructureData
+{
+    /// <summary>
+    /// Creates a new <see cref="P_RUN_TIME"/> instance initialized with default values.
+    /// </summary>
+    public P_RUN_TIME() : base("P_RUN_TIME")
+    {
+        EnableIn = new BOOL();
+        EnableOut = new BOOL();
+        Inp_InitializeReq = new BOOL();
+        Inp_Starting = new BOOL();
+        Inp_Running = new BOOL();
+        PCmd_ClearStarts = new BOOL();
+        PCmd_ClearMaxHrs = new BOOL();
+        PCmd_ClearTotHrs = new BOOL();
+        Val_Starts = new DINT();
+        Val_CurRunHrs = new REAL();
+        Val_MaxRunHrs = new REAL();
+        Val_TotRunHrs = new REAL();
+        Sts_Initialized = new BOOL();
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="P_RUN_TIME"/> instance initialized with the provided element.
+    /// </summary>
+    public P_RUN_TIME(XElement element) : base(element)
+    {
+    }
+
+    /// <summary>
+    /// The <c>EnableIn</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL EnableIn
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>EnableOut</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL EnableOut
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Inp_InitializeReq</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL Inp_InitializeReq
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Inp_Starting</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL Inp_Starting
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Inp_Running</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL Inp_Running
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>PCmd_ClearStarts</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL PCmd_ClearStarts
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>PCmd_ClearMaxHrs</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL PCmd_ClearMaxHrs
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>PCmd_ClearTotHrs</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL PCmd_ClearTotHrs
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Val_Starts</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public DINT Val_Starts
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Val_CurRunHrs</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public REAL Val_CurRunHrs
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Val_MaxRunHrs</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public REAL Val_MaxRunHrs
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Val_TotRunHrs</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public REAL Val_TotRunHrs
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Sts_Initialized</c> member of the <see cref="P_RUN_TIME"/> data type.
+    /// </summary>
+    public BOOL Sts_Initialized
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -94,9 +95,9 @@ public class Parameter : LogixObject<Parameter>
     /// Default is <see cref="string.Empty"/>.
     /// Valid value is required for valid import.
     /// </value>
-    public string? DataType
+    public string DataType
     {
-        get => GetValue();
+        get => GetValue() ?? Alias?.DataType ?? throw Element.L5XError(L5XName.DataType);
         set => SetValue(value);
     }
 
@@ -108,9 +109,9 @@ public class Parameter : LogixObject<Parameter>
     /// Default is <see cref="Dimensions.Empty"/>.
     /// Members should not have multidimensional arrays.
     /// </value>
-    public Dimensions? Dimension
+    public Dimensions Dimension
     {
-        get => GetValue(Dimensions.Parse);
+        get => GetValue(Dimensions.Parse) ?? Dimensions.Empty;
         set => SetValue(value);
     }
 
@@ -155,13 +156,11 @@ public class Parameter : LogixObject<Parameter>
     }
 
     /// <summary>
-    /// The usage option indicating the scope in which the <c>Parameter</c> is visible or usable from.
+    /// The <see cref="TagUsage"/> option indicating the scope in which the parameter is visible or usable from.
     /// </summary>
-    /// <value>
-    /// A <see cref="TagUsage"/> option representing the <c>Parameter</c> scope.
-    /// Default for AoiBlock is <see cref="TagUsage.Input"/>. The only valid options for AoiBlock are Input, Output,
-    /// and InOut.
-    /// </value>
+    /// <remarks>
+    /// Default is <see cref="TagUsage.Input"/>. The only valid options for AoiBlock are Input, Output, and InOut.
+    /// </remarks>
     public TagUsage Usage
     {
         get => GetRequiredValue(TagUsage.Parse);
@@ -169,10 +168,8 @@ public class Parameter : LogixObject<Parameter>
     }
 
     /// <summary>
-    /// Indicates whether the <c>Parameter</c> is required from the instruction code clock.
+    /// Indicates whether the <see cref="Parameter"/> is required from the instruction code clock.
     /// </summary>
-    /// <value>
-    /// <c>true</c> if the <c>Parameter</c> is required; otherwise, false. Default is <c>false</c>.</value>
     public bool? Required
     {
         get => GetOptionalBool();
@@ -180,9 +177,8 @@ public class Parameter : LogixObject<Parameter>
     }
 
     /// <summary>
-    /// Indicates whether the <c>Parameter</c> is visible from the instruction code block.
+    /// Indicates whether the <see cref="Parameter"/> is visible from the instruction code block.
     /// </summary>
-    /// <value><c>true</c> if the <c>Parameter</c> is visible; otherwise, false. Default is <c>false</c>.</value>
     public bool? Visible
     {
         get => GetOptionalBool();
@@ -221,6 +217,12 @@ public class Parameter : LogixObject<Parameter>
     }
 
     /// <summary>
+    /// Represents the associated alias of the parameter if one is defined.
+    /// Provides a way to reference a <see cref="LocalTag"/> that serves as an alias for this parameter.
+    /// </summary>
+    public LocalTag? Alias => GetAncestor<AddOnInstruction>()?.LocalTags.SingleOrDefault(t => t.Name == AliasFor);
+
+    /// <summary>
     /// Creates a new <see cref="Tag"/> instance from this <see cref="Parameter"/> configuration.
     /// </summary>
     /// <param name="tagName">The name of the tag.</param>
@@ -232,16 +234,13 @@ public class Parameter : LogixObject<Parameter>
     /// </remarks>
     public Tag ToTag(string tagName)
     {
-        if (DataType is null || DataType.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
-            throw new InvalidOperationException("Can not generate Tag with null or empty DataType name.");
-
-        var isArray = Dimension is not null && Dimension.Length > 0;
+        var isArray = Dimension.Length > 0;
 
         var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
             ? registered
             : new StructureData(DataType));
 
-        var value = !isArray ? data : ArrayData.New(data, Dimension!);
+        var value = !isArray ? data : ArrayData.New(data, Dimension);
 
         return new Tag(tagName, value);
     }
@@ -261,17 +260,33 @@ public class Parameter : LogixObject<Parameter>
     /// </remarks>
     public LogixMember ToMember()
     {
-        if (DataType is null || DataType.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
-            throw new InvalidOperationException("Can not generate Member with null or empty DataType name.");
-
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)
             throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
 
-        var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
-            ? registered
-            : new StructureData(DataType));
+        var isArray = Dimension.Length > 0;
 
-        return new LogixMember(Name, data);
+        //If the parameter has default data, we can opt to return a member with the correcly initialized data value.
+        if (Default is not null)
+        {
+            LogixData defaultValue = isArray ? ArrayData.New(Default, Dimension) : Default;
+            return new LogixMember(Name, defaultValue);
+        }
+
+        //If the type is registered, we can create the instance using the registered factory.
+        if (LogixType.TryCreate(DataType, out var registered))
+        {
+            var value = isArray ? ArrayData.New(registered, Dimension) : registered;
+            return new LogixMember(Name, value);
+        }
+
+        //If not, we can try to get the data type definition from the l5X if attached
+        //and use that to recursively build up the complex type.
+        var data = TryGetDocument(out var doc) && doc.TryGet<DataType>(DataType, out var definition)
+            ? definition.ToData()
+            : new StructureData(DataType);
+
+        var structure = isArray ? ArrayData.New(data, Dimension) : data;
+        return new LogixMember(Name, structure);
     }
 
     /// <inheritdoc />

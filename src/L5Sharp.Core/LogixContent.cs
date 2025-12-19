@@ -128,7 +128,7 @@ public class LogixContent : LogixElement
         controller.Modules.Add(local);
 
         var content = new XElement(L5XName.RSLogix5000Content);
-        content.Add(new XAttribute(L5XName.SchemaRevision, 1.0));
+        content.Add(new XAttribute(L5XName.SchemaRevision, "1.0"));
         content.Add(new XAttribute(L5XName.SoftwareRevision, local.Revision!));
         content.Add(new XAttribute(L5XName.TargetName, controller.Name));
         content.Add(new XAttribute(L5XName.TargetType, L5XName.Controller));

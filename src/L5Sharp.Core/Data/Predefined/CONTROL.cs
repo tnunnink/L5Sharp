@@ -1,19 +1,20 @@
 ﻿using System.Xml.Linq;
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable InconsistentNaming RSLogix naming
+// Auto-generated file
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built-in data type used with ... instructions. 
+/// Represents a <c>CONTROL</c> data type structure.
 /// </summary>
-[LogixData(nameof(CONTROL))]
-public sealed class CONTROL : StructureData
+[LogixData("CONTROL")]
+public sealed partial class CONTROL : StructureData
 {
     /// <summary>
-    /// Creates a new <see cref="CONTROL"/> data type instance.
+    /// Creates a new <see cref="CONTROL"/> instance initialized with default values.
     /// </summary>
-    public CONTROL() : base(nameof(CONTROL))
+    public CONTROL() : base("CONTROL")
     {
         LEN = new DINT();
         POS = new DINT();
@@ -27,13 +28,15 @@ public sealed class CONTROL : StructureData
         FD = new BOOL();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="CONTROL"/> instance initialized with the provided element.
+    /// </summary>
     public CONTROL(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// Gets the <see cref="LEN"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>LEN</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public DINT LEN
     {
@@ -42,7 +45,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="POS"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>POS</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public DINT POS
     {
@@ -51,7 +54,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="EN"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>EN</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL EN
     {
@@ -60,7 +63,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="EU"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>EU</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL EU
     {
@@ -69,7 +72,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="DN"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>DN</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL DN
     {
@@ -78,7 +81,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="EM"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>EM</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL EM
     {
@@ -87,7 +90,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ER"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>ER</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL ER
     {
@@ -96,7 +99,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="UL"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>UL</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL UL
     {
@@ -105,7 +108,7 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="IN"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>IN</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL IN
     {
@@ -114,11 +117,12 @@ public sealed class CONTROL : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="FD"/> member of the <see cref="CONTROL"/> data type.
+    /// The <c>FD</c> member of the <see cref="CONTROL"/> data type.
     /// </summary>
     public BOOL FD
     {
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
+
 }

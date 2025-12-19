@@ -1,20 +1,20 @@
 ﻿using System.Xml.Linq;
-
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable InconsistentNaming I want to keep the naming consistent with Logix (for now).
+// Auto-generated file
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built-in data type in Logix that is a part of the alarm instruction set.
+/// Represents a <c>ALARM</c> data type structure.
 /// </summary>
-[LogixData(nameof(ALARM))]
-public sealed class ALARM : StructureData
+[LogixData("ALARM")]
+public sealed partial class ALARM : StructureData
 {
     /// <summary>
-    /// Creates a new <see cref="ALARM"/> data type instance.
+    /// Creates a new <see cref="ALARM"/> instance initialized with default values.
     /// </summary>
-    public ALARM() : base(nameof(ALARM))
+    public ALARM() : base("ALARM")
     {
         EnableIn = new BOOL();
         In = new REAL();
@@ -42,13 +42,15 @@ public sealed class ALARM : StructureData
         ROCPeriodInv = new BOOL();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="ALARM"/> instance initialized with the provided element.
+    /// </summary>
     public ALARM(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>EnableIn</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL EnableIn
     {
@@ -57,7 +59,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="In"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>In</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL In
     {
@@ -66,7 +68,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="HHLimit"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>HHLimit</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL HHLimit
     {
@@ -75,7 +77,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="HLimit"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>HLimit</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL HLimit
     {
@@ -84,7 +86,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="LLimit"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>LLimit</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL LLimit
     {
@@ -93,7 +95,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="LLLimit"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>LLLimit</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL LLLimit
     {
@@ -102,7 +104,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="Deadband"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>Deadband</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL Deadband
     {
@@ -111,7 +113,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCPosLimit"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCPosLimit</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL ROCPosLimit
     {
@@ -120,7 +122,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCNegLimit"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCNegLimit</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL ROCNegLimit
     {
@@ -129,7 +131,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCPeriod"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCPeriod</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL ROCPeriod
     {
@@ -138,7 +140,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="EnableOut"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>EnableOut</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL EnableOut
     {
@@ -147,7 +149,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="HHAlarm"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>HHAlarm</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL HHAlarm
     {
@@ -156,7 +158,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="HAlarm"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>HAlarm</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL HAlarm
     {
@@ -165,7 +167,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="LAlarm"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>LAlarm</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL LAlarm
     {
@@ -174,7 +176,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="LLAlarm"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>LLAlarm</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL LLAlarm
     {
@@ -183,7 +185,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCPosAlarm"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCPosAlarm</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL ROCPosAlarm
     {
@@ -192,7 +194,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCNegAlarm"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCNegAlarm</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL ROCNegAlarm
     {
@@ -201,7 +203,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROC"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROC</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public REAL ROC
     {
@@ -210,7 +212,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="Status"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>Status</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public DINT Status
     {
@@ -219,7 +221,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="InstructFault"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>InstructFault</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL InstructFault
     {
@@ -228,7 +230,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="DeadbandInv"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>DeadbandInv</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL DeadbandInv
     {
@@ -237,7 +239,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCPosLimitInv"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCPosLimitInv</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL ROCPosLimitInv
     {
@@ -246,7 +248,7 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCNegLimitInv"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCNegLimitInv</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL ROCNegLimitInv
     {
@@ -255,11 +257,12 @@ public sealed class ALARM : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ROCPeriodInv"/> member of the <see cref="ALARM"/> data type.
+    /// The <c>ROCPeriodInv</c> member of the <see cref="ALARM"/> data type.
     /// </summary>
     public BOOL ROCPeriodInv
     {
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
+
 }

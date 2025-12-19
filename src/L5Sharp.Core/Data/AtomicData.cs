@@ -134,11 +134,17 @@ public abstract class AtomicData : LogixData
     /// <exception cref="ArgumentException">Thrown when the provided value is null or empty.</exception>
     public static AtomicData Parse(string value)
     {
-        //todo is there a better way to determine the size? Or should we even have this method?
         var radix = Radix.Infer(value);
 
         if (radix == Radix.Float || radix == Radix.Exponential)
-            return new REAL(radix.Parse<float>(value));
+            return new LREAL(radix.Parse<double>(value));
+
+        if (radix == Radix.DateTime)
+            return new DT(radix.Parse<long>(value));
+        if (radix == Radix.DateTimeNs)
+            return new LDT(radix.Parse<long>(value));
+        if (radix == Radix.DateTimeNs)
+            return new LDT(radix.Parse<long>(value));
 
         return new DINT(radix.Parse<int>(value));
     }
@@ -251,8 +257,13 @@ public abstract class AtomicData : LogixData
 }
 
 /// <summary>
-/// 
+/// Provides a set of extension methods for working with <see cref="AtomicData"/> instances.
 /// </summary>
+/// <remarks>
+/// This static class defines utility methods that enhance the functionality of <see cref="AtomicData"/> objects.
+/// These methods are designed to simplify common tasks such as value extraction while ensuring type safety and
+/// error handling for unsupported data types.
+/// </remarks>
 public static class AtomicDataExtensions
 {
     /// <summary>
@@ -265,6 +276,7 @@ public static class AtomicDataExtensions
     {
         return data switch
         {
+            IAtomicValue<bool> x => x.Value,
             IAtomicValue<sbyte> x => x.Value,
             IAtomicValue<byte> x => x.Value,
             IAtomicValue<short> x => x.Value,

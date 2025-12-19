@@ -1,0 +1,48 @@
+﻿using System.Xml.Linq;
+// Auto-generated file
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+
+namespace L5Sharp.Core;
+
+/// <summary>
+/// Represents a <c>CONNECTION_STATUS</c> data type structure.
+/// </summary>
+[LogixData("CONNECTION_STATUS")]
+public sealed partial class CONNECTION_STATUS : StructureData
+{
+    /// <summary>
+    /// Creates a new <see cref="CONNECTION_STATUS"/> instance initialized with default values.
+    /// </summary>
+    public CONNECTION_STATUS() : base("CONNECTION_STATUS")
+    {
+        RunMode = new BOOL();
+        ConnectionFaulted = new BOOL();
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="CONNECTION_STATUS"/> instance initialized with the provided element.
+    /// </summary>
+    public CONNECTION_STATUS(XElement element) : base(element)
+    {
+    }
+
+    /// <summary>
+    /// The <c>RunMode</c> member of the <see cref="CONNECTION_STATUS"/> data type.
+    /// </summary>
+    public BOOL RunMode
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>ConnectionFaulted</c> member of the <see cref="CONNECTION_STATUS"/> data type.
+    /// </summary>
+    public BOOL ConnectionFaulted
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+}

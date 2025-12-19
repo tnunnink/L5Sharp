@@ -223,9 +223,8 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
             TypeCode.UInt16 => convertible.ToUInt16(provider),
             TypeCode.UInt32 => convertible.ToUInt32(provider),
             TypeCode.UInt64 => convertible.ToUInt64(provider),
-            TypeCode.DBNull => throw new InvalidCastException(
-                "Conversion for type code 'DbNull' not supported by AtomicType."),
-            _ => throw new InvalidCastException($"Conversion for {conversionType.Name} not supported by AtomicType.")
+            TypeCode.DBNull => throw new InvalidCastException("Conversion for type code 'DbNull' not supported."),
+            _ => throw new InvalidCastException($"Conversion for {conversionType.Name} not supported.")
         };
     }
 
@@ -246,30 +245,26 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     /// <exception cref="InvalidCastException">The specified type is not a valid atomic type.</exception>
     private object ToAtomic(Type conversionType)
     {
-        if (conversionType == typeof(BOOL))
-            return new BOOL(Value != 0);
-        if (conversionType == typeof(SINT))
-            return new SINT((sbyte)Value);
-        if (conversionType == typeof(INT))
-            return new INT(Value);
-        if (conversionType == typeof(DINT))
-            return new DINT(Value);
-        if (conversionType == typeof(LINT))
-            return new LINT(Value);
-        if (conversionType == typeof(REAL))
-            return new REAL(Value);
-        if (conversionType == typeof(LREAL))
-            return new LREAL(Value);
-        if (conversionType == typeof(USINT))
-            return new USINT((byte)Value);
-        if (conversionType == typeof(UINT))
-            return new UINT((ushort)Value);
-        if (conversionType == typeof(UDINT))
-            return new UDINT((uint)Value);
-        if (conversionType == typeof(ULINT))
-            return new ULINT((ulong)Value);
-
-        throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.");
+        return conversionType switch
+        {
+            _ when conversionType == typeof(BOOL) => new BOOL(Value != 0),
+            _ when conversionType == typeof(SINT) => new SINT((sbyte)Value),
+            _ when conversionType == typeof(INT) => new INT(Value),
+            _ when conversionType == typeof(DINT) => new DINT(Value),
+            _ when conversionType == typeof(LINT) => new LINT(Value),
+            _ when conversionType == typeof(REAL) => new REAL(Value),
+            _ when conversionType == typeof(LREAL) => new LREAL(Value),
+            _ when conversionType == typeof(USINT) => new USINT((byte)Value),
+            _ when conversionType == typeof(UINT) => new UINT((ushort)Value),
+            _ when conversionType == typeof(UDINT) => new UDINT((uint)Value),
+            _ when conversionType == typeof(ULINT) => new ULINT((ulong)Value),
+            _ when conversionType == typeof(DT) => new DT(Value),
+            _ when conversionType == typeof(LDT) => new LDT(Value),
+            _ when conversionType == typeof(TIME32) => new TIME32(Value),
+            _ when conversionType == typeof(TIME) => new TIME(Value),
+            _ when conversionType == typeof(LTIME) => new LTIME(Value),
+            _ => throw new InvalidCastException($"Cannot convert from {GetType().Name} to {conversionType.Name}.")
+        };
     }
 
     #endregion

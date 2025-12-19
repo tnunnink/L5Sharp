@@ -204,12 +204,8 @@ public class DataType : LogixComponent<DataType>
     /// </remarks>
     public LogixData ToData()
     {
-        if (string.IsNullOrEmpty(Name))
-            throw new InvalidOperationException("Can not create data with null or empty data type name");
-
         //Need to intercept the BIT types and make them booleans.
-        if (Name == "BIT")
-            return new BOOL();
+        if (Name == "BIT") return new BOOL();
 
         //Try to instantiate the type if registered
         if (LogixType.TryCreate(Name, out var registered))

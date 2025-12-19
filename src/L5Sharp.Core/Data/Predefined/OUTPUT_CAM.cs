@@ -1,0 +1,108 @@
+﻿using System.Xml.Linq;
+// Auto-generated file
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+
+namespace L5Sharp.Core;
+
+/// <summary>
+/// Represents a <c>OUTPUT_CAM</c> data type structure.
+/// </summary>
+[LogixData("OUTPUT_CAM")]
+public sealed partial class OUTPUT_CAM : StructureData
+{
+    /// <summary>
+    /// Creates a new <see cref="OUTPUT_CAM"/> instance initialized with default values.
+    /// </summary>
+    public OUTPUT_CAM() : base("OUTPUT_CAM")
+    {
+        OutputBit = new DINT();
+        LatchType = new DINT();
+        UnlatchType = new DINT();
+        Left = new REAL();
+        Right = new REAL();
+        Duration = new REAL();
+        EnableType = new DINT();
+        EnableBit = new DINT();
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="OUTPUT_CAM"/> instance initialized with the provided element.
+    /// </summary>
+    public OUTPUT_CAM(XElement element) : base(element)
+    {
+    }
+
+    /// <summary>
+    /// The <c>OutputBit</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public DINT OutputBit
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>LatchType</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public DINT LatchType
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>UnlatchType</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public DINT UnlatchType
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Left</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public REAL Left
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Right</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public REAL Right
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Duration</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public REAL Duration
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>EnableType</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public DINT EnableType
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>EnableBit</c> member of the <see cref="OUTPUT_CAM"/> data type.
+    /// </summary>
+    public DINT EnableBit
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+}

@@ -1,5 +1,4 @@
 ﻿using CliFx.Infrastructure;
-using L5Sharp.CLI.Commands;
 using L5Sharp.CLI.Commands.Projects;
 
 namespace L5Sharp.Tests.CLI.Commands;
@@ -12,6 +11,9 @@ public class ConvertCommandTests
     {
         var command = new ConvertCommand
         {
+            Project = @"C:\Users\tnunnink\Documents\Rockwell\Example.ACD",
+            Force = true,
+            Detailed = true
         };
 
         await command.ExecuteAsync(new SystemConsole());

@@ -384,8 +384,8 @@ public abstract class LogixElement : ILogixElement
     /// Gets the first parent element of the current underlying element object with the specified name and returns 
     /// a new deserialized instance of the parent type if found. If not found, returns <c>null</c>.
     /// </summary>
-    /// <param name="ancestor">The name of the parent element to return. If not provided will use the default configured
-    /// L5XType for the specified element type.</param>
+    /// <param name="ancestorName">The name of the parent element to return.
+    /// If not provided will use the default registered element name for the specified type.</param>
     /// <typeparam name="TElement">The element type of the parent to return.</typeparam>
     /// <returns>A <see cref="LogixElement"/> representing the specified parent element if found;
     /// Otherwise, <c>null</c>.</returns>
@@ -394,10 +394,11 @@ public abstract class LogixElement : ILogixElement
     /// to a <c>L5X</c> document then this will return null. Note that we only get parent but don't set it. A parent is
     /// defined by adding a given logix element to the corresponding parent logix container.
     /// </remarks>
-    protected TElement? GetAncestor<TElement>(string? ancestor = null) where TElement : LogixElement
+    protected TElement? GetAncestor<TElement>(string? ancestorName = null) where TElement : LogixElement
     {
-        ancestor ??= typeof(TElement).Name;
-        return Element.Ancestors(ancestor).FirstOrDefault()?.Deserialize<TElement>();
+        ancestorName ??= LogixSerializer.NamesFor(typeof(TElement)).First();
+        var ancestor = Element.Ancestors(ancestorName).FirstOrDefault();
+        return ancestor?.Deserialize<TElement>();
     }
 
     /// <summary>

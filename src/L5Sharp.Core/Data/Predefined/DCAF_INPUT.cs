@@ -1,0 +1,228 @@
+﻿using System.Xml.Linq;
+// Auto-generated file
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+
+namespace L5Sharp.Core;
+
+/// <summary>
+/// Represents a <c>DCAF_INPUT</c> data type structure.
+/// </summary>
+[LogixData("DCAF_INPUT")]
+public sealed partial class DCAF_INPUT : StructureData
+{
+    /// <summary>
+    /// Creates a new <see cref="DCAF_INPUT"/> instance initialized with default values.
+    /// </summary>
+    public DCAF_INPUT() : base("DCAF_INPUT")
+    {
+        EnableIn = new BOOL();
+        InputStatus = new BOOL();
+        Reset = new BOOL();
+        RestartType = new BOOL();
+        ColdStartType = new BOOL();
+        ChannelA = new REAL();
+        ChannelB = new REAL();
+        Tolerance = new REAL();
+        HighLimit = new REAL();
+        LowLimit = new REAL();
+        DiscrepancyTime = new DINT();
+        EnableOut = new BOOL();
+        O1 = new BOOL();
+        FP = new BOOL();
+        HTP = new BOOL();
+        LTP = new BOOL();
+        O1OnTime = new DINT();
+        FaultCode = new DINT();
+        DiagnosticCode = new DINT();
+        Revision = new DINT();
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="DCAF_INPUT"/> instance initialized with the provided element.
+    /// </summary>
+    public DCAF_INPUT(XElement element) : base(element)
+    {
+    }
+
+    /// <summary>
+    /// The <c>EnableIn</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL EnableIn
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>InputStatus</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL InputStatus
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Reset</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL Reset
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>RestartType</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL RestartType
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>ColdStartType</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL ColdStartType
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>ChannelA</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public REAL ChannelA
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>ChannelB</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public REAL ChannelB
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Tolerance</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public REAL Tolerance
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>HighLimit</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public REAL HighLimit
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>LowLimit</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public REAL LowLimit
+    {
+        get => GetMember<REAL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>DiscrepancyTime</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public DINT DiscrepancyTime
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>EnableOut</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL EnableOut
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>O1</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL O1
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>FP</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL FP
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>HTP</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL HTP
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>LTP</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public BOOL LTP
+    {
+        get => GetMember<BOOL>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>O1OnTime</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public DINT O1OnTime
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>FaultCode</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public DINT FaultCode
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>DiagnosticCode</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public DINT DiagnosticCode
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Revision</c> member of the <see cref="DCAF_INPUT"/> data type.
+    /// </summary>
+    public DINT Revision
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+}

@@ -33,6 +33,36 @@ public class DataFormat : LogixEnum<DataFormat, string>
     public static readonly DataFormat Message = new(nameof(Message), nameof(Message));
 
     /// <summary>
+    /// Represents Axis formatted data structure.
+    /// </summary>
+    public static readonly DataFormat Axis = new(nameof(Axis), nameof(Axis));
+
+    /// <summary>
+    /// Represents CoordinateSystem formatted data structure.
+    /// </summary>
+    public static readonly DataFormat CoordinateSystem = new(nameof(CoordinateSystem), nameof(CoordinateSystem));
+
+    /// <summary>
+    /// Represents MotionGroup formatted data structure.
+    /// </summary>
+    public static readonly DataFormat MotionGroup = new(nameof(MotionGroup), nameof(MotionGroup));
+
+    /// <summary>
+    /// Represents BEO (Energy_Base type) formatted data structure.
+    /// </summary>
+    public static readonly DataFormat BEO = new(nameof(BEO), nameof(BEO));
+
+    /// <summary>
+    /// Represents EEO (Energy_Electrical type) formatted data structure.
+    /// </summary>
+    public static readonly DataFormat EEO = new(nameof(EEO), nameof(EEO));
+
+    /// <summary>
+    /// Represents HMIBC (HMIBC type) formatted data structure.
+    /// </summary>
+    public static readonly DataFormat HMIBC = new(nameof(HMIBC), nameof(HMIBC));
+
+    /// <summary>
     /// Represents L5K formatted data structure.
     /// </summary>
     public static readonly DataFormat L5K = new(nameof(L5K), nameof(L5K));

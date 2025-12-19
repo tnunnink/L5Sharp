@@ -1,19 +1,20 @@
 ﻿using System.Xml.Linq;
-
-// ReSharper disable InconsistentNaming RSLogix naming
+// Auto-generated file
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built-in data type used with counter instructions. 
+/// Represents a <c>COUNTER</c> data type structure.
 /// </summary>
-[LogixData(nameof(COUNTER))]
-public sealed class COUNTER : StructureData
+[LogixData("COUNTER")]
+public sealed partial class COUNTER : StructureData
 {
     /// <summary>
-    /// Creates a new <see cref="COUNTER"/> data type instance.
+    /// Creates a new <see cref="COUNTER"/> instance initialized with default values.
     /// </summary>
-    public COUNTER() : base(nameof(COUNTER))
+    public COUNTER() : base("COUNTER")
     {
         PRE = new DINT();
         ACC = new DINT();
@@ -24,13 +25,15 @@ public sealed class COUNTER : StructureData
         UN = new BOOL();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="COUNTER"/> instance initialized with the provided element.
+    /// </summary>
     public COUNTER(XElement element) : base(element)
     {
     }
 
     /// <summary>
-    /// Gets the <see cref="PRE"/> member of the <see cref="COUNTER"/> data type.
+    /// The <c>PRE</c> member of the <see cref="COUNTER"/> data type.
     /// </summary>
     public DINT PRE
     {
@@ -39,7 +42,7 @@ public sealed class COUNTER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ACC"/> member of the <see cref="COUNTER"/> data type.
+    /// The <c>ACC</c> member of the <see cref="COUNTER"/> data type.
     /// </summary>
     public DINT ACC
     {
@@ -48,7 +51,7 @@ public sealed class COUNTER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="CU"/> member of the <see cref="COUNTER"/> data type.
+    /// The <c>CU</c> member of the <see cref="COUNTER"/> data type.
     /// </summary>
     public BOOL CU
     {
@@ -57,7 +60,7 @@ public sealed class COUNTER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="CD"/> member of the <see cref="COUNTER"/> data type.
+    /// The <c>CD</c> member of the <see cref="COUNTER"/> data type.
     /// </summary>
     public BOOL CD
     {
@@ -66,7 +69,7 @@ public sealed class COUNTER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="DN"/> member of the <see cref="COUNTER"/> data type.
+    /// The <c>DN</c> member of the <see cref="COUNTER"/> data type.
     /// </summary>
     public BOOL DN
     {
@@ -75,7 +78,7 @@ public sealed class COUNTER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="OV"/> member of the <see cref="COUNTER"/> data type.
+    /// The <c>OV</c> member of the <see cref="COUNTER"/> data type.
     /// </summary>
     public BOOL OV
     {
@@ -84,11 +87,12 @@ public sealed class COUNTER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="UN"/> member of the <see cref="COUNTER"/> data type.
+    /// The <c>UN</c> member of the <see cref="COUNTER"/> data type.
     /// </summary>
     public BOOL UN
     {
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
+
 }

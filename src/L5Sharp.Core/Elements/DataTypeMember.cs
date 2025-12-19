@@ -74,9 +74,9 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// <value>
     /// A <see cref="Dimensions"/> representing the array dimensions of the member. Default is <see cref="Dimensions.Empty"/>.
     /// </value>
-    public Dimensions? Dimension
+    public Dimensions Dimension
     {
-        get => GetValue(Dimensions.Parse);
+        get => GetValue(Dimensions.Parse) ?? Dimensions.Empty;
         set => SetValue(value);
     }
 
@@ -154,8 +154,8 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     }
 
     /// <summary>
-    /// Gets the parent <see cref="Core.DataType"/> component that this member is contained by. If this
-    /// member is not contained or attached to a L5X document, this returns null.
+    /// Gets the parent data type component that this member is contained by. If this member is not contained or
+    /// attached to a L5X document, this returns null.
     /// </summary>
     /// <value>A <see cref="Core.DataType"/> representing the parent type for this member.</value>
     public DataType? Parent => GetAncestor<DataType>();
@@ -177,19 +177,19 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// <exception cref="InvalidOperationException">Thrown when the Name or DataType is null or empty.</exception>
     public LogixMember ToMember()
     {
-        var isArray = Dimension is not null && Dimension.Length > 0;
+        var isArray = Dimension.Length > 0;
 
         //If the type is registered, we can create the instance using the registered factory.
-        if (LogixType.IsRegistered(DataType))
+        if (LogixType.TryCreate(DataType, out var registered))
         {
-            var value = !isArray ? LogixType.Create(DataType) : ArrayData.New(DataType, Dimension!);
+            var value = isArray ? ArrayData.New(registered, Dimension) : registered;
             return new LogixMember(Name, value);
         }
 
         //If not, we can try to get the data type definition from the l5X if attached
         //and use that to recursively build up the complex type.
-        var definition = GetDefinition();
-        var structure = !isArray ? definition.ToData() : ArrayData.New(definition.ToData(), Dimension!);
+        var data = GetDefinition().ToData();
+        var structure = isArray ? ArrayData.New(data, Dimension) : data;
         return new LogixMember(Name, structure);
     }
 

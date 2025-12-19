@@ -35,7 +35,7 @@ namespace L5Sharp.Tests.Core.Components
                 Name = "Test",
                 Description = "This is a test type",
                 Family = DataTypeFamily.String,
-                Class = DataTypeClass.Predefined,
+                Class = DataTypeClass.User,
                 Members =
                 [
                     new DataTypeMember { Name = "Member01" },
@@ -78,7 +78,7 @@ namespace L5Sharp.Tests.Core.Components
                 Name = "Test",
                 Description = "This is a test type",
                 Family = DataTypeFamily.String,
-                Class = DataTypeClass.Predefined,
+                Class = DataTypeClass.User,
                 Members =
                 [
                     new DataTypeMember { Name = "Member01" },
