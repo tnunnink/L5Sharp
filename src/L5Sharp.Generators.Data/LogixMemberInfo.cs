@@ -26,7 +26,7 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
     /// </returns>
     public static LogixMemberInfo From(DataTypeMember member)
     {
-        var parentType = member.Parent?.Name ?? string.Empty;
+        var parentType = member.Parent?.Name ?? "StructureData";
         var name = member.Name;
         var dataType = member.DataType == "BIT" ? "BOOL" : member.DataType.SanitizeName();
         var dimension = member.Dimension.Length;
@@ -45,8 +45,7 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
     /// </returns>
     public static LogixMemberInfo From(Parameter parameter)
     {
-        //todo var parentType = parameter.Parent?.Name ?? string.Empty;
-        var parentType = string.Empty;
+        var parentType = parameter.Instruction?.Name ?? "StructureData";
         var name = parameter.Name;
         var dataType = parameter.DataType.SanitizeName();
         var dimension = parameter.Dimension.Length;

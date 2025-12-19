@@ -136,17 +136,8 @@
 <Member Name="DATA" DataType="SINT" Dimension="23" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 </Members>
 </DataType>
-<DataType Name="InvalidType" Family="NoFamily" Class="User">
-<Description>
-<![CDATA[Testing type with invalid members]]>
-</Description>
-<Members>
-<Member Name="Invalid01" DataType="NULL" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
-<Description>
-<![CDATA[Test]]>
-</Description>
-</Member>
-</Members>
+<DataType Name="CHANNEL_AI_O_0" Family="NoFamily" Class="IO" >
+<Members />
 </DataType>
 <DataType Name="ModuleType" Family="NoFamily" Class="User">
 <Description>

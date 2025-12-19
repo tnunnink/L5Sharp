@@ -24,6 +24,7 @@ internal record LogixTypeInfo(
     public string? Description { get; } = Description;
     public IEnumerable<LogixMemberInfo> Members { get; } = Members;
     public string DerivedType { get; } = DerivedType ?? "StructureData";
+    public string TypeName => Name.SanitizeName();
 
 
     /// <summary>
@@ -37,10 +38,13 @@ internal record LogixTypeInfo(
     /// </returns>
     public static LogixTypeInfo From(DataType dataType)
     {
-        var derivedType = Equals(dataType.Family, DataTypeFamily.String) ? "StringData" : "StructureData";
         var name = dataType.Name;
         var description = dataType.Description;
-        var members = dataType.Members.Where(m => !m.Hidden).Select(LogixMemberInfo.From);
+        var derivedType = Equals(dataType.Family, DataTypeFamily.String) ? "StringData" : "StructureData";
+
+        var members = !Equals(dataType.Family, DataTypeFamily.String)
+            ? dataType.Members.Where(m => !m.Hidden).Select(LogixMemberInfo.From)
+            : [];
 
         return new LogixTypeInfo(name, members, description, derivedType);
     }
@@ -58,6 +62,7 @@ internal record LogixTypeInfo(
     {
         var name = aoi.Name;
         var description = aoi.Description;
+
         var members = aoi.Parameters
             .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Output)
             .Select(LogixMemberInfo.From);
@@ -78,13 +83,11 @@ internal record LogixTypeInfo(
     {
         nameSpace ??= DefaultNameSpace;
 
-        var typeName = Name.SanitizeName();
-
         //We will use the data type description as the remarks documentation for the class if available.
         var remarks = string.IsNullOrWhiteSpace(Description)
             ? string.Empty
             : $"""
-               
+
                /// <remarks>
                /// {Description}
                /// </remarks>
@@ -101,23 +104,23 @@ internal record LogixTypeInfo(
               namespace {{nameSpace}};
 
               /// <summary>
-              /// Represents a <c>{{typeName}}</c> data type structure.
+              /// Represents a <c>{{TypeName}}</c> data type structure.
               /// </summary>{{remarks}}
               [LogixData("{{Name}}")]
-              public sealed partial class {{typeName}} : {{DerivedType}}
+              public sealed partial class {{TypeName}} : {{DerivedType}}
               {
                   /// <summary>
-                  /// Creates a new <see cref="{{typeName}}"/> instance initialized with default values.
+                  /// Creates a new <see cref="{{TypeName}}"/> instance initialized with default values.
                   /// </summary>
-                  public {{typeName}}() : base("{{Name}}")
+                  public {{TypeName}}() : base("{{Name}}")
                   {
                       {{Members.GenerateInitializers()}}
                   }
                   
                   /// <summary>
-                  /// Creates a new <see cref="{{typeName}}"/> instance initialized with the provided element.
+                  /// Creates a new <see cref="{{TypeName}}"/> instance initialized with the provided element.
                   /// </summary>
-                  public {{typeName}}(XElement element) : base(element)
+                  public {{TypeName}}(XElement element) : base(element)
                   {
                   }
                   

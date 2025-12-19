@@ -4,10 +4,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Generators.Data;
 
-public class Tests
+[TestFixture]
+public class SimpleTypeTests
 {
     [Test]
-    public Task Testing()
+    public Task New_DefaultInstance_ShouldBeVerified()
     {
         var type = new SimpleType();
 
@@ -15,7 +16,7 @@ public class Tests
     }
 
     [Test]
-    public void IsRegistered()
+    public void Create_ValidTypeName_ShouldNotBeNull()
     {
         var type = LogixType.Create("SimpleType");
 
@@ -23,7 +24,7 @@ public class Tests
     }
 
     [Test]
-    public void AndInFactIShouldBeAbleToCreateItByType()
+    public void Create_GenericOverload_ShouldNotBeNullAndHaveExpectedMembers()
     {
         var type = LogixType.Create<SimpleType>();
 
