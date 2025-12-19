@@ -181,7 +181,7 @@ public sealed partial class SFC_STEP : StructureData
     /// <summary>
     /// The <c>Count</c> member of the <see cref="SFC_STEP"/> data type.
     /// </summary>
-    public DINT Count
+    public new DINT Count
     {
         get => GetMember<DINT>();
         set => SetMember(value);

@@ -217,6 +217,13 @@ public class Parameter : LogixObject<Parameter>
     }
 
     /// <summary>
+    /// Gets the parent <see cref="AddOnInstruction"/> of the current <see cref="Parameter"/> instance.
+    /// This property navigates the hierarchy to find the nearest ancestor of type <see cref="AddOnInstruction"/>,
+    /// or returns null if no such ancestor exists.
+    /// </summary>
+    public AddOnInstruction? Instruction => GetAncestor<AddOnInstruction>();
+
+    /// <summary>
     /// Represents the associated alias of the parameter if one is defined.
     /// Provides a way to reference a <see cref="LocalTag"/> that serves as an alias for this parameter.
     /// </summary>

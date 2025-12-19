@@ -59,7 +59,7 @@ public sealed partial class SFC_STOP : StructureData
     /// <summary>
     /// The <c>Count</c> member of the <see cref="SFC_STOP"/> data type.
     /// </summary>
-    public DINT Count
+    public new DINT Count
     {
         get => GetMember<DINT>();
         set => SetMember(value);

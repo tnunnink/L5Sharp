@@ -50,4 +50,11 @@ public class LocalTag : Tag
         Value = value;
         SetProperty(description, nameof(Description));
     }
+
+    /// <summary>
+    /// Gets the parent <see cref="AddOnInstruction"/> of the current <see cref="LocalTag"/> instance.
+    /// This property navigates the hierarchy to find the nearest ancestor of type <see cref="AddOnInstruction"/>,
+    /// or returns null if no such ancestor exists.
+    /// </summary>
+    public AddOnInstruction? Instruction => GetAncestor<AddOnInstruction>();
 }

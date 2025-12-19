@@ -29,7 +29,7 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
         var parentType = member.Parent?.Name ?? string.Empty;
         var name = member.Name;
         var dataType = member.DataType == "BIT" ? "BOOL" : member.DataType.SanitizeName();
-        var dimension = member.Dimension?.Length ?? 0;
+        var dimension = member.Dimension.Length;
         var descritpion = member.Description;
 
         return new LogixMemberInfo(parentType, name, dataType, dimension, descritpion);
@@ -45,11 +45,11 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
     /// </returns>
     public static LogixMemberInfo From(Parameter parameter)
     {
-        //var parentType = parameter.Parent?.Name ?? string.Empty;
+        //todo var parentType = parameter.Parent?.Name ?? string.Empty;
         var parentType = string.Empty;
         var name = parameter.Name;
         var dataType = parameter.DataType.SanitizeName();
-        var dimension = parameter.Dimension?.Length ?? 0;
+        var dimension = parameter.Dimension.Length;
         var descritpion = parameter.Description;
 
         return new LogixMemberInfo(parentType, name, dataType, dimension, descritpion);
@@ -129,7 +129,6 @@ internal static class LogixMembersInfoExtension
         }
 
         return builder.ToString().TrimEnd();
-        ;
     }
 
     /// <summary>

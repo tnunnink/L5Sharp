@@ -61,14 +61,14 @@ public class LogixDataGenerator : IIncrementalGenerator
                     spc.AddSource($"{hintName}.g.cs", source);
                 }
 
-                /*foreach (var aoi in content.AddOnInstructions)
+                foreach (var aoi in content.AddOnInstructions)
                 {
                     var hintName = aoi.Name.SanitizeName();
                     var info = LogixTypeInfo.From(aoi);
                     var code = info.GenerateSource(ns);
                     var source = SourceText.From(code, Encoding.UTF8);
                     spc.AddSource($"{hintName}.g.cs", source);
-                }*/
+                }
             }
         });
     }

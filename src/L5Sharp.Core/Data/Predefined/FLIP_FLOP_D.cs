@@ -53,7 +53,7 @@ public sealed partial class FLIP_FLOP_D : StructureData
     /// <summary>
     /// The <c>Clear</c> member of the <see cref="FLIP_FLOP_D"/> data type.
     /// </summary>
-    public BOOL Clear
+    public new BOOL Clear
     {
         get => GetMember<BOOL>();
         set => SetMember(value);

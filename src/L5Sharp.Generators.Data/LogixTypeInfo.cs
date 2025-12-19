@@ -59,7 +59,7 @@ internal record LogixTypeInfo(
         var name = aoi.Name;
         var description = aoi.Description;
         var members = aoi.Parameters
-            .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Input)
+            .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Output)
             .Select(LogixMemberInfo.From);
 
         return new LogixTypeInfo(name, members, description);

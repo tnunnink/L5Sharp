@@ -89,7 +89,7 @@ public sealed partial class SFC_ACTION : StructureData
     /// <summary>
     /// The <c>Count</c> member of the <see cref="SFC_ACTION"/> data type.
     /// </summary>
-    public DINT Count
+    public new DINT Count
     {
         get => GetMember<DINT>();
         set => SetMember(value);
