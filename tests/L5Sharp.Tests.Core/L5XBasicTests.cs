@@ -36,7 +36,7 @@ public class L5XBasicTests
 
         content.Should().NotBeNull();
         content.Content.SchemaRevision.Should().Be("1.0");
-        content.Content.SoftwareRevision.Should().Be("32.02");
+        content.Content.SoftwareRevision.Should().Be("36.0");
         content.Content.TargetName.Should().Be("TestController");
         content.Content.TargetType.Should().Be("Controller");
         content.Content.ContainsContext.Should().Be(false);
@@ -50,7 +50,7 @@ public class L5XBasicTests
 
         content.Should().NotBeNull();
         content.Content.SchemaRevision.Should().Be("1.0");
-        content.Content.SoftwareRevision.Should().Be("32.02");
+        content.Content.SoftwareRevision.Should().Be("36.0");
         content.Content.TargetName.Should().Be("TestController");
         content.Content.TargetType.Should().Be("Controller");
         content.Content.ContainsContext.Should().Be(false);

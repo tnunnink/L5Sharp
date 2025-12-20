@@ -50,16 +50,6 @@ public class LogixTypeTests
         type.Should().Be(false);
     }
 
-    /*[Test]
-    public void Create_BIT_ShouldBeExpected()
-    {
-        var type = LogixType.Create("BIT");
-
-        type.Should().NotBeNull();
-        type.Should().BeOfType<BOOL>();
-        type.Should().BeEquivalentTo(new BOOL());
-    }*/
-
     [Test]
     public void Create_SINT_ShouldBeExpected()
     {
@@ -140,6 +130,31 @@ public class LogixTypeTests
     }
 
     [Test]
+    [TestCase(typeof(BOOL))]
+    [TestCase(typeof(SINT))]
+    [TestCase(typeof(INT))]
+    [TestCase(typeof(DINT))]
+    [TestCase(typeof(LINT))]
+    [TestCase(typeof(USINT))]
+    [TestCase(typeof(UINT))]
+    [TestCase(typeof(UDINT))]
+    [TestCase(typeof(ULINT))]
+    [TestCase(typeof(REAL))]
+    [TestCase(typeof(LREAL))]
+    [TestCase(typeof(DT))]
+    [TestCase(typeof(LDT))]
+    [TestCase(typeof(TIME))]
+    [TestCase(typeof(TIME32))]
+    [TestCase(typeof(LTIME))]
+    [TestCase(typeof(TIMER))]
+    public void IsRegistered_Atomics_ShouldBeExpected(Type type)
+    {
+        var result = LogixType.IsRegistered(type);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
     public void IsRegistered_RegisteredType_ShouldBeTrue()
     {
         var result = LogixType.IsRegistered("TIMER");
@@ -167,12 +182,18 @@ public class LogixTypeTests
     [TestCase("ULINT")]
     [TestCase("REAL")]
     [TestCase("LREAL")]
+    [TestCase("DT")]
+    [TestCase("LDT")]
+    [TestCase("TIME")]
+    [TestCase("TIME32")]
+    [TestCase("LTIME")]
     public void IsAtomic_AtomicType_ShouldBeTrue(string typeName)
     {
         var result = LogixType.IsAtomic(typeName);
 
         result.Should().BeTrue();
     }
+
 
     [Test]
     public void IsAtomic_StructureType_ShouldBeFalse()
@@ -194,6 +215,11 @@ public class LogixTypeTests
     [TestCase(typeof(ULINT), "ULINT")]
     [TestCase(typeof(REAL), "REAL")]
     [TestCase(typeof(LREAL), "LREAL")]
+    [TestCase(typeof(DT), "DT")]
+    [TestCase(typeof(LDT), "LDT")]
+    [TestCase(typeof(TIME), "TIME")]
+    [TestCase(typeof(TIME32), "TIME32")]
+    [TestCase(typeof(LTIME), "LTIME")]
     [TestCase(typeof(TIMER), "TIMER")]
     public void NameFor_ValidType_ShouldBeExpected(Type type, string name)
     {

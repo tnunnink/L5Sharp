@@ -1,4 +1,4 @@
-﻿<Tag Name="NewSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read Only">
+﻿<Tag Name="NewSimpleTag" TagType="Base" DataType="SimpleType" Constant="false" ExternalAccess="Read Only" OpcUaAccess="None">
   <Description><![CDATA[This is an updated tag]]></Description>
   <Data Format="L5K"><![CDATA[[0,0,14,1,0,0.00000000e+000]]]></Data>
   <Data Format="Decorated">

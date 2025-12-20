@@ -72,7 +72,8 @@ public class L5XDataTypeTests
         var content = L5X.Load(Known.Test);
         var component = new DataType
         {
-            Name = "NewType", Description = "This is a test",
+            Name = "NewType",
+            Description = "This is a test",
             Members =
             [
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },

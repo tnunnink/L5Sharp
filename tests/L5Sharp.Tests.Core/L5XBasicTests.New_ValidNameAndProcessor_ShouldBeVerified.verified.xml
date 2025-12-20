@@ -1,4 +1,4 @@
-﻿<RSLogix5000Content SchemaRevision="1" SoftwareRevision="36.1" TargetName="Test" TargetType="Controller" ContainsContext="false" Owner="Scrubbed" ExportDate="DateTime_1">
+﻿<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="36.1" TargetName="Test" TargetType="Controller" ContainsContext="false" Owner="Scrubbed" ExportDate="DateTime_1">
   <Controller Name="Test" MajorRev="36" MinorRev="1" ProjectCreationDate="DateTime_1" LastModifiedDate="DateTime_1" ProcessorType="1756-L83E">
     <DataTypes />
     <Modules>

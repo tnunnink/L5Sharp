@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="36.00" TargetName="TestController" TargetType="Controller" ContainsContext="false" ExportDate="Wed Dec 17 14:01:31 2025" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
-<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="36" MinorRev="11" ProjectCreationDate="Fri Feb 14 14:26:19 2025" LastModifiedDate="Wed Dec 17 14:01:06 2025" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="36.00" TargetName="TestController" TargetType="Controller" ContainsContext="false" ExportDate="Sat Dec 20 09:05:19 2025" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="TestController" ProcessorType="1756-L83E" MajorRev="36" MinorRev="11" ProjectCreationDate="Fri Feb 14 14:26:19 2025" LastModifiedDate="Sat Dec 20 09:05:03 2025" SFCExecutionControl="CurrentActive" SFCRestartPosition="MostRecent" SFCLastScan="DontScan" ProjectSN="16#0000_0000"
  MatchProjectToController="false" CanUseRPIFromProducer="false" InhibitAutomaticFirmwareUpdate="0" PassThroughConfiguration="EnabledWithAppend" DownloadProjectDocumentationAndExtendedProperties="true" DownloadProjectCustomProperties="true" ReportMinorOverflow="false" AutoDiagsEnabled="false" WebServerEnabled="false">
 <Description>
 <![CDATA[This is a test project]]>
@@ -135,9 +135,6 @@
 <Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 <Member Name="DATA" DataType="SINT" Dimension="23" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 </Members>
-</DataType>
-<DataType Name="CHANNEL_AI_O_0" Family="NoFamily" Class="IO" >
-<Members />
 </DataType>
 <DataType Name="ModuleType" Family="NoFamily" Class="User">
 <Description>
@@ -6921,6 +6918,14 @@
 </Structure>
 </Data>
 </Tag>
+<Tag Name="LDT" TagType="Base" DataType="LDT" Radix="Date/Time (ns)" Constant="false" ExternalAccess="None" OpcUaAccess="None">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="LDT" Radix="Date/Time (ns)" Value="LDT#1970-01-01-00:00:00.000_000_000Z"/>
+</Data>
+</Tag>
 <Tag Name="MultiDimensionalArray" TagType="Base" DataType="DINT" Dimensions="3 5" Radix="Decimal" Constant="false" ExternalAccess="Read/Write" OpcUaAccess="None">
 <Data Format="L5K">
 <![CDATA[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]]>
@@ -7195,18 +7200,18 @@
 </Tag>
 <Tag Name="SimpleLint" TagType="Base" DataType="LINT" Radix="Decimal" Constant="false" ExternalAccess="None" OpcUaAccess="None">
 <Data Format="L5K">
-<![CDATA[123]]>
+<![CDATA[9223372036854775807]]>
 </Data>
 <Data Format="Decorated">
-<DataValue DataType="LINT" Radix="Decimal" Value="123"/>
+<DataValue DataType="LINT" Radix="Decimal" Value="9223372036854775807"/>
 </Data>
 </Tag>
 <Tag Name="SimpleLTime" TagType="Base" DataType="LTIME" Radix="LTime (ns)" Constant="false" ExternalAccess="None" OpcUaAccess="None">
 <Data Format="L5K">
-<![CDATA[0]]>
+<![CDATA[891347000621879]]>
 </Data>
 <Data Format="Decorated">
-<DataValue DataType="LTIME" Radix="LTime (ns)" Value="LT#0ns"/>
+<DataValue DataType="LTIME" Radix="LTime (ns)" Value="LT#10d_7h_35m_47s_621us_879ns"/>
 </Data>
 </Tag>
 <Tag Name="SimpleReal" TagType="Base" DataType="REAL" Radix="Float" Constant="false" ExternalAccess="None" OpcUaAccess="None">
@@ -7244,18 +7249,18 @@
 </Tag>
 <Tag Name="SimpleTime" TagType="Base" DataType="TIME" Radix="Time (us)" Constant="false" ExternalAccess="None" OpcUaAccess="None">
 <Data Format="L5K">
-<![CDATA[0]]>
+<![CDATA[-7384000001]]>
 </Data>
 <Data Format="Decorated">
-<DataValue DataType="TIME" Radix="Time (us)" Value="T#0us"/>
+<DataValue DataType="TIME" Radix="Time (us)" Value="T#-2h_3m_4s_1us"/>
 </Data>
 </Tag>
 <Tag Name="SimpleTime32" TagType="Base" DataType="TIME32" Radix="Time32 (us)" Constant="false" ExternalAccess="None" OpcUaAccess="None">
 <Data Format="L5K">
-<![CDATA[0]]>
+<![CDATA[2147483647]]>
 </Data>
 <Data Format="Decorated">
-<DataValue DataType="TIME32" Radix="Time32 (us)" Value="T32#0us"/>
+<DataValue DataType="TIME32" Radix="Time32 (us)" Value="T32#35m_47s_483ms_647us"/>
 </Data>
 </Tag>
 <Tag Name="SimpleUDint" TagType="Base" DataType="UDINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write" OpcUaAccess="None">
@@ -8503,6 +8508,23 @@
 <DataValueMember Name="EN" DataType="BOOL" Value="0"/>
 <DataValueMember Name="TT" DataType="BOOL" Value="0"/>
 <DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Test_BIT_FIELD_DISTRIBUTE" TagType="Base" DataType="FBD_BIT_FIELD_DISTRIBUTE" Constant="false" ExternalAccess="None" OpcUaAccess="None">
+<Data Format="L5K">
+<![CDATA[[1,0,0,1,0,0,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="FBD_BIT_FIELD_DISTRIBUTE">
+<DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="Source" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="SourceBit" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Length" DataType="DINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="DestBit" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Target" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Dest" DataType="DINT" Radix="Decimal" Value="0"/>
 </Structure>
 </Data>
 </Tag>

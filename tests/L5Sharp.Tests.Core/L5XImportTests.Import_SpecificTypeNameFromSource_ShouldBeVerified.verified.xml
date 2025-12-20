@@ -170,10 +170,10 @@
                 <Text><![CDATA[XIC(InOutTest.BoolMember)OTL(LocalBool);]]></Text>
               </Rung>
               <Rung Number="2" Type="N">
-                <Text><![CDATA[EQU(Config,LocalArray[0])MOV(Config,InOutArray[0]);]]></Text>
+                <Text><![CDATA[EQ(Config,LocalArray[0])MOVE(Config,InOutArray[0]);]]></Text>
               </Rung>
               <Rung Number="3" Type="N">
-                <Text><![CDATA[MOV(100,LocalArray[2]);]]></Text>
+                <Text><![CDATA[MOVE(100,LocalArray[2]);]]></Text>
               </Rung>
             </RLLContent>
           </Routine>

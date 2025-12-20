@@ -181,15 +181,20 @@ public static class LogixSerializer
                 {
                     nameof(BOOL) => new BOOL(e),
                     nameof(SINT) => new SINT(e),
-                    nameof(USINT) => new USINT(e),
                     nameof(INT) => new INT(e),
-                    nameof(UINT) => new UINT(e),
                     nameof(DINT) => new DINT(e),
-                    nameof(UDINT) => new UDINT(e),
                     nameof(LINT) => new LINT(e),
+                    nameof(USINT) => new USINT(e),
+                    nameof(UINT) => new UINT(e),
+                    nameof(UDINT) => new UDINT(e),
                     nameof(ULINT) => new ULINT(e),
                     nameof(REAL) => new REAL(e),
                     nameof(LREAL) => new LREAL(e),
+                    nameof(DT) => new DT(e),
+                    nameof(LDT) => new LDT(e),
+                    nameof(TIME) => new TIME(e),
+                    nameof(TIME32) => new TIME32(e),
+                    nameof(LTIME) => new LTIME(e),
                     _ => throw new NotSupportedException(
                         $"The type '{e.DataType()}' is not a supported atomic data value.")
                 };

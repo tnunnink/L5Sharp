@@ -71,7 +71,7 @@ namespace L5Sharp.Tests.Core
             controller.Name.Should().Be("TestController");
             controller.ProcessorType.Should().Be("1756-L83E");
             controller.Description.Should().Be("This is a test project");
-            controller.Revision.Should().Be(new Revision(32, 11));
+            controller.Revision.Should().Be(new Revision(36, 11));
             controller.RedundancyInfo?.Enabled.Should().BeFalse();
         }
 
@@ -119,7 +119,7 @@ namespace L5Sharp.Tests.Core
             var content = L5X.Load(Known.Test);
 
             var results = content.Query<Rung>()
-                .SelectMany(r => r.Instructions().Where(i => i.Key == "MOV").SelectMany(x => x.Tags))
+                .SelectMany(r => r.Instructions().Where(i => i.Key == "MOVE").SelectMany(x => x.Tags))
                 .ToList();
 
             results.Should().NotBeEmpty();
