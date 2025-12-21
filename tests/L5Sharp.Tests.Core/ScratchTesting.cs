@@ -49,4 +49,14 @@ public class ScratchTesting
         content.DataTypes.AddRange(dataTypes);
         content.Save(@"C:\users\tnunnink\documents\rockwell\predefined.L5X");
     }
+
+    [Test]
+    public void METHOD()
+    {
+        var content = L5X.Load(@"C:\users\tnunnink\documents\rockwell\example.L5X");
+
+        var members = content.DataTypes.SelectMany(d => d.Members).ToList();
+
+        members.Should().NotBeEmpty();
+    }
 }

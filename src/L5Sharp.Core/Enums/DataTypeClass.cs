@@ -24,4 +24,9 @@ public sealed class DataTypeClass : LogixEnum<DataTypeClass, string>
     /// Represents an <b>IO</b> <see cref="DataTypeClass"/>.
     /// </summary>
     public static readonly DataTypeClass IO = new(nameof(IO), nameof(IO));
+    
+    /// <summary>
+    /// Represents a <b>Predefined</b> <see cref="DataTypeClass"/>.
+    /// </summary>
+    public static readonly DataTypeClass Predefined = new(nameof(Predefined), "ProductDefined");
 }

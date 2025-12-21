@@ -70,9 +70,9 @@ public class DataType : LogixComponent<DataType>
     /// A <see cref="DataTypeFamily"/> option indicating the family for which the current data type belongs.
     /// This is just string for string types and none for all others.
     /// </value>
-    public DataTypeFamily? Family
+    public DataTypeFamily Family
     {
-        get => GetValue(DataTypeFamily.Parse);
+        get => GetValue(DataTypeFamily.Parse) ?? DataTypeFamily.None;
         set => SetValue(value);
     }
 
@@ -83,9 +83,9 @@ public class DataType : LogixComponent<DataType>
     /// A <see cref="DataTypeClass"/> option indicating the class for which the current data type belongs.
     /// L5X files will only ever contain <see cref="DataTypeClass.User"/> class types.
     /// </value>
-    public DataTypeClass? Class
+    public DataTypeClass Class
     {
-        get => GetValue(DataTypeClass.Parse);
+        get => GetValue(DataTypeClass.Parse) ?? DataTypeClass.Unknown;
         set => SetValue(value);
     }
 

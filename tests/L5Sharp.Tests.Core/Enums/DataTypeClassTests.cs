@@ -28,5 +28,15 @@ namespace L5Sharp.Tests.Core.Enums
 
             type.Should().NotBeNull();
         }
+        
+        [Test]
+        public void New_Predefined_ShouldNotBeNull()
+        {
+            var type = DataTypeClass.Predefined;
+
+            type.Should().NotBeNull();
+            type.Name.Should().Be("Predefined");
+            type.Value.Should().Be("ProductDefined");
+        }
     }
 }
