@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace L5Sharp.Generators.Data;
 
@@ -72,24 +71,37 @@ internal record LogixTypeInfo(
     }
 
     /// <summary>
-    /// 
+    /// Creates a collection of <see cref="LogixTypeInfo"/> instances from the provided <see cref="LogixData"/> object.
     /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
+    /// <param name="data">
+    /// The <see cref="LogixData"/> object containing metadata to be transformed into a collection of <see cref="LogixTypeInfo"/> instances.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="LogixTypeInfo"/> instances representing the metadata derived from the provided <see cref="LogixData"/>.
+    /// </returns>
     public static IEnumerable<LogixTypeInfo> From(LogixData data)
     {
         var types = new List<LogixTypeInfo>();
 
+        // ReSharper disable once ConvertIfStatementToSwitchStatement
         if (data is StructureData structure)
         {
             if (LogixType.IsRegistered(structure.Name)) return types;
 
-            var members = structure.Members.Select(m => LogixMemberInfo.From(m, structure.Name));
+            var typeName = structure.Name.SanitizeName();
+            var members = structure.Members.Select(m => LogixMemberInfo.From(m, typeName));
             var type = new LogixTypeInfo(structure.Name, members);
             types.Add(type);
 
-            var nested = structure.Members.SelectMany(m => From(m.Value));
-            types.AddRange(nested);
+            var nestedType = structure.Members.SelectMany(m => From(m.Value));
+            types.AddRange(nestedType);
+        }
+
+        if (data is ArrayData array)
+        {
+            //We need to get nested structures inside arrays
+            var arrayTypes = From(array.Members.First().Value);
+            types.AddRange(arrayTypes);
         }
 
         return types;

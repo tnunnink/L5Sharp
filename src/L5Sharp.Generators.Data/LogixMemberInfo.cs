@@ -55,11 +55,15 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
     }
 
     /// <summary>
-    /// 
+    /// Creates a new instance of <see cref="LogixMemberInfo"/> using the provided <see cref="LogixMember"/>
+    /// and the specified parent type name.
     /// </summary>
-    /// <param name="member"></param>
-    /// <param name="parentType"></param>
-    /// <returns></returns>
+    /// <param name="member">The <see cref="LogixMember"/> containing the metadata to be transformed into a Logix member.</param>
+    /// <param name="parentType">The name of the parent type to associate with the Logix member.</param>
+    /// <returns>
+    /// A new <see cref="LogixMemberInfo"/> instance populated with the parent type, member name, data type, dimension,
+    /// and other relevant details derived from the provided <see cref="LogixMember"/>.
+    /// </returns>
     public static LogixMemberInfo From(LogixMember member, string parentType)
     {
         var name = member.Name;

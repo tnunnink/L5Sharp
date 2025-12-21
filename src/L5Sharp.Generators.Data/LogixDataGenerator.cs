@@ -94,14 +94,14 @@ public class LogixDataGenerator : IIncrementalGenerator
                     types.Add(x.Name, x);
                 });
 
-            /*content.Modules.SelectMany(m => m.Tags).SelectMany(t => LogixTypeInfo.From(t.Value))
+            content.Modules.SelectMany(m => m.Tags).SelectMany(t => LogixTypeInfo.From(t.Value))
                 .ToList().ForEach(x =>
                 {
                     if (!types.ContainsKey(x.Name))
                     {
                         types.Add(x.Name, x);
                     }
-                });*/
+                });
         }
 
         return types.Values;
