@@ -25,7 +25,7 @@ public class ModuleTests
         module.Description.Should().BeNull();
         module.CatalogNumber.Should().BeEmpty();
         module.Revision.Should().Be("1.0");
-        module.Vendor.Should().Be(Vendor.Rockwell);
+        module.Vendor.Should().Be(Vendor.Unknown);
         module.ProductType.Should().Be(ProductType.Unknown);
         module.ProductCode.Should().Be(0);
         module.ParentModule.Should().BeEmpty();
@@ -35,7 +35,8 @@ public class ModuleTests
         module.MajorFault.Should().BeFalse();
         module.Keying.Should().Be(ElectronicKeying.CompatibleModule);
         module.Ports.Should().NotBeNull();
-        module.Communications?.ConfigTag.Should().NotBeNull();
+        module.Connections.Should().BeEmpty();
+        module.Config.Should().NotBeNull();
     }
 
     [Test]
@@ -55,9 +56,10 @@ public class ModuleTests
             Inhibited = true,
             SafetyEnabled = true,
             MajorFault = true,
-            Keying = ElectronicKeying.Disabled,
-            Ports = [new Port { Id = 1, Type = "ICP", Address = "1", Upstream = true }],
+            Keying = ElectronicKeying.Disabled
         };
+
+        module.Ports.Add(new Port { Id = 1, Type = "ICP", Address = "1", Upstream = true });
 
         module.Should().NotBeNull();
         module.Name.Should().Be("Test");
@@ -141,11 +143,8 @@ public class ModuleTests
     [Test]
     public void IP_SetValue_ShouldBeUpdated()
     {
-        var module = new Module
-        {
-            Name = "Test",
-            Ports = [new Port { Id = 1, Type = "Ethernet", Upstream = true }]
-        };
+        var module = new Module("Test");
+        module.Ports.Add(new Port { Id = 1, Type = "Ethernet", Upstream = true });
 
         module.IP = IPAddress.Loopback;
 
@@ -179,9 +178,10 @@ public class ModuleTests
             Inhibited = true,
             SafetyEnabled = true,
             MajorFault = true,
-            Keying = ElectronicKeying.Disabled,
-            Ports = [new Port { Id = 1, Type = "ICP", Address = "1", Upstream = true }]
+            Keying = ElectronicKeying.Disabled
         };
+
+        module.Ports.Add(new Port { Id = 1, Type = "ICP", Address = "1", Upstream = true });
 
         var xml = module.Serialize().ToString();
 

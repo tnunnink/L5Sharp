@@ -10,7 +10,7 @@ namespace L5Sharp.CLI.Commands.Projects;
 [Command("new", Description = "")]
 public class NewCommand : ICommand
 {
-    [CommandParameter(0, Name = "name", Description = "")]
+    [CommandParameter(0, Name = "name", Description = "The name of the project to create.")]
     public string Name { get; set; } = string.Empty;
 
     [CommandParameter(1, Name = "processor", Description = "")]

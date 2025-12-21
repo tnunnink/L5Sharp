@@ -32,7 +32,7 @@ public class Module : LogixComponent<Module>
     {
         CatalogNumber = string.Empty;
         Revision = new Revision();
-        Vendor = Vendor.Rockwell;
+        Vendor = Vendor.Unknown;
         ProductType = ProductType.Unknown;
         ParentModule = string.Empty;
         ParentModPortId = 0;
@@ -40,7 +40,13 @@ public class Module : LogixComponent<Module>
         MajorFault = false;
         SafetyEnabled = false;
         Keying = ElectronicKeying.CompatibleModule;
-        Ports = [];
+
+        //Initialize ports collection element.
+        Element.Add(new XElement(L5XName.Ports));
+
+        //Initialize private communications child element.
+        // ReSharper disable once ExplicitCallerInfoArgument
+        SetComplex(new Communications(), L5XName.Communications);
     }
 
     /// <inheritdoc />
@@ -207,20 +213,12 @@ public class Module : LogixComponent<Module>
     /// devices used to communicate with a controller and field equipment. Ports must have a unique id, a type,
     /// and address.
     /// </remarks>
-    public LogixContainer<Port> Ports
-    {
-        get => GetContainer<Port>();
-        set => SetContainer(value);
-    }
+    public LogixContainer<Port> Ports => GetContainer<Port>();
 
     /// <summary>
     /// 
     /// </summary>
-    public Communications? Communications
-    {
-        get => GetComplex<Communications>();
-        set => SetComplex(value);
-    }
+    public LogixContainer<Connection> Connections => GetComms().Connections;
 
     /// <summary>
     /// Gets the slot number of the current module if one exists. If the module does not have a slot, it returns null.
@@ -250,6 +248,13 @@ public class Module : LogixComponent<Module>
         get => Ports.FirstOrDefault(p => p is { IsEthernet: true, Address.IsIP: true })?.Address?.ToIPAddress();
         set => SetAddress(value?.ToString(), true);
     }
+
+    /// <summary>
+    /// Returns the module's config tag object contained in the communications element.
+    /// </summary>
+    /// <returns>A <see cref="Tag"/> containing the module's config tag data.</returns>
+    /// <remarks>This is a simple helper to make accessing the module config data more concise.</remarks>
+    public Tag? Config => GetComms().ConfigTag;
 
     /// <summary>
     /// Gets the parent module of this module component defined in the current L5X document.
@@ -288,36 +293,7 @@ public class Module : LogixComponent<Module>
     /// get a single list of all module tags. This extension makes that easy by sifting through the object and returning
     /// a flat list containing all non-null config, input, and output tags defined for the <see cref="Module"/> component.
     /// </remarks>
-    public IEnumerable<Tag> Tags
-    {
-        get
-        {
-            var tags = new List<Tag>();
-
-            if (Communications is null) return tags;
-
-            if (Communications.ConfigTag is not null)
-                tags.Add(Communications.ConfigTag);
-
-            foreach (var connection in Communications.Connections)
-            {
-                if (connection.InputTag is not null)
-                    tags.Add(connection.InputTag);
-
-                if (connection.OutputTag is not null)
-                    tags.Add(connection.OutputTag);
-            }
-
-            return tags;
-        }
-    }
-
-    /// <summary>
-    /// Returns the module's config tag object contained in the communications element.
-    /// </summary>
-    /// <returns>A <see cref="Tag"/> containing the module's config tag data.</returns>
-    /// <remarks>This is a simple helper to make accessing the module config data more concise.</remarks>
-    public Tag? Config => Communications?.ConfigTag;
+    public IEnumerable<Tag> Tags => GetTags();
 
     /// <inheritdoc />
     public override IEnumerable<Reference> References()
@@ -540,6 +516,23 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
+    /// Retrieves the communications configuration for the module.
+    /// </summary>
+    /// <returns>A <see cref="Communications"/> object representing the communications configuration of the module.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the communications element is not found within the module's XML structure.
+    /// </exception>
+    private Communications GetComms()
+    {
+        var element = Element.Element(L5XName.Communications);
+
+        if (element is null)
+            throw Element.L5XError(L5XName.Communications);
+
+        return new Communications(element);
+    }
+
+    /// <summary>
     /// Gets the parent module to this module using the current Element to traverse the XML structure. 
     /// </summary>
     private Module? GetParent()
@@ -559,6 +552,16 @@ public class Module : LogixComponent<Module>
         return Element.Parent?.Elements()
             .Where(m => m.Attribute(L5XName.ParentModule)?.Value == Name)
             .Select(e => new Module(e)) ?? [];
+    }
+
+    /// <summary>
+    /// Get all nested tag elements and returns as concrete tag instances. This includes config, input, and output
+    /// tag data elements for the module. 
+    /// </summary>
+    /// <returns>A collection of <see cref="Tag"/> objects representing the module's tags.</returns>
+    private IEnumerable<Tag> GetTags()
+    {
+        return Element.Descendants().Where(e => e.IsModuleTagElement()).Select(e => e.Deserialize<Tag>());
     }
 
     /// <summary>
@@ -630,14 +633,7 @@ public class Module : LogixComponent<Module>
 
         var catalog = new ModuleCatalog();
         var entry = catalog.Lookup(catalogNumber);
-
-        var ports = entry.Ports.Select(p => new Port
-        {
-            Id = p.Number,
-            Type = p.Type,
-            Address = p.Type == "Ethernet" ? Address.NewIP() : Address.NewSlot(),
-        });
-
+        
         var module = new Module
         {
             Name = name,
@@ -646,10 +642,18 @@ public class Module : LogixComponent<Module>
             Vendor = entry.Vendor,
             ProductType = entry.ProductType,
             ProductCode = entry.ProductCode,
-            Ports = new LogixContainer<Port>(ports),
             Description = entry.Description,
             SafetyEnabled = entry.Categories.Contains("Safety")
         };
+
+        var ports = entry.Ports.Select(p => new Port
+        {
+            Id = p.Number,
+            Type = p.Type,
+            Address = p.Type == "Ethernet" ? Address.NewIP() : Address.NewSlot(),
+        });
+
+        module.Ports.AddRange(ports);
 
         return module;
     }
@@ -712,18 +716,4 @@ public class Module : LogixComponent<Module>
     }
 
     #endregion
-}
-
-/// <summary>
-/// Extensions methods for a single <see cref="Module"/> or collection of <see cref="Module"/> components.
-/// </summary>
-public static class ModuleExtensions
-{
-    /// <summary>
-    /// Gets the <c>Local</c> module or module that represents the controller of the module collection.
-    /// </summary>
-    /// <param name="modules">A collection of modules.</param>
-    /// <returns>A single <see cref="Module"/> which is named local if found; Otherwise, <c>null</c>.</returns>
-    /// <remarks>This is a helper to concisely get the controller or root local module from the module collection.</remarks>
-    public static Module? Local(this IEnumerable<Module> modules) => modules.SingleOrDefault(m => m.Name == "Local");
 }

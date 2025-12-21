@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace L5Sharp.Generators.Data;
 
@@ -15,7 +16,7 @@ namespace L5Sharp.Generators.Data;
 internal record LogixTypeInfo(
     string Name,
     IEnumerable<LogixMemberInfo> Members,
-    string? Description,
+    string? Description = null,
     string? DerivedType = null)
 {
     private const string DefaultNameSpace = "L5Sharp.Data.Generated";
@@ -68,6 +69,30 @@ internal record LogixTypeInfo(
             .Select(LogixMemberInfo.From);
 
         return new LogixTypeInfo(name, members, description);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public static IEnumerable<LogixTypeInfo> From(LogixData data)
+    {
+        var types = new List<LogixTypeInfo>();
+
+        if (data is StructureData structure)
+        {
+            if (LogixType.IsRegistered(structure.Name)) return types;
+
+            var members = structure.Members.Select(m => LogixMemberInfo.From(m, structure.Name));
+            var type = new LogixTypeInfo(structure.Name, members);
+            types.Add(type);
+
+            var nested = structure.Members.SelectMany(m => From(m.Value));
+            types.AddRange(nested);
+        }
+
+        return types;
     }
 
     /// <summary>
@@ -124,7 +149,7 @@ internal record LogixTypeInfo(
                   {
                   }
                   
-              {{Members.GenerateProeprties()}}
+              {{Members.GenerateProperties()}}
               }
               """;
     }

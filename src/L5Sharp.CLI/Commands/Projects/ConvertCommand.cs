@@ -52,15 +52,13 @@ public class ConvertCommand : ProjectCommand
                     ctx.Spinner(Spinner.Known.Sand);
                     ctx.SpinnerStyle(Style.Parse("blue"));
 
-                    //Not going to inject a logger because it doesn't really tell us that much (just opened/saved).
-                    //Most info will be based on catching the exceptions it will throw.
                     using var project = await LogixProject.OpenLogixProjectAsync(
                         projectPath,
                         new StdOutEventLogger(),
                         cancellation
                     );
 
-                    await project.SaveAsAsync(savePath, Force, Detailed, cancellationToken: cancellation);
+                    await project.SaveAsAsync(savePath, Force, Detailed, cancellation);
                 });
         }
         catch (Exception e)

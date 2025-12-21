@@ -23,7 +23,7 @@ public class Communications : LogixElement
     public Communications() : base(L5XName.Communications)
     {
         Element.Add(new XElement(L5XName.ConfigTag));
-        Connections = [];
+        Element.Add(new XElement(L5XName.Connections));
     }
 
     /// <summary>
@@ -48,9 +48,5 @@ public class Communications : LogixElement
     /// <remarks>
     /// Each connection may contain input or output tag structures, as well as several other configuration properties.
     /// </remarks>
-    public LogixContainer<Connection> Connections
-    {
-        get => GetContainer<Connection>();
-        set => SetContainer(value);
-    }
+    public LogixContainer<Connection> Connections => GetContainer<Connection>();
 }

@@ -70,27 +70,38 @@ public class LogixDataGenerator : IIncrementalGenerator
             if (!TryParseContent(context, project, out var content))
                 continue;
 
-            content.DataTypes.ToList().ForEach(x =>
-            {
-                if (types.ContainsKey(x.Name))
+            content.DataTypes.Select(LogixTypeInfo.From)
+                .ToList().ForEach(x =>
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, x.Name));
-                    return;
-                }
+                    if (types.ContainsKey(x.Name))
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, x.Name));
+                        return;
+                    }
 
-                types.Add(x.Name, LogixTypeInfo.From(x));
-            });
+                    types.Add(x.Name, x);
+                });
 
-            content.AddOnInstructions.ToList().ForEach(x =>
-            {
-                if (types.ContainsKey(x.Name))
+            content.AddOnInstructions.Select(LogixTypeInfo.From)
+                .ToList().ForEach(x =>
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, x.Name));
-                    return;
-                }
+                    if (types.ContainsKey(x.Name))
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, x.Name));
+                        return;
+                    }
 
-                types.Add(x.Name, LogixTypeInfo.From(x));
-            });
+                    types.Add(x.Name, x);
+                });
+
+            /*content.Modules.SelectMany(m => m.Tags).SelectMany(t => LogixTypeInfo.From(t.Value))
+                .ToList().ForEach(x =>
+                {
+                    if (!types.ContainsKey(x.Name))
+                    {
+                        types.Add(x.Name, x);
+                    }
+                });*/
         }
 
         return types.Values;

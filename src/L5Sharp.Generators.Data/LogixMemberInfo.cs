@@ -8,7 +8,7 @@ namespace L5Sharp.Generators.Data;
 /// Represents metadata for a Logix member including essential information such as parent identifier, name,
 /// data type, dimension, and description.
 /// </summary>
-internal record LogixMemberInfo(string Parent, string Name, string DataType, int Dimension, string? Description)
+internal record LogixMemberInfo(string Parent, string Name, string DataType, int Dimension, string? Description = null)
 {
     public string Parent { get; } = Parent;
     public string Name { get; } = Name;
@@ -30,9 +30,9 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
         var name = member.Name;
         var dataType = member.DataType == "BIT" ? "BOOL" : member.DataType.SanitizeName();
         var dimension = member.Dimension.Length;
-        var descritpion = member.Description;
+        var description = member.Description;
 
-        return new LogixMemberInfo(parentType, name, dataType, dimension, descritpion);
+        return new LogixMemberInfo(parentType, name, dataType, dimension, description);
     }
 
     /// <summary>
@@ -49,9 +49,24 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
         var name = parameter.Name;
         var dataType = parameter.DataType.SanitizeName();
         var dimension = parameter.Dimension.Length;
-        var descritpion = parameter.Description;
+        var description = parameter.Description;
 
-        return new LogixMemberInfo(parentType, name, dataType, dimension, descritpion);
+        return new LogixMemberInfo(parentType, name, dataType, dimension, description);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="member"></param>
+    /// <param name="parentType"></param>
+    /// <returns></returns>
+    public static LogixMemberInfo From(LogixMember member, string parentType)
+    {
+        var name = member.Name;
+        var dataType = member.Value.Name.SanitizeName();
+        var dimension = member.Value is ArrayData array ? array.Dimensions.Length : 0;
+
+        return new LogixMemberInfo(parentType, name, dataType, dimension);
     }
 
     /// <summary>
@@ -117,7 +132,7 @@ internal static class LogixMembersInfoExtension
     /// <returns>
     /// A string containing the concatenated property definitions for the provided <see cref="LogixMemberInfo"/> objects.
     /// </returns>
-    internal static string GenerateProeprties(this IEnumerable<LogixMemberInfo> members)
+    internal static string GenerateProperties(this IEnumerable<LogixMemberInfo> members)
     {
         var builder = new StringBuilder();
 

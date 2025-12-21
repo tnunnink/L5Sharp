@@ -5,4 +5,8 @@
     <Port Id="1" Type="ICP" Upstream="false" Address="0" />
     <Port Id="2" Type="Ethernet" Upstream="false" Address="192.168.0.1" />
   </Ports>
+  <Communications>
+    <ConfigTag />
+    <Connections />
+  </Communications>
 </Module>

@@ -99,12 +99,6 @@ public sealed class L5X
     public LogixContainer<Task> Tasks => Controller.Tasks;
 
     /// <summary>
-    /// The container collection of <see cref="ParameterConnection"/> components found in the L5X file.
-    /// </summary>
-    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="ParameterConnection"/> components.</value>
-    public LogixContainer<ParameterConnection> ParameterConnections => Controller.ParameterConnections;
-
-    /// <summary>
     /// The container collection of <see cref="Trend"/> components found in the L5X file.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="Trend"/> components.</value>
