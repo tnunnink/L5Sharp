@@ -126,7 +126,7 @@ internal record LogixTypeInfo(
             : $"""
 
                /// <remarks>
-               /// {Description}
+               /// {Description?.Replace("\n", "\n/// ")}
                /// </remarks>
                """;
 

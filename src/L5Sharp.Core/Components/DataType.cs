@@ -212,7 +212,7 @@ public class DataType : LogixComponent<DataType>
             return registered;
 
         //We need to handle strings types specifically to match a Logix custom format.
-        if (Family is not null && Family == DataTypeFamily.String)
+        if (Family == DataTypeFamily.String)
             return new StringData(Name, string.Empty);
 
         //Otherwise, we need to build the members using the configured Members collection.

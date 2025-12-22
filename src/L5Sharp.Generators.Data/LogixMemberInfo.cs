@@ -85,13 +85,14 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
         var isArray = Dimension > 0;
         var returnType = isArray ? $"{DataType}[]" : DataType;
         var methodSuffix = isArray ? "Array" : "Member";
+        var newModifier = Name is "Count" or "Clear" ? "new " : string.Empty;
 
         var remarks = string.IsNullOrWhiteSpace(Description)
             ? string.Empty
             : $"""
 
                    /// <remarks>
-                   /// {Description}
+                   /// {Description?.Replace("\n", "\n    /// ")}
                    /// </remarks>
                """;
 
@@ -100,7 +101,7 @@ internal record LogixMemberInfo(string Parent, string Name, string DataType, int
                   /// <summary>
                   /// The <c>{{Name}}</c> member of the <see cref="{{Parent}}"/> data type.
                   /// </summary>{{remarks}}
-                  public {{returnType}} {{Name}}
+                  public {{newModifier}}{{returnType}} {{Name}}
                   {
                       get => Get{{methodSuffix}}<{{DataType}}>();
                       set => Set{{methodSuffix}}(value);

@@ -70,7 +70,9 @@ public class LogixDataGenerator : IIncrementalGenerator
             if (!TryParseContent(context, project, out var content))
                 continue;
 
-            content.DataTypes.Select(LogixTypeInfo.From)
+            content.DataTypes
+                .Where(d => d.Class is not null && d.Class == DataTypeClass.User)
+                .Select(LogixTypeInfo.From)
                 .ToList().ForEach(x =>
                 {
                     if (types.ContainsKey(x.Name))
@@ -82,7 +84,8 @@ public class LogixDataGenerator : IIncrementalGenerator
                     types.Add(x.Name, x);
                 });
 
-            content.AddOnInstructions.Select(LogixTypeInfo.From)
+            content.AddOnInstructions
+                .Select(LogixTypeInfo.From)
                 .ToList().ForEach(x =>
                 {
                     if (types.ContainsKey(x.Name))
@@ -94,7 +97,9 @@ public class LogixDataGenerator : IIncrementalGenerator
                     types.Add(x.Name, x);
                 });
 
-            content.Modules.SelectMany(m => m.Tags).SelectMany(t => LogixTypeInfo.From(t.Value))
+            content.Modules
+                .SelectMany(m => m.Tags)
+                .SelectMany(t => LogixTypeInfo.From(t.Value))
                 .ToList().ForEach(x =>
                 {
                     if (!types.ContainsKey(x.Name))
