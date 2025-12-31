@@ -27,15 +27,6 @@ public class LogixSerializerRegistrationGenerator : IIncrementalGenerator
         });
     }
 
-    /// <summary>
-    /// Retrieves an incremental provider that generates registrations for types annotated with the [LogixElement] attribute.
-    /// </summary>
-    /// <param name="context">
-    /// The initialization context provided by the incremental generator, used to configure and register syntax providers.
-    /// </param>
-    /// <returns>
-    /// An incremental values provider that produces registrations associating type names with their corresponding element attributes.
-    /// </returns>
     private static IncrementalValuesProvider<Registration> GetElementRegistrations(
         IncrementalGeneratorInitializationContext context)
     {
@@ -51,59 +42,44 @@ public class LogixSerializerRegistrationGenerator : IIncrementalGenerator
             });
     }
 
-    /// <summary>
-    /// Generates the source code for registering LogixElement types in the current assembly.
-    /// </summary>
-    /// <param name="registrations">
-    /// A dictionary containing the type names as keys and their associated element names as values.
-    /// </param>
-    /// <param name="nameSpace">
-    /// The root namespace in which the generated code should be placed.
-    /// </param>
-    /// <returns>
-    /// A string containing the generated source code.
-    /// </returns>
     private static string GenerateSource(IEnumerable<Registration> registrations, string nameSpace)
     {
         var builder = new StringBuilder();
-
-        builder.AppendLine("using L5Sharp.Core;");
-        builder.AppendLine("using System.Xml.Linq;");
-        builder.AppendLine("using System.Runtime.CompilerServices;");
-        builder.AppendLine();
-        builder.AppendLine($"namespace {nameSpace};");
-        builder.AppendLine();
-        builder.AppendLine("/// <summary>");
-        builder.AppendLine("/// Generated class for registering decorated types with the LogixSerializer.");
-        builder.AppendLine("/// </summary>");
-        builder.AppendLine("internal static class LogixSerializerRegistration");
-        builder.AppendLine("{");
-        builder.AppendLine("    /// <summary>");
-        builder.AppendLine(
-            "    /// Automatically registers all found LogixElement and LogixData types when the module is loaded.");
-        builder.AppendLine("    /// </summary>");
-        builder.AppendLine("    [ModuleInitializer]");
-        builder.AppendLine("    internal static void Register()");
-        builder.AppendLine("    {");
 
         foreach (var registration in registrations)
         {
             var type = registration.Type;
             var names = string.Join(", ", registration.Arguments.Select(n => $"\"{n}\""));
-            var code = $"LogixSerializer.Register<{type}>(e => new {type}(e), {names});";
-            builder.AppendLine($"        {code}");
+            var register = $"LogixSerializer.Register<{type}>(e => new {type}(e), {names});";
+            builder.AppendLine($"{register}");
+            builder.Append("        ");
         }
 
-        builder.AppendLine("    }");
-        builder.AppendLine("}");
+        return
+            $$"""
+              using L5Sharp.Core;
+              using System.Xml.Linq;
+              using System.Runtime.CompilerServices;
 
-        return builder.ToString();
+              namespace {{nameSpace}};
+
+              /// <summary>
+              /// Generated class for registering decorated types with the LogixSerializer.
+              /// </summary>
+              internal static class LogixSerializerRegistration
+              {
+                  /// <summary>
+                  /// Automatically registers all found LogixElement and LogixData types when the module is loaded.
+                  /// </summary>
+                  [ModuleInitializer]
+                  internal static void Register()
+                  {
+                      {{builder}}
+                  }
+              }
+              """;
     }
 
-    /// <summary>
-    /// Represents a registration that associates a type name with its corresponding element names.
-    /// This struct is primarily used for handling serializer registration in Logix generation processes.
-    /// </summary>
     private readonly struct Registration(string type, string[] arguments)
     {
         public string Type { get; } = type;
