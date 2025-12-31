@@ -67,7 +67,7 @@ namespace L5Sharp.Tests.Core.Data.Predefined
         [Test]
         public void New_ElementWithName_ShouldNotBeNull()
         {
-            const string xml = @"<StructureMember Name=""TimeMember"" DataType=""TIMER""/>";
+            const string xml = """<StructureMember Name="TimeMember" DataType="TIMER"/>""";
             var element = XElement.Parse(xml);
 
             var type = new TIMER(element);
@@ -108,7 +108,7 @@ namespace L5Sharp.Tests.Core.Data.Predefined
             var type = new TIMER();
 
             var clone = type.Clone().As<TIMER>();
-            
+
             clone.Should().BeOfType<TIMER>();
         }
 

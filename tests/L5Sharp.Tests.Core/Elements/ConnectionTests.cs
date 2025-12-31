@@ -33,8 +33,6 @@ public class ConnectionTests
         connection.EventId.Should().Be(0);
         connection.InputTagSuffix.Should().Be("I");
         connection.OutputTagSuffix.Should().Be("O");
-        connection.InputTag.Should().BeNull();
-        connection.OutputTag.Should().BeNull();
     }
 
     [Test]
@@ -75,8 +73,6 @@ public class ConnectionTests
         connection.EventId.Should().Be(1);
         connection.InputTagSuffix.Should().Be("II");
         connection.OutputTagSuffix.Should().Be("OO");
-        connection.InputTag.Should().BeNull();
-        connection.OutputTag.Should().BeNull();
     }
 
     [Test]

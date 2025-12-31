@@ -127,13 +127,13 @@ public class ModuleTests
             m.Description = "This will fail";
         });
 
-        action.Should().Throw<InvalidOperationException>();
+        action.Should().Throw<KeyNotFoundException>();
     }
 
     [Test]
     public Task Local_ValidCatalogNumber_ShouldBeVerified()
     {
-        var module = Module.Local("1756-L83E", "33.12");
+        var module = Module.Local("1756-L83E", "33.1");
 
         var xml = module.Serialize().ToString();
 
@@ -216,11 +216,12 @@ public class ModuleTests
         var action = () => module.Connect("5094-OF8", m => { m.Name = "ChildCard"; });
 
         action.Should().Throw<InvalidOperationException>()
-            .WithMessage("No matching downstream port type is available for 'TestCard'.");
+            .WithMessage(
+                "Failed to connect (5094-OF8/A) to TestCard (1756-EN2T). No matching ports available for connection.");
     }
 
     [Test]
-    public void Connect_ChildWithMultipleMatchingPort_ShouldThrowException()
+    public void Connect_ChildWithMultipleMatchingAvilablePorts_ShouldConnectToFirstPort()
     {
         var module = Module.Create("1756-EN2T", m =>
         {
@@ -228,9 +229,8 @@ public class ModuleTests
             m.IP = IPAddress.Loopback;
         });
 
-        var action = () => module.Connect("1756-EN2T", m => { m.Name = "ChildCard"; });
+        var result = module.Connect("1756-EN2T", m => { m.Name = "ChildCard"; });
 
-        action.Should().Throw<InvalidOperationException>()
-            .WithMessage("Multiple matching downstream ports types are available for on 'TestCard'.");
+        result.Ports.Should().Contain(p => p.Upstream && p.Type == "ICP");
     }
 }

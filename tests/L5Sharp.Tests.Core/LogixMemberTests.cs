@@ -82,7 +82,7 @@ public class LogixMemberTests
         var member = new LogixMember("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<StructureData>();
+        member.Value.Should().BeOfType<TIMER>();
         member.Value.Member("PRE")!.Value.Should().Be(1000);
         member.Value.Member("ACC")!.Value.Should().Be(2000);
         member.Value.Member("EN")!.Value.Should().Be(1);
@@ -108,7 +108,7 @@ public class LogixMemberTests
         var member = new LogixMember(element);
 
         member.Name.Should().Be("Test");
-        member.Value.Should().BeOfType<StructureData>();
+        member.Value.Should().BeOfType<TIMER>();
         member.Value.Member("PRE")!.Value.Should().Be(1000);
         member.Value.Member("ACC")!.Value.Should().Be(2000);
         member.Value.Member("EN")!.Value.Should().Be(1);
@@ -219,15 +219,16 @@ public class LogixMemberTests
                 </Element>
             </Array>
             """;
+        
         var element = XElement.Parse(xml);
         var type = element.Deserialize<LogixData>();
 
         var member = new LogixMember("Test", type);
 
         member.Name.Should().Be("Test");
-        member.Value.As<ArrayData>()[0].Should().BeOfType<StructureData>();
-        member.Value.As<ArrayData>()[1].Should().BeOfType<StructureData>();
-        member.Value.As<ArrayData>()[2].Should().BeOfType<StructureData>();
+        member.Value.As<ArrayData>()[0].Should().BeOfType<TIMER>();
+        member.Value.As<ArrayData>()[1].Should().BeOfType<TIMER>();
+        member.Value.As<ArrayData>()[2].Should().BeOfType<TIMER>();
     }
 
     [Test]
@@ -287,7 +288,7 @@ public class LogixMemberTests
         var dataType = member.Value;
 
         dataType.Should().NotBeNull();
-        dataType.Should().BeOfType<StructureData>();
+        dataType.Should().BeOfType<TIMER>();
         dataType.As<TIMER>().PRE.Should().Be(123);
     }
 

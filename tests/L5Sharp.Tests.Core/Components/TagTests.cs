@@ -162,7 +162,7 @@ public class TagTests
         var parent = tag["Simple.M1"].Parent;
 
         parent.Should().NotBeNull();
-        parent?.Value.Should().BeOfType<StructureData>();
+        parent?.Value.Should().BeOfType<MySimpleData>();
         parent?.TagName.Should().Be("Test.Simple");
     }
 
@@ -1222,10 +1222,10 @@ public class TagTests
 
     #endregion
 
-    #region UsageTests
+    #region ReferencesTests
 
     [Test]
-    public void Usages_ForAllTagsExampleFile_ShouldNotTakeForever()
+    public void References_ForAllTagsExampleFile_ShouldNotTakeForever()
     {
         var content = L5X.Load(Known.Example);
 

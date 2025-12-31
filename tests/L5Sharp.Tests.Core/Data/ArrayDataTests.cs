@@ -570,7 +570,7 @@ namespace L5Sharp.Tests.Core.Data
 
             array.Name.Should().Be("TIMER");
             array.Dimensions.Should().Be(new Dimensions(5));
-            array.Should().AllBeOfType<StructureData>();
+            array.Should().AllBeOfType<TIMER>();
 
             array[1].As<TIMER>().PRE.Should().Be(1000);
             array[1].As<TIMER>().EN.Should().Be(true);

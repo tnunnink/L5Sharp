@@ -493,4 +493,82 @@ public class StructureDataTests
 
         result.Should().BeFalse();
     }
+
+    [Test]
+    public void Update_ByteArrayExample1_ShouldPArseCorrectly()
+    {
+        var data = new StructureData("Test", new List<LogixMember>
+        {
+            new("BoolMember", new BOOL()),
+            new("SintMember", new SINT()),
+            new("DintMember", new DINT()),
+            new("LintMember", new LINT()),
+        });
+
+        var value = new byte[] { 1, 123, 0, 0, 56, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0 };
+
+        var size = data.Update(value, 0);
+
+        size.Should().Be(16);
+    } 
+    
+    [Test]
+    public void Update_ByteArrayExample2_ShouldParseCorrectly()
+    {
+        var data = new StructureData("Test", new List<LogixMember>
+        {
+            new("BoolMember", new BOOL()),
+            new("SintMember", new SINT()),
+            new("DintMember", new DINT()),
+            new("LintMember", new LINT()),
+            new("RealMember", new REAL()),
+            new("Sint", new SINT()),
+            new("Bit", new BOOL()),
+            new("Dint", new DINT())
+        });
+
+        var value = new byte[]
+        {
+            1,123,0,0,56,0,0,0,15,0,0,0,0,0,0,0,154,153,185,63,30,1,0,0,89,1,0,0,0,0,0,0
+        };
+
+        var size = data.Update(value, 0);
+
+        //not that rockwell is adding extra 4 bytes padding because the type contains a LINT,
+        //which means the size must be divisible by 8. The last 4 bytes will be padding and not contain data so we are good. 
+        size.Should().Be(28);
+    }
+    
+    [Test]
+    public void Update_ByteArrayExample3_ShouldParseCorrectly()
+    {
+        var data = new StructureData("Test", new List<LogixMember>
+        {
+            new("BoolMember", new BOOL()),
+            new("SintMember", new SINT()),
+            new("DintMember", new DINT()),
+            new("LintMember", new LINT()),
+            new("RealMember", new REAL()),
+            new("Sint", new SINT()),
+            new("Bit", new BOOL()),
+            new("Dint", new DINT()),
+            new("Nested", new StructureData("NestedType", new List<LogixMember>
+            {
+                new("Bool1", new BOOL()),
+                new("Bool2", new BOOL()),
+                new("Bool3", new BOOL()),
+                new("Real1", new REAL()),
+                new("Real2", new REAL())
+            }))
+        });
+
+        var value = new byte[]
+        {
+            1,123,0,0,56,0,0,0,15,0,0,0,0,0,0,0,154,153,185,63,30,1,0,0,89,1,0,0,13,0,0,0,164,112,157,63,143,194,21,64
+        };
+
+        var size = data.Update(value, 0);
+        
+        size.Should().Be(40);
+    }
 }

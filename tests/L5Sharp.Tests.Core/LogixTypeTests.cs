@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Xml.Linq;
+using FluentAssertions;
 using L5Sharp.Tests.Core.Data.Custom;
 
 namespace L5Sharp.Tests.Core;
@@ -19,7 +20,7 @@ public class LogixTypeTests
     [Test]
     public void Register_ValidType_ShouldBeRegistered()
     {
-        LogixType.Register("MyTypeName", () => new MyUnregisteredType());
+        LogixType.Register<MyUnregisteredType>("MyTypeName");
 
         var result = LogixType.IsRegistered("MyTypeName");
 
@@ -29,15 +30,8 @@ public class LogixTypeTests
     [Test]
     public void Register_EmptyKey_ShouldThrowException()
     {
-        FluentActions.Invoking(() => LogixType.Register(string.Empty, () => new MySimpleData()))
+        FluentActions.Invoking(() => LogixType.Register<MySimpleData>(string.Empty))
             .Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Register_NullFactory_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => LogixType.Register<MySimpleData>("MyType", null!))
-            .Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -127,6 +121,72 @@ public class LogixTypeTests
         type.Should().NotBeNull();
         type.Should().BeOfType<BOOL>();
         type.Should().Be(false);
+    }
+
+    [Test]
+    public void TryCreate_RegisteredAtomic_ShouldBeTrue()
+    {
+        var result = LogixType.TryCreate("DINT", out var data);
+
+        result.Should().BeTrue();
+        data.Should().NotBeNull();
+        data.Should().BeOfType<DINT>();
+    }
+
+    [Test]
+    public void TryCreate_RegisteredPredefined_ShouldBeTrue()
+    {
+        var result = LogixType.TryCreate("COUNTER", out var data);
+
+        result.Should().BeTrue();
+        data.Should().NotBeNull();
+        data.Should().BeOfType<COUNTER>();
+    }
+
+    [Test]
+    public void Deserialize_DataValueElement_ShouldBeExpectedType()
+    {
+        var xml = XElement.Parse(
+            """
+            <DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+            """
+        );
+
+        var data = LogixType.Deserialize(xml);
+
+        data.Should().NotBeNull();
+        data.Should().BeOfType<BOOL>();
+        data.Should().Be(false);
+    }
+
+    [Test]
+    public void Deserialize_StructureElement_ShouldBeExpectedType()
+    {
+        var xml = XElement.Parse(
+            """
+            <Structure DataType="TIMER">
+                <DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+                <DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+                <DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+                <DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+                <DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+            </Structure>
+            """
+        );
+
+        var data = LogixType.Deserialize(xml);
+
+        data.Should().NotBeNull();
+        data.Should().BeOfType<TIMER>();
+    }
+
+    [Test]
+    public void TryCreate_NonRegistered_ShouldBeFalse()
+    {
+        var result = LogixType.TryCreate("Fake", out var data);
+
+        result.Should().BeFalse();
+        data.Should().BeNull();
     }
 
     [Test]

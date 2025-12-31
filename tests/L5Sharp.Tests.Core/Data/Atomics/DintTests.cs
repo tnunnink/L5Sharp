@@ -45,6 +45,16 @@ public class DintTests
     }
 
     [Test]
+    public void Size_WhenCalled_ShouldBeExpected()
+    {
+        var atomic = new DINT();
+
+        var size = atomic.Size;
+
+        size.Should().Be(sizeof(int));
+    }
+
+    [Test]
     public void Update_Null_ShouldThrowException()
     {
         var atomic = new DINT();

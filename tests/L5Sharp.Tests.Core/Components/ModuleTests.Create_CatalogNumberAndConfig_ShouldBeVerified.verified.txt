@@ -1,11 +1,10 @@
-﻿<Module Name="MyModule" CatalogNumber="1783-ETAP" Major="1" Minor="2" Vendor="1" ProductType="12" ParentModule="" ParentModPortId="0" Inhibited="false" MajorFault="false" SafetyEnabled="false" ProductCode="203">
+﻿<Module Name="MyModule" CatalogNumber="1783-ETAP" Vendor="1" ProductType="12" ProductCode="203" Major="1" Minor="2" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="false" SafetyEnabled="false">
   <Description><![CDATA[This is a test of the create factory method using the module catalog.]]></Description>
   <EKey State="ExactMatch" />
   <Ports>
-    <Port Id="1" Type="Ethernet" Upstream="false" Address="0.0.0.0" />
+    <Port Id="1" Type="Ethernet" Address="0.0.0.0" Upstream="true" />
   </Ports>
   <Communications>
     <ConfigTag />
-    <Connections />
   </Communications>
 </Module>

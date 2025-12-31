@@ -418,6 +418,18 @@
       <None Update="LogixContainerTests.AddRange_ValidElements_ShouldBeVerified.verified.xml">
         <DependentUpon>LogixContainerTests.cs</DependentUpon>
       </None>
+      <None Update="Devices\ModuleDefinitionTests.Serialize_ModuleWithConnections_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="Devices\ModuleDefinitionTests.Serialize_KnownModule_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="Devices\ModuleDefinitionTests.Create_FromKnownDefinition_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="Devices\ModuleDefinitionTests.Create_FromModuleWithConnections_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
