@@ -18,9 +18,9 @@ public class Address
     /// </summary>
     /// <param name="address"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public Address(string? address)
+    public Address(string address)
     {
-        if (address is null || address.IsEmpty())
+        if (string.IsNullOrEmpty(address))
             throw new ArgumentException("Can not create address from null or empty value.");
 
         _value = address;
@@ -45,16 +45,17 @@ public class Address
     public bool IsNetwork => IsIPv4(_value) || IsHostName(_value);
 
     /// <summary>
-    /// Creates a new <see cref="Address"/> with the optional IP address value.
+    /// Creates a new <see cref="Address"/> instance with the provided IP address or a default IP address if none is specified.
     /// </summary>
-    /// <returns>A <see cref="Address"/> with the default IP value.</returns>
+    /// <param name="ip">The optional IP address string to initialize the <see cref="Address"/>. Defaults to "192.168.0.1" if not provided.</param>
+    /// <returns>A new instance of <see cref="Address"/> initialized with the specified or default IP address.</returns>
     public static Address NewIP(string? ip = null) => ip is not null ? new Address(ip) : new Address("192.168.0.1");
 
     /// <summary>
-    /// Creates a new <see cref="Address"/> with the optional slot number.
+    /// /
     /// </summary>
-    /// <param name="slot">The slot number to create. If not provided will default to 0.</param>
-    /// <returns>A <see cref="Address"/> representing a slot number within a chassis.</returns>
+    /// <param name="slot"></param>
+    /// <returns></returns>
     public static Address NewSlot(byte slot = 0) => new(slot.ToString());
 
     /// <summary>
@@ -65,11 +66,27 @@ public class Address
     public static Address Parse(string value) => new(value);
 
     /// <summary>
-    /// Tries to parse a string into a <see cref="Address"/> value.
+    /// Attempts to parse the specified string value into an <see cref="Address"/> object.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>An <see cref="Address"/> representing the parsed value if successful; Otherwise, null.</returns>
-    public static Address? TryParse(string? value) => value is null || value.IsEmpty() ? null : new Address(value);
+    /// <param name="value">The string value to parse into an <see cref="Address"/>.</param>
+    /// <param name="address">
+    /// When this method returns, contains the parsed <see cref="Address"/> object if the conversion succeeded,
+    /// or null if the conversion failed.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the string value was successfully parsed into an <see cref="Address"/>; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool TryParse(string? value, out Address address)
+    {
+        if (value is null || value.IsEmpty())
+        {
+            address = null!;
+            return false;
+        }
+        
+        address = new Address(value);
+        return true;
+    }
 
     /// <summary>
     /// Converts the address value to an IPAddress object.
@@ -121,7 +138,9 @@ public class Address
     /// </summary>
     private static bool IsIPv4(string value)
     {
-        return IPAddress.TryParse(value, out var ip) && ip.AddressFamily == AddressFamily.InterNetwork;
+        return value.Contains('.') 
+               && IPAddress.TryParse(value, out var ip) 
+               && ip.AddressFamily == AddressFamily.InterNetwork;
     }
 
     /// <summary>

@@ -29,9 +29,25 @@ public sealed class LINT : AtomicData, IComparable, IConvertible, IAtomicValue<l
     {
         Element.SetAttributeValue(L5XName.Value, value.ToString());
     }
+    
+    /// <inheritdoc />
+    public override int Size => sizeof(long);
 
     /// <inheritdoc />
     public long Value => GetAtomicValue<long>();
+    
+    /// <inheritdoc />
+    public override int Update(byte[] data, int offset)
+    {
+        // If the size of this type overflows the boundary, we need to start at the next interval.
+        // This can happen for only types larger than 1 byte.
+        offset = (offset + Size - 1) & ~(Size - 1);
+
+        var value = BitConverter.ToInt64(data, offset);
+        Update(value);
+
+        return offset + Size;
+    }
 
     /// <inheritdoc />
     public int CompareTo(object? obj)

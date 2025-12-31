@@ -64,6 +64,20 @@ public class StringData : LogixData, IEnumerable<char>
     }
 
     /// <summary>
+    /// Gets the maximum number of characters this string type can hold.
+    /// </summary>
+    /// <remarks>
+    /// Deriving classes must override this property to correctly updated or read data streams.
+    /// </remarks>
+    public virtual int Capacity => 0;
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// For strings, the size is the 4-byte DINT length plus the SINT array capacity.
+    /// </remarks>
+    public override int Size => (sizeof(int) + Capacity + 3) & ~3;
+
+    /// <summary>
     /// Gets the length of the string represented by the current <see cref="StringData"/> instance.
     /// </summary>
     /// <remarks>
@@ -71,7 +85,7 @@ public class StringData : LogixData, IEnumerable<char>
     /// accessing the <see cref="string.Length"/> property of the underlying string value.
     /// This is not tied to the underlying element value for the LEN member when present.
     /// </remarks>
-    public int Length => GetString().Length;
+    public int Length => GetLength();
 
     /// <inheritdoc />
     public override void Update(LogixData data)
@@ -82,20 +96,33 @@ public class StringData : LogixData, IEnumerable<char>
         if (data is not StringData stringData)
             throw new ArgumentException($"Can not update string with data of type '{data.GetType()}'.");
 
-        if (Element.Name.LocalName is L5XName.Data)
-        {
-            Element.SetAttributeValue(L5XName.Length, stringData.Length);
-            Element.ReplaceNodes(new XCData($"'{stringData}'"));
-            return;
-        }
+        SetLength(stringData.Length);
+        SetString(stringData);
+    }
 
-        Element.Elements()
-            .First(e => e.MemberName() == "LEN")
-            .SetAttributeValue(L5XName.Value, stringData.Length);
+    /// <inheritdoc />
+    public override int Update(byte[] data, int offset)
+    {
+        // If we have not defined the size of the string type we can't know how many bytes to read.
+        // We have to rely on the serializer instantiating conrete types and the user defining custom one (either
+        // manually or with source generator)
+        if (Capacity <= 0)
+            throw new InvalidOperationException(
+                $"Cannot hydrate string '{Name}' because its capacity is unknown. Ensure the type is registered or generated.");
 
-        Element.Elements()
-            .First(e => e.MemberName() == "DATA")
-            .ReplaceNodes(new XCData($"'{stringData}'"));
+        // Align to the DINT offset to read the length data.
+        // Default to the capacity if lower than the string length to ensure valid mapping.
+        offset = (offset + 3) & ~3;
+        var rawLength = BitConverter.ToInt32(data, offset);
+        var safeLength = Math.Min(rawLength, Capacity);
+        SetLength(safeLength);
+
+        //Read the remaing bytes to get the string value.
+        var value = System.Text.Encoding.ASCII.GetString(data, offset + sizeof(int), safeLength);
+        SetString(value);
+
+        //Size will depend on the Capacity property getting set correctly.
+        return offset + Size;
     }
 
     /// <inheritdoc />
@@ -141,8 +168,48 @@ public class StringData : LogixData, IEnumerable<char>
     /// </summary>
     private string GetString()
     {
-        var text = Element.DescendantNodes().OfType<XCData>().FirstOrDefault()?.Value ?? string.Empty;
-        return text.TrimStart('\'').TrimEnd('\'');
+        return Element.DescendantNodes().OfType<XCData>().First()?.Value.Trim('\'') ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Sets the string value within the underlying XML element.
+    /// </summary>
+    /// <param name="value">The string value to be assigned to the XML element.</param>
+    private void SetString(string value)
+    {
+        Element.DescendantNodes().OfType<XCData>().First().ReplaceWith(new XCData($"'{value}'"));
+    }
+
+    /// <summary>
+    /// Retrieves the length of the string data from the underlying XML element.
+    /// </summary>
+    /// <returns>The length of the string data as an integer.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the length attribute or element is not found in the XML.</exception>
+    private int GetLength()
+    {
+        var value = Element.Name.LocalName is L5XName.Data
+            ? Element.Attribute(L5XName.Length)?.Value
+            : Element.Elements().FirstOrDefault(e => e.MemberName() == "LEN")?.Attribute(L5XName.Value)?.Value;
+
+        if (value is null)
+            throw Element.L5XError(L5XName.Length);
+
+        return int.Parse(value);
+    }
+
+    /// <summary>
+    /// Sets the length attribute for the underlying XML element of the StringData instance.
+    /// </summary>
+    /// <param name="length">The new length to be set for the string representation within the XML structure.</param>
+    private void SetLength(int length)
+    {
+        if (Element.Name.LocalName is L5XName.Data)
+        {
+            Element.SetAttributeValue(L5XName.Length, length);
+            return;
+        }
+
+        Element.Elements().Single(e => e.MemberName() == "LEN").SetAttributeValue(L5XName.Value, length);
     }
 
     /// <summary>

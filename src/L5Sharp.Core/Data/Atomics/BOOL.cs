@@ -42,7 +42,25 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
     }
 
     /// <inheritdoc />
+    public override int Size => sizeof(bool);
+
+    /// <inheritdoc />
     public bool Value => GetAtomicValue<bool>();
+
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// Standalone BOOL tag logic (takes 1 byte in Logix)
+    /// </remarks>
+    public override int Update(byte[] data, int offset)
+    {
+        if (offset < 0 || offset > data.Length - 1)
+            throw new ArgumentException("Offset is out of range for the provided data array.", nameof(offset));
+
+        var value = data[offset] != 0;
+        Update(value);
+        return offset + Size;
+    }
 
     /// <inheritdoc />
     public int CompareTo(object? obj)

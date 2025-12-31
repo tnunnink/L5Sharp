@@ -1,7 +1,10 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
+
 // Auto-generated file
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -264,5 +267,4 @@ public sealed partial class ALARM : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

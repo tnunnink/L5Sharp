@@ -7,8 +7,10 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// A static deserialization class for <see cref="ILogixElement"/> objects and their derivatives.
-/// 
 /// </summary>
+/// <remarks>
+/// 
+/// </remarks>
 public static class LogixSerializer
 {
     /// <summary>
@@ -116,7 +118,7 @@ public static class LogixSerializer
     /// </remarks>
     public static TElement Deserialize<TElement>(this XElement element) where TElement : ILogixElement
     {
-        return (TElement)Deserialize(element);
+        return (TElement)element.Deserialize();
     }
 
     /// <summary>
@@ -217,10 +219,10 @@ public static class LogixSerializer
                 //so that we can deserialize as string data.
                 if (e.Elements().Any(m => m.FirstNode is XCData))
                 {
-                    return new StringData(e);
+                    return LogixType.TryDeserialize(e, out var stringData) ? stringData : new StringData(e);
                 }
 
-                return new StructureData(e);
+                return LogixType.TryDeserialize(e, out var structure) ? structure : new StructureData(e);
             },
             L5XName.Structure,
             L5XName.StructureMember
@@ -263,17 +265,20 @@ public static class LogixSerializer
                     };
                 }
 
-                if (e.FirstNode is not XElement structure)
-                    throw e.L5XError(L5XName.Structure);
+                var structure = e.FirstNode as XElement ?? throw e.L5XError(L5XName.Structure);
 
                 //Detect if the structure element contains a nested string value (CData node)
                 //so that we can deserialize as string data.
                 if (structure.Elements().Any(m => m.FirstNode is XCData))
                 {
-                    return new StringData(structure);
+                    return LogixType.TryDeserialize(structure, out var stringData)
+                        ? stringData
+                        : new StringData(structure);
                 }
 
-                return new StructureData(structure);
+                return LogixType.TryDeserialize(structure, out var structureData)
+                    ? structureData
+                    : new StructureData(structure);
             },
             L5XName.Element
         );

@@ -28,6 +28,10 @@ public class Connection : LogixObject<Connection>
         Priority = ConnectionPriority.Scheduled;
         InputConnectionType = TransmissionType.Multicast;
         InputProductionTrigger = ProductionTrigger.Cyclic;
+
+        //By default, just add the input and output tags. This will let us set data.
+        Element.Add(new XElement(L5XName.InputTag, new XAttribute(L5XName.ExternalAccess, ExternalAccess.ReadWrite)));
+        Element.Add(new XElement(L5XName.OutputTag, new XAttribute(L5XName.ExternalAccess, ExternalAccess.ReadWrite)));
     }
 
     /// <summary>
@@ -153,6 +157,27 @@ public class Connection : LogixObject<Connection>
     public int? EventId
     {
         get => GetValue(int.Parse);
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether an event trigger can be sent programmatically.
+    /// </summary>
+    /// <remarks>
+    /// This property allows controlling the ability to send an event trigger through code rather than relying on predefined configurations.
+    /// </remarks>
+    public bool? ProgrammaticallySendEventTrigger
+    {
+        get => GetOptionalBool();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the path used to define the connection between the module and the field device.
+    /// </summary>
+    public string? ConnectionPath
+    {
+        get => GetValue();
         set => SetValue(value);
     }
 

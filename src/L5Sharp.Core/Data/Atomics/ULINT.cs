@@ -29,9 +29,25 @@ public sealed class ULINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     {
         Element.SetAttributeValue(L5XName.Value, value);
     }
+    
+    /// <inheritdoc />
+    public override int Size => sizeof(ulong);
 
     /// <inheritdoc />
     public ulong Value => GetAtomicValue<ulong>();
+    
+    /// <inheritdoc />
+    public override int Update(byte[] data, int offset)
+    {
+        // If the size of this type overflows the boundary, we need to start at the next interval.
+        // This can happen for only types larger than 1 byte.
+        offset = (offset + Size - 1) & ~(Size - 1);
+
+        var value = BitConverter.ToUInt64(data, offset);
+        Update(value);
+
+        return offset + Size;
+    }
 
     /// <inheritdoc />
     public int CompareTo(object? obj)

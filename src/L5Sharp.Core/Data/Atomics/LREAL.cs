@@ -32,11 +32,27 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     {
         Element.SetAttributeValue(L5XName.Value, value.ToString(DoubleFormat, CultureInfo.InvariantCulture));
     }
+    
+    /// <inheritdoc />
+    public override int Size => sizeof(double);
 
     /// <inheritdoc />
     public double Value => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false
         ? GetAtomicValue<double>()
         : double.NaN;
+    
+    /// <inheritdoc />
+    public override int Update(byte[] data, int offset)
+    {
+        // If the size of this type overflows the boundary, we need to start at the next interval.
+        // This can happen for only types larger than 1 byte.
+        offset = (offset + Size - 1) & ~(Size - 1);
+
+        var value = BitConverter.ToDouble(data, offset);
+        Update(value);
+
+        return offset + Size;
+    }
 
     /// <inheritdoc />
     public int CompareTo(object? obj)

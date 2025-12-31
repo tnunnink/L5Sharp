@@ -65,6 +65,12 @@ public abstract class LogixData : LogixElement
     public virtual IEnumerable<LogixMember> Members => [];
 
     /// <summary>
+    /// The memory size of the logix data element in bytes.
+    /// </summary>
+    /// <value>An <see cref="int"/> representing the allocated size of the logix data element.</value>
+    public virtual int Size => 0;
+
+    /// <summary>
     /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
     /// Otherwise, returns <c>null</c>.
     /// </summary>
@@ -86,6 +92,39 @@ public abstract class LogixData : LogixElement
     /// this method as necessary.
     /// </remarks>
     public abstract void Update(LogixData data);
+
+    /// <summary>
+    /// Updates the current object state using the provided data starting at the specified offset.
+    /// </summary>
+    /// <param name="data">The byte array containing the data to update the object with.</param>
+    /// <param name="offset">The starting index in the byte array from which data will be read.</param>
+    /// <returns>The number of bytes processed during the update operation.</returns>
+    public virtual int Update(byte[] data, int offset)
+    {
+        var bitNumber = 0;
+
+        foreach (var member in Members)
+        {
+            // Logix packs contiguous booleans into byte chuncks, which this code will handle by default.
+            // Any non-standard formatting/layout will need to be handled in derived classes.
+            if (member.Value is BOOL bit)
+            {
+                if (bitNumber == 0) offset++;
+                var bitValue = (data[offset - 1] & (1 << bitNumber)) != 0;
+                bit.Update(bitValue);
+                bitNumber = (bitNumber + 1) % 8;
+                continue;
+            }
+
+            //Reset the bit block when we hit a non-BOOL member.
+            bitNumber = 0;
+
+            // Recurse and update offset to the next position in the array.
+            offset = member.Value.Update(data, offset);
+        }
+
+        return offset;
+    }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

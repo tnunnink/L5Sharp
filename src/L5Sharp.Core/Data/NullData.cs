@@ -24,7 +24,7 @@ public sealed class NullData : LogixData
 
     /// <inheritdoc />
     public override void Update(LogixData data) =>
-        throw new InvalidOperationException("Can not update data for the null data instnace.");
+        throw new InvalidOperationException("Can not update data for the null data instance.");
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullData"/> logix type.

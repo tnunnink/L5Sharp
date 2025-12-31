@@ -31,7 +31,23 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     }
 
     /// <inheritdoc />
+    public override int Size => sizeof(short);
+
+    /// <inheritdoc />
     public short Value => GetAtomicValue<short>();
+
+    /// <inheritdoc />
+    public override int Update(byte[] data, int offset)
+    {
+        // If the size of this type overflows the boundary, we need to start at the next interval.
+        // This can happen for only typs larger than 1 byte.
+        offset = (offset + Size - 1) & ~(Size - 1);
+
+        var value = BitConverter.ToInt16(data, offset);
+        Update(value);
+
+        return offset + Size;
+    }
 
     /// <inheritdoc />
     public int CompareTo(object? obj)

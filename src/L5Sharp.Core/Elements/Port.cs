@@ -145,6 +145,7 @@ public class Port : LogixObject<Port>
         }
 
         var bus = Element.Element(L5XName.Bus);
+        
         if (bus is null)
         {
             bus = new XElement(L5XName.Bus);

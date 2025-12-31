@@ -78,7 +78,7 @@ public class DataFormat : LogixEnum<DataFormat, string>
     /// (<see cref="Tag"/>), will have the normal <c>Data</c> name.
     /// </param>
     /// <returns>An <see cref="XElement"/> representing the formatted data with the appropriate format attribute and child elements.</returns>
-    public static XElement Format(LogixData? data, Type type)
+    public static XElement Format(LogixData? data, Type? type = null)
     {
         //Determine the proper data element name from the specified element type.
         var name = type == typeof(Parameter) || type == typeof(LocalTag)

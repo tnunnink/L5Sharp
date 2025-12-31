@@ -216,8 +216,14 @@ public class Module : LogixComponent<Module>
     public LogixContainer<Port> Ports => GetContainer<Port>();
 
     /// <summary>
-    /// 
+    /// A collection of <see cref="Connection"/> elements that represent the physical IO data connections.
     /// </summary>
+    /// <remarks>
+    /// Most modules contain a single connection element with configuration specific for the device. Each connection element
+    /// will typically contain input and output tag data structure representing the field data the device is communicating.
+    /// When creating a new module, this collection is initialized but not connections are added since it is driven by
+    /// the internals of the software. To build modules with initialized connections, you can duplicated from existing L5X or...
+    /// </remarks>
     public LogixContainer<Connection> Connections => GetComms().Connections;
 
     /// <summary>
@@ -348,6 +354,7 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <param name="catalogNumber">The catalog number of the child module to be created and connected.</param>
     /// <param name="config">An action to configure the child module after it is connected.</param>
+    /// <param name="catalog"></param>
     /// <returns>A new configured <see cref="Module"/> instnace "connected" to this parent module.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the child module is null.</exception>
     /// <exception cref="InvalidOperationException">Thrown when this module contains no downstream port with a type that
@@ -355,19 +362,25 @@ public class Module : LogixComponent<Module>
     /// <remarks>
     /// The intention of this method is to help with both generating and configuring the parent and port properties of
     /// a child module so that it will be imported correctly into Studio 5K. This method uses the internal
-    /// <see cref="ModuleCatalog"/> to generate the child instance. Then it will try to find a downstream port of the current
+    /// <see cref="RockwellCatalogDatabase"/> to generate the child instance. Then it will try to find a downstream port of the current
     /// module that has a type matching one of the child ports. If the match is successful, then the child module
     /// is configured using the current module as the parent. This method will also attempt to add the serialized child
     /// to the underlying L5X content if possible.
     /// </remarks>
-    public Module Connect(string catalogNumber, Action<Module> config)
+    public Module Connect(string catalogNumber, Action<Module> config, IModuleCatalog? catalog = null)
     {
         if (config is null) throw new ArgumentNullException(nameof(config));
-        var child = CreateFromCatalog(string.Empty, catalogNumber);
-        ConnectModule(child);
-        config.Invoke(child);
-        TryAddModule(child);
-        return child;
+
+        catalog ??= new RockwellCatalogDatabase();
+
+        var definition = catalog.FindLatest(catalogNumber);
+        var module = definition.Create(string.Empty);
+
+        ConnectModule(module);
+        config.Invoke(module);
+        TryAddModule(module);
+
+        return module;
     }
 
     /// <summary>
@@ -405,18 +418,21 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <param name="name">The name of the module to create.</param>
     /// <param name="catalogNumber">The catalog number of the module to create.</param>
+    /// <param name="catalog"></param>
     /// <returns>A new configured <see cref="Module"/> instance.</returns>
     /// <remarks>
-    /// This factory method uses the <see cref="ModuleCatalog"/> to find the specified catalog number.
+    /// This factory method uses the <see cref="RockwellCatalogDatabase"/> to find the specified catalog number.
     /// If the machine does not have Studio 5K installed or the specified module was not found, then this factory method
     /// will throw an exception. If found, then the module is generated using the catalog data and the provided module name.
     /// This method is for generating modules without needing to know the exact product type, code, vendor, revision,
     /// and port configurations. This will not generate any connection or tag data for the module,
     /// but in most cases that should be built when imported.
     /// </remarks>
-    public static Module Create(string name, string catalogNumber)
+    public static Module Create(string name, string catalogNumber, IModuleCatalog? catalog = null)
     {
-        var module = CreateFromCatalog(name, catalogNumber);
+        catalog ??= new RockwellCatalogDatabase();
+        var definition = catalog.FindLatest(catalogNumber);
+        var module = definition.Create(name);
         return module;
     }
 
@@ -425,22 +441,25 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <param name="catalogNumber">The catalog number of the module to create.</param>
     /// <param name="config">An action to configure the properties of the created module.</param>
+    /// <param name="catalog"></param>
     /// <returns>A new configured <see cref="Module"/> instance.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="catalogNumber"/> or <paramref name="config"/> is null.</exception>
     /// <exception cref="InvalidOperationException">Thrown if no module with the specified catalog number is found in the module catalog.</exception>
     /// <remarks>
-    /// This factory method uses the <see cref="ModuleCatalog"/> to find the specified catalog number.
+    /// This factory method uses the <see cref="RockwellCatalogDatabase"/> to find the specified catalog number.
     /// If the machine does not have Studio 5K installed or the specified module was not found, then this factory method
     /// will throw an exception. If found, then the module is generated using the catalog data and the provided config
     /// delegate. This method is for generating and configuring modules without needing to know the exact
     /// product type, code, vendor, revision, and port configurations. This will not generate any connection or
     /// tag data for the module, but in most cases that should be built when imported.
     /// </remarks>
-    public static Module Create(string catalogNumber, Action<Module> config)
+    public static Module Create(string catalogNumber, Action<Module> config, IModuleCatalog? catalog = null)
     {
         if (config is null) throw new ArgumentNullException(nameof(config));
 
-        var module = CreateFromCatalog(string.Empty, catalogNumber);
+        catalog ??= new RockwellCatalogDatabase();
+        var definition = catalog.FindLatest(catalogNumber);
+        var module = definition.Create("NewModule");
         config.Invoke(module);
         return module;
     }
@@ -458,7 +477,7 @@ public class Module : LogixComponent<Module>
     /// <remarks>
     /// This factory method exists to assist with creating new module instances from existing L5X content.
     /// There are some module types that we can't generate all the required XML content for using the
-    /// <see cref="ModuleCatalog"/>), specifically safety enabled modules that have the 'SafetyScript' element.
+    /// <see cref="RockwellCatalogDatabase"/>), specifically safety enabled modules that have the 'SafetyScript' element.
     /// This method encapsulates a common workflow of copying modules from existing known content. 
     /// </remarks>
     public static Module Create(string filePath, string catalogNumber, Action<Module> config)
@@ -475,19 +494,14 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <param name="processor">The processor catalog number for the module.</param>
     /// <param name="revision">The software revision of the controller.</param>
+    /// <param name="catalog"></param>
     /// <returns>A new <see cref="Module"/> representing a default local controller module instance.</returns>
-    public static Module Local(string processor, Revision? revision = null)
+    public static Module Local(string processor, Revision? revision = null, IModuleCatalog? catalog = null)
     {
-        var module = CreateFromCatalog(nameof(Local), processor);
+        catalog ??= new RockwellCatalogDatabase();
 
-        //These are the default self-referential properties for the local controller module instance.
-        module.ParentModule = nameof(Local);
-        module.ParentModPortId = 1;
-
-        if (revision is not null)
-        {
-            module.Revision = revision;
-        }
+        var definition = revision is null ? catalog.FindLatest(processor) : catalog.Find(processor, revision);
+        var module = definition.Create(nameof(Local));
 
         return module;
     }
@@ -537,9 +551,10 @@ public class Module : LogixComponent<Module>
     /// </summary>
     private Module? GetParent()
     {
-        return Element.Parent?.Elements(L5XName.Module)
-            .FirstOrDefault(m => m.LogixName() == ParentModule)
-            ?.Deserialize<Module>();
+        return Element.Parent?
+            .Elements(L5XName.Module)
+            .FirstOrDefault(m => m.LogixName() == ParentModule)?
+            .Deserialize<Module>();
     }
 
     /// <summary>
@@ -569,48 +584,50 @@ public class Module : LogixComponent<Module>
     /// </summary>
     private void ConnectModule(Module child)
     {
-        var ports = Ports.Where(p => !p.Upstream && child.Ports.Any(c => c.Type == p.Type)).ToArray();
+        var port = FindConnectablePortFor(child);
 
-        switch (ports.Length)
-        {
-            case 0:
-                throw new InvalidOperationException(
-                    $"No matching downstream port type is available for '{Name}'.");
-            case > 1:
-                throw new InvalidOperationException(
-                    $"Multiple matching downstream ports types are available for on '{Name}'.");
-            default:
-                child.ConfigureParent(this, ports[0]);
-                break;
-        }
+        //Ensure the port we are connecting to is configured as downstream.
+        port.Upstream = false;
+
+        child.ParentModule = Name;
+        child.ParentModPortId = port.Id;
+
+        var match = child.Ports.Single(p => p.Type == port.Type);
+        match.Address = match.IsEthernet ? match.Address : NextSlot();
+        match.Upstream = true;
     }
 
     /// <summary>
-    /// Configures the properties of this module to form a connection to the provided parent module and port.
+    /// Finds a connectable port in the module's available ports that matches the type of the child module's ports.
     /// </summary>
-    /// <param name="parent">The parent module for which to form a connection.</param>
-    /// <param name="port">The parent port for which to form a connection.</param>
-    private void ConfigureParent(Module parent, Port port)
+    /// <param name="child">The child module for which a connectable port is being searched.</param>
+    /// <returns>A <see cref="Port"/> that is available and valid to connect to the specified child module.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when no valid connectable port can be found for the child module.
+    /// </exception>
+    private Port FindConnectablePortFor(Module child)
     {
-        ParentModule = parent.Name;
-        ParentModPortId = port.Id;
+        // Get the parent port of this module to determine if it is an existing valid port connection.
+        var parentPort = GetParent()?.Ports.SingleOrDefault(p => p.Id == ParentModPortId);
 
-        var match = Ports.FirstOrDefault(p => p.Type == port.Type);
+        // Children can only connect ports of the same type.
+        var candidates = Ports.Where(p => child.Ports.Any(c => c.Type == p.Type));
 
-        if (match is not null)
+        foreach (var candidate in candidates)
         {
-            match.Address = match.IsEthernet ? match.Address : parent.NextSlot();
-            match.Upstream = true;
-            return;
+            // If the parent port for this module exists, matches the port type for the cadidate,
+            // and the candidate is set to upstream, then it is in use, and we must avoid it.
+            if (parentPort is not null && parentPort.Type == candidate.Type && candidate.Upstream)
+                continue;
+
+            // If we get here, there is either no upstream port connection (meaning this is a detached module instance),
+            // there is an upstream port connection, but does not match the candidate port type, and so this is a valid
+            // connectable port.
+            return candidate;
         }
 
-        Ports.Add(new Port
-        {
-            Id = Ports.Count + 1,
-            Type = port.Type,
-            Address = port.IsEthernet ? Address.NewIP() : parent.NextSlot(),
-            Upstream = true
-        });
+        throw new InvalidOperationException(
+            $"Failed to connect {child.Name}({child.CatalogNumber}) to {Name} ({CatalogNumber}). No matching ports available for connection.");
     }
 
     /// <summary>
@@ -620,42 +637,6 @@ public class Module : LogixComponent<Module>
     private void TryAddModule(Module child)
     {
         Element.Parent?.Add(child.Serialize());
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="Module"/> instance from the built in <see cref="ModuleCatalog"/> service utility
-    /// using the provided name and catalog number.
-    /// </summary>
-    private static Module CreateFromCatalog(string name, string catalogNumber)
-    {
-        if (name is null) throw new ArgumentNullException(nameof(name));
-        if (catalogNumber is null) throw new ArgumentNullException(nameof(catalogNumber));
-
-        var catalog = new ModuleCatalog();
-        var entry = catalog.Lookup(catalogNumber);
-        
-        var module = new Module
-        {
-            Name = name,
-            CatalogNumber = entry.CatalogNumber,
-            Revision = entry.Revisions.Max(),
-            Vendor = entry.Vendor,
-            ProductType = entry.ProductType,
-            ProductCode = entry.ProductCode,
-            Description = entry.Description,
-            SafetyEnabled = entry.Categories.Contains("Safety")
-        };
-
-        var ports = entry.Ports.Select(p => new Port
-        {
-            Id = p.Number,
-            Type = p.Type,
-            Address = p.Type == "Ethernet" ? Address.NewIP() : Address.NewSlot(),
-        });
-
-        module.Ports.AddRange(ports);
-
-        return module;
     }
 
     /// <summary>
@@ -705,13 +686,12 @@ public class Module : LogixComponent<Module>
     /// </summary>
     private void SetAddress(string? value, bool isEthernet = false)
     {
-        var address = Address.TryParse(value);
-
         var port = Ports.FirstOrDefault(p => Equals(p.IsEthernet, isEthernet));
 
         if (port is null)
             throw new InvalidOperationException($"No supporting port found for address: '{value}'");
 
+        var address = Address.TryParse(value, out var parsed) ? parsed : null;
         port.Address = address;
     }
 

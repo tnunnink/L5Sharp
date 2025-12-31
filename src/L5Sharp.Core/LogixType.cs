@@ -1,37 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
 /// <summary>
 /// A global registry and factory for <see cref="LogixData"/> classes and their deriviatives. This class provides the
-/// ability to create new default instances of data structures by name. It also has helpers for determining the type
-/// name for a given <see cref="LogixData"/> type and if a given type name is an atomic type.
+/// ability to create new default instances of data structures by name and deserialize contrete instances from a given XElement.
+/// It also has helpers for determining the type name for a given <see cref="LogixData"/> type and if a given type name is an atomic type.
 /// </summary>
-/// <remarks>
-/// This class will contain all registered <see cref="LogixData"/> implementation decorated with
-/// the <see cref="LogixDataAttribute"/>. You can use the <see cref="Register{TData}"/> method manually if you prefer to
-/// register a custom factory delegate.
-/// </remarks>
 public static class LogixType
 {
     /// <summary>
-    /// A dictionary mapping .NET <see cref="Type"/> instances to their corresponding Logix type names.
-    /// Used internally to resolve type names for LogixData creation and management.
+    /// The map of all registered logix data types to their corresponding name. The name is the value of the type
+    /// defined in the L5X.
     /// </summary>
     private static readonly Dictionary<Type, string> Names = [];
 
     /// <summary>
-    /// A collection of factory methods for creating instances of <see cref="LogixData"/>
-    /// based on a registered type name.
+    /// Collection of registered atomic data type names. This lets us check if a given type is a special case atomic
+    /// data instance.
+    /// </summary>
+    private static readonly List<string> Atomics = [];
+
+    /// <summary>
+    /// A collection of factory methods for creating default instances of logix data types by name.
     /// </summary>
     private static readonly Dictionary<string, Func<LogixData>> Factories = [];
 
     /// <summary>
-    /// A private static list of strings representing atomic data types in the Logix system.
-    /// It is used internally to store and manage predefined atomic type names for validation and type resolution.
+    /// A collection of factory methods for deserializing a logix data type from a given XElement.
     /// </summary>
-    private static readonly List<string> Atomics = [];
+    private static readonly Dictionary<string, Func<XElement, LogixData>> Deserializers = [];
 
     /// <summary>
     /// Returns the singleton null <see cref="LogixData"/> object.
@@ -39,42 +40,46 @@ public static class LogixType
     public static LogixData Null => NullData.Instance;
 
     /// <summary>
-    /// Registers a new <see cref="LogixData"/> type with the specified name and factory method.
+    /// Registers a new Logix data type with the specified name.
+    /// The data type must inherit from <see cref="LogixData"/> and have a parameterless constructor.
     /// </summary>
-    /// <param name="name">The unique name associated with the <see cref="LogixData"/> type being registered.</param>
-    /// <param name="factory">A factory method used to create instances of the specified <see cref="LogixData"/> type.</param>
-    /// <typeparam name="TData">The type of <see cref="LogixData"/> being registered.</typeparam>
-    /// <exception cref="ArgumentNullException">Thrown when the name or factory parameter is null.</exception>
-    public static void Register<TData>(string name, Func<TData> factory) where TData : LogixData
+    /// <typeparam name="TData">The type of the Logix data to register, inheriting from <see cref="LogixData"/>.</typeparam>
+    /// <param name="name">The name associated with the Logix data type to be registered.</param>
+    /// <exception cref="ArgumentException">Thrown when the provided name is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the data type has already been registered.</exception>
+    public static void Register<TData>(string name) where TData : LogixData, new()
     {
         if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name can not be null or empty.");
-
-        if (factory is null)
-            throw new ArgumentNullException(nameof(factory));
+            throw new ArgumentException("Name cannot be null or empty.");
 
         if (Names.ContainsKey(typeof(TData)))
             throw new InvalidOperationException($"Type already registered: '{typeof(TData)}'");
 
-        Names[typeof(TData)] = name;
-        Factories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
+        var type = typeof(TData);
+
+        Names[type] = name;
+        Factories[name] = () => new TData();
+        TryRegisterDeserializer(type, name);
     }
 
     /// <summary>
-    /// Registers a new <see cref="AtomicData"/> type with the specified name and factory method.
+    /// Registers a new atomic data type with the specified name.
+    /// The atomic type must derive from <see cref="AtomicData"/> and have a parameterless constructor.
     /// </summary>
-    /// <param name="name">The unique name associated with the <see cref="AtomicData"/> type being registered.</param>
-    /// <param name="factory">A factory method used to create instances of the specified <see cref="AtomicData"/> type.</param>
-    /// <typeparam name="TAtomic">The type of <see cref="AtomicData"/> being registered.</typeparam>
-    /// <exception cref="ArgumentNullException">Thrown when the name or factory parameter is null.</exception>
-    internal static void RegisterAtomic<TAtomic>(string name, Func<TAtomic> factory) where TAtomic : AtomicData
+    /// <typeparam name="TAtomic">The type of the atomic data to register, inheriting from <see cref="AtomicData"/>.</typeparam>
+    /// <param name="name">The name associated with the atomic data type to be registered.</param>
+    /// <exception cref="ArgumentException">Thrown when the provided name is null or empty.</exception>
+    internal static void RegisterAtomic<TAtomic>(string name) where TAtomic : AtomicData, new()
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.");
 
-        Names[typeof(TAtomic)] = name;
-        Factories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
+        var type = typeof(TAtomic);
+
+        Names[type] = name;
         Atomics.Add(name);
+        Factories[name] = () => new TAtomic();
+        TryRegisterDeserializer(type, name);
     }
 
     /// <summary>
@@ -185,27 +190,55 @@ public static class LogixType
     }
 
     /// <summary>
-    /// Creates an instance of the specified <see cref="LogixData"/> type using a registered factory method,
-    /// or returns a default instance if no factory is found for the given data type.
+    /// Deserializes an <see cref="XElement"/> into a <see cref="LogixData"/> object based on its data type.
+    /// The data type must be registered with an associated deserializer function.
     /// </summary>
-    /// <param name="dataType">
-    /// The name of the <see cref="LogixData"/> type to create. If null, the type name of <typeparamref name="TData"/> is used.
-    /// </param>
-    /// <typeparam name="TData">The type of <see cref="LogixData"/> to create.</typeparam>
-    /// <returns>
-    /// An instance of <typeparamref name="TData"/> created by a factory method if registered, otherwise a default
-    /// instance of <see cref="StructureData"/> cast to <typeparamref name="TData"/>
-    /// .</returns>
-    public static TData CreateOrDefault<TData>(string? dataType = null) where TData : LogixData
+    /// <param name="element">
+    /// The XML element to deserialize, containing the data type information. It's expected that this element is
+    /// some tag data structure, array, or data value element.</param>
+    /// <returns>A <see cref="LogixData"/> instance representing the deserialized data.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided element is null.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the data type is not registered or a matching deserializer function is not found.
+    /// </exception>
+    public static LogixData Deserialize(XElement element)
     {
-        dataType ??= typeof(TData).Name;
+        var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
 
-        if (Factories.TryGetValue(dataType, out var factory))
+        if (Deserializers.TryGetValue(dataType, out var deserializer))
         {
-            return factory().As<TData>();
+            return deserializer(element);
         }
 
-        return new StructureData(dataType).As<TData>();
+        throw new InvalidOperationException($"No registered type found for '{dataType}'");
+    }
+
+    /// <summary>
+    /// Attempts to deserialize an <see cref="XElement"/> into a <see cref="LogixData"/> instance.
+    /// </summary>
+    /// <param name="element">The XML element containing the data to be deserialized.</param>
+    /// <param name="data">
+    /// When this method returns, contains the deserialized <see cref="LogixData"/> instance if the operation succeeds,
+    /// or <c>null</c> if the operation fails.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the deserialization is successful and a matching deserializer is found; otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when a required attribute, such as the data type, is missing or invalid in the provided element.
+    /// </exception>
+    public static bool TryDeserialize(XElement element, out LogixData data)
+    {
+        var dataType = element.DataType() ?? throw element.L5XError(L5XName.DataType);
+
+        if (Deserializers.TryGetValue(dataType, out var deserializer))
+        {
+            data = deserializer(element);
+            return true;
+        }
+
+        data = null!;
+        return false;
     }
 
     /// <summary>
@@ -254,5 +287,25 @@ public static class LogixType
     public static bool IsRegistered(string typeName)
     {
         return Factories.ContainsKey(typeName);
+    }
+
+    /// <summary>
+    /// Attempts to register a deserializer for the specified type and name.
+    /// A deserializer is only registered if the type has a public constructor
+    /// that accepts a single parameter of type <see cref="XElement"/> and is not abstract.
+    /// </summary>
+    /// <param name="type">The type for which the deserializer is being registered.</param>
+    /// <param name="name">The name associated with the deserializer to be registered.</param>
+    private static void TryRegisterDeserializer(Type type, string name)
+    {
+        var constructor = type.GetConstructor([typeof(XElement)]);
+
+        if (constructor is null || !constructor.IsPublic || type.IsAbstract)
+            return;
+
+        var parameter = Expression.Parameter(typeof(XElement), "e");
+        var expression = Expression.New(constructor, parameter);
+        var deserializer = Expression.Lambda<Func<XElement, LogixData>>(expression, parameter).Compile();
+        Deserializers[name] = deserializer;
     }
 }

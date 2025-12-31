@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+
 // ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Core;
@@ -33,4 +34,7 @@ public sealed class STRING_32 : StringData
     public STRING_32(string value) : base(nameof(STRING_32), value)
     {
     }
+
+    /// <inheritdoc />
+    public override int Capacity => 32;
 }

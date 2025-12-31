@@ -33,6 +33,9 @@ public sealed class STRING : StringData
     {
     }
 
+    /// <inheritdoc />
+    public override int Capacity => 82;
+
     /// <summary>
     /// Converts the provided <see cref="string"/> to a <see cref="STRING"/> value.
     /// </summary>

@@ -34,4 +34,7 @@ public sealed class STRING_16 : StringData
     public STRING_16(string value) : base(nameof(STRING_16), value)
     {
     }
+
+    /// <inheritdoc />
+    public override int Capacity => 16;
 }

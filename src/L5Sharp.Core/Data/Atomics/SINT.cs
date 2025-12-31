@@ -31,7 +31,21 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     }
 
     /// <inheritdoc />
+    public override int Size => sizeof(sbyte);
+
+    /// <inheritdoc />
     public sbyte Value => GetAtomicValue<sbyte>();
+
+    /// <inheritdoc />
+    public override int Update(byte[] data, int offset)
+    {
+        if (offset < 0 || offset > data.Length - 1)
+            throw new ArgumentException("Offset is out of range for the provided data array.", nameof(offset));
+        
+        var value = new SINT((sbyte)data[offset]);
+        Update(value);
+        return offset + Size;
+    }
 
     /// <inheritdoc />
     public int CompareTo(object? obj)
@@ -88,7 +102,7 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     /// <returns>A <see cref="SINT"/> object that represents the parsed value.</returns>
     public new static SINT Parse(string value)
     {
-       var radix = Radix.Infer(value);
+        var radix = Radix.Infer(value);
         var typed = radix.Parse<sbyte>(value);
         var formatted = radix.Format(typed);
 
