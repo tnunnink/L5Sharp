@@ -14,7 +14,9 @@ public class LogixTypeRegistrationGenerator : IIncrementalGenerator
     /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var provider = GetDataRegistrations(context).Collect().Combine(context.AnalyzerConfigOptionsProvider);
+        var provider = GetLogixTypeInfo(context)
+            .Collect()
+            .Combine(context.AnalyzerConfigOptionsProvider);
 
         context.RegisterSourceOutput(provider, (ctx, source) =>
         {
@@ -37,7 +39,7 @@ public class LogixTypeRegistrationGenerator : IIncrementalGenerator
     /// <returns>
     /// An incremental values provider that produces registrations associating class names with their corresponding data attributes.
     /// </returns>
-    private static IncrementalValuesProvider<Registration> GetDataRegistrations(
+    private static IncrementalValuesProvider<LogixTypeInfo> GetLogixTypeInfo(
         IncrementalGeneratorInitializationContext context)
     {
         return context.SyntaxProvider.ForAttributeWithMetadataName(
@@ -46,50 +48,60 @@ public class LogixTypeRegistrationGenerator : IIncrementalGenerator
             static (ctx, _) =>
             {
                 var symbol = (INamedTypeSymbol)ctx.TargetSymbol;
-                var type = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                var typeName = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                 var arguments = symbol.GetAttributeArguments(LogixDataAttribute).ToArray();
                 var dataType = arguments[0] ?? string.Empty;
                 var isAtomic = arguments.Length == 2 ? arguments[1] : "false";
-                return new Registration(type, dataType, isAtomic);
+                return new LogixTypeInfo(typeName, dataType, isAtomic);
             });
     }
 
-    private static string GenerateSource(IEnumerable<Registration> registrations, string nameSpace)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="registrations"></param>
+    /// <param name="nameSpace"></param>
+    /// <returns></returns>
+    private static string GenerateSource(IEnumerable<LogixTypeInfo> registrations, string nameSpace)
     {
         var builder = new StringBuilder();
 
-        builder.AppendLine("using L5Sharp.Core;");
-        builder.AppendLine("using System.Xml.Linq;");
-        builder.AppendLine("using System.Runtime.CompilerServices;");
-        builder.AppendLine();
-        builder.AppendLine($"namespace {nameSpace};");
-        builder.AppendLine();
-        builder.AppendLine("/// <summary>");
-        builder.AppendLine("/// Generated class for registering types decorated with the LogixData attribute.");
-        builder.AppendLine("/// </summary>");
-        builder.AppendLine("internal static class LogixTypeRegistration");
-        builder.AppendLine("{");
-        builder.AppendLine("    /// <summary>");
-        builder.AppendLine(
-            "    /// Automatically registers all found LogixData types when the module is loaded.");
-        builder.AppendLine("    /// </summary>");
-        builder.AppendLine("    [ModuleInitializer]");
-        builder.AppendLine("    internal static void Register()");
-        builder.AppendLine("    {");
-
-        registrations.ToList().ForEach(r =>
+        foreach (var registration in registrations)
         {
-            var code = r.IsAtomic.ToLower() == "true"
-                ? $"LogixType.RegisterAtomic<{r.TypeName}>(\"{r.DataType}\", () => new {r.TypeName}());"
-                : $"LogixType.Register<{r.TypeName}>(\"{r.DataType}\", () => new {r.TypeName}());";
+            var typeName = registration.TypeName;
+            var dataType = registration.DataType;
 
-            builder.AppendLine($"        {code}");
-        });
+            var register = registration.IsAtomic.ToLower() == "true"
+                ? $"LogixType.RegisterAtomic<{typeName}>(\"{dataType}\");"
+                : $"LogixType.Register<{typeName}>(\"{dataType}\");";
 
-        builder.AppendLine("    }");
-        builder.AppendLine("}");
+            builder.AppendLine($"{register}");
+            builder.Append("        ");
+        }
 
-        return builder.ToString();
+        return
+            $$"""
+              using L5Sharp.Core;
+              using System.Xml.Linq;
+              using System.Runtime.CompilerServices;
+
+              namespace {{nameSpace}};
+
+              /// <summary>
+              /// Generated class for registering types decorated with the LogixData attribute.
+              /// </summary>
+              internal static class LogixTypeRegistration
+              {
+                  /// <summary>
+                  /// Automatically registers all found LogixData types when the module is loaded.
+                  /// </summary>
+                  [ModuleInitializer]
+                  internal static void Register()
+                  {
+                      {{builder}}
+                  }
+              }
+              """;
     }
 
     /// <summary>
@@ -100,7 +112,7 @@ public class LogixTypeRegistrationGenerator : IIncrementalGenerator
     /// This struct encapsulates information about the type name, corresponding data type,
     /// and whether the type is considered atomic within the Logix data model.
     /// </remarks>
-    private readonly struct Registration(string typeName, string dataType, string isAtomic)
+    private readonly struct LogixTypeInfo(string typeName, string dataType, string isAtomic)
     {
         public string TypeName { get; } = typeName;
         public string DataType { get; } = dataType;
