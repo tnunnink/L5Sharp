@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using L5Sharp.Core;
 
 namespace L5Sharp.Generators.Data;
@@ -14,17 +16,19 @@ namespace L5Sharp.Generators.Data;
 /// </remarks>
 internal record LogixTypeInfo(
     string Name,
+    DataTypeClass Class,
+    DataTypeFamily Family,
     IEnumerable<LogixMemberInfo> Members,
-    string? Description = null,
-    string? DerivedType = null)
+    string? Description = null)
 {
     private const string DefaultNameSpace = "L5Sharp.Data.Generated";
 
+    public string TypeName => Name.SanitizeName();
     public string Name { get; } = Name;
+    public DataTypeClass Class { get; } = Class;
+    public DataTypeFamily Family { get; } = Family;
     public string? Description { get; } = Description;
     public IEnumerable<LogixMemberInfo> Members { get; } = Members;
-    public string DerivedType { get; } = DerivedType ?? "StructureData";
-    public string TypeName => Name.SanitizeName();
 
 
     /// <summary>
@@ -39,14 +43,15 @@ internal record LogixTypeInfo(
     public static LogixTypeInfo From(DataType dataType)
     {
         var name = dataType.Name;
+        var typeClass = dataType.Class;
+        var typeFamily = dataType.Family;
         var description = dataType.Description;
-        var derivedType = Equals(dataType.Family, DataTypeFamily.String) ? "StringData" : "StructureData";
 
         var members = !Equals(dataType.Family, DataTypeFamily.String)
-            ? dataType.Members.Where(m => !m.Hidden).Select(LogixMemberInfo.From)
+            ? dataType.Members.Select(LogixMemberInfo.From)
             : [];
 
-        return new LogixTypeInfo(name, members, description, derivedType);
+        return new LogixTypeInfo(name, typeClass, typeFamily, members, description);
     }
 
     /// <summary>
@@ -67,19 +72,11 @@ internal record LogixTypeInfo(
             .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Output)
             .Select(LogixMemberInfo.From);
 
-        return new LogixTypeInfo(name, members, description);
+        return new LogixTypeInfo(name, DataTypeClass.User, DataTypeFamily.None, members, description);
     }
 
-    /// <summary>
-    /// Creates a collection of <see cref="LogixTypeInfo"/> instances from the provided <see cref="LogixData"/> object.
-    /// </summary>
-    /// <param name="data">
-    /// The <see cref="LogixData"/> object containing metadata to be transformed into a collection of <see cref="LogixTypeInfo"/> instances.
-    /// </param>
-    /// <returns>
-    /// A collection of <see cref="LogixTypeInfo"/> instances representing the metadata derived from the provided <see cref="LogixData"/>.
-    /// </returns>
-    public static IEnumerable<LogixTypeInfo> From(LogixData data)
+    // todo I need to consider if this is even a viable solution. With tag data we can't know the real size and backing members of a given type.
+    /*public static IEnumerable<LogixTypeInfo> From(LogixData data)
     {
         var types = new List<LogixTypeInfo>();
 
@@ -106,19 +103,24 @@ internal record LogixTypeInfo(
 
         return types;
     }
+    */
 
     /// <summary>
-    /// Generates source code for a data type class based on the current <see cref="LogixTypeInfo"/> instance.
+    /// Generates the source code for the Logix type based on the provided namespace and context information.
     /// </summary>
     /// <param name="nameSpace">
-    /// The namespace in which the generated class will be placed. If null or empty, the default value "L5Sharp.Data.Generated" will be used.
+    /// The namespace in which the generated Logix type will reside. If null, a default namespace will be used.
+    /// </param>
+    /// <param name="context">
+    /// A dictionary containing context information about other Logix types used to generate necessary type dependencies.
     /// </param>
     /// <returns>
-    /// A string containing the generated source code for the corresponding data type class.
+    /// A string representation of the generated source code.
     /// </returns>
-    public string GenerateSource(string? nameSpace)
+    public string GenerateSource(string? nameSpace, Dictionary<string, LogixTypeInfo> context)
     {
         nameSpace ??= DefaultNameSpace;
+        var derivedType = Family == DataTypeFamily.String ? "StringData" : "StructureData";
 
         //We will use the data type description as the remarks documentation for the class if available.
         var remarks = string.IsNullOrWhiteSpace(Description)
@@ -134,9 +136,10 @@ internal record LogixTypeInfo(
             $$"""
               using L5Sharp.Core;
               using System.Xml.Linq;
-              // Auto-generated file
+              // Auto-generated type definition
               // ReSharper disable InconsistentNaming
               // ReSharper disable PartialTypeWithSinglePart
+              // ReSharper disable MemberCanBePrivate.Global
 
               namespace {{nameSpace}};
 
@@ -144,7 +147,7 @@ internal record LogixTypeInfo(
               /// Represents a <c>{{TypeName}}</c> data type structure.
               /// </summary>{{remarks}}
               [LogixData("{{Name}}")]
-              public sealed partial class {{TypeName}} : {{DerivedType}}
+              public sealed partial class {{TypeName}} : {{derivedType}}
               {
                   /// <summary>
                   /// Creates a new <see cref="{{TypeName}}"/> instance initialized with default values.
@@ -161,8 +164,121 @@ internal record LogixTypeInfo(
                   {
                   }
                   
+              {{GenerateSizeAndUpdateOverrides(context)}}
+                  
               {{Members.GenerateProperties()}}
+              
+                  
               }
+              """;
+    
+        //todo could add this to generator to get access for members.
+    /*/// <inheritdoc />
+    public override ExternalAccess GetAccess(string memberName) => memberName switch
+    {
+        {{Members.GenerateAccessMetadata()}}
+            _ => ExternalAccess.ReadWrite
+    };*/
+    }
+
+    /// <summary>
+    /// Computes the memory offset for the current data type, taking into account its members and their alignments.
+    /// </summary>
+    /// <param name="context">
+    /// A dictionary containing metadata for various Logix data types, where the key is the data type name
+    /// and the value is its corresponding <see cref="LogixTypeInfo"/> instance.
+    /// </param>
+    /// <param name="alignment">
+    /// An output parameter representing the alignment requirement of the current data type,
+    /// as calculated based on its members.
+    /// </param>
+    /// <returns>
+    /// The total memory offset, adjusted for the computed alignment.
+    /// </returns>
+    public int ComputeOffset(Dictionary<string, LogixTypeInfo> context, out int alignment)
+    {
+        var offset = 0;
+        alignment = 0;
+
+        foreach (var member in Members)
+        {
+            offset += member.ComputeOffset(context, out var memberAlign);
+            alignment = Math.Max(alignment, memberAlign);
+        }
+
+        return (offset + alignment - 1) & ~(alignment - 1);
+    }
+
+    /// <summary>
+    /// Generates the size and custom overrides for type definitions and updates the provided context with relevant mappings.
+    /// </summary>
+    /// <param name="context">
+    /// A dictionary containing existing <see cref="LogixTypeInfo"/> instances mapped by their names,
+    /// which is used to resolve dependencies and update with new or modified type information.
+    /// </param>
+    /// <returns>
+    /// An object containing the calculated size of the type and necessary method overrides
+    /// for processing byte stream data related to the type.
+    /// </returns>
+    private object GenerateSizeAndUpdateOverrides(Dictionary<string, LogixTypeInfo> context)
+    {
+        var builder = new StringBuilder();
+        var offset = 0;
+        var alignment = 0;
+        var hidden = new Dictionary<string, int>();
+
+        foreach (var member in Members)
+        {
+            if (member.Target is not null && hidden.TryGetValue(member.Target, out var target))
+            {
+                // Calculate which specific byte in the 4-byte DINT the bit belongs to
+                var byteOffset = target + member.BitNumber / 8;
+                var bitInByte = member.BitNumber % 8;
+
+                var line = $"{member.Name}.Update((data[offset + {byteOffset}] & (1 << {bitInByte})) != 0);";
+                builder.AppendLine(line);
+                builder.Append("        ");
+                continue;
+            }
+
+            if (member.Hidden)
+            {
+                hidden.Add(member.Name, offset);
+            }
+            else
+            {
+                //todo take this out once we upgrade to next version which has update extension.
+                var arrayExtension = member.Dimension > 0 ? ".ToArrayData()" : string.Empty;
+                builder.AppendLine($"{member.Name}{arrayExtension}.Update(data, offset + {offset});");
+                builder.Append("        ");
+            }
+
+            offset += member.ComputeOffset(context, out var align);
+            alignment = Math.Max(alignment, align);
+        }
+
+        var size = (offset + alignment - 1) & ~(alignment - 1);
+        var mapping = builder.ToString();
+
+        return
+            $$"""
+                  /// <inheritdoc />
+                  /// <remarks>
+                  /// This value was generated based on the type definition exported from Studio 5k.
+                  /// We need this value to correctly read data from a byte stream in <see cref="Update"/>.
+                  /// </remarks>
+                  public override int Size => {{size}};
+
+                  /// <inheritdoc />
+                  /// <remarks>
+                  /// This mapping was generated based on the type definition exported from Studio 5K.
+                  /// Rockwell predefined types don't follow normal UDT packing rules and have to be handled manually.
+                  /// </remarks>
+                  public override int Update(byte[] data, int offset)
+                  {
+                      {{mapping}}
+                      return offset + Size;
+                  }
               """;
     }
 }

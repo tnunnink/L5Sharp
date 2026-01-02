@@ -28,13 +28,13 @@ public class LogixDataGenerator : IIncrementalGenerator
 
             options.GlobalOptions.TryGetValue("build_property.RootNamespace", out var ns);
 
-            var types = ReadTypesFromProjects(projects, spc).ToList();
+            var types = IndexTypeDefinitions(projects, spc);
 
             foreach (var type in types)
             {
-                var code = type.GenerateSource(ns);
+                var code = type.Value.GenerateSource(ns, types);
                 var source = SourceText.From(code, Encoding.UTF8);
-                spc.AddSource($"{type.TypeName}.g.cs", source);
+                spc.AddSource($"{type.Value.TypeName}.g.cs", source);
             }
 
             if (types.Count == 0) return;
@@ -43,7 +43,7 @@ public class LogixDataGenerator : IIncrementalGenerator
             //generated types with the registration attribute until it's too late.
             spc.AddSource(
                 "LogixDataRegistration.g.cs",
-                SourceText.From(GenerateRegistration(types, ns ?? "L5Sharp.Data.Generation"), Encoding.UTF8)
+                SourceText.From(GenerateRegistration(types.Values, ns ?? "L5Sharp.Data.Generation"), Encoding.UTF8)
             );
         });
     }
@@ -60,7 +60,7 @@ public class LogixDataGenerator : IIncrementalGenerator
     /// <returns>
     /// A collection of LogixTypeInfo objects representing the types extracted from the provided projects.
     /// </returns>
-    private static IEnumerable<LogixTypeInfo> ReadTypesFromProjects(IEnumerable<Project> projects,
+    private static Dictionary<string, LogixTypeInfo> IndexTypeDefinitions(IEnumerable<Project> projects,
         SourceProductionContext context)
     {
         var types = new Dictionary<string, LogixTypeInfo>();
@@ -71,45 +71,48 @@ public class LogixDataGenerator : IIncrementalGenerator
                 continue;
 
             content.DataTypes
-                .Where(d => d.Class is not null && d.Class == DataTypeClass.User)
+                .Where(x => !LogixType.IsRegistered(x.Name))
                 .Select(LogixTypeInfo.From)
-                .ToList().ForEach(x =>
+                .ToList().ForEach(t =>
                 {
-                    if (types.ContainsKey(x.Name))
+                    if (types.ContainsKey(t.Name))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, x.Name));
+                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, t.Name));
                         return;
                     }
 
-                    types.Add(x.Name, x);
+                    types.Add(t.Name, t);
                 });
 
             content.AddOnInstructions
+                .Where(x => !LogixType.IsRegistered(x.Name))
                 .Select(LogixTypeInfo.From)
-                .ToList().ForEach(x =>
+                .ToList().ForEach(t =>
                 {
-                    if (types.ContainsKey(x.Name))
+                    if (types.ContainsKey(t.Name))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, x.Name));
+                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, t.Name));
                         return;
                     }
 
-                    types.Add(x.Name, x);
+                    types.Add(t.Name, t);
                 });
 
-            content.Modules
+            //todo since module definition can be exported as DataType we might need to rely on that since the definition can be different the the data structure.
+            /*content.Modules
                 .SelectMany(m => m.Tags)
                 .SelectMany(t => LogixTypeInfo.From(t.Value))
                 .ToList().ForEach(x =>
                 {
+                    //Since we could find many of the same type here, we don't care about throwing a warning.
                     if (!types.ContainsKey(x.Name))
                     {
                         types.Add(x.Name, x);
                     }
-                });
+                });*/
         }
 
-        return types.Values;
+        return types;
     }
 
     /// <summary>
@@ -161,7 +164,7 @@ public class LogixDataGenerator : IIncrementalGenerator
 
         foreach (var type in types)
         {
-            builder.Append($"LogixType.Register<{type.TypeName}>(\"{type.Name}\", () => new {type.TypeName}());");
+            builder.Append($"LogixType.Register<{type.TypeName}>(\"{type.Name}\");");
             builder.Append("\n        ");
         }
 
