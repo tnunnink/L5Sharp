@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!--<PackageReference Include="L5Sharp" Version="6.0.0-beta.5" />-->
+      <PackageReference Include="libplctag.NativeImport" Version="1.0.41" />
+      <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.1" />
+      <PackageReference Include="System.Threading.Channels" Version="9.0.11" />
+      <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\L5Sharp.Core\L5Sharp.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="L5Sharp.PLC.csproj.DotSettings" />
+    </ItemGroup>
+
+</Project>
