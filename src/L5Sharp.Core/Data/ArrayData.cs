@@ -43,17 +43,6 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// otherwise, the radix <see cref="L5Sharp.Core.Radix.Null"/> format.</value>
     public Radix Radix => GetValue(Radix.Parse) ?? Radix.Null;
 
-    /// <inheritdoc />
-    public override int Update(byte[] data, int offset)
-    {
-        foreach (var member in Members)
-        {
-            offset = member.Value.Update(data, offset);
-        }
-
-        return offset;
-    }
-
     /// <summary>
     /// Gets the <see cref="LogixData"/> instance at the specified index.
     /// </summary>
@@ -110,6 +99,17 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
         {
             match.Target.Update(match.Source);
         }
+    }
+
+    /// <inheritdoc />
+    public override int Update(byte[] data, int offset)
+    {
+        foreach (var member in Members)
+        {
+            offset = member.Value.Update(data, offset);
+        }
+
+        return offset;
     }
 
     /// <summary>
@@ -439,5 +439,23 @@ public static class ArrayDataExtensions
     public static ArrayData ToArrayData<TData>(this TData[,,] items) where TData : LogixData, new()
     {
         return ArrayData.New(items);
+    }
+
+    /// <summary>
+    /// Updates the array of <typeparamref name="TData"/> objects using the provided byte array and offset.
+    /// </summary>
+    /// <typeparam name="TData">The type of the data, which must derive from <see cref="LogixData"/> and have a parameterless constructor.</typeparam>
+    /// <param name="array">The array of <typeparamref name="TData"/> objects to be updated.</param>
+    /// <param name="data">The byte array containing the data to update the objects with.</param>
+    /// <param name="offset">The starting position in the byte array from which to begin the update.</param>
+    /// <returns>The offset after processing all elements in the array.</returns>
+    public static int Update<TData>(this TData[] array, byte[] data, int offset) where TData : LogixData, new()
+    {
+        foreach (var item in array)
+        {
+            offset = item.Update(data, offset);
+        }
+
+        return offset;
     }
 }

@@ -40,7 +40,7 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     public override int Update(byte[] data, int offset)
     {
         // If the size of this type overflows the boundary, we need to start at the next interval.
-        // This can happen for only typs larger than 1 byte.
+        // This can happen for only types larger than 1 byte.
         offset = (offset + Size - 1) & ~(Size - 1);
 
         var value = BitConverter.ToInt32(data, offset);

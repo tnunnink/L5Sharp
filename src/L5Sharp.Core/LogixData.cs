@@ -105,7 +105,7 @@ public abstract class LogixData : LogixElement
 
         foreach (var member in Members)
         {
-            // Logix packs contiguous booleans into byte chuncks, which this code will handle by default.
+            // Logix packs contiguous booleans into byte chunks, which this code will handle by default.
             // Any non-standard formatting/layout will need to be handled in derived classes.
             if (member.Value is BOOL bit)
             {
