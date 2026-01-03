@@ -13,27 +13,36 @@ namespace L5Sharp.Gateway;
 public interface IPlcClient : IDisposable
 {
     /// <summary>
-    /// Sends a ping request to verify connectivity with the PLC.
+    /// Verifies the connectivity to the PLC by performing a ping operation asynchronously.
     /// </summary>
     /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains an integer indicating the response or status of the ping request.</returns>
-    ValueTask<bool> PingAsync(CancellationToken token = default);
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result indicates whether the ping operation
+    /// was successful.
+    /// </returns>
+    Task<bool> PingAsync(CancellationToken token = default);
 
     /// <summary>
-    /// Reads the value of the specified tag from the PLC asynchronously.
+    /// Reads the specified tag value from the PLC asynchronously.
     /// </summary>
-    /// <param name="tag">The tag to be read from the PLC. This typically includes the name and data type.</param>
+    /// <param name="tag">The tag to be read from the PLC, including its name and metadata.</param>
     /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the result of the tag read operation, including the value and associated metadata.</returns>
-    ValueTask<TagResult> ReadAsync(Tag tag, CancellationToken token = default);
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains the result of the
+    /// tag read operation, including the status and associated metadata.
+    /// </returns>
+    Task<TagStatus> ReadAsync(Tag tag, CancellationToken token = default);
 
     /// <summary>
     /// Writes the specified tag value to the PLC asynchronously.
     /// </summary>
-    /// <param name="tag">The tag to be written to the PLC, including its name and value.</param>
+    /// <param name="tag">The tag to be written to the PLC, including its name and metadata.</param>
     /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the result of the tag write operation, including the status and associated metadata.</returns>
-    ValueTask<TagResult> WriteAsync(Tag tag, CancellationToken token = default);
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains the status of the
+    /// tag write operation, including any associated metadata.
+    /// </returns>
+    Task<TagStatus> WriteAsync(Tag tag, CancellationToken token = default);
 
     /// <summary>
     /// Creates a watch to monitor a collection of tags for changes in their values or statuses.

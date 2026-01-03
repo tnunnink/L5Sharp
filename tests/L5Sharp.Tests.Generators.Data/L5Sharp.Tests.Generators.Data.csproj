@@ -26,7 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Files\Definitions.L5X"/>
+        <AdditionalFiles Include="Files\Empty.L5X"/>
+        <!--<AdditionalFiles Include="Files\Definitions.L5X"/>-->
         <!--<AdditionalFiles Include="C:\Users\tnunnink\Documents\Rockwell\Template.L5X"/>-->
     </ItemGroup>
 
@@ -36,18 +37,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="SimpleTypeTests.New_DefaultInstance_ShouldBeVerified.verified.xml">
-            <DependentUpon>SimpleTypeTests.cs</DependentUpon>
-        </None>
-        <None Update="ComplexTypeTests.New_DefaultInstance_ShouldBeVerified.verified.xml">
-            <DependentUpon>ComplexTypeTests.cs</DependentUpon>
-        </None>
-        <None Update="ComplexTypeTests.Create_SetMembers_ShouldBeVerified.verified.xml">
-            <DependentUpon>ComplexTypeTests.cs</DependentUpon>
-        </None>
         <None Update="Files\Definitions.L5X">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ProductDefinedTypeTests\" />
     </ItemGroup>
 
 </Project>

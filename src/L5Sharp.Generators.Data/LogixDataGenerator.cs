@@ -71,7 +71,9 @@ public class LogixDataGenerator : IIncrementalGenerator
                 continue;
 
             content.DataTypes
-                .Where(x => !LogixType.IsRegistered(x.Name))
+                .Where(x => x.Serialize().Element(L5XName.Members) is not null
+                            && !LogixType.IsAtomic(x.Name))
+                            //&& !LogixType.IsRegistered(x.Name))
                 .Select(LogixTypeInfo.From)
                 .ToList().ForEach(t =>
                 {

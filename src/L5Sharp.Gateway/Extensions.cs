@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using L5Sharp.Core;
 using libplctag.NativeImport;
 
@@ -20,16 +22,6 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Converts an integer code to its corresponding <see cref="TagAction"/> value.
-    /// </summary>
-    /// <param name="code">The integer code to be converted to a <see cref="TagAction"/>.</param>
-    /// <returns>The <see cref="TagAction"/> that corresponds to the provided code.</returns>
-    public static TagAction AsAction(this int code)
-    {
-        return (TagAction)code;
-    }
-
-    /// <summary>
     /// Retrieves the current status of the specified <see cref="Tag"/>.
     /// </summary>
     /// <param name="tag">The <see cref="Tag"/> for which the status is being requested.</param>
@@ -44,28 +36,25 @@ public static class Extensions
             throw new InvalidOperationException($"No status object is available for tag: '{tag.Name}'");
         }
 
+        /*var result = plctag.plc_tag_status(status.Handle).AsResult();
+        status.*/
+
         return status;
     }
 
     /// <summary>
-    /// Attempts to retrieve the <see cref="TagStatus"/> associated with the provided <see cref="Tag"/>.
+    /// Creates a real-time watch for the provided collection of tags in a specified PLC configuration.
     /// </summary>
-    /// <param name="tag">The <see cref="Tag"/> object from which the status is to be retrieved.</param>
-    /// <param name="status">When this method returns, contains the <see cref="TagStatus"/> associated with the
-    /// specified tag, if available; otherwise, <c>null</c>.</param>
-    /// <returns><c>true</c> if the <see cref="TagStatus"/> was successfully retrieved; otherwise, <c>false</c>.</returns>
-    public static bool TryGetStatus(this Tag tag, out TagStatus status)
+    /// <param name="tags">A collection of <see cref="Tag"/> objects to monitor.</param>
+    /// <param name="ip">The IP address of the target PLC to connect to.</param>
+    /// <param name="slot">The slot number of the controller module. Defaults to 0 if not specified.</param>
+    /// <param name="rate">The refresh interval in milliseconds for reading tag updates. Defaults to 1000 milliseconds.</param>
+    /// <returns>An instance of <see cref="ITagWatch"/> that can be used to monitor and manage updates to the specified tags.</returns>
+    public static ITagWatch Watch(this IEnumerable<Tag> tags, string ip, ushort slot = 0, int rate = 1000)
     {
-        var annotation = tag.Serialize().Annotation<TagStatus>();
-
-        if (annotation is null)
-        {
-            status = null!;
-            return false;
-        }
-
-        status = annotation;
-        return true;
+        //todo var composite = new CompositeDisposable();
+        using var client = new PlcClient(ip, slot, new PlcOptions { ReadInterval = rate });
+        return client.CreateWatch(tags.ToList());
     }
 
     /// <summary>
@@ -88,19 +77,26 @@ public static class Extensions
     /// </summary>
     /// <param name="tag">The tag instance to be updated with the read data.</param>
     /// <param name="handle">The handle of the tag to read data from.</param>
-    internal static void Read(this Tag tag, int handle)
+    internal static TagStatus Refresh(this Tag tag, int handle)
     {
         // Create a byte buffer to read out data from.
         var size = plctag.plc_tag_get_size(handle);
         var buffer = new byte[size];
-
-        // Read the current byte array value and update the underlying tag data.
         var result = plctag.plc_tag_get_raw_bytes(handle, 0, buffer, size).AsResult();
-        tag.Value.Update(buffer, 0);
+        //todo should we handle the result of this? From docs a lot of the errors seem like they would be operational but idk
+
+        // We only update the value if the bytes are different
+        var current = tag.Serialize().Annotation<TagStatus>();
+        if (current?.Data is null || !current.Data.SequenceEqual(buffer))
+        {
+            // Update the underlying tag data.
+            tag.Value.Update(buffer, 0);
+        }
 
         // Attach the current status on the tag element as an annotation so users can read the info.
-        var status = new TagStatus(handle, result);
+        var status = new TagStatus(handle, tag.TagName, result, buffer);
         tag.SetStatus(status);
+        return status;
     }
 
     /// <summary>

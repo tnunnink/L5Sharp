@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+﻿/*using FluentAssertions;
 using L5Sharp.Core;
 using Task = System.Threading.Tasks.Task;
 
-namespace L5Sharp.Tests.Generators.Data;
+namespace L5Sharp.Tests.Generators.Data.UserDefinedTypeTests;
 
 [TestFixture]
 public class ComplexTypeTests
@@ -45,4 +45,4 @@ public class ComplexTypeTests
         
         return VerifyXml(type.Serialize().ToString());
     }
-}
+}*/

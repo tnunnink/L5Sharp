@@ -11,7 +11,7 @@ public class ConvertCommandTests
     {
         var command = new ConvertCommand
         {
-            Project = @"C:\Users\tnunnink\Documents\Rockwell\Example.ACD",
+            Project = @"C:\Users\tnunnink\Documents\Rockwell\Empty.ACD",
             Force = true,
             Detailed = true
         };

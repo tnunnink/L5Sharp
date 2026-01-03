@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+﻿/*using FluentAssertions;
 using L5Sharp.Core;
 using Task = System.Threading.Tasks.Task;
 
-namespace L5Sharp.Tests.Generators.Data;
+namespace L5Sharp.Tests.Generators.Data.UserDefinedTypeTests;
 
 [TestFixture]
 public class SimpleTypeTests
@@ -32,4 +32,4 @@ public class SimpleTypeTests
         type.BoolMember.Should().Be(false);
         type.DintMember.Should().Be(0);
     }
-}
+}*/

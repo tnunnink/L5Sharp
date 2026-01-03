@@ -12,15 +12,15 @@ namespace L5Sharp.Gateway;
 public interface ITagWatch : IDisposable
 {
     /// <summary>
-    /// Gets a value indicating whether the tag watch is currently active and processing updates.
-    /// </summary>
-    bool IsRunning { get; }
-
-    /// <summary>
     /// Gets the interval, in milliseconds, at which the tag values are read from the PLC. This property defines
     /// the time between successive poll requests to retrieve updated tag data during active monitoring.
     /// </summary>
-    int RefreshRate { get; }
+    int RefreshRate { get; set; }
+
+    /// <summary>
+    /// Gets a value indicating whether the tag watch is currently active and processing updates.
+    /// </summary>
+    bool IsRunning { get; }
 
     /// <summary>
     /// Gets the collection of tags currently being monitored by the tag watch. This collection contains all tags
@@ -38,6 +38,22 @@ public interface ITagWatch : IDisposable
     /// but updates will no longer be applied to the Tag instances until started again.
     /// </summary>
     Task StopAsync(CancellationToken token = default);
+
+    /// <summary>
+    /// Executes the tag monitoring process for a specified duration.
+    /// </summary>
+    /// <param name="period">The duration, in milliseconds, for which to run the monitoring process.</param>
+    /// <param name="token">The cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents the asynchronous monitoring operation.</returns>
+    Task RunForAsync(int period, CancellationToken token = default);
+
+    /// <summary>
+    /// Continuously monitors and processes tags while the specified predicate evaluates to true.
+    /// </summary>
+    /// <param name="predicate">A function that tests each tag to determine whether to continue processing.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous execution of the monitoring operation.</returns>
+    Task RunWhileAsync(Func<Tag, bool> predicate, CancellationToken token = default);
 
     /// <summary>
     /// Subscribes to tag updates, allowing the provided callback to execute whenever a tag is updated.

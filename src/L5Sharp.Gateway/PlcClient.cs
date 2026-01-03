@@ -75,59 +75,45 @@ public class PlcClient : IPlcClient
         _baseUri = $"protocol=ab_eip&gateway={_ip}&path=1,{slot}&plc=controllogix";
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="ip"></param>
-    /// <param name="slot"></param>
-    /// <param name="options"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public PlcClient(IPAddress ip, ushort slot = 0, PlcOptions? options = null)
-    {
-        _ip = ip ?? throw new ArgumentNullException(nameof(ip));
-        _options = options ?? new PlcOptions();
-        _baseUri = $"protocol=ab_eip&gateway={_ip}&path=1,{slot}&plc=controllogix";
-    }
-
-
     /// <inheritdoc />
-    public ValueTask<bool> PingAsync(CancellationToken token = default)
+    public Task<bool> PingAsync(CancellationToken token = default)
     {
-        return new ValueTask<bool>(Task.Run(async () =>
-            {
-                using var ping = new Ping();
-                var reply = await ping.SendPingAsync(_ip).ConfigureAwait(false);
-                return reply.Status == IPStatus.Success;
-            }, token)
-        );
+        return Task.Run(async () =>
+        {
+            using var ping = new Ping();
+            var reply = await ping.SendPingAsync(_ip).ConfigureAwait(false);
+            return reply.Status == IPStatus.Success;
+        }, token);
     }
 
     /// <inheritdoc />
-    public ValueTask<TagResult> ReadAsync(Tag tag, CancellationToken token = default)
+    public Task<TagStatus> ReadAsync(Tag tag, CancellationToken token = default)
     {
         if (tag is null)
             throw new ArgumentNullException(nameof(tag));
 
-        return new ValueTask<TagResult>(Task.Run(() =>
+        return Task.Run(() =>
         {
             var tagName = tag.DetermineTagName();
             var handle = _handles.GetOrAdd(tagName, CreateTagHandle);
-
+            
             if (handle <= 0)
-                return handle.AsResult();
+            {
+                return new TagStatus(0, tag.TagName, handle.AsResult());
+            }
+            
 
             using (token.Register(() => AbortOperation(handle)))
             {
                 var result = plctag.plc_tag_read(handle, _options.Timeout).AsResult();
-                //var status = new TagStatus(, result);
-                tag.Read(handle);
-                return result;
+                TagException.ThrowIfRequested(result, _options.ThrowOn);
+                return tag.Refresh(handle);
             }
-        }, token));
+        }, token);
     }
 
     /// <inheritdoc />
-    public ValueTask<TagResult> WriteAsync(Tag tag, CancellationToken token = default)
+    public Task<TagStatus> WriteAsync(Tag tag, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
@@ -158,12 +144,12 @@ public class PlcClient : IPlcClient
         foreach (var handle in _handles.Values)
         {
             var result = plctag.plc_tag_destroy(handle).AsResult();
-            TagException.ThrowIfRequested(result, _options.ExceptionCodes);
+            TagException.ThrowIfRequested(result, _options.ThrowOn);
         }
 
-        //_watching.Clear();
         _handles.Clear();
         _disposed = true;
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -177,7 +163,7 @@ public class PlcClient : IPlcClient
     {
         var route = $"{_baseUri}&name={tagName}";
         var result = plctag.plc_tag_create(route, _options.Timeout).AsResult();
-        TagException.ThrowIfRequested(result, _options.ExceptionCodes, tagName);
+        TagException.ThrowIfRequested(result, _options.ThrowOn, tagName);
         return (int)result;
     }
 
@@ -189,7 +175,7 @@ public class PlcClient : IPlcClient
     private void AbortOperation(int handle)
     {
         var result = plctag.plc_tag_abort(handle).AsResult();
-        TagException.ThrowIfRequested(result, _options.ExceptionCodes);
+        TagException.ThrowIfRequested(result, _options.ThrowOn);
     }
 
     /// <summary>

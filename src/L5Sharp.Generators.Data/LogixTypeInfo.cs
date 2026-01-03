@@ -229,7 +229,7 @@ internal record LogixTypeInfo(
 
         foreach (var member in Members)
         {
-            if (member.Target is not null && hidden.TryGetValue(member.Target, out var target))
+            if (!member.Hidden && member.Target is not null && hidden.TryGetValue(member.Target, out var target))
             {
                 // Calculate which specific byte in the 4-byte DINT the bit belongs to
                 var byteOffset = target + member.BitNumber / 8;

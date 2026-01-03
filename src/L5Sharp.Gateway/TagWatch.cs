@@ -80,6 +80,13 @@ internal class TagWatch : ITagWatch
     private Task? _processor;
 
     /// <summary>
+    /// Represents a condition used to determine whether the monitoring process for tags should be canceled.
+    /// This is a function that evaluates a <see cref="Tag"/> instance and returns a boolean indicating
+    /// whether the condition for cancellation has been met.
+    /// </summary>
+    private Func<Tag, bool>? _cancellationCondition;
+
+    /// <summary>
     /// Represents a class that monitors and manages a collection of PLC tags.
     /// Provides functionality for starting and stopping tag monitoring, subscribing to tag events,
     /// and handling tag event callbacks.
@@ -128,11 +135,9 @@ internal class TagWatch : ITagWatch
     public Task StartAsync(CancellationToken token = default)
     {
         ThrowIfDisposed();
+        ThrowIfRunning();
 
-        if (IsRunning)
-            return Task.CompletedTask;
-
-        _cancellation = new CancellationTokenSource();
+        _cancellation = CreateLinkedCancellation(token);
         _processor = Task.Run(() => ProcessMessagesAsync(_cancellation.Token), token);
 
         IsRunning = true;
@@ -143,34 +148,46 @@ internal class TagWatch : ITagWatch
     public async Task StopAsync(CancellationToken token = default)
     {
         ThrowIfDisposed();
-
-        if (!IsRunning) return;
-
         _cancellation?.Cancel();
+        if (_processor is not null) await _processor;
+    }
 
-        try
-        {
-            if (_processor is not null)
-            {
-                await _processor;
-            }
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        finally
-        {
-            _cancellation?.Dispose();
-            _cancellation = null;
-            _processor = null;
-            IsRunning = false;
-        }
+    /// <inheritdoc />
+    public Task RunForAsync(int period, CancellationToken token = default)
+    {
+        ThrowIfDisposed();
+        ThrowIfRunning();
+
+        _cancellation = CreateLinkedCancellation(token, period);
+        _processor = Task.Run(() => ProcessMessagesAsync(_cancellation.Token), token);
+
+        IsRunning = true;
+
+        //Return the task so the caller can await the result.
+        return _processor;
+    }
+
+    /// <inheritdoc />
+    public Task RunWhileAsync(Func<Tag, bool> predicate, CancellationToken token = default)
+    {
+        ThrowIfDisposed();
+        ThrowIfRunning();
+
+        _cancellationCondition = predicate ?? throw new ArgumentNullException(nameof(predicate));
+        _cancellation = CreateLinkedCancellation(token);
+        _processor = Task.Run(() => ProcessMessagesAsync(_cancellation.Token), token);
+
+        IsRunning = true;
+
+        //Return the task so the caller can await the result.
+        return _processor;
     }
 
     /// <inheritdoc />
     public IDisposable Subscribe(Action<Tag> callback)
     {
         ThrowIfDisposed();
+        ThrowIfRunning();
 
         if (callback is null)
             throw new ArgumentNullException(nameof(callback));
@@ -185,6 +202,12 @@ internal class TagWatch : ITagWatch
     public void Dispose()
     {
         if (_disposed) return;
+
+        if (IsRunning)
+        {
+            _cancellation?.Cancel();
+            ResetWatch();
+        }
 
         foreach (var handle in _tags.Keys)
         {
@@ -209,11 +232,11 @@ internal class TagWatch : ITagWatch
         var path = $"{_baseUri}&name={tagName}&auto_sync_read_ms={RefreshRate}";
 
         var result = plctag.plc_tag_create_ex(path, _callbackDelegate, IntPtr.Zero, _options.Timeout).AsResult();
-        TagException.ThrowIfRequested(result, _options.ExceptionCodes, tagName);
+        TagException.ThrowIfRequested(result, _options.ThrowOn, tagName);
         if (result <= 0) return;
 
         var handle = (int)result;
-        tag.SetStatus(TagStatus.Pending(handle));
+        tag.SetStatus(TagStatus.Pending(handle, tag.TagName));
         _tags.TryAdd(handle, tag);
     }
 
@@ -226,7 +249,7 @@ internal class TagWatch : ITagWatch
     /// <param name="data"></param>
     private void TagEventCallback(int handle, int eventId, int statusId, IntPtr data)
     {
-        var message = new TagMessage(handle, eventId.AsAction(), statusId.AsResult());
+        var message = new TagMessage(handle, (TagAction)eventId, (TagResult)statusId);
         _channel.Writer.TryWrite(message);
     }
 
@@ -238,38 +261,51 @@ internal class TagWatch : ITagWatch
     /// <returns>A task that represents the asynchronous operation of processing tag messages.</returns>
     private async Task ProcessMessagesAsync(CancellationToken token)
     {
-        await foreach (var message in _channel.Reader.ReadAllAsync(token))
+        try
         {
-            if (!_tags.TryGetValue(message.Handle, out var tag)) continue;
-
-            // Update the watched tag value and trigger notify subscribers.
-            if (message.Action == TagAction.ReadCompleted)
+            await foreach (var message in _channel.Reader.ReadAllAsync(token))
             {
-                tag.Read(message.Handle);
-                NotifySubscribers(tag);
+                if (!_tags.TryGetValue(message.Handle, out var tag)) continue;
+
+                if (message.Action == TagAction.ReadCompleted)
+                {
+                    tag.Refresh(message.Handle);
+                    NotifySubscribers(tag);
+                    if (ShouldCancel(tag)) break;
+                }
             }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        finally
+        {
+            ResetWatch();
         }
     }
 
     /// <summary>
     /// Notifies all subscribed clients with the given tag object.
-    /// Iterates through the list of subscribers and invokes their callback actions, passing the tag as a parameter.
+    /// Iterates through the list of subscribers an invokes their callback actions, passing the tag as a parameter.
     /// </summary>
     /// <param name="tag">The tag object containing updated information to notify subscribers about.</param>
     private void NotifySubscribers(Tag tag)
     {
-        // We iterate over the Values (the delegates)
         foreach (var callback in _subscribers.Values)
         {
-            try
-            {
-                callback(tag);
-            }
-            catch (Exception)
-            {
-                // TODO: Handle subscriber exceptions
-            }
+            callback(tag);
         }
+    }
+
+    /// <summary>
+    /// Determines whether the given tag meets the cancellation condition.
+    /// This method evaluates a function, if defined, to determine if monitoring for the tag should be canceled.
+    /// </summary>
+    /// <param name="tag">The tag object to evaluate against the cancellation condition.</param>
+    /// <returns>True if the cancellation condition is met for the specified tag; otherwise, false.</returns>
+    private bool ShouldCancel(Tag tag)
+    {
+        return _cancellationCondition?.Invoke(tag) == true;
     }
 
     /// <summary>
@@ -287,6 +323,20 @@ internal class TagWatch : ITagWatch
     }
 
     /// <summary>
+    /// Resets the state of the tag monitoring system to its initial state by disposing of existing resources,
+    /// clearing cancellation tokens, and resetting associated properties.
+    /// Ensures that the monitoring process can be safely reinitialized or stopped without residual state conflicts.
+    /// </summary>
+    private void ResetWatch()
+    {
+        _cancellation?.Dispose();
+        _cancellation = null;
+        _cancellationCondition = null;
+        _processor = null;
+        IsRunning = false;
+    }
+
+    /// <summary>
     /// Ensures that the <see cref="PlcClient"/> instance has not been disposed before proceeding with the operation.
     /// </summary>
     /// <exception cref="InvalidOperationException">
@@ -298,6 +348,47 @@ internal class TagWatch : ITagWatch
         {
             throw new InvalidOperationException("The client has been disposed and can no longer perform actions.");
         }
+    }
+
+    /// <summary>
+    /// Ensures that the tag watch is not currently running before proceeding with the operation.
+    /// Throws an exception if the tag watch is in a running state.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the tag watch is already running and the operation cannot be performed.
+    /// </exception>
+    private void ThrowIfRunning()
+    {
+        if (IsRunning)
+        {
+            throw new InvalidOperationException("Tag watch is already running.");
+        }
+    }
+
+    /// <summary>
+    /// Creates a linked <see cref="CancellationTokenSource"/> which combines a new cancellation token with the specified token.
+    /// This allows for coordinated cancellation across multiple dependent tokens.
+    /// </summary>
+    /// <param name="token">The external <see cref="CancellationToken"/> to link with the new cancellation token source.</param>
+    /// <returns>A new <see cref="CancellationTokenSource"/> that is linked to the specified token.</returns>
+    private static CancellationTokenSource CreateLinkedCancellation(CancellationToken token)
+    {
+        var local = new CancellationTokenSource();
+        return CancellationTokenSource.CreateLinkedTokenSource(local.Token, token);
+    }
+
+    /// <summary>
+    /// Creates a linked CancellationTokenSource that combines a provided cancellation token and a timeout.
+    /// The resulting CancellationTokenSource will be canceled if either the provided token is canceled
+    /// or the specified timeout elapses.
+    /// </summary>
+    /// <param name="token">The existing cancellation token to be linked.</param>
+    /// <param name="timeout">The timeout, in milliseconds, after which the token will be canceled.</param>
+    /// <returns>A linked CancellationTokenSource that combines the provided token and timeout.</returns>
+    private static CancellationTokenSource CreateLinkedCancellation(CancellationToken token, int timeout)
+    {
+        var local = new CancellationTokenSource(timeout);
+        return CancellationTokenSource.CreateLinkedTokenSource(local.Token, token);
     }
 
     /// <summary>

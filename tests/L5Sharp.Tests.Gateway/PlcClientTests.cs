@@ -1,4 +1,5 @@
-﻿using L5Sharp.Core;
+﻿using FluentAssertions;
+using L5Sharp.Core;
 using L5Sharp.Gateway;
 using Task = System.Threading.Tasks.Task;
 
@@ -32,34 +33,43 @@ public class PlcClientTests
     }
 
     [Test]
-    public async Task ReadAsync_Ex01_ShouldGetSuccessfulResult()
+    public async Task ReadAsync_SimpleAtomicTag_ShouldGetSuccessfulResult()
     {
-        using var client = new PlcClient("10.10.38.32", 1);
         var tag = Tag.New<DINT>("SomeDINT");
+        using var client = new PlcClient("10.10.38.32", 1);
 
-        var result = await client.ReadAsync(tag);
+        var status = await client.ReadAsync(tag);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.EqualTo(TagResult.Ok));
-            Assert.That(tag.Value, Is.Not.EqualTo(new DINT(0)));
-        });
+        status.Handle.Should().BeGreaterThan(0);
+        status.TagName.Should().Be(new TagName("SomeDINT"));
+        status.Result.Should().Be(TagResult.Ok);
+        status.Data.Should().NotBeEmpty();
+        status.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        status.IsGood.Should().BeTrue();
+        status.IsBad.Should().BeFalse();
+
+        //Value is updated
+        tag.Value.Should().NotBe(0);
     }
 
     [Test]
-    public async Task ReadAsync_Ex02_ShouldGetSuccessfulResult()
+    public async Task ReadAsync_ComplexPredefinedTag_ShouldGetSuccessfulResult()
     {
-        using var client = new PlcClient("10.10.38.32", 1);
         var tag = Tag.New<TIMER>("SomeTimer");
+        using var client = new PlcClient("10.10.38.32", 1);
 
-        var result = await client.ReadAsync(tag);
+        var status = await client.ReadAsync(tag);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.EqualTo(TagResult.Ok));
-            //Assert.That(tag.Value.As<TIMER>().PRE, Is.EqualTo(new DINT(5000)));
-            //todo we need to get source generator mappings complete to read the correct byte stream from complex predefined types.
-        });
+        status.Handle.Should().BeGreaterThan(0);
+        status.TagName.Should().Be(new TagName("SomeTimer"));
+        status.Result.Should().Be(TagResult.Ok);
+        status.Data.Should().NotBeEmpty();
+        status.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        status.IsGood.Should().BeTrue();
+        status.IsBad.Should().BeFalse();
+
+        //todo we need to get source generator mappings complete to read the correct byte stream from complex predefined types.
+        //tag.Value.As<TIMER>.PRE.ShouldNotBe(new DINT(0));
     }
 
     [Test]
