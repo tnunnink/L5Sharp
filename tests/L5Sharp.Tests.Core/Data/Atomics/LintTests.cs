@@ -155,6 +155,17 @@ public class LintTests
 
         result.Should().Be(expected);
     }
+    
+    [Test]
+    public void ToBytes_WhenCalled_ReturnsExpected()
+    {
+        var expected = BitConverter.GetBytes(_random);
+        var atomic = new LINT(_random);
+
+        var bytes = atomic.ToBytes();
+
+        bytes.Should().BeEquivalentTo(expected);
+    }
 
     [Test]
     public void ToChar_WhenCalled_ShouldBeExpectedValue()

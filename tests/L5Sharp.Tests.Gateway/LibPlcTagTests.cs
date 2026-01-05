@@ -10,7 +10,7 @@ public class LibPlcTagTests
     {
         // Set up connection - Replace with your actual IP and a known Timer name
         const string ip = "10.10.38.32";
-        const string tagName = "SomeConfig.Ch0Disable";
+        const string tagName = "RTC.MONTH";
         const string path = $"protocol=ab_eip&gateway={ip}&path=1,1&plc=controllogix&name={tagName}";
 
         var handle = plctag.plc_tag_create(path, 5000);

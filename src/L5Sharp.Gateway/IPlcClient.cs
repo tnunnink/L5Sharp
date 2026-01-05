@@ -20,7 +20,7 @@ public interface IPlcClient : IDisposable
     /// A task that represents the asynchronous operation. The task result indicates whether the ping operation
     /// was successful.
     /// </returns>
-    Task<bool> PingAsync(CancellationToken token = default);
+    Task<bool> Ping(CancellationToken token = default);
 
     /// <summary>
     /// Reads the specified tag value from the PLC asynchronously.
@@ -31,7 +31,7 @@ public interface IPlcClient : IDisposable
     /// A task that represents the asynchronous operation. The task result contains the result of the
     /// tag read operation, including the status and associated metadata.
     /// </returns>
-    Task<TagStatus> ReadAsync(Tag tag, CancellationToken token = default);
+    Task<TagResponse> ReadTag(Tag tag, CancellationToken token = default);
 
     /// <summary>
     /// Writes the specified tag value to the PLC asynchronously.
@@ -42,13 +42,12 @@ public interface IPlcClient : IDisposable
     /// A task that represents the asynchronous operation. The task result contains the status of the
     /// tag write operation, including any associated metadata.
     /// </returns>
-    Task<TagStatus> WriteAsync(Tag tag, CancellationToken token = default);
+    Task<TagResponse> WriteTag(Tag tag, CancellationToken token = default);
 
     /// <summary>
     /// Creates a watch to monitor a collection of tags for changes in their values or statuses.
     /// </summary>
     /// <param name="tags">A collection of tags to be monitored for changes.</param>
-    /// <param name="name"></param>
     /// <returns>An instance of <c>ITagWatch</c> that allows starting, stopping, and subscribing to tag updates.</returns>
-    ITagWatch CreateWatch(ICollection<Tag> tags, string? name = null);
+    ITagWatch WatchTags(ICollection<Tag> tags);
 }

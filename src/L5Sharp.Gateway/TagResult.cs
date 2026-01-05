@@ -46,7 +46,6 @@ public enum TagResult
     BadData = -4,
 
     /// <summary>
-    /// usually returned from a remote system when something addressed does not exist.
     /// Represents a failure related to a device, indicating that the device
     /// has encountered an issue preventing normal operation or communication.
     /// This status is often used to denote hardware or connectivity problems
@@ -261,7 +260,7 @@ public enum TagResult
     /// <summary>
     /// Represents a failure that occurs during a write operation. This status is typically used to indicate
     /// errors encountered while attempting to write data, such as disk failures, permission issues, or
-    /// other circumstances preventing the completion of the write process.
+    /// other circumstances preventing the completion of the writing process.
     /// </summary>
     WriteErr = -37
 }

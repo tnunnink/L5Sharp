@@ -73,7 +73,7 @@ public class LogixDataGenerator : IIncrementalGenerator
             content.DataTypes
                 .Where(x => x.Serialize().Element(L5XName.Members) is not null
                             && !LogixType.IsAtomic(x.Name))
-                            //&& !LogixType.IsRegistered(x.Name))
+                //&& !LogixType.IsRegistered(x.Name))
                 .Select(LogixTypeInfo.From)
                 .ToList().ForEach(t =>
                 {
@@ -99,19 +99,6 @@ public class LogixDataGenerator : IIncrementalGenerator
 
                     types.Add(t.Name, t);
                 });
-
-            //todo since module definition can be exported as DataType we might need to rely on that since the definition can be different the the data structure.
-            /*content.Modules
-                .SelectMany(m => m.Tags)
-                .SelectMany(t => LogixTypeInfo.From(t.Value))
-                .ToList().ForEach(x =>
-                {
-                    //Since we could find many of the same type here, we don't care about throwing a warning.
-                    if (!types.ContainsKey(x.Name))
-                    {
-                        types.Add(x.Name, x);
-                    }
-                });*/
         }
 
         return types;

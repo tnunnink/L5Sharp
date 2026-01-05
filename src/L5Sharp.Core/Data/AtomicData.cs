@@ -113,13 +113,6 @@ public abstract class AtomicData : LogixData
     public abstract string ToString(Radix radix);
 
     /// <summary>
-    /// Returns the value of the <see cref="AtomicData"/> as a byte array.
-    /// </summary>
-    /// <returns>An array of <see cref="byte"/> representing the binary value of the atomic type.</returns>
-    /// <remarks>This is needed for formatting the atomic value in the proper radix format.</remarks>
-    public abstract byte[] ToBytes();
-
-    /// <summary>
     /// Gets the array of bit representing the value of the atomic type.
     /// </summary>
     /// <returns>A <see cref="BitArray"/> containing the array bit values</returns>

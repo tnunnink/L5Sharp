@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using L5Sharp.Core;
 
@@ -14,66 +13,17 @@ internal record LogixMemberInfo(
     string Name,
     string DataType,
     int Dimension,
-    ExternalAccess Access,
+    string Access,
     string? Description = null,
-    string? Target = null,
-    bool Hidden = false,
-    int? BitNumber = null)
+    bool Hidden = false)
 {
     public string Parent { get; } = Parent;
     public string Name { get; } = Name;
     public string DataType { get; } = DataType;
     public int Dimension { get; } = Dimension;
-    public ExternalAccess Access { get; } = Access;
+    public string Access { get; } = Access;
     public string? Description { get; } = Description;
-    public string? Target { get; } = Target;
     public bool Hidden { get; } = Hidden;
-    public int? BitNumber { get; } = BitNumber;
-
-
-    /// <summary>
-    /// Computes the memory offset and alignment for the current member based on its data type and dimension.
-    /// </summary>
-    /// <param name="context">A dictionary containing type information for resolving non-atomic data types.</param>
-    /// <param name="alignment">The alignment of the current member, set as an output parameter.</param>
-    /// <returns>
-    /// The total memory offset required by the current member, considering its data type and dimension.
-    /// </returns>
-    public int ComputeOffset(Dictionary<string, LogixTypeInfo> context, out int alignment)
-    {
-        //Logix as a min of 4 byte alignment and a max of 8, depending on the size of nested members.
-        const int minAlignment = 4;
-
-        if (LogixType.IsAtomic(DataType))
-        {
-            var size = DataType switch
-            {
-                nameof(BOOL) => 0, //The reason it's 0 is that we have the backing hidden member in the type definition.
-                nameof(SINT) or nameof(USINT) => 1,
-                nameof(INT) or nameof(UINT) => 2,
-                nameof(DINT) or nameof(UDINT) or nameof(REAL) or nameof(TIME32) => 4,
-                _ => 8
-            };
-
-            alignment = Math.Max(minAlignment, size);
-            return Dimension > 0 ? size * Dimension : size;
-        }
-
-        if (context.TryGetValue(DataType, out var info))
-        {
-            return info.ComputeOffset(context, out alignment);
-        }
-
-        if (LogixType.TryCreate(DataType, out var registered))
-        {
-            alignment = 4; //todo not sure what to do here. We would have to travers the structure I guess
-            return registered.Size;
-        }
-
-        //todo We have encountered a member with an undefined data type definition. What can we do?
-        alignment = 4;
-        return 0;
-    }
 
     /// <summary>
     /// Creates an instance of <see cref="LogixMemberInfo"/> from the provided <see cref="DataTypeMember"/>.
@@ -92,9 +42,7 @@ internal record LogixMemberInfo(
             member.Dimension.Length,
             member.ExternalAccess ?? ExternalAccess.ReadWrite,
             member.Description,
-            member.Target,
-            member.Hidden,
-            member.BitNumber
+            member.Hidden
         );
     }
 
@@ -211,24 +159,6 @@ internal static class LogixMembersInfoExtension
         {
             if (member.Hidden) continue;
             builder.Append(member.GenerateInitializer());
-            builder.Append("\n        ");
-        }
-
-        return builder.ToString().TrimEnd();
-    }
-
-    /// <summary>
-    /// Generates the source code for the class-level member access mapping.
-    /// This allows the PlcClient to know what's readable without using Reflection.
-    /// </summary>
-    internal static string GenerateAccessMetadata(this IEnumerable<LogixMemberInfo> members)
-    {
-        var builder = new StringBuilder();
-
-        foreach (var member in members)
-        {
-            if (member.Hidden) continue;
-            builder.Append($"nameof({member.Name}) => ExternalAccess.{member.Access},");
             builder.Append("\n        ");
         }
 

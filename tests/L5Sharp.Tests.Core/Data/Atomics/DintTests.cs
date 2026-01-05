@@ -187,7 +187,7 @@ public class DintTests
     }
 
     [Test]
-    public void GetBytes_WhenCalled_ReturnsExpected()
+    public void ToBytes_WhenCalled_ReturnsExpected()
     {
         var expected = BitConverter.GetBytes(_random);
         var atomic = new DINT(_random);

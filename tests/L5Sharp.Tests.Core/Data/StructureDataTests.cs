@@ -96,6 +96,26 @@ public class StructureDataTests
     }
 
     [Test]
+    public void ToBytes_SimpleMemberStructure_ShouldHaveExpectedValueANdLength()
+    {
+        var expected = new byte[] { 1, 13, };
+        
+        var data = new StructureData("MyComplex", new List<LogixMember>
+        {
+            new("Member1", new BOOL(true)),
+            new("Member2", new SINT(13)),
+            new("Member3", new INT(1000)),
+            new("Member4", new REAL(4.5f)),
+            new("Member5", new DINT(54039281))
+        });
+
+        var bytes = data.ToBytes();
+
+        bytes.Length.Should().Be(12);
+        bytes.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
     public void Clone_WhenCalled_ShouldNotBeSameAsButEqual()
     {
         var data = new StructureData("MyComplex", new List<LogixMember>
@@ -510,8 +530,8 @@ public class StructureDataTests
         var size = data.Update(value, 0);
 
         size.Should().Be(16);
-    } 
-    
+    }
+
     [Test]
     public void Update_ByteArrayExample2_ShouldParseCorrectly()
     {
@@ -529,7 +549,7 @@ public class StructureDataTests
 
         var value = new byte[]
         {
-            1,123,0,0,56,0,0,0,15,0,0,0,0,0,0,0,154,153,185,63,30,1,0,0,89,1,0,0,0,0,0,0
+            1, 123, 0, 0, 56, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 154, 153, 185, 63, 30, 1, 0, 0, 89, 1, 0, 0, 0, 0, 0, 0
         };
 
         var size = data.Update(value, 0);
@@ -538,7 +558,7 @@ public class StructureDataTests
         //which means the size must be divisible by 8. The last 4 bytes will be padding and not contain data so we are good. 
         size.Should().Be(28);
     }
-    
+
     [Test]
     public void Update_ByteArrayExample3_ShouldParseCorrectly()
     {
@@ -564,11 +584,12 @@ public class StructureDataTests
 
         var value = new byte[]
         {
-            1,123,0,0,56,0,0,0,15,0,0,0,0,0,0,0,154,153,185,63,30,1,0,0,89,1,0,0,13,0,0,0,164,112,157,63,143,194,21,64
+            1, 123, 0, 0, 56, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 154, 153, 185, 63, 30, 1, 0, 0, 89, 1, 0, 0, 13, 0, 0,
+            0, 164, 112, 157, 63, 143, 194, 21, 64
         };
 
         var size = data.Update(value, 0);
-        
+
         size.Should().Be(40);
     }
 }

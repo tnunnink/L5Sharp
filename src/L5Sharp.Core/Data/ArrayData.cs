@@ -43,6 +43,9 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// otherwise, the radix <see cref="L5Sharp.Core.Radix.Null"/> format.</value>
     public Radix Radix => GetValue(Radix.Parse) ?? Radix.Null;
 
+    /// <inheritdoc />
+    public override int Size => Members.FirstOrDefault()?.Value.Size ?? 0 * Dimensions.Length;
+
     /// <summary>
     /// Gets the <see cref="LogixData"/> instance at the specified index.
     /// </summary>

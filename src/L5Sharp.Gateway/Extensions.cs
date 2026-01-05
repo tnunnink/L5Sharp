@@ -22,27 +22,6 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Retrieves the current status of the specified <see cref="Tag"/>.
-    /// </summary>
-    /// <param name="tag">The <see cref="Tag"/> for which the status is being requested.</param>
-    /// <returns>The <see cref="TagStatus"/> representing the current status of the provided <see cref="Tag"/>.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when no status object is available for the specified tag.</exception>
-    public static TagStatus GetStatus(this Tag tag)
-    {
-        var status = tag.Serialize().Annotation<TagStatus>();
-
-        if (status is null)
-        {
-            throw new InvalidOperationException($"No status object is available for tag: '{tag.Name}'");
-        }
-
-        /*var result = plctag.plc_tag_status(status.Handle).AsResult();
-        status.*/
-
-        return status;
-    }
-
-    /// <summary>
     /// Creates a real-time watch for the provided collection of tags in a specified PLC configuration.
     /// </summary>
     /// <param name="tags">A collection of <see cref="Tag"/> objects to monitor.</param>
@@ -54,7 +33,7 @@ public static class Extensions
     {
         //todo var composite = new CompositeDisposable();
         using var client = new PlcClient(ip, slot, new PlcOptions { ReadInterval = rate });
-        return client.CreateWatch(tags.ToList());
+        return client.WatchTags(tags.ToList());
     }
 
     /// <summary>
@@ -77,36 +56,87 @@ public static class Extensions
     /// </summary>
     /// <param name="tag">The tag instance to be updated with the read data.</param>
     /// <param name="handle">The handle of the tag to read data from.</param>
-    internal static TagStatus Refresh(this Tag tag, int handle)
+    internal static void ReadValue(this Tag tag, int handle)
     {
-        // Create a byte buffer to read out data from.
-        var size = plctag.plc_tag_get_size(handle);
-        var buffer = new byte[size];
-        var result = plctag.plc_tag_get_raw_bytes(handle, 0, buffer, size).AsResult();
-        //todo should we handle the result of this? From docs a lot of the errors seem like they would be operational but idk
-
-        // We only update the value if the bytes are different
-        var current = tag.Serialize().Annotation<TagStatus>();
-        if (current?.Data is null || !current.Data.SequenceEqual(buffer))
+        switch (tag.Value)
         {
-            // Update the underlying tag data.
-            tag.Value.Update(buffer, 0);
+            case BOOL atomic:
+                atomic.Update(plctag.plc_tag_get_int8(handle, 0) != 0);
+                break;
+            case SINT atomic:
+                atomic.Update(plctag.plc_tag_get_int8(handle, 0));
+                break;
+            case USINT atomic:
+                atomic.Update(plctag.plc_tag_get_uint8(handle, 0));
+                break;
+            case INT atomic:
+                atomic.Update(plctag.plc_tag_get_int16(handle, 0));
+                break;
+            case UINT atomic:
+                atomic.Update(plctag.plc_tag_get_uint16(handle, 0));
+                break;
+            case DINT atomic:
+                atomic.Update(plctag.plc_tag_get_int32(handle, 0));
+                break;
+            case UDINT atomic:
+                atomic.Update(plctag.plc_tag_get_uint32(handle, 0));
+                break;
+            case LINT atomic:
+                atomic.Update(plctag.plc_tag_get_int64(handle, 0));
+                break;
+            case ULINT atomic:
+                atomic.Update(plctag.plc_tag_get_uint64(handle, 0));
+                break;
+            case REAL atomic:
+                atomic.Update(plctag.plc_tag_get_float32(handle, 0));
+                break;
+            case LREAL atomic:
+                atomic.Update(plctag.plc_tag_get_float64(handle, 0));
+                break;
+            case DT atomic:
+                atomic.Update(plctag.plc_tag_get_int64(handle, 0));
+                break;
+            case LDT atomic:
+                atomic.Update(plctag.plc_tag_get_int64(handle, 0));
+                break;
+            case TIME32 atomic:
+                atomic.Update(plctag.plc_tag_get_int32(handle, 0));
+                break;
+            case TIME atomic:
+                atomic.Update(plctag.plc_tag_get_int64(handle, 0));
+                break;
+            case LTIME atomic:
+                atomic.Update(plctag.plc_tag_get_int64(handle, 0));
+                break;
         }
-
-        // Attach the current status on the tag element as an annotation so users can read the info.
-        var status = new TagStatus(handle, tag.TagName, result, buffer);
-        tag.SetStatus(status);
-        return status;
     }
 
     /// <summary>
-    /// Updates the status of a <see cref="Tag"/> by attaching the provided <see cref="TagStatus"/> as an annotation.
+    /// Reads data from the specified tag handle and updates the tag value and status accordingly.
     /// </summary>
-    /// <param name="tag">The <see cref="Tag"/> object to which the status will be applied.</param>
-    /// <param name="status">The <see cref="TagStatus"/> to be assigned to the tag.</param>
-    internal static void SetStatus(this Tag tag, TagStatus status)
+    /// <param name="tag">The tag instance to be updated with the read data.</param>
+    /// <param name="handle">The handle of the tag to read data from.</param>
+    internal static int WriteValue(this Tag tag, int handle)
     {
-        tag.Serialize().RemoveAnnotations<TagStatus>();
-        tag.Serialize().AddAnnotation(status);
+        return tag.Value switch
+        {
+            BOOL atomic => plctag.plc_tag_set_uint8(handle, 0, atomic.ToBytes()[0]),
+            SINT atomic => plctag.plc_tag_set_int8(handle, 0, atomic.Value),
+            USINT atomic => plctag.plc_tag_set_uint16(handle, 0, atomic.Value),
+            INT atomic => plctag.plc_tag_set_int16(handle, 0, atomic.Value),
+            UINT atomic => plctag.plc_tag_set_uint16(handle, 0, atomic.Value),
+            DINT atomic => plctag.plc_tag_set_int32(handle, 0, atomic.Value),
+            UDINT atomic => plctag.plc_tag_set_uint32(handle, 0, atomic.Value),
+            LINT atomic => plctag.plc_tag_set_int64(handle, 0, atomic.Value),
+            ULINT atomic => plctag.plc_tag_set_uint64(handle, 0, atomic.Value),
+            REAL atomic => plctag.plc_tag_set_float32(handle, 0, atomic.Value),
+            LREAL atomic => plctag.plc_tag_set_float64(handle, 0, atomic.Value),
+            DT atomic => plctag.plc_tag_set_int64(handle, 0, atomic.Value),
+            LDT atomic => plctag.plc_tag_set_int64(handle, 0, atomic.Value),
+            TIME32 atomic => plctag.plc_tag_set_int32(handle, 0, atomic.Value),
+            TIME atomic => plctag.plc_tag_set_int64(handle, 0, atomic.Value),
+            LTIME atomic => plctag.plc_tag_set_int64(handle, 0, atomic.Value),
+            _ => throw new ArgumentOutOfRangeException("")
+        };
     }
 }

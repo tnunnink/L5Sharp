@@ -33,13 +33,6 @@ internal class TagWatch : ITagWatch
     private readonly PlcOptions _options;
 
     /// <summary>
-    /// Specifies the interval, in milliseconds, at which tag values are read and processed
-    /// in the <see cref="TagWatch"/> instance. This value determines the frequency of tag
-    /// polling and influences the responsiveness of the system.
-    /// </summary>
-    private readonly int _readInterval;
-
-    /// <summary>
     /// Holds a collection of <see cref="Tag"/> instances keyed by their unique handle values.
     /// Facilitates efficient lookup and management of tags within the <see cref="TagWatch"/> class.
     /// </summary>
@@ -93,9 +86,10 @@ internal class TagWatch : ITagWatch
     /// </summary>
     internal TagWatch(ICollection<Tag> tags, string baseUri, PlcOptions options)
     {
+        RefreshRate = options.ReadInterval;
+
         _callbackDelegate = TagEventCallback;
         _baseUri = baseUri;
-        _readInterval = options.ReadInterval;
         _options = options;
 
         var capacity = Math.Max(100, tags.Count * 10);
@@ -119,33 +113,28 @@ internal class TagWatch : ITagWatch
     }
 
     /// <inheritdoc />
-    public bool IsRunning { get; private set; }
+    public int RefreshRate { get; }
 
     /// <inheritdoc />
-    public int RefreshRate
-    {
-        get => _readInterval;
-        set => UpdateReadInterval(value);
-    }
+    public bool IsRunning { get; private set; }
 
     /// <inheritdoc />
     public IEnumerable<Tag> Tags => _tags.Values;
 
     /// <inheritdoc />
-    public Task StartAsync(CancellationToken token = default)
+    public void Start()
     {
         ThrowIfDisposed();
         ThrowIfRunning();
 
-        _cancellation = CreateLinkedCancellation(token);
-        _processor = Task.Run(() => ProcessMessagesAsync(_cancellation.Token), token);
+        _cancellation = new CancellationTokenSource();
+        _processor = Task.Run(() => ProcessMessagesAsync(_cancellation.Token));
 
         IsRunning = true;
-        return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    public async Task StopAsync(CancellationToken token = default)
+    public async Task Stop(CancellationToken token = default)
     {
         ThrowIfDisposed();
         _cancellation?.Cancel();
@@ -153,7 +142,7 @@ internal class TagWatch : ITagWatch
     }
 
     /// <inheritdoc />
-    public Task RunForAsync(int period, CancellationToken token = default)
+    public Task RunFor(int period, CancellationToken token = default)
     {
         ThrowIfDisposed();
         ThrowIfRunning();
@@ -168,7 +157,7 @@ internal class TagWatch : ITagWatch
     }
 
     /// <inheritdoc />
-    public Task RunWhileAsync(Func<Tag, bool> predicate, CancellationToken token = default)
+    public Task RunWhile(Func<Tag, bool> predicate, CancellationToken token = default)
     {
         ThrowIfDisposed();
         ThrowIfRunning();
@@ -196,6 +185,11 @@ internal class TagWatch : ITagWatch
         _subscribers.TryAdd(id, callback);
 
         return new Unsubscriber(() => _subscribers.TryRemove(id, out _));
+    }
+
+    public void PollAt(int rate)
+    {
+        throw new NotImplementedException();
     }
 
     /// <inheritdoc />
@@ -236,7 +230,6 @@ internal class TagWatch : ITagWatch
         if (result <= 0) return;
 
         var handle = (int)result;
-        tag.SetStatus(TagStatus.Pending(handle, tag.TagName));
         _tags.TryAdd(handle, tag);
     }
 
@@ -249,7 +242,7 @@ internal class TagWatch : ITagWatch
     /// <param name="data"></param>
     private void TagEventCallback(int handle, int eventId, int statusId, IntPtr data)
     {
-        var message = new TagMessage(handle, (TagAction)eventId, (TagResult)statusId);
+        var message = new TagMessage(handle, eventId, statusId);
         _channel.Writer.TryWrite(message);
     }
 
@@ -267,9 +260,9 @@ internal class TagWatch : ITagWatch
             {
                 if (!_tags.TryGetValue(message.Handle, out var tag)) continue;
 
-                if (message.Action == TagAction.ReadCompleted)
+                if (message.Event == TagEvent.ReadCompleted)
                 {
-                    tag.Refresh(message.Handle);
+                    tag.ReadValue(message.Handle);
                     NotifySubscribers(tag);
                     if (ShouldCancel(tag)) break;
                 }

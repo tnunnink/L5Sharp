@@ -17,59 +17,75 @@ public class PlcClientTests
     }
 
     [Test]
-    public void New_ValidParameters_ShouldHaveExpectedProperties()
-    {
-        using var client = new PlcClient("10.10.38.32", 1);
-    }
-
-    [Test]
-    public async Task PingAsync_ValidReachableAddress_ShouldBeTrue()
+    public async Task Ping_ValidReachableAddress_ShouldBeTrue()
     {
         using var client = new PlcClient("10.10.38.32", 1);
 
-        var result = await client.PingAsync();
+        var result = await client.Ping();
 
         Assert.That(result, Is.True);
     }
 
     [Test]
-    public async Task ReadAsync_SimpleAtomicTag_ShouldGetSuccessfulResult()
+    public async Task Read_SimpleAtomicTag_ShouldGetSuccessfulResult()
     {
-        var tag = Tag.New<DINT>("SomeDINT");
+        var tag = Tag.New<DINT>("RTC.MONTH");
         using var client = new PlcClient("10.10.38.32", 1);
 
-        var status = await client.ReadAsync(tag);
+        var response = await client.ReadTag(tag);
 
-        status.Handle.Should().BeGreaterThan(0);
-        status.TagName.Should().Be(new TagName("SomeDINT"));
-        status.Result.Should().Be(TagResult.Ok);
-        status.Data.Should().NotBeEmpty();
-        status.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        status.IsGood.Should().BeTrue();
-        status.IsBad.Should().BeFalse();
-
-        //Value is updated
+        response.Tag.Should().NotBeNull();
+        response.Success.Should().BeTrue();
+        response.Status.Should().Be(TagResult.Ok);
+        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        response.Errors.Should().BeEmpty();
         tag.Value.Should().NotBe(0);
     }
 
     [Test]
-    public async Task ReadAsync_ComplexPredefinedTag_ShouldGetSuccessfulResult()
+    public async Task Read_SimpleAtomicInLoopToEnsureCachedHandle_ShouldReadInExpectedTime()
     {
-        var tag = Tag.New<TIMER>("SomeTimer");
+        var tag = Tag.New<DINT>("RTC.MONTH");
         using var client = new PlcClient("10.10.38.32", 1);
 
-        var status = await client.ReadAsync(tag);
+        for (var i = 0; i < 10; i++)
+        {
+            var response = await client.ReadTag(tag);
+            response.Success.Should().BeTrue();
+            Console.WriteLine($"{response.Timestamp} | {tag.Value}");
+        }
+    }
 
-        status.Handle.Should().BeGreaterThan(0);
-        status.TagName.Should().Be(new TagName("SomeTimer"));
-        status.Result.Should().Be(TagResult.Ok);
-        status.Data.Should().NotBeEmpty();
-        status.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        status.IsGood.Should().BeTrue();
-        status.IsBad.Should().BeFalse();
+    [Test]
+    public async Task Read_ComplexPredefinedTag_ShouldGetSuccessfulResult()
+    {
+        var tag = Tag.New<TIMER>("RTC");
+        using var client = new PlcClient("10.10.38.32", 1);
 
-        //todo we need to get source generator mappings complete to read the correct byte stream from complex predefined types.
-        //tag.Value.As<TIMER>.PRE.ShouldNotBe(new DINT(0));
+        var response = await client.ReadTag(tag);
+
+        response.Tag.Should().NotBeNull();
+        response.Success.Should().BeTrue();
+        response.Status.Should().Be(TagResult.Ok);
+        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        response.Errors.Should().BeEmpty();
+        tag.Value.As<TIMER>().PRE.Should().NotBe(0);
+    }
+
+    [Test]
+    public async Task Read_ComplexAlarmType_ShouldGetSuccessfulResult()
+    {
+        var tag = Tag.New<ALARM>("SomeAlarm");
+        using var client = new PlcClient("10.10.38.32", 1);
+
+        var response = await client.ReadTag(tag);
+
+        response.Tag.Should().Be(new TagName("SomeAlarm"));
+        response.Success.Should().BeTrue();
+        response.Status.Should().Be(TagResult.Ok);
+        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        response.Errors.Should().BeEmpty();
+        tag.Value.As<ALARM>().In.Should().Be(1.23f);
     }
 
     [Test]
@@ -77,7 +93,7 @@ public class PlcClientTests
     {
         var tag = Tag.New<DINT>("SomeDINT");
         using var client = new PlcClient("10.10.38.32", 1);
-        using var watch = client.CreateWatch([tag]);
+        using var watch = client.WatchTags([tag]);
 
         Assert.Multiple(() =>
         {
@@ -91,7 +107,7 @@ public class PlcClientTests
     {
         var tag = Tag.New<DINT>("SomeDINT");
         using var client = new PlcClient("10.10.38.32", 1);
-        using var watch = client.CreateWatch([tag]);
+        using var watch = client.WatchTags([tag]);
 
         Assert.That(watch.Tags.Count(), Is.EqualTo(1));
     }
@@ -103,7 +119,7 @@ public class PlcClientTests
         var t2 = Tag.New<DINT>("SomeTimer");
         var t3 = Tag.New<DINT>("SomeString");
         using var client = new PlcClient("10.10.38.32", 1);
-        using var watch = client.CreateWatch([t1, t2, t3]);
+        using var watch = client.WatchTags([t1, t2, t3]);
 
         Assert.That(watch.Tags.Count(), Is.EqualTo(3));
     }

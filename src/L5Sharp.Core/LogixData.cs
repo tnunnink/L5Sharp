@@ -71,15 +71,23 @@ public abstract class LogixData : LogixElement
     public virtual int Size => 0;
 
     /// <summary>
-    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
-    /// Otherwise, returns <c>null</c>.
+    /// Returns the value of the <see cref="AtomicData"/> as a byte array.
     /// </summary>
-    /// <param name="name">The name of the member to get.</param>
-    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
-    /// <remarks>This performs a case-insensitive comparison for the member name.</remarks>
-    public LogixMember? Member(string name)
+    /// <returns>An array of <see cref="byte"/> representing the binary value of the atomic type.</returns>
+    /// <remarks>This is needed for formatting the atomic value in the proper radix format.</remarks>
+    public virtual byte[] ToBytes()
     {
-        return Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
+        var data = new byte[Size];
+        var offset = 0;
+
+        foreach (var member in Members)
+        {
+            var block = member.Value.ToBytes();
+            Buffer.BlockCopy(block, 0, data, offset, block.Length);
+            offset += block.Length;
+        }
+
+        return data;
     }
 
     /// <summary>
@@ -124,6 +132,18 @@ public abstract class LogixData : LogixElement
         }
 
         return offset;
+    }
+
+    /// <summary>
+    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
+    /// Otherwise, returns <c>null</c>.
+    /// </summary>
+    /// <param name="name">The name of the member to get.</param>
+    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <remarks>This performs a case-insensitive comparison for the member name.</remarks>
+    public LogixMember? Member(string name)
+    {
+        return Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
     }
 
     /// <inheritdoc />

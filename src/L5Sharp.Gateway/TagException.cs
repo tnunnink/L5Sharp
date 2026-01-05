@@ -14,7 +14,7 @@ public class TagException : Exception
     /// </summary>
     /// <param name="result">The status representing the specific error encountered during the tag operation.</param>
     /// <param name="tagName">The optional name of the tag associated with the operation that caused the exception.</param>
-    private TagException(TagResult result, string? tagName = null) : base(BuildMessage(result))
+    public TagException(TagResult result, string? tagName = null) : base(BuildMessage(result))
     {
         Result = result;
         TagName = tagName;
