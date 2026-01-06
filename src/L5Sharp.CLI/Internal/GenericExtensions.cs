@@ -24,8 +24,6 @@ public static class GenericExtensions
     /// <returns>True if the file extension matches the specified project type, otherwise false.</returns>
     public static bool IsLogixFile(this string path, FileType type)
     {
-        if (!Path.Exists(path)) return false;
-        if (!File.Exists(path)) return false;
         return string.Equals(Path.GetExtension(path), $".{type}", StringComparison.OrdinalIgnoreCase);
     }
 

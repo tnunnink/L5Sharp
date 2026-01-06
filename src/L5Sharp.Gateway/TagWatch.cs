@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
 using L5Sharp.Core;
+using L5Sharp.Gateway.Abstractions;
+using L5Sharp.Gateway.Common;
 using libplctag.NativeImport;
 using Task = System.Threading.Tasks.Task;
 
@@ -262,7 +264,7 @@ internal class TagWatch : ITagWatch
 
                 if (message.Event == TagEvent.ReadCompleted)
                 {
-                    tag.ReadValue(message.Handle);
+                    //tag.ReadValue(message.Handle);
                     NotifySubscribers(tag);
                     if (ShouldCancel(tag)) break;
                 }

@@ -146,6 +146,15 @@ public abstract class LogixData : LogixElement
         return Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
     }
 
+    /// <summary>
+    /// Determines whether the current LogixData instance represents an atomic data type.
+    /// </summary>
+    /// <returns>True if the data type is atomic; otherwise, false.</returns>
+    public bool IsAtomic()
+    {
+        return LogixType.IsAtomic(Name);
+    }
+
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {

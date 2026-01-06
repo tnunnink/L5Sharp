@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using L5Sharp.Gateway.Common;
 
 namespace L5Sharp.Gateway;
 
@@ -23,5 +24,5 @@ public class PlcOptions
     /// Gets the set of statuses that the client should throw exceptions for.
     /// By default, no status codes are configured and error codes are returned with the tag response.
     /// </summary>
-    public HashSet<TagResult> ThrowOn { get; } = [];
+    public HashSet<TagStatus> ThrowOn { get; } = [];
 }

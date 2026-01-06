@@ -9,7 +9,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using L5Sharp.Core;
-using libplctag.NativeImport;
+using L5Sharp.Gateway.Abstractions;
+using L5Sharp.Gateway.Common;
+using L5Sharp.Gateway.Services;
 using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Gateway;
@@ -18,6 +20,13 @@ namespace L5Sharp.Gateway;
 public class PlcClient : IPlcClient
 {
     /// <summary>
+    /// Specifies the timeout duration, in milliseconds, for asynchronous operations initiated by the <see cref="PlcClient"/>.
+    /// When libplctag functions are executed with a 0ms timeout, they will return immediately, and we will use the tag
+    /// event callback to update the result of the operation. 
+    /// </summary>
+    private const int AsyncTimeout = 0;
+
+    /// <summary>
     /// Indicates whether the current instance of <see cref="PlcClient"/> has been disposed.
     /// This variable is used to track whether resources associated with the object have been released
     /// to prevent further usage and manage object lifecycle effectively.
@@ -25,18 +34,17 @@ public class PlcClient : IPlcClient
     private bool _disposed;
 
     /// <summary>
-    /// A delegate used as a callback function for handling PLC tag-related events.
-    /// This delegate is invoked by the underlying <see cref="libplctag.NativeImport.plctag"/> library
-    /// when a specific event occurs, facilitating communication between the library and the client.
+    /// Provides access to tag-related operations for the <see cref="PlcClient"/> class.
+    /// This variable serves as a dependency for managing tag interactions, enabling creation, reading,
+    /// writing, and other operations crucial for interacting with PLC tags.
     /// </summary>
-    private readonly plctag.callback_func_ex _tagEventCallback;
+    private readonly ITagService _tagService;
 
     /// <summary>
-    /// Specifies the timeout duration, in milliseconds, for asynchronous operations initiated by the <see cref="PlcClient"/>.
-    /// When libplctag functions are executed with a 0ms timeout, they will return immediately, and we will use the tag
-    /// event callback to update the result of the operation. 
+    /// Represents a private instance of <see cref="TagBuffer"/> used internally for managing tag-related operations.
+    /// This buffer facilitates the reading and writing of tag values by interfacing with an underlying <see cref="ITagService"/>.
     /// </summary>
-    private const int AsyncTimeout = 0;
+    private readonly TagBuffer _tagBuffer;
 
     /// <summary>
     /// Represents the IP address of the PLC being communicated with.
@@ -57,7 +65,7 @@ public class PlcClient : IPlcClient
     /// This URI contains information such as the protocol, gateway (IP address),
     /// path (slot number), and the type of PLC being connected to.
     /// </summary>
-    private readonly string _baseUri;
+    private readonly string _uri;
 
     /// <summary>
     /// Maintains a mapping between tag names and their associated handles
@@ -81,23 +89,24 @@ public class PlcClient : IPlcClient
     /// </summary>
     private readonly ConcurrentBag<ITagWatch> _watches = [];
 
-
     /// <summary>
     /// Creates a new <see cref="PlcClient"/> instance with the provided IP address and optional slot number.
     /// </summary>
     /// <param name="ip">The IP address of the PLC to connect to.</param>
     /// <param name="slot">The slot of the PLC in the backplane. Default is '0'.</param>
     /// <param name="options"></param>
+    /// <param name="tagService"></param>
     /// <exception cref="ArgumentException">Thrown when <paramref name="ip"/> is not a valid IP.</exception>
-    public PlcClient(string ip, ushort slot = 0, PlcOptions? options = null)
+    public PlcClient(string ip, ushort slot = 0, PlcOptions? options = null, ITagService? tagService = null)
     {
         if (!IPAddress.TryParse(ip, out var address))
             throw new ArgumentException($"Unable to parse IP address: {ip}");
 
+        _tagService = tagService ?? new NativeTagService(onEventEx: TagEventCallback);
+        _tagBuffer = new TagBuffer(_tagService);
         _ip = address;
         _options = options ?? new PlcOptions();
-        _baseUri = $"protocol=ab_eip&gateway={_ip}&path=1,{slot}&plc=controllogix";
-        _tagEventCallback = TagEventCallback;
+        _uri = $"protocol=ab_eip&gateway={address}&path=1,{slot}&plc=controllogix";
     }
 
     /// <inheritdoc />
@@ -114,32 +123,81 @@ public class PlcClient : IPlcClient
     /// <inheritdoc />
     public async Task<TagResponse> ReadTag(Tag tag, CancellationToken token = default)
     {
-        if (tag is null)
-            throw new ArgumentNullException(nameof(tag));
-
+        if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
-        var results = new List<(TagName, TagResult)>();
-        var members = tag.Members(t => LogixType.IsAtomic(t.DataType)).ToList();
+        var members = tag.Members(m => m.Value.IsAtomic()).ToList();
         var tasks = members.Select(m => (Member: m, Read: ReadTagValue(m, token))).ToList();
+
+        if (tasks.Count == 0)
+            return TagResponse.NoData(tag.TagName);
 
         var timer = Stopwatch.StartNew();
         await Task.WhenAll(tasks.Select(t => t.Read));
         timer.Stop();
 
-        foreach (var task in tasks)
-        {
-            results.Add((task.Member.TagName, task.Read.Result));
-        }
-
-        return TagResponse.Aggregate(tag, results);
+        var results = tasks.Select(t => (t.Member.TagName, t.Read.Result)).ToList();
+        return TagResponse.Aggregate(results, timer.Elapsed);
     }
 
+    /// <inheritdoc />
+    public async Task<TagResponse> ReadTags(IEnumerable<Tag> tags, CancellationToken token = default)
+    {
+        if (tags is null) throw new ArgumentNullException(nameof(tags));
+        ThrowIfDisposed();
+
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
+        var tasks = members.Select(m => (Member: m, Read: ReadTagValue(m, token))).ToList();
+
+        if (tasks.Count == 0)
+            return TagResponse.NoData(members.Select(t => t.TagName).ToArray());
+
+        var timer = Stopwatch.StartNew();
+        await Task.WhenAll(tasks.Select(t => t.Read));
+        timer.Stop();
+
+        var results = tasks.Select(t => (t.Member.TagName, t.Read.Result)).ToList();
+        return TagResponse.Aggregate(results, timer.Elapsed);
+    }
 
     /// <inheritdoc />
-    public Task<TagResponse> WriteTag(Tag tag, CancellationToken token = default)
+    public async Task<TagResponse> WriteTag(Tag tag, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        if (tag is null) throw new ArgumentNullException(nameof(tag));
+        ThrowIfDisposed();
+
+        var members = tag.Members(m => m.Value.IsAtomic()).ToList();
+        var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
+
+        if (tasks.Count == 0)
+            return TagResponse.NoData(tag.TagName);
+
+        var timer = Stopwatch.StartNew();
+        await Task.WhenAll(tasks.Select(t => t.Write));
+        timer.Stop();
+
+        var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
+        return TagResponse.Aggregate(results, timer.Elapsed);
+    }
+
+    /// <inheritdoc />
+    public async Task<TagResponse> WriteTags(IEnumerable<Tag> tags, CancellationToken token = default)
+    {
+        if (tags is null) throw new ArgumentNullException(nameof(tags));
+        ThrowIfDisposed();
+
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
+        var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
+
+        if (tasks.Count == 0)
+            return TagResponse.NoData(members.Select(t => t.TagName).ToArray());
+
+        var timer = Stopwatch.StartNew();
+        await Task.WhenAll(tasks.Select(t => t.Write));
+        timer.Stop();
+
+        var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
+        return TagResponse.Aggregate(results, timer.Elapsed); 
     }
 
     /// <inheritdoc />
@@ -150,7 +208,7 @@ public class PlcClient : IPlcClient
         if (tags is null)
             throw new ArgumentNullException(nameof(tags));
 
-        var watch = new TagWatch(tags, _baseUri, _options);
+        var watch = new TagWatch(tags, _uri, _options);
         _watches.Add(watch);
         return watch;
     }
@@ -167,8 +225,7 @@ public class PlcClient : IPlcClient
 
         foreach (var handle in _handles.Values)
         {
-            //todo should this be awaited? WE are not in a task here.
-            var result = plctag.plc_tag_destroy(handle.TagId).AsResult();
+            var result = _tagService.Destroy(handle.TagId).AsResult();
             TagException.ThrowIfRequested(result, _options.ThrowOn);
             Marshal.FreeHGlobal(handle.TagPtr);
         }
@@ -183,19 +240,43 @@ public class PlcClient : IPlcClient
     /// that has public access. If not, we might encounter an error, which we either throw or return depending on
     /// the configured options.
     /// </summary>
-    private async Task<TagResult> ReadTagValue(Tag tag, CancellationToken token)
+    private async Task<TagStatus> ReadTagValue(Tag tag, CancellationToken token)
     {
         var tagName = tag.DetermineTagName();
         var handle = await GetOrCreateHandle(tagName, token);
 
-        // Execute the create function in asynchronously.
-        var result = (await ExecuteAsync(tagName, () => plctag.plc_tag_read(handle, AsyncTimeout), token)).AsResult();
-
+        var result = (await ExecuteAsync(tagName, () => _tagService.Read(handle, AsyncTimeout), token)).AsResult();
         TagException.ThrowIfRequested(result, _options.ThrowOn);
 
-        if (result == TagResult.Ok)
-            tag.ReadValue(handle);
+        if (result == TagStatus.Ok)
+        {
+            _tagBuffer.ReadValue(tag, handle);
+        }
 
+        return result;
+    }
+
+    /// <summary>
+    /// Writes the value of the specified tag to the PLC asynchronously.
+    /// </summary>
+    /// <param name="tag">The tag object containing the value and metadata to be written.</param>
+    /// <param name="token">The cancellation token to observe while waiting for the operation to complete.</param>
+    /// <returns>A <see cref="TagStatus"/> representing the status of the write operation.</returns>
+    /// <exception cref="TagException">Thrown if the write operation fails and exceptions are configured to be thrown.</exception>
+    private async Task<TagStatus> WriteTagValue(Tag tag, CancellationToken token)
+    {
+        var tagName = tag.DetermineTagName();
+        var handle = await GetOrCreateHandle(tagName, token);
+
+        var written = _tagBuffer.WriteValue(tag, handle).AsResult();
+        if (written < 0)
+        {
+            TagException.ThrowIfRequested(written, _options.ThrowOn);
+            return written;
+        }
+
+        var result = (await ExecuteAsync(tagName, () => _tagService.Write(handle, AsyncTimeout), token)).AsResult();
+        TagException.ThrowIfRequested(result, _options.ThrowOn);
         return result;
     }
 
@@ -209,12 +290,12 @@ public class PlcClient : IPlcClient
     /// <exception cref="TagException">Thrown when a tag-level error is encountered during handle creation.</exception>
     private async Task<int> GetOrCreateHandle(TagName tagName, CancellationToken token)
     {
-        // Get cached handle if exists to avoid recreating (most expensive part of the operation according to libplctag)
+        // Get cached handle if exists to avoid recreating
         if (_handles.TryGetValue(tagName, out var cached))
             return cached.TagId;
 
         // Build the Uri route to the PLC tag.
-        var route = $"{_baseUri}&name={tagName}";
+        var route = $"{_uri}&name={tagName}";
 
         // Pass the tag name string as the unmanaged pointer.
         // This user data will be available in the event callback, which is needed for lookup.
@@ -222,7 +303,7 @@ public class PlcClient : IPlcClient
 
         // Execute the create function asynchronously.
         var tagId = await ExecuteAsync(tagName,
-            () => plctag.plc_tag_create_ex(route, _tagEventCallback, tagPtr, AsyncTimeout),
+            () => _tagService.Create(route, TagEventCallback, tagPtr, AsyncTimeout),
             token
         );
 
@@ -235,7 +316,14 @@ public class PlcClient : IPlcClient
         }
 
         // If successful, cache the handle and return.
-        _handles.TryAdd(tagName, new TagHandle(tagId, tagPtr));
+        if (!_handles.TryAdd(tagName, new TagHandle(tagId, tagPtr)))
+        {
+            // Another thread won the race while we were awaiting
+            // Free our redundant pointer to prevent memory leak.
+            Marshal.FreeHGlobal(tagPtr);
+            return _handles[tagName].TagId;
+        }
+
         return tagId;
     }
 
@@ -262,6 +350,7 @@ public class PlcClient : IPlcClient
             var status = native();
 
             // If not pending, we can return without awaiting the task.
+            //todo still not 100% sure about this. Might still want to wait.
             if (status < 0) return status;
 
             // Emulate the timeout with a linked cancellation for the specified timeout.
@@ -293,12 +382,12 @@ public class PlcClient : IPlcClient
             if (token.IsCancellationRequested)
                 pending.TrySetCanceled();
             else
-                pending.TrySetException(new TagException(TagResult.Timeout, tagName));
+                pending.TrySetException(new TagException(TagStatus.Timeout, tagName));
         }
 
         if (_handles.TryGetValue(tagName, out var handle))
         {
-            var result = plctag.plc_tag_abort(handle.TagId).AsResult();
+            var result = _tagService.Abort(handle.TagId).AsResult();
             TagException.ThrowIfRequested(result, _options.ThrowOn);
         }
     }
@@ -314,7 +403,7 @@ public class PlcClient : IPlcClient
     {
         // We only want to process events that are "completed" and not pending or starting,
         // and that have the required user data tag pointer.
-        if (!TagEvent.IsComplete(eventId) || statusId.AsResult() == TagResult.Pending || userData == IntPtr.Zero)
+        if (!TagEvent.IsComplete(eventId) || statusId.AsResult() == TagStatus.Pending || userData == IntPtr.Zero)
             return;
 
         // Get the tag name from the pinned memory location.

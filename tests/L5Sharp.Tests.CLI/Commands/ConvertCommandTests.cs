@@ -11,7 +11,8 @@ public class ConvertCommandTests
     {
         var command = new ConvertCommand
         {
-            Project = @"C:\Users\tnunnink\Documents\Rockwell\Empty.ACD",
+            Project = @"C:\Users\tnunnink\Documents\Projects\L5Sharp\tests\L5Sharp.Samples\Empty.ACD",
+            Output = @"C:\Users\tnunnink\Documents\Projects\L5Sharp\tests\L5Sharp.Samples\Simple.L5X",
             Force = true,
             Detailed = true
         };

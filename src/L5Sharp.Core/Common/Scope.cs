@@ -137,13 +137,13 @@ public sealed class Scope
     /// </returns>
     private ScopeLevel DetermineLevel()
     {
-        var ancestors = _element.Ancestors().Where(IsContainer).Select(x => x.Name.LocalName).ToArray();
+        var container = _element.Ancestors().FirstOrDefault(IsContainer)?.Name.LocalName;
 
-        return ancestors.Length switch
+        return container switch
         {
-            2 when ancestors[0] == L5XName.Program => ScopeLevel.Program,
-            2 when ancestors[0] == L5XName.AddOnInstructionDefinition => ScopeLevel.Routine,
-            1 when ancestors[0] == L5XName.Controller => ScopeLevel.Controller,
+            L5XName.Program => ScopeLevel.Program,
+            L5XName.AddOnInstructionDefinition => ScopeLevel.Routine,
+            L5XName.Controller => ScopeLevel.Controller,
             _ => ScopeLevel.None
         };
     }
@@ -156,13 +156,13 @@ public sealed class Scope
     /// </returns>
     private string DetermineContainer()
     {
-        var ancestors = _element.Ancestors().Where(IsContainer).ToArray();
+        var container = _element.Ancestors().FirstOrDefault(IsContainer);
 
-        return ancestors.Length switch
+        return container?.Name.LocalName switch
         {
-            2 when ancestors[0].Name.LocalName == L5XName.Program => ancestors[0].LogixName(),
-            2 when ancestors[0].Name.LocalName == L5XName.AddOnInstructionDefinition => ancestors[0].LogixName(),
-            1 when ancestors[0].Name.LocalName == L5XName.Controller => ancestors[0].LogixName(),
+            L5XName.Program => container.LogixName(),
+            L5XName.AddOnInstructionDefinition => container.LogixName(),
+            L5XName.Controller => container.LogixName(),
             _ => string.Empty
         };
     }

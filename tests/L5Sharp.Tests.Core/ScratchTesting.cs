@@ -53,10 +53,13 @@ public class ScratchTesting
     [Test]
     public void METHOD()
     {
-        var content = L5X.Load(@"C:\users\tnunnink\documents\rockwell\Template.L5X");
+        var content = L5X.Load(Known.Simple);
 
-        var members = content.DataTypes.SelectMany(d => d.Members).ToList();
+        for (var i = 0; i < 1000; i++)
+        {
+            content.Tags.Add(new Tag($"Tag_{i}", new DINT(i)));
+        }
 
-        members.Should().NotBeEmpty();
+        content.Save(Known.Simple);
     }
 }
