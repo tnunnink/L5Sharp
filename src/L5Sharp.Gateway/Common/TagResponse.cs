@@ -13,12 +13,13 @@ namespace L5Sharp.Gateway.Common;
 public class TagResponse
 {
     /// <summary>
-    /// A collection of tags representing the results of tag-related operations.
+    /// A collection of tags associated with the response. Each tag should represent an atomic member of the
+    /// tag or set of tags that were involved in the operation that produced this response object.
     /// </summary>
     private readonly List<TagName> _tags = [];
 
     /// <summary>
-    /// A flat list of specific member results. To save memory, we typically only store failures here.
+    /// A flat list of specific member results. To save memory, we only store failures here.
     /// </summary>
     private readonly List<(TagName Tag, TagStatus Result)> _errors = [];
 
@@ -27,8 +28,8 @@ public class TagResponse
     /// </summary>
     private TagResponse(TimeSpan duration)
     {
-        Duration = duration;
         Timestamp = DateTime.UtcNow;
+        Duration = duration;
     }
 
     /// <summary>
@@ -40,7 +41,7 @@ public class TagResponse
     /// Represents the result status of the tag operation, typically indicating success or
     /// the first encountered failure.
     /// </summary>
-    public TagStatus Status => _errors.Count > 0 ? _errors[0].Result : TagStatus.Ok;
+    public TagStatus Result => _errors.Count > 0 ? _errors[0].Result : TagStatus.Ok;
 
     /// <summary>
     /// The timestamp indicating when the tag response was created.
@@ -106,5 +107,6 @@ public class TagResponse
     /// </summary>
     /// <param name="status">The result code for which the error message needs to be decoded.</param>
     /// <returns>A string representing the decoded error message.</returns>
+    //todo I need to figure out how to replace this.
     private static string GetError(TagStatus status) => plctag.plc_tag_decode_error((int)status);
 }

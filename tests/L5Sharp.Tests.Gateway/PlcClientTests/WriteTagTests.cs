@@ -22,7 +22,7 @@ public class WriteTagTests
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -40,10 +40,10 @@ public class WriteTagTests
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
+        response.Tags.Should().HaveCount(5);
         response.Errors.Should().BeEmpty();
     }
 }

@@ -83,11 +83,10 @@ public class PlcClient : IPlcClient
     private readonly ConcurrentDictionary<string, TaskCompletionSource<int>> _operations = [];
 
     /// <summary>
-    /// Maintains a collection of active <see cref="ITagWatch"/> instances created by the <see cref="PlcClient"/>.
-    /// This variable is used to manage and track watches that monitor changes to PLC tags, ensuring
-    /// their lifecycle is appropriately handled and allowing centralized access for operations such as disposal.
+    /// Maintains a thread-safe collection of active <see cref="TagWatch"/> instances associated with their respective handles.
+    /// This is used to manage and track tag watch operations within the <see cref="PlcClient"/>.
     /// </summary>
-    private readonly ConcurrentBag<ITagWatch> _watches = [];
+    private readonly ConcurrentDictionary<int, TagWatch> _watches = [];
 
     /// <summary>
     /// Creates a new <see cref="PlcClient"/> instance with the provided IP address and optional slot number.
@@ -197,20 +196,45 @@ public class PlcClient : IPlcClient
         timer.Stop();
 
         var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
-        return TagResponse.Aggregate(results, timer.Elapsed); 
+        return TagResponse.Aggregate(results, timer.Elapsed);
     }
 
     /// <inheritdoc />
-    public ITagWatch WatchTags(ICollection<Tag> tags)
+    public async Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChanged = null, CancellationToken token = default)
     {
+        if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
-        if (tags is null)
-            throw new ArgumentNullException(nameof(tags));
+        var members = tag.Members(m => m.Value.IsAtomic()).ToList();
+        var tasks = members.Select(m => (Member: m, Create: GetOrCreateHandle(m.TagName, token))).ToList();
+        await Task.WhenAll(tasks.Select(t => t.Create));
 
-        var watch = new TagWatch(tags, _uri, _options);
-        _watches.Add(watch);
-        return watch;
+        foreach (var (member, task) in tasks)
+        {
+            var handle = task.Result;
+            if (handle <= 1) continue; //todo not totally sure here.
+
+            var watch = _watches.GetOrAdd(
+                handle,
+                h => new TagWatch(h, member, _options.ReadInterval, _tagService, _tagBuffer)
+            );
+
+            watch.Increment();
+            if (onChanged is not null) watch.OnChanged += onChanged;
+        }
+
+        return new Unsubscriber(() =>
+        {
+            foreach (var task in tasks)
+            {
+                var handle = task.Create.Result;
+                if (!_watches.TryGetValue(handle, out var watch)) continue;
+
+                if (onChanged is not null) watch.OnChanged -= onChanged;
+                watch.Decrement();
+                if (watch.IsIdle) _watches.TryRemove(watch.Handle, out _);
+            }
+        });
     }
 
     /// <inheritdoc />
@@ -218,14 +242,14 @@ public class PlcClient : IPlcClient
     {
         if (_disposed) return;
 
-        foreach (var watch in _watches)
+        foreach (var watch in _watches.Values)
         {
             watch.Dispose();
         }
 
         foreach (var handle in _handles.Values)
         {
-            var result = _tagService.Destroy(handle.TagId).AsResult();
+            var result = _tagService.Destroy(handle.TagId).AsStatus();
             TagException.ThrowIfRequested(result, _options.ThrowOn);
             Marshal.FreeHGlobal(handle.TagPtr);
         }
@@ -245,7 +269,7 @@ public class PlcClient : IPlcClient
         var tagName = tag.DetermineTagName();
         var handle = await GetOrCreateHandle(tagName, token);
 
-        var result = (await ExecuteAsync(tagName, () => _tagService.Read(handle, AsyncTimeout), token)).AsResult();
+        var result = (await ExecuteAsync(tagName, () => _tagService.Read(handle, AsyncTimeout), token)).AsStatus();
         TagException.ThrowIfRequested(result, _options.ThrowOn);
 
         if (result == TagStatus.Ok)
@@ -268,14 +292,14 @@ public class PlcClient : IPlcClient
         var tagName = tag.DetermineTagName();
         var handle = await GetOrCreateHandle(tagName, token);
 
-        var written = _tagBuffer.WriteValue(tag, handle).AsResult();
+        var written = _tagBuffer.WriteValue(tag, handle).AsStatus();
         if (written < 0)
         {
             TagException.ThrowIfRequested(written, _options.ThrowOn);
             return written;
         }
 
-        var result = (await ExecuteAsync(tagName, () => _tagService.Write(handle, AsyncTimeout), token)).AsResult();
+        var result = (await ExecuteAsync(tagName, () => _tagService.Write(handle, AsyncTimeout), token)).AsStatus();
         TagException.ThrowIfRequested(result, _options.ThrowOn);
         return result;
     }
@@ -311,7 +335,7 @@ public class PlcClient : IPlcClient
         if (tagId <= 0)
         {
             Marshal.FreeHGlobal(tagPtr);
-            TagException.ThrowIfRequested(tagId.AsResult(), _options.ThrowOn, tagName);
+            TagException.ThrowIfRequested(tagId.AsStatus(), _options.ThrowOn, tagName);
             return tagId;
         }
 
@@ -387,7 +411,7 @@ public class PlcClient : IPlcClient
 
         if (_handles.TryGetValue(tagName, out var handle))
         {
-            var result = _tagService.Abort(handle.TagId).AsResult();
+            var result = _tagService.Abort(handle.TagId).AsStatus();
             TagException.ThrowIfRequested(result, _options.ThrowOn);
         }
     }
@@ -403,26 +427,33 @@ public class PlcClient : IPlcClient
     {
         // We only want to process events that are "completed" and not pending or starting,
         // and that have the required user data tag pointer.
-        if (!TagEvent.IsComplete(eventId) || statusId.AsResult() == TagStatus.Pending || userData == IntPtr.Zero)
+        if (!TagEvent.IsComplete(eventId) || statusId.AsStatus() == TagStatus.Pending || userData == IntPtr.Zero)
             return;
 
         // Get the tag name from the pinned memory location.
         var tagName = Marshal.PtrToStringAnsi(userData);
 
-        // At this point we should attempt to "dequeue" the operation. If we fail, then something went wrong.
-        if (!_operations.TryRemove(tagName, out var operation))
-            return;
-
-        switch (eventId)
+        // At this point we should attempt to "dequeue" an operation if it exists.
+        if (_operations.TryRemove(tagName, out var operation))
         {
-            // For a successful create operation, we want to set the result to the returned tag handle.
-            case TagEvent.Created when statusId == 0:
-                operation.TrySetResult(handle);
-                break;
-            // For all other operations/cases, we want the set the result to the returned status.
-            default:
-                operation.TrySetResult(statusId);
-                break;
+            switch (eventId)
+            {
+                // For a successful create operation, we want to set the result to the returned tag handle.
+                case TagEvent.Created when statusId == 0:
+                    operation.TrySetResult(handle);
+                    break;
+                // For all other operations/cases, we want the set the result to the returned status.
+                default:
+                    operation.TrySetResult(statusId);
+                    return;
+            }
+        }
+
+        // At this point we should see if any tag watch exists for this handle.
+        // If so and this event was a completed read, then notify the watch.
+        if (_watches.TryGetValue(handle, out var watch) && eventId == TagEvent.ReadCompleted)
+        {
+            watch.Notify(statusId.AsStatus());
         }
     }
 
@@ -438,5 +469,14 @@ public class PlcClient : IPlcClient
         {
             throw new InvalidOperationException("The client has been disposed and can no longer perform actions.");
         }
+    }
+
+    /// <summary>
+    /// Provides a mechanism to manage and handle the unsubscription of tag-related callbacks in a monitoring system.
+    /// This class is used internally to dispose of subscriptions when they are no longer needed.
+    /// </summary>
+    private class Unsubscriber(Action unsubscribe) : IDisposable
+    {
+        public void Dispose() => unsubscribe();
     }
 }

@@ -57,17 +57,25 @@ public interface IPlcClient : IDisposable
     Task<TagResponse> WriteTag(Tag tag, CancellationToken token = default);
 
     /// <summary>
-    /// 
+    /// Writes multiple tags to the PLC asynchronously.
     /// </summary>
-    /// <param name="tags"></param>
-    /// <param name="token"></param>
-    /// <returns></returns>
+    /// <param name="tags">A collection of tags to be written to the PLC.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains a <see cref="TagResponse"/>
+    /// object indicating the result of the write operation, including success status and any errors encountered.
+    /// </returns>
     Task<TagResponse> WriteTags(IEnumerable<Tag> tags, CancellationToken token = default);
 
     /// <summary>
-    /// Creates a watch to monitor a collection of tags for changes in their values or statuses.
+    /// Monitors the specified PLC tag for changes and executes a callback action when the tag value changes.
     /// </summary>
-    /// <param name="tags">A collection of tags to be monitored for changes.</param>
-    /// <returns>An instance of <c>ITagWatch</c> that allows starting, stopping, and subscribing to tag updates.</returns>
-    ITagWatch WatchTags(ICollection<Tag> tags);
+    /// <param name="tag">The tag to be monitored for changes.</param>
+    /// <param name="onChange">An optional callback action to invoke when the tag value changes. If null, changes will still be monitored without invoking a callback.</param>
+    /// <param name="token">A cancellation token to cancel the monitoring operation.</param>
+    /// <returns>
+    /// A task that represents the asynchronous monitoring operation.
+    /// The task result is an <see cref="IDisposable"/> object that can be used to stop monitoring the tag.
+    /// </returns>
+    Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChange = null, CancellationToken token = default);
 }

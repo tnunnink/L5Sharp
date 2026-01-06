@@ -12,7 +12,7 @@ public static class TagExtensions
     /// </summary>
     /// <param name="code">The integer code to be converted to a <see cref="TagStatus"/>.</param>
     /// <returns>The <see cref="TagStatus"/> that corresponds to the provided code.</returns>
-    public static TagStatus AsResult(this int code)
+    public static TagStatus AsStatus(this int code)
     {
         return (TagStatus)code;
     }

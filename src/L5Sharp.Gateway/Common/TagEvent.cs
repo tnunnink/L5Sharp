@@ -41,10 +41,14 @@ internal static class TagEvent
     public const int Created = 7;
 
     /// <summary>
-    /// 
+    /// Determines whether the specified tag event is considered a "completed" state.
     /// </summary>
-    /// <param name="event"></param>
-    /// <returns></returns>
+    /// <param name="event">
+    /// The event identifier to check. Valid event identifiers include ReadCompleted, WriteCompleted, or Created.
+    /// </param>
+    /// <returns>
+    /// True if the event identifier corresponds to a "completed" state; otherwise, false.
+    /// </returns>
     public static bool IsComplete(int @event)
     {
         return @event is ReadCompleted or WriteCompleted or Created;
