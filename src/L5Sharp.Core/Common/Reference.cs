@@ -427,7 +427,7 @@ public sealed class Reference
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _path.Expression.GetHashCode();
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_path.Expression);
 
     /// <inheritdoc />
     public override string ToString() => _path.Expression;
