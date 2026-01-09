@@ -1,22 +1,12 @@
 ﻿using L5Sharp.Core;
 
-namespace L5Sharp.Gateway.Common;
+namespace L5Sharp.Gateway.Internal;
 
 /// <summary>
 /// Provides extension methods for working with tags in a Rockwell Logix-based PLC environment.
 /// </summary>
-public static class TagExtensions
+internal static class TagExtensions
 {
-    /// <summary>
-    /// Converts an integer code to its corresponding <see cref="TagStatus"/> value.
-    /// </summary>
-    /// <param name="code">The integer code to be converted to a <see cref="TagStatus"/>.</param>
-    /// <returns>The <see cref="TagStatus"/> that corresponds to the provided code.</returns>
-    public static TagStatus AsStatus(this int code)
-    {
-        return (TagStatus)code;
-    }
-
     /// <summary>
     /// Determines the fully qualified tag name based on the provided tag's scope and name.
     /// </summary>

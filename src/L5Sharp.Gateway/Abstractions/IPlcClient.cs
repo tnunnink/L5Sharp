@@ -78,4 +78,17 @@ public interface IPlcClient : IDisposable
     /// The task result is an <see cref="IDisposable"/> object that can be used to stop monitoring the tag.
     /// </returns>
     Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChange = null, CancellationToken token = default);
+
+    /// <summary>
+    /// Monitors the specified collection of PLC tags for changes asynchronously and invokes a callback action
+    /// when a tag's value changes.
+    /// </summary>
+    /// <param name="tags">A collection of tags to monitor for value changes.</param>
+    /// <param name="onChange">An optional callback action that is invoked when a tag value changes, receiving the changed tag as a parameter.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the monitoring operation.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result is a disposable object
+    /// that can be used to stop the monitoring of the tags.
+    /// </returns>
+    Task<IDisposable> WatchTags(IEnumerable<Tag> tags, Action<Tag>? onChange = null, CancellationToken token = default);
 }

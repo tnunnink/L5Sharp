@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using L5Sharp.Core;
 using L5Sharp.Gateway.Abstractions;
 using L5Sharp.Gateway.Common;
+using L5Sharp.Gateway.Internal;
 using L5Sharp.Gateway.Services;
 using Task = System.Threading.Tasks.Task;
 
@@ -76,11 +77,11 @@ public class PlcClient : IPlcClient
     private readonly ConcurrentDictionary<TagName, TagHandle> _handles = [];
 
     /// <summary>
-    /// Stores pending read operations initiated by the <see cref="PlcClient"/> instance,
-    /// associating a unique identifier with a <see cref="TaskCompletionSource{TResult}"/>
-    /// to track and resolve the completion of each read request asynchronously.
+    /// Represents a collection of pending asynchronous operations mapped to tag names.
+    /// This dictionary associates a <see cref="TagName"/> with a <see cref="TaskCompletionSource{TResult}"/>
+    /// that facilitates the management and synchronization of PLC operations.
     /// </summary>
-    private readonly ConcurrentDictionary<string, TaskCompletionSource<int>> _operations = [];
+    private readonly ConcurrentDictionary<TagName, TaskCompletionSource<int>> _operations = [];
 
     /// <summary>
     /// Maintains a thread-safe collection of active <see cref="TagWatch"/> instances associated with their respective handles.
@@ -101,7 +102,7 @@ public class PlcClient : IPlcClient
         if (!IPAddress.TryParse(ip, out var address))
             throw new ArgumentException($"Unable to parse IP address: {ip}");
 
-        _tagService = tagService ?? new NativeTagService(onEventEx: TagEventCallback);
+        _tagService = tagService ?? new NativeTagService(onEvent: TagEventCallback);
         _tagBuffer = new TagBuffer(_tagService);
         _ip = address;
         _options = options ?? new PlcOptions();
@@ -120,121 +121,76 @@ public class PlcClient : IPlcClient
     }
 
     /// <inheritdoc />
-    public async Task<TagResponse> ReadTag(Tag tag, CancellationToken token = default)
+    public Task<TagResponse> ReadTag(Tag tag, CancellationToken token = default)
     {
         if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
         var members = tag.Members(m => m.Value.IsAtomic()).ToList();
-        var tasks = members.Select(m => (Member: m, Read: ReadTagValue(m, token))).ToList();
-
-        if (tasks.Count == 0)
-            return TagResponse.NoData(tag.TagName);
-
-        var timer = Stopwatch.StartNew();
-        await Task.WhenAll(tasks.Select(t => t.Read));
-        timer.Stop();
-
-        var results = tasks.Select(t => (t.Member.TagName, t.Read.Result)).ToList();
-        return TagResponse.Aggregate(results, timer.Elapsed);
+        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(tag.TagName));
+        return ReadTagMembers(members, token);
     }
 
     /// <inheritdoc />
-    public async Task<TagResponse> ReadTags(IEnumerable<Tag> tags, CancellationToken token = default)
+    public Task<TagResponse> ReadTags(IEnumerable<Tag> tags, CancellationToken token = default)
     {
         if (tags is null) throw new ArgumentNullException(nameof(tags));
         ThrowIfDisposed();
 
         var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-        var tasks = members.Select(m => (Member: m, Read: ReadTagValue(m, token))).ToList();
-
-        if (tasks.Count == 0)
-            return TagResponse.NoData(members.Select(t => t.TagName).ToArray());
-
-        var timer = Stopwatch.StartNew();
-        await Task.WhenAll(tasks.Select(t => t.Read));
-        timer.Stop();
-
-        var results = tasks.Select(t => (t.Member.TagName, t.Read.Result)).ToList();
-        return TagResponse.Aggregate(results, timer.Elapsed);
+        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(members.Select(t => t.TagName).ToArray()));
+        return ReadTagMembers(members, token);
     }
 
     /// <inheritdoc />
-    public async Task<TagResponse> WriteTag(Tag tag, CancellationToken token = default)
+    public Task<TagResponse> WriteTag(Tag tag, CancellationToken token = default)
     {
         if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
         var members = tag.Members(m => m.Value.IsAtomic()).ToList();
-        var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
-
-        if (tasks.Count == 0)
-            return TagResponse.NoData(tag.TagName);
-
-        var timer = Stopwatch.StartNew();
-        await Task.WhenAll(tasks.Select(t => t.Write));
-        timer.Stop();
-
-        var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
-        return TagResponse.Aggregate(results, timer.Elapsed);
+        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(tag.TagName));
+        return WriteTagMembers(members, token);
     }
 
     /// <inheritdoc />
-    public async Task<TagResponse> WriteTags(IEnumerable<Tag> tags, CancellationToken token = default)
+    public Task<TagResponse> WriteTags(IEnumerable<Tag> tags, CancellationToken token = default)
     {
         if (tags is null) throw new ArgumentNullException(nameof(tags));
         ThrowIfDisposed();
 
         var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-        var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
-
-        if (tasks.Count == 0)
-            return TagResponse.NoData(members.Select(t => t.TagName).ToArray());
-
-        var timer = Stopwatch.StartNew();
-        await Task.WhenAll(tasks.Select(t => t.Write));
-        timer.Stop();
-
-        var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
-        return TagResponse.Aggregate(results, timer.Elapsed);
+        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(members.Select(t => t.TagName).ToArray()));
+        return WriteTagMembers(members, token);
     }
 
     /// <inheritdoc />
-    public async Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChanged = null, CancellationToken token = default)
+    public async Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChange = null, CancellationToken token = default)
     {
         if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
         var members = tag.Members(m => m.Value.IsAtomic()).ToList();
-        var tasks = members.Select(m => (Member: m, Create: GetOrCreateHandle(m.TagName, token))).ToList();
-        await Task.WhenAll(tasks.Select(t => t.Create));
 
-        foreach (var (member, task) in tasks)
-        {
-            var handle = task.Result;
-            if (handle <= 1) continue; //todo not totally sure here.
+        if (members.Count == 0)
+            throw new InvalidOperationException("No atomic tag data members exist in the provided tag.");
 
-            var watch = _watches.GetOrAdd(
-                handle,
-                h => new TagWatch(h, member, _options.ReadInterval, _tagService, _tagBuffer)
-            );
+        return await WatchTagMembers(members, onChange, token);
+    }
 
-            watch.Increment();
-            if (onChanged is not null) watch.OnChanged += onChanged;
-        }
+    /// <inheritdoc />
+    public Task<IDisposable> WatchTags(IEnumerable<Tag> tags, Action<Tag>? onChange = null,
+        CancellationToken token = default)
+    {
+        if (tags is null) throw new ArgumentNullException(nameof(tags));
+        ThrowIfDisposed();
 
-        return new Unsubscriber(() =>
-        {
-            foreach (var task in tasks)
-            {
-                var handle = task.Create.Result;
-                if (!_watches.TryGetValue(handle, out var watch)) continue;
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
 
-                if (onChanged is not null) watch.OnChanged -= onChanged;
-                watch.Decrement();
-                if (watch.IsIdle) _watches.TryRemove(watch.Handle, out _);
-            }
-        });
+        if (members.Count == 0)
+            throw new InvalidOperationException("No atomic tag data members exist in the provided set of tags.");
+
+        return WatchTagMembers(members, onChange, token);
     }
 
     /// <inheritdoc />
@@ -249,14 +205,93 @@ public class PlcClient : IPlcClient
 
         foreach (var handle in _handles.Values)
         {
-            var result = _tagService.Destroy(handle.TagId).AsStatus();
-            TagException.ThrowIfRequested(result, _options.ThrowOn);
             Marshal.FreeHGlobal(handle.TagPtr);
+            var status = _tagService.Destroy(handle.TagId).AsStatus();
+            TagException.ThrowIfRequested(status, _options.ThrowOn);
         }
 
+        _watches.Clear();
         _handles.Clear();
         _disposed = true;
         GC.SuppressFinalize(this);
+    }
+
+
+    /// <summary>
+    /// Reads the values of the specified collection of tag members and returns a response containing the results.
+    /// </summary>
+    private async Task<TagResponse> ReadTagMembers(ICollection<Tag> members, CancellationToken token = default)
+    {
+        var tasks = members.Select(m => (Member: m, Read: ReadTagValue(m, token))).ToList();
+
+        var timer = Stopwatch.StartNew();
+        await Task.WhenAll(tasks.Select(t => t.Read));
+        timer.Stop();
+
+        var results = tasks.Select(t => (t.Member.TagName, t.Read.Result)).ToList();
+        return TagResponse.Aggregate(results, timer.Elapsed);
+    }
+
+    /// <summary>
+    /// Writes a collection of tag members to the PLC and returns a response containing the results of the operation.
+    /// </summary>
+    private async Task<TagResponse> WriteTagMembers(ICollection<Tag> members, CancellationToken token = default)
+    {
+        var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
+
+        var timer = Stopwatch.StartNew();
+        await Task.WhenAll(tasks.Select(t => t.Write));
+        timer.Stop();
+
+        var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
+        return TagResponse.Aggregate(results, timer.Elapsed);
+    }
+
+    /// <summary>
+    /// Subscribes to changes in a collection of tag members and invokes a callback when changes occur.
+    /// </summary>
+    /// <param name="members">The collection of tag members to monitor for changes.</param>
+    /// <param name="onChanged">The optional callback action to invoke when a tag member's value changes.</param>
+    /// <param name="token">A cancellation token to observe while waiting for task completion.</param>
+    /// <returns>An <see cref="IDisposable"/> that allows unsubscribing from tag monitoring.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="members"/> is null.</exception>
+    private async Task<IDisposable> WatchTagMembers(ICollection<Tag> members, Action<Tag>? onChanged,
+        CancellationToken token)
+    {
+        var tasks = members.Select(m => (Member: m, Create: GetOrCreateHandle(m.TagName, token))).ToList();
+        await Task.WhenAll(tasks.Select(t => t.Create));
+
+        foreach (var (member, create) in tasks)
+        {
+            var handle = create.Result;
+            if (handle <= 1) continue; //todo not totally sure here.
+
+            var watch = _watches.GetOrAdd(
+                handle,
+                h => new TagWatch(h, member, _options.ReadInterval, _tagService, _tagBuffer)
+            );
+
+            watch.Increment();
+            if (onChanged is not null) watch.OnChanged += onChanged;
+        }
+
+        return new Unsubscriber(() =>
+        {
+            // If the caller already disposed of the client, then we can return.
+            if (_disposed) return;
+            
+            foreach (var task in tasks)
+            {
+                var handle = task.Create.Result;
+
+                if (!_watches.TryGetValue(handle, out var watch))
+                    continue;
+
+                if (onChanged is not null) watch.OnChanged -= onChanged;
+                watch.Decrement();
+                if (watch.IsIdle) _watches.TryRemove(watch.Handle, out _);
+            }
+        });
     }
 
     /// <summary>
@@ -269,15 +304,15 @@ public class PlcClient : IPlcClient
         var tagName = tag.DetermineTagName();
         var handle = await GetOrCreateHandle(tagName, token);
 
-        var result = (await ExecuteAsync(tagName, () => _tagService.Read(handle, AsyncTimeout), token)).AsStatus();
-        TagException.ThrowIfRequested(result, _options.ThrowOn);
+        var status = (await ExecuteAsync(tagName, () => _tagService.Read(handle, AsyncTimeout), token)).AsStatus();
+        TagException.ThrowIfRequested(status, _options.ThrowOn);
 
-        if (result == TagStatus.Ok)
+        if (status == TagStatus.Ok)
         {
             _tagBuffer.ReadValue(tag, handle);
         }
 
-        return result;
+        return status;
     }
 
     /// <summary>
@@ -299,9 +334,9 @@ public class PlcClient : IPlcClient
             return written;
         }
 
-        var result = (await ExecuteAsync(tagName, () => _tagService.Write(handle, AsyncTimeout), token)).AsStatus();
-        TagException.ThrowIfRequested(result, _options.ThrowOn);
-        return result;
+        var status = (await ExecuteAsync(tagName, () => _tagService.Write(handle, AsyncTimeout), token)).AsStatus();
+        TagException.ThrowIfRequested(status, _options.ThrowOn);
+        return status;
     }
 
     /// <summary>
@@ -373,8 +408,7 @@ public class PlcClient : IPlcClient
             // Native method with no timeout will return immediately with pending or error.
             var status = native();
 
-            // If not pending, we can return without awaiting the task.
-            //todo still not 100% sure about this. Might still want to wait.
+            // If an error returned, we can return without awaiting the task.
             if (status < 0) return status;
 
             // Emulate the timeout with a linked cancellation for the specified timeout.
@@ -411,8 +445,8 @@ public class PlcClient : IPlcClient
 
         if (_handles.TryGetValue(tagName, out var handle))
         {
-            var result = _tagService.Abort(handle.TagId).AsStatus();
-            TagException.ThrowIfRequested(result, _options.ThrowOn);
+            var status = _tagService.Abort(handle.TagId).AsStatus();
+            TagException.ThrowIfRequested(status, _options.ThrowOn);
         }
     }
 

@@ -12,43 +12,22 @@ namespace L5Sharp.Gateway.Services;
 /// </summary>
 public class NativeTagService : ITagService
 {
-    private readonly plctag.callback_func _onEvent;
-    private readonly plctag.callback_func_ex _onEventEx;
-    private readonly plctag.log_callback_func? _onLog;
+    private readonly plctag.callback_func_ex _onEvent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NativeTagService"/> class with optional callbacks for events and logging.
     /// </summary>
     /// <param name="onEvent">Optional callback function invoked for tag events. Receives tag ID, event type, and status code.</param>
-    /// <param name="onEventEx">Optional extended callback function invoked for tag events with user data. Receives tag ID, event type, status code, and user data pointer.</param>
-    /// <param name="onLog">Optional callback function invoked for logging messages. Receives log level, message ID, and log message text.</param>
-    public NativeTagService(
-        Action<int, int, int>? onEvent = null,
-        Action<int, int, int, IntPtr>? onEventEx = null,
-        Action<int, int, string>? onLog = null)
+    public NativeTagService(Action<int, int, int, IntPtr>? onEvent)
     {
         // Pinned delegates to prevent GC collection
-        _onEvent = new plctag.callback_func(onEvent ?? ((_, _, _) => { }));
-        _onEventEx = new plctag.callback_func_ex(onEventEx ?? ((_, _, _, _) => { }));
-        _onLog = new plctag.log_callback_func(onLog ?? ((_, _, _) => { }));
+        _onEvent = new plctag.callback_func_ex(onEvent ?? ((_, _, _, _) => { }));
     }
 
     /// <inheritdoc />
-    public int Abort(int tag)
+    public int Abort(int handle)
     {
-        return plctag.plc_tag_abort(tag);
-    }
-
-    /// <inheritdoc />
-    public int CheckVersion(int major, int minor, int patch)
-    {
-        return plctag.plc_tag_check_lib_version(major, minor, patch);
-    }
-
-    /// <inheritdoc />
-    public int Create(string path, int timeout)
-    {
-        return plctag.plc_tag_create(path, timeout);
+        return plctag.plc_tag_abort(handle);
     }
 
     /// <inheritdoc />
@@ -56,7 +35,7 @@ public class NativeTagService : ITagService
     {
         // This implementation uses the callback provided in the constructor because libplctag requires the delegate
         // be pinned to prevent GC reclaiming the reference.
-        return plctag.plc_tag_create_ex(path, _onEventEx, userData, timeout);
+        return plctag.plc_tag_create_ex(path, _onEvent, userData, timeout);
     }
 
     /// <inheritdoc />
@@ -66,284 +45,212 @@ public class NativeTagService : ITagService
     }
 
     /// <inheritdoc />
-    public int Read(int tag, int timeout)
+    public int Read(int handle, int timeout)
     {
-        return plctag.plc_tag_read(tag, timeout);
+        return plctag.plc_tag_read(handle, timeout);
     }
 
     /// <inheritdoc />
-    public int Write(int tag, int timeout)
+    public int Write(int handle, int timeout)
     {
-        return plctag.plc_tag_write(tag, timeout);
+        return plctag.plc_tag_write(handle, timeout);
     }
 
     /// <inheritdoc />
-    public int Status(int tag)
+    public int Status(int handle)
     {
-        return plctag.plc_tag_status(tag);
+        return plctag.plc_tag_status(handle);
     }
 
     /// <inheritdoc />
-    public int RegisterCallback(int tag, Action<int, int, int> callback)
+    public int Destroy(int handle)
     {
-        // This implementation uses the callback provided in the constructor because libplctag requires the delegate
-        // be pinned to prevent GC reclaiming the reference.
-        return plctag.plc_tag_register_callback(tag, _onEvent);
+        return plctag.plc_tag_destroy(handle);
     }
 
     /// <inheritdoc />
-    public int UnregisterCallback(int tag)
+    public int GetAttribute(int handle, string attributeName, int defaultValue)
     {
-        return plctag.plc_tag_unregister_callback(tag);
-    }
-
-    /// <param name="logger"></param>
-    /// <inheritdoc />
-    public int RegisterLogger(Action<int, int, string> logger)
-    {
-        // This implementation uses the callback provided in the constructor because libplctag requires the delegate
-        // be pinned to prevent GC reclaiming the reference.
-        return plctag.plc_tag_register_logger(_onLog);
+        return plctag.plc_tag_get_int_attribute(handle, attributeName, defaultValue);
     }
 
     /// <inheritdoc />
-    public int UnregisterLogger(int tag)
+    public int SetAttribute(int handle, string attributeName, int newValue)
     {
-        // I really don't know why this method takes a tag handle when the logger is global.
-        return plctag.plc_tag_unregister_logger(tag);
+        return plctag.plc_tag_set_int_attribute(handle, attributeName, newValue);
     }
 
     /// <inheritdoc />
-    public int Lock(int tag)
+    public int GetBit(int handle, int offsetBit)
     {
-        return plctag.plc_tag_lock(tag);
+        return plctag.plc_tag_get_bit(handle, offsetBit);
     }
 
     /// <inheritdoc />
-    public int Unlock(int tag)
+    public sbyte GetSByte(int handle, int offset)
     {
-        return plctag.plc_tag_unlock(tag);
+        return plctag.plc_tag_get_int8(handle, offset);
     }
 
     /// <inheritdoc />
-    public int Destroy(int tag)
+    public short GetShort(int handle, int offset)
     {
-        return plctag.plc_tag_destroy(tag);
+        return plctag.plc_tag_get_int16(handle, offset);
     }
 
     /// <inheritdoc />
-    public int Shutdown()
+    public int GetInt(int handle, int offSet)
     {
-        return plctag.plc_tag_shutdown();
+        return plctag.plc_tag_get_int32(handle, offSet);
     }
 
     /// <inheritdoc />
-    public void SetDebugLevel(int debugLevel)
+    public long GetLong(int handle, int offSet)
     {
-        plctag.plc_tag_set_debug_level(debugLevel);
+        return plctag.plc_tag_get_int64(handle, offSet);
     }
 
     /// <inheritdoc />
-    public int GetAttribute(int tag, string attributeName, int defaultValue)
+    public float GetFloat(int handle, int offSet)
     {
-        return plctag.plc_tag_get_int_attribute(tag, attributeName, defaultValue);
+        return plctag.plc_tag_get_float32(handle, offSet);
     }
 
     /// <inheritdoc />
-    public int SetAttribute(int tag, string attributeName, int newValue)
+    public double GetDouble(int handle, int offSet)
     {
-        return plctag.plc_tag_set_int_attribute(tag, attributeName, newValue);
+        return plctag.plc_tag_get_float64(handle, offSet);
     }
 
     /// <inheritdoc />
-    public int GetByteArrayAttribute(int tag, string attributeName, byte[] buffer, int length)
+    public byte GetByte(int handle, int offSet)
     {
-        return plctag.plc_tag_get_raw_bytes(tag, 0, buffer, length);
+        return plctag.plc_tag_get_uint8(handle, offSet);
     }
 
     /// <inheritdoc />
-    public int GetSize(int tag)
+    public ushort GetUShort(int handle, int offSet)
     {
-        return plctag.plc_tag_get_size(tag);
+        return plctag.plc_tag_get_uint16(handle, offSet);
     }
 
     /// <inheritdoc />
-    public int SetSize(int tag, int size)
+    public uint GetUInt(int handle, int offSet)
     {
-        return plctag.plc_tag_set_size(tag, size);
+        return plctag.plc_tag_get_uint32(handle, offSet);
     }
 
     /// <inheritdoc />
-    public int GetBit(int tag, int offSetBit)
+    public ulong GetULong(int handle, int offSet)
     {
-        return plctag.plc_tag_get_bit(tag, offSetBit);
+        return plctag.plc_tag_get_uint64(handle, offSet);
     }
 
     /// <inheritdoc />
-    public sbyte GetSByte(int tag, int offSet)
+    public int GetRawBytes(int handle, int start, byte[] buffer, int length)
     {
-        return plctag.plc_tag_get_int8(tag, offSet);
+        return plctag.plc_tag_get_raw_bytes(handle, start, buffer, length);
     }
 
     /// <inheritdoc />
-    public short GetShort(int tag, int offSet)
+    public int GetStringLength(int handle, int offset)
     {
-        return plctag.plc_tag_get_int16(tag, offSet);
+        return plctag.plc_tag_get_string_length(handle, offset);
     }
 
     /// <inheritdoc />
-    public int GetInt(int tag, int offSet)
+    public int GetString(int handle, int offset, StringBuilder buffer, int length)
     {
-        return plctag.plc_tag_get_int32(tag, offSet);
+        return plctag.plc_tag_get_string(handle, offset, buffer, length);
     }
 
     /// <inheritdoc />
-    public long GetLong(int tag, int offSet)
+    public int GetStringTotalLength(int handle, int offset)
     {
-        return plctag.plc_tag_get_int64(tag, offSet);
+        return plctag.plc_tag_get_string_total_length(handle, offset);
     }
 
     /// <inheritdoc />
-    public float GetFloat(int tag, int offSet)
+    public int GetStringCapacity(int handle, int offset)
     {
-        return plctag.plc_tag_get_float32(tag, offSet);
+        return plctag.plc_tag_get_string_capacity(handle, offset);
     }
 
     /// <inheritdoc />
-    public double GetDouble(int tag, int offSet)
+    public int SetBit(int handle, int offSetBit, int val)
     {
-        return plctag.plc_tag_get_float64(tag, offSet);
+        return plctag.plc_tag_set_bit(handle, offSetBit, val);
     }
 
     /// <inheritdoc />
-    public byte GetByte(int tag, int offSet)
+    public int SetSByte(int handle, int offSet, sbyte val)
     {
-        return plctag.plc_tag_get_uint8(tag, offSet);
+        return plctag.plc_tag_set_int8(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public ushort GetUShort(int tag, int offSet)
+    public int SetShort(int handle, int offSet, short val)
     {
-        return plctag.plc_tag_get_uint16(tag, offSet);
+        return plctag.plc_tag_set_int16(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public uint GetUInt(int tag, int offSet)
+    public int SetInt(int handle, int offSet, int val)
     {
-        return plctag.plc_tag_get_uint32(tag, offSet);
+        return plctag.plc_tag_set_int32(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public ulong GetULong(int tag, int offSet)
+    public int SetLong(int handle, int offSet, long val)
     {
-        return plctag.plc_tag_get_uint64(tag, offSet);
+        return plctag.plc_tag_set_int64(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public int GetRawBytes(int tag, int start, byte[] buffer, int length)
+    public int SetFloat(int handle, int offSet, float val)
     {
-        return plctag.plc_tag_get_raw_bytes(tag, start, buffer, length);
+        return plctag.plc_tag_set_float32(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public int GetStringLength(int tag, int offset)
+    public int SetDouble(int handle, int offSet, double val)
     {
-        return plctag.plc_tag_get_string_length(tag, offset);
+        return plctag.plc_tag_set_float64(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public int GetString(int tag, int offset, StringBuilder buffer, int length)
+    public int SetByte(int handle, int offSet, byte val)
     {
-        return plctag.plc_tag_get_string(tag, offset, buffer, length);
+        return plctag.plc_tag_set_uint8(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public int GetStringTotalLength(int tag, int offset)
+    public int SetUShort(int handle, int offSet, ushort val)
     {
-        return plctag.plc_tag_get_string_total_length(tag, offset);
+        return plctag.plc_tag_set_uint16(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public int GetStringCapacity(int tag, int offset)
+    public int SetUInt(int handle, int offSet, uint val)
     {
-        return plctag.plc_tag_get_string_capacity(tag, offset);
+        return plctag.plc_tag_set_uint32(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public int SetBit(int tag, int offSetBit, int val)
+    public int SetULong(int handle, int offSet, ulong val)
     {
-        return plctag.plc_tag_set_bit(tag, offSetBit, val);
+        return plctag.plc_tag_set_uint64(handle, offSet, val);
     }
 
     /// <inheritdoc />
-    public int SetSByte(int tag, int offSet, sbyte val)
+    public int SetRawBytes(int handle, int offset, byte[] buffer, int length)
     {
-        return plctag.plc_tag_set_int8(tag, offSet, val);
+        return plctag.plc_tag_set_raw_bytes(handle, offset, buffer, length);
     }
 
     /// <inheritdoc />
-    public int SetShort(int tag, int offSet, short val)
+    public int SetString(int handle, int offset, string value)
     {
-        return plctag.plc_tag_set_int16(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetInt(int tag, int offSet, int val)
-    {
-        return plctag.plc_tag_set_int32(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetLong(int tag, int offSet, long val)
-    {
-        return plctag.plc_tag_set_int64(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetFloat(int tag, int offSet, float val)
-    {
-        return plctag.plc_tag_set_float32(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetDouble(int tag, int offSet, double val)
-    {
-        return plctag.plc_tag_set_float64(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetByte(int tag, int offSet, byte val)
-    {
-        return plctag.plc_tag_set_uint8(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetUShort(int tag, int offSet, ushort val)
-    {
-        return plctag.plc_tag_set_uint16(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetUInt(int tag, int offSet, uint val)
-    {
-        return plctag.plc_tag_set_uint32(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetULong(int tag, int offSet, ulong val)
-    {
-        return plctag.plc_tag_set_uint64(tag, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetRawBytes(int tag, int offset, byte[] buffer, int length)
-    {
-        return plctag.plc_tag_set_raw_bytes(tag, offset, buffer, length);
-    }
-
-    /// <inheritdoc />
-    public int SetString(int tag, int offset, string value)
-    {
-        return plctag.plc_tag_set_string(tag, offset, value);
+        return plctag.plc_tag_set_string(handle, offset, value);
     }
 }

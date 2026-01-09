@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace L5Sharp.Gateway.Common;
+namespace L5Sharp.Gateway.Internal;
 
 /// <summary>
 /// Represents a handle for identifying and interacting with a specific tag in the system.
 /// </summary>
-public readonly struct TagHandle
+internal readonly struct TagHandle
 {
     /// <summary>
     /// Represents a handle for identifying and interacting with a specific tag in the system.

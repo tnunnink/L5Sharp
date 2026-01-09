@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Gateway.Common;
+﻿namespace L5Sharp.Gateway.Internal;
 
 /// <summary>
 /// Represents the various state changes or actions that can occur with a tag during its lifecycle.

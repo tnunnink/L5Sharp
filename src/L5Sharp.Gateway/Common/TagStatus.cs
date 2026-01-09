@@ -264,3 +264,29 @@ public enum TagStatus
     /// </summary>
     WriteErr = -37
 }
+
+/// <summary>
+/// Provides extension methods for working with the <see cref="TagStatus"/> enumeration.
+/// </summary>
+public static class TagStatusExtensions
+{
+    /// <summary>
+    /// Converts an integer code to its corresponding <see cref="TagStatus"/> value.
+    /// </summary>
+    /// <param name="code">The integer code to be converted to a <see cref="TagStatus"/>.</param>
+    /// <returns>The <see cref="TagStatus"/> that corresponds to the provided code.</returns>
+    public static TagStatus AsStatus(this int code)
+    {
+        return (TagStatus)code;
+    }
+
+    /// <summary>
+    /// Converts the specified <see cref="TagStatus"/> instance to its corresponding integer value.
+    /// </summary>
+    /// <param name="status">The <see cref="TagStatus"/> instance to be converted to an integer.</param>
+    /// <returns>The integer value that corresponds to the provided <see cref="TagStatus"/>.</returns>
+    public static int AsValue(this TagStatus status)
+    {
+        return (int)status;
+    }
+}

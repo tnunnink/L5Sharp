@@ -2,7 +2,7 @@
 using L5Sharp.Core;
 using L5Sharp.Gateway.Abstractions;
 
-namespace L5Sharp.Gateway.Common;
+namespace L5Sharp.Gateway.Internal;
 
 /// <summary>
 /// Handles mapping and conversion of tag values between internal representations and external data handles.

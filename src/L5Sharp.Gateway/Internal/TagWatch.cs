@@ -2,8 +2,9 @@
 using System.Threading;
 using L5Sharp.Core;
 using L5Sharp.Gateway.Abstractions;
+using L5Sharp.Gateway.Common;
 
-namespace L5Sharp.Gateway.Common;
+namespace L5Sharp.Gateway.Internal;
 
 /// <summary>
 /// Represents a watcher for a specific tag, providing functionality to track and notify changes.
@@ -31,7 +32,9 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     private readonly ITagService _tagService = tagService;
 
     /// <summary>
-    /// 
+    /// A private field that serves as the central mechanism for mapping and converting tag values
+    /// between internal representations and external data handles. This buffer facilitates the reading
+    /// and writing of values associated with specific tags, ensuring efficient and synchronized data operations.
     /// </summary>
     private readonly TagBuffer _buffer = buffer;
 
@@ -77,7 +80,7 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     public event Action<Tag>? OnChanged;
 
     /// <summary>
-    /// Increments the subscriber count for the associated tag. If this call results in the first subscriber
+    /// Increments the subscriber count for the associated watch. If this call results in the first subscriber
     /// being added, it enables automatic synchronization of read operations for the associated tag based
     /// on the specified refresh rate.
     /// </summary>
@@ -134,7 +137,7 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
         // Clear the subscriber count
         _subscribers = 0;
 
-        // Important: Detach all managed event handlers to avoid memory leaks
+        // Detach all managed event handlers to avoid memory leaks
         OnChanged = null;
     }
 }

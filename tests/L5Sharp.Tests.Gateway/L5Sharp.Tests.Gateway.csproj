@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\L5Sharp.Gateway\L5Sharp.Gateway.csproj" />
+      <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
     </ItemGroup>
 
 </Project>
