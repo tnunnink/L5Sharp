@@ -464,14 +464,14 @@ public class Tag : LogixComponent<Tag>
             if (tagName is null) throw new ArgumentNullException(nameof(tagName));
             if (tagName.IsEmpty) return this;
 
-            var member = Value.Member(tagName.Root);
+            var member = Value.Member(tagName.Base);
 
             if (member is null)
                 throw new ArgumentException(
-                    $"No member with name '{tagName.Root}' exists in the tag data structure for type {DataType}.");
+                    $"No member with name '{tagName.Base}' exists in the tag data structure for type {DataType}.");
 
             var tag = new Tag(member, this);
-            return tagName.Depth == 0 ? tag : tag[tagName.Path];
+            return tagName.Depth == 0 ? tag : tag[tagName.Member];
         }
     }
 
@@ -530,11 +530,11 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return this;
 
-        var member = Value.Member(tagName.Root);
+        var member = Value.Member(tagName.Base);
         if (member is null) return null;
 
         var tag = new Tag(member, this);
-        return tagName.Depth == 0 ? tag : tag.Member(tagName.Path);
+        return tagName.Depth == 0 ? tag : tag.Member(tagName.Member);
     }
 
     /// <summary>
@@ -627,7 +627,7 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return Members();
 
-        var member = Value.Member(tagName.Root);
+        var member = Value.Member(tagName.Base);
         if (member is null) return [];
 
         var tag = new Tag(member, this);

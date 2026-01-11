@@ -39,12 +39,6 @@ public class NativeTagService : ITagService
     }
 
     /// <inheritdoc />
-    public string Decode(int error)
-    {
-        return plctag.plc_tag_decode_error(error);
-    }
-
-    /// <inheritdoc />
     public int Read(int handle, int timeout)
     {
         return plctag.plc_tag_read(handle, timeout);
@@ -69,21 +63,9 @@ public class NativeTagService : ITagService
     }
 
     /// <inheritdoc />
-    public int GetAttribute(int handle, string attributeName, int defaultValue)
-    {
-        return plctag.plc_tag_get_int_attribute(handle, attributeName, defaultValue);
-    }
-
-    /// <inheritdoc />
     public int SetAttribute(int handle, string attributeName, int newValue)
     {
         return plctag.plc_tag_set_int_attribute(handle, attributeName, newValue);
-    }
-
-    /// <inheritdoc />
-    public int GetBit(int handle, int offsetBit)
-    {
-        return plctag.plc_tag_get_bit(handle, offsetBit);
     }
 
     /// <inheritdoc />
@@ -99,153 +81,123 @@ public class NativeTagService : ITagService
     }
 
     /// <inheritdoc />
-    public int GetInt(int handle, int offSet)
+    public int GetInt(int handle, int offset)
     {
-        return plctag.plc_tag_get_int32(handle, offSet);
+        return plctag.plc_tag_get_int32(handle, offset);
     }
 
     /// <inheritdoc />
-    public long GetLong(int handle, int offSet)
+    public long GetLong(int handle, int offset)
     {
-        return plctag.plc_tag_get_int64(handle, offSet);
+        return plctag.plc_tag_get_int64(handle, offset);
     }
 
     /// <inheritdoc />
-    public float GetFloat(int handle, int offSet)
+    public float GetFloat(int handle, int offset)
     {
-        return plctag.plc_tag_get_float32(handle, offSet);
+        return plctag.plc_tag_get_float32(handle, offset);
     }
 
     /// <inheritdoc />
-    public double GetDouble(int handle, int offSet)
+    public double GetDouble(int handle, int offset)
     {
-        return plctag.plc_tag_get_float64(handle, offSet);
+        return plctag.plc_tag_get_float64(handle, offset);
     }
 
     /// <inheritdoc />
-    public byte GetByte(int handle, int offSet)
+    public byte GetByte(int handle, int offset)
     {
-        return plctag.plc_tag_get_uint8(handle, offSet);
+        return plctag.plc_tag_get_uint8(handle, offset);
     }
 
     /// <inheritdoc />
-    public ushort GetUShort(int handle, int offSet)
+    public ushort GetUShort(int handle, int offset)
     {
-        return plctag.plc_tag_get_uint16(handle, offSet);
+        return plctag.plc_tag_get_uint16(handle, offset);
     }
 
     /// <inheritdoc />
-    public uint GetUInt(int handle, int offSet)
+    public uint GetUInt(int handle, int offset)
     {
-        return plctag.plc_tag_get_uint32(handle, offSet);
+        return plctag.plc_tag_get_uint32(handle, offset);
     }
 
     /// <inheritdoc />
-    public ulong GetULong(int handle, int offSet)
+    public ulong GetULong(int handle, int offset)
     {
-        return plctag.plc_tag_get_uint64(handle, offSet);
+        return plctag.plc_tag_get_uint64(handle, offset);
     }
 
     /// <inheritdoc />
-    public int GetRawBytes(int handle, int start, byte[] buffer, int length)
+    public string GetString(int handle, int offset)
     {
-        return plctag.plc_tag_get_raw_bytes(handle, start, buffer, length);
+        var length = plctag.plc_tag_get_string_length(handle, offset);
+        if (length < 0) return string.Empty;
+
+        var builder = new StringBuilder(length);
+        var result = plctag.plc_tag_get_string(handle, offset, builder, length);
+
+        return result == 0 ? builder.ToString() : string.Empty;
     }
 
     /// <inheritdoc />
-    public int GetStringLength(int handle, int offset)
+    public int SetSByte(int handle, int offset, sbyte value)
     {
-        return plctag.plc_tag_get_string_length(handle, offset);
+        return plctag.plc_tag_set_int8(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int GetString(int handle, int offset, StringBuilder buffer, int length)
+    public int SetShort(int handle, int offset, short value)
     {
-        return plctag.plc_tag_get_string(handle, offset, buffer, length);
+        return plctag.plc_tag_set_int16(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int GetStringTotalLength(int handle, int offset)
+    public int SetInt(int handle, int offset, int value)
     {
-        return plctag.plc_tag_get_string_total_length(handle, offset);
+        return plctag.plc_tag_set_int32(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int GetStringCapacity(int handle, int offset)
+    public int SetLong(int handle, int offset, long value)
     {
-        return plctag.plc_tag_get_string_capacity(handle, offset);
+        return plctag.plc_tag_set_int64(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int SetBit(int handle, int offSetBit, int val)
+    public int SetFloat(int handle, int offset, float value)
     {
-        return plctag.plc_tag_set_bit(handle, offSetBit, val);
+        return plctag.plc_tag_set_float32(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int SetSByte(int handle, int offSet, sbyte val)
+    public int SetDouble(int handle, int offset, double value)
     {
-        return plctag.plc_tag_set_int8(handle, offSet, val);
+        return plctag.plc_tag_set_float64(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int SetShort(int handle, int offSet, short val)
+    public int SetByte(int handle, int offset, byte value)
     {
-        return plctag.plc_tag_set_int16(handle, offSet, val);
+        return plctag.plc_tag_set_uint8(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int SetInt(int handle, int offSet, int val)
+    public int SetUShort(int handle, int offset, ushort value)
     {
-        return plctag.plc_tag_set_int32(handle, offSet, val);
+        return plctag.plc_tag_set_uint16(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int SetLong(int handle, int offSet, long val)
+    public int SetUInt(int handle, int offset, uint value)
     {
-        return plctag.plc_tag_set_int64(handle, offSet, val);
+        return plctag.plc_tag_set_uint32(handle, offset, value);
     }
 
     /// <inheritdoc />
-    public int SetFloat(int handle, int offSet, float val)
+    public int SetULong(int handle, int offset, ulong value)
     {
-        return plctag.plc_tag_set_float32(handle, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetDouble(int handle, int offSet, double val)
-    {
-        return plctag.plc_tag_set_float64(handle, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetByte(int handle, int offSet, byte val)
-    {
-        return plctag.plc_tag_set_uint8(handle, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetUShort(int handle, int offSet, ushort val)
-    {
-        return plctag.plc_tag_set_uint16(handle, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetUInt(int handle, int offSet, uint val)
-    {
-        return plctag.plc_tag_set_uint32(handle, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetULong(int handle, int offSet, ulong val)
-    {
-        return plctag.plc_tag_set_uint64(handle, offSet, val);
-    }
-
-    /// <inheritdoc />
-    public int SetRawBytes(int handle, int offset, byte[] buffer, int length)
-    {
-        return plctag.plc_tag_set_raw_bytes(handle, offset, buffer, length);
+        return plctag.plc_tag_set_uint64(handle, offset, value);
     }
 
     /// <inheritdoc />

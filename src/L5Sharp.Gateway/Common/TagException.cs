@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using libplctag.NativeImport;
 
 namespace L5Sharp.Gateway.Common;
 
@@ -61,8 +60,6 @@ public class TagException : Exception
     /// <returns>A string containing the formatted error message for the tag operation.</returns>
     private static string BuildMessage(TagStatus status)
     {
-        //todo need to replace this
-        var error = plctag.plc_tag_decode_error((int)status);
-        return $"Tag operation failed with error: {error}";
+        return $"Tag operation failed with error: {status}";
     }
 }

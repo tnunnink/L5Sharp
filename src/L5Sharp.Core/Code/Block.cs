@@ -209,8 +209,8 @@ public class Block : LogixObject<Block>
         if (target is null || target.IsEmpty)
             throw new ArgumentException("Can not wire block with null or empty target tag name.");
 
-        var operand = target.Root;
-        var pin = target.Path;
+        var operand = target.Base;
+        var pin = target.Member;
 
         var to = Element.Parent?.Elements().FirstOrDefault(e =>
             e.GetBlockOperand() == operand
@@ -256,8 +256,8 @@ public class Block : LogixObject<Block>
         if (source is null || source.IsEmpty)
             throw new ArgumentException("Can not wire block with null or empty target tag name.");
 
-        var operand = source.Root;
-        var pin = source.Path;
+        var operand = source.Base;
+        var pin = source.Member;
 
         var from = Element.Parent?.Elements().FirstOrDefault(e =>
             e.GetBlockOperand() == operand

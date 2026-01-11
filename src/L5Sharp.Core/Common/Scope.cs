@@ -8,24 +8,31 @@ namespace L5Sharp.Core;
 /// Represents the definition of a Scope in the Logix system.
 /// </summary>
 /// <remarks>
-/// A Scope defines the hierarchical or functional container for elements in a Logix project,
-/// such as programs, routines, and controller-level objects. The class provides functionality
-/// to access and determine the level and container of the current scope object based
-/// on XML configuration.
+/// A Scope defines the hierarchical container for elements in a Logix project,
+/// such as programs, routines, and controller-level objects. The class scope using a <see cref="ScopeLevel"/> and
+/// container name to identify the scope of a given element.
 /// </remarks>
 public sealed class Scope
 {
-    private readonly XElement _element;
+    /// <summary>
+    /// Creates a new scope with the provided <see cref="ScopeLevel"/> and container name.
+    /// </summary>
+    private Scope(ScopeLevel level, string container)
+    {
+        Level = level;
+        Container = container;
+    }
 
     /// <summary>
-    /// Creates a new scope instance based on the provided <see cref="XElement"/> which contains the hierarchical
-    /// references which are used to determine the scope of the element.
+    /// Creates a new scope instance based on the provided <see cref="XElement"/>.
     /// </summary>
-    /// <param name="element">The element to determine the scope of.</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="element"/> is null.</exception>
     private Scope(XElement element)
     {
-        _element = element ?? throw new ArgumentNullException(nameof(element));
+        if (element is null)
+            throw new ArgumentNullException(nameof(element));
+
+        Level = DetermineLevel(element);
+        Container = DetermineContainer(element);
     }
 
     /// <summary>
@@ -40,7 +47,7 @@ public sealed class Scope
     /// its ancestors. The only elements that are considered are <c>Controller</c>, <c>Program</c>, and
     /// <c>AddOnInstructionDefinition</c> (Routine) elements.
     /// </remarks>
-    public ScopeLevel Level => DetermineLevel();
+    public ScopeLevel Level { get; }
 
     /// <summary>
     /// Gets the name of the container in which the current <see cref="Scope"/> resides.
@@ -53,7 +60,7 @@ public sealed class Scope
     /// <returns>
     /// A string representing the name of the container, or an empty string if no container is found.
     /// </returns>
-    public string Container => DetermineContainer();
+    public string Container { get; }
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="Scope"/> is at the global level.
@@ -120,6 +127,32 @@ public sealed class Scope
     }
 
     /// <summary>
+    /// Gets a <see cref="Scope"/> instance representing the global Controller scope.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="Scope"/> with the <see cref="ScopeLevel"/> set to <c>Controller</c> and an empty container name.
+    /// </returns>
+    /// <remarks>
+    /// The Controller scope represents the highest hierarchical level in a Logix project,
+    /// containing global objects accessible by all programs within the project.
+    /// </remarks>
+    public static Scope Controller => new(ScopeLevel.Controller, string.Empty);
+
+    /// <summary>
+    /// Creates a new scope instance for a program based on the specified program name.
+    /// </summary>
+    /// <param name="name">The name of the program to assign as the container for the scope.</param>
+    /// <returns>A new <see cref="Scope"/> instance representing a program-level scope.</returns>
+    public static Scope Program(string name) => new(ScopeLevel.Program, name);
+
+    /// <summary>
+    /// Creates a new <see cref="Scope"/> instance representing a routine level scope with the specified container name.
+    /// </summary>
+    /// <param name="name">The name of the routine container for this scope.</param>
+    /// <returns>A new <see cref="Scope"/> instance representing the routine level scope.</returns>
+    public static Scope Routine(string name) => new(ScopeLevel.Routine, name);
+
+    /// <summary>
     /// Creates a new <see cref="Scope"/> instance based on the provided <see cref="XElement"/>.
     /// </summary>
     /// <param name="element">The XML element representing the scope.</param>
@@ -130,14 +163,14 @@ public sealed class Scope
     #region Internal
 
     /// <summary>
-    /// Determines the scope level of the current element based on its XML ancestry.
+    /// Determines the scope level of the provided element based on its XML ancestry.
     /// </summary>
     /// <returns>
     /// A <see cref="ScopeLevel"/> value that represents the determined scope level.
     /// </returns>
-    private ScopeLevel DetermineLevel()
+    private static ScopeLevel DetermineLevel(XElement element)
     {
-        var container = _element.Ancestors().FirstOrDefault(IsContainer)?.Name.LocalName;
+        var container = element.Ancestors().FirstOrDefault(IsContainer)?.Name.LocalName;
 
         return container switch
         {
@@ -149,14 +182,14 @@ public sealed class Scope
     }
 
     /// <summary>
-    /// Determines the container of the current XML element based on its ancestry and predefined L5X element types.
+    /// Determines the container of the provided XML element based on its ancestry and predefined L5X element types.
     /// </summary>
     /// <returns>
     /// A string representing the name of the determined container, or an empty string if no container is found.
     /// </returns>
-    private string DetermineContainer()
+    private static string DetermineContainer(XElement element)
     {
-        var container = _element.Ancestors().FirstOrDefault(IsContainer);
+        var container = element.Ancestors().FirstOrDefault(IsContainer);
 
         return container?.Name.LocalName switch
         {

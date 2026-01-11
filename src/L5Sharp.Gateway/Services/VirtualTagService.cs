@@ -26,6 +26,7 @@ public class VirtualTagService : ITagService
     private class TagStore(int handle, Tag tag, Action<int, int, int, IntPtr> callback, IntPtr userData)
     {
         private CancellationTokenSource? _pendingOperation;
+        private CancellationTokenSource? _autoSync;
 
         public int Handle { get; } = handle;
         public TagStatus Status { get; private set; } = TagStatus.Ok;
@@ -50,22 +51,26 @@ public class VirtualTagService : ITagService
         /// Cancels any currently active or pending operation for the tag associated with this instance,
         /// changing its status to indicate the operation was aborted.
         /// </summary>
-        public void CancelOperation()
+        public void CancelOperation(TagStatus status)
         {
-            Status = TagStatus.Abort;
+            Status = status;
             _pendingOperation?.Cancel();
             _pendingOperation = null;
         }
 
         /// <summary>
-        /// Notifies the tag service of an event or status change, updating the tag's status and invoking the associated callback.
+        /// Notifies the tag store of an event or status change, updating the tag's status and invoking the associated callback.
         /// </summary>
         /// <param name="eventId">The identifier of the event that triggered the notification.</param>
         /// <param name="statusId">The current status identifier of the tag, used to update its status.</param>
         public void Notify(int eventId, TagStatus statusId)
         {
             Status = statusId;
-            callback(Handle, eventId, statusId.AsValue(), userData);
+
+            if (eventId > 0)
+            {
+                callback(Handle, eventId, statusId.AsValue(), userData);
+            }
         }
 
         /// <summary>
@@ -86,6 +91,45 @@ public class VirtualTagService : ITagService
         {
             tag.Value.Update(Buffer, 0);
         }
+
+        /// <summary>
+        /// Configures and starts an automatic synchronization operation for the tag at a specified interval.
+        /// Cancels any existing synchronization operation before starting the new one. The synchronization process
+        /// periodically performs read operations on the tag and simulates completion using the provided
+        /// delegate function.
+        /// </summary>
+        /// <param name="interval">
+        /// The time interval, in milliseconds, between each synchronization operation. If the interval is less than
+        /// or equal to zero, synchronization will not be started.
+        /// </param>
+        /// <param name="simulate">
+        /// A delegate function that simulates the synchronization operation. The function is invoked
+        /// with an action to execute during synchronization and a cancellation token for aborting the operation if required.
+        /// </param>
+        public void SetAutoSync(int interval, Func<Action, CancellationToken, Task> simulate)
+        {
+            _autoSync?.Cancel();
+            if (interval <= 0) return;
+
+            _autoSync = new CancellationTokenSource();
+            var token = _autoSync.Token;
+
+            Task.Run(async () =>
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    await Task.Delay(interval, token);
+
+                    Notify(TagEvent.ReadStarted, TagStatus.Pending);
+
+                    await simulate(() =>
+                    {
+                        ReadBytes();
+                        Notify(TagEvent.ReadCompleted, TagStatus.Ok);
+                    }, token);
+                }
+            }, token);
+        }
     }
 
     /// <summary>
@@ -101,7 +145,7 @@ public class VirtualTagService : ITagService
     private readonly ConcurrentDictionary<int, TagStore> _memory = [];
 
     /// <summary>
-    /// It seems like the handles start at 11 and increment from there. Set to 10 and increment on the first create.
+    /// It seems like the handles start at 11 and increment from there. Set to 10 and increment on the first creation.
     /// </summary>
     private int _handleCounter = 10;
 
@@ -143,8 +187,7 @@ public class VirtualTagService : ITagService
         if (!_memory.TryGetValue(handle, out var store))
             return TagStatus.NotFound.AsValue();
 
-        store.CancelOperation();
-
+        store.CancelOperation(TagStatus.Abort);
         return store.Status.AsValue();
     }
 
@@ -162,51 +205,92 @@ public class VirtualTagService : ITagService
         var store = new TagStore(++_handleCounter, tag, callback, userData);
         var token = store.StartOperation();
 
-        if (!_memory.TryAdd(store.Handle, store))
-            return TagStatus.CreateErr.AsValue();
+        var work = SimulateLatency(() =>
+        {
+            if (!_memory.TryAdd(store.Handle, store))
+                store.Notify(TagEvent.None, TagStatus.CreateErr);
 
-        SimulateLatency(() => { store.Notify(TagEvent.Created, TagStatus.Ok); }, token);
+            store.Notify(TagEvent.Created, TagStatus.Ok);
 
-        return store.Handle;
-    }
+            //libplctag will read once after creating the handle to get data.
+            store.ReadBytes();
+            store.Notify(TagEvent.ReadCompleted, TagStatus.Ok);
+        }, token);
 
-    /// <inheritdoc />
-    public string Decode(int error)
-    {
-        // might have to manually map these
-        return string.Empty;
+        // Return without waiting for the operation to complete (this is how libplctag works)
+        if (timeout == 0) return store.Handle;
+
+        try
+        {
+            if (work.Wait(timeout, token)) return store.Handle;
+            store.CancelOperation(TagStatus.Timeout);
+            return store.Status.AsValue();
+        }
+        catch (OperationCanceledException)
+        {
+            // If canceled from the abort method, then the status should be set to abort.
+            return store.Status.AsValue();
+        }
     }
 
     /// <inheritdoc />
     public int Read(int handle, int timeout)
     {
         if (!_memory.TryGetValue(handle, out var store))
-            return (int)TagStatus.NotFound;
+            return TagStatus.NotFound.AsValue();
 
         var token = store.StartOperation();
-
         store.Notify(TagEvent.ReadStarted, TagStatus.Pending);
-        store.ReadBytes();
 
-        SimulateLatency(() => { store.Notify(TagEvent.ReadCompleted, TagStatus.Ok); }, token);
+        var work = SimulateLatency(() =>
+        {
+            store.ReadBytes();
+            store.Notify(TagEvent.ReadCompleted, TagStatus.Ok);
+        }, token);
 
-        return store.Status.AsValue();
+        if (timeout == 0) return TagStatus.Pending.AsValue();
+
+        try
+        {
+            if (work.Wait(timeout, token)) return store.Status.AsValue();
+            store.CancelOperation(TagStatus.Timeout);
+            return store.Status.AsValue();
+        }
+        catch (OperationCanceledException)
+        {
+            // If canceled from the abort method, then the status should be set to abort.
+            return store.Status.AsValue();
+        }
     }
 
     /// <inheritdoc />
     public int Write(int handle, int timeout)
     {
         if (!_memory.TryGetValue(handle, out var store))
-            return (int)TagStatus.NotFound;
+            return TagStatus.NotFound.AsValue();
 
         var token = store.StartOperation();
-
         store.Notify(TagEvent.WriteStarted, TagStatus.Pending);
-        store.WriteBytes();
 
-        SimulateLatency(() => { store.Notify(TagEvent.WriteCompleted, TagStatus.Ok); }, token);
+        var work = SimulateLatency(() =>
+        {
+            store.WriteBytes();
+            store.Notify(TagEvent.WriteCompleted, TagStatus.Ok);
+        }, token);
 
-        return store.Status.AsValue();
+        if (timeout == 0) return TagStatus.Pending.AsValue();
+
+        try
+        {
+            if (work.Wait(timeout, token)) return store.Status.AsValue();
+            store.CancelOperation(TagStatus.Timeout);
+            return store.Status.AsValue();
+        }
+        catch (OperationCanceledException)
+        {
+            // If canceled from the abort method, then the status should be set to abort.
+            return store.Status.AsValue();
+        }
     }
 
     /// <inheritdoc />
@@ -224,46 +308,23 @@ public class VirtualTagService : ITagService
         if (!_memory.TryRemove(handle, out var store))
             return TagStatus.NotFound.AsValue();
 
-        store.CancelOperation();
+        store.CancelOperation(TagStatus.Abort);
 
         return TagStatus.Ok.AsValue();
     }
 
     /// <inheritdoc />
-    public int GetAttribute(int handle, string attributeName, int defaultValue)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
     public int SetAttribute(int handle, string attributeName, int newValue)
     {
-        /*if (attributeName != "auto_sync_read_ms")
-            return TagStatus.Ok.AsValue();
-
         if (!_memory.TryGetValue(handle, out var store))
             return TagStatus.NotFound.AsValue();
 
-        store.EnableAutoSync(newValue);
-        return TagStatus.Ok.AsValue();*/
-
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetBit(int handle, int offsetBit)
-    {
-        if (!_memory.TryGetValue(handle, out var store))
-            return sbyte.MinValue;
-
-        if (offsetBit < 0 || store.Buffer.Length < offsetBit + sizeof(sbyte))
+        if (attributeName != "auto_sync_read_ms")
         {
-            //todo not sure how to emulate what the library does yet.
-            //store.Status = TagStatus.OutOfBounds;
-            return sbyte.MinValue;
+            store.SetAutoSync(newValue, SimulateLatency);
         }
 
-        return (sbyte)store.Buffer[offsetBit];
+        return TagStatus.Ok.AsValue();
     }
 
     /// <inheritdoc />
@@ -274,11 +335,11 @@ public class VirtualTagService : ITagService
 
         if (offset < 0 || store.Buffer.Length < offset + sizeof(sbyte))
         {
-            //todo not sure how to emulate what the library does yet.
-            //store.Status = TagStatus.OutOfBounds;
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
             return sbyte.MinValue;
         }
 
+        store.Notify(TagEvent.None, TagStatus.Ok);
         return (sbyte)store.Buffer[offset];
     }
 
@@ -290,168 +351,383 @@ public class VirtualTagService : ITagService
 
         if (offset < 0 || store.Buffer.Length < offset + sizeof(short))
         {
-            //todo not sure how to emulate what the library does yet.
-            //store.Status = TagStatus.OutOfBounds;
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
             return short.MinValue;
         }
 
+        store.Notify(TagEvent.None, TagStatus.Ok);
         return BitConverter.ToInt16(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public int GetInt(int handle, int offSet)
+    public int GetInt(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return int.MinValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(int))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return int.MinValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return BitConverter.ToInt32(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public long GetLong(int handle, int offSet)
+    public long GetLong(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return long.MinValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(long))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return long.MinValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return BitConverter.ToInt64(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public float GetFloat(int handle, int offSet)
+    public float GetFloat(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return float.MinValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(float))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return float.MinValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return BitConverter.ToSingle(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public double GetDouble(int handle, int offSet)
+    public double GetDouble(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return double.MinValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(double))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return double.MinValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return BitConverter.ToDouble(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public byte GetByte(int handle, int offSet)
+    public byte GetByte(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return byte.MaxValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(byte))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return byte.MaxValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return store.Buffer[offset];
     }
 
     /// <inheritdoc />
-    public ushort GetUShort(int handle, int offSet)
+    public ushort GetUShort(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return ushort.MaxValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(ushort))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return ushort.MaxValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return BitConverter.ToUInt16(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public uint GetUInt(int handle, int offSet)
+    public uint GetUInt(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return uint.MaxValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(uint))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return uint.MaxValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return BitConverter.ToUInt32(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public ulong GetULong(int handle, int offSet)
+    public ulong GetULong(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return ulong.MaxValue;
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(ulong))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return ulong.MaxValue;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return BitConverter.ToUInt64(store.Buffer, offset);
     }
 
     /// <inheritdoc />
-    public int GetRawBytes(int handle, int start, byte[] buffer, int length)
+    public string GetString(int handle, int offset)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return string.Empty;
+
+        var bytes = store.Buffer;
+
+        // Read the LEN (first 4 bytes)
+        var length = BitConverter.ToInt32(bytes, offset);
+
+        // Ensure we don't read past the end of the actual buffer
+        var readLength = Math.Min(length, store.Buffer.Length - (offset + 4));
+        if (readLength <= 0)
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return string.Empty;
+        }
+
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return Encoding.ASCII.GetString(bytes, offset + 4, readLength);
     }
 
     /// <inheritdoc />
-    public int GetStringLength(int handle, int offset)
+    public int SetSByte(int handle, int offset, sbyte value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(sbyte))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            Array.Copy(new[] { (byte)value }, 0, store.Buffer, offset, sizeof(sbyte));
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int GetString(int handle, int offset, StringBuilder buffer, int length)
+    public int SetShort(int handle, int offset, short value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(short))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int GetStringTotalLength(int handle, int offset)
+    public int SetInt(int handle, int offset, int value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(int))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int GetStringCapacity(int handle, int offset)
+    public int SetLong(int handle, int offset, long value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(long))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int SetBit(int handle, int offSetBit, int val)
+    public int SetFloat(int handle, int offset, float value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(float))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int SetSByte(int handle, int offSet, sbyte val)
+    public int SetDouble(int handle, int offset, double value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(double))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int SetShort(int handle, int offSet, short val)
+    public int SetByte(int handle, int offset, byte value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(byte))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            Array.Copy(new[] { value }, 0, store.Buffer, offset, sizeof(byte));
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int SetInt(int handle, int offSet, int val)
+    public int SetUShort(int handle, int offset, ushort value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(ushort))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int SetLong(int handle, int offSet, long val)
+    public int SetUInt(int handle, int offset, uint value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(uint))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
+
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
-    public int SetFloat(int handle, int offSet, float val)
+    public int SetULong(int handle, int offset, ulong value)
     {
-        throw new NotImplementedException();
-    }
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
 
-    /// <inheritdoc />
-    public int SetDouble(int handle, int offSet, double val)
-    {
-        throw new NotImplementedException();
-    }
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(ulong))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+        }
+        else
+        {
+            BitConverter.GetBytes(value).CopyTo(store.Buffer, offset);
+            store.Notify(TagEvent.None, TagStatus.Ok);
+        }
 
-    /// <inheritdoc />
-    public int SetByte(int handle, int offSet, byte val)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int SetUShort(int handle, int offSet, ushort val)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int SetUInt(int handle, int offSet, uint val)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int SetULong(int handle, int offSet, ulong val)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int SetRawBytes(int handle, int offset, byte[] buffer, int length)
-    {
-        throw new NotImplementedException();
+        return store.Status.AsValue();
     }
 
     /// <inheritdoc />
     public int SetString(int handle, int offset, string value)
     {
-        throw new NotImplementedException();
+        if (!_memory.TryGetValue(handle, out var store))
+            return TagStatus.NotFound.AsValue();
+
+        // 1. Write the length (LEN) as a 4-byte DINT
+        var length = BitConverter.GetBytes(value.Length);
+        if (offset < 0 || store.Buffer.Length < offset + sizeof(int))
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return store.Status.AsValue();
+        }
+
+        length.CopyTo(store.Buffer, offset);
+
+        // 2. Write the character bytes (DATA) using ASCII encoding
+        var bytes = Encoding.ASCII.GetBytes(value);
+        var writeLength = Math.Min(bytes.Length, store.Buffer.Length - (offset + 4));
+        if (writeLength <= 0)
+        {
+            store.Notify(TagEvent.None, TagStatus.OutOfBounds);
+            return store.Status.AsValue();
+        }
+
+        Array.Copy(bytes, 0, store.Buffer, offset + 4, writeLength);
+        store.Notify(TagEvent.None, TagStatus.Ok);
+        return store.Status.AsValue();
     }
 
     /// <summary>
@@ -460,9 +736,9 @@ public class VirtualTagService : ITagService
     /// </summary>
     /// <param name="onComplete">An <see cref="Action"/> delegate to execute after the delay completes.</param>
     /// <param name="token">A <see cref="CancellationToken"/> that can be used to cancel the delay or execution of the action.</param>
-    private void SimulateLatency(Action onComplete, CancellationToken token)
+    private Task SimulateLatency(Action onComplete, CancellationToken token)
     {
-        Task.Run(async () =>
+        return Task.Run(async () =>
         {
             try
             {

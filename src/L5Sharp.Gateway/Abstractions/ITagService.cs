@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace L5Sharp.Gateway.Abstractions;
 
@@ -38,18 +37,6 @@ public interface ITagService
     int Create(string path, Action<int, int, int, IntPtr> callback, IntPtr userData, int timeout);
 
     /// <summary>
-    /// Decodes the specified error code into a human-readable string representation.
-    /// This provides descriptive information about the error for ease of debugging
-    /// or logging.
-    /// </summary>
-    /// <param name="error">The error code to decode.</param>
-    /// <returns>
-    /// A string representing the description of the provided error code. If the error
-    /// code is not recognized, a generic description may be returned.
-    /// </returns>
-    string Decode(int error);
-
-    /// <summary>
     /// Reads the data of the specified tag from the gateway system within the provided timeout period.
     /// This function retrieves the most recent value associated with the tag, waiting up to the specified timeout
     /// for the operation to complete successfully or fail.
@@ -85,29 +72,6 @@ public interface ITagService
     /// </returns>
     int Status(int handle);
 
-    /*/// <summary>
-    /// Acquires a synchronization lock on the specified tag to prevent concurrent multithreaded access.
-    /// This ensures thread-safe operations when reading from or writing to the tag's data.
-    /// The lock must be released by calling <see cref="Unlock"/> when the operation is complete.
-    /// </summary>
-    /// <param name="tag">The identifier of the tag to lock.</param>
-    /// <returns>
-    /// A status code indicating the result of the lock operation. Returns 0 for success,
-    /// or a specific error code on failure.
-    /// </returns>
-    int Lock(int tag);
-
-    /// <summary>
-    /// Releases the synchronization lock on the specified tag, allowing other threads to access it.
-    /// This should be called after completing operations that required exclusive access to the tag's data.
-    /// </summary>
-    /// <param name="tag">The identifier of the tag to unlock.</param>
-    /// <returns>
-    /// A status code indicating the result of the unlock operation. Returns 0 for success,
-    /// or a specific error code on failure.
-    /// </returns>
-    int Unlock(int tag);*/
-
     /// <summary>
     /// Destroys the specified tag, releasing any associated resources and invalidating its identifier.
     /// This operation makes the tag unavailable for further operations.
@@ -118,18 +82,6 @@ public interface ITagService
     /// or a specific error code on failure.
     /// </returns>
     int Destroy(int handle);
-
-    /// <summary>
-    /// Retrieves the value of a specified attribute associated with a tag.
-    /// If the attribute does not exist, a default value is returned.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to query.</param>
-    /// <param name="attributeName">The name of the attribute to retrieve.</param>
-    /// <param name="defaultValue">The default value to return if the attribute is not found.</param>
-    /// <returns>
-    /// The value of the requested attribute if found, or the specified default value if the attribute does not exist.
-    /// </returns>
-    int GetAttribute(int handle, string attributeName, int defaultValue);
 
     /// <summary>
     /// Sets an attribute for the specified tag with a new value.
@@ -143,16 +95,6 @@ public interface ITagService
     /// or a specific error code on failure.
     /// </returns>
     int SetAttribute(int handle, string attributeName, int newValue);
-
-    /// <summary>
-    /// Retrieves the value of a specific bit from the tag's data at the specified bit offset.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offsetBit">The bit offset within the tag's data buffer.</param>
-    /// <returns>
-    /// The value of the bit (0 or 1), or a negative error code on failure.
-    /// </returns>
-    int GetBit(int handle, int offsetBit);
 
     /// <summary>
     /// Retrieves a signed byte value from the tag's data at the specified byte offset.
@@ -178,286 +120,212 @@ public interface ITagService
     /// Retrieves a 32-bit signed integer value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The 32-bit signed integer value at the specified offset.
     /// </returns>
-    int GetInt(int handle, int offSet);
+    int GetInt(int handle, int offset);
 
     /// <summary>
     /// Retrieves a 64-bit signed integer value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The 64-bit signed integer value at the specified offset.
     /// </returns>
-    long GetLong(int handle, int offSet);
+    long GetLong(int handle, int offset);
 
     /// <summary>
     /// Retrieves a single-precision floating-point value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The single-precision floating-point value at the specified offset.
     /// </returns>
-    float GetFloat(int handle, int offSet);
+    float GetFloat(int handle, int offset);
 
     /// <summary>
     /// Retrieves a double-precision floating-point value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The double-precision floating-point value at the specified offset.
     /// </returns>
-    double GetDouble(int handle, int offSet);
+    double GetDouble(int handle, int offset);
 
     /// <summary>
     /// Retrieves an unsigned byte value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The unsigned byte value at the specified offset.
     /// </returns>
-    byte GetByte(int handle, int offSet);
+    byte GetByte(int handle, int offset);
 
     /// <summary>
     /// Retrieves a 16-bit unsigned integer value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The 16-bit unsigned integer value at the specified offset.
     /// </returns>
-    ushort GetUShort(int handle, int offSet);
+    ushort GetUShort(int handle, int offset);
 
     /// <summary>
     /// Retrieves a 32-bit unsigned integer value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The 32-bit unsigned integer value at the specified offset.
     /// </returns>
-    uint GetUInt(int handle, int offSet);
+    uint GetUInt(int handle, int offset);
 
     /// <summary>
     /// Retrieves a 64-bit unsigned integer value from the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
     /// <returns>
     /// The 64-bit unsigned integer value at the specified offset.
     /// </returns>
-    ulong GetULong(int handle, int offSet);
-
-    /// <summary>
-    /// Retrieves raw bytes from the tag's data buffer starting at the specified offset
-    /// and copies them into the provided buffer.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to read from.</param>
-    /// <param name="start">The starting byte offset within the tag's data buffer.</param>
-    /// <param name="buffer">The buffer to copy the raw bytes into.</param>
-    /// <param name="length">The number of bytes to copy.</param>
-    /// <returns>
-    /// A status code indicating the result of the operation. Returns 0 for success,
-    /// or a specific error code on failure.
-    /// </returns>
-    int GetRawBytes(int handle, int start, byte[] buffer, int length);
-
-    /// <summary>
-    /// Retrieves the current length of a string stored in the tag's data at the specified offset.
-    /// This represents the number of characters currently used in the string.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to query.</param>
-    /// <param name="offset">The byte offset within the tag's data buffer where the string is located.</param>
-    /// <returns>
-    /// The length of the string in characters, or a negative error code on failure.
-    /// </returns>
-    int GetStringLength(int handle, int offset);
+    ulong GetULong(int handle, int offset);
 
     /// <summary>
     /// Retrieves a string from the tag's data at the specified offset and copies it into the provided buffer.
     /// </summary>
     /// <param name="handle">The identifier of the tag to read from.</param>
     /// <param name="offset">The byte offset within the tag's data buffer where the string is located.</param>
-    /// <param name="buffer">The StringBuilder buffer to copy the string into.</param>
-    /// <param name="length">The maximum number of characters to copy.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int GetString(int handle, int offset, StringBuilder buffer, int length);
-
-    /// <summary>
-    /// Retrieves the total length of a string stored in the tag's data at the specified offset.
-    /// This includes both the string length prefix and the actual string data.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to query.</param>
-    /// <param name="offset">The byte offset within the tag's data buffer where the string is located.</param>
-    /// <returns>
-    /// The total length in bytes, or a negative error code on failure.
-    /// </returns>
-    int GetStringTotalLength(int handle, int offset);
-
-    /// <summary>
-    /// Retrieves the maximum capacity of a string stored in the tag's data at the specified offset.
-    /// This represents the maximum number of characters the string can hold.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to query.</param>
-    /// <param name="offset">The byte offset within the tag's data buffer where the string is located.</param>
-    /// <returns>
-    /// The string capacity in characters, or a negative error code on failure.
-    /// </returns>
-    int GetStringCapacity(int handle, int offset);
-
-    /// <summary>
-    /// Sets the value of a specific bit in the tag's data at the specified bit offset.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSetBit">The bit offset within the tag's data buffer.</param>
-    /// <param name="val">The value to set (0 or 1).</param>
-    /// <returns>
-    /// A status code indicating the result of the operation. Returns 0 for success,
-    /// or a specific error code on failure.
-    /// </returns>
-    int SetBit(int handle, int offSetBit, int val);
+    string GetString(int handle, int offset);
 
     /// <summary>
     /// Sets a signed byte value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The signed byte value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The signed byte value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetSByte(int handle, int offSet, sbyte val);
+    int SetSByte(int handle, int offset, sbyte value);
 
     /// <summary>
     /// Sets a 16-bit signed integer value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The 16-bit signed integer value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The 16-bit signed integer value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetShort(int handle, int offSet, short val);
+    int SetShort(int handle, int offset, short value);
 
     /// <summary>
     /// Sets a 32-bit signed integer value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The 32-bit signed integer value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The 32-bit signed integer value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetInt(int handle, int offSet, int val);
+    int SetInt(int handle, int offset, int value);
 
     /// <summary>
     /// Sets a 64-bit signed integer value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The 64-bit signed integer value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The 64-bit signed integer value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetLong(int handle, int offSet, long val);
+    int SetLong(int handle, int offset, long value);
 
     /// <summary>
     /// Sets a single-precision floating-point value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The single-precision floating-point value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The single-precision floating-point value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetFloat(int handle, int offSet, float val);
+    int SetFloat(int handle, int offset, float value);
 
     /// <summary>
     /// Sets a double-precision floating-point value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The double-precision floating-point value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The double-precision floating-point value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetDouble(int handle, int offSet, double val);
+    int SetDouble(int handle, int offset, double value);
 
     /// <summary>
     /// Sets an unsigned byte value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The unsigned byte value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The unsigned byte value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetByte(int handle, int offSet, byte val);
+    int SetByte(int handle, int offset, byte value);
 
     /// <summary>
     /// Sets a 16-bit unsigned integer value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The 16-bit unsigned integer value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The 16-bit unsigned integer value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetUShort(int handle, int offSet, ushort val);
+    int SetUShort(int handle, int offset, ushort value);
 
     /// <summary>
     /// Sets a 32-bit unsigned integer value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The 32-bit unsigned integer value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The 32-bit unsigned integer value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetUInt(int handle, int offSet, uint val);
+    int SetUInt(int handle, int offset, uint value);
 
     /// <summary>
     /// Sets a 64-bit unsigned integer value in the tag's data at the specified byte offset.
     /// </summary>
     /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offSet">The byte offset within the tag's data buffer.</param>
-    /// <param name="val">The 64-bit unsigned integer value to set.</param>
+    /// <param name="offset">The byte offset within the tag's data buffer.</param>
+    /// <param name="value">The 64-bit unsigned integer value to set.</param>
     /// <returns>
     /// A status code indicating the result of the operation. Returns 0 for success,
     /// or a specific error code on failure.
     /// </returns>
-    int SetULong(int handle, int offSet, ulong val);
-
-    /// <summary>
-    /// Writes raw bytes from the provided buffer into the tag's data buffer starting at the specified offset.
-    /// </summary>
-    /// <param name="handle">The identifier of the tag to modify.</param>
-    /// <param name="offset">The starting byte offset within the tag's data buffer.</param>
-    /// <param name="buffer">The buffer containing the raw bytes to write.</param>
-    /// <param name="length">The number of bytes to write from the buffer.</param>
-    /// <returns>
-    /// A status code indicating the result of the operation. Returns 0 for success,
-    /// or a specific error code on failure.
-    /// </returns>
-    int SetRawBytes(int handle, int offset, byte[] buffer, int length);
+    int SetULong(int handle, int offset, ulong value);
 
     /// <summary>
     /// Sets a string value in the tag's data at the specified offset.

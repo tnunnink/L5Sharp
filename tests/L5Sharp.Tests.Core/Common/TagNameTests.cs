@@ -10,7 +10,6 @@ namespace L5Sharp.Tests.Core.Common
         private const string Base = "MyTag_01";
         private const string Path = "SomeMember[1].Some_Element_Property";
 
-
         private static readonly IEnumerable<string> Members = new List<string>
         {
             "MyTag_01",
@@ -44,43 +43,127 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void New_SimpleTagName_ShouldBeExpected()
+        public void New_BaseTagOnly_ShouldHaveExpectedProperties()
         {
-            var tagName = new TagName("Test");
+            var tagName = new TagName("MyTag");
 
-            tagName.Root.Should().Be("Test");
+            tagName.Path.Should().Be("MyTag");
+            tagName.Base.Should().Be("MyTag");
             tagName.Operand.Should().BeEmpty();
-            tagName.Path.Should().BeEmpty();
-            tagName.Member.Should().Be("Test");
+            tagName.Member.Should().BeEmpty();
+            tagName.Element.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
             tagName.Members.Should().HaveCount(1);
-            tagName.IsEmpty.Should().BeFalse();
-            tagName.IsQualified.Should().BeTrue();
         }
 
         [Test]
-        public void New_ComplexName_ShouldNotBeNull()
+        public void New_TagNameTwoMembers_ShouldHaveExpectedValues()
         {
-            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            var tagName = new TagName("MyTag.MemberName");
 
-            tagName.Should().NotBeNull();
+            tagName.Path.Should().Be("MyTag.MemberName");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".MemberName");
+            tagName.Member.Should().Be("MemberName");
+            tagName.Element.Should().Be("MemberName");
+            tagName.Depth.Should().Be(1);
+            tagName.Members.Should().HaveCount(2);
         }
 
         [Test]
-        public void New_ComplexName_ShouldBeExpected()
+        public void New_TagNameThreeMembers_ShouldHaveExpectedValues()
+        {
+            var tagName = new TagName("MyTag.MemberName.SubMember");
+
+            tagName.Path.Should().Be("MyTag.MemberName.SubMember");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".MemberName.SubMember");
+            tagName.Member.Should().Be("MemberName.SubMember");
+            tagName.Element.Should().Be("SubMember");
+            tagName.Depth.Should().Be(2);
+            tagName.Members.Should().HaveCount(3);
+        }
+
+        [Test]
+        public void New_TagNameWithArrayIndex_ShouldHaveExpectedValues()
+        {
+            var tagName = new TagName("MyTag[13].MemberName");
+
+            tagName.Path.Should().Be("MyTag[13].MemberName");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be("[13].MemberName");
+            tagName.Member.Should().Be("[13].MemberName");
+            tagName.Element.Should().Be("MemberName");
+            tagName.Depth.Should().Be(2);
+            tagName.Members.Should().HaveCount(3);
+        }
+
+        [Test]
+        public void New_TagNameWithBitReference_ShouldHaveExpectedValues()
+        {
+            var tagName = new TagName("MyTag.MemberName.1");
+
+            tagName.Path.Should().Be("MyTag.MemberName.1");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".MemberName.1");
+            tagName.Member.Should().Be("MemberName.1");
+            tagName.Element.Should().Be("1");
+            tagName.Depth.Should().Be(2);
+            tagName.Members.Should().HaveCount(3);
+        }
+
+        [Test]
+        public void New_ComplexTagName_ShouldBeExpected()
         {
             var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
 
-            tagName.Root.Should().Be("Module:1:I");
+            tagName.Path.Should().Be("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            tagName.Base.Should().Be("Module:1:I");
             tagName.Operand.Should().Be(".TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-            tagName.Path.Should().Be("TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-            tagName.Member.Should().Be("12");
+            tagName.Member.Should().Be("TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            tagName.Element.Should().Be("12");
             tagName.Depth.Should().Be(8);
             tagName.Members.Should().HaveCount(9);
             tagName.IsEmpty.Should().BeFalse();
             tagName.IsQualified.Should().BeTrue();
         }
-        
+
+        [Test]
+        public void Scope_NoProgramPrefix_ShouldBeControllerAndEmptyContainer()
+        {
+            var tagName = new TagName("MyTag");
+
+            var scope = tagName.Scope;
+
+            scope.Level.Should().Be(ScopeLevel.Controller);
+            scope.Container.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Scope_WithProgramPrefix_ShouldBeControllerAndEmptyContainer()
+        {
+            var tagName = new TagName("Program:SomeProgram.MyTag");
+
+            var scope = tagName.Scope;
+
+            scope.Level.Should().Be(ScopeLevel.Program);
+            scope.Container.Should().Be("SomeProgram");
+        }
+
+        [Test]
+        public void Scope_WithProgramPrefix_ShouldHaveExpectedProperties()
+        {
+            var tagName = new TagName("Program:SomeProgram.MyTag");
+            
+            tagName.Path.Should().Be("Program:SomeProgram.MyTag");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().BeEmpty();
+            tagName.Member.Should().BeEmpty();
+            tagName.Element.Should().BeEmpty();
+            tagName.Depth.Should().Be(0);
+            tagName.Members.Should().HaveCount(1);
+        }
+
         [Test]
         public void IsQualified_QualifiedTagNameWithAllPossibleMemberTypes_ShouldBeTrue()
         {
@@ -95,20 +178,20 @@ namespace L5Sharp.Tests.Core.Common
         public void IsQualified_ArraySegmentOnly_ShouldBeFalse()
         {
             var tagName = new TagName("[1]");
-            
+
             var result = tagName.IsQualified;
-            
+
             result.Should().BeFalse();
         }
-        
+
         [Test]
         [Description("GitHub Issue #52: A tag with a bit index reference tag should be qualified")]
         public void IsQualified_BitIndexAddressing_ShouldBeFalse()
         {
             var tagName = new TagName("DintTest.[Offset]");
-            
+
             var result = tagName.IsQualified;
-            
+
             result.Should().BeTrue();
         }
 
@@ -128,7 +211,7 @@ namespace L5Sharp.Tests.Core.Common
 
             foreach (var tag in tags)
             {
-                var member = tag.Root;
+                var member = tag.Base;
                 member.Should().NotBeNull();
             }
 
@@ -157,13 +240,15 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Path_MemberSeparator_ShouldBeExpected()
+        [TestCase("MyTag.SomeMember.1", "SomeMember.1")]
+        [TestCase("MyTag[1].SomeMember.1", "[1].SomeMember.1")]
+        public void Path_MemberSeparator_ShouldBeExpected(string text, string expected)
         {
-            var tagName = new TagName("MyTag.SomeMember.1");
+            var tagName = new TagName(text);
 
-            var path = tagName.Path;
+            var path = tagName.Member;
 
-            path.Should().Be("SomeMember.1");
+            path.Should().Be(expected);
         }
 
         [Test]
@@ -171,7 +256,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag[1].SomeMember.1");
 
-            var path = tagName.Path;
+            var path = tagName.Member;
 
             path.Should().Be("[1].SomeMember.1");
         }
@@ -181,7 +266,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
 
-            var member = tagName.Member;
+            var member = tagName.Element;
 
             member.Should().Be("12");
         }
@@ -191,7 +276,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("");
 
-            var member = tagName.Member;
+            var member = tagName.Element;
 
             member.Should().BeEmpty();
         }
@@ -201,7 +286,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag.Member[1]");
 
-            var member = tagName.Member;
+            var member = tagName.Element;
 
             member.Should().Be("[1]");
         }
@@ -222,7 +307,7 @@ namespace L5Sharp.Tests.Core.Common
 
             foreach (var tag in tags)
             {
-                var member = tag.Member;
+                var member = tag.Element;
                 member.Should().NotBeNull();
             }
 
@@ -297,10 +382,10 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = TagName.Empty;
 
-            tagName.Root.Should().BeEmpty();
+            tagName.Base.Should().BeEmpty();
             tagName.Operand.Should().BeEmpty();
-            tagName.Path.Should().BeEmpty();
             tagName.Member.Should().BeEmpty();
+            tagName.Element.Should().BeEmpty();
             tagName.Members.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
             tagName.IsEmpty.Should().BeTrue();
@@ -360,84 +445,6 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Rename_ValidTagName_ShouldReturnExpected()
-        {
-            var tag = new TagName(TestTagName);
-
-            var result = tag.Rename("MyNewTagName");
-
-            result.ToString().Should().StartWith("MyNewTagName");
-        }
-
-        [Test]
-        public void StaticEqualsFullTagName_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag", "MyTag", TagNameComparer.Qualified);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsFullTagName_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag", "AnotherTag", TagNameComparer.Qualified);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void StaticEqualsBase_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember", "MyTag.AnotherMember", TagNameComparer.Root);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsBase_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember", "AnotherTag.SomeMember", TagNameComparer.Root);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void StaticEqualsPath_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.SomeMember.SubPathMember",
-                TagNameComparer.Path);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsPath_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath",
-                TagNameComparer.Path);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void StaticEqualsMember_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.AnotherMember.SubPathMember",
-                TagNameComparer.Member);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsMember_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath",
-                TagNameComparer.Member);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
         public void ImplicitOperator_Byte_ShouldBeExpected()
         {
             TagName tagName = TestTagName;
@@ -490,6 +497,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var first = new TagName(TestTagName);
 
+            // ReSharper disable once EqualExpressionComparison
             var result = first.Equals(first);
 
             result.Should().BeTrue();
@@ -501,7 +509,7 @@ namespace L5Sharp.Tests.Core.Common
             var first = new TagName(TestTagName);
             var second = new TagName(TestTagName);
 
-            var result = first.Equals((object)second);
+            var result = first.Equals(second);
 
             result.Should().BeTrue();
         }

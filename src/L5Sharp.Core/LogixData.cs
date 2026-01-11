@@ -65,29 +65,37 @@ public abstract class LogixData : LogixElement
     public virtual IEnumerable<LogixMember> Members => [];
 
     /// <summary>
-    /// The memory size of the logix data element in bytes.
+    /// The size, in bytes, of the LogixData representation.
     /// </summary>
-    /// <value>An <see cref="int"/> representing the allocated size of the logix data element.</value>
+    /// <value>An <see cref="int"/> value representing the total memory size of the Logix data object.</value>
     public virtual int Size => 0;
 
     /// <summary>
-    /// Returns the value of the <see cref="AtomicData"/> as a byte array.
+    /// Converts the current instance into a byte array representation.
     /// </summary>
-    /// <returns>An array of <see cref="byte"/> representing the binary value of the atomic type.</returns>
-    /// <remarks>This is needed for formatting the atomic value in the proper radix format.</remarks>
+    /// <returns>An array of bytes representing the current instance.</returns>
     public virtual byte[] ToBytes()
     {
-        var data = new byte[Size];
-        var offset = 0;
+        var data = new List<byte>();
+        var bitNumber = 0;
 
         foreach (var member in Members)
         {
-            var block = member.Value.ToBytes();
-            Buffer.BlockCopy(block, 0, data, offset, block.Length);
-            offset += block.Length;
+            // Logix packs contiguous booleans into byte chunks, which this code will handle by default.
+            // Any non-standard formatting/layout will need to be handled in derived classes.
+            if (member.Value is BOOL bit)
+            {
+                if (bitNumber == 0) data.Add(0);
+                if (bit.Value) data[data.Count - 1] |= (byte)(1 << bitNumber);
+                bitNumber = (bitNumber + 1) % 8;
+                continue;
+            }
+
+            bitNumber = 0;
+            data.AddRange(member.Value.ToBytes());
         }
 
-        return data;
+        return data.ToArray();
     }
 
     /// <summary>
@@ -102,11 +110,15 @@ public abstract class LogixData : LogixElement
     public abstract void Update(LogixData data);
 
     /// <summary>
-    /// Updates the current object state using the provided data starting at the specified offset.
+    /// Updates the current data structure or value using the provided byte array and offset.
     /// </summary>
     /// <param name="data">The byte array containing the data to update the object with.</param>
     /// <param name="offset">The starting index in the byte array from which data will be read.</param>
     /// <returns>The number of bytes processed during the update operation.</returns>
+    /// <remarks>
+    /// This method will recurse the member sturcutre and apply bytes to atomic data internally to update
+    /// the underlying data structure. The base method will hanle UDT bit-packing similar to Logix 5K.
+    /// </remarks>
     public virtual int Update(byte[] data, int offset)
     {
         var bitNumber = 0;

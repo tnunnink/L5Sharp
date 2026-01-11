@@ -59,13 +59,6 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     public TagStatus Status { get; private set; }
 
     /// <summary>
-    /// Gets the current number of active subscribers for the associated tag. The value represents how many entities
-    /// are currently monitoring or relying on the changes of the tag through this instance.
-    /// This property is automatically managed by incrementing or decrementing when subscription operations are performed.
-    /// </summary>
-    public int Subscribers => _subscribers;
-
-    /// <summary>
     /// Indicates whether the tag watch is currently idle, meaning there are no active subscribers
     /// monitoring the associated tag for changes.
     /// Returns true if there are no subscribers; otherwise, false.
@@ -91,7 +84,10 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
         // This would indicate that we just started the watch and need to enable auto sync.
         if (_subscribers == 1)
         {
-            _tagService.SetAttribute(Handle, "auto_sync_read_ms", _refreshRate);
+            var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", _refreshRate);
+
+            if (status < 0)
+                throw new InvalidOperationException($"Unable to start auto sync service. Result: {status}");
         }
     }
 
@@ -107,7 +103,10 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
         // No more subscribers means stop the auto sync for the tag.
         if (_subscribers == 0)
         {
-            _tagService.SetAttribute(Handle, "auto_sync_read_ms", 0);
+            var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", 0);
+
+            if (status < 0)
+                throw new InvalidOperationException($"Unable to stop auto sync service. Result: {status}");
         }
     }
 

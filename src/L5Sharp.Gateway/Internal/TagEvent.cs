@@ -6,6 +6,11 @@
 internal static class TagEvent
 {
     /// <summary>
+    /// Represents the default or "no operation" state where no specific tag event has occurred.
+    /// </summary>
+    public const int None = 0;
+
+    /// <summary>
     /// Represents the event that triggers when a read operation has started for a tag.
     /// </summary>
     public const int ReadStarted = 1;

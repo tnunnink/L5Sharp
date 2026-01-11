@@ -103,22 +103,15 @@ public class StringData : LogixData, IEnumerable<char>
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {
-        // If we have not defined the size of the string type we can't know how many bytes to read.
-        // We have to rely on the serializer instantiating conrete types and the user defining custom one (either
-        // manually or with source generator)
-        if (Capacity <= 0)
-            throw new InvalidOperationException(
-                $"Cannot hydrate string '{Name}' because its capacity is unknown. Ensure the type is registered or generated.");
-
         // Align to the DINT offset to read the length data.
-        // Default to the capacity if lower than the string length to ensure valid mapping.
         offset = (offset + 3) & ~3;
-        var rawLength = BitConverter.ToInt32(data, offset);
-        var safeLength = Math.Min(rawLength, Capacity);
-        SetLength(safeLength);
+        var length = BitConverter.ToInt32(data, offset);
+        SetLength(length);
 
-        //Read the remaing bytes to get the string value.
-        var value = System.Text.Encoding.ASCII.GetString(data, offset + sizeof(int), safeLength);
+        //Read the remaining bytes to get the string value. If capacity is defined,
+        //read the entire capacity length to return a more accurate offset.
+        var totalLength = Capacity > 0 ? Capacity : length;
+        var value = System.Text.Encoding.ASCII.GetString(data, offset + sizeof(int), totalLength);
         SetString(value);
 
         //Size will depend on the Capacity property getting set correctly.

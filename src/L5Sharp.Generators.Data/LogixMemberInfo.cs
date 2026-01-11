@@ -13,7 +13,6 @@ internal record LogixMemberInfo(
     string Name,
     string DataType,
     int Dimension,
-    string Access,
     string? Description = null,
     bool Hidden = false)
 {
@@ -21,7 +20,6 @@ internal record LogixMemberInfo(
     public string Name { get; } = Name;
     public string DataType { get; } = DataType;
     public int Dimension { get; } = Dimension;
-    public string Access { get; } = Access;
     public string? Description { get; } = Description;
     public bool Hidden { get; } = Hidden;
 
@@ -36,11 +34,10 @@ internal record LogixMemberInfo(
     public static LogixMemberInfo From(DataTypeMember member)
     {
         return new LogixMemberInfo(
-            member.Parent?.Name ?? "StructureData",
+            member.Parent?.Name.SanitizeName() ?? "StructureData",
             member.Name,
             member.DataType == "BIT" ? "BOOL" : member.DataType.SanitizeName(),
             member.Dimension.Length,
-            member.ExternalAccess ?? ExternalAccess.ReadWrite,
             member.Description,
             member.Hidden
         );
@@ -57,11 +54,10 @@ internal record LogixMemberInfo(
     public static LogixMemberInfo From(Parameter parameter)
     {
         return new LogixMemberInfo(
-            parameter.Instruction?.Name ?? "StructureData",
+            parameter.Instruction?.Name.SanitizeName() ?? "StructureData",
             parameter.Name,
             parameter.DataType.SanitizeName(),
             parameter.Dimension.Length,
-            parameter.ExternalAccess ?? ExternalAccess.ReadWrite,
             parameter.Description
         );
     }

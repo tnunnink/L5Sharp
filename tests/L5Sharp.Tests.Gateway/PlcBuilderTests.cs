@@ -2,6 +2,7 @@
 using L5Sharp.Gateway;
 using L5Sharp.Gateway.Common;
 using L5Sharp.Gateway.Services;
+using L5Sharp.Samples;
 
 namespace L5Sharp.Tests.Gateway;
 
@@ -21,7 +22,7 @@ public class PlcBuilderTests
                 o.ThrowOn.Add(TagStatus.Timeout);
                 o.ThrowOn.Add(TagStatus.NoResources);
             })
-            .UseTagService(() => VirtualTagService.Upload(@"C:\users\username\projects\MyProject.L5X"))
+            .UseTagService(() => VirtualTagService.Upload(Known.Test))
             .Build();
 
         client.Should().NotBeNull();

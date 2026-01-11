@@ -35,6 +35,7 @@ internal class TagBuffer(ITagService service)
             case TIME32 atomic: atomic.Update(service.GetInt(handle, 0)); break;
             case TIME atomic: atomic.Update(service.GetLong(handle, 0)); break;
             case LTIME atomic: atomic.Update(service.GetLong(handle, 0)); break;
+            case StringData stringData: stringData.Update(service.GetString(handle, 0)); break;
         }
     }
 
@@ -49,7 +50,7 @@ internal class TagBuffer(ITagService service)
     {
         return tag.Value switch
         {
-            BOOL atomic => service.SetByte(handle, 0, atomic.ToBytes()[0]),
+            BOOL atomic => service.SetByte(handle, 0, (byte)(atomic.Value ? 1 : 0)),
             SINT atomic => service.SetSByte(handle, 0, atomic.Value),
             INT atomic => service.SetShort(handle, 0, atomic.Value),
             DINT atomic => service.SetInt(handle, 0, atomic.Value),
@@ -65,6 +66,7 @@ internal class TagBuffer(ITagService service)
             TIME32 atomic => service.SetInt(handle, 0, atomic.Value),
             TIME atomic => service.SetLong(handle, 0, atomic.Value),
             LTIME atomic => service.SetLong(handle, 0, atomic.Value),
+            StringData stringData => service.SetString(handle, 0, stringData.ToString()),
             _ => throw new ArgumentOutOfRangeException(nameof(tag), tag.Value,
                 $"Unsupported tag data type: {tag.Value.GetType().Name}")
         };

@@ -246,11 +246,7 @@ public class Argument
             return [argument];
 
         if (type == ArgumentType.Expression)
-        {
-            return Regex.Matches(argument, TagName.Pattern)
-                .Cast<Match>()
-                .Select(m => new TagName(m.Value));
-        }
+            return TagName.Scrape(argument);
 
         return [];
     }

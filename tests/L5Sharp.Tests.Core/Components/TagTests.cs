@@ -822,7 +822,7 @@ public class TagTests
             Value = new MyNestedData()
         };
 
-        var members = tag.Members(t => TagName.Equals(t, "M1", TagNameComparer.Member));
+        var members = tag.Members(t => t.Element == "M1");
 
         members.Should().HaveCount(1);
     }

@@ -121,14 +121,24 @@ public class PlcClient : IPlcClient
     }
 
     /// <inheritdoc />
+    public Task<TagResponse> ReadTag<TData>(TagName tagName, CancellationToken token = default)
+        where TData : LogixData, new()
+    {
+        if (tagName is null) throw new ArgumentNullException(nameof(tagName));
+        ThrowIfDisposed();
+
+        //what about program tags?
+        var tag = Tag.New<TData>(tagName);
+        return ReadAllTags([tag], token);
+    }
+
+    /// <inheritdoc />
     public Task<TagResponse> ReadTag(Tag tag, CancellationToken token = default)
     {
         if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
-        var members = tag.Members(m => m.Value.IsAtomic()).ToList();
-        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(tag.TagName));
-        return ReadTagMembers(members, token);
+        return ReadAllTags([tag], token);
     }
 
     /// <inheritdoc />
@@ -137,9 +147,21 @@ public class PlcClient : IPlcClient
         if (tags is null) throw new ArgumentNullException(nameof(tags));
         ThrowIfDisposed();
 
-        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(members.Select(t => t.TagName).ToArray()));
-        return ReadTagMembers(members, token);
+        return ReadAllTags(tags.ToArray(), token);
+    }
+
+    /// <inheritdoc />
+    public Task<TagResponse> WriteTag<TData>(TagName tagName, Action<TData> update, CancellationToken token = default)
+        where TData : LogixData, new()
+    {
+        if (tagName is null) throw new ArgumentNullException(nameof(tagName));
+        if (update is null) throw new ArgumentNullException(nameof(update));
+        ThrowIfDisposed();
+
+        var tag = Tag.New<TData>(tagName);
+        update(tag.Value.As<TData>());
+
+        return WriteAllTags([tag], token);
     }
 
     /// <inheritdoc />
@@ -148,9 +170,7 @@ public class PlcClient : IPlcClient
         if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
-        var members = tag.Members(m => m.Value.IsAtomic()).ToList();
-        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(tag.TagName));
-        return WriteTagMembers(members, token);
+        return WriteAllTags([tag], token);
     }
 
     /// <inheritdoc />
@@ -159,23 +179,27 @@ public class PlcClient : IPlcClient
         if (tags is null) throw new ArgumentNullException(nameof(tags));
         ThrowIfDisposed();
 
-        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-        if (members.Count == 0) return Task.FromResult(TagResponse.NoData(members.Select(t => t.TagName).ToArray()));
-        return WriteTagMembers(members, token);
+        return WriteAllTags(tags.ToArray(), token);
     }
 
     /// <inheritdoc />
-    public async Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChange = null, CancellationToken token = default)
+    public Task<IDisposable> WatchTag<TData>(TagName tagName, Action<Tag>? onChange = null,
+        CancellationToken token = default) where TData : LogixData, new()
+    {
+        if (tagName is null) throw new ArgumentNullException(nameof(tagName));
+        ThrowIfDisposed();
+
+        var tag = Tag.New<TData>(tagName);
+        return WatchAllTags([tag], onChange, token);
+    }
+
+    /// <inheritdoc />
+    public Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChange = null, CancellationToken token = default)
     {
         if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
-        var members = tag.Members(m => m.Value.IsAtomic()).ToList();
-
-        if (members.Count == 0)
-            throw new InvalidOperationException("No atomic tag data members exist in the provided tag.");
-
-        return await WatchTagMembers(members, onChange, token);
+        return WatchAllTags([tag], onChange, token);
     }
 
     /// <inheritdoc />
@@ -185,12 +209,7 @@ public class PlcClient : IPlcClient
         if (tags is null) throw new ArgumentNullException(nameof(tags));
         ThrowIfDisposed();
 
-        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-
-        if (members.Count == 0)
-            throw new InvalidOperationException("No atomic tag data members exist in the provided set of tags.");
-
-        return WatchTagMembers(members, onChange, token);
+        return WatchAllTags(tags.ToArray(), onChange, token);
     }
 
     /// <inheritdoc />
@@ -220,8 +239,11 @@ public class PlcClient : IPlcClient
     /// <summary>
     /// Reads the values of the specified collection of tag members and returns a response containing the results.
     /// </summary>
-    private async Task<TagResponse> ReadTagMembers(ICollection<Tag> members, CancellationToken token = default)
+    private async Task<TagResponse> ReadAllTags(ICollection<Tag> tags, CancellationToken token = default)
     {
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
+        if (members.Count == 0) return TagResponse.NoData(tags);
+
         var tasks = members.Select(m => (Member: m, Read: ReadTagValue(m, token))).ToList();
 
         var timer = Stopwatch.StartNew();
@@ -229,14 +251,17 @@ public class PlcClient : IPlcClient
         timer.Stop();
 
         var results = tasks.Select(t => (t.Member.TagName, t.Read.Result)).ToList();
-        return TagResponse.Aggregate(results, timer.Elapsed);
+        return TagResponse.Aggregate(tags, results, timer.Elapsed);
     }
 
     /// <summary>
     /// Writes a collection of tag members to the PLC and returns a response containing the results of the operation.
     /// </summary>
-    private async Task<TagResponse> WriteTagMembers(ICollection<Tag> members, CancellationToken token = default)
+    private async Task<TagResponse> WriteAllTags(ICollection<Tag> tags, CancellationToken token = default)
     {
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
+        if (members.Count == 0) return TagResponse.NoData(tags);
+
         var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
 
         var timer = Stopwatch.StartNew();
@@ -244,27 +269,25 @@ public class PlcClient : IPlcClient
         timer.Stop();
 
         var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
-        return TagResponse.Aggregate(results, timer.Elapsed);
+        return TagResponse.Aggregate(tags, results, timer.Elapsed);
     }
 
     /// <summary>
     /// Subscribes to changes in a collection of tag members and invokes a callback when changes occur.
     /// </summary>
-    /// <param name="members">The collection of tag members to monitor for changes.</param>
-    /// <param name="onChanged">The optional callback action to invoke when a tag member's value changes.</param>
-    /// <param name="token">A cancellation token to observe while waiting for task completion.</param>
-    /// <returns>An <see cref="IDisposable"/> that allows unsubscribing from tag monitoring.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="members"/> is null.</exception>
-    private async Task<IDisposable> WatchTagMembers(ICollection<Tag> members, Action<Tag>? onChanged,
-        CancellationToken token)
+    private async Task<IDisposable> WatchAllTags(ICollection<Tag> tags, Action<Tag>? onChanged, CancellationToken token)
     {
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
+        if (members.Count == 0)
+            throw new InvalidOperationException("No atomic tag data members exist in the provided set of tags.");
+
         var tasks = members.Select(m => (Member: m, Create: GetOrCreateHandle(m.TagName, token))).ToList();
         await Task.WhenAll(tasks.Select(t => t.Create));
 
         foreach (var (member, create) in tasks)
         {
             var handle = create.Result;
-            if (handle <= 1) continue; //todo not totally sure here.
+            if (handle <= 1) continue;
 
             var watch = _watches.GetOrAdd(
                 handle,
@@ -279,7 +302,7 @@ public class PlcClient : IPlcClient
         {
             // If the caller already disposed of the client, then we can return.
             if (_disposed) return;
-            
+
             foreach (var task in tasks)
             {
                 var handle = task.Create.Result;

@@ -1,17 +1,12 @@
-﻿using L5Sharp.Gateway;
-
-namespace L5Sharp.Tests.Gateway.PlcClientTests;
+﻿namespace L5Sharp.Tests.Gateway.ClientTests;
 
 [TestFixture]
-public class PingTests
+public class PingTests : PlcTestBase
 {
-    private const string TestIp = "10.11.19.204";
-    private const int TestSlot = 1;
-    
     [Test]
     public async Task Ping_ValidReachableAddress_ShouldBeTrue()
     {
-        using var client = new PlcClient(TestIp, TestSlot);
+        using var client = CreateClient();
 
         var result = await client.Ping();
 

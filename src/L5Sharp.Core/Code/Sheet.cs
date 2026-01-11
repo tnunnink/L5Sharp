@@ -291,16 +291,16 @@ public class Sheet : LogixCode<Sheet>
         if (from is null) throw new ArgumentNullException(nameof(from));
         if (to is null) throw new ArgumentNullException(nameof(to));
 
-        var source = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == from.Root)?.Deserialize<Block>();
-        var target = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == to.Root)?.Deserialize<Block>();
+        var source = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == from.Base)?.Deserialize<Block>();
+        var target = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == to.Base)?.Deserialize<Block>();
 
         if (source is null)
-            throw new InvalidOperationException($"No source block with operand '{from.Root}' exists in the sheet.");
+            throw new InvalidOperationException($"No source block with operand '{from.Base}' exists in the sheet.");
 
         if (target is null)
-            throw new InvalidOperationException($"No target block with operand '{to.Root}' exists in the sheet.");
+            throw new InvalidOperationException($"No target block with operand '{to.Base}' exists in the sheet.");
 
-        WireBlocks(source.ID, target.ID, from.Path, to.Path);
+        WireBlocks(source.ID, target.ID, from.Member, to.Member);
 
         return this;
     }

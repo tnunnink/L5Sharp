@@ -1,38 +1,51 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.Gateway;
-using L5Sharp.Gateway.Common;
 using Task = System.Threading.Tasks.Task;
 
-namespace L5Sharp.Tests.Gateway.PlcClientTests;
+namespace L5Sharp.Tests.Gateway.ClientTests;
 
 [TestFixture]
-public class WriteTagTests
+public class WriteTagTests : PlcTestBase
 {
-    private const string TestIp = "10.11.19.204";
-    private const int TestSlot = 1;
+    [Test]
+    public async Task WriteTag_ExistingNameAndValidType_ShouldReturnSuccess()
+    {
+        using var client = CreateClient();
+
+        var response = await client.WriteTag<TIMER>("TestTimer", d =>
+        {
+            d.PRE = 12345;
+            d.ACC = 123;
+            d.EN = true;
+        });
+
+        response.Success.Should().BeTrue();
+        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        response.Tags.Should().HaveCount(1);
+        response.Errors.Should().BeEmpty();
+    }
 
     [Test]
-    public async Task WriteTag_TestDintTag_ShouldGetSuccessfulResult()
+    public async Task WriteTag_DintType_ShouldGetSuccessfulResult()
     {
-        using var client = new PlcClient(TestIp, TestSlot);
+        using var client = CreateClient();
         var tag = Tag.New<DINT>("TestDint");
         tag.Value = 123;
 
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
-        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
         response.Errors.Should().BeEmpty();
     }
-    
+
     [Test]
     public async Task WriteTag_TimerType_ShouldGetSuccessAndExpectedMemberValue()
     {
-        using var client = new PlcClient(TestIp, TestSlot);
+        using var client = CreateClient();
         var tag = Tag.New<TIMER>("TestTimer");
         tag["PRE"].Value = 10000;
         tag["DN"].Value = 1;
@@ -40,10 +53,9 @@ public class WriteTagTests
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
-        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(5);
+        response.Tags.Should().HaveCount(1);
         response.Errors.Should().BeEmpty();
     }
 }

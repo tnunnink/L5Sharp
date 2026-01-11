@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
 using L5Sharp.Gateway.Abstractions;
-using libplctag.NativeImport;
 
 namespace L5Sharp.Gateway.Common;
 
@@ -13,21 +12,16 @@ namespace L5Sharp.Gateway.Common;
 public class TagResponse
 {
     /// <summary>
-    /// A collection of tags associated with the response. Each tag should represent an atomic member of the
-    /// tag or set of tags that were involved in the operation that produced this response object.
+    /// Represents a collection of tags alongside their associated statuses that encountered errors during a tag operation.
     /// </summary>
-    private readonly List<TagName> _tags = [];
-
-    /// <summary>
-    /// A flat list of specific member results. To save memory, we only store failures here.
-    /// </summary>
-    private readonly List<(TagName Tag, TagStatus Result)> _errors = [];
+    private readonly List<(TagName Tag, TagStatus Status)> _errors = [];
 
     /// <summary>
     /// Creates a new <see cref="TagResponse"/> object indicating the result of the operation.
     /// </summary>
-    private TagResponse(TimeSpan duration)
+    private TagResponse(IEnumerable<Tag> tags, TimeSpan duration)
     {
+        Tags = tags;
         Timestamp = DateTime.UtcNow;
         Duration = duration;
     }
@@ -38,75 +32,66 @@ public class TagResponse
     public bool Success => _errors.Count == 0;
 
     /// <summary>
-    /// Represents the result status of the tag operation, typically indicating success or
-    /// the first encountered failure.
-    /// </summary>
-    public TagStatus Result => _errors.Count > 0 ? _errors[0].Result : TagStatus.Ok;
-
-    /// <summary>
-    /// The timestamp indicating when the tag response was created.
-    /// This value is set to the current UTC time at the moment of initialization.
+    /// The timestamp representing the date and time when the operation was completed.
     /// </summary>
     public DateTime Timestamp { get; }
 
     /// <summary>
-    /// Gets the duration of the operation represented by the tag response.
+    /// The duration of the operation represented as a <see cref="TimeSpan"/>.
+    /// This property indicates the elapsed time required to complete the operation,
+    /// providing insight into the performance and timing of the process.
     /// </summary>
-    /// <remarks>
-    /// The duration is calculated as the time span between the initiation of the operation
-    /// and the point when the response was generated, providing a measure of the operation's execution time.
-    /// </remarks>
     public TimeSpan Duration { get; }
 
     /// <summary>
     /// A collection of tags associated with the result of a tag-related operation.
     /// Provides access to the tags directly involved in the operation.
     /// </summary>
-    public IEnumerable<TagName> Tags => _tags;
+    public IEnumerable<Tag> Tags { get; }
 
     /// <summary>
-    /// Gets a collection of errors encountered during the tag-related operation.
-    /// Each error is represented as a tuple containing the tag name and the corresponding error message.
+    /// A collection of errors represented as a sequence of tuples containing <see cref="TagName"/> and its associated <see cref="TagStatus"/>.
+    /// Provides details about the tags and their processing status, specifically for operations resulting in errors.
     /// </summary>
-    public IEnumerable<(TagName, string)> Errors => _errors.Select(e => (Member: e.Tag, GetError(e.Result))).ToList();
+    public IEnumerable<TagError> Errors => _errors.Select(e => new TagError(e.Tag, e.Status)).ToList();
 
     /// <summary>
-    /// Creates a new <see cref="TagResponse"/> object with a status of <see cref="TagStatus.NoData"/> for the specified tag names.
+    /// Determines if the specified status exists within the error list.
     /// </summary>
-    /// <param name="tagNames">An array of <see cref="TagName"/> objects for which there is no data available.</param>
-    /// <returns>A <see cref="TagResponse"/> object containing the specified tag names with a <see cref="TagStatus.NoData"/> status.</returns>
-    public static TagResponse NoData(params TagName[] tagNames)
+    /// <param name="status">The <see cref="TagStatus"/> to check for in the error list.</param>
+    /// <returns>True if the status exists in the error list; otherwise, false.</returns>
+    public bool HasError(TagStatus status) => _errors.Any(e => e.Status == status);
+
+    /// <summary>
+    /// Creates a <see cref="TagResponse"/> indicating that no data is available for the provided tags.
+    /// </summary>
+    /// <param name="tags">The collection of tags for which no data is available.</param>
+    /// <returns>A <see cref="TagResponse"/> object indicating the absence of data for the specified tags.</returns>
+    public static TagResponse NoData(ICollection<Tag> tags)
     {
-        var response = new TagResponse(TimeSpan.Zero);
-        response._errors.AddRange(tagNames.Select(t => (t, TagStatus.NoData)));
+        var response = new TagResponse(tags, TimeSpan.Zero);
+        response._errors.AddRange(tags.Select(t => (t.TagName, TagStatus.NoData)));
         return response;
     }
 
     /// <summary>
-    /// Aggregates the results of tag operations and creates a new <see cref="TagResponse"/> object containing the operation details.
+    /// Aggregates the provided tag data and results into a <see cref="TagResponse"/> object,
+    /// including any errors identified during the operation.
     /// </summary>
-    /// <param name="results">A list of tuples where each tuple represents a tag and its corresponding operation status.</param>
-    /// <param name="duration">The time duration of the tag operation.</param>
-    /// <returns>A <see cref="TagResponse"/> object containing the aggregated operation details, including tags and errors.</returns>
-    public static TagResponse Aggregate(List<(TagName, TagStatus)> results, TimeSpan duration)
+    /// <param name="tags">The collection of <see cref="Tag"/> objects being processed.</param>
+    /// <param name="results">A list of tuples containing <see cref="TagName"/> and <see cref="TagStatus"/> pairs representing the processing outcomes of individual tags.</param>
+    /// <param name="duration">The total time taken to process the tags.</param>
+    /// <returns>A <see cref="TagResponse"/> object encapsulating the aggregation results and any errors that occurred.</returns>
+    public static TagResponse Aggregate(ICollection<Tag> tags, List<(TagName, TagStatus)> results, TimeSpan duration)
     {
-        var response = new TagResponse(duration);
+        var response = new TagResponse(tags, duration);
 
         foreach (var (member, status) in results)
         {
-            response._tags.Add(member);
             if (status >= 0) continue;
             response._errors.Add((member, status));
         }
 
         return response;
     }
-
-    /// <summary>
-    /// Decodes the error message corresponding to the provided <see cref="TagStatus"/> value.
-    /// </summary>
-    /// <param name="status">The result code for which the error message needs to be decoded.</param>
-    /// <returns>A string representing the decoded error message.</returns>
-    //todo I need to figure out how to replace this.
-    private static string GetError(TagStatus status) => plctag.plc_tag_decode_error((int)status);
 }
