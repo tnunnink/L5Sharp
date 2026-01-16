@@ -42,7 +42,7 @@ public class ConsumeInfo : LogixElement
     /// <value>A <see cref="TagName"/> representing the name of the remote tag to consume.</value>
     public TagName RemoteTag
     {
-        get => GetRequiredValue(TagName.Parse);
+        get => GetRequiredValue().ToTagName();
         set => SetValue(value);
     }
 

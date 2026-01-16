@@ -40,7 +40,7 @@ public class Unit : LogixObject<Unit>
     /// </value>
     public TagName Operand
     {
-        get => GetRequiredValue(TagName.Parse);
+        get => GetRequiredValue().ToTagName();
         set => SetRequiredValue(value);
     }
 

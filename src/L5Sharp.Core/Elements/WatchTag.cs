@@ -37,7 +37,7 @@ public class WatchTag : LogixElement
     /// <value>A <see cref="string"/> representing the tag specifier.</value>
     public TagName Specifier
     {
-        get => GetRequiredValue(TagName.Parse);
+        get => GetRequiredValue().ToTagName();
         set => SetRequiredValue(value);
     }
 

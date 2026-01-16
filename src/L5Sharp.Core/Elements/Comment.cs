@@ -40,12 +40,12 @@ public class Comment : LogixObject<Comment>
     /// </value>
     public TagName Operand
     {
-        get => GetRequiredValue(TagName.Parse);
+        get => GetRequiredValue().ToTagName();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
-    /// The text containting the comment.
+    /// The text containing the comment.
     /// </summary>
     /// <value>A <see cref="string"/> containsing the comment text.</value>
     public string Value

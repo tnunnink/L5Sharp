@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents a unique path to a logix entity in the L5X context. This type provides properties to help analyze or
-/// identify the reference type and location, including scope and id information.
+/// identify the reference type and Identifier, including scope and id information.
 /// </summary>
 /// <remarks>
 /// This type is a simple wrapper around an  <see cref="XPathExpression"/> which can be used to select the
@@ -27,7 +27,7 @@ public sealed class Reference
     private const char Slash = '/';
     
     /// <summary>
-    /// The underlying XPath expression that represents the location of the element in the L5X.
+    /// The underlying XPath expression that represents the Identifier of the element in the L5X.
     /// </summary>
     private readonly XPathExpression _path;
 
@@ -62,7 +62,7 @@ public sealed class Reference
     /// <remarks>
     /// For components this will be the name, but for code elements (Rung/Line/Sheet) this will be the number.
     /// </remarks>
-    public string Location => ParseLocation(_path.Expression);
+    public string Identifier => ParseIdentifier(_path.Expression);
 
     /// <summary>
     /// Gets the name of the parent container the target element is in. This will be either the Program or AOI
@@ -85,7 +85,7 @@ public sealed class Reference
     /// </summary>
     /// <remarks>
     /// The instruction text is embedded in the XPath using the text contains function.
-    /// Embedding this additional data allows provides more info regarding the location of a code reference.
+    /// Embedding this additional data allows provides more info regarding the Identifier of a code reference.
     /// </remarks>
     public Instruction Logic => ParseInstruction(_path.Expression);
     
@@ -168,7 +168,7 @@ public sealed class Reference
     /// container name; otherwise, <c>false</c>.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when the provided scope is null.</exception>
-    /// <remarks>If the provided scope or reference is globally scoped this will return false.</remarks>
+    /// <remarks>If the provided scope or reference is globally scoped, this will return false.</remarks>
     public bool IsLocalTo(Scope scope)
     {
         if (scope is null)
@@ -179,13 +179,13 @@ public sealed class Reference
 
     /// <summary>
     /// Determines whether the reference is a container to the specified scope, based on the scope level, container, and
-    /// the reference <see cref="Location"/>.
+    /// the reference <see cref="Identifier"/>.
     /// </summary>
     /// <param name="scope">The scope to check the reference against.</param>
     /// <returns>
     /// <c>true</c> when the scope is program scoped, the reference type is program, and the scope container
-    /// matches the reference location -or- the scope is routine scoped, the reference type is AOI, and the scope container
-    /// matches the reference location; otherwise, <c>false</c>.
+    /// matches the reference Identifier -or- the scope is routine scoped, the reference type is AOI, and the scope container
+    /// matches the reference Identifier; otherwise, <c>false</c>.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when the provided scope is null.</exception>
     /// <remarks>
@@ -198,10 +198,10 @@ public sealed class Reference
             throw new ArgumentNullException(nameof(scope));
 
         if (scope.IsProgram && Type == ReferenceType.Program)
-            return scope.Container.IsEquivalent(Location);
+            return scope.Container.IsEquivalent(Identifier);
         
         if (scope.IsRoutine && Type == ReferenceType.Aoi)
-            return scope.Container.IsEquivalent(Location);
+            return scope.Container.IsEquivalent(Identifier);
 
         return false;
     }
@@ -211,7 +211,7 @@ public sealed class Reference
     /// </summary>
     /// <param name="other">The reference object used to scope the current reference.</param>
     /// <returns>
-    /// Returns a new <see cref="Reference"/> object with the same type and location but scoped to the same
+    /// Returns a new <see cref="Reference"/> object with the same type and Identifier but scoped to the same
     /// container as the provided reference object.
     /// </returns>
     /// <remarks>
@@ -226,7 +226,7 @@ public sealed class Reference
         builder.Append(L5XName.Controller)
             .AppendIf($"/Programs/Program[@Name='{other.Container}']", () => other.IsLocal)
             .AppendIf($"/Routines/Routine[@Name='{other.Routine}']", () => IsLogic && other.IsLogic)
-            .Append($"/{Type.Container}/{Type.Value}[{Type.Identifier}='{Location}']");
+            .Append($"/{Type.Container}/{Type.Value}[{Type.Identifier}='{Identifier}']");
 
         return Reference.To(builder.ToString());
     }
@@ -246,7 +246,7 @@ public sealed class Reference
 
         builder.Append(L5XName.Controller)
             .AppendIf($"/Programs/Program[@Name='{scope.Container}']", () => scope.IsLocal)
-            .Append($"/{Type.Container}/{Type.Value}[{Type.Identifier}='{Location}']");
+            .Append($"/{Type.Container}/{Type.Value}[{Type.Identifier}='{Identifier}']");
 
         return Reference.To(builder.ToString());
     }
@@ -288,7 +288,7 @@ public sealed class Reference
         if (!IsTag)
             throw new InvalidOperationException("This operation is only valid for Tag type references");
         
-        var path = Path.Replace(Location, tagName);
+        var path = Path.Replace(Identifier, tagName);
         return Reference.To(path);
     }
 
@@ -305,12 +305,12 @@ public sealed class Reference
     /// Creates a new <see cref="Reference"/> instance representing a specific reference within the system.
     /// </summary>
     /// <param name="type">The type of reference, which determines its classification and characteristics.</param>
-    /// <param name="location">The location of the reference as a string, which uniquely identifies it within its type.</param>
+    /// <param name="Identifier">The Identifier of the reference as a string, which uniquely identifies it within its type.</param>
     /// <param name="program">An optional program name to associate the reference with, if applicable.</param>
     /// <param name="routine">An optional routine name to associate the reference with, if applicable.</param>
     /// <returns>A new <see cref="Reference"/> object initialized with the specified parameters.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="type"/> argument is null.</exception>
-    public static Reference To(ReferenceType type, string location, string? program = null, string? routine = null)
+    public static Reference To(ReferenceType type, string Identifier, string? program = null, string? routine = null)
     {
         if (type is null)
             throw new ArgumentNullException(nameof(type));
@@ -320,7 +320,7 @@ public sealed class Reference
         builder.Append("Controller")
             .AppendIf($"/Programs/Program[@Name='{program}']", () => !string.IsNullOrEmpty(program))
             .AppendIf($"/Routines/Routine[@Name='{routine}']", () => !string.IsNullOrEmpty(routine))
-            .Append($"/{type.Container}/{type.Value}[{type.Identifier}='{location}']");
+            .Append($"/{type.Container}/{type.Value}[{type.Identifier}='{Identifier}']");
         
         return new Reference(builder.ToString());
     }
@@ -395,7 +395,7 @@ public sealed class Reference
         for (var i = elements.Length - 1; i >= 0; i--)
         {
             if (i < elements.Length - 1) builder.Append('/');
-            var identifier = Identifier(elements[i]);
+            var identifier = GetIdentifier(elements[i]);
             builder.Append(identifier);
         }
 
@@ -474,7 +474,7 @@ public sealed class Reference
     
     /// <summary>
     /// Traverse from the end of the path to the first segment that has a parsable reference type name.
-    /// This will be the location or target of the reference, since it is the node that the expression should return.
+    /// This will be the Identifier or target of the reference, since it is the node that the expression should return.
     /// Note that with the instruction syntax this might not be the last segment but should in most cases.
     /// </summary>
     private static ReferenceType ParseType(string path)
@@ -495,10 +495,10 @@ public sealed class Reference
     
     /// <summary>
     /// Traverse from the end of the path to the first segment containing a name/number identifier.
-    /// This will be the location or target of the reference, since it is the node that the expression should return.
+    /// This will be the Identifier or target of the reference, since it is the node that the expression should return.
     /// Note that with the instruction syntax this might not be the last segment but should in most cases.
     /// </summary>
-    private static string ParseLocation(string path)
+    private static string ParseIdentifier(string path)
     {
         var segments = path.Split(Slash, StringSplitOptions.RemoveEmptyEntries);
         
@@ -587,7 +587,7 @@ public sealed class Reference
     /// </summary>
     /// <param name="element">The XML element for which the identifier is generated.</param>
     /// <returns>A string representing the identifier for the XML element.</returns>
-    private static string Identifier(XElement element)
+    private static string GetIdentifier(XElement element)
     {
         if (element.IsTagElement() || element.Name.LocalName.EndsWith(L5XName.Member))
         {

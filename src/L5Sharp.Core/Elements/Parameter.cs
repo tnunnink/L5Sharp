@@ -191,7 +191,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>A <see cref="TagName"/> string representing the full tag name of the alias tag.</value>
     public TagName? AliasFor
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 

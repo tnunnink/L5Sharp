@@ -808,7 +808,7 @@ public class TagTests
             Value = new MyNestedData()
         };
 
-        var members = tag.Members(t => t.Members.Count() > 2);
+        var members = tag.Members(t => t.Slice().Count() > 2);
 
         members.Should().NotBeEmpty();
     }

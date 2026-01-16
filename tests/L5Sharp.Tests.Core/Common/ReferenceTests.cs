@@ -16,7 +16,7 @@ public class ReferenceTests
         reference.Path.Should().Be("Tag[@Name='Test']");
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("Test");
+        reference.Identifier.Should().Be("Test");
     }
 
     [Test]
@@ -29,7 +29,7 @@ public class ReferenceTests
         reference.Path.Should().Be("Rung[@Number='0']");
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Rung);
-        reference.Location.Should().Be("0");
+        reference.Identifier.Should().Be("0");
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("/Tags/Tag[@Name='my_tag_name']");
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("my_tag_name");
+        reference.Identifier.Should().Be("my_tag_name");
         reference.Container.Should().BeEmpty();
         reference.Routine.Should().BeEmpty();
     }
@@ -66,7 +66,7 @@ public class ReferenceTests
         reference.Path.Should().Be(path);
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.DataType);
-        reference.Location.Should().Be("TypeName");
+        reference.Identifier.Should().Be("TypeName");
         reference.IsGlobal.Should().BeTrue();
     }
 
@@ -80,7 +80,7 @@ public class ReferenceTests
         reference.Path.Should().Be(path);
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Module);
-        reference.Location.Should().Be("ModuleName");
+        reference.Identifier.Should().Be("ModuleName");
         reference.IsGlobal.Should().BeTrue();
     }
 
@@ -94,7 +94,7 @@ public class ReferenceTests
         reference.Path.Should().Be(path);
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Aoi);
-        reference.Location.Should().Be("TypeName");
+        reference.Identifier.Should().Be("TypeName");
     }
 
     [Test]
@@ -107,7 +107,7 @@ public class ReferenceTests
         reference.Path.Should().Be(path);
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("myTag.Member.1");
+        reference.Identifier.Should().Be("myTag.Member.1");
     }
 
     [Test]
@@ -120,7 +120,7 @@ public class ReferenceTests
         reference.Path.Should().Be(path);
         reference.Container.Should().Be("MyProgram");
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("TagName.Member.Something");
+        reference.Identifier.Should().Be("TagName.Member.Something");
     }
 
     [Test]
@@ -135,7 +135,7 @@ public class ReferenceTests
         reference.Container.Should().Be("MyProgram");
         reference.Routine.Should().Be("MyRoutine");
         reference.Type.Should().Be(ReferenceType.Rung);
-        reference.Location.Should().Be("1");
+        reference.Identifier.Should().Be("1");
         reference.IsLocal.Should().BeTrue();
         reference.IsLogic.Should().BeTrue();
         reference.Logic.Should().NotBeNull();
@@ -150,7 +150,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("Controller/DataTypes/DataType[@Name='TargetName']");
         reference.Type.Should().Be(ReferenceType.DataType);
-        reference.Location.Should().Be("TargetName");
+        reference.Identifier.Should().Be("TargetName");
     }
 
     [Test]
@@ -160,7 +160,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("Controller/Modules/Module[@Name='TargetName']");
         reference.Type.Should().Be(ReferenceType.Module);
-        reference.Location.Should().Be("TargetName");
+        reference.Identifier.Should().Be("TargetName");
     }
 
     [Test]
@@ -171,7 +171,7 @@ public class ReferenceTests
         reference.Path.Should()
             .Be("Controller/AddOnInstructionDefinitions/AddOnInstructionDefinition[@Name='TargetName']");
         reference.Type.Should().Be(ReferenceType.Aoi);
-        reference.Location.Should().Be("TargetName");
+        reference.Identifier.Should().Be("TargetName");
     }
 
     [Test]
@@ -181,7 +181,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("Controller/Tags/Tag[@Name='TargetName']");
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("TargetName");
+        reference.Identifier.Should().Be("TargetName");
         reference.Container.Should().BeEmpty();
     }
 
@@ -193,7 +193,7 @@ public class ReferenceTests
         reference.Path.Should().Be("Controller/Programs/Program[@Name='MyProgram']/Tags/Tag[@Name='TargetName']");
         reference.Type.Should().Be(ReferenceType.Tag);
         reference.Container.Should().Be("MyProgram");
-        reference.Location.Should().Be("TargetName");
+        reference.Identifier.Should().Be("TargetName");
     }
 
     [Test]
@@ -208,7 +208,7 @@ public class ReferenceTests
         result.IsLocal.Should().BeTrue();
         result.Container.Should().Be(local.Container);
         result.Type.Should().Be(ReferenceType.Tag);
-        result.Location.Should().Be("TagName");
+        result.Identifier.Should().Be("TagName");
     }
 
     [Test]
@@ -220,7 +220,7 @@ public class ReferenceTests
         var result = routine.ToScope(code);
 
         result.Type.Should().Be(ReferenceType.Routine);
-        result.Location.Should().Be("MyRoutine");
+        result.Identifier.Should().Be("MyRoutine");
         result.Container.Should().Be("MyProgram");
         result.Routine.Should().BeEmpty();
         result.IsLocal.Should().BeTrue();
@@ -235,7 +235,7 @@ public class ReferenceTests
         var result = unscoped.ToScope(local);
 
         result.Type.Should().Be(ReferenceType.Rung);
-        result.Location.Should().Be("2");
+        result.Identifier.Should().Be("2");
         result.Container.Should().Be("MyProgram");
         result.Routine.Should().Be("MyRoutine");
         result.IsLocal.Should().BeTrue();
@@ -255,7 +255,7 @@ public class ReferenceTests
         result.Container.Should().BeEmpty();
         result.Routine.Should().BeEmpty();
         result.Type.Should().Be(ReferenceType.Tag);
-        result.Location.Should().Be("SomeOtherTag");
+        result.Identifier.Should().Be("SomeOtherTag");
     }
 
     [Test]
@@ -269,7 +269,7 @@ public class ReferenceTests
         result.IsGlobal.Should().BeTrue();
         result.Container.Should().BeEmpty();
         result.Type.Should().Be(ReferenceType.Tag);
-        result.Location.Should().Be("SomeOtherTag");
+        result.Identifier.Should().Be("SomeOtherTag");
     }
 
     [Test]
@@ -279,7 +279,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("Controller/Tags/Tag[@Name='MyTagName']");
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("MyTagName");
+        reference.Identifier.Should().Be("MyTagName");
     }
 
     [Test]
@@ -289,7 +289,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("Controller/DataTypes/DataType[@Name='MyType']");
         reference.Type.Should().Be(ReferenceType.DataType);
-        reference.Location.Should().Be("MyType");
+        reference.Identifier.Should().Be("MyType");
     }
 
     [Test]
@@ -299,7 +299,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("Controller/AddOnInstructionDefinitions/AddOnInstructionDefinition[@Name='MyType']");
         reference.Type.Should().Be(ReferenceType.Aoi);
-        reference.Location.Should().Be("MyType");
+        reference.Identifier.Should().Be("MyType");
     }
 
     [Test]
@@ -309,7 +309,7 @@ public class ReferenceTests
 
         reference.Path.Should().Be("Controller/Modules/Module[@Name='ModuleName']");
         reference.Type.Should().Be(ReferenceType.Module);
-        reference.Location.Should().Be("ModuleName");
+        reference.Identifier.Should().Be("ModuleName");
     }
 
     [Test]
@@ -320,7 +320,7 @@ public class ReferenceTests
         reference.Path.Should().Be("Controller/Tags/Tag[@Name='MyTagName']");
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("MyTagName");
+        reference.Identifier.Should().Be("MyTagName");
     }
 
     [Test]
@@ -331,7 +331,7 @@ public class ReferenceTests
         reference.Path.Should().Be("Controller/Programs/Program[@Name='MainProgram']");
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Program);
-        reference.Location.Should().Be("MainProgram");
+        reference.Identifier.Should().Be("MainProgram");
     }
 
     [Test]
@@ -342,7 +342,7 @@ public class ReferenceTests
         reference.Path.Should().Be("Controller/Tasks/Task[@Name='TaskName']");
         reference.Container.Should().BeEmpty();
         reference.Type.Should().Be(ReferenceType.Task);
-        reference.Location.Should().Be("TaskName");
+        reference.Identifier.Should().Be("TaskName");
     }
 
     [Test]
@@ -357,7 +357,7 @@ public class ReferenceTests
         reference.Path.Should().Be("Controller/Programs/Program[@Name='MyProgram']/Tags/Tag[@Name='MyTagName']");
         reference.Container.Should().Be("MyProgram");
         reference.Type.Should().Be(ReferenceType.Tag);
-        reference.Location.Should().Be("MyTagName");
+        reference.Identifier.Should().Be("MyTagName");
     }
 
     [Test]
@@ -376,7 +376,7 @@ public class ReferenceTests
         reference.Path.Should().Be(expected);
         reference.Container.Should().Be("MyProgram");
         reference.Type.Should().Be(ReferenceType.Rung);
-        reference.Location.Should().Be("23");
+        reference.Identifier.Should().Be("23");
     }
 
     [Test]
@@ -409,7 +409,7 @@ public class ReferenceTests
 
         references.Should().NotBeEmpty();
         references.Should().AllSatisfy(s => s.Type.Should().Be(ReferenceType.Tag));
-        references.Should().AllSatisfy(s => s.Location.Should().NotBe(TagName.Empty));
+        references.Should().AllSatisfy(s => s.Identifier.Should().NotBe(TagName.Empty));
         Console.WriteLine(references.Count);
     }
 }

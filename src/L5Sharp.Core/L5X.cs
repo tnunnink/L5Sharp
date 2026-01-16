@@ -360,7 +360,7 @@ public sealed class L5X
     public ILogixEntity Get(Reference reference)
     {
         var element = _index.GetElement<ILogixEntity>(reference);
-        return element is Tag tag ? tag[reference.Location.ToTagName().Member] : element;
+        return element is Tag tag ? tag[reference.Identifier.ToTagName().Member] : element;
     }
 
     /// <summary>
@@ -375,7 +375,7 @@ public sealed class L5X
     {
         var reference = Reference.To<TComponent>(name, program);
         var element = _index.GetElement<TComponent>(reference);
-        return element is Tag tag ? (TComponent)(LogixElement)tag[reference.Location.ToTagName().Member] : element;
+        return element is Tag tag ? (TComponent)(LogixElement)tag[reference.Identifier.ToTagName().Member] : element;
     }
 
     /// <summary>
@@ -407,7 +407,7 @@ public sealed class L5X
 
         var reference = Reference.Build(action);
         var element = _index.GetElement<ILogixEntity>(reference);
-        return element is Tag tag ? tag[reference.Location.ToTagName().Member] : element;
+        return element is Tag tag ? tag[reference.Identifier.ToTagName().Member] : element;
     }
 
     /// <summary>
@@ -429,7 +429,7 @@ public sealed class L5X
         var reference = builder.Build();
 
         var element = _index.GetElement<TEntity>(reference);
-        return element is Tag tag ? tag[reference.Location.ToTagName().Member].As<TEntity>() : element;
+        return element is Tag tag ? tag[reference.Identifier.ToTagName().Member].As<TEntity>() : element;
     }
 
     /// <summary>
@@ -441,9 +441,12 @@ public sealed class L5X
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> parameter is null.</exception>
     public bool TryGet(Reference reference, out ILogixEntity entity)
     {
+        //To support tag name paths with a program name prefix, always a tag name and scope the reference accordingly.
+        var tagName = reference.Identifier.ToTagName();
+        
         if (_index.TryGetElement<ILogixEntity>(reference, out var element))
         {
-            var target = element is Tag tag ? tag.Member(reference.Location.ToTagName().Member) : element;
+            var target = element is Tag tag ? tag.Member(reference.Identifier.ToTagName().Member) : element;
             return target.IsNull(out entity);
         }
 
@@ -461,12 +464,14 @@ public sealed class L5X
     /// <returns>True if the component is found; otherwise, false.</returns>
     public bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent<TComponent>
     {
-        var reference = Reference.To<TComponent>(name);
+        //To support tag name paths with a program name prefix, always a tag name and scope the reference accordingly.
+        var tagName = name.ToTagName();
+        var reference = Reference.To<TComponent>(tagName.Base).ToScope(tagName.Scope);
 
         if (_index.TryGetElement<TComponent>(reference, out var element))
         {
             var target = element is Tag tag
-                ? tag.Member(reference.Location.ToTagName().Member)?.As<TComponent>()
+                ? tag.Member(tagName.Member)?.As<TComponent>()
                 : element;
 
             return target.IsNull(out component);
@@ -492,7 +497,7 @@ public sealed class L5X
         if (_index.TryGetElement<TComponent>(reference, out var element))
         {
             var target = element is Tag tag
-                ? tag.Member(reference.Location.ToTagName().Member)?.As<TComponent>()
+                ? tag.Member(reference.Identifier.ToTagName().Member)?.As<TComponent>()
                 : element;
 
             return target.IsNull(out component);
@@ -540,7 +545,7 @@ public sealed class L5X
 
         if (_index.TryGetElement<ILogixEntity>(reference, out var element))
         {
-            var target = element is Tag tag ? tag.Member(reference.Location.ToTagName().Member) : element;
+            var target = element is Tag tag ? tag.Member(reference.Identifier.ToTagName().Member) : element;
             return target.IsNull(out entity);
         }
 
@@ -570,7 +575,7 @@ public sealed class L5X
 
         if (_index.TryGetElement<TEntity>(reference, out var element))
         {
-            var target = element is Tag tag ? tag.Member(reference.Location.ToTagName().Member)?.As<TEntity>() : element;
+            var target = element is Tag tag ? tag.Member(reference.Identifier.ToTagName().Member)?.As<TEntity>() : element;
             return target.IsNull(out entity);
         }
 

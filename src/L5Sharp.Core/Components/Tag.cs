@@ -291,7 +291,7 @@ public class Tag : LogixComponent<Tag>
     /// <value>A <see cref="Core.TagName"/> string representing the full tag name of the alias tag.</value>
     public TagName? AliasFor
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -631,7 +631,7 @@ public class Tag : LogixComponent<Tag>
         if (member is null) return [];
 
         var tag = new Tag(member, this);
-        var remaining = TagName.Combine(tagName.Members.Skip(1));
+        var remaining = TagName.Combine(tagName.Slice().Skip(1));
         return remaining.IsEmpty ? tag.Members() : tag.MembersOf(remaining);
     }
 
@@ -784,7 +784,7 @@ public class Tag : LogixComponent<Tag>
             return Element.Element(L5XName.Description)?.Value;
 
         //Local member comments always override pass-through and inherited descriptions
-        var comment = Comments?.FirstOrDefault(c => TagName.HasOperand(c.Operand));
+        var comment = Comments?.FirstOrDefault(c => TagName.Contains(c.Operand));
         if (comment is not null) return comment.Value;
 
         //If there is no attached document or the corresponding data type is not available, default to the inherited description.
@@ -827,16 +827,16 @@ public class Tag : LogixComponent<Tag>
         //Child descriptions are set in the 'Comments' element of a tag.
         if (value is null || value.IsEmpty())
         {
-            Comments?.RemoveIf(c => TagName.HasOperand(c.Operand));
+            Comments?.RemoveIf(c => TagName.Contains(c.Operand));
             return;
         }
 
         //Comments are only initialized in the XML element when a comment exists.
         Comments ??= [];
 
-        if (Comments!.Any(c => TagName.HasOperand(c.Operand)))
+        if (Comments!.Any(c => TagName.Contains(c.Operand)))
         {
-            Comments!.Update(c => c.Value = value, c => TagName.HasOperand(c.Operand));
+            Comments!.Update(c => c.Value = value, c => TagName.Contains(c.Operand));
             return;
         }
 
@@ -848,7 +848,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     private string? GetUnit()
     {
-        return Units?.FirstOrDefault(x => TagName.HasOperand(x.Operand))?.Value;
+        return Units?.FirstOrDefault(x => TagName.Contains(x.Operand))?.Value;
     }
 
     /// <summary>
@@ -858,15 +858,15 @@ public class Tag : LogixComponent<Tag>
     {
         if (value is null || value.IsEmpty())
         {
-            Units?.RemoveIf(x => TagName.HasOperand(x.Operand));
+            Units?.RemoveIf(x => TagName.Contains(x.Operand));
             return;
         }
 
         Units ??= [];
 
-        if (Units!.Any(c => TagName.HasOperand(c.Operand)))
+        if (Units!.Any(c => TagName.Contains(c.Operand)))
         {
-            Units!.Update(c => c.Value = value, c => TagName.HasOperand(c.Operand));
+            Units!.Update(c => c.Value = value, c => TagName.Contains(c.Operand));
             return;
         }
 

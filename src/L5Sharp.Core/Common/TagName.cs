@@ -51,7 +51,10 @@ public sealed class TagName : IComparable<TagName>
         new(@"^[A-Za-z_][\w:]{0,39}$", RegexOptions.Compiled);
 
     /// <summary>
-    /// 
+    /// A compiled regular expression used to define the naming rules for Logix tag members.
+    /// Validates that a member name starts with an alphabetic character or an underscore,
+    /// followed by up to 39 alphanumeric characters or underscores.
+    /// Ensures compliance with naming conventions for tag components within a Logix environment.
     /// </summary>
     private static readonly Regex MemberNamePattern =
         new(@"^[A-Za-z_][\w]{0,39}$", RegexOptions.Compiled);
@@ -93,36 +96,33 @@ public sealed class TagName : IComparable<TagName>
     /// The <c>Base</c> part of a tag name is the beginning part of the tag name up to the first member
     /// separator character (e.g., '.' or '['). For Module-defined tags, this includes the colon separator.
     /// </remarks>
-    /// <seealso cref="Operand"/>
-    /// <seealso cref="Member"/>
     public string Base => GetBase(_path);
 
     /// <summary>
-    /// Gets the operand portion of the <see cref="TagName"/> value.
+    /// Represents the operand portion of the tag path, including all members, elements, and indices,
+    /// excluding the base portion of the tag path. This string begins with the separator used between
+    /// the base and subsequent members, providing a detailed representation of the tag structure beyond the base.
+    /// Used for operations requiring deeper levels of the tag hierarchy.
     /// </summary>
-    /// <remarks>
-    /// The <c>Operand</c> of a tag name represents the part of the name after <see cref="Base"/>. This value will always be
-    /// the full tag name value without the leading root name. The operand will include the leading '.' character.
-    /// </remarks>
-    /// <seealso cref="Member"/>
     public string Operand => GetOperand(_path);
 
     /// <summary>
-    /// Gets the member portion of the tag name if it contains hierarchical segments.
+    /// Gets the portion of the tag name that represents the member path.
     /// </summary>
-    /// <remarks>
-    /// The <c>Member</c> is the part of the tag name following its <see cref="Base"/> and any leading separator (e.g., '.').
-    /// This is similar to <see cref="Operand"/>, except that is also removes any leading member separator character ('.'). 
+    /// /// <remarks>
+    /// The member is derived by stripping the base tag name and any leading separators
+    /// from the operand. This property encapsulates the hierarchical component
+    /// beneath the base, including nested structures or indices when applicable.
     /// </remarks>
-    /// <seealso cref="Operand"/>
     public string Member => GetOperand(_path).TrimStart(Separator);
 
     /// <summary>
-    /// Gets the member name, or the last member of <see cref="Members"/>, of the tag name value.
+    /// Retrieves the terminal component or final segment of the tag path represented by the instance.
     /// </summary>
     /// <remarks>
-    /// The <c>Member</c> of a tag name represents the last member name of the string. This is the string after the final
-    /// member separator character.
+    /// This property isolates the most specific portion of the logical reference, such as the last member,
+    /// submember, or indexed element in a hierarchical path structure.
+    /// It is particularly useful for identifying the immediate target or endpoint in a tag hierarchy.
     /// </remarks>
     public string Element => GetElement(_path);
 
@@ -133,7 +133,7 @@ public sealed class TagName : IComparable<TagName>
     /// Each member of a tag name can be represented by a string, array bracket, or bit index value.
     /// For example, MyTag[1].MemberName.5 has 4 members.
     /// </remarks>
-    public IEnumerable<string> Members => GetMembers(_path);
+    public IEnumerable<string> Slice() => GetMembers(_path);
 
     /// <summary>
     /// A zero-based number representing the depth of the tag name. In other words, the number of members
@@ -186,13 +186,6 @@ public sealed class TagName : IComparable<TagName>
     }
 
     /// <summary>
-    /// Parses the provided string into a <see cref="TagName"/> value.
-    /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="TagName"/> representing the parsed value.</returns>
-    public static TagName Parse(string value) => new(value);
-
-    /// <summary>
     /// Determines if the provided string value is a valid tag name.
     /// </summary>
     /// <param name="value">The <see cref="string"/> to test.</param>
@@ -208,8 +201,8 @@ public sealed class TagName : IComparable<TagName>
     /// <returns>A <see cref="TagName"/> representing the combination of <c>left</c> and <c>right</c>.</returns>
     /// <remarks>
     /// This method would be more performant than <see cref="Combine(string[])"/>, assuming there are just
-    /// two strings to join together, as it does not iterate a collection and build a string with a string builder
-    /// class. This method simply joins to strings using a string format syntax.
+    /// two strings to join together, as it does not iterate a collection or use a string builder class.
+    /// This method simply concatenates to strings.
     /// </remarks>
     public static TagName Concat(string left, string right)
     {
@@ -239,49 +232,21 @@ public sealed class TagName : IComparable<TagName>
     public static TagName Combine(IEnumerable<string> members) => new(ConcatenateMembers(members));
 
     /// <summary>
-    /// Determines if the provided tagName is contained within the current value.
+    /// Determines whether the current <see cref="TagName"/> contains the specified <paramref name="tagName"/>.
     /// </summary>
-    /// <param name="tagName">The tag name to evaluate as a sub path or contained tag name path.</param>
-    /// <returns>true if tagName is contained within the current value; otherwise, false.</returns>
-    /// <exception cref="ArgumentNullException">tagName is null.</exception>
+    /// <param name="tagName">The <see cref="TagName"/> to check for containment.</param>
+    /// <returns>
+    /// <c>true</c> if the current <see cref="TagName"/> contains the specified <paramref name="tagName"/>;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="tagName"/> is <c>null</c>.</exception>
     public bool Contains(TagName tagName)
     {
         if (tagName is null)
             throw new ArgumentNullException(nameof(tagName));
 
-        return _path.Contains(tagName);
+        return _path.IndexOf(tagName._path, StringComparison.OrdinalIgnoreCase) >= 0;
     }
-
-    /// <summary>
-    /// Determines whether the provided <see cref="TagName"/> object has the same base as the current <see cref="TagName"/>.
-    /// </summary>
-    /// <param name="tagName">The <see cref="TagName"/> to compare with the base of the current instance.</param>
-    /// <returns>
-    /// <c>true</c> if the base of the current instance is equivalent to the base of the provided <see cref="TagName"/>;
-    /// otherwise, <c>false</c>.
-    /// </returns>
-    public bool HasBase(TagName tagName) => Base.IsEquivalent(tagName);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tagName"></param>
-    /// <returns></returns>
-    public bool HasOperand(TagName tagName) => Operand.IsEquivalent(tagName);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tagName"></param>
-    /// <returns></returns>
-    public bool HasMember(TagName tagName) => Member.IsEquivalent(tagName);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tagName"></param>
-    /// <returns></returns>
-    public bool HasElement(TagName tagName) => Element.IsEquivalent(tagName);
 
     /// <inheritdoc />
     public int CompareTo(TagName? other)
@@ -388,28 +353,36 @@ public sealed class TagName : IComparable<TagName>
     private static IEnumerable<string> GetMembers(string path)
     {
         var tagName = GetLocalTagName(path);
-
         var start = 0;
 
         for (var i = 0; i < tagName.Length; i++)
         {
-            if (tagName[i] == Separator || tagName[i] == ArrayOpen)
+            if (tagName[i] == Separator)
             {
                 if (i > start) yield return tagName.Substring(start, i - start);
-                start = i;
+                start = i + 1;
             }
 
-            if (tagName[i] == ArrayClose)
+            if (tagName[i] == ArrayOpen)
             {
-                yield return tagName.Substring(start, i - start + 1);
-                start = i + 1;
+                if (i > start) yield return tagName.Substring(start, i - start);
+
+                var end = tagName.IndexOf(ArrayClose, i);
+                if (end == -1)
+                {
+                    yield return tagName.Substring(i);
+                    yield break;
+                }
+
+                yield return tagName.Substring(i, end - i + 1);
+                start = end + 1;
+                i = end;
             }
         }
 
         if (start < tagName.Length)
         {
-            var remaining = tagName.Substring(start).TrimStart(Separator);
-            if (!remaining.IsEmpty()) yield return remaining;
+            yield return tagName.Substring(start);
         }
     }
 
@@ -517,10 +490,6 @@ public sealed class TagName : IComparable<TagName>
 /// <summary>
 /// Provides extension methods for working with <c>TagName</c> objects.
 /// </summary>
-/// <remarks>
-/// This static class contains methods that extend the functionality of <c>TagName</c>,
-/// offering convenience for handling tag name conversions and operations.
-/// </remarks>
 public static class TagNameExtensions
 {
     /// <summary>

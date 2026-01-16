@@ -48,7 +48,7 @@ public class EventInfo : LogixElement
     /// <remarks>Only used for event tasks with a Consumed Tag trigger or a Module Input Data State Change trigger.</remarks>
     public TagName? EventTag
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 

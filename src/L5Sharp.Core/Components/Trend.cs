@@ -104,7 +104,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StartTriggerTag1
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -147,7 +147,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StartTriggerTargetTag1
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -168,7 +168,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StartTriggerTag2
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -211,7 +211,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StartTriggerTargetTag2
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -249,7 +249,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StopTriggerTag1
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -292,7 +292,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StopTriggerTargetTag1
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -313,7 +313,7 @@ public class Trend : LogixComponent<Trend>
     /// </summary>
     public TagName? StopTriggerTag2
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -356,7 +356,7 @@ public class Trend : LogixComponent<Trend>
     /// <remarks>The tag must be one of the pen names.</remarks>
     public TagName? StopTriggerTargetTag2
     {
-        get => GetValue(TagName.Parse);
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
