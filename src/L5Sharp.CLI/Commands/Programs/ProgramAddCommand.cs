@@ -31,7 +31,7 @@ public class ProgramAddCommand : MutateCommand
 
     protected override void Mutate(L5X project)
     {
-        if (project.Contains(b => b.Program(Name)))
+        if (project.Contains(Reference.To<Program>(Name)))
             throw new CommandException($"Project already contains a program: '{Name}'", ExitCodes.ComponentNotFound);
 
         var program = new Program(Name)

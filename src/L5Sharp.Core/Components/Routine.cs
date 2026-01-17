@@ -92,7 +92,7 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public OnlineEditType? OnlineEditType
     {
-        get => OnlineEditType.TryParse(Element.Element(Type.ContentName)?.Attribute(nameof(OnlineEditType))?.Value);
+        get => GetValue(OnlineEditType.Parse, e => e.Element(Type.ContentName));
         set => Element.Element(Type.ContentName)?.SetAttributeValue(nameof(OnlineEditType), value);
     }
 
@@ -105,7 +105,7 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public SheetSize? SheetSize
     {
-        get => SheetSize.TryParse(Element.Element(Type.ContentName)?.Attribute(nameof(SheetSize))?.Value);
+        get => GetValue(SheetSize.Parse, e => e.Element(Type.ContentName));
         set => Element.Element(Type.ContentName)?.SetAttributeValue(nameof(SheetSize), value);
     }
 
@@ -118,7 +118,7 @@ public class Routine : LogixComponent<Routine>
     /// </value>
     public SheetOrientation? SheetOrientation
     {
-        get => SheetOrientation.TryParse(Element.Element(Type.ContentName)?.Attribute(nameof(SheetOrientation))?.Value);
+        get => GetValue(SheetOrientation.Parse, e => e.Element(Type.ContentName));
         set => Element.Element(Type.ContentName)?.SetAttributeValue(nameof(SheetOrientation), value);
     }
 
@@ -190,9 +190,12 @@ public class Routine : LogixComponent<Routine>
         if (!TryGetDocument(out var document))
             return [];
 
-        //The container to scope returns programs that reference this routine.
+        //Containing programs referencing this routine is considered a reference. 
         //The rest should be logic instructions (JSR, FOR, etc).
-        return document.References(Name).Where(r => r.IsContainerTo(Scope) || (r.IsLogic && r.Logic.Supports(r.Type)));
+        return document.References(Name).Where(r =>
+            (r.Type == ReferenceType.Program && r.Id == Scope.Container) ||
+            (r.HasLogic(out var c) && c.Supports(r.Type))
+        );
     }
 
     /// <inheritdoc />

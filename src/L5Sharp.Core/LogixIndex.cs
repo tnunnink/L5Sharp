@@ -300,11 +300,11 @@ internal class LogixIndex
 
         foreach (var instruction in code.Instructions())
         {
-            var reference = code.Reference.ToLogic(instruction);
+            var reference = code.Reference.At(instruction);
 
-            AddOrUpdateReference(reference.Logic.Key, reference);
+            AddOrUpdateReference(instruction.Key, reference);
 
-            foreach (var tag in reference.Logic.Arguments.Where(a => a.Type.IsTag))
+            foreach (var tag in instruction.Arguments.Where(a => a.Type.IsTag))
                 AddOrUpdateReference(tag, reference);
         }
     }

@@ -220,6 +220,32 @@ public abstract class LogixElement : ILogixElement
     }
 
     /// <summary>
+    /// Retrieves the value of the specified attribute from an <see cref="XElement"/> selected by the provided selector function,
+    /// and parses it into the specified type using the provided parser function.
+    /// </summary>
+    /// <typeparam name="T">The type to which the attribute value should be parsed.</typeparam>
+    /// <param name="parser">A function that converts a string to the desired type <typeparamref name="T"/>.</param>
+    /// <param name="selector">A function that selects the <see cref="XElement"/> from which to retrieve the attribute value.</param>
+    /// <param name="name">The name of the attribute to retrieve. Defaults to the name of the calling member if not specified.</param>
+    /// <returns>The parsed value of the specified attribute if found, otherwise the default value for <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="parser"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="selector"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if the <paramref name="name"/> is null or an empty string.</exception>
+    protected T? GetValue<T>(Func<string, T> parser, Func<XElement, XElement> selector,
+        [CallerMemberName] string? name = null)
+    {
+        if (parser is null) throw new ArgumentNullException(nameof(parser));
+        if (selector is null) throw new ArgumentNullException(nameof(selector));
+
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        var value = selector(Element).Attribute(name)?.Value;
+
+        return value is not null ? parser(value) : default;
+    }
+
+    /// <summary>
     /// Gets the value of the specified attribute name from the element parsed as the specified generic type parameter.
     /// </summary>
     /// <param name="name">The name of the attribute.</param>

@@ -173,7 +173,7 @@ public sealed class Task : LogixComponent<Task>
     /// <inheritdoc />
     public override IEnumerable<Reference> References()
     {
-        return base.References().Where(r => r.IsLogic && r.Logic.Supports(Reference.Type));
+        return base.References().Where(r => r.HasLogic(out var c) && c.Supports(Reference.Type));
     }
 
     /// <inheritdoc />

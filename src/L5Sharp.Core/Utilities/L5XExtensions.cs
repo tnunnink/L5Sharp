@@ -94,6 +94,26 @@ internal static class L5XExtensions
     }
 
     /// <summary>
+    /// Retrieves the Logix identifier associated with the specified XElement.
+    /// </summary>
+    /// <param name="element">The XElement from which to extract the identifier.</param>
+    /// <returns>A string containing the identifier if found, or an empty string if no identifier exists.</returns>
+    /// <remarks>This is the value of either the name, number, or ID attribute, which ever is found first (in that order).</remarks>
+    internal static string LogixId(this XElement element)
+    {
+        if (element.Attribute(L5XName.Name) is not null)
+            return element.Attribute(L5XName.Name)!.Value;
+
+        if (element.Attribute(L5XName.Number) is not null)
+            return element.Attribute(L5XName.Number)!.Value;
+
+        if (element.Attribute(L5XName.ID) is not null)
+            return element.Attribute(L5XName.ID)!.Value;
+
+        return string.Empty;
+    }
+
+    /// <summary>
     /// Retrieves the name of a member from the specified <see cref="XObject"/>.
     /// </summary>
     /// <param name="obj">The <see cref="XObject"/> representing the XML element or attribute.</param>
@@ -210,6 +230,32 @@ internal static class L5XExtensions
                 _ => throw new NotSupportedException($"Module tag element not supported for {el.Name.LocalName}")
             };
         }
+    }
+
+    /// <summary>
+    /// Attempts to find an ancestor XElement that matches the specified predicate.
+    /// </summary>
+    /// <param name="element">The starting XElement for the search.</param>
+    /// <param name="predicate">A function to test each ancestor for a condition.</param>
+    /// <param name="ancestor">The first ancestor element that matches the predicate, if found.</param>
+    /// <returns>True if an ancestor matching the predicate is found, otherwise false.</returns>
+    internal static bool TryGetAncestor(this XElement element, Func<XElement, bool> predicate, out XElement ancestor)
+    {
+        var current = element.Parent;
+
+        while (current is not null)
+        {
+            if (predicate(current))
+            {
+                ancestor = current;
+                return true;
+            }
+
+            current = current.Parent;
+        }
+
+        ancestor = null!;
+        return false;
     }
 
     /// <summary>
@@ -342,19 +388,6 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Determines whether the specified XML element is identifiable, based on its attributes or type.
-    /// </summary>
-    /// <param name="element">The XML element to be evaluated.</param>
-    /// <returns>True if the element has a 'Name' or 'Number' attribute or is a module tag element. Otherwise, false.</returns>
-    internal static bool IsIdentifiable(this XElement element)
-    {
-        return element.Attribute(L5XName.Name) is not null
-               || element.Attribute(L5XName.Number) is not null
-               || element.Attribute(L5XName.ID) is not null
-               || element.IsModuleTagElement();
-    }
-
-    /// <summary>
     /// Combines the collection of string values into a single string separated by the provided character.
     /// </summary>
     /// <param name="enumerable">The collection to combine.</param>
@@ -468,23 +501,33 @@ internal static class L5XExtensions
     }
 
     /// <summary>
-    /// Appends the specified value to the string builder if the provided predicate evaluates to true.
+    /// Appends the string representation of a value to the current StringBuilder instance
+    /// if a specified condition evaluates to true.
     /// </summary>
     /// <param name="builder">The StringBuilder instance to append to.</param>
-    /// <param name="value">The string value to conditionally append.</param>
-    /// <param name="predicate">The predicate function used to determine if the value should be appended.</param>
-    /// <returns>The original StringBuilder instance, with the value appended if the predicate evaluates to true.</returns>
-    public static StringBuilder AppendIf(this StringBuilder builder, string value, Func<bool> predicate)
+    /// <param name="value">The value to be evaluated and potentially appended.</param>
+    /// <param name="predicate">A function that determines whether the value should be appended.</param>
+    /// <param name="selector">
+    /// An optional function that specifies how to convert the value to its string representation.
+    /// If not provided, the value's <c>ToString</c> method is used.
+    /// </param>
+    /// <typeparam name="T">The type of the value to be appended.</typeparam>
+    /// <returns>The updated StringBuilder instance.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the <paramref name="builder"/> or <paramref name="predicate"/> is null.
+    /// </exception>
+    public static StringBuilder AppendIf<T>(this StringBuilder builder, T value,
+        Func<T, bool> predicate,
+        Func<T, string>? selector = null)
     {
-        if (builder is null)
-            throw new ArgumentNullException(nameof(builder));
+        if (builder is null) throw new ArgumentNullException(nameof(builder));
+        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        if (predicate is null)
-            throw new ArgumentNullException(nameof(predicate));
+        var text = selector?.Invoke(value) ?? value?.ToString() ?? null;
 
-        if (predicate.Invoke())
+        if (predicate(value) && text is not null)
         {
-            builder.Append(value);
+            builder.Append(text);
         }
 
         return builder;

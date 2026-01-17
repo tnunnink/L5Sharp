@@ -161,11 +161,7 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <inheritdoc />
-    /// <remarks>
-    /// Tag overrides the default implementation so that each nested tag member will include the
-    /// full dot down path to it's instance/reference (not just the root tag name).
-    /// </remarks>
-    public override Reference Reference => Parent is null ? base.Reference : base.Reference.ToTag(TagName);
+    public override Reference Reference => Parent is null ? base.Reference : Reference.To(TagName);
 
     /// <summary>
     /// The full tag name path of the <see cref="Tag"/>.
@@ -177,7 +173,7 @@ public class Tag : LogixComponent<Tag>
     /// member object. This property is determined by the hierarchical structure of the tag component.
     /// </para>
     /// </remarks>
-    public TagName TagName => Parent is null ? new TagName(Name) : TagName.Concat(Parent.TagName, Name);
+    public TagName TagName => GetTagName();
 
     /// <summary>
     /// The name of the data type the tag represents. 
@@ -378,7 +374,6 @@ public class Tag : LogixComponent<Tag>
     /// <value>The <see cref="Tag"/> object that represents the alias if found. If this object is not
     /// attached, or <see cref="AliasFor"/> is not set, then this will return <c>null</c>.</value>
     public Tag? Alias => GetAliasTag();
-
 
     /// <summary>
     /// The collection of <see cref="Comment"/> configured for this tag.
@@ -648,14 +643,26 @@ public class Tag : LogixComponent<Tag>
     public override string ToString() => TagName;
 
     /// <summary>
-    /// Creates a new <see cref="Tag"/> with the provided name and specified type parameter.
+    /// Creates a new <see cref="Tag"/> instance with the specified name and a strongly typed data value.
     /// </summary>
-    /// <param name="name">The name of the tag.</param>
-    /// <typeparam name="TData">The logix data type of the tag. Type must have a parameterless constructor to create.</typeparam>
-    /// <returns>A new <see cref="Tag"/> object with specified parameters.</returns>
-    public static Tag New<TData>(string name) where TData : LogixData, new()
+    /// <param name="tagName">The name of the tag to create.</param>
+    /// <typeparam name="TData">The type of <see cref="LogixData"/> for the tag's value. Must have a parameterless constructor.</typeparam>
+    /// <returns>A new <see cref="Tag"/> instance initialized with the specified name and data type.</returns>
+    /// <remarks>
+    /// If the <paramref name="tagName"/> contains a program scope, a virtual program container will be created and
+    /// this tag will be added to it to give the new tag instance a valid scope and tag name value.
+    /// </remarks>
+    public static Tag New<TData>(TagName tagName) where TData : LogixData, new()
     {
-        return new Tag { Name = name, Value = new TData() };
+        var tag = new Tag { Name = tagName.Base, Value = new TData() };
+
+        if (tagName.Scope.IsProgram)
+        {
+            var context = new Program(tagName.Scope.Container) { Use = Use.Context };
+            context.Tags.Add(tag);
+        }
+
+        return tag;
     }
 
     /// <summary>
@@ -669,6 +676,21 @@ public class Tag : LogixComponent<Tag>
     }
 
     #region Internal
+
+    /// <summary>
+    /// Retrieves the fully qualified <see cref="TagName"/> of the tag, including its hierarchical context.
+    /// </summary>
+    /// <returns>A <see cref="TagName"/> object representing the tag's full name.</returns>
+    private TagName GetTagName()
+    {
+        if (Parent is not null)
+            return TagName.Concat(Parent.TagName, Name);
+
+        if (Scope.IsProgram)
+            return new TagName($"Program:{Scope.Container}.{Name}");
+
+        return new TagName(Name);
+    }
 
     /// <summary>
     /// Retrieves the root tag by traversing the hierarchy of parent tags.

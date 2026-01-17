@@ -181,11 +181,16 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     }
 
     /// <summary>
-    /// Tries to parse the specified string representation of an enumeration name or value into its corresponding
-    /// enumeration type.
+    /// Attempts to parse the specified string representation of a value into an instance of the enumeration type.
     /// </summary>
-    /// <param name="value">The string to parse. This can be the name or value.</param>
-    /// <returns>The enum value corresponding to the specified string representation if found; Otherwise, <c>null</c>.</returns>
+    /// <param name="value">The string representation of the value to parse.</param>
+    /// <param name="result">
+    /// When this method returns, contains the parsed enumeration value if the parsing succeeded;
+    /// otherwise, contains the default value of the enumeration type.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the string was successfully parsed into a valid enumeration instance; otherwise, <c>false</c>.
+    /// </returns>
     /// <remarks>
     /// This method will first check for enums by name. If none exists, then it will check the value lookup dictionary
     /// of enumeration values converted to string. This combines factories for name and value
@@ -193,19 +198,22 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
     /// In this library we typically represent the XML value as the <see cref="Value"/> property which is also a string,
     /// but we also in some places will relay on name, and we want to support both.
     /// </remarks>
-    public static TEnum? TryParse(string? value)
+    public static bool TryParse(string? value, out TEnum result)
     {
-        if (value is null) return null;
+        if (value is not null && NameLookup.Value.TryGetValue(value, out var named))
+        {
+            result = named;
+            return true;
+        }
 
-        if (NameLookup.Value.TryGetValue(value, out var named))
-            return named;
+        if (value is not null && ValueLookup.Value.TryGetValue(value, out var literal))
+        {
+            result = literal;
+            return true;
+        }
 
-        // ReSharper disable once ConvertIfStatementToReturnStatement
-        // ReSharper disable once CanSimplifyDictionaryTryGetValueWithGetValueOrDefault
-        if (ValueLookup.Value.TryGetValue(value, out var literal))
-            return literal;
-
-        return null;
+        result = null!;
+        return false;
     }
 
     /// <inheritdoc />

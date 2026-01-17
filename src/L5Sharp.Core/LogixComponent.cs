@@ -148,7 +148,7 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
         if (!TryGetDocument(out var document))
             return [];
 
-        return document.References(Name).Where(r => r.IsVisibleTo(Scope));
+        return document.References(Name).Where(r => r.Scope.IsVisibleTo(Scope));
     }
 
     /// <summary>

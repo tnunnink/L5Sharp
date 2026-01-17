@@ -60,13 +60,20 @@ public sealed class TagName : IComparable<TagName>
         new(@"^[A-Za-z_][\w]{0,39}$", RegexOptions.Compiled);
 
     /// <summary>
-    /// 
+    /// A regular expression pattern used to validate and match reference-style index notations
+    /// in Logix tag names. The pattern ensures the string starts and ends with square brackets
+    /// and contains valid characters, including alphabetic characters, underscores, colons,
+    /// and alphanumeric values, with a maximum length of 41 characters (excluding brackets).
+    /// This is important for parsing and verifying valid reference indices in tag operations.
     /// </summary>
     private static readonly Regex ReferenceIndexPattern =
         new(@"^\[[A-Za-z_][\w:]{0,39}\]$", RegexOptions.Compiled);
 
     /// <summary>
-    /// 
+    /// A regular expression pattern used to match numeric index notations within a Logix tag name.
+    /// The pattern is designed to identify indices enclosed in square brackets, such as single-dimensional
+    /// (e.g., <c>[0]</c>), multi-dimensional (e.g., <c>[0,1]</c>, <c>[0,1,2]</c>), and properly formatted numeric indices.
+    /// Used internally to validate and extract numeric indices during tag operations.
     /// </summary>
     private static readonly Regex NumericIndexPattern =
         new(@"^\[[0-9]+(?:\,[0-9]+)?(?:\,[0-9]+)?\]$", RegexOptions.Compiled);
@@ -90,6 +97,17 @@ public sealed class TagName : IComparable<TagName>
     public string Path => _path;
 
     /// <summary>
+    /// Gets the local portion of the tag name, excluding any program scope prefix.
+    /// </summary>
+    /// <remarks>
+    /// If the tag name is program-scoped (begins with "Program:"), this property returns
+    /// only the tag name portion after the program prefix and separator. For controller-scoped
+    /// tags, this property returns the same value as <see cref="Path"/>.
+    /// For example, "Program:MyProgram.MyTag" would return "MyTag".
+    /// </remarks>
+    public string LocalPath => GetLocalTagName(_path);
+
+    /// <summary>
     /// Gets the base portion of the tag name or an empty string if not defined.
     /// </summary>
     /// <remarks>
@@ -101,7 +119,7 @@ public sealed class TagName : IComparable<TagName>
     /// <summary>
     /// Represents the operand portion of the tag path, including all members, elements, and indices,
     /// excluding the base portion of the tag path. This string begins with the separator used between
-    /// the base and subsequent members, providing a detailed representation of the tag structure beyond the base.
+    /// the base and later members, providing a detailed representation of the tag structure beyond the base.
     /// Used for operations requiring deeper levels of the tag hierarchy.
     /// </summary>
     public string Operand => GetOperand(_path);

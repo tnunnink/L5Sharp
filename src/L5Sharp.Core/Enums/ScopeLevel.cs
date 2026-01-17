@@ -10,23 +10,38 @@ public class ScopeLevel : LogixEnum<ScopeLevel, string>
     }
 
     /// <summary>
-    /// Represents a Null <see cref="ScopeLevel"/> value.
+    /// Represents the <see cref="ScopeLevel"/> option for a null or undefined scope in a Logix application.
     /// </summary>
-    /// <remarks>A <c>Null</c> scope will occur on element objects that have not been added to a container.</remarks>
-    public static readonly ScopeLevel None = new(nameof(None), "NullScope");
+    /// <remarks>
+    /// The <c>None</c> scope typically signifies the absence of a defined scope level,
+    /// serving as a default or placeholder value in scenarios where no specific scope is applicable.
+    /// </remarks>
+    public static readonly ScopeLevel None = new(nameof(None), nameof(None));
 
     /// <summary>
-    /// Represents a Controller <see cref="ScopeLevel"/> value.
+    /// Represents the <see cref="ScopeLevel"/> for a Controller-level scope in a Logix application.
     /// </summary>
-    public static readonly ScopeLevel Controller = new(nameof(Controller), "ControllerScope");
+    /// <remarks>
+    /// The <c>Controller</c> scope typically signifies tags or configurations accessible globally
+    /// across the project, without being constrained to a specific program or routine.
+    /// </remarks>
+    public static readonly ScopeLevel Controller = new(nameof(Controller), nameof(Controller));
 
     /// <summary>
-    /// Represents a Program <see cref="ScopeLevel"/> value.
+    /// Represents the <see cref="ScopeLevel"/> option corresponding to a program-level scope in a Logix environment.
     /// </summary>
-    public static readonly ScopeLevel Program = new(nameof(Program), "ProgramScope");
+    /// <remarks>
+    /// This scope level is used to identify elements or tags that are associated specifically with a program.
+    /// The program-level scope can define properties and behavior distinct from other levels such as controller or AOI.
+    /// </remarks>
+    public static readonly ScopeLevel Program = new(nameof(Program), nameof(Program));
 
     /// <summary>
-    /// Represents a Program <see cref="ScopeLevel"/> value.
+    /// Represents the AOI (Add-On Instruction) scope level within the Logix system.
     /// </summary>
-    public static readonly ScopeLevel Routine = new(nameof(Routine), "RoutineScope");
+    /// <remarks>
+    /// The AOI scope corresponds to a scope level associated with Add-On Instructions in a Logix controller project.
+    /// It is used to define and manage elements that belong specifically to an AOI context.
+    /// </remarks>
+    public static readonly ScopeLevel Aoi = new(nameof(Aoi), nameof(Aoi));
 }

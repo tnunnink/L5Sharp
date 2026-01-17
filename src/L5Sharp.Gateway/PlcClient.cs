@@ -127,8 +127,9 @@ public class PlcClient : IPlcClient
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         ThrowIfDisposed();
 
-        //what about program tags?
+        //Create new virtual tag instance to collect data.
         var tag = Tag.New<TData>(tagName);
+
         return ReadAllTags([tag], token);
     }
 
@@ -158,6 +159,7 @@ public class PlcClient : IPlcClient
         if (update is null) throw new ArgumentNullException(nameof(update));
         ThrowIfDisposed();
 
+        //Create new virtual tag instance to update data.
         var tag = Tag.New<TData>(tagName);
         update(tag.Value.As<TData>());
 
@@ -189,7 +191,9 @@ public class PlcClient : IPlcClient
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         ThrowIfDisposed();
 
+        //Create new virtual tag instance to collect data.
         var tag = Tag.New<TData>(tagName);
+
         return WatchAllTags([tag], onChange, token);
     }
 
@@ -234,7 +238,6 @@ public class PlcClient : IPlcClient
         _disposed = true;
         GC.SuppressFinalize(this);
     }
-
 
     /// <summary>
     /// Reads the values of the specified collection of tag members and returns a response containing the results.
@@ -324,7 +327,7 @@ public class PlcClient : IPlcClient
     /// </summary>
     private async Task<TagStatus> ReadTagValue(Tag tag, CancellationToken token)
     {
-        var tagName = tag.DetermineTagName();
+        var tagName = tag.TagName;
         var handle = await GetOrCreateHandle(tagName, token);
 
         var status = (await ExecuteAsync(tagName, () => _tagService.Read(handle, AsyncTimeout), token)).AsStatus();
@@ -347,7 +350,7 @@ public class PlcClient : IPlcClient
     /// <exception cref="TagException">Thrown if the write operation fails and exceptions are configured to be thrown.</exception>
     private async Task<TagStatus> WriteTagValue(Tag tag, CancellationToken token)
     {
-        var tagName = tag.DetermineTagName();
+        var tagName = tag.TagName;
         var handle = await GetOrCreateHandle(tagName, token);
 
         var written = _tagBuffer.WriteValue(tag, handle).AsStatus();

@@ -332,50 +332,72 @@ public sealed class L5X
     /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="reference"/> is <c>null</c>.</exception>
     public bool Contains(Reference reference)
     {
-        return _index.ContainsElement(reference);
+        if (!reference.Type.IsTag)
+            return _index.ContainsElement(reference);
+
+        // It's a tag, so handle potential member paths (e.g. "MyTag.Member[0]")
+        var tagName = reference.Id.ToTagName();
+
+        // Always search the index using the base name and the reference's explicit scope.
+        var baseReference = Reference.To<Tag>(tagName.Base, reference.Scope);
+        var tag = _index.GetElement<Tag>(baseReference);
+
+        // Navigate to the specified member (this will return the base tag if no member is specified).
+        return tag.Member(tagName.Member) is not null;
     }
 
     /// <summary>
-    /// Determines whether the current <see cref="L5X"/> contains an element specified by the provided builder action.
+    /// Finds and returns a <see cref="ILogixEntity"/> object from the L5X content that matches
+    /// the provided <see cref="Reference"/>.
     /// </summary>
-    /// <param name="action">An <see cref="Action{T}"/> of <see cref="IReferenceTypeBuilder"/> that defines the element to locate.</param>
-    /// <returns>True if the specified element is found within the current <see cref="L5X"/>; otherwise, false.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is null.</exception>
-    public bool Contains(Action<IReferenceTypeBuilder> action)
-    {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
-
-        var reference = Reference.Build(action);
-        return _index.ContainsElement(reference);
-    }
-
-    /// <summary>
-    /// Retrieves a <see cref="ILogixEntity"/> from the L5X content using the specified <see cref="Reference"/>.
-    /// </summary>
-    /// <param name="reference">The <see cref="Reference"/> used to locate the specific entity within the L5X content.</param>
-    /// <returns>The <see cref="ILogixEntity"/> that corresponds to the specified <see cref="Reference"/>.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> is null.</exception>
-    /// <exception cref="KeyNotFoundException">Thrown when no element matching the provided <paramref name="reference"/> is found.</exception>
+    /// <param name="reference">A <see cref="Reference"/> object that identifies the entity to retrieve from the L5X content.</param>
+    /// <returns>An <see cref="ILogixEntity"/> instance matching the specified <see cref="Reference"/>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="reference"/> is null.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown if no element with the specified <paramref name="reference"/> exists in the L5X content.</exception>
     public ILogixEntity Get(Reference reference)
     {
-        var element = _index.GetElement<ILogixEntity>(reference);
-        return element is Tag tag ? tag[reference.Identifier.ToTagName().Member] : element;
+        if (!reference.Type.IsTag)
+            return _index.GetElement<ILogixEntity>(reference);
+
+        // It's a tag, so handle potential member paths (e.g. "MyTag.Member[0]")
+        var tagName = reference.Id.ToTagName();
+
+        // Always search the index using the base name and the reference's explicit scope.
+        var baseReference = Reference.To<Tag>(tagName.Base, reference.Scope);
+        var tag = _index.GetElement<Tag>(baseReference);
+
+        // Navigate to the specified member (this will return the base tag if no member is specified).
+        return tag[tagName.Member];
     }
 
     /// <summary>
-    /// Retrieves a <typeparamref name="TComponent"/> instance from the L5X content using the specified name and optional program.
+    /// Retrieves a component from the L5X content using the specified name.
     /// </summary>
-    /// <typeparam name="TComponent">The type of the component to retrieve.</typeparam>
-    /// <param name="name">The name of the component to retrieve.</param>
-    /// <param name="program">An optional program name to locate the component in its specific program scope.</param>
-    /// <returns>The retrieved <typeparamref name="TComponent"/> instance.</returns>
-    /// <exception cref="KeyNotFoundException">Thrown when no element with the specified name and program is found in the L5X content.</exception>
-    public TComponent Get<TComponent>(string name, string? program = null) where TComponent : LogixComponent<TComponent>
+    /// <typeparam name="TComponent">The type of the component to retrieve, which must inherit from <see cref="LogixComponent{TComponent}"/>.</typeparam>
+    /// <param name="name">
+    /// The name of the component to retrieve. For tags, supports dot-notation paths (e.g., "TagName.Member")
+    /// and optional program scope prefix (e.g., "ProgramName.TagName").
+    /// </param>
+    /// <returns>The retrieved component instance of the specified type.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown when no element with the specified name is found in the L5X content.</exception>
+    /// <remarks>
+    /// <para>
+    /// This method uses the internal component index to efficiently locate components by their name.
+    /// For tag components, the name parameter can include member paths and program scope information,
+    /// which will be parsed automatically using <see cref="TagName"/> parsing.
+    /// </para>
+    /// <para>
+    /// If the component is scoped to a program, include the program name as a prefix (e.g., "MyProgram.MyTag").
+    /// Controller-scoped components can be retrieved using just the component name.
+    /// </para>
+    /// </remarks>
+    public TComponent Get<TComponent>(string name) where TComponent : LogixComponent<TComponent>
     {
-        var reference = Reference.To<TComponent>(name, program);
+        //To support tag name paths in the string name, convert to a TagName instance which can parse the values for us.
+        var tagName = name.ToTagName();
+        var reference = Reference.To<TComponent>(tagName.Base, tagName.Scope);
         var element = _index.GetElement<TComponent>(reference);
-        return element is Tag tag ? (TComponent)(LogixElement)tag[reference.Identifier.ToTagName().Member] : element;
+        return element is Tag tag ? tag[tagName.Member].As<TComponent>() : element;
     }
 
     /// <summary>
@@ -387,49 +409,10 @@ public sealed class L5X
     /// <param name="routine">The name of the routine within the program where the Logix code object resides.</param>
     /// <returns>The deserialized instance of the specified <typeparamref name="TCode"/>.</returns>
     /// <exception cref="KeyNotFoundException">Thrown when no element with the given reference is found.</exception>
-    public TCode Get<TCode>(int number, string program, string routine) where TCode : LogixCode<TCode>
+    public TCode Get<TCode>(uint number, string program, string routine) where TCode : LogixCode<TCode>
     {
         var reference = Reference.To<TCode>(number, program, routine);
         return _index.GetElement<TCode>(reference);
-    }
-
-    /// <summary>
-    /// Retrieves an <see cref="ILogixEntity"/> from the L5X content based on the provided reference builder action.
-    /// </summary>
-    /// <param name="action">An action used to configure the <see cref="IReferenceTypeBuilder"/> to define the reference of the target entity.</param>
-    /// <returns>An <see cref="ILogixEntity"/> that matches the specified reference.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
-    /// <exception cref="KeyNotFoundException">Thrown when no element matching the specified reference is found in the L5X content.</exception>
-    public ILogixEntity Get(Action<IReferenceTypeBuilder> action)
-    {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
-
-        var reference = Reference.Build(action);
-        var element = _index.GetElement<ILogixEntity>(reference);
-        return element is Tag tag ? tag[reference.Identifier.ToTagName().Member] : element;
-    }
-
-    /// <summary>
-    /// Retrieves an instance of the specified <typeparamref name="TEntity"/> type using the provided reference location builder action.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to retrieve, which must inherit from <see cref="ILogixEntity"/>.</typeparam>
-    /// <param name="action">An <see cref="Action{T}"/> that sets up the reference location for the desired entity via the <see cref="IReferenceLocationBuilder"/>.</param>
-    /// <returns>An instance of <typeparamref name="TEntity"/> representing the retrieved entity.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
-    /// <exception cref="KeyNotFoundException">Thrown when no element matching the specified reference is found.</exception>
-    public TEntity Get<TEntity>(Action<IReferenceLocationBuilder> action) where TEntity : class, ILogixEntity
-    {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
-
-        var builder = new ReferenceBuilder();
-        builder.Type(ReferenceType.Parse(typeof(TEntity).Name));
-        action.Invoke(builder);
-        var reference = builder.Build();
-
-        var element = _index.GetElement<TEntity>(reference);
-        return element is Tag tag ? tag[reference.Identifier.ToTagName().Member].As<TEntity>() : element;
     }
 
     /// <summary>
@@ -441,12 +424,16 @@ public sealed class L5X
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> parameter is null.</exception>
     public bool TryGet(Reference reference, out ILogixEntity entity)
     {
-        //To support tag name paths with a program name prefix, always a tag name and scope the reference accordingly.
-        var tagName = reference.Identifier.ToTagName();
-        
-        if (_index.TryGetElement<ILogixEntity>(reference, out var element))
+        if (!reference.Type.IsTag)
+            return _index.TryGetElement(reference, out entity);
+
+        // It's a tag, so handle potential member paths (e.g. "MyTag.Member[0]")
+        var tagName = reference.Id.ToTagName();
+
+        // Always search the index using the base name and the reference's explicit scope.
+        if (_index.TryGetElement<Tag>(Reference.To<Tag>(tagName.Base, reference.Scope), out var tag))
         {
-            var target = element is Tag tag ? tag.Member(reference.Identifier.ToTagName().Member) : element;
+            var target = tag.Member(tagName.Member);
             return target.IsNull(out entity);
         }
 
@@ -466,38 +453,12 @@ public sealed class L5X
     {
         //To support tag name paths with a program name prefix, always a tag name and scope the reference accordingly.
         var tagName = name.ToTagName();
-        var reference = Reference.To<TComponent>(tagName.Base).ToScope(tagName.Scope);
+        var reference = Reference.To<TComponent>(tagName.Base, tagName.Scope);
 
         if (_index.TryGetElement<TComponent>(reference, out var element))
         {
             var target = element is Tag tag
                 ? tag.Member(tagName.Member)?.As<TComponent>()
-                : element;
-
-            return target.IsNull(out component);
-        }
-
-        component = null!;
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to retrieve a <typeparamref name="TComponent"/> by the given name and optional program context.
-    /// </summary>
-    /// <typeparam name="TComponent">The type of <see cref="ILogixComponent"/> to retrieve.</typeparam>
-    /// <param name="name">The name of the component to retrieve.</param>
-    /// <param name="program">The optional program context in which the component resides.</param>
-    /// <param name="component">The output parameter that will contain the retrieved component if the operation succeeds.</param>
-    /// <returns>True if the component is successfully retrieved; otherwise, false.</returns>
-    public bool TryGet<TComponent>(string name, string program, out TComponent component)
-        where TComponent : LogixComponent<TComponent>
-    {
-        var reference = Reference.To<TComponent>(name, program);
-
-        if (_index.TryGetElement<TComponent>(reference, out var element))
-        {
-            var target = element is Tag tag
-                ? tag.Member(reference.Identifier.ToTagName().Member)?.As<TComponent>()
                 : element;
 
             return target.IsNull(out component);
@@ -516,7 +477,8 @@ public sealed class L5X
     /// <param name="routine">The name of the routine containing the desired code.</param>
     /// <param name="code">When this method returns, contains the retrieved <typeparamref name="TCode"/> if the operation is successful, or null if unsuccessful.</param>
     /// <returns><c>true</c> if the <typeparamref name="TCode"/> is retrieved; otherwise, <c>false</c>.</returns>
-    public bool TryGet<TCode>(int number, string program, string routine, out TCode code) where TCode : LogixCode<TCode>
+    public bool TryGet<TCode>(uint number, string program, string routine, out TCode code)
+        where TCode : LogixCode<TCode>
     {
         var reference = Reference.To<TCode>(number, program, routine);
 
@@ -526,60 +488,6 @@ public sealed class L5X
         }
 
         code = null!;
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to retrieve a <see cref="ILogixEntity"/> based on the provided reference action.
-    /// </summary>
-    /// <param name="action">An <see cref="Action{T}"/> that defines the reference to locate the entity.</param>
-    /// <param name="entity">When this method returns, contains the <see cref="ILogixEntity"/> if found; otherwise, null.</param>
-    /// <returns><c>true</c> if the entity was found; otherwise, <c>false</c>.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
-    public bool TryGet(Action<IReferenceTypeBuilder> action, out ILogixEntity entity)
-    {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
-
-        var reference = Reference.Build(action);
-
-        if (_index.TryGetElement<ILogixEntity>(reference, out var element))
-        {
-            var target = element is Tag tag ? tag.Member(reference.Identifier.ToTagName().Member) : element;
-            return target.IsNull(out entity);
-        }
-
-        entity = null!;
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to retrieve an element of the specified type from the L5X based on the provided reference builder action.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of element to retrieve.</typeparam>
-    /// <param name="action">A builder action that defines the reference of the entity to get.</param>
-    /// <param name="entity">When this method returns, contains the retrieved entity if successful;
-    /// otherwise, null if no matching entity is found.</param>
-    /// <returns><c>true</c> if the entity was successfully retrieved; otherwise, <c>false</c>.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> parameter is null.</exception>
-    public bool TryGet<TEntity>(Action<IReferenceLocationBuilder> action, out TEntity entity)
-        where TEntity : class, ILogixEntity
-    {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
-
-        var builder = new ReferenceBuilder();
-        builder.Type(ReferenceType.Parse(typeof(TEntity).Name));
-        action.Invoke(builder);
-        var reference = builder.Build();
-
-        if (_index.TryGetElement<TEntity>(reference, out var element))
-        {
-            var target = element is Tag tag ? tag.Member(reference.Identifier.ToTagName().Member)?.As<TEntity>() : element;
-            return target.IsNull(out entity);
-        }
-
-        entity = null!;
         return false;
     }
 
@@ -620,8 +528,8 @@ public sealed class L5X
             throw new ArgumentNullException(nameof(component));
 
         var container = Element
-            .Descendants(component.Reference.Type.Container)
-            .FirstOrDefault(e => component.Reference.IsScopedTo(Scope.Of(e)));
+            .Descendants(component.Reference.Type.Value)
+            .FirstOrDefault(e => component.Reference.Scope.Equals(Scope.Of(e)));
 
         if (container is null)
             throw new InvalidOperationException($"Could not find container type {component.GetType()}");
@@ -645,7 +553,7 @@ public sealed class L5X
             throw new ArgumentNullException(nameof(component));
 
         var container = Element
-            .Descendants(component.Reference.Type.Container)
+            .Descendants(component.Reference.Type.Value)
             .FirstOrDefault(e => Scope.Of(e).IsIn(programName));
 
         if (container is null)
@@ -656,16 +564,15 @@ public sealed class L5X
     }
 
     /// <summary>
-    /// Removes a specific element identified by the provided <see cref="IReferenceTypeBuilder"/> action.
+    /// Removes the element corresponding to the specified <see cref="Reference"/> from the L5X content.
     /// </summary>
-    /// <param name="action">An action to configure the <see cref="IReferenceTypeBuilder"/> for identifying the element to remove.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="action"/> is null.</exception>
-    public void Remove(Action<IReferenceTypeBuilder> action)
+    /// <param name="reference">The <see cref="Reference"/> representing the element to be removed.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="reference"/> is null.</exception>
+    public void Remove(Reference reference)
     {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
 
-        var reference = Reference.Build(action);
         var element = Element.XPathSelectElement(reference);
         element?.Remove();
     }

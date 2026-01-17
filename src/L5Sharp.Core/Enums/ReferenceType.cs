@@ -1,4 +1,7 @@
-﻿namespace L5Sharp.Core;
+﻿using System.Linq;
+using System.Text;
+
+namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents an abstract base type for a Logix reference type. This class provides
@@ -12,27 +15,61 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     }
 
     /// <summary>
-    /// The name of the element that represents the container element for this element/scope type.
-    /// This is required to help with build valid scope paths.
+    /// Indicates whether the reference type is associated with a tag element.
     /// </summary>
-    public abstract string Container { get; }
+    public bool IsTag => this == Tag;
 
     /// <summary>
-    /// Gets the property used to uniquely identify a specific instance within its scope or context.
-    /// The value of this property is critical for defining the identity of the object in the hierarchy.
+    /// Indicates whether the reference type is related to logic elements such as Rung, Line, or Sheet.
     /// </summary>
-    public abstract string Identifier { get; }
+    public bool IsLogic => this == Rung || this == Line || this == Sheet;
 
     /// <summary>
-    /// Gets a value indicating whether the reference type can be defined in different scopes/containers within
-    /// the L5X context (e.g., Tag, Routine, Rung).
+    /// Determines whether the reference type represents a container entity, such as a Program or an AOI (Add-On Instruction).
     /// </summary>
-    public virtual bool IsContainable => false;
-    
+    public bool IsContainer => this == Program || this == Aoi;
+
     /// <summary>
-    /// 
+    /// Determines whether the reference type is contextual, meaning it represents an element that can be contained
+    /// in different scopes within an L5X project (Tag, Routine, Rung, Line, or Sheet).
     /// </summary>
-    public virtual bool IsContainer => false;
+    public bool IsContextual => this == Tag || this == Routine || IsLogic;
+
+    /// <summary>
+    /// Generates an XPath expression based on the current reference type and the provided identifier.
+    /// </summary>
+    /// <param name="identifier">The identifier to include in the XPath expression. For logic types, this corresponds to a number,
+    /// whereas for non-logic types, it corresponds to a name.</param>
+    /// <returns>A string representing the XPath expression for the specified identifier and reference type.</returns>
+    public string GetXPath(string identifier)
+    {
+        var builder = new StringBuilder();
+
+        var container = GetContainer();
+        var attribute = IsLogic ? "@Number" : "@Name";
+        builder.Append($"/{container}/{Value}[{attribute}='{identifier}']");
+
+        return builder.ToString();
+    }
+
+    /// <summary>
+    /// Retrieves a <see cref="ReferenceType"/> based on the specified entity type.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The entity type for which the <see cref="ReferenceType"/> is to be determined.
+    /// Must implement <see cref="ILogixEntity"/>.
+    /// </typeparam>
+    /// <returns>The <see cref="ReferenceType"/> corresponding to the entity type <typeparamref name="TEntity"/>.</returns>
+    public static ReferenceType FromType<TEntity>() where TEntity : ILogixEntity
+    {
+        return Parse(LogixSerializer.NamesFor(typeof(TEntity)).First());
+    }
+
+    /// <summary>
+    /// Retrieves the element name that contains the reference type in the L5X schema. This is typically the pluralized
+    /// reference value, but different for some types like code references of AOIs.
+    /// </summary>
+    protected abstract string GetContainer();
 
     /// <summary>
     /// Represents a Null <see cref="ReferenceType"/> value.
@@ -93,74 +130,56 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
 
     private class NullReferenceType() : ReferenceType(nameof(Null), string.Empty)
     {
-        public override string Container => string.Empty;
-        public override string Identifier => string.Empty;
+        protected override string GetContainer() => string.Empty;
     }
 
-    private class DataTypeReferenceType() : ReferenceType(nameof(DataType), "DataType")
+    private class DataTypeReferenceType() : ReferenceType("datatype", "DataType")
     {
-        public override string Container => "DataTypes";
-        public override string Identifier => "@Name";
+        protected override string GetContainer() => "DataTypes";
     }
 
-    private class AoiReferenceType() : ReferenceType("AddOnInstruction", "AddOnInstructionDefinition")
+    private class AoiReferenceType() : ReferenceType("aoi", "AddOnInstructionDefinition")
     {
-        public override string Container => "AddOnInstructionDefinitions";
-        public override string Identifier => "@Name";
+        protected override string GetContainer() => "AddOnInstructionDefinitions";
     }
 
-    private class ModuleReferenceType() : ReferenceType(nameof(Module), "Module")
+    private class ModuleReferenceType() : ReferenceType("module", "Module")
     {
-        public override string Container => "Modules";
-        public override string Identifier => "@Name";
+        protected override string GetContainer() => "Modules";
     }
 
-    private class TagReferenceType() : ReferenceType(nameof(Tag), "Tag")
+    private class TagReferenceType() : ReferenceType("tag", "Tag")
     {
-        public override string Container => "Tags";
-
-        public override string Identifier => "@Name";
-        public override bool IsContainable => true;
+        protected override string GetContainer() => "Tags";
     }
 
-    private class ProgramReferenceType() : ReferenceType(nameof(Program), "Program")
+    private class ProgramReferenceType() : ReferenceType("program", "Program")
     {
-        public override string Container => "Programs";
-        public override string Identifier => "@Name";
+        protected override string GetContainer() => "Programs";
     }
 
-    private class RoutineReferenceType() : ReferenceType(nameof(Routine), "Routine")
+    private class RoutineReferenceType() : ReferenceType("routine", "Routine")
     {
-        public override string Container => "Routines";
-        public override string Identifier => "@Name";
-        public override bool IsContainable => true;
+        protected override string GetContainer() => "Routines";
     }
 
-    private class TaskReferenceType() : ReferenceType(nameof(Task), "Task")
+    private class TaskReferenceType() : ReferenceType("task", "Task")
     {
-        public override string Container => "Tasks";
-        public override string Identifier => "@Name";
+        protected override string GetContainer() => "Tasks";
     }
 
-    private class RungReferenceType() : ReferenceType(nameof(Rung), "Rung")
+    private class RungReferenceType() : ReferenceType("rung", "Rung")
     {
-        public override string Container => "RLLContent";
-        public override string Identifier => "@Number";
-        public override bool IsContainable => true;
+        protected override string GetContainer() => "RLLContent";
     }
 
-    private class LineReferenceType() : ReferenceType(nameof(Line), "Line")
+    private class LineReferenceType() : ReferenceType("line", "Line")
     {
-        public override string Container => "STContent";
-        public override string Identifier => "@Number";
-        public override bool IsContainable => true;
+        protected override string GetContainer() => "STContent";
     }
 
-    private class SheetReferenceType() : ReferenceType(nameof(Sheet), "Sheet")
+    private class SheetReferenceType() : ReferenceType("sheet", "Sheet")
     {
-        public override string Container => "FBDContent";
-        public override string Identifier => "@Number";
-
-        public override bool IsContainable => true;
+        protected override string GetContainer() => "FBDContent";
     }
 }

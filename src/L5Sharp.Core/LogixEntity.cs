@@ -100,7 +100,7 @@ public abstract class LogixEntity<TEntity> : LogixObject<TEntity>, ILogixEntity 
 
         var reference = Reference.To<TComponent>(name);
 
-        if (reference.Type.IsContainable && doc.TryGet<TComponent>(reference.ToScope(Scope), out var local))
+        if (reference.Type.IsContextual && doc.TryGet<TComponent>(reference.ToScope(Scope), out var local))
         {
             component = local;
             return true;

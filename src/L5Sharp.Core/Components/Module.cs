@@ -200,7 +200,8 @@ public class Module : LogixComponent<Module>
     /// <value>A <see cref="ElectronicKeying"/> enum value representing the mode.</value>
     public ElectronicKeying? Keying
     {
-        get => ElectronicKeying.TryParse(Element.Element(L5XName.EKey)?.Attribute(L5XName.State)?.Value);
+        // ReSharper disable once ExplicitCallerInfoArgument This is fine we want to flatten the structure to just "Keying"
+        get => GetValue(ElectronicKeying.Parse, e => e.Element(L5XName.EKey), L5XName.State);
         set => SetKeying(value);
     }
 
@@ -304,7 +305,7 @@ public class Module : LogixComponent<Module>
     /// <inheritdoc />
     public override IEnumerable<Reference> References()
     {
-        return base.References().Where(r => r.IsLogic && r.Logic.Supports(r.Type));
+        return base.References().Where(r => r.HasLogic(out var c) && c.Supports(r.Type));
     }
 
     /// <inheritdoc />

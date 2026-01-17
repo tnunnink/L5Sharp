@@ -6,6 +6,20 @@ namespace L5Sharp.Tests.Core.Common;
 public class ScopeTests
 {
     [Test]
+    public void None_WhenCalled_ShouldHaveExpectedLevelAndContainer()
+    {
+        var scope = Scope.None;
+
+        scope.Level.Should().Be(ScopeLevel.None);
+        scope.Container.Should().BeEmpty();
+        scope.IsController.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsRoutine.Should().BeFalse();
+        scope.IsLocal.Should().BeFalse();
+        scope.IsLogic.Should().BeFalse();
+    }
+
+    [Test]
     public void Controller_WhenCalled_ShouldHaveExpectedLevelAndContainer()
     {
         var scope = Scope.Controller;
@@ -16,10 +30,11 @@ public class ScopeTests
         scope.IsProgram.Should().BeFalse();
         scope.IsRoutine.Should().BeFalse();
         scope.IsLocal.Should().BeFalse();
+        scope.IsLogic.Should().BeFalse();
     }
 
     [Test]
-    public void Program_ValidProgramName_ShouldHaveExpectedProperties()
+    public void Program_ValidName_ShouldHaveExpectedProperties()
     {
         var scope = Scope.Program("MyProgram");
 
@@ -29,14 +44,15 @@ public class ScopeTests
         scope.IsProgram.Should().BeTrue();
         scope.IsRoutine.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
+        scope.IsLogic.Should().BeFalse();
     }
 
     [Test]
-    public void Routine_ValidProgramName_ShouldHaveExpectedProperties()
+    public void Aoi_ValidName_ShouldHaveExpectedProperties()
     {
-        var scope = Scope.Routine("MyAoi");
+        var scope = Scope.Aoi("MyAoi");
 
-        scope.Level.Should().Be(ScopeLevel.Routine);
+        scope.Level.Should().Be(ScopeLevel.Aoi);
         scope.Container.Should().Be("MyAoi");
         scope.IsController.Should().BeFalse();
         scope.IsProgram.Should().BeFalse();
@@ -63,7 +79,7 @@ public class ScopeTests
 
         result.Should().BeFalse();
     }
-    
+
     [Test]
     public void IsIn_ControllerInProgram_ShouldBeFalse()
     {
@@ -83,7 +99,7 @@ public class ScopeTests
 
         result.Should().BeFalse();
     }
-    
+
     [Test]
     public void IsIn_ControllerInController_ShouldBeTrue()
     {

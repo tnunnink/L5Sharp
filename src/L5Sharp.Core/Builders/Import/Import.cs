@@ -162,10 +162,9 @@ internal class Import
             if (program is null)
                 throw new InvalidOperationException("Could not determine scope for import process.");
 
-            return Reference.To<Routine>(source.Content.TargetName, program.Name);
+            return Reference.To<Routine>(source.Content.TargetName, Scope.Program(program.Name));
         }
 
-        var type = ReferenceType.Parse(source.Content.TargetType);
-        return Reference.Build(b => b.Type(type).Named(source.Content.TargetName));
+        return Reference.To($"{source.Content.TargetType}://{source.Content.TargetName}");
     }
 }
