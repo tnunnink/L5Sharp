@@ -199,8 +199,8 @@ public sealed class Scope
             return false;
 
         return Level == other.Level &&
-               Container.IsEquivalent(other.Container) &&
-               string.Equals(Routine, other.Routine, StringComparison.OrdinalIgnoreCase);
+               StringComparer.OrdinalIgnoreCase.Equals(Container, other.Container) &&
+               StringComparer.OrdinalIgnoreCase.Equals(Routine, other.Routine);
     }
 
     /// <inheritdoc />
@@ -277,6 +277,22 @@ public sealed class Scope
     public static Scope Of(XElement element) => new(element);
 
     /// <summary>
+    /// Determines if the provided objects are equal.
+    /// </summary>
+    /// <param name="left">An object to compare.</param>
+    /// <param name="right">An object to compare.</param>
+    /// <returns>true if the provided objects are equal; otherwise, false.</returns>
+    public static bool operator ==(Scope? left, Scope? right) => Equals(left, right);
+
+    /// <summary>
+    /// Determines if the provided objects are not equal.
+    /// </summary>
+    /// <param name="left">An object to compare.</param>
+    /// <param name="right">An object to compare.</param>
+    /// <returns>true if the provided objects are not equal; otherwise, false.</returns>
+    public static bool operator !=(Scope? left, Scope? right) => !Equals(left, right);
+
+    /// <summary>
     /// Determines the scope level of the provided element based on its XML ancestry.
     /// </summary>
     /// <returns>
@@ -311,7 +327,6 @@ public sealed class Scope
         {
             L5XName.Program => container.LogixName(),
             L5XName.AddOnInstructionDefinition => container.LogixName(),
-            L5XName.Controller => container.LogixName(),
             _ => string.Empty
         };
     }

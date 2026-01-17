@@ -7,7 +7,7 @@ namespace L5Sharp.Tests.Core.Common;
 public class ReferenceTests
 {
     [Test]
-    public void TagScope_InMemory_ShouldBeExpected()
+    public void TagScope_ControllerTag_ShouldBeExpected()
     {
         var component = new Tag("Test", 100);
 
@@ -17,6 +17,21 @@ public class ReferenceTests
         reference.Type.Should().Be(ReferenceType.Tag);
         reference.Scope.Should().Be(Scope.None);
         reference.Id.Should().Be("Test");
+    }
+    
+    [Test]
+    public void TagScope_ProgramTag_ShouldBeExpected()
+    {
+        //This factory method will create the tag inside a virtual program container.
+        var component = Tag.New<DINT>("Program:SomeProgram.MyTagName");
+
+        var reference = component.Reference;
+
+        reference.Path.Should().Be("tag://SomeProgram/MyTagName");
+        reference.Type.Should().Be(ReferenceType.Tag);
+        reference.Scope.Level.Should().Be(ScopeLevel.Program);
+        reference.Scope.Container.Should().Be("SomeProgram");
+        reference.Id.Should().Be("MyTagName");
     }
 
     [Test]

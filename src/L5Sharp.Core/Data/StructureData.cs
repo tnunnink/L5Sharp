@@ -383,60 +383,6 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     }
 
     /// <summary>
-    /// Converts an <see cref="XElement"/> into a structured representation by transforming its attributes
-    /// into child elements representing data members.
-    /// </summary>
-    /// <param name="element">The <see cref="XElement"/> to transform into a structured format.</param>
-    /// <returns>An <see cref="XElement"/> with attributes converted into data member elements.</returns>
-    /// <remarks>
-    /// This is used for special formatted data where the members are attributes of the element.
-    /// In these cases, if we transform the element structure, we don't have to have custom code to handle
-    /// reading/writing values in the logix member. When we go to serialize the data, we can reverse the
-    /// transformation so that it will import successfully.
-    /// </remarks>
-    protected static XElement ToStructure<TStructure>(XElement element) where TStructure : StructureData
-    {
-        if (element is null)
-            throw new ArgumentNullException(nameof(element));
-
-        var members = new List<XElement>();
-
-        //We will rely on the property declarations of the structure type to determine the correct data type for the members.
-        var propertyLookup = typeof(TStructure).GetProperties()
-            .Where(p => typeof(LogixData).IsAssignableFrom(p.PropertyType))
-            .ToDictionary(p => p.Name, p => p.PropertyType);
-
-        foreach (var attribute in element.Attributes())
-        {
-            var name = attribute.Name.LocalName;
-
-            //Use the type registry to get the name. These should all be atomic types.
-            var dataType = LogixType.NameFor(propertyLookup[name]);
-
-            //Try to infer the radix format. If not a valid format, assume decimal (for the case of boolean)
-            var radix = Radix.TryInfer(attribute.Value, out var format) ? format : Radix.Decimal;
-
-            //Handle boolean keyword values and convert to 1/0
-            var value = attribute.Value switch
-            {
-                "true" => "1",
-                "false" => "0",
-                _ => attribute.Value
-            };
-
-            var member = new XElement(L5XName.DataValueMember);
-            member.SetAttributeValue(L5XName.Name, name);
-            member.SetAttributeValue(L5XName.DataType, dataType);
-            member.SetAttributeValue(L5XName.Radix, radix);
-            member.SetAttributeValue(L5XName.Value, value);
-            members.Add(member);
-        }
-
-        element.ReplaceAll(members);
-        return element;
-    }
-
-    /// <summary>
     /// Adds a specified member to the structure.
     /// </summary>
     /// <param name="member">The <see cref="LogixMember"/> instance to add to the structure.</param>

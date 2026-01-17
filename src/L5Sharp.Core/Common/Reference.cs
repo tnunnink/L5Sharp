@@ -132,18 +132,24 @@ public sealed class Reference
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        return obj switch
-        {
-            Reference other => Scope.Equals(other.Scope) && Path.IsEquivalent(other.Path),
-            string path => Path.IsEquivalent(path),
-            _ => false
-        };
+        if (obj is not Reference other)
+            return false;
+
+        return Type == other.Type &&
+               Scope == other.Scope &&
+               StringComparer.OrdinalIgnoreCase.Equals(Id, other.Id) && 
+               StringComparer.OrdinalIgnoreCase.Equals(Fragment, other.Fragment);
     }
 
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        return StringComparer.OrdinalIgnoreCase.GetHashCode(Path);
+        var typeHash = Type.GetHashCode();
+        var scopeHash = Scope.GetHashCode();
+        var idHash = StringComparer.OrdinalIgnoreCase.GetHashCode(Id);
+        var fragmentHash = Fragment is not null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Fragment) : 0;
+        
+        return typeHash ^ scopeHash ^ idHash ^ fragmentHash;
     }
 
     /// <inheritdoc />

@@ -319,24 +319,6 @@
       <None Update="Components\ModuleTests.Create_CatalogNumberAndConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
-      <None Update="Components\TagTests.Build_SimpleStructureWithConfiguredMembers_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_StructureWithPredefinedMember_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_AtomicArrayWithSetValue_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_ComplexNestedStructure_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_StructureArrayWithNestedConfig_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_SimpleAliasTag_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
       <None Update="Components\TagTests.Duplicate_ValidConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
@@ -429,6 +411,21 @@
       </None>
       <None Update="Devices\ModuleDefinitionTests.Create_FromModuleWithConnections_ShouldBeVerified.verified.xml">
         <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Add_ToScopedContainer_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_PredefinedTypeConfiguredValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_PredefinedTypeDefaultValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_SimpleAliasTag_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_UserDefinedTypeDefaultValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

@@ -167,7 +167,7 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Test);
 
-        var result = content.Contains("/Tag/FakeTag");
+        var result = content.Contains("tag://FakeTag");
 
         result.Should().BeFalse();
     }
@@ -229,22 +229,19 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void TryGet_NoTypeSpecified_ShouldBeFalse()
+    public void TryGet_InvalidPathReference_ShouldThrowFormatException()
     {
         var content = L5X.Load(Known.Test);
 
-        var result = content.TryGet(Known.DataType, out var entity);
-
-        result.Should().BeFalse();
-        entity.Should().BeNull();
+        FluentActions.Invoking(() => content.TryGet(Known.DataType, out var _)).Should().Throw<FormatException>();
     }
 
     [Test]
-    public void TryGet_KnownType_ShouldBeTrue()
+    public void TryGet_ValidPathToKnownType_ShouldBeTrue()
     {
         var content = L5X.Load(Known.Test);
 
-        var result = content.TryGet(Reference.To<DataType>(Known.DataType), out var entity);
+        var result = content.TryGet($"datatype://{Known.DataType}", out var entity);
 
         result.Should().BeTrue();
         entity.Should().NotBeNull();
@@ -287,6 +284,27 @@ public class L5XBasicTests
     }
 
     [Test]
+    public Task Add_ToScopedContainer_ShouldBeVerified()
+    {
+        var content = L5X.Load(Known.Test);
+        var tag = new Tag("TestAdd", 123);
+
+        content.Add(tag, Known.Program);
+
+        return VerifyXml(content.Content.Serialize().ToString()).ScrubMember("ExportDate");
+    }
+
+    [Test]
+    public void Remove_ExistingComponent_ShouldReturnTrue()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Remove<Tag>(Known.Tag);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
     public void Remove_ExistingComponent_ShouldNotExist()
     {
         var content = L5X.Load(Known.Test);
@@ -294,6 +312,16 @@ public class L5XBasicTests
         content.Remove<Tag>(Known.Tag);
 
         content.TryGet<Tag>(Known.Tag, out _).Should().BeFalse();
+    }
+
+    [Test]
+    public void Remove_NonExistingComponent_ShouldReturnFalse()
+    {
+        var content = L5X.Load(Known.Test);
+
+        var result = content.Remove<Tag>("FakeTag");
+
+        result.Should().BeFalse();
     }
 
     [Test]

@@ -17,17 +17,12 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     /// <summary>
     /// Indicates whether the reference type is associated with a tag element.
     /// </summary>
-    public bool IsTag => this == Tag;
+    public bool IsTag => this == Tag || this == Parameter || this == LocalTag;
 
     /// <summary>
     /// Indicates whether the reference type is related to logic elements such as Rung, Line, or Sheet.
     /// </summary>
     public bool IsLogic => this == Rung || this == Line || this == Sheet;
-
-    /// <summary>
-    /// Determines whether the reference type represents a container entity, such as a Program or an AOI (Add-On Instruction).
-    /// </summary>
-    public bool IsContainer => this == Program || this == Aoi;
 
     /// <summary>
     /// Determines whether the reference type is contextual, meaning it represents an element that can be contained
@@ -83,9 +78,19 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     public static readonly ReferenceType DataType = new DataTypeReferenceType();
 
     /// <summary>
-    /// Represents a Module <see cref="ReferenceType"/> value.
+    /// Represents a Aoi (AddOnInstruction) <see cref="ReferenceType"/> value.
     /// </summary>
     public static readonly ReferenceType Aoi = new AoiReferenceType();
+
+    /// <summary>
+    /// Represents a Parameter <see cref="ReferenceType"/> value.
+    /// </summary>
+    public static readonly ReferenceType Parameter = new ParameterReferenceType();
+
+    /// <summary>
+    /// Represents a LocalTag <see cref="ReferenceType"/> value.
+    /// </summary>
+    public static readonly ReferenceType LocalTag = new LocalTagReferenceType();
 
     /// <summary>
     /// Represents a Module <see cref="ReferenceType"/> value.
@@ -93,7 +98,7 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     public static readonly ReferenceType Module = new ModuleReferenceType();
 
     /// <summary>
-    /// Represents a Program <see cref="ReferenceType"/> value.
+    /// Represents a Tag <see cref="ReferenceType"/> value.
     /// </summary>
     public static readonly ReferenceType Tag = new TagReferenceType();
 
@@ -141,6 +146,16 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     private class AoiReferenceType() : ReferenceType("aoi", "AddOnInstructionDefinition")
     {
         protected override string GetContainer() => "AddOnInstructionDefinitions";
+    }
+
+    private class ParameterReferenceType() : ReferenceType("parameter", "Parameter")
+    {
+        protected override string GetContainer() => "Parameters";
+    }
+
+    private class LocalTagReferenceType() : ReferenceType("localtag", "LocalTag")
+    {
+        protected override string GetContainer() => "LocalTags";
     }
 
     private class ModuleReferenceType() : ReferenceType("module", "Module")

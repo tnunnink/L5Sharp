@@ -22,7 +22,7 @@ namespace L5Sharp.Core;
 public class Tag : LogixComponent<Tag>
 {
     /// <summary>
-    /// THe data member that the current tag instance is wrapping.
+    /// The data member that the current tag instance is wrapping.
     /// This will be null for the root tag element.
     /// It is only provided through the private constructor.
     /// </summary>
@@ -666,13 +666,13 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Builds a tag using the fluent tag builder API to intuitively construct simple or complex tag objects. 
+    /// Creates a new <see cref="ITagBuilder"/> for building a <see cref="Tag"/> with the specified name.
     /// </summary>
-    /// <param name="name">The name of the tag to build.</param>
-    /// <returns>An instance of <see cref="ITagBaseTypeBuilder"/> to enable tag configuration.</returns>
-    public static ITagBaseTypeBuilder New(string name)
+    /// <param name="tagName">The name of the tag to be created.</param>
+    /// <returns>An instance of <see cref="ITagBuilder"/> for configuring and building the tag.</returns>
+    public static ITagBuilder New(TagName tagName)
     {
-        return new TagBaseTypeBuilder(name);
+        return new TagBuilder(tagName);
     }
 
     #region Internal

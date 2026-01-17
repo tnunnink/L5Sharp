@@ -423,8 +423,11 @@ public abstract class LogixElement : ILogixElement
     protected TElement? GetAncestor<TElement>(string? ancestorName = null) where TElement : LogixElement
     {
         ancestorName ??= LogixSerializer.NamesFor(typeof(TElement)).First();
-        var ancestor = Element.Ancestors(ancestorName).FirstOrDefault();
-        return ancestor?.Deserialize<TElement>();
+
+        if (!Element.TryGetAncestor(e => e.Name.LocalName == ancestorName, out var ancestor))
+            return null;
+
+        return ancestor.Deserialize<TElement>();
     }
 
     /// <summary>

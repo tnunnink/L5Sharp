@@ -56,21 +56,23 @@ public sealed class L5X
     public LogixContent Content { get; }
 
     /// <summary>
-    /// Represents the primary controller within a Logix project.
+    /// Represents the controller instance within a Logix project.
     /// This serves as the root element for components such as tags, programs, tasks, and other key project elements.
     /// </summary>
     public Controller Controller { get; }
 
     /// <summary>
-    /// The container collection of <see cref="DataType"/> components found in the L5X file.
+    /// A collection of <see cref="DataType"/> elements associated with the <see cref="Controller"/> of the L5X object.
+    /// This property provides access to user-defined data types within the RSLogix5000 project, allowing for enumeration,
+    /// manipulation, and querying of these custom-defined structures in a logix container.
     /// </summary>
-    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="DataType"/> components.</value>
     public LogixContainer<DataType> DataTypes => Controller.DataTypes;
 
     /// <summary>
-    /// Gets the collection of <see cref="AddOnInstruction"/> components found in the L5X file.
+    /// A collection of <see cref="AddOnInstruction"/> objects representing the user-defined Add-On Instructions (AOIs)
+    /// within the RSLogix5000 project. This property provides access to the AOIs defined in the project's
+    /// controller, enabling tasks such as enumeration, retrieval, and manipulation of Add-On Instruction definitions.
     /// </summary>
-    /// <value>A <see cref="LogixContainer{TComponent}"/> of <see cref="AddOnInstruction"/> components.</value>
     public LogixContainer<AddOnInstruction> AddOnInstructions => Controller.AddOnInstructions;
 
     /// <summary>
@@ -332,18 +334,7 @@ public sealed class L5X
     /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="reference"/> is <c>null</c>.</exception>
     public bool Contains(Reference reference)
     {
-        if (!reference.Type.IsTag)
-            return _index.ContainsElement(reference);
-
-        // It's a tag, so handle potential member paths (e.g. "MyTag.Member[0]")
-        var tagName = reference.Id.ToTagName();
-
-        // Always search the index using the base name and the reference's explicit scope.
-        var baseReference = Reference.To<Tag>(tagName.Base, reference.Scope);
-        var tag = _index.GetElement<Tag>(baseReference);
-
-        // Navigate to the specified member (this will return the base tag if no member is specified).
-        return tag.Member(tagName.Member) is not null;
+        return _index.ContainsElement(reference);
     }
 
     /// <summary>
@@ -356,6 +347,9 @@ public sealed class L5X
     /// <exception cref="KeyNotFoundException">Thrown if no element with the specified <paramref name="reference"/> exists in the L5X content.</exception>
     public ILogixEntity Get(Reference reference)
     {
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
+
         if (!reference.Type.IsTag)
             return _index.GetElement<ILogixEntity>(reference);
 
@@ -393,7 +387,9 @@ public sealed class L5X
     /// </remarks>
     public TComponent Get<TComponent>(string name) where TComponent : LogixComponent<TComponent>
     {
-        //To support tag name paths in the string name, convert to a TagName instance which can parse the values for us.
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.", nameof(name));
+
         var tagName = name.ToTagName();
         var reference = Reference.To<TComponent>(tagName.Base, tagName.Scope);
         var element = _index.GetElement<TComponent>(reference);
@@ -424,6 +420,9 @@ public sealed class L5X
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> parameter is null.</exception>
     public bool TryGet(Reference reference, out ILogixEntity entity)
     {
+        if (reference is null)
+            throw new ArgumentNullException(nameof(reference));
+
         if (!reference.Type.IsTag)
             return _index.TryGetElement(reference, out entity);
 
@@ -451,16 +450,15 @@ public sealed class L5X
     /// <returns>True if the component is found; otherwise, false.</returns>
     public bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent<TComponent>
     {
-        //To support tag name paths with a program name prefix, always a tag name and scope the reference accordingly.
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty.", nameof(name));
+
         var tagName = name.ToTagName();
         var reference = Reference.To<TComponent>(tagName.Base, tagName.Scope);
 
         if (_index.TryGetElement<TComponent>(reference, out var element))
         {
-            var target = element is Tag tag
-                ? tag.Member(tagName.Member)?.As<TComponent>()
-                : element;
-
+            var target = element is Tag tag ? tag.Member(tagName.Member)?.As<TComponent>() : element;
             return target.IsNull(out component);
         }
 
@@ -527,12 +525,11 @@ public sealed class L5X
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
-        var container = Element
-            .Descendants(component.Reference.Type.Value)
-            .FirstOrDefault(e => component.Reference.Scope.Equals(Scope.Of(e)));
+        var typeName = LogixSerializer.NamesFor(component.GetType()).First();
+        var container = Element.Descendants($"{typeName}s").FirstOrDefault();
 
         if (container is null)
-            throw new InvalidOperationException($"Could not find container type {component.GetType()}");
+            throw new InvalidOperationException($"Could not find container for type: '{component.GetType()}'");
 
         container.Add(component.Serialize());
     }
@@ -552,29 +549,34 @@ public sealed class L5X
         if (component is null)
             throw new ArgumentNullException(nameof(component));
 
-        var container = Element
-            .Descendants(component.Reference.Type.Value)
-            .FirstOrDefault(e => Scope.Of(e).IsIn(programName));
+        var typeName = LogixSerializer.NamesFor(component.GetType()).First();
+        var container = Element.Descendants($"{typeName}s").FirstOrDefault(e => Scope.Of(e).IsIn(programName));
 
         if (container is null)
             throw new InvalidOperationException(
-                $"Could not find container type {component.GetType()} in scope: '{programName}'");
+                $"Could not find container for type {component.GetType()} in scope: '{programName}'");
 
         container.Add(component.Serialize());
     }
 
     /// <summary>
-    /// Removes the element corresponding to the specified <see cref="Reference"/> from the L5X content.
+    /// Removes the specified <see cref="Reference"/> from the current L5X structure, if it exists.
     /// </summary>
-    /// <param name="reference">The <see cref="Reference"/> representing the element to be removed.</param>
+    /// <param name="reference">The <see cref="Reference"/> object representing the element to remove.</param>
+    /// <returns>True if the element was successfully removed; otherwise, false.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="reference"/> is null.</exception>
-    public void Remove(Reference reference)
+    public bool Remove(Reference reference)
     {
         if (reference is null)
             throw new ArgumentNullException(nameof(reference));
 
-        var element = Element.XPathSelectElement(reference);
-        element?.Remove();
+        if (_index.TryGetElement<ILogixEntity>(reference, out var entity))
+        {
+            entity.Serialize().Remove();
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -595,14 +597,20 @@ public sealed class L5X
     /// and finding references or dependents.
     /// </para>
     /// </remarks>
-    public void Remove<TComponent>(string name) where TComponent : LogixComponent<TComponent>
+    public bool Remove<TComponent>(string name) where TComponent : LogixComponent<TComponent>
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var reference = Reference.To<TComponent>(name);
-        var element = Element.XPathSelectElement(reference);
-        element?.Remove();
+
+        if (_index.TryGetElement<TComponent>(reference, out var component))
+        {
+            component.Remove();
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
