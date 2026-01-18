@@ -330,7 +330,7 @@ public class Sheet : LogixCode<Sheet>
     {
         var existingWire = Element.Elements(L5XName.Wire).FirstOrDefault(w =>
             w.Attribute(L5XName.ToID)?.Value == toId.ToString() &&
-            w.Attribute(L5XName.ToParam)?.Value == toParam
+            w.Attribute(L5XName.ToParam)?.Value == toParam?.ToString()
         );
 
         existingWire?.Remove();
