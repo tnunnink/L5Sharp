@@ -8,7 +8,7 @@ namespace L5Sharp.Tests.Core.Common
         [Test]
         public void New_Null_ShouldThrowException()
         {
-            var action = () => new Address(null);
+            var action = () => new Address(null!);
 
             action.Should().Throw<ArgumentException>();
         }
