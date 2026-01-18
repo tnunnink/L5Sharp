@@ -72,7 +72,7 @@ internal record LogixMemberInfo(
     public string GenerateProperty()
     {
         var isArray = Dimension > 0;
-        var returnType = isArray ? $"{DataType}[]" : DataType;
+        var returnType = isArray ? $"ArrayData<{DataType}>" : DataType;
         var methodSuffix = isArray ? "Array" : "Member";
         var newModifier = Name is "Count" or "Clear" ? "new " : string.Empty;
 
@@ -108,7 +108,7 @@ internal record LogixMemberInfo(
     public string GenerateInitializer()
     {
         var typeName = DataType.SanitizeName();
-        var initializer = Dimension > 0 ? $"{typeName}[{Dimension}]" : $"{typeName}()";
+        var initializer = Dimension > 0 ? $"ArrayData<{typeName}>({Dimension})" : $"{typeName}()";
         return $"{Name} = new {initializer};";
     }
 }
