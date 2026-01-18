@@ -118,7 +118,7 @@ public static class LogixSerializer
     /// </remarks>
     public static TElement Deserialize<TElement>(this XElement element) where TElement : ILogixElement
     {
-        return (TElement)element.Deserialize();
+        return element.Deserialize().As<TElement>();
     }
 
     /// <summary>
