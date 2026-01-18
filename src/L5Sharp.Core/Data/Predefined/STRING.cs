@@ -17,7 +17,7 @@ public sealed class STRING : StringData
     /// <summary>
     /// Creates a new empty <see cref="STRING"/> type.
     /// </summary>
-    public STRING() : base(nameof(STRING), string.Empty)
+    public STRING() : base(nameof(STRING))
     {
     }
 

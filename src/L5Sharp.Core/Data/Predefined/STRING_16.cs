@@ -19,7 +19,7 @@ public sealed class STRING_16 : StringData
     /// <summary>
     /// Creates a new empty <see cref="STRING"/> type.
     /// </summary>
-    public STRING_16() : base(nameof(STRING_16), string.Empty)
+    public STRING_16() : base(nameof(STRING_16))
     {
     }
 
