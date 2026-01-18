@@ -33,34 +33,17 @@ public class StringData : LogixData, IEnumerable<char>
     /// <param name="value">The value of the string data instance.</param>
     /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is null or empty.</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
-    public StringData(string name, string value) : base(new XElement(L5XName.Data))
+    public StringData(string name, string? value = null) : base(new XElement(L5XName.Data))
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty");
 
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
+        value ??= string.Empty;
 
         Element.SetAttributeValue(L5XName.DataType, name);
         Element.SetAttributeValue(L5XName.Format, DataFormat.String);
         Element.SetAttributeValue(L5XName.Length, value.Length);
         Element.Add(new XCData($"'{value}'"));
-    }
-
-    /// <summary>
-    /// Creates a new empty <see cref="StringData"/> instance with the default type name 'StringData'.
-    /// </summary>
-    public StringData() : this(nameof(StringData), string.Empty)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="StringData"/> instance initialized with the provided string value. 
-    /// </summary>
-    /// <param name="value">The string value to initialize the data object with.</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
-    public StringData(string value) : this(nameof(StringData), value)
-    {
     }
 
     /// <summary>
@@ -139,13 +122,6 @@ public class StringData : LogixData, IEnumerable<char>
     public IEnumerator<char> GetEnumerator() => GetString().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    /// <summary>
-    /// Defines an implicit conversion from a <see cref="string"/> to a <see cref="StringData"/> object.
-    /// </summary>
-    /// <param name="value">The string value to be converted into a <see cref="StringData"/>.</param>
-    /// <returns>A new instance of <see cref="StringData"/> initialized with the specified string value.</returns>
-    public static implicit operator StringData(string value) => new(value);
 
     /// <summary>
     /// Defines an implicit conversion from a <see cref="StringData"/> instance to a <see cref="string"/>.
