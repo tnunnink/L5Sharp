@@ -57,7 +57,7 @@ public class L5XDataTypeTests
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new DataTypeMember
                     { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
             ]
         };
 
@@ -79,7 +79,7 @@ public class L5XDataTypeTests
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new DataTypeMember
                     { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
             ]
         };
 
@@ -103,7 +103,7 @@ public class L5XDataTypeTests
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new DataTypeMember
                     { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
             ]
         };
 
@@ -124,7 +124,7 @@ public class L5XDataTypeTests
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new DataTypeMember
                     { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
             ]
         };
 
@@ -148,7 +148,7 @@ public class L5XDataTypeTests
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new DataTypeMember
                     { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
             ]
         };
 
@@ -168,7 +168,7 @@ public class L5XDataTypeTests
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
+                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly },
             }
         };
 
@@ -222,7 +222,7 @@ public class L5XDataTypeTests
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
+                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly },
             }
         };
 
@@ -243,7 +243,7 @@ public class L5XDataTypeTests
             {
                 new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
+                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly },
             }
         };
 

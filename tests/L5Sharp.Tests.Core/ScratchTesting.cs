@@ -39,7 +39,7 @@ public class ScratchTesting
                 DataType = m.Value.Name,
                 Dimension = m.Value is ArrayData array ? array.Dimensions : Dimensions.Empty,
                 Radix = m.Value is AtomicData atomic ? atomic.Radix : Radix.Null,
-                ExternalAccess = ExternalAccess.ReadWrite
+                ExternalAccess = Access.ReadWrite
             });
 
             dataType.Members.AddRange(members);

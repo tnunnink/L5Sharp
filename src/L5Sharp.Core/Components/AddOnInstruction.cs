@@ -425,7 +425,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
             Radix = Radix.Decimal,
             Required = false,
             Visible = false,
-            ExternalAccess = ExternalAccess.ReadOnly,
+            ExternalAccess = Access.ReadOnly,
             Default = new BOOL()
         };
     }
@@ -445,7 +445,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
             Radix = Radix.Decimal,
             Required = false,
             Visible = false,
-            ExternalAccess = ExternalAccess.ReadOnly,
+            ExternalAccess = Access.ReadOnly,
             Default = new BOOL()
         };
     }

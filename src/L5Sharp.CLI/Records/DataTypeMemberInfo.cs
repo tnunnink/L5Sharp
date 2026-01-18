@@ -12,7 +12,7 @@ public record DataTypeMemberInfo()
         DataType = element.DataType;
         Dimension = element.Dimension?.ToString() ?? Dimensions.Empty.ToString();
         Radix = element.Radix ?? Core.Radix.Null;
-        ExternalAccess = element.ExternalAccess ?? Core.ExternalAccess.ReadWrite;
+        ExternalAccess = element.ExternalAccess ?? Core.Access.ReadWrite;
         Parent = element.Parent?.Name;
     }
 
@@ -21,7 +21,7 @@ public record DataTypeMemberInfo()
     public string DataType { get; init; } = nameof(DINT);
     public string Dimension { get; init; } = Dimensions.Empty.ToString();
     public string Radix { get; init; } = Core.Radix.Decimal;
-    public string ExternalAccess { get; init; } = Core.ExternalAccess.ReadWrite;
+    public string ExternalAccess { get; init; } = Core.Access.ReadWrite;
     [JsonIgnore] public string? Parent { get; init; }
 
     /// <summary>
@@ -45,6 +45,6 @@ public record DataTypeMemberInfo()
         DataType = info.DataType,
         Dimension = Dimensions.Parse(info.Dimension),
         Radix = Core.Radix.Parse(info.Radix),
-        ExternalAccess = Core.ExternalAccess.Parse(info.ExternalAccess)
+        ExternalAccess = Core.Access.Parse(info.ExternalAccess)
     };
 }

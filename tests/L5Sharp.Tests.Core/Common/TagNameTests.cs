@@ -139,6 +139,7 @@ namespace L5Sharp.Tests.Core.Common
             var tagName = new TagName("Program:SomeProgram.MyTag");
 
             tagName.Path.Should().Be("Program:SomeProgram.MyTag");
+            tagName.LocalPath.Should().Be("MyTag");
             tagName.Base.Should().Be("MyTag");
             tagName.Operand.Should().BeEmpty();
             tagName.Member.Should().BeEmpty();
@@ -147,34 +148,17 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void IsQualified_QualifiedTagNameWithAllPossibleMemberTypes_ShouldBeTrue()
+        public void Scope_WithProgramPrefixAndMemberTag_ShouldHaveExpectedProperties()
         {
-            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            var tagName = new TagName("Program:SomeProgram.MyTag.Member[0].Value.12");
 
-            var result = tagName.IsQualified;
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void IsQualified_ArraySegmentOnly_ShouldBeFalse()
-        {
-            var tagName = new TagName("[1]");
-
-            var result = tagName.IsQualified;
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        [Description("GitHub Issue #52: A tag with a bit index reference tag should be qualified")]
-        public void IsQualified_BitIndexAddressing_ShouldBeFalse()
-        {
-            var tagName = new TagName("DintTest.[Offset]");
-
-            var result = tagName.IsQualified;
-
-            result.Should().BeTrue();
+            tagName.Path.Should().Be("Program:SomeProgram.MyTag.Member[0].Value.12");
+            tagName.LocalPath.Should().Be("MyTag.Member[0].Value.12");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".Member[0].Value.12");
+            tagName.Member.Should().Be("Member[0].Value.12");
+            tagName.Element.Should().Be("12");
+            tagName.Depth.Should().Be(4);
         }
 
         [Test]
@@ -182,6 +166,9 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase("MyTag.SomeMember.1", "MyTag")]
         [TestCase("MyTag[1].SomeMember.1", "MyTag")]
         [TestCase("Module:1:I.Data[1].SubTag.Value.12", "Module:1:I")]
+        [TestCase(".Member[32].Value", "")]
+        [TestCase("Member[32].Value", "Member")]
+        [TestCase("[32].Value", "[32]")]
         public void Base_WhenCalled_ShouldBeExpected(string value, string expected)
         {
             var tagName = new TagName(value);
@@ -272,6 +259,23 @@ namespace L5Sharp.Tests.Core.Common
             elements.Should().AllSatisfy(s => s.Should().Be("Target"));
             stopwatch.Elapsed.Seconds.Should().BeLessThan(1);
         }
+        
+        [Test]
+        [TestCase("", 0)]
+        [TestCase("MyTag.SomeMember.1", 2)]
+        [TestCase("MyTag[1].SomeMember.1", 3)]
+        [TestCase("Module:1:I.Data[1].SubTag.Value.12", 5)]
+        [TestCase(".Member[32].Value", 2)]
+        [TestCase("Member[32].Value", 2)]
+        [TestCase("[32].Value", 1)]
+        public void Depth_ValidTagName_ShouldBeExpected(string value, int expected)
+        {
+            var tagName = new TagName(value);
+
+            var path = tagName.Depth;
+
+            path.Should().Be(expected);
+        }
 
         [Test]
         public void Slice_ComplexTag_ShouldContainExpectedValues()
@@ -292,6 +296,23 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
+        [TestCase("", 0)]
+        [TestCase("MyTag.SomeMember.1", 3)]
+        [TestCase("MyTag[1].SomeMember.1", 4)]
+        [TestCase("Module:1:I.Data[1].SubTag.Value.12", 6)]
+        [TestCase(".Member[32].Value", 3)]
+        [TestCase("Member[32].Value", 3)]
+        [TestCase("[32].Value", 2)]
+        public void Sclice_ProvidedTagName_ShouldHaveExpectedCount(string value, int expected)
+        {
+            var tagName = new TagName(value);
+
+            var members = tagName.Slice().ToList();
+
+            members.Should().HaveCount(expected);
+        }
+
+        [Test]
         public void Slice_WhenCalledManyTimes_ShouldBeEfficient()
         {
             var tags = Enumerable.Range(0, 1000000)
@@ -309,11 +330,34 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Contains_NullName_ShouldThrowArgumentNullException()
+        public void IsQualified_QualifiedTagNameWithAllPossibleMemberTypes_ShouldBeTrue()
         {
-            var tagName = new TagName(TestTagName);
+            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
 
-            FluentActions.Invoking(() => tagName.Contains(null!)).Should().Throw<ArgumentNullException>();
+            var result = tagName.IsQualified;
+
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsQualified_ArraySegmentOnly_ShouldBeFalse()
+        {
+            var tagName = new TagName("[1]");
+
+            var result = tagName.IsQualified;
+
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        [Description("GitHub Issue #52: A tag with a bit index reference tag should be qualified")]
+        public void IsQualified_BitIndexAddressing_ShouldBeFalse()
+        {
+            var tagName = new TagName("DintTest.[Offset]");
+
+            var result = tagName.IsQualified;
+
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -334,6 +378,14 @@ namespace L5Sharp.Tests.Core.Common
             var result = tagName.Contains("SomeMember");
 
             result.Should().BeTrue();
+        }
+
+        [Test]
+        public void Contains_NullName_ShouldThrowArgumentNullException()
+        {
+            var tagName = new TagName(TestTagName);
+
+            FluentActions.Invoking(() => tagName.Contains(null!)).Should().Throw<ArgumentNullException>();
         }
 
 

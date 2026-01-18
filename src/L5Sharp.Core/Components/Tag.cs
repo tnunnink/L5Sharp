@@ -50,7 +50,7 @@ public class Tag : LogixComponent<Tag>
     public Tag() : base(L5XName.Tag)
     {
         TagType = TagType.Base;
-        ExternalAccess = ExternalAccess.ReadWrite;
+        ExternalAccess = Access.ReadWrite;
         Constant = false;
     }
 
@@ -101,7 +101,7 @@ public class Tag : LogixComponent<Tag>
     protected Tag(string element) : base(element)
     {
         TagType = TagType.Base;
-        ExternalAccess = ExternalAccess.ReadWrite;
+        ExternalAccess = Access.ReadWrite;
         Constant = false;
     }
 
@@ -232,21 +232,21 @@ public class Tag : LogixComponent<Tag>
     /// <summary>
     /// The external access option indicating the read/write access of the tag.
     /// </summary>
-    /// <value>A <see cref="Core.ExternalAccess"/> option representing read/write access of the tag.</value>
-    public ExternalAccess? ExternalAccess
+    /// <value>A <see cref="Access"/> option representing read/write access of the tag.</value>
+    public Access? ExternalAccess
     {
-        get => GetValue(ExternalAccess.Parse);
+        get => GetValue(Access.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// The external access option indicating the read/write access of the tag from OPC UA.
     /// </summary>
-    /// <value>A <see cref="Core.OpcUAAccess"/> option representing read/write access of the tag from OPC UA.</value>
+    /// <value>A <see cref="Access"/> option representing read/write access of the tag from OPC UA.</value>
     // ReSharper disable once InconsistentNaming we need the name to match.
-    public OpcUAAccess? OpcUAAccess
+    public Access? OpcUAAccess
     {
-        get => GetValue(OpcUAAccess.Parse);
+        get => GetValue(Access.Parse);
         set => SetValue(value);
     }
 
@@ -670,7 +670,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <param name="tagName">The name of the tag to be created.</param>
     /// <returns>An instance of <see cref="ITagBuilder"/> for configuring and building the tag.</returns>
-    public static ITagBuilder New(TagName tagName)
+    public static ITagBuilder Create(TagName tagName)
     {
         return new TagBuilder(tagName);
     }
@@ -914,12 +914,12 @@ public class Tag : LogixComponent<Tag>
         var slot = parts[1];
         var suffix = parts[2];
 
-        var tag = doc.Query<Module>()
-            .FirstOrDefault(m => m.Name == name)
-            ?.Tags.FirstOrDefault(t => t.Name.EndsWith(suffix))
-            ?.Member($"Slot[{slot}]"); //Not sure if this is all rack connections tag structure, but for now will hard code
+        if (!doc.TryGet<Module>(name, out var module))
+            return LogixType.Null;
 
-        return tag is not null ? tag.Value : LogixType.Null;
+        var alias = module.Tags.FirstOrDefault(t => t.Name.EndsWith(suffix));
+        var data = alias?.Member($"Slot[{slot}]");
+        return data is not null ? data.Value : LogixType.Null;
     }
 
     #endregion

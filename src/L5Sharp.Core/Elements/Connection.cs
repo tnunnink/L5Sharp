@@ -30,8 +30,8 @@ public class Connection : LogixObject<Connection>
         InputProductionTrigger = ProductionTrigger.Cyclic;
 
         //By default, just add the input and output tags. This will let us set data.
-        Element.Add(new XElement(L5XName.InputTag, new XAttribute(L5XName.ExternalAccess, ExternalAccess.ReadWrite)));
-        Element.Add(new XElement(L5XName.OutputTag, new XAttribute(L5XName.ExternalAccess, ExternalAccess.ReadWrite)));
+        Element.Add(new XElement(L5XName.InputTag, new XAttribute(L5XName.ExternalAccess, Access.ReadWrite)));
+        Element.Add(new XElement(L5XName.OutputTag, new XAttribute(L5XName.ExternalAccess, Access.ReadWrite)));
     }
 
     /// <summary>

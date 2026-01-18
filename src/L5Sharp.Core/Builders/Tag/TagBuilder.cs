@@ -9,6 +9,13 @@ internal class TagBuilder(TagName tagName) : ITagBuilder
 {
     private readonly Tag _instance = new() { Name = tagName.Base };
 
+    public ITagBuilder AliasFor(TagName alias)
+    {
+        _instance.AliasFor = alias;
+        _instance.TagType = TagType.Alias;
+        return this;
+    }
+
     public ITagBuilder WithValue(LogixData value)
     {
         _instance.Value = value;
@@ -35,34 +42,69 @@ internal class TagBuilder(TagName tagName) : ITagBuilder
         return this;
     }
 
-    public ITagBuilder AliasFor(TagName alias)
+    public ITagBuilder WithAccess(Access access)
     {
-        _instance.AliasFor = alias;
-        _instance.TagType = TagType.Alias;
-        return this;
-    }
-
-    public ITagBuilder UsedAs(TagUsage usage)
-    {
-        _instance.Usage = usage;
+        _instance.ExternalAccess = access;
         return this;
     }
 
     public ITagBuilder ReadWrite()
     {
-        _instance.ExternalAccess = ExternalAccess.ReadWrite;
+        _instance.ExternalAccess = Access.ReadWrite;
         return this;
     }
 
     public ITagBuilder ReadOnly()
     {
-        _instance.ExternalAccess = ExternalAccess.ReadOnly;
+        _instance.ExternalAccess = Access.ReadOnly;
         return this;
     }
 
-    public ITagBuilder Private()
+    public ITagBuilder WithUsage(TagUsage usage)
     {
-        _instance.ExternalAccess = ExternalAccess.None;
+        _instance.Usage = usage;
+        return this;
+    }
+
+    public ITagBuilder Normal()
+    {
+        _instance.Usage = TagUsage.Normal;
+        return this;
+    }
+
+    public ITagBuilder Local()
+    {
+        _instance.Usage = TagUsage.Local;
+        return this;
+    }
+
+    public ITagBuilder Public()
+    {
+        _instance.Usage = TagUsage.Public;
+        return this;
+    }
+
+    public ITagBuilder Input()
+    {
+        _instance.Usage = TagUsage.Input;
+        return this;
+    }
+
+    public ITagBuilder Output()
+    {
+        _instance.Usage = TagUsage.Output;
+        return this;
+    }
+
+    public ITagBuilder InOut()
+    {
+        _instance.Usage = TagUsage.InOut;
+        return this;
+    }
+
+    public ITagBuilder Static()
+    {
+        _instance.Usage = TagUsage.Static;
         return this;
     }
 

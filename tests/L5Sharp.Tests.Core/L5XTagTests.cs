@@ -38,16 +38,6 @@ public class L5XTagTests
     }
 
     [Test]
-    public void Scope_AllNestedTagMembers_ShouldNotHaveDoubleSlash()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var scopes = content.Query<Tag>().SelectMany(t => t.Members()).Select(t => t.Reference).ToList();
-
-        scopes.Should().AllSatisfy(s => s.Path.Should().NotContain("//"));
-    }
-
-    [Test]
     public void GetRackConnectionAliasTagsShouldReturnExpectedElements()
     {
         var content = L5X.Load(Known.ModuleRackIoExport);

@@ -14,7 +14,7 @@ public record TagInfo()
         DataType = tag.DataType;
         Dimensions = tag.Dimensions.ToString();
         Radix = tag.Radix.Name;
-        Access = tag.ExternalAccess?.Name ?? ExternalAccess.ReadWrite;
+        Access = tag.ExternalAccess?.Name ?? Core.Access.ReadWrite;
         //Value = tag.Value is AtomicValue<>;
         Type = tag.TagType?.Name ?? TagType.Base;
         Usage = tag.Usage?.Name ?? TagUsage.Normal;
@@ -31,7 +31,7 @@ public record TagInfo()
     public string DataType { get; init; } = string.Empty;
     public string Dimensions { get; init; } = Core.Dimensions.Empty.ToString();
     public string Radix { get; init; } = Core.Radix.Decimal;
-    public string Access { get; init; } = ExternalAccess.ReadWrite;
+    public string Access { get; init; } = Core.Access.ReadWrite;
     public object? Value { get; init; }
     public string Type { get; init; } = TagType.Base;
     public string Usage { get; init; } = TagUsage.Normal;

@@ -438,11 +438,11 @@ public class PlcClient : IPlcClient
             if (status < 0) return status;
 
             // Emulate the timeout with a linked cancellation for the specified timeout.
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
-            cts.CancelAfter(_options.Timeout);
+            using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(token);
+            cancellation.CancelAfter(_options.Timeout);
 
             // When canceled, call the abort operation to stop and remove the task from the pending lookup.
-            using (cts.Token.Register(() => AbortOperation(tagName, token)))
+            using (cancellation.Token.Register(() => AbortOperation(tagName, token)))
             {
                 return await operation.Task.ConfigureAwait(false);
             }
@@ -485,7 +485,7 @@ public class PlcClient : IPlcClient
     /// <param name="userData">A pointer to user-defined data associated with the event, typically containing tag-specific details.</param>
     private void TagEventCallback(int handle, int eventId, int statusId, IntPtr userData)
     {
-        // We only want to process events that are "completed" and not pending or starting,
+        // We only want to process events that are "completed" (read/write/create) and not pending or starting,
         // and that have the required user data tag pointer.
         if (!TagEvent.IsComplete(eventId) || statusId.AsStatus() == TagStatus.Pending || userData == IntPtr.Zero)
             return;

@@ -5,7 +5,7 @@ namespace L5Sharp.Gateway.Abstractions;
 /// <summary>
 /// Defines a service for managing and interacting with tags in a gateway system.
 /// This mimics the API of the underlying libplctag.NativeImport. We are wrapping this API so that we can
-/// test library (or external) code without having an actual PLC to connect 
+/// test library (or external) code without having an actual PLC to connect to.
 /// </summary>
 public interface ITagService
 {

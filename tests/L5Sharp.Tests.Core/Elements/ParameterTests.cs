@@ -15,7 +15,7 @@ public class ParameterTests
         parameter.DataType.Should().BeEmpty();
         parameter.Dimension.Should().Be(Dimensions.Empty);
         parameter.Radix.Should().Be(Radix.Null);
-        parameter.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        parameter.ExternalAccess.Should().Be(Access.ReadWrite);
         parameter.TagType.Should().Be(TagType.Base);
         parameter.Usage.Should().Be(TagUsage.Input);
         parameter.Default.Should().BeNull();

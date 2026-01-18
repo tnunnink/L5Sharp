@@ -52,10 +52,9 @@ public static class LogixType
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name cannot be null or empty.");
 
-        if (Names.ContainsKey(typeof(TData)))
-            throw new InvalidOperationException($"Type already registered: '{typeof(TData)}'");
-
         var type = typeof(TData);
+
+        if (Names.ContainsKey(type)) return;
 
         Names[type] = name;
         Factories[name] = () => new TData();

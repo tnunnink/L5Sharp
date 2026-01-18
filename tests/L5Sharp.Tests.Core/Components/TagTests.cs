@@ -29,7 +29,7 @@ public class TagTests
         tag.DataType.Should().Be("NULL");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
         tag.Value.Should().Be(LogixType.Null);
         tag.Constant.Should().BeFalse();
         tag.TagType.Should().Be(TagType.Base);
@@ -52,7 +52,7 @@ public class TagTests
             Name = "Test",
             Description = "This is a test",
             Value = new BOOL(true),
-            ExternalAccess = ExternalAccess.ReadOnly,
+            ExternalAccess = Access.ReadOnly,
             TagType = TagType.Alias,
             Usage = TagUsage.Local,
             AliasFor = new TagName("SomeOtherTag"),
@@ -65,7 +65,7 @@ public class TagTests
         tag.DataType.Should().Be("BOOL");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Decimal);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        tag.ExternalAccess.Should().Be(Access.ReadOnly);
         tag.Description.Should().Be("This is a test");
         tag.Constant.Should().BeTrue();
         tag.Usage.Should().Be(TagUsage.Local);
@@ -292,7 +292,7 @@ public class TagTests
         tag.DataType.Should().Be("NULL");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
         tag.TagType.Should().Be(TagType.Base);
         tag.Constant.Should().BeFalse();
         tag.Value.Should().Be(LogixType.Null);
@@ -422,7 +422,7 @@ public class TagTests
         tag.Name.Should().Be("TestSimpleTag");
         tag.DataType.Should().Be("SimpleType");
         tag.Constant.Should().BeFalse();
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        tag.ExternalAccess.Should().Be(Access.ReadOnly);
         tag.Value.Should().BeOfType<StructureData>();
         tag.Member("BoolMember").Should().NotBeNull();
         tag.Member("SintMember").Should().NotBeNull();
@@ -444,7 +444,7 @@ public class TagTests
         tag.DataType.Should().Be("ComplexType");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
-        tag.ExternalAccess.Should().Be(ExternalAccess.None);
+        tag.ExternalAccess.Should().Be(Access.None);
         tag.Constant.Should().BeFalse();
     }
 
@@ -977,7 +977,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicTypeWithValue_ShouldHaveExpectedValues()
     {
-        var tag = Tag.New("SomeAtomic")
+        var tag = Tag.Create("SomeAtomic")
             .WithValue(123)
             .Build();
 
@@ -985,44 +985,64 @@ public class TagTests
         tag.DataType.Should().Be("DINT");
         tag.Value.Should().Be(123);
         tag.Radix.Should().Be(Radix.Decimal);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
         tag.TagType.Should().Be(TagType.Base);
     }
 
     [Test]
     public void Build_SimpleNoneAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.New("SomeAtomic")
-            .Private()
+        var tag = Tag.Create("SomeAtomic")
+            .WithAccess(Access.None)
             .Build();
 
-        tag.ExternalAccess.Should().Be(ExternalAccess.None);
+        tag.ExternalAccess.Should().Be(Access.None);
     }
 
     [Test]
     public void Build_SimpleReadOnlyAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.New("SomeAtomic")
+        var tag = Tag.Create("SomeAtomic")
             .ReadOnly()
             .Build();
 
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        tag.ExternalAccess.Should().Be(Access.ReadOnly);
     }
 
     [Test]
     public void Build_SimpleReadWriteAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.New("SomeAtomic")
+        var tag = Tag.Create("SomeAtomic")
             .ReadWrite()
             .Build();
 
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
+    }
+
+    [Test]
+    public void Build_SimpleWithUsage_ShouldHaveExpectedAccess()
+    {
+        var tag = Tag.Create("SomeAtomic")
+            .WithUsage(TagUsage.Public)
+            .Build();
+
+        tag.Usage.Should().Be(TagUsage.Public);
+    }
+
+    [Test]
+    public void Build_SimpleWithNormalUsage_ShouldHaveExpectedAccess()
+    {
+        var tag = Tag.Create("SomeAtomic")
+            .Normal()
+            .Build();
+
+        tag.Usage.Should().Be(TagUsage.Normal);
     }
 
     [Test]
     public void Build_SimpleWithDescription_ShouldHaveExpectedDescription()
     {
-        var tag = Tag.New("SomeAtomic")
+        var tag = Tag.Create("SomeAtomic")
             .WithDescription("This is a test of the fluent tag builder")
             .Build();
 
@@ -1032,7 +1052,7 @@ public class TagTests
     [Test]
     public void Build_SimpleConstant_ShouldHaveExpectedConstant()
     {
-        var tag = Tag.New("SomeAtomic")
+        var tag = Tag.Create("SomeAtomic")
             .Constant()
             .Build();
 
@@ -1042,7 +1062,7 @@ public class TagTests
     [Test]
     public void Build_SimpleConsumer_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.New("ConsumerTag")
+        var tag = Tag.Create("ConsumerTag")
             .Consumes(cb => cb
                 .Provider("RemoteProviderName")
                 .RemoteTag("RemoteTagName.Member.Value")
@@ -1063,7 +1083,7 @@ public class TagTests
     [Test]
     public void Build_SimpleProducer_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.New("ProducerTag")
+        var tag = Tag.Create("ProducerTag")
             .Produces(b => b
                 .WithMaxCount(5)
                 .SendEventTrigger()
@@ -1082,7 +1102,7 @@ public class TagTests
     [Test]
     public Task Build_SimpleAliasTag_ShouldBeVerified()
     {
-        var tag = Tag.New("MyTagName")
+        var tag = Tag.Create("MyTagName")
             .AliasFor("SomeOtherTag")
             .Build();
 
@@ -1092,7 +1112,7 @@ public class TagTests
     [Test]
     public Task Build_PredefinedTypeDefaultValue_ShouldBeVerified()
     {
-        var tag = Tag.New("MyTagName")
+        var tag = Tag.Create("MyTagName")
             .WithValue<TIMER>()
             .WithDescription("Builder example of creating a complex predefined data type with default data.")
             .Build();
@@ -1103,7 +1123,7 @@ public class TagTests
     [Test]
     public Task Build_PredefinedTypeConfiguredValue_ShouldBeVerified()
     {
-        var tag = Tag.New("MyTagName")
+        var tag = Tag.Create("MyTagName")
             .WithValue<TIMER>(t =>
             {
                 t.PRE = 10000;
@@ -1120,7 +1140,7 @@ public class TagTests
     [Test]
     public Task Build_UserDefinedTypeDefaultValue_ShouldBeVerified()
     {
-        var tag = Tag.New("MyTagName")
+        var tag = Tag.Create("MyTagName")
             .WithValue<MyNestedData>()
             .WithDescription("Builder example of creating a complex user defined data type with defualt data.")
             .Build();
@@ -1131,7 +1151,7 @@ public class TagTests
     [Test]
     public Task Build_UserDefinedTypeConfiguredValue_ShouldBeVerified()
     {
-        var tag = Tag.New("MyTagName")
+        var tag = Tag.Create("MyTagName")
             .WithValue<MyNestedData>(d =>
             {
                 d.Simple.M2 = 123;

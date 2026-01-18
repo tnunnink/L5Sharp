@@ -3,24 +3,24 @@
 namespace L5Sharp.Tests.Core.Enums
 {
     [TestFixture]
-    public class OpcUAAccessTests
+    public class AccessTests
     {
         [Test]
         public void None_WhenCalled_ShouldNotBeNull()
         {
-            OpcUAAccess.None.Should().NotBeNull();
+            Access.None.Should().NotBeNull();
         }
 
         [Test]
         public void ReadOnly_WhenCalled_ShouldNotBeNull()
         {
-            OpcUAAccess.ReadOnly.Should().NotBeNull();
+            Access.ReadOnly.Should().NotBeNull();
         }
 
         [Test]
         public void ReadWrite_WhenCalled_ShouldNotBeNull()
         {
-            OpcUAAccess.ReadWrite.Should().NotBeNull();
+            Access.ReadWrite.Should().NotBeNull();
         }
     }
 }

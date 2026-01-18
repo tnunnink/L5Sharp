@@ -80,8 +80,7 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     public void Increment()
     {
         Interlocked.Increment(ref _subscribers);
-
-        // This would indicate that we just started the watch and need to enable auto sync.
+        
         if (_subscribers == 1)
         {
             var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", _refreshRate);
@@ -99,8 +98,7 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     public void Decrement()
     {
         Interlocked.Decrement(ref _subscribers);
-
-        // No more subscribers means stop the auto sync for the tag.
+        
         if (_subscribers == 0)
         {
             var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", 0);

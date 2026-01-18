@@ -15,7 +15,7 @@ public class DataTypeMemberTests
         member.DataType.Should().Be("BOOL");
         member.Dimension.Should().BeEquivalentTo(Dimensions.Empty);
         member.Radix.Should().Be(Radix.Null);
-        member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        member.ExternalAccess.Should().Be(Access.ReadWrite);
         member.Parent.Should().BeNull();
         member.Definition.Should().NotBeNull();
     }
@@ -30,7 +30,7 @@ public class DataTypeMemberTests
             DataType = "INT",
             Dimension = 10,
             Radix = Radix.Decimal,
-            ExternalAccess = ExternalAccess.ReadOnly
+            ExternalAccess = Access.ReadOnly
         };
 
 
@@ -39,7 +39,7 @@ public class DataTypeMemberTests
         member.DataType.Should().Be("INT");
         member.Dimension.Should().Be(new Dimensions(10));
         member.Radix.Should().Be(Radix.Decimal);
-        member.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        member.ExternalAccess.Should().Be(Access.ReadOnly);
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class DataTypeMemberTests
             DataType = "REAL",
             Dimension = new Dimensions(3),
             Radix = Radix.Exponential,
-            ExternalAccess = ExternalAccess.ReadWrite,
+            ExternalAccess = Access.ReadWrite,
             Description = "This is a test",
             Hidden = true,
             Target = "SomeOtherMember",
@@ -92,7 +92,7 @@ public class DataTypeMemberTests
             DataType = "REAL",
             Dimension = new Dimensions(3),
             Radix = Radix.Exponential,
-            ExternalAccess = ExternalAccess.ReadWrite,
+            ExternalAccess = Access.ReadWrite,
             Description = "This is a test",
             Hidden = true,
             Target = "SomeOtherMember",

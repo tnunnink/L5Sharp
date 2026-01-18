@@ -69,11 +69,11 @@ public class LogixEnumTests
     [Test]
     public void Options_NonGenericValidType_ShouldReturnExpected()
     {
-        var options = LogixEnum.Options(typeof(ExternalAccess)).ToList();
+        var options = LogixEnum.Options(typeof(Access)).ToList();
 
         options.Should().NotBeEmpty();
-        options.Should().Contain(ExternalAccess.None);
-        options.Should().Contain(ExternalAccess.ReadOnly);
-        options.Should().Contain(ExternalAccess.ReadWrite);
+        options.Should().Contain(Access.None);
+        options.Should().Contain(Access.ReadOnly);
+        options.Should().Contain(Access.ReadWrite);
     }
 }

@@ -72,7 +72,7 @@ public sealed class TagName : IComparable<TagName>
     /// <summary>
     /// A regular expression pattern used to match numeric index notations within a Logix tag name.
     /// The pattern is designed to identify indices enclosed in square brackets, such as single-dimensional
-    /// (e.g., <c>[0]</c>), multi-dimensional (e.g., <c>[0,1]</c>, <c>[0,1,2]</c>), and properly formatted numeric indices.
+    /// (e.g., <c>[0]</c>), multidimensional (e.g., <c>[0,1]</c>, <c>[0,1,2]</c>), and properly formatted numeric indices.
     /// Used internally to validate and extract numeric indices during tag operations.
     /// </summary>
     private static readonly Regex NumericIndexPattern =
@@ -145,15 +145,6 @@ public sealed class TagName : IComparable<TagName>
     public string Element => GetElement(_path);
 
     /// <summary>
-    /// Returns a collection of string names representing each member of the full tag name value.
-    /// </summary>
-    /// <remarks>
-    /// Each member of a tag name can be represented by a string, array bracket, or bit index value.
-    /// For example, MyTag[1].MemberName.5 has 4 members.
-    /// </remarks>
-    public IEnumerable<string> Slice() => GetMembers(_path);
-
-    /// <summary>
     /// A zero-based number representing the depth of the tag name. In other words, the number of members
     /// after the root portion of the tag name.
     /// </summary>
@@ -189,6 +180,57 @@ public sealed class TagName : IComparable<TagName>
     /// Gets the static empty <see cref="TagName"/> value.
     /// </summary>
     public static TagName Empty => new(string.Empty);
+
+    /// <summary>
+    /// Returns a collection of string names representing each member of the full tag name value.
+    /// </summary>
+    /// <remarks>
+    /// Each member of a tag name can be represented by a string, array bracket, or bit index value.
+    /// For example, MyTag[1].MemberName.5 has 4 members.
+    /// </remarks>
+    public IEnumerable<string> Slice() => GetMembers(_path);
+
+    /// <summary>
+    /// Determines whether the current <see cref="TagName"/> contains the specified <paramref name="tagName"/>.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to check for containment.</param>
+    /// <returns>
+    /// <c>true</c> if the current <see cref="TagName"/> contains the specified <paramref name="tagName"/>;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="tagName"/> is <c>null</c>.</exception>
+    public bool Contains(TagName tagName)
+    {
+        if (tagName is null)
+            throw new ArgumentNullException(nameof(tagName));
+
+        return _path.IndexOf(tagName._path, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(TagName? other)
+    {
+        return ReferenceEquals(this, other) ? 0
+            : ReferenceEquals(null, other) ? 1
+            : StringComparer.OrdinalIgnoreCase.Compare(_path, other._path);
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            TagName other => StringComparer.OrdinalIgnoreCase.Equals(_path, other._path),
+            string other => StringComparer.OrdinalIgnoreCase.Equals(_path, other),
+            _ => false
+        };
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_path);
+
+    /// <inheritdoc />
+    public override string ToString() => _path;
 
     /// <summary>
     /// Extracts all <see cref="TagName"/> instances from the specified text based on the predefined tag name pattern.
@@ -250,48 +292,6 @@ public sealed class TagName : IComparable<TagName>
     public static TagName Combine(IEnumerable<string> members) => new(ConcatenateMembers(members));
 
     /// <summary>
-    /// Determines whether the current <see cref="TagName"/> contains the specified <paramref name="tagName"/>.
-    /// </summary>
-    /// <param name="tagName">The <see cref="TagName"/> to check for containment.</param>
-    /// <returns>
-    /// <c>true</c> if the current <see cref="TagName"/> contains the specified <paramref name="tagName"/>;
-    /// otherwise, <c>false</c>.
-    /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="tagName"/> is <c>null</c>.</exception>
-    public bool Contains(TagName tagName)
-    {
-        if (tagName is null)
-            throw new ArgumentNullException(nameof(tagName));
-
-        return _path.IndexOf(tagName._path, StringComparison.OrdinalIgnoreCase) >= 0;
-    }
-
-    /// <inheritdoc />
-    public int CompareTo(TagName? other)
-    {
-        return ReferenceEquals(this, other) ? 0
-            : ReferenceEquals(null, other) ? 1
-            : StringComparer.OrdinalIgnoreCase.Compare(_path, other._path);
-    }
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            TagName other => StringComparer.OrdinalIgnoreCase.Equals(_path, other._path),
-            string other => StringComparer.OrdinalIgnoreCase.Equals(_path, other),
-            _ => false
-        };
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_path);
-
-    /// <inheritdoc />
-    public override string ToString() => _path;
-
-    /// <summary>
     /// Determines if the provided objects are equal.
     /// </summary>
     /// <param name="left">An object to compare.</param>
@@ -331,11 +331,14 @@ public sealed class TagName : IComparable<TagName>
     {
         var tagName = GetLocalTagName(path);
 
-        if (tagName.IsEmpty() || tagName.StartsWith(Separator) || tagName.StartsWith(ArrayOpen))
+        if (tagName.IsEmpty() || tagName.StartsWith(Separator))
             return string.Empty;
 
-        var separator = tagName.IndexOfAny([Separator, ArrayOpen]);
-        return separator > 0 ? tagName.Substring(0, separator) : tagName;
+        var end = tagName.StartsWith(ArrayOpen)
+            ? tagName.IndexOf(ArrayClose) + 1
+            : tagName.IndexOfAny([Separator, ArrayOpen]);
+
+        return end > 0 ? tagName.Substring(0, end) : tagName;
     }
 
     /// <summary>
@@ -412,7 +415,12 @@ public sealed class TagName : IComparable<TagName>
     private static int GetDepth(string path)
     {
         var tagName = GetLocalTagName(path);
-        return tagName.Count(c => c is Separator or ArrayOpen);
+
+        if (tagName.IsEmpty())
+            return 0;
+
+        //We can't count the first member if this tag name starts with a separator.
+        return tagName.Substring(1).Count(c => c is Separator or ArrayOpen);
     }
 
     /// <summary>

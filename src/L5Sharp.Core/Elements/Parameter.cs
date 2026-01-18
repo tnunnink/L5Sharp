@@ -35,7 +35,7 @@ public class Parameter : LogixObject<Parameter>
         Radix = Radix.Null;
         Required = false;
         Visible = false;
-        ExternalAccess = ExternalAccess.ReadWrite;
+        ExternalAccess = Access.ReadWrite;
         Constant = false;
     }
 
@@ -133,12 +133,12 @@ public class Parameter : LogixObject<Parameter>
     /// The external access of the <c>Parameter</c>. 
     /// </summary>
     /// <value>
-    /// A <see cref="Core.ExternalAccess"/> representing read/write access of the <c>Parameter</c>.
-    /// Default is <see cref="L5Sharp.Core.ExternalAccess.ReadWrite"/>.
+    /// A <see cref="Access"/> representing read/write access of the <c>Parameter</c>.
+    /// Default is <see cref="Access.ReadWrite"/>.
     /// </value>
-    public ExternalAccess? ExternalAccess
+    public Access? ExternalAccess
     {
-        get => GetValue(ExternalAccess.Parse);
+        get => GetValue(Access.Parse);
         set => SetValue(value);
     }
 

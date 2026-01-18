@@ -22,7 +22,7 @@ public class DataTypeMember : LogixObject<DataTypeMember>
         DataType = string.Empty;
         Dimension = Dimensions.Empty;
         Radix = Radix.Null;
-        ExternalAccess = ExternalAccess.ReadWrite;
+        ExternalAccess = Access.ReadWrite;
         Hidden = false;
     }
 
@@ -96,12 +96,12 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// The external access of the <c>Member</c>. 
     /// </summary>
     /// <value>
-    /// A <see cref="Core.ExternalAccess"/> representing read/write access of the member.
-    /// Default is <see cref="L5Sharp.Core.ExternalAccess.ReadWrite"/>.
+    /// A <see cref="Access"/> representing read/write access of the member.
+    /// Default is <see cref="Access.ReadWrite"/>.
     /// </value>
-    public ExternalAccess? ExternalAccess
+    public Access? ExternalAccess
     {
-        get => GetValue(ExternalAccess.Parse);
+        get => GetValue(Access.Parse);
         set => SetValue(value);
     }
 

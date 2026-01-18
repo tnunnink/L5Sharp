@@ -108,7 +108,7 @@ public sealed class Reference
     public Reference At(string fragment)
     {
         if (string.IsNullOrEmpty(fragment))
-            throw new ArgumentException();
+            throw new ArgumentException("Fragment cannot be null or empty.", nameof(fragment));
 
         return new Reference(Type, Scope, Id, fragment);
     }
