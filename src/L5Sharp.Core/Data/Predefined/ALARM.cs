@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-// Auto-generated file
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable MemberCanBePrivate.Global
@@ -43,7 +43,7 @@ public sealed partial class ALARM : StructureData
         ROCNegLimitInv = new BOOL();
         ROCPeriodInv = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="ALARM"/> instance initialized with the provided element.
     /// </summary>

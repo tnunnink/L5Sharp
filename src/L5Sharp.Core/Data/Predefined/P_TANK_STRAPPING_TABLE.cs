@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -44,7 +46,7 @@ public sealed partial class P_TANK_STRAPPING_TABLE : StructureData
         Sts_UnderMin = new BOOL();
         Sts_OverMax = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_TANK_STRAPPING_TABLE"/> instance initialized with the provided element.
     /// </summary>
@@ -294,5 +296,4 @@ public sealed partial class P_TANK_STRAPPING_TABLE : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

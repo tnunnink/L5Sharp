@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -184,7 +186,7 @@ public sealed partial class P_ANALOG_INPUT_MULTI : StructureData
         XRdy_ResetAckAll = new BOOL();
         Val_Owner = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_ANALOG_INPUT_MULTI"/> instance initialized with the provided element.
     /// </summary>
@@ -1694,5 +1696,4 @@ public sealed partial class P_ANALOG_INPUT_MULTI : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

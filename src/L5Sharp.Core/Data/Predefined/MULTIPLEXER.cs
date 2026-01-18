@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -32,7 +34,7 @@ public sealed partial class MULTIPLEXER : StructureData
         InstructFault = new BOOL();
         SelectorInv = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="MULTIPLEXER"/> instance initialized with the provided element.
     /// </summary>
@@ -174,5 +176,4 @@ public sealed partial class MULTIPLEXER : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -38,7 +40,7 @@ public sealed partial class SAFE_BRAKE_CONTROL : StructureData
         FaultType = new SINT();
         DiagnosticCode = new SINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="SAFE_BRAKE_CONTROL"/> instance initialized with the provided element.
     /// </summary>
@@ -234,5 +236,4 @@ public sealed partial class SAFE_BRAKE_CONTROL : StructureData
         get => GetMember<SINT>();
         set => SetMember(value);
     }
-
 }

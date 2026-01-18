@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -31,7 +33,7 @@ public sealed partial class CB_SINGLE_STROKE_MODE : StructureData
         O1 = new BOOL();
         DiagnosticCode = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="CB_SINGLE_STROKE_MODE"/> instance initialized with the provided element.
     /// </summary>
@@ -164,5 +166,4 @@ public sealed partial class CB_SINGLE_STROKE_MODE : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

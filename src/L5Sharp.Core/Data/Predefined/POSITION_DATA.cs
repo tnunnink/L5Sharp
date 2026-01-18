@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -24,7 +26,7 @@ public sealed partial class POSITION_DATA : StructureData
         Ry = new REAL();
         Rz = new REAL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="POSITION_DATA"/> instance initialized with the provided element.
     /// </summary>
@@ -94,5 +96,4 @@ public sealed partial class POSITION_DATA : StructureData
         get => GetMember<REAL>();
         set => SetMember(value);
     }
-
 }

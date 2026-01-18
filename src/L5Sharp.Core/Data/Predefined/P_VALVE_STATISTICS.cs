@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -66,7 +68,7 @@ public sealed partial class P_VALVE_STATISTICS : StructureData
         Sts_ErrSlowCloseTime = new BOOL();
         Sts_ErrSlowOpenTime = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_VALVE_STATISTICS"/> instance initialized with the provided element.
     /// </summary>
@@ -514,5 +516,4 @@ public sealed partial class P_VALVE_STATISTICS : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

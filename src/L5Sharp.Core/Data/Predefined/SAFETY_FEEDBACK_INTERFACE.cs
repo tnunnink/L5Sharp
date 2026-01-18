@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -40,7 +42,7 @@ public sealed partial class SAFETY_FEEDBACK_INTERFACE : StructureData
         PositionScalingOut = new REAL();
         UnwindOut = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="SAFETY_FEEDBACK_INTERFACE"/> instance initialized with the provided element.
     /// </summary>
@@ -254,5 +256,4 @@ public sealed partial class SAFETY_FEEDBACK_INTERFACE : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

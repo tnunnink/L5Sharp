@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -19,7 +21,7 @@ public sealed partial class RAC_CODE_DESCRIPTION : StructureData
         Code = new DINT();
         Desc = new STRING();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="RAC_CODE_DESCRIPTION"/> instance initialized with the provided element.
     /// </summary>
@@ -44,5 +46,4 @@ public sealed partial class RAC_CODE_DESCRIPTION : StructureData
         get => GetMember<STRING>();
         set => SetMember(value);
     }
-
 }

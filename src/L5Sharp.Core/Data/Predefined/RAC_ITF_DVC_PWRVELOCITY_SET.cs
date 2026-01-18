@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -20,7 +22,7 @@ public sealed partial class RAC_ITF_DVC_PWRVELOCITY_SET : StructureData
         InhibitCmd = new BOOL();
         InhibitSet = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="RAC_ITF_DVC_PWRVELOCITY_SET"/> instance initialized with the provided element.
     /// </summary>
@@ -54,5 +56,4 @@ public sealed partial class RAC_ITF_DVC_PWRVELOCITY_SET : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

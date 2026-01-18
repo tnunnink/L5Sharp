@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -71,7 +73,7 @@ public sealed partial class P_BOOLEAN_LOGIC : StructureData
         Sts_ErrOutSrcPtr = new BOOL();
         Sts_ErrTimer = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_BOOLEAN_LOGIC"/> instance initialized with the provided element.
     /// </summary>
@@ -564,5 +566,4 @@ public sealed partial class P_BOOLEAN_LOGIC : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

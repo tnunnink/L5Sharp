@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -62,7 +64,7 @@ public sealed partial class TOTALIZER : StructureData
         RTSTimeStampInv = new BOOL();
         DeltaTInv = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="TOTALIZER"/> instance initialized with the provided element.
     /// </summary>
@@ -474,5 +476,4 @@ public sealed partial class TOTALIZER : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

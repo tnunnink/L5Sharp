@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -25,7 +27,7 @@ public sealed partial class UP_DOWN_ACCUM : StructureData
         EnableOut = new BOOL();
         Out = new REAL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="UP_DOWN_ACCUM"/> instance initialized with the provided element.
     /// </summary>
@@ -104,5 +106,4 @@ public sealed partial class UP_DOWN_ACCUM : StructureData
         get => GetMember<REAL>();
         set => SetMember(value);
     }
-
 }

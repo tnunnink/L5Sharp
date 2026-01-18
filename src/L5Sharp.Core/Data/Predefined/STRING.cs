@@ -1,52 +1,53 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
+
+// Auto-generated type definition
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a predefined String Logix data type.
+/// Represents a <c>STRING</c> data type structure.
 /// </summary>
-[LogixData(nameof(STRING))]
-public sealed class STRING : StringData
+[LogixData("STRING")]
+public sealed partial class STRING : StringData
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new <see cref="STRING"/> instance initialized with default values.
+    /// </summary>
+    public STRING() : base("STRING")
+    {
+    }
+    
+    /// <summary>
+    /// Creates a new <see cref="STRING"/> instance initialized with the provided value.
+    /// </summary>
+    public STRING(string value) : base("STRING", value)
+    {
+    }
+    
+    /// <summary>
+    /// Creates a new <see cref="STRING"/> instance initialized with the provided element.
+    /// </summary>
     public STRING(XElement element) : base(element)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new empty <see cref="STRING"/> type.
-    /// </summary>
-    public STRING() : base(nameof(STRING))
-    {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="STRING"/> with the provided value.
-    /// </summary>
-    /// <param name="value">The string value.</param>
-    /// <exception cref="ArgumentNullException"><c>value</c> is null.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <c>value</c> length is greater than the predefined Logix string length of 82 characters.
-    /// </exception>
-    public STRING(string value) : base(nameof(STRING), value)
     {
     }
 
     /// <inheritdoc />
     public override int Capacity => 82;
+    
+    /// <summary>
+    /// Defines an implicit conversion from a <see cref="StringData"/> instance to a <see cref="string"/>.
+    /// </summary>
+    /// <param name="value">The <see cref="StringData"/> instance to be converted.</param>
+    /// <returns>A <see cref="string"/> representation of the <see cref="StringData"/> value.</returns>
+    public static implicit operator string(STRING value) => value.ToString();
 
     /// <summary>
-    /// Converts the provided <see cref="string"/> to a <see cref="STRING"/> value.
+    /// Defines an implicit conversion from a <see cref="STRING"/> instance to a <see cref="string"/>.
     /// </summary>
-    /// <param name="input">The value to convert.</param>
-    /// <returns>A <see cref="STRING"/> type value.</returns>
-    public static implicit operator STRING(string input) => new(input);
-
-    /// <summary>
-    /// Converts the provided <see cref="STRING"/> to a <see cref="string"/> value.
-    /// </summary>
-    /// <param name="input">The value to convert.</param>
-    /// <returns>A <see cref="string"/> type value.</returns>
-    public static implicit operator string(STRING input) => input.ToString();
+    /// <param name="value">The <see cref="STRING"/> instance to be converted.</param>
+    /// <returns>A <see cref="string"/> representation of the <see cref="STRING"/> value.</returns>
+    public static implicit operator STRING(string value) => new(value);
 }

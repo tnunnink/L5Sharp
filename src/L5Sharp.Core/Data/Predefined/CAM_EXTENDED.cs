@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -20,7 +22,7 @@ public sealed partial class CAM_EXTENDED : StructureData
         Slave = new LREAL();
         SegmentType = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="CAM_EXTENDED"/> instance initialized with the provided element.
     /// </summary>
@@ -54,5 +56,4 @@ public sealed partial class CAM_EXTENDED : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -72,7 +74,7 @@ public sealed partial class P_ANALOG_HART : StructureData
         Sts_eSts = new SINT();
         Sts_eFault = new INT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_ANALOG_HART"/> instance initialized with the provided element.
     /// </summary>
@@ -574,5 +576,4 @@ public sealed partial class P_ANALOG_HART : StructureData
         get => GetMember<INT>();
         set => SetMember(value);
     }
-
 }

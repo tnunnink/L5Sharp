@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -20,7 +22,7 @@ public sealed partial class P_HART_CODE_DESC_STATUS : StructureData
         Desc = new STRING_32();
         bSts = new SINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_HART_CODE_DESC_STATUS"/> instance initialized with the provided element.
     /// </summary>
@@ -54,5 +56,4 @@ public sealed partial class P_HART_CODE_DESC_STATUS : StructureData
         get => GetMember<SINT>();
         set => SetMember(value);
     }
-
 }

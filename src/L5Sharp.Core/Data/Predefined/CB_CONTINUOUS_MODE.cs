@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -35,7 +37,7 @@ public sealed partial class CB_CONTINUOUS_MODE : StructureData
         CA = new BOOL();
         DiagnosticCode = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="CB_CONTINUOUS_MODE"/> instance initialized with the provided element.
     /// </summary>
@@ -204,5 +206,4 @@ public sealed partial class CB_CONTINUOUS_MODE : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

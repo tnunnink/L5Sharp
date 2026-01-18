@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -188,7 +190,7 @@ public sealed partial class P_DISCRETE_OUTPUT : StructureData
         XRdy_ResetAckAll = new BOOL();
         Val_Owner = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_DISCRETE_OUTPUT"/> instance initialized with the provided element.
     /// </summary>
@@ -1734,5 +1736,4 @@ public sealed partial class P_DISCRETE_OUTPUT : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

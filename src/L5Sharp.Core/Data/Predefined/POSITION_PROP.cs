@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -48,7 +50,7 @@ public sealed partial class POSITION_PROP : StructureData
         SPPercentInv = new BOOL();
         PositionSpanInv = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="POSITION_PROP"/> instance initialized with the provided element.
     /// </summary>
@@ -334,5 +336,4 @@ public sealed partial class POSITION_PROP : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

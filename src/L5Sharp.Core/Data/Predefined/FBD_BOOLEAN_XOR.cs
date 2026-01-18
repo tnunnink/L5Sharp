@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -22,7 +24,7 @@ public sealed partial class FBD_BOOLEAN_XOR : StructureData
         EnableOut = new BOOL();
         Out = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="FBD_BOOLEAN_XOR"/> instance initialized with the provided element.
     /// </summary>
@@ -74,5 +76,4 @@ public sealed partial class FBD_BOOLEAN_XOR : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

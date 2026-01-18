@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -50,7 +52,7 @@ public sealed partial class SEC_ORDER_CONTROLLER : StructureData
         RTSTimeStampInv = new BOOL();
         DeltaTInv = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="SEC_ORDER_CONTROLLER"/> instance initialized with the provided element.
     /// </summary>
@@ -354,5 +356,4 @@ public sealed partial class SEC_ORDER_CONTROLLER : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

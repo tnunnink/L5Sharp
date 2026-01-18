@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -453,7 +455,7 @@ public sealed partial class MMC : StructureData
         CV3PV2RespTCInv = new BOOL();
         CV3TargetInv = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="MMC"/> instance initialized with the provided element.
     /// </summary>
@@ -4384,5 +4386,4 @@ public sealed partial class MMC : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

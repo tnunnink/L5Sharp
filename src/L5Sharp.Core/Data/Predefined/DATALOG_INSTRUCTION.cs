@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -24,7 +26,7 @@ public sealed partial class DATALOG_INSTRUCTION : StructureData
         IP = new BOOL();
         ERR = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="DATALOG_INSTRUCTION"/> instance initialized with the provided element.
     /// </summary>
@@ -94,5 +96,4 @@ public sealed partial class DATALOG_INSTRUCTION : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

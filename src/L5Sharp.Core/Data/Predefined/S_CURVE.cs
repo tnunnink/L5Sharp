@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -46,7 +48,7 @@ public sealed partial class S_CURVE : StructureData
         RTSTimeStampInv = new BOOL();
         DeltaTInv = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="S_CURVE"/> instance initialized with the provided element.
     /// </summary>
@@ -314,5 +316,4 @@ public sealed partial class S_CURVE : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

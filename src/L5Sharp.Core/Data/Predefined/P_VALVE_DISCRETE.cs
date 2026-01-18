@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -237,7 +239,7 @@ public sealed partial class P_VALVE_DISCRETE : StructureData
         XRdy_Reset = new BOOL();
         XRdy_ResetAckAll = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="P_VALVE_DISCRETE"/> instance initialized with the provided element.
     /// </summary>
@@ -2224,5 +2226,4 @@ public sealed partial class P_VALVE_DISCRETE : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

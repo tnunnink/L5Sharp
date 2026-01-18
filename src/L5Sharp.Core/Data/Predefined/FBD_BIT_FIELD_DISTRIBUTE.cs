@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -25,7 +27,7 @@ public sealed partial class FBD_BIT_FIELD_DISTRIBUTE : StructureData
         EnableOut = new BOOL();
         Dest = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="FBD_BIT_FIELD_DISTRIBUTE"/> instance initialized with the provided element.
     /// </summary>
@@ -104,5 +106,4 @@ public sealed partial class FBD_BIT_FIELD_DISTRIBUTE : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

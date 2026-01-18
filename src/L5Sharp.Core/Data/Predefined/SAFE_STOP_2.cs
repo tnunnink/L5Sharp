@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -43,7 +45,7 @@ public sealed partial class SAFE_STOP_2 : StructureData
         DecelerationRamp = new REAL();
         StandstillSetpoint = new REAL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="SAFE_STOP_2"/> instance initialized with the provided element.
     /// </summary>
@@ -284,5 +286,4 @@ public sealed partial class SAFE_STOP_2 : StructureData
         get => GetMember<REAL>();
         set => SetMember(value);
     }
-
 }

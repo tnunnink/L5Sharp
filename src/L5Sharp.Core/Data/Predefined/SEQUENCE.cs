@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -58,7 +60,7 @@ public sealed partial class SEQUENCE : StructureData
         DefineUSSIValid = new BOOL();
         USSI = new STRING();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="SEQUENCE"/> instance initialized with the provided element.
     /// </summary>
@@ -434,5 +436,4 @@ public sealed partial class SEQUENCE : StructureData
         get => GetMember<STRING>();
         set => SetMember(value);
     }
-
 }

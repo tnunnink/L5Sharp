@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -29,7 +31,7 @@ public sealed partial class FUNCTION_GENERATOR : StructureData
         XY2SizeInv = new BOOL();
         XisOutofOrder = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="FUNCTION_GENERATOR"/> instance initialized with the provided element.
     /// </summary>
@@ -144,5 +146,4 @@ public sealed partial class FUNCTION_GENERATOR : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

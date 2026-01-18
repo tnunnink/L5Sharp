@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -20,7 +22,7 @@ public sealed partial class EXT_ROUTINE_PARAMETERS : StructureData
         ElementCount = new DINT();
         ParamType = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="EXT_ROUTINE_PARAMETERS"/> instance initialized with the provided element.
     /// </summary>
@@ -54,5 +56,4 @@ public sealed partial class EXT_ROUTINE_PARAMETERS : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }

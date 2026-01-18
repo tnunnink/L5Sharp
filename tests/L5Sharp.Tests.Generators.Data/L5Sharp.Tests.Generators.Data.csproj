@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Files\Empty.L5X"/>
+        <!--<AdditionalFiles Include="Files\Empty.L5X"/>-->
         <!--<AdditionalFiles Include="Files\Definitions.L5X"/>-->
         <!--<AdditionalFiles Include="C:\Users\tnunnink\Documents\Rockwell\Template.L5X"/>-->
     </ItemGroup>

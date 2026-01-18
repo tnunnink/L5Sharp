@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -26,7 +28,7 @@ public sealed partial class PHASE_INSTRUCTION : StructureData
         ERR = new INT();
         EXERR = new INT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="PHASE_INSTRUCTION"/> instance initialized with the provided element.
     /// </summary>
@@ -114,5 +116,4 @@ public sealed partial class PHASE_INSTRUCTION : StructureData
         get => GetMember<INT>();
         set => SetMember(value);
     }
-
 }

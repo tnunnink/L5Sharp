@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -33,7 +35,7 @@ public sealed partial class MOTION_INSTRUCTION : StructureData
         SEGMENT = new DINT();
         EXERR = new SINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="MOTION_INSTRUCTION"/> instance initialized with the provided element.
     /// </summary>
@@ -184,5 +186,4 @@ public sealed partial class MOTION_INSTRUCTION : StructureData
         get => GetMember<SINT>();
         set => SetMember(value);
     }
-
 }

@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -34,7 +36,7 @@ public sealed partial class TWO_HAND_RUN_STATION : StructureData
         LBF = new BOOL();
         FP = new BOOL();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="TWO_HAND_RUN_STATION"/> instance initialized with the provided element.
     /// </summary>
@@ -194,5 +196,4 @@ public sealed partial class TWO_HAND_RUN_STATION : StructureData
         get => GetMember<BOOL>();
         set => SetMember(value);
     }
-
 }

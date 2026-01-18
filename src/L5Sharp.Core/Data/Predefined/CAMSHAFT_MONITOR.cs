@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
-// Auto-generated file
+
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
 // ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
@@ -32,7 +34,7 @@ public sealed partial class CAMSHAFT_MONITOR : StructureData
         FaultCode = new DINT();
         DiagnosticCode = new DINT();
     }
-
+    
     /// <summary>
     /// Creates a new <see cref="CAMSHAFT_MONITOR"/> instance initialized with the provided element.
     /// </summary>
@@ -174,5 +176,4 @@ public sealed partial class CAMSHAFT_MONITOR : StructureData
         get => GetMember<DINT>();
         set => SetMember(value);
     }
-
 }
