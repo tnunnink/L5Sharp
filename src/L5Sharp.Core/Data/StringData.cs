@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -69,6 +70,18 @@ public class StringData : LogixData, IEnumerable<char>
     /// This is not tied to the underlying element value for the LEN member when present.
     /// </remarks>
     public int Length => GetLength();
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// String data types don't have members, so this implementation is overriden. Since we know there is a length and
+    /// data member, which we have the data for, we can statically return the serialized byte array for these types.
+    /// </remarks>
+    public override byte[] ToBytes()
+    {
+        var length = BitConverter.GetBytes(Length);
+        var data = Encoding.ASCII.GetBytes(GetString());
+        return length.Concat(data).ToArray();
+    }
 
     /// <inheritdoc />
     public override void Update(LogixData data)

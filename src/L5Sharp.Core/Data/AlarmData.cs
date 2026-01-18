@@ -34,7 +34,7 @@ public abstract class AlarmData : LogixData
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data));
-        
+
         if (data is not AlarmData alarm)
             throw new ArgumentException($"Can not update alarm data with data of type '{data.GetType()}'");
 

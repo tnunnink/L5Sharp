@@ -68,35 +68,22 @@ public abstract class LogixData : LogixElement
     /// The size, in bytes, of the LogixData representation.
     /// </summary>
     /// <value>An <see cref="int"/> value representing the total memory size of the Logix data object.</value>
-    public virtual int Size => 0;
+    public virtual int Size => Members.Sum(m => m.Value.Size);
 
     /// <summary>
-    /// Converts the current instance into a byte array representation.
+    /// Serializes the current <see cref="LogixData"/> instance into a byte array representation.
     /// </summary>
-    /// <returns>An array of bytes representing the current instance.</returns>
-    public virtual byte[] ToBytes()
-    {
-        var data = new List<byte>();
-        var bitNumber = 0;
-
-        foreach (var member in Members)
-        {
-            // Logix packs contiguous booleans into byte chunks, which this code will handle by default.
-            // Any non-standard formatting/layout will need to be handled in derived classes.
-            if (member.Value is BOOL bit)
-            {
-                if (bitNumber == 0) data.Add(0);
-                if (bit.Value) data[data.Count - 1] |= (byte)(1 << bitNumber);
-                bitNumber = (bitNumber + 1) % 8;
-                continue;
-            }
-
-            bitNumber = 0;
-            data.AddRange(member.Value.ToBytes());
-        }
-
-        return data.ToArray();
-    }
+    /// <returns>
+    /// A byte array containing the serialized data from all members of this <see cref="LogixData"/> instance.
+    /// </returns>
+    /// <remarks>
+    /// The default implementation will naively delegate to all nested members recursively to aggregate the bytes for the data type.
+    /// Eventially each atomic type will return the concrete byte data. In most use cases this will work.
+    /// However, Logix will pack contiguous bits (boolean members) into bytes for user-defined types, so if you use this
+    /// method as a means to read/write serialized data to/from real PLC, it might fail or incorrectly update tag buffers.
+    /// My primary use case for this functionality is the internal services and not PLC communication. 
+    /// </remarks>
+    public virtual byte[] ToBytes() => Members.SelectMany(m => m.Value.ToBytes()).ToArray();
 
     /// <summary>
     /// Updates the current instance of the <see cref="LogixData"/> with the data from the specified instance.

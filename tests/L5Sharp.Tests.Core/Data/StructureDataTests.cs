@@ -98,8 +98,8 @@ public class StructureDataTests
     [Test]
     public void ToBytes_SimpleMemberStructure_ShouldHaveExpectedValueANdLength()
     {
-        var expected = new byte[] { 1, 13, };
-        
+        var expected = new byte[] { 1, 13, 232, 3, 0, 0, 144, 64, 241, 146, 56, 3 };
+
         var data = new StructureData("MyComplex", new List<LogixMember>
         {
             new("Member1", new BOOL(true)),

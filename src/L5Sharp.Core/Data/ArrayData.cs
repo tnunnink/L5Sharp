@@ -44,7 +44,7 @@ public class ArrayData : LogixData
     public Radix Radix => GetValue(Radix.Parse) ?? Radix.Null;
 
     /// <inheritdoc />
-    public override int Size => Members.FirstOrDefault()?.Value.Size ?? 0 * Dimensions.Length;
+    public override int Size => Members.Sum(m => m.Value.Size);
 
     /// <summary>
     /// Gets the <see cref="LogixData"/> instance at the specified index.

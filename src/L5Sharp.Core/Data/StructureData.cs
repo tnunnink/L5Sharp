@@ -75,6 +75,31 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     {
         get { return Element.Elements().Select(e => e.Deserialize<LogixData>()).ToArray(); }
     }
+    
+    /// <inheritdoc />
+    public override byte[] ToBytes()
+    {
+        var data = new List<byte>();
+        var bitNumber = 0;
+
+        foreach (var member in Members)
+        {
+            // Logix packs contiguous booleans into byte chunks, which this code will handle by default.
+            // Any non-standard formatting/layout will need to be handled in derived classes.
+            if (member.Value is BOOL bit)
+            {
+                if (bitNumber == 0) data.Add(0);
+                if (bit.Value) data[data.Count - 1] |= (byte)(1 << bitNumber);
+                bitNumber = (bitNumber + 1) % 8;
+                continue;
+            }
+
+            bitNumber = 0;
+            data.AddRange(member.Value.ToBytes());
+        }
+
+        return data.ToArray();
+    }
 
     /// <inheritdoc />
     public override void Update(LogixData data)
@@ -370,7 +395,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     {
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (array is null) throw new ArgumentNullException(nameof(array));
-        
+
         var existing = Element.Elements().SingleOrDefault(m => m.MemberName().IsEquivalent(name));
 
         if (existing is null)
