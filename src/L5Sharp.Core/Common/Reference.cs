@@ -168,7 +168,7 @@ public sealed class Reference
         
         builder.Append(L5XName.Controller);
         builder.AppendIf(Scope, s => s.IsProgram, s => $"/Programs/Program[@Name='{s.Container}']");
-        builder.AppendIf(Scope, s => s.IsRoutine, s => $"/AddOnInstructionDefinitions/AddOnInstructionDefinition[@Name='{s.Container}']");
+        builder.AppendIf(Scope, s => s.IsAoi, s => $"/AddOnInstructionDefinitions/AddOnInstructionDefinition[@Name='{s.Container}']");
         builder.AppendIf(Scope, s => s.IsLogic, s => $"/Routines/Routine[@Name='{s.Routine}']");
         builder.Append(Type.GetXPath(Id));
 

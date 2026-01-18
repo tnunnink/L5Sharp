@@ -102,16 +102,15 @@ public sealed class Scope
     public bool IsProgram => Level == ScopeLevel.Program;
 
     /// <summary>
-    /// Gets a value indicating whether the current <see cref="Scope"/> object represents a routine-level scope.
+    /// Gets a value indicating whether the current <see cref="Scope"/> object represents an Add-On Instruction (AOI).
     /// </summary>
-    /// <remarks>
-    /// A routine-level scope corresponds to AOI components within the L5X file, where the scope This property
-    /// checks if the <see cref="Scope.Level"/> is equal to <see cref="ScopeLevel.Aoi"/>.
-    /// </remarks>
     /// <returns>
-    /// <c>true</c> if the current scope represents a routine level; otherwise, <c>false</c>.
+    /// <c>true</c> if the <see cref="Scope.Level"/> is set to <see cref="ScopeLevel.Aoi"/>; otherwise, <c>false</c>.
     /// </returns>
-    public bool IsRoutine => Level == ScopeLevel.Aoi;
+    /// <remarks>
+    /// This property evaluates the <see cref="Scope.Level"/> of the object to determine if it corresponds to an Add-On Instruction.
+    /// </remarks>
+    public bool IsAoi => Level == ScopeLevel.Aoi;
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="Scope"/> is local.
