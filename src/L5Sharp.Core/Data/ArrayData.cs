@@ -20,7 +20,7 @@ namespace L5Sharp.Core;
 /// </footer>
 [LogixElement(L5XName.Array)]
 [LogixElement(L5XName.ArrayMember)]
-public sealed class ArrayData : LogixData, IEnumerable<LogixData>
+public class ArrayData : LogixData
 {
     /// <inheritdoc />
     public ArrayData(XElement element) : base(element)
@@ -53,7 +53,7 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
     public LogixData this[ushort x]
     {
-        get => GetElement($"[{x}]");
+        get => GetElement<LogixData>($"[{x}]");
         set => SetElement($"[{x}]", value);
     }
 
@@ -65,7 +65,7 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
     public LogixData this[ushort x, ushort y]
     {
-        get => GetElement($"[{x},{y}]");
+        get => GetElement<LogixData>($"[{x},{y}]");
         set => SetElement($"[{x},{y}]", value);
     }
 
@@ -78,7 +78,7 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
     public LogixData this[ushort x, ushort y, ushort z]
     {
-        get => GetElement($"[{x},{y},{z}]");
+        get => GetElement<LogixData>($"[{x},{y},{z}]");
         set => SetElement($"[{x},{y},{z}]", value);
     }
 
@@ -115,25 +115,11 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
         return offset;
     }
 
-    /// <summary>
-    /// Creates a new instance of <see cref="ArrayData"/> with the specified data type and dimensions.
-    /// </summary>
-    /// <param name="dataType">The data type of the array elements.</param>
-    /// <param name="dimensions">The dimensions defining the size of the array. Must not be null.</param>
-    /// <returns>A new instance of <see cref="ArrayData"/> representing the created array.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="dimensions"/> parameter is null.</exception>
-    public static ArrayData New(string dataType, Dimensions dimensions)
-    {
-        if (dimensions is null)
-            throw new ArgumentNullException(nameof(dimensions));
-
-        var seed = LogixType.CreateOrDefault(dataType);
-
-        return new ArrayData(CreateArray(seed, dimensions));
-    }
+    /// <inheritdoc />
+    public override string ToString() => $"{Name}{Dimensions.ToIndex()}";
 
     /// <summary>
-    /// Creates a new instance of the <see cref="ArrayData"/> class with the specified data type and dimensions.
+    /// Creates a new instance of the <see cref="ArrayData"/> class with the specified seed data type and dimensions.
     /// </summary>
     /// <param name="dataType">The <see cref="LogixData"/> that specifies the type of the array elements.</param>
     /// <param name="dimensions">The <see cref="Dimensions"/> that defines the structure of the array.</param>
@@ -141,148 +127,21 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="dataType"/> or <paramref name="dimensions"/> is null.</exception>
     public static ArrayData New(LogixData dataType, Dimensions dimensions)
     {
-        if (dimensions is null)
-            throw new ArgumentNullException(nameof(dimensions));
+        if (dataType is null) throw new ArgumentNullException(nameof(dataType));
+        if (dimensions is null) throw new ArgumentNullException(nameof(dimensions));
 
-        if (dataType is null)
-            throw new ArgumentNullException(nameof(dataType));
+        var element = new XElement(L5XName.Array);
+        element.Add(new XAttribute(L5XName.DataType, dataType.Name));
+        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
 
-        return new ArrayData(CreateArray(dataType, dimensions));
+        if (dataType is AtomicData atomic)
+            element.Add(new XAttribute(L5XName.Radix, atomic.Radix));
+
+        var elements = dimensions.Indices().Select(i => CreateArrayElement(i, (LogixData)dataType.Clone()));
+        element.Add(elements);
+
+        return new ArrayData(element);
     }
-
-    /// <summary>
-    /// Creates a new instance of <see cref="ArrayData"/> with the specified dimensions and element data type.
-    /// </summary>
-    /// <typeparam name="TData">The type of <see cref="LogixData"/> elements contained in the array.</typeparam>
-    /// <param name="dimensions">The dimensions of the array to be created.</param>
-    /// <returns>A new <see cref="ArrayData"/> instance with the specified dimensions and element type.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="dimensions"/> parameter is null.</exception>
-    public static ArrayData New<TData>(Dimensions dimensions) where TData : LogixData, new()
-    {
-        if (dimensions is null)
-            throw new ArgumentNullException(nameof(dimensions));
-
-        return new ArrayData(CreateArray(new TData(), dimensions));
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ArrayData"/> instance from the specified array of elements.
-    /// </summary>
-    /// <typeparam name="TData">The type of <see cref="LogixData"/> elements contained in the array.</typeparam>
-    /// <param name="array">The array of <typeparamref name="TData"/> elements to create the <see cref="ArrayData"/> from.</param>
-    /// <returns>A new <see cref="ArrayData"/> instance containing the specified elements.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="array"/> is null.</exception>
-    public static ArrayData New<TData>(TData[] array) where TData : LogixData, new()
-    {
-        return new ArrayData(CreateArray<TData>(array));
-    }
-
-    /// <summary>
-    /// Creates a new instance of <see cref="ArrayData"/> from a two-dimensional array of a specified data type.
-    /// </summary>
-    /// <typeparam name="TData">The type of elements in the array.</typeparam>
-    /// <param name="array">The two-dimensional array of data to create the <see cref="ArrayData"/> instance from.</param>
-    /// <returns>A new <see cref="ArrayData"/> instance containing the provided data.</returns>
-    public static ArrayData New<TData>(TData[,] array) where TData : LogixData, new()
-    {
-        return new ArrayData(CreateArray<TData>(array));
-    }
-
-    /// <summary>
-    /// Creates a new instance of <see cref="ArrayData"/> from the specified multidimensional array of LogixData.
-    /// </summary>
-    /// <typeparam name="TData">The type of elements in the array.</typeparam>
-    /// <param name="array">A three-dimensional array of LogixData from which to create the ArrayData.</param>
-    /// <returns>A new instance of <see cref="ArrayData"/> filled with the data from the specified array.</returns>
-    public static ArrayData New<TData>(TData[,,] array) where TData : LogixData, new()
-    {
-        return new ArrayData(CreateArray<TData>(array));
-    }
-
-    /// <inheritdoc />
-    public IEnumerator<LogixData> GetEnumerator() => Members.Select(m => m.Value).GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    /// <inheritdoc />
-    public override string ToString() => $"{Name}{Dimensions.ToIndex()}";
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(BOOL[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(SINT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(USINT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(INT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(UINT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(DINT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(UDINT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(LINT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(ULINT[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(REAL[] value) => New(value);
-
-    /// <summary>
-    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator ArrayData(LREAL[] value) => New(value);
 
     /// <summary>
     /// Handles getting the logix type at the specified index of the current array from the underlying member collection. 
@@ -290,7 +149,7 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// <param name="index">The index at which to get the type.</param>
     /// <returns>A <see cref="LogixData"/> at the specified index.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
-    private LogixData GetElement(string index)
+    protected TData GetElement<TData>(string index) where TData : LogixData
     {
         var element = Element.Elements().SingleOrDefault(m => m.MemberName() == index);
 
@@ -298,7 +157,7 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
             throw new ArgumentOutOfRangeException(nameof(index),
                 $"The index '{index}' is outside the bound of the array.");
 
-        return element.Deserialize<LogixData>();
+        return element.Deserialize<TData>();
     }
 
     /// <summary>
@@ -307,7 +166,7 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
     /// <param name="index">The index at which to set the type.</param>
     /// <param name="value">The logix type value to set.</param>
     /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
-    private void SetElement(string index, LogixData value)
+    protected void SetElement<TData>(string index, TData value) where TData : LogixData
     {
         if (value is null)
             throw new ArgumentNullException(nameof(value));
@@ -318,57 +177,14 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
             throw new ArgumentOutOfRangeException(nameof(index),
                 $"The index '{index}' is outside the bound of the array.");
 
-        element.Deserialize<LogixData>().Update(value);
-    }
-
-    /// <summary>
-    /// Creates a new array data element with the provided data type name and dimensions. This method will use the base
-    /// static factory to create a seed <see cref="LogixData"/> instance, and use that along with the dimensions to
-    /// generate a default array element. 
-    /// </summary>
-    private static XElement CreateArray(LogixData seed, Dimensions dimensions)
-    {
-        var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, seed.Name));
-        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
-        if (seed is AtomicData atomic) element.Add(new XAttribute(L5XName.Radix, atomic.Radix));
-
-        var elements = dimensions.Indices().Select(i => CreateArrayElement(i, seed));
-        element.Add(elements);
-
-        return element;
-    }
-
-    /// <summary>
-    /// Creates a new array data structure element with the provided array object. This method will
-    /// determine the dimensions from the provided array. It will also use the first item in the array
-    /// to seed the data type name and radix if available. If this collection contains no items, we will resort
-    /// to the type name of the array element type.
-    /// </summary>
-    private static XElement CreateArray<TData>(Array array) where TData : LogixData, new()
-    {
-        var name = LogixType.NameFor(typeof(TData));
-        var dimensions = Dimensions.FromArray(array);
-        var radix = Radix.Default(typeof(TData));
-
-        var element = new XElement(L5XName.Array);
-        element.Add(new XAttribute(L5XName.DataType, name));
-        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
-
-        if (radix != Radix.Null)
-            element.Add(new XAttribute(L5XName.Radix, radix));
-
-        var elements = dimensions.Indices().Zip(array.Cast<TData>(), (i, d) => CreateArrayElement(i, d ?? new TData()));
-        element.Add(elements);
-
-        return element;
+        element.Deserialize<TData>().Update(value);
     }
 
     /// <summary>
     /// Creates an array index element with the provided index string and logix type data object.
     /// The format of the element will depend on the logix type provided, atomic, string, or structure.
     /// </summary>
-    private static XElement CreateArrayElement(string index, LogixData data)
+    protected static XElement CreateArrayElement(string index, LogixData data)
     {
         var element = new XElement(L5XName.Element, new XAttribute(L5XName.Index, index));
 
@@ -390,75 +206,174 @@ public sealed class ArrayData : LogixData, IEnumerable<LogixData>
 }
 
 /// <summary>
-/// Provides extension methods for working with <see cref="ArrayData"/> objects, enabling streamlined
-/// creation and manipulation of array-based Logix data structures.
+/// Represents a Logix array of data elements, supporting multidimensional indexing and implicit
+/// conversions from standard array types. Provides functionality to define and handle Logix data
+/// structures with specific dimensions and types.
 /// </summary>
 /// <remarks>
-/// The methods within this class facilitate operations such as converting collections into
-/// <see cref="ArrayData"/> instances and enhancing array-related functionalities.
+/// This class allows for flexible initialization of array data, including one-dimensional,
+/// two-dimensional, and three-dimensional structures. Indexed properties provide access to elements
+/// of the array, and enumerable functionality enables iteration over data elements.
 /// </remarks>
-public static class ArrayDataExtensions
+public sealed class ArrayData<TData> : ArrayData, IEnumerable<TData> where TData : LogixData, new()
 {
-    /// <summary>
-    /// Converts an enumerable collection of items into an instance of <see cref="ArrayData"/>.
-    /// </summary>
-    /// <param name="items">The collection of items to be converted into an <see cref="ArrayData"/> object.
-    /// Each item must be a type derived from <see cref="LogixData"/>.</param>
-    /// <typeparam name="TData">The type of the items in the collection, which must inherit from <see cref="LogixData"/> and have a parameterless constructor.</typeparam>
-    /// <returns>An instance of <see cref="ArrayData"/> that encapsulates the provided collection of items.</returns>
-    public static ArrayData ToArrayData<TData>(this IEnumerable<TData> items) where TData : LogixData, new()
+    /// <inheritdoc />
+    public ArrayData(XElement element) : base(element)
     {
-        return ArrayData.New(items.ToArray());
     }
 
     /// <summary>
-    /// Converts the specified one-dimensional array of items into a new <see cref="ArrayData"/> instance.
+    /// Initializes a new instance of the <see cref="ArrayData{TData}"/> class with the specified dimensions.
     /// </summary>
-    /// <typeparam name="TData">The type of elements in the array. Must be a subclass of <see cref="LogixData"/> and have a parameterless constructor.</typeparam>
-    /// <param name="items">The one-dimensional array of items to be converted into an <see cref="ArrayData"/> instance.</param>
-    /// <returns>A new <see cref="ArrayData"/> instance that represents the provided array of items.</returns>
-    public static ArrayData ToArrayData<TData>(this TData[] items) where TData : LogixData, new()
+    /// <param name="dimensions">The dimensions that define the structure of the array.</param>
+    /// <remarks>
+    /// Creates an array of <typeparamref name="TData"/> elements with the specified dimensions,
+    /// where each element is initialized to a new instance of <typeparamref name="TData"/>.
+    /// </remarks>
+    public ArrayData(Dimensions dimensions) : base(CreateArray(dimensions))
     {
-        return ArrayData.New(items);
     }
 
     /// <summary>
-    /// Converts a multidimensional array of <typeparamref name="TData"/> into a new instance of <see cref="ArrayData"/>.
+    /// Initializes a new instance of the <see cref="ArrayData{TData}"/> class with a one-dimensional array.
     /// </summary>
-    /// <param name="items">The multidimensional array containing elements of type <typeparamref name="TData"/> to convert.</param>
-    /// <typeparam name="TData">The data type of elements contained in the array, which must derive from <see cref="LogixData"/>.</typeparam>
-    /// <returns>A new <see cref="ArrayData"/> instance populated with the provided array elements.</returns>
-    public static ArrayData ToArrayData<TData>(this TData[,] items) where TData : LogixData, new()
+    /// <param name="array">A one-dimensional array of <typeparamref name="TData"/> elements to initialize the array data.</param>
+    /// <remarks>
+    /// Creates an <see cref="ArrayData{TData}"/> from the provided one-dimensional array,
+    /// preserving the array's length and element values.
+    /// </remarks>
+    public ArrayData(TData[] array) : base(CreateArray(array))
     {
-        return ArrayData.New(items);
     }
 
     /// <summary>
-    /// Converts a three-dimensional array of items into a new <see cref="ArrayData"/> instance.
+    /// Initializes a new instance of the <see cref="ArrayData{TData}"/> class with a two-dimensional array.
     /// </summary>
-    /// <param name="items">The three-dimensional array of <typeparamref name="TData"/> to be converted.</param>
-    /// <typeparam name="TData">The type of the items in the array, inheriting from <see cref="LogixData"/>.</typeparam>
-    /// <returns>A new <see cref="ArrayData"/> instance containing the provided items.</returns>
-    public static ArrayData ToArrayData<TData>(this TData[,,] items) where TData : LogixData, new()
+    /// <param name="array">A two-dimensional array of <typeparamref name="TData"/> elements to initialize the array data.</param>
+    /// <remarks>
+    /// Creates an <see cref="ArrayData{TData}"/> from the provided two-dimensional array,
+    /// preserving the array's dimensions and element values.
+    /// </remarks>
+    public ArrayData(TData[,] array) : base(CreateArray(array))
     {
-        return ArrayData.New(items);
     }
 
     /// <summary>
-    /// Updates the array of <typeparamref name="TData"/> objects using the provided byte array and offset.
+    /// Initializes a new instance of the <see cref="ArrayData{TData}"/> class with a three-dimensional array.
     /// </summary>
-    /// <typeparam name="TData">The type of the data, which must derive from <see cref="LogixData"/> and have a parameterless constructor.</typeparam>
-    /// <param name="array">The array of <typeparamref name="TData"/> objects to be updated.</param>
-    /// <param name="data">The byte array containing the data to update the objects with.</param>
-    /// <param name="offset">The starting position in the byte array from which to begin the update.</param>
-    /// <returns>The offset after processing all elements in the array.</returns>
-    public static int Update<TData>(this TData[] array, byte[] data, int offset) where TData : LogixData, new()
+    /// <param name="array">A three-dimensional array of <typeparamref name="TData"/> elements to initialize the array data.</param>
+    /// <remarks>
+    /// Creates an <see cref="ArrayData{TData}"/> from the provided three-dimensional array,
+    /// preserving the array's dimensions and element values.
+    /// </remarks>
+    public ArrayData(TData[,,] array) : base(CreateArray(array))
     {
-        foreach (var item in array)
-        {
-            offset = item.Update(data, offset);
-        }
+    }
 
-        return offset;
+    /// <summary>
+    /// Gets the <see cref="LogixData"/> instance at the specified index.
+    /// </summary>
+    /// <param name="x">The index of the array element</param>
+    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
+    public new TData this[ushort x]
+    {
+        get => GetElement<TData>($"[{x}]");
+        set => SetElement($"[{x}]", value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="LogixData"/> instance at the specified index.
+    /// </summary>
+    /// <param name="x">The x index of the array element</param>
+    /// <param name="y">The y index of the array element</param>
+    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
+    public new TData this[ushort x, ushort y]
+    {
+        get => GetElement<TData>($"[{x},{y}]");
+        set => SetElement($"[{x},{y}]", value);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="LogixData"/> instance at the specified index.
+    /// </summary>
+    /// <param name="x">The x index of the array element</param>
+    /// <param name="y">The y index of the array element</param>
+    /// <param name="z">The z index of the array element</param>
+    /// <exception cref="ArgumentOutOfRangeException"><c>index</c> is out of range of the array.</exception>
+    public new TData this[ushort x, ushort y, ushort z]
+    {
+        get => GetElement<TData>($"[{x},{y},{z}]");
+        set => SetElement($"[{x},{y},{z}]", value);
+    }
+
+    /// <summary>
+    /// Implicitly converts the provided array of logix type objects to an <see cref="ArrayData{TLogixType}"/>.
+    /// </summary>
+    /// <param name="array"></param>
+    /// <returns>A new <see cref="ArrayData{TLogixType}"/> containing the elements of the provided array.</returns>
+    public static implicit operator ArrayData<TData>(TData[] array) => new(array);
+
+    /// <summary>
+    /// Implicitly converts the provided array of logix type objects to an <see cref="ArrayData{TLogixType}"/>.
+    /// </summary>
+    /// <param name="array"></param>
+    /// <returns>A new <see cref="ArrayData{TLogixType}"/> containing the elements of the provided array.</returns>
+    public static implicit operator ArrayData<TData>(TData[,] array) => new(array);
+
+    /// <summary>
+    /// Implicitly converts the provided array of logix type objects to an <see cref="ArrayData{TLogixType}"/>.
+    /// </summary>
+    /// <param name="array"></param>
+    /// <returns>A new <see cref="ArrayData{TLogixType}"/> containing the elements of the provided array.</returns>
+    public static implicit operator ArrayData<TData>(TData[,,] array) => new(array);
+
+    /// <inheritdoc />
+    public IEnumerator<TData> GetEnumerator() => Members.Select(m => m.Value.As<TData>()).GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    /// <summary>
+    /// Creates an XML element representing an array structure with the specified dimensions
+    /// and type info specified by the generic type parameter.
+    /// </summary>
+    private static XElement CreateArray(Dimensions dimensions)
+    {
+        var name = LogixType.NameFor(typeof(TData));
+        var radix = Radix.Default(typeof(TData));
+
+        var element = new XElement(L5XName.Array);
+        element.Add(new XAttribute(L5XName.DataType, name));
+        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
+
+        if (radix != Radix.Null)
+            element.Add(new XAttribute(L5XName.Radix, radix));
+
+        var elements = dimensions.Indices().Select(i => CreateArrayElement(i, new TData()));
+        element.Add(elements);
+
+        return element;
+    }
+
+    /// <summary>
+    /// Creates an XML representation of the specified array, including its data type, dimensions,
+    /// and optionally its radix, and populates it with elements derived from the array data.
+    /// </summary>
+    private static XElement CreateArray(Array array)
+    {
+        var name = LogixType.NameFor(typeof(TData));
+        var dimensions = Dimensions.FromArray(array);
+        var radix = Radix.Default(typeof(TData));
+
+        var element = new XElement(L5XName.Array);
+        element.Add(new XAttribute(L5XName.DataType, name));
+        element.Add(new XAttribute(L5XName.Dimensions, dimensions));
+
+        if (radix != Radix.Null)
+            element.Add(new XAttribute(L5XName.Radix, radix));
+
+        var elements = dimensions.Indices().Zip(array.Cast<TData>(), (i, d) => CreateArrayElement(i, d ?? new TData()));
+        element.Add(elements);
+
+        return element;
     }
 }
