@@ -289,26 +289,6 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     }
 
     /// <summary>
-    /// Retrieves an array of elements of type <typeparamref name="TData"/> from the structure data element.
-    /// </summary>
-    /// <typeparam name="TData">The specific type of elements to retrieve.</typeparam>
-    /// <param name="name">The name of the array member associated with the data. Defaults to the caller's member name.</param>
-    /// <returns>An array of elements of type <typeparamref name="TData"/>.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when no member with the specified <paramref name="name"/> exists or when the member is not an array.</exception>
-    protected TData[] GetArray<TData>([CallerMemberName] string? name = null) where TData : LogixData
-    {
-        var element = Element.Elements().SingleOrDefault(m => m.MemberName().IsEquivalent(name));
-
-        if (element is null)
-            throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
-
-        if (element.Name.LocalName is not L5XName.ArrayMember)
-            throw new InvalidOperationException($"Member '{name}' is not an array member element.");
-
-        return element.Deserialize<LogixData>().As<ArrayData>().Cast<TData>().ToArray();
-    }
-
-    /// <summary>
     /// Adds or updates the value for the specified member of the <see cref="StructureData"/> type.  
     /// </summary>
     /// <param name="value">The value to set.</param>
@@ -346,6 +326,27 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     }
 
     /// <summary>
+    /// Retrieves an array of elements of type <typeparamref name="TData"/> from the structure data element.
+    /// </summary>
+    /// <typeparam name="TData">The specific type of elements to retrieve.</typeparam>
+    /// <param name="name">The name of the array member associated with the data. Defaults to the caller's member name.</param>
+    /// <returns>An array of elements of type <typeparamref name="TData"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no member with the specified <paramref name="name"/> exists or when the member is not an array.</exception>
+    protected ArrayData<TData> GetArray<TData>([CallerMemberName] string? name = null)
+        where TData : LogixData, new()
+    {
+        var element = Element.Elements().SingleOrDefault(m => m.MemberName().IsEquivalent(name));
+
+        if (element is null)
+            throw new InvalidOperationException($"No member with name '{name}' exists for type {Name}");
+
+        if (element.Name.LocalName is not L5XName.ArrayMember)
+            throw new InvalidOperationException($"Member '{name}' is not an array member element.");
+
+        return element.Deserialize<ArrayData<TData>>();
+    }
+
+    /// <summary>
     /// Adds or updates the array for the specified member of the <see cref="StructureData"/> type.
     /// </summary>
     /// <typeparam name="TData">The data type of the elements in the array, derived from <see cref="LogixData"/>.</typeparam>
@@ -364,22 +365,22 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     /// Note that the order in which members exist in the underlying collection matters when importing logix type tag data.
     /// </para>
     /// </remarks>
-    protected void SetArray<TData>(TData[] array, [CallerMemberName] string? name = null) where TData : LogixData, new()
+    protected void SetArray<TData>(ArrayData<TData> array, [CallerMemberName] string? name = null)
+        where TData : LogixData, new()
     {
         if (name is null) throw new ArgumentNullException(nameof(name));
         if (array is null) throw new ArgumentNullException(nameof(array));
-
-        var data = array.ToArrayData();
+        
         var existing = Element.Elements().SingleOrDefault(m => m.MemberName().IsEquivalent(name));
 
         if (existing is null)
         {
-            var member = new LogixMember(name, data);
+            var member = new LogixMember(name, array);
             Element.Add(member.Serialize());
             return;
         }
 
-        existing.Deserialize<LogixData>().Update(data);
+        existing.Deserialize<ArrayData<TData>>().Update(array);
     }
 
     /// <summary>
