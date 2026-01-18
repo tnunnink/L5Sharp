@@ -556,18 +556,18 @@ public class TagTests
     [Test]
     public void SetValue_StructureArrayType_ShouldHaveExpectedValues()
     {
-        var tag = new Tag { Name = "Test", Value = ArrayData.New<TIMER>(4) };
+        var tag = new Tag { Name = "Test", Value = new ArrayData<TIMER>(4) };
 
-        tag.Value = ArrayData.New<TIMER>([
+        tag.Value = new ArrayData<TIMER>([
             new TIMER { PRE = 100 },
             new TIMER { PRE = 200 },
             new TIMER { PRE = 300 }
         ]);
 
-        tag.Value.As<ArrayData>().Should().HaveCount(4);
-        tag.Value.As<ArrayData>()[0].As<TIMER>().PRE.Should().Be(100);
-        tag.Value.As<ArrayData>()[1].As<TIMER>().PRE.Should().Be(200);
-        tag.Value.As<ArrayData>()[2].As<TIMER>().PRE.Should().Be(300);
+        tag.Value.As<ArrayData<TIMER>>().Should().HaveCount(4);
+        tag.Value.As<ArrayData<TIMER>>()[0].PRE.Should().Be(100);
+        tag.Value.As<ArrayData<TIMER>>()[1].PRE.Should().Be(200);
+        tag.Value.As<ArrayData<TIMER>>()[2].PRE.Should().Be(300);
     }
 
     [Test]
@@ -1126,16 +1126,6 @@ public class TagTests
             .Build();
 
         return VerifyXml(tag.Serialize().ToString());
-    }
-
-    [Test]
-    public void METHOD()
-    {
-        var tag = Tag.New<MyNestedData>("Tag");
-
-        var flags = tag.Value.As<MyNestedData>().Flags;
-
-        flags[5] = true;
     }
 
     [Test]

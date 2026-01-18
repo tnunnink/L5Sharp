@@ -14,7 +14,7 @@ public class ScopeTests
         scope.Container.Should().BeEmpty();
         scope.IsController.Should().BeFalse();
         scope.IsProgram.Should().BeFalse();
-        scope.IsRoutine.Should().BeFalse();
+        scope.IsAoi.Should().BeFalse();
         scope.IsLocal.Should().BeFalse();
         scope.IsLogic.Should().BeFalse();
     }
@@ -28,7 +28,7 @@ public class ScopeTests
         scope.Container.Should().BeEmpty();
         scope.IsController.Should().BeTrue();
         scope.IsProgram.Should().BeFalse();
-        scope.IsRoutine.Should().BeFalse();
+        scope.IsAoi.Should().BeFalse();
         scope.IsLocal.Should().BeFalse();
         scope.IsLogic.Should().BeFalse();
     }
@@ -42,7 +42,7 @@ public class ScopeTests
         scope.Container.Should().Be("MyProgram");
         scope.IsController.Should().BeFalse();
         scope.IsProgram.Should().BeTrue();
-        scope.IsRoutine.Should().BeFalse();
+        scope.IsAoi.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
         scope.IsLogic.Should().BeFalse();
     }
@@ -56,7 +56,7 @@ public class ScopeTests
         scope.Container.Should().Be("MyAoi");
         scope.IsController.Should().BeFalse();
         scope.IsProgram.Should().BeFalse();
-        scope.IsRoutine.Should().BeTrue();
+        scope.IsAoi.Should().BeTrue();
         scope.IsLocal.Should().BeTrue();
     }
 
@@ -108,5 +108,85 @@ public class ScopeTests
         var result = scope.IsIn(string.Empty);
 
         result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsVisibleTo_ControllerToController_ShouldBeTrue()
+    {
+        var scope = Scope.Controller;
+
+        var result = scope.IsVisibleTo(Scope.Controller);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsVisibleTo_ControllerToProgram_ShouldBeTrue()
+    {
+        var scope = Scope.Controller;
+
+        var result = scope.IsVisibleTo(Scope.Program("DoesNotMatter"));
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsVisibleTo_ProgramToController_ShouldBeTrue()
+    {
+        var scope = Scope.Program("MyProgram");
+
+        var result = scope.IsVisibleTo(Scope.Controller);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsVisibleTo_ProgramToSameProgramScope_ShouldBeTrue()
+    {
+        var scope = Scope.Program("MyProgram");
+
+        var result = scope.IsVisibleTo(Scope.Program("MyProgram"));
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsVisibleTo_DifferentScope_ShouldBeFalse()
+    {
+        var scope = Scope.Program("MyProgram");
+
+        var result = scope.IsVisibleTo(Scope.Program("OtherProgram"));
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void IsLocalTo_SameProgram_ShouldBeTrue()
+    {
+        var scope = Scope.Program("MyProgram");
+
+        var result = scope.IsLocalTo(Scope.Program("MyProgram"));
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void IsLocalTo_DifferentProgram_ShouldBeFalse()
+    {
+        var scope = Scope.Program("MyProgram");
+
+        var result = scope.IsLocalTo(Scope.Program("OtherProgram"));
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void IsLocalTo_Controller_ShouldBeFalse()
+    {
+        var scope = Scope.Program("MyProgram");
+
+        var result = scope.IsLocalTo(Scope.Controller);
+
+        result.Should().BeFalse();
     }
 }

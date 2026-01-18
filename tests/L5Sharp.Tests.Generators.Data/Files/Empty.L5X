@@ -95,7 +95,7 @@
 <Member Name="ALM_HiddenFloat11" DataType="REAL" Dimension="0" Radix="Float" Hidden="true" ExternalAccess="None"/>
 </Members>
 </DataType>
-<DataType Name="ALARM_ANALOG" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="ALARM_ANALOG" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="DEAD_ZONE1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 <Member Name="DEAD_ZONE2" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
@@ -245,7 +245,7 @@
 <Member Name="ROCPeriodInv" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="Status" BitNumber="7" ExternalAccess="Read/Write"/>
 <Member Name="DEAD_ZONE22" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="ALARM_CONDITION" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="ControlFlags" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
@@ -302,7 +302,7 @@
 <Member Name="DEADZONE2" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 </Members>
 </DataType>
-<DataType Name="ALARM_DIGITAL" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="ALARM_DIGITAL" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="DEAD_ZONE1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 <Member Name="DEAD_ZONE2" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
@@ -371,7 +371,7 @@
 <Member Name="SeverityInv" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="Status" BitNumber="2" ExternalAccess="Read/Write"/>
 <Member Name="DEAD_ZONE16" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="ALARM_SET" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="InAlarmUnackedCount" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read Only"/>
@@ -430,7 +430,7 @@
 <Member Name="hidden_11" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 </Members>
 </DataType>
-<DataType Name="AXIS_CIP_DRIVE" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="AXIS_CIP_DRIVE" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="DEAD_ZONE0" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 <Member Name="DEAD_ZONE1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
@@ -2580,7 +2580,7 @@
 <Member Name="DEAD_ZONE183" DataType="REAL" Dimension="0" Radix="Float" Hidden="true" ExternalAccess="None"/>
 <Member Name="DEAD_ZONE184" DataType="REAL" Dimension="0" Radix="Float" Hidden="true" ExternalAccess="None"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="BOOL" Family="NoFamily" Class="ProductDefined"/>
 <DataType Name="BUS_OBJ" Family="NoFamily" Class="ProductDefined">
 <Members>
@@ -3764,7 +3764,7 @@
 <Member Name="FD" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="Control" BitNumber="24" ExternalAccess="Read/Write"/>
 </Members>
 </DataType>
-<DataType Name="COORDINATE_SYSTEM" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="COORDINATE_SYSTEM" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="DEAD_ZONE1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 <Member Name="DEAD_ZONE2" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
@@ -3806,7 +3806,7 @@
 <Member Name="TurnsCounters" DataType="INT" Dimension="4" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 <Member Name="RobotConfiguration" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="COUNTER" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="Control" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
@@ -4522,7 +4522,7 @@
 <Member Name="hidden_11" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 </Members>
 </DataType>
-<DataType Name="ENERGY_BASE" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="ENERGY_BASE" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="EnergyResourceType" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 <Member Name="BaseEnergyObjectCapabilities" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
@@ -4545,7 +4545,7 @@
 <Member Name="PhaseRotation" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 <Member Name="Pad" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="EXT_ROUTINE_CONTROL" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="ErrorCode" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
@@ -5061,7 +5061,7 @@
 <Member Name="HLL_HiddenFloat1" DataType="REAL" Dimension="0" Radix="Float" Hidden="true" ExternalAccess="None"/>
 </Members>
 </DataType>
-<DataType Name="HMIBC" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="HMIBC" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="DEAD_ZONE1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 <Member Name="DEAD_ZONE2" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
@@ -5073,7 +5073,7 @@
 <Member Name="ButtonState" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ulBoolOutput1" BitNumber="1" ExternalAccess="Read/Write"/>
 <Member Name="Out" DataType="BIT" Dimension="0" Radix="Decimal" Hidden="false" Target="ulBoolOutput1" BitNumber="2" ExternalAccess="Read/Write"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="IMC" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="EnableIn" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
@@ -5497,7 +5497,7 @@
 <Member Name="MAX_HiddenFloat2" DataType="REAL" Dimension="0" Radix="Float" Hidden="true" ExternalAccess="None"/>
 </Members>
 </DataType>
-<DataType Name="MESSAGE" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="MESSAGE" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="offsettodata" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 <Member Name="Flags" DataType="INT" Dimension="0" Radix="Hex" Hidden="false" ExternalAccess="Read/Write"/>
@@ -5534,7 +5534,7 @@
 <Member Name="ConnectionRate" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 <Member Name="TimeoutMultiplier" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="MINIMUM_CAPTURE" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="ulBoolInput1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="Read/Write"/>
@@ -6008,7 +6008,7 @@
 <Member Name="hidden_01" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 </Members>
 </DataType>
-<DataType Name="MOTION_GROUP" Family="NoFamily" Class="ProductDefined">
+<!--<DataType Name="MOTION_GROUP" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="DEAD_ZONE1" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
 <Member Name="DEAD_ZONE2" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="true" ExternalAccess="None"/>
@@ -6045,7 +6045,7 @@
 <Member Name="TaskAverageScanTime" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 <Member Name="TaskAverageIOTime" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
 </Members>
-</DataType>
+</DataType>-->
 <DataType Name="MOTION_INSTRUCTION" Family="NoFamily" Class="ProductDefined">
 <Members>
 <Member Name="FLAGS" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>

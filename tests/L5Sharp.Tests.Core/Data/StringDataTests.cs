@@ -9,13 +9,13 @@ public class StringDataTests
     [Test]
     public void New_NullElement_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new StringData((XElement)null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => new StringData(null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
-    public void New_NullValue_ShouldThrowException()
+    public void New_NullName_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new StringData((string)null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => new StringData((string)null!)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -25,11 +25,11 @@ public class StringDataTests
     }
 
     [Test]
-    public void New_EmptyValue_ShouldBeEmpty()
+    public void New_NameAndEmptyValue_ShouldBeEmpty()
     {
-        var data = new StringData(string.Empty);
+        var data = new StringData("MyString", string.Empty);
 
-        data.Name.Should().Be(nameof(StringData));
+        data.Name.Should().Be("MyString");
         data.Members.Should().BeEmpty();
         data.Should().BeEmpty();
     }
@@ -37,37 +37,16 @@ public class StringDataTests
     [Test]
     public void New_ValueOverload_ShouldBeExpected()
     {
-        var data = new StringData("This is the value");
+        var data = new StringData("MyString", "This is the value");
 
-        data.Name.Should().Be(nameof(StringData));
-        data.Members.Should().BeEmpty();
+        data.Name.Should().Be("MyString");
         data.Should().BeEquivalentTo("This is the value");
     }
 
     [Test]
-    public void New_NameAndValueOverload_ShouldBeExpected()
-    {
-        var data = new StringData("MyStringType", "This is the test value");
-
-        data.Name.Should().Be("MyStringType");
-        data.Should().BeEquivalentTo("This is the test value");
-    }
-
-    [Test]
-    public void ImplicitConversion_ValidString_ShouldBeExpected()
-    {
-        StringData data = "This is a test";
-
-        data.Name.Should().Be(nameof(StringData));
-        data.Should().BeOfType<StringData>();
-        data.Should().BeEquivalentTo("This is a test");
-    }
-
-
-    [Test]
     public void ToString_Empty_ShouldBeExpected()
     {
-        var data = new StringData(string.Empty);
+        var data = new StringData("MyString", string.Empty);
 
         var value = data.ToString();
 
@@ -77,7 +56,7 @@ public class StringDataTests
     [Test]
     public void ToString_ValueNoSpecialCharacters_ShouldBeExpected()
     {
-        var data = new StringData("This is a test");
+        var data = new StringData("MyString", "This is a test");
 
         var value = data.ToString();
 
@@ -87,7 +66,7 @@ public class StringDataTests
     [Test]
     public void ToString_ValueSpecialCharacters_ShouldBeExpected()
     {
-        var data = new StringData("This is a $'special character$' test");
+        var data = new StringData("MyString", "This is a $'special character$' test");
 
         var value = data.ToString();
 
@@ -97,7 +76,7 @@ public class StringDataTests
     [Test]
     public void Length_EmptyValue_ShouldBeExpected()
     {
-        var data = new StringData(string.Empty);
+        var data = new StringData("MyString", string.Empty);
 
         data.Length.Should().Be(0);
     }
@@ -105,7 +84,7 @@ public class StringDataTests
     [Test]
     public void Length_EmptyValue_ShouldHaveExpectedCount()
     {
-        var data = new StringData("this is a test");
+        var data = new StringData("MyString", "this is a test");
 
         data.Length.Should().Be(14);
     }
@@ -193,7 +172,7 @@ public class StringDataTests
     [Test]
     public void ToArray_NonEmpty_ShouldBeExpected()
     {
-        var data = new StringData("This is a test");
+        var data = new StringData("MyString", "This is a test");
 
         var characters = data.ToArray();
 
@@ -214,70 +193,50 @@ public class StringDataTests
     }
 
     [Test]
-    public Task Serialize_Default_ShouldBeVerified()
+    public Task Serialize_NameAndEmptyValue_ShouldBeVerified()
     {
-        var data = new StringData(string.Empty);
+        var data = new StringData("MyString", string.Empty);
 
         var xml = data.Serialize().ToString();
 
-        return Verify(xml);
+        return VerifyXml(xml);
     }
 
     [Test]
     public Task Serialize_WithValue_ShouldBeVerified()
     {
-        var data = new StringData("This is the string value");
+        var data = new StringData("MyString", "This is the string value");
 
         var xml = data.Serialize().ToString();
 
-        return Verify(xml);
+        return VerifyXml(xml);
     }
 
     [Test]
-    public Task Serialize_NameAndValue_ShouldBeVerified()
+    public Task SerializeStructure_EmptyValue_ShouldBeVerified()
     {
-        var data = new StringData("MyStringType", "This is the string value");
-
-        var xml = data.Serialize().ToString();
-
-        return Verify(xml);
-    }
-
-    [Test]
-    public Task SerializeStructure_EmptyNameAndValue_ShouldBeVerified()
-    {
-        var data = new StringData(string.Empty);
+        var data = new StringData("MyString", string.Empty);
 
         var xml = data.ToStructureElement().ToString();
 
-        return Verify(xml);
+        return VerifyXml(xml);
     }
 
     [Test]
-    public Task SerializeStructure_NameEmpty_ShouldBeVerified()
+    public Task SerializeStructure_WithValue_ShouldBeVerified()
     {
-        var data = new StringData("This is a test value");
+        var data = new StringData("MyString", "This is the string value");
 
         var xml = data.ToStructureElement().ToString();
 
-        return Verify(xml);
-    }
-
-    [Test]
-    public Task SerializeStructure_NameWithValue_ShouldBeVerified()
-    {
-        var data = new StringData("MyStringType", "This is the string value");
-
-        var xml = data.ToStructureElement().ToString();
-
-        return Verify(xml);
+        return VerifyXml(xml);
     }
 
     [Test]
     public void GetHashCode_WhenCalled_ShouldBeExpected()
     {
         var expected = "This is a test".GetHashCode();
-        var type = new StringData("This is a test");
+        var type = new StringData("MyString", "This is a test");
 
         var code = type.GetHashCode();
 
@@ -287,8 +246,8 @@ public class StringDataTests
     [Test]
     public void Equals_EqualStringType_ShouldBeTrue()
     {
-        var a = new StringData("Test");
-        var b = new StringData("Test");
+        var a = new StringData("MyString", "Test");
+        var b = new StringData("MyString", "Test");
 
         var result = a.Equals(b);
 
@@ -298,8 +257,8 @@ public class StringDataTests
     [Test]
     public void Equals_NotEqualStringType_ShouldBeFalse()
     {
-        var a = new StringData("Test1");
-        var b = new StringData("Test2");
+        var a = new StringData("MyString", "Test1");
+        var b = new StringData("MyString", "Test2");
 
         var result = a.Equals(b);
 
@@ -309,7 +268,7 @@ public class StringDataTests
     [Test]
     public void Equals_EqualString_ShouldBeTrue()
     {
-        var a = new StringData("Test");
+        var a = new StringData("MyString", "Test");
         const string b = "Test";
 
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -321,7 +280,7 @@ public class StringDataTests
     [Test]
     public void Equals_NotEqualString_ShouldBeFalse()
     {
-        var a = new StringData("Test1");
+        var a = new StringData("MyString", "Test1");
         const string b = "Test2";
 
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -333,7 +292,7 @@ public class StringDataTests
     [Test]
     public void Equals_null_ShouldBeFalse()
     {
-        var a = new StringData("Test1");
+        var a = new StringData("MyString", "Test1");
 
         var result = a.Equals(null!);
 

@@ -361,21 +361,6 @@
       <None Update="LogixContainerTests.Add_ValidType_ShouldBeVerified.verified.xml">
         <DependentUpon>LogixContainerTests.cs</DependentUpon>
       </None>
-      <None Update="Data\StringDataTests.Serialize_WithValue_ShouldBeVerified.verified.txt">
-        <DependentUpon>StringDataTests.cs</DependentUpon>
-      </None>
-      <None Update="Data\StringDataTests.Serialize_NameAndValue_ShouldBeVerified.verified.txt">
-        <DependentUpon>StringDataTests.cs</DependentUpon>
-      </None>
-      <None Update="Data\StringDataTests.SerializeStructure_NameWithValue_ShouldBeVerified.verified.txt">
-        <DependentUpon>StringDataTests.cs</DependentUpon>
-      </None>
-      <None Update="Data\StringDataTests.SerializeStructure_NameEmpty_ShouldBeVerified.verified.txt">
-        <DependentUpon>StringDataTests.cs</DependentUpon>
-      </None>
-      <None Update="Data\StringDataTests.SerializeStructure_EmptyNameAndValue_ShouldBeVerified.verified.txt">
-        <DependentUpon>StringDataTests.cs</DependentUpon>
-      </None>
       <None Update="Elements\ParameterTests.Serialize_NameAndValue_ShouldBeVerified.verified.xml">
         <DependentUpon>ParameterTests.cs</DependentUpon>
       </None>
@@ -426,6 +411,21 @@
       </None>
       <None Update="Components\TagTests.Build_UserDefinedTypeDefaultValue_ShouldBeVerified.verified.xml">
         <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_UserDefinedTypeConfiguredValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.Serialize_NameAndEmptyValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.Serialize_WithValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.SerializeStructure_EmptyValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.SerializeStructure_WithValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

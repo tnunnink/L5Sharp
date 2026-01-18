@@ -219,7 +219,7 @@ public class LogixMemberTests
                 </Element>
             </Array>
             """;
-        
+
         var element = XElement.Parse(xml);
         var type = element.Deserialize<LogixData>();
 
@@ -349,7 +349,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_ArrayOfAtomicDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", ArrayData.New<REAL>([1.1f, 2.2f, 3.3f, 4.4f]));
+        var member = new LogixMember("Test", new ArrayData<REAL>([1.1f, 2.2f, 3.3f, 4.4f]));
 
         var xml = member.Serialize().ToString();
 
@@ -359,7 +359,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_ArrayOfStructureDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", ArrayData.New<TIMER>([new TIMER(), new TIMER(), new TIMER()]));
+        var member = new LogixMember("Test", new ArrayData<TIMER>([new TIMER(), new TIMER(), new TIMER()]));
 
         var xml = member.Serialize().ToString();
 
@@ -369,7 +369,7 @@ public class LogixMemberTests
     [Test]
     public Task Serialize_ArrayOfStringDataType_ShouldBeVerified()
     {
-        var member = new LogixMember("Test", new STRING[] { "Test1", "Test2", "Test3" }.ToArrayData());
+        var member = new LogixMember("Test", new ArrayData<STRING>(["Test1", "Test2", "Test3"]));
 
         var xml = member.Serialize().ToString();
 

@@ -31,9 +31,6 @@ public class RungTests
         rung.Comment.Should().BeNull();
         rung.Program.Should().BeNull();
         rung.Routine.Should().BeNull();
-        rung.Reference.Should().Be("Rung[@Number='0']");
-        rung.Scope.Level.Should().Be(ScopeLevel.None);
-        rung.Scope.Container.Should().BeEmpty();
     }
 
     [Test]

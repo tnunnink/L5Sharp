@@ -17,9 +17,9 @@ public class MyNestedData : StructureData
         Str = new STRING();
         Tmr = new TIMER();
         Simple = new MySimpleData();
-        Flags = new BOOL[10];
-        Counters = new COUNTER[3];
-        Names = new STRING[5];
+        Flags = new ArrayData<BOOL>(10);
+        Counters = new ArrayData<COUNTER>(3);
+        Names = new ArrayData<STRING>(5);
     }
 
     public MyNestedData(XElement element) : base(element)
@@ -65,7 +65,7 @@ public class MyNestedData : StructureData
     /// <summary>
     /// A nested array of atomic values.
     /// </summary>
-    public BOOL[] Flags
+    public ArrayData<BOOL> Flags
     {
         get => GetArray<BOOL>();
         set => SetArray(value);
@@ -74,7 +74,7 @@ public class MyNestedData : StructureData
     /// <summary>
     /// A nested array of structure types.
     /// </summary>
-    public COUNTER[] Counters
+    public ArrayData<COUNTER> Counters
     {
         get => GetArray<COUNTER>();
         set => SetArray(value);
@@ -83,7 +83,7 @@ public class MyNestedData : StructureData
     /// <summary>
     /// A nested array of atomic values.
     /// </summary>
-    public STRING[] Names
+    public ArrayData<STRING> Names
     {
         get => GetArray<STRING>();
         set => SetArray(value);
