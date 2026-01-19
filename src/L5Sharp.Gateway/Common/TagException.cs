@@ -13,7 +13,7 @@ public class TagException : Exception
     /// </summary>
     /// <param name="status">The status representing the specific error encountered during the tag operation.</param>
     /// <param name="tagName">The optional name of the tag associated with the operation that caused the exception.</param>
-    public TagException(TagStatus status, string? tagName = null) : base(BuildMessage(status))
+    public TagException(TagStatus status, string? tagName = null) : base($"Tag operation failed with error: {status}")
     {
         Status = status;
         TagName = tagName;
@@ -51,15 +51,5 @@ public class TagException : Exception
         if (!exceptionCode.Contains(status)) return;
 
         throw new TagException(status, tagName);
-    }
-
-    /// <summary>
-    /// Constructs a detailed error message based on the specified tag status.
-    /// </summary>
-    /// <param name="status">The status representing the specific error encountered during the tag operation.</param>
-    /// <returns>A string containing the formatted error message for the tag operation.</returns>
-    private static string BuildMessage(TagStatus status)
-    {
-        return $"Tag operation failed with error: {status}";
     }
 }

@@ -8,18 +8,35 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <Title>L5Sharp.Gateway</Title>
+        <Description>A gateway library for reading and writing Allen-Bradley Logix controller data using L5Sharp and libplctag</Description>
+        <Authors>Timothy Nunnink</Authors>
+        <Copyright>Copyright (c) Timothy Nunnink 2026</Copyright>
+        <Version>1.0.0-beta.1</Version>
+        <AssemblyVersion>1.0.0.1</AssemblyVersion>
+        <AssemblyFileVersion>1.0.0.1</AssemblyFileVersion>
+        <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageId>L5Sharp.Gateway</PackageId>
+        <PackageProjectUrl>https://github.com/tnunnink/L5Sharp</PackageProjectUrl>
+        <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
+
     <ItemGroup>
-      <!--<PackageReference Include="L5Sharp" Version="6.0.0-beta.5" />-->
-      <PackageReference Include="libplctag.NativeImport" Version="1.0.41" />
+        <PackageReference Include="libplctag.NativeImport" Version="1.0.41"/>
+        <ProjectReference Include="..\L5Sharp.Core\L5Sharp.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\L5Sharp.Core\L5Sharp.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="L5Sharp.PLC.csproj.DotSettings" />
-      <None Remove="L5Sharp.Gateway.csproj.DotSettings" />
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+        <None Remove="L5Sharp.PLC.csproj.DotSettings"/>
+        <None Remove="L5Sharp.Gateway.csproj.DotSettings"/>
     </ItemGroup>
 
 </Project>

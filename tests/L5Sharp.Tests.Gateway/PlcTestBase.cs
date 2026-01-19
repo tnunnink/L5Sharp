@@ -8,7 +8,7 @@ namespace L5Sharp.Tests.Gateway;
 public abstract class PlcTestBase
 {
     // Toggle this to switch all tests between Virtual and Physical PLC (ITagService)
-    private static bool UseVirtual => true;
+    private static bool UseVirtual => false;
 
     protected static IPlcClient CreateClient(Action<PlcOptions>? config = null)
     {

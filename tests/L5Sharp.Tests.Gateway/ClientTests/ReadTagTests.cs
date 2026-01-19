@@ -16,6 +16,7 @@ public class ReadTagTests : PlcTestBase
         var response = await client.ReadTag<DINT>("TestDint");
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -32,6 +33,7 @@ public class ReadTagTests : PlcTestBase
         var response = await client.ReadTag(tag);
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -50,6 +52,7 @@ public class ReadTagTests : PlcTestBase
         var response = await client.ReadTag(tag);
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -79,6 +82,7 @@ public class ReadTagTests : PlcTestBase
         var response = await client.ReadTag(tag);
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -95,6 +99,7 @@ public class ReadTagTests : PlcTestBase
         var response = await client.ReadTag(tag);
 
         response.Success.Should().BeFalse();
+        response.Result.Should().Be(TagStatus.NoData);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().Be(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -111,6 +116,7 @@ public class ReadTagTests : PlcTestBase
         var response = await client.ReadTag(tag);
 
         response.Success.Should().BeFalse();
+        response.Result.Should().Be(TagStatus.NotFound);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -127,6 +133,7 @@ public class ReadTagTests : PlcTestBase
         var response = await client.ReadTags(tags);
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Duration.Should().BeLessThan(TimeSpan.FromSeconds(1));

@@ -32,6 +32,13 @@ public class TagResponse
     public bool Success => _errors.Count == 0;
 
     /// <summary>
+    /// Gets the overall result status of the tag operation.
+    /// Returns the status of the first error encountered if any errors occurred during the operation;
+    /// otherwise, returns <see cref="TagStatus.Ok"/> indicating successful completion.
+    /// </summary>
+    public TagStatus Result => _errors.Count > 0 ? _errors.First().Status : TagStatus.Ok;
+
+    /// <summary>
     /// The timestamp representing the date and time when the operation was completed.
     /// </summary>
     public DateTime Timestamp { get; }
@@ -53,7 +60,7 @@ public class TagResponse
     /// A collection of errors represented as a sequence of tuples containing <see cref="TagName"/> and its associated <see cref="TagStatus"/>.
     /// Provides details about the tags and their processing status, specifically for operations resulting in errors.
     /// </summary>
-    public IEnumerable<TagError> Errors => _errors.Select(e => new TagError(e.Tag, e.Status)).ToList();
+    public IEnumerable<TagError> Errors => _errors.Select(e => new TagError(e.Tag, e.Status)).ToArray();
 
     /// <summary>
     /// Determines if the specified status exists within the error list.
@@ -67,7 +74,7 @@ public class TagResponse
     /// </summary>
     /// <param name="tags">The collection of tags for which no data is available.</param>
     /// <returns>A <see cref="TagResponse"/> object indicating the absence of data for the specified tags.</returns>
-    public static TagResponse NoData(ICollection<Tag> tags)
+    public static TagResponse NoData(Tag[] tags)
     {
         var response = new TagResponse(tags, TimeSpan.Zero);
         response._errors.AddRange(tags.Select(t => (t.TagName, TagStatus.NoData)));
@@ -82,7 +89,7 @@ public class TagResponse
     /// <param name="results">A list of tuples containing <see cref="TagName"/> and <see cref="TagStatus"/> pairs representing the processing outcomes of individual tags.</param>
     /// <param name="duration">The total time taken to process the tags.</param>
     /// <returns>A <see cref="TagResponse"/> object encapsulating the aggregation results and any errors that occurred.</returns>
-    public static TagResponse Aggregate(ICollection<Tag> tags, List<(TagName, TagStatus)> results, TimeSpan duration)
+    public static TagResponse Aggregate(Tag[] tags, List<(TagName, TagStatus)> results, TimeSpan duration)
     {
         var response = new TagResponse(tags, duration);
 

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
+using L5Sharp.Gateway.Common;
 using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Gateway.ClientTests;
@@ -20,6 +21,7 @@ public class WriteTagTests : PlcTestBase
         });
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -36,6 +38,7 @@ public class WriteTagTests : PlcTestBase
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -53,6 +56,7 @@ public class WriteTagTests : PlcTestBase
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
+        response.Result.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);

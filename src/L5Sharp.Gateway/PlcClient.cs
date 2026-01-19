@@ -119,6 +119,25 @@ public class PlcClient : IPlcClient
         _uri = $"protocol=ab_eip&gateway={_options.IP}&path=1,{_options.Slot}&plc=controllogix";
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlcClient"/> class with the specified IP address and optional slot number.
+    /// This is a convenience constructor that creates a default <see cref="PlcOptions"/> configuration internally.
+    /// </summary>
+    /// <param name="ip">
+    /// The IP address of the PLC to connect to. This parameter is required and cannot be null.
+    /// </param>
+    /// <param name="slot">
+    /// The slot number of the PLC in the chassis. Defaults to 0 if not specified.
+    /// For CompactLogix controllers, this is typically 0. For ControlLogix controllers in a chassis,
+    /// specify the slot number where the controller is located.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the <paramref name="ip"/> parameter is null.
+    /// </exception>
+    public PlcClient(string ip, ushort slot = 0) : this(new PlcOptions { IP = ip, Slot = slot })
+    {
+    }
+
     /// <inheritdoc />
     public Task<bool> Ping(CancellationToken token = default)
     {
@@ -252,7 +271,7 @@ public class PlcClient : IPlcClient
     /// <summary>
     /// Reads the values of the specified collection of tag members and returns a response containing the results.
     /// </summary>
-    private async Task<TagResponse> ReadAllTags(ICollection<Tag> tags, CancellationToken token = default)
+    private async Task<TagResponse> ReadAllTags(Tag[] tags, CancellationToken token = default)
     {
         var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
         if (members.Count == 0) return TagResponse.NoData(tags);
@@ -270,7 +289,7 @@ public class PlcClient : IPlcClient
     /// <summary>
     /// Writes a collection of tag members to the PLC and returns a response containing the results of the operation.
     /// </summary>
-    private async Task<TagResponse> WriteAllTags(ICollection<Tag> tags, CancellationToken token = default)
+    private async Task<TagResponse> WriteAllTags(Tag[] tags, CancellationToken token = default)
     {
         var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
         if (members.Count == 0) return TagResponse.NoData(tags);
