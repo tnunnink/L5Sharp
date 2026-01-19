@@ -197,8 +197,6 @@ public class VirtualTagService : ITagService
         if (!TryExtractName(path, out var tagName))
             return TagStatus.BadParam.AsValue();
 
-        //todo this does not account for the formatting of tag names in libplctag
-        // which is can be Program:ProgramName.TagName (should this be supported by core?)
         if (!_storage.TryGet<Tag>(tagName, out var tag))
             return TagStatus.NotFound.AsValue();
 
@@ -319,7 +317,7 @@ public class VirtualTagService : ITagService
         if (!_memory.TryGetValue(handle, out var store))
             return TagStatus.NotFound.AsValue();
 
-        if (attributeName != "auto_sync_read_ms")
+        if (attributeName == "auto_sync_read_ms")
         {
             store.SetAutoSync(newValue, SimulateLatency);
         }

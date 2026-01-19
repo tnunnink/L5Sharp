@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using L5Sharp.Gateway.Abstractions;
 using L5Sharp.Gateway.Common;
 
 namespace L5Sharp.Gateway;
@@ -8,6 +11,18 @@ namespace L5Sharp.Gateway;
 /// </summary>
 public class PlcOptions
 {
+    /// <summary>
+    /// Gets or sets the IP address of the PLC (Programmable Logic Controller) to connect to.
+    /// Specifies the network address used for communication with the PLC.
+    /// </summary>
+    public string IP { get; set; } = IPAddress.Loopback.ToString();
+
+    /// <summary>
+    /// Gets or sets the slot number of the PLC (Programmable Logic Controller) to connect to.
+    /// Specifies the position of the controller within the chassis.
+    /// </summary>
+    public ushort Slot { get; set; }
+
     /// <summary>
     /// Gets or sets the timeout duration, in milliseconds, for operations interacting with the PLC.
     /// Determines the maximum time to wait for a response before timing out.

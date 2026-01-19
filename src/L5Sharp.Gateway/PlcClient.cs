@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -35,6 +34,13 @@ public class PlcClient : IPlcClient
     private bool _disposed;
 
     /// <summary>
+    /// Represents the configuration options used by the <see cref="PlcClient"/> for interacting with a PLC.
+    /// This variable stores an instance of <see cref="PlcOptions"/> to define settings such as timeouts
+    /// and communication intervals for PLC operations.
+    /// </summary>
+    private readonly PlcOptions _options;
+
+    /// <summary>
     /// Provides access to tag-related operations for the <see cref="PlcClient"/> class.
     /// This variable serves as a dependency for managing tag interactions, enabling creation, reading,
     /// writing, and other operations crucial for interacting with PLC tags.
@@ -46,20 +52,6 @@ public class PlcClient : IPlcClient
     /// This buffer facilitates the reading and writing of tag values by interfacing with an underlying <see cref="ITagService"/>.
     /// </summary>
     private readonly TagBuffer _tagBuffer;
-
-    /// <summary>
-    /// Represents the IP address of the PLC being communicated with.
-    /// This address is used to establish a connection to the target PLC
-    /// for sending and receiving tag data.
-    /// </summary>
-    private readonly IPAddress _ip;
-
-    /// <summary>
-    /// Represents the configuration options used by the <see cref="PlcClient"/> for interacting with a PLC.
-    /// This variable stores an instance of <see cref="PlcOptions"/> to define settings such as timeouts
-    /// and communication intervals for PLC operations.
-    /// </summary>
-    private readonly PlcOptions _options;
 
     /// <summary>
     /// The base URI for establishing a connection to the PLC client.
@@ -90,23 +82,41 @@ public class PlcClient : IPlcClient
     private readonly ConcurrentDictionary<int, TagWatch> _watches = [];
 
     /// <summary>
-    /// Creates a new <see cref="PlcClient"/> instance with the provided IP address and optional slot number.
+    /// Initializes a new instance of the <see cref="PlcClient"/> class with the specified configuration options.
     /// </summary>
-    /// <param name="ip">The IP address of the PLC to connect to.</param>
-    /// <param name="slot">The slot of the PLC in the backplane. Default is '0'.</param>
-    /// <param name="options"></param>
-    /// <param name="tagService"></param>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="ip"/> is not a valid IP.</exception>
-    public PlcClient(string ip, ushort slot = 0, PlcOptions? options = null, ITagService? tagService = null)
+    /// <param name="options">
+    /// The configuration options that define connection parameters such as IP address, slot number,
+    /// timeout settings, and read interval for PLC operations.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="options"/> parameter is null.</exception>
+    public PlcClient(PlcOptions options)
     {
-        if (!IPAddress.TryParse(ip, out var address))
-            throw new ArgumentException($"Unable to parse IP address: {ip}");
-
-        _tagService = tagService ?? new NativeTagService(onEvent: TagEventCallback);
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+        _tagService = new NativeTagService(onEvent: TagEventCallback);
         _tagBuffer = new TagBuffer(_tagService);
-        _ip = address;
-        _options = options ?? new PlcOptions();
-        _uri = $"protocol=ab_eip&gateway={address}&path=1,{slot}&plc=controllogix";
+        _uri = $"protocol=ab_eip&gateway={_options.IP}&path=1,{_options.Slot}&plc=controllogix";
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlcClient"/> class with the specified configuration options
+    /// and a custom tag service implementation for dependency injection or testing purposes.
+    /// </summary>
+    /// <param name="options">
+    /// The configuration options that define connection parameters such as IP address, slot number,
+    /// timeout settings, and read interval for PLC operations.
+    /// </param>
+    /// <param name="tagService">
+    /// The tag service implementation to use for tag operations, allowing for custom or mock implementations.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the <paramref name="options"/> or <paramref name="tagService"/> parameter is null.
+    /// </exception>
+    public PlcClient(PlcOptions options, ITagService tagService)
+    {
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+        _tagService = tagService ?? throw new ArgumentNullException(nameof(tagService));
+        _tagBuffer = new TagBuffer(_tagService);
+        _uri = $"protocol=ab_eip&gateway={_options.IP}&path=1,{_options.Slot}&plc=controllogix";
     }
 
     /// <inheritdoc />
@@ -115,7 +125,7 @@ public class PlcClient : IPlcClient
         return Task.Run(async () =>
         {
             using var ping = new Ping();
-            var reply = await ping.SendPingAsync(_ip).ConfigureAwait(false);
+            var reply = await ping.SendPingAsync(_options.IP).ConfigureAwait(false);
             return reply.Status == IPStatus.Success;
         }, token);
     }

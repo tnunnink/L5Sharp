@@ -7,23 +7,29 @@ namespace L5Sharp.Tests.Gateway;
 
 public abstract class PlcTestBase
 {
-    private const string Ip = "10.11.19.204";
-    private const ushort Slot = 1;
-
     // Toggle this to switch all tests between Virtual and Physical PLC (ITagService)
     private static bool UseVirtual => true;
 
     protected static IPlcClient CreateClient(Action<PlcOptions>? config = null)
     {
-        var builder = Plc.ConnectTo(Ip).Slot(Slot);
+        //Configure a common PLC target for testing.
+        var options = new PlcOptions
+        {
+            IP = "10.11.19.204",
+            Slot = 1
+        };
 
-        if (config is not null)
-            builder.WithOptions(config);
+        //Apply any custom configuration to the options as needed.
+        config?.Invoke(options);
 
+        //When virtual setting is enabled, return a new client with the virtual tag service for in memory data access.
         if (UseVirtual)
-            // Seed the Virtual Service with a sample L5X file.
-            builder.UseTagService(() => VirtualTagService.Upload(Known.Simple, TimeSpan.Zero));
+        {
+            var service = VirtualTagService.Upload(Known.Simple, TimeSpan.FromMilliseconds(10));
+            return new PlcClient(options, service);
+        }
 
-        return builder.Build();
+        //Otherwise return the default client with config options.
+        return new PlcClient(options);
     }
 }

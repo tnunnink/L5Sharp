@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
-using L5Sharp.Gateway;
 using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Gateway.ClientTests;
