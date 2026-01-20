@@ -36,7 +36,7 @@ public class TagResponse
     /// Returns the status of the first error encountered if any errors occurred during the operation;
     /// otherwise, returns <see cref="TagStatus.Ok"/> indicating successful completion.
     /// </summary>
-    public TagStatus Result => _errors.Count > 0 ? _errors.First().Status : TagStatus.Ok;
+    public TagStatus Status => _errors.Count > 0 ? _errors.First().Status : TagStatus.Ok;
 
     /// <summary>
     /// The timestamp representing the date and time when the operation was completed.
@@ -63,11 +63,55 @@ public class TagResponse
     public IEnumerable<TagError> Errors => _errors.Select(e => new TagError(e.Tag, e.Status)).ToArray();
 
     /// <summary>
+    /// Retrieves the <see cref="Tag"/> associated with the specified <see cref="TagName"/> from the response.
+    /// Throws an <see cref="InvalidOperationException"/> if the tag is not found.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to search for.</param>
+    /// <returns>The <see cref="Tag"/> associated with the specified tag name.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the response does not contain a result for the specified tag name.</exception>
+    public Tag GetTag(TagName tagName)
+    {
+        var tag = Tags.FirstOrDefault(t => t.TagName == tagName);
+
+        if (tag is null)
+            throw new InvalidOperationException($"Response does not contain result for tag: '{tagName}'");
+
+        return tag;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the <see cref="Tag"/> associated with the specified <see cref="TagName"/> from the response.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to search for.</param>
+    /// <param name="tag">When this method returns, contains the <see cref="Tag"/> associated with the specified tag name if found; otherwise, <c>null</c>.</param>
+    /// <returns><c>true</c> if the tag was found; otherwise, <c>false</c>.</returns>
+    public bool TryGetTag(TagName tagName, out Tag tag)
+    {
+        var match = Tags.FirstOrDefault(t => t.TagName == tagName);
+
+        if (match is not null)
+        {
+            tag = match;
+            return true;
+        }
+
+        tag = null!;
+        return false;
+    }
+
+    /// <summary>
     /// Determines if the specified status exists within the error list.
     /// </summary>
     /// <param name="status">The <see cref="TagStatus"/> to check for in the error list.</param>
     /// <returns>True if the status exists in the error list; otherwise, false.</returns>
     public bool HasError(TagStatus status) => _errors.Any(e => e.Status == status);
+
+    /// <summary>
+    /// Determines if the specified <see cref="TagName"/> has an associated error in the tag operation results.
+    /// </summary>
+    /// <param name="tagName">The <see cref="TagName"/> to check for errors.</param>
+    /// <returns>Returns <c>true</c> if an error is associated with the specified <see cref="TagName"/>; otherwise, <c>false</c>.</returns>
+    public bool HasError(TagName tagName) => _errors.Any(e => e.Tag == tagName);
 
     /// <summary>
     /// Creates a <see cref="TagResponse"/> indicating that no data is available for the provided tags.

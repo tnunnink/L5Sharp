@@ -181,6 +181,20 @@ public class PlcClient : IPlcClient
     }
 
     /// <inheritdoc />
+    public Task<TagResponse> WriteTag<TData>(TagName tagName, TData data, CancellationToken token = default) 
+        where TData : LogixData, new()
+    {
+        if (tagName is null) throw new ArgumentNullException(nameof(tagName));
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        ThrowIfDisposed();
+
+        //Create new tag instance to update data.
+        var tag = Tag.Create(tagName).WithValue(data).Build();
+
+        return WriteAllTags([tag], token);
+    }
+
+    /// <inheritdoc />
     public Task<TagResponse> WriteTag<TData>(TagName tagName, Action<TData> update, CancellationToken token = default)
         where TData : LogixData, new()
     {

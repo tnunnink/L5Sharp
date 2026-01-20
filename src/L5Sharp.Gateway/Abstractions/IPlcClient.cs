@@ -61,6 +61,20 @@ public interface IPlcClient : IDisposable
     Task<TagResponse> ReadTags(IEnumerable<Tag> tags, CancellationToken token = default);
 
     /// <summary>
+    /// Writes a specified value to the specified tag within the PLC asynchronously.
+    /// </summary>
+    /// <param name="tagName">The name of the tag to be written.</param>
+    /// <param name="data">The value to be written to the specified tag.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
+    /// <typeparam name="TData">The type of the data to write, which must be a subclass of <see cref="LogixData"/>.</typeparam>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains a <see cref="TagResponse"/>
+    /// indicating the status of the write operation.
+    /// </returns>
+    Task<TagResponse> WriteTag<TData>(TagName tagName, TData data, CancellationToken token = default)
+        where TData : LogixData, new();
+
+    /// <summary>
     /// Writes a specified tag asynchronously by applying an update operation to the existing tag data.
     /// </summary>
     /// <param name="tagName">The name of the tag to be written.</param>

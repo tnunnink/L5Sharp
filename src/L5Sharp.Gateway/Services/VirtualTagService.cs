@@ -133,20 +133,29 @@ public class VirtualTagService : ITagService
     }
 
     /// <summary>
-    /// A private field used to store an instance of the L5X class, which represents the internal state or data
-    /// required by the MockTagService for managing and processing tags.
+    /// A private field that acts as the primary data storage for the VirtualTagService.
+    /// It is responsible for maintaining and managing tag instances, enabling operations
+    /// such as reading, writing, and configuration of tag attributes.
     /// </summary>
     private readonly L5X _storage;
 
     /// <summary>
-    /// A private field that serves as an in-memory storage for managing and tracking tags within the MockTagService.
-    /// It uses a thread-safe dictionary to store tag instances, allowing retrieval and modification by tag identifiers.
+    /// A private field that serves as an in-memory store for tag handles and their associated metadata.
+    /// This field leverages a thread-safe dictionary to enable efficient retrieval, addition, and modification
+    /// of tag-related data, which is crucial for operations such as creation, reading, writing, and destruction
+    /// of virtual tags within the service.
     /// </summary>
     private readonly ConcurrentDictionary<int, TagStore> _memory = [];
 
     /// <summary>
-    /// It seems like the handles start at 11 and increment from there. Set to 10 and increment on the first creation.
+    /// A private field used to generate unique handles for tag operations within the <see cref="VirtualTagService"/>.
+    /// It serves as a counter, incrementing with each new handle creation to maintain distinct identifiers
+    /// for tag-related operations such as creation, reading, writing, and destruction.
     /// </summary>
+    /// <remarks>
+    /// It seems like the handles start at 11 and increment from there.
+    /// Set to 10 and increment on the first creation.
+    /// </remarks>
     private int _handleCounter = 10;
 
     /// <summary>
@@ -155,12 +164,11 @@ public class VirtualTagService : ITagService
     /// </summary>
     private readonly TimeSpan _latency;
 
-
     /// <summary>
     /// Provides a virtual implementation of the <see cref="ITagService"/> interface, allowing for the management
     /// and manipulation of tags in a simulated environment. This class is typically used for testing or simulation purposes.
     /// </summary>
-    public VirtualTagService(L5X storage, TimeSpan? latency = null)
+    private VirtualTagService(L5X storage, TimeSpan? latency = null)
     {
         _storage = storage ?? throw new ArgumentNullException(nameof(storage));
         _latency = latency ?? TimeSpan.FromMilliseconds(50);
@@ -206,7 +214,10 @@ public class VirtualTagService : ITagService
         var work = SimulateLatency(() =>
         {
             if (!_memory.TryAdd(store.Handle, store))
+            {
                 store.Notify(TagEvent.None, TagStatus.CreateErr);
+                return;
+            }
 
             store.Notify(TagEvent.Created, TagStatus.Ok);
 
