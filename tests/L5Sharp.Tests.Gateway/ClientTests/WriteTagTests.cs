@@ -9,6 +9,21 @@ namespace L5Sharp.Tests.Gateway.ClientTests;
 public class WriteTagTests : PlcTestBase
 {
     [Test]
+    public async Task WriteTag_ExistingNameAndValidData_ShouldReturnSuccess()
+    {
+        using var client = CreateClient();
+
+        var response = await client.WriteTag<DINT>("TestDint", 123);
+
+        response.Success.Should().BeTrue();
+        response.Status.Should().Be(TagStatus.Ok);
+        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        response.Tags.Should().HaveCount(1);
+        response.Errors.Should().BeEmpty();
+    }
+    
+    [Test]
     public async Task WriteTag_ExistingNameAndValidType_ShouldReturnSuccess()
     {
         using var client = CreateClient();
@@ -21,7 +36,7 @@ public class WriteTagTests : PlcTestBase
         });
 
         response.Success.Should().BeTrue();
-        response.Result.Should().Be(TagStatus.Ok);
+        response.Status.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -38,7 +53,7 @@ public class WriteTagTests : PlcTestBase
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
-        response.Result.Should().Be(TagStatus.Ok);
+        response.Status.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);
@@ -56,7 +71,7 @@ public class WriteTagTests : PlcTestBase
         var response = await client.WriteTag(tag);
 
         response.Success.Should().BeTrue();
-        response.Result.Should().Be(TagStatus.Ok);
+        response.Status.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         response.Tags.Should().HaveCount(1);

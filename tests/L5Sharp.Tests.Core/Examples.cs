@@ -49,7 +49,7 @@ namespace L5Sharp.Tests.Core
         {
             var content = L5X.Load(Known.Test);
 
-            var count = content.Tags.Count();
+            var count = content.Tags.Count;
 
             content.Tags.AddRange(new List<Tag>
             {
@@ -58,7 +58,7 @@ namespace L5Sharp.Tests.Core
                 new() { Name = "tag03", Value = "This is a string tag value" }
             });
 
-            content.Tags.Count().Should().Be(count + 3);
+            content.Tags.Count.Should().Be(count + 3);
         }
 
         [Test]

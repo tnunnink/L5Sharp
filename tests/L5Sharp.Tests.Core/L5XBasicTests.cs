@@ -233,7 +233,7 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Test);
 
-        FluentActions.Invoking(() => content.TryGet(Known.DataType, out var _)).Should().Throw<FormatException>();
+        FluentActions.Invoking(() => content.TryGet(Known.DataType, out _)).Should().Throw<FormatException>();
     }
 
     [Test]
