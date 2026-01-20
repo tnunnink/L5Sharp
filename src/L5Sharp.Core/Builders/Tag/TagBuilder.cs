@@ -136,6 +136,8 @@ internal class TagBuilder(TagName tagName) : ITagBuilder
 
     public Tag Build()
     {
+        // If the specified tag is a program tag, create a context program that will let tag to compute the
+        // correct tag name and scope.
         if (tagName.Scope.IsProgram)
         {
             var context = new Program(tagName.Scope.Container) { Use = Use.Context };

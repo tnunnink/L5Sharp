@@ -80,9 +80,18 @@ public interface ILogixComponent : ILogixEntity
 }
 
 /// <summary>
-/// 
+/// Represents a fundamental building block for Logix components in the L5X architecture.
 /// </summary>
-/// <typeparam name="TComponent"></typeparam>
+/// <remarks>
+/// The `LogixComponent` class serves as a base implementation for defining reusable and hierarchical structures
+/// within an L5X framework. This class facilitates the management of component-level properties and behaviors,
+/// enabling customization and extensibility where needed.
+/// Derived classes can implement additional functionality tailored to specific control system requirements,
+/// leveraging the core methods and attributes provided by `LogixComponent`.
+/// </remarks>
+/// <footer>
+/// For further reference, consult Rockwell Automation's documentation on L5X structures and component definitions.
+/// </footer>
 public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILogixComponent
     where TComponent : LogixComponent<TComponent>
 {
@@ -96,42 +105,22 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
     protected LogixComponent(XElement element) : base(element)
     {
     }
-
-    /// <summary>
-    /// The <see cref="Use"/> of the component within the L5X file.
-    /// </summary>
-    /// <remarks>
-    /// Typically used when exporting individual components (DataType, AoiBlock, Module) to indicate whether the component
-    /// is the target of the L5X content or exists solely as a context or dependency of the target component. When
-    /// saving a project as an L5X, the top-level controller component is the target, and all other components will
-    /// not have this property. 
-    /// </remarks>
+    
+    /// <inheritdoc />
     public Use? Use
     {
         get => GetValue(Use.Parse);
         set => SetValue(value);
     }
 
-    /// <summary>
-    /// The unique name of the component.
-    /// </summary>
-    /// <value>A <see cref="string"/> representing the component name.</value>
-    /// <remarks>
-    /// The name servers as a unique identifier for various types of components.
-    /// In most cases, the component name should satisfy Logix naming constraints of alphanumeric and
-    /// underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
-    /// Validation is not performed by this library, so importing components with invalid names may fail.
-    /// </remarks>
+    /// <inheritdoc />
     public virtual string Name
     {
         get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
-    /// <summary>
-    /// The description of the component.
-    /// </summary>
-    /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
+    /// <inheritdoc />
     public virtual string? Description
     {
         get => GetProperty();
@@ -151,16 +140,7 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
         return document.References(Name).Where(r => r.Scope.IsVisibleTo(Scope));
     }
 
-    /// <summary>
-    /// Deletes this component and it's references from the current attached L5X file.
-    /// </summary>
-    /// <remarks>
-    /// This method can be helpful for completely scrubbing a L5X file of the specific component, which means removing
-    /// references to it as well as the component itself. This is on contrast to <see cref="ILogixObject{TElement}.Remove()"/>
-    /// which will simply remove this element from the parent container. If this component is not attached to an L5X
-    /// then it will simply return and not throw any exceptions. Use this with caution as you will not be able
-    /// to undo the process except for the fact that you have reference to the component being deleted. 
-    /// </remarks>
+    /// <inheritdoc />
     public virtual void Delete()
     {
         if (!TryGetDocument(out var doc)) return;
@@ -178,11 +158,7 @@ public abstract class LogixComponent<TComponent> : LogixEntity<TComponent>, ILog
         Element.Remove();
     }
 
-    /// <summary>
-    /// Creates a new <see cref="L5X"/> with the provided logix component as the target type.
-    /// </summary>
-    /// <param name="softwareRevision">The optional software revision, or version of Studio to export the component as.</param>
-    /// <returns>A <see cref="L5X"/> containing the component as the target of the L5X.</returns>
+    /// <inheritdoc />
     public virtual L5X Export(Revision? softwareRevision = null)
     {
         Use = Use.Target;

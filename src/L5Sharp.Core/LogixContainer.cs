@@ -296,7 +296,7 @@ public static class ContainerExtensions
     public static TComponent Get<TComponent>(this LogixContainer<TComponent> container, string name)
         where TComponent : LogixComponent<TComponent>
     {
-        var component = container.Serialize().Elements().SingleOrDefault(e => e.LogixName() == name);
+        var component = container.Serialize().Elements().FirstOrDefault(e => e.LogixName() == name);
 
         if (component is null)
             throw new InvalidOperationException($"No component with name {name} was found in container.");
@@ -315,7 +315,7 @@ public static class ContainerExtensions
     public static bool TryGet<TComponent>(this LogixContainer<TComponent> container, string name, out TComponent result)
         where TComponent : LogixComponent<TComponent>
     {
-        var component = container.Serialize().Elements().SingleOrDefault(e => e.LogixName() == name);
+        var component = container.Serialize().Elements().FirstOrDefault(e => e.LogixName() == name);
 
         if (component is null)
         {
@@ -332,9 +332,17 @@ public static class ContainerExtensions
     /// </summary>
     /// <param name="container">The logix container of component objets.</param>
     /// <param name="name">The name of the component to remove.</param>
-    public static void Remove<TComponent>(this LogixContainer<TComponent> container, string name)
+    public static bool Remove<TComponent>(this LogixContainer<TComponent> container, string name)
         where TComponent : LogixComponent<TComponent>
     {
-        container.Serialize().Elements().SingleOrDefault(c => string.Equals(c.LogixName(), name))?.Remove();
+        var component = container.Serialize().Elements().FirstOrDefault(c => c.LogixName().IsEquivalent(name));
+
+        if (component is null)
+        {
+            return false;
+        }
+
+        component.Remove();
+        return true;
     }
 }
