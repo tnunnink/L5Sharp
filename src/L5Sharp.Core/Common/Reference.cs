@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents a unique path to a logix entity in the L5X context. This type provides properties to help analyze or
-/// identify the reference type and Identifier, including scope and id information.
+/// identify the reference type, scope, and id information.
 /// </summary>
 /// <remarks>
 /// This type is a simple wrapper around an  <see cref="XPathExpression"/> which can be used to select the
@@ -254,7 +254,6 @@ public sealed class Reference
         return new Reference(ReferenceType.Tag, tagName.Scope, tagName.LocalPath);
     }
 
-
     /// <summary>
     /// Creates a new <see cref="Reference"/> instance from the specified XML element.
     /// </summary>
@@ -345,7 +344,7 @@ public sealed class Reference
 
         var schemaIndex = path.IndexOf("://");
         if (schemaIndex <= 0)
-            throw new FormatException($"Invalid reference path '{path}'. Expected format 'Type://[Container/][Routine/]Id'");
+            throw new FormatException($"Invalid reference path '{path}'. Expected format 'Type://[Container/][Routine/]Id[#Fragment]'");
         
         var typeName = path.Substring(0, schemaIndex);
         if (!ReferenceType.TryParse(typeName, out var type))

@@ -273,19 +273,6 @@ public static class ContainerExtensions
     }
 
     /// <summary>
-    /// Returns a component with the specified name if it exists in the container, otherwise returns <c>null</c>.
-    /// </summary>
-    /// <param name="container">The logix container of component objets.</param>
-    /// <param name="name">The name of the component to find.</param>
-    /// <typeparam name="TComponent">The component type to return.</typeparam>
-    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type if found; Otherwise, <c>null</c>.</returns>
-    public static TComponent? Find<TComponent>(this LogixContainer<TComponent> container, string name)
-        where TComponent : LogixComponent<TComponent>
-    {
-        return container.Serialize().Elements().FirstOrDefault(e => e.LogixName() == name)?.Deserialize<TComponent>();
-    }
-
-    /// <summary>
     /// Returns a component with the specified name from the container.
     /// </summary>
     /// <param name="container">The logix container of component objets.</param>
@@ -325,6 +312,19 @@ public static class ContainerExtensions
 
         result = component.Deserialize<TComponent>();
         return true;
+    }
+
+    /// <summary>
+    /// Returns a component with the specified name if it exists in the container, otherwise returns <c>null</c>.
+    /// </summary>
+    /// <param name="container">The logix container of component objets.</param>
+    /// <param name="name">The name of the component to find.</param>
+    /// <typeparam name="TComponent">The component type to return.</typeparam>
+    /// <returns>A <see cref="LogixComponent{TComponent}"/> of the specified type if found; Otherwise, <c>null</c>.</returns>
+    public static TComponent? GetOrDefault<TComponent>(this LogixContainer<TComponent> container, string name)
+        where TComponent : LogixComponent<TComponent>
+    {
+        return container.Serialize().Elements().FirstOrDefault(e => e.LogixName() == name)?.Deserialize<TComponent>();
     }
 
     /// <summary>

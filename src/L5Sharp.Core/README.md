@@ -247,13 +247,13 @@ var tag = Tag.Create("SomeTimer")
 ```
 
 > [!NOTE]
-> When a component or element is created in memory, it is not attached to an L5X until you add it to an appropriate 
-> container collection (Tags, DataType, Modules, etc.). This is important to remember because some navigation 
+> When a component or element is created in memory, it is not attached to an L5X until you add it to an appropriate
+> container collection (Tags, DataType, Modules, etc.). This is important to remember because some navigation
 > properties will return null if the object is not part of the XML hierarchy.
 
 ### Modifying Components
 
-L5Sharp.Core offers many ways to configure or update components. At the simpliest level, you can directly set
+L5Sharp offers various ways to configure or update components. At the simpliest level, you can directly set
 properties of a component as needed.
 
 ```csharp
@@ -263,57 +263,69 @@ tag.Value = 50;
 tag.Description = "Updated tag description";
 tag.ExternalAccess = Access.ReadOnly;
 tag.Usage = TasUsage.Public;
+tag.AliasFor = "OtherTag.Member"
 ```
+
+> [!WARNING]
+> L5Sharp.Core is not strict in terms of property validation. In most cases, you can set a property on a component to
+> any given value (acceptable by the value type) and attempt to import it into Studio. Studio will validate certain
+> properties but be relaxed on others. For this reason, it's hard to fully perform validation ahead of time
+> without manually importing permutations of content to see how Studio handles it. When we do find things Studio is
+> strict on, we attempt to mimic that in the object construction and hide the details, such that the API can remain
+> clean and simple.
 
 All components contain methods for cloning or duplicating the instance with updated values. This is a key part
 of the library since in many cases, you want to copy existing templates and update only a few properties.
 
 ```csharp
-// Create a direct clone of the current object.
+// Create a direct clone of the current object with no changes.
 var clone = tag.Clone();
 
-// Create a duplicate with updated config.
-var duplicate = tag.Duplicate(t => 
+// Create a duplicate with updated config. This method will also add the duplicate to the L5X.
+var duplicate = program.Duplicate(p => 
 {
-    t.Value;
-})
+    p.Name = "Program_02";
+    p.Description = "This is a different instance";
+    p.Replace("Tag_01", "Tag_02"); //This method will perform find/replace of text in the new object.
+});
 ```
- 
 
-> [!WARNING]
-> L5Sharp.Core is not strict in terms of property validation. In most cases, you can set a property on a component to
-> any given value (acceptable by the value type) and attempt to import it into Studio. Studio will validate certain
-> properties but be relaxed on others. For this reason, it's hard to fully perform in memory validation ahead of time
-> without manually importing permutations of content to see how Studio handles it. When we do find things Studio is
-> strict on, we attempt to mimic that in the object construction and hide the details, such that the API can remain
-> clean and simple.
+Components also support "self-referencing" collection methods like `AddAfter`, `AddBefore`, `Remove`, and `Replace`.
+These functions operate relative to the current instance and require the element to be attached to a parent
+container or L5X. These methods mostly make use of the underlying `XElement` methods which do the same thing.
+
+```csharp
+// Add a new object after current instance in the document.
+rung.AddAfter(new Rung("XIC(SomeTag.12)OTE(AnotherTag)"));
+
+// Replace current instance with new one.
+tag.Replace(new Tag { Name = "UpdatedTag", Value = 123, Description = "Completely new instance"});
+
+// Removes this instance from the L5X or parent container.
+routine.Remove()
+```
+
+All `LogixContainer<T>` collection also support adding, removing, and updating elements as you would expect.
 
 ```csharp
 // Add a new component to a container
-content.Tags.Add(new Tag { Name = "MyTag", Value = 100 });
+project.Tags.Add(new Tag { Name = "MyTag", Value = 100 });
+
 // Remove a component from a container
-content.Tags.Remove("OldTag");
-
-// Modify component properties directly
-
-
-// Replace component in place
-tag.Replace(new Tag { Name = "UpdatedTag", Description = "Completely new instance"})
-    
-// Duplicate components with changes
-var duplicate = tag.Duplicate(t => 
-{
-    t.Description = "Has same properties except this one." 
-});
+project.Tags.Remove("OldTag");
 
 // Bulk update components
-content.Tags.Update(
+project.Tags.Update(
     t => t.DataType == "TIMER", //update condition
     t => t.Description = "Updated TIMER description" //update action
 );
+```
 
-// Save changes
-content.Save("UpdatedFile.L5X");
+Remember that all changes are directly applied to the underlying XML content. Once changes are complete, you can save
+the L5X to your desired output.
+
+```csharp
+project.Save("Updated.L5X");
 ```
 
 ### Tag Data

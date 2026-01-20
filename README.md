@@ -1,4 +1,4 @@
-# L5Sharp
+﻿# L5Sharp
 
 A .NET library for interacting with Rockwell's L5X import/export files.
 
@@ -34,6 +34,12 @@ Install-Package L5Sharp
 ``` csharp
 // Load an L5X file
 var content = L5X.Load("C:\\PathToMyFile\\FileName.L5X");
+
+// Parse and L5X string
+var content = L5X.Parse("<RSLogix5000Content... />");
+
+// Parse and L5X string
+var content = L5X.New("Test", "1756-L83E", 33.1);
 ```
 
 ### Query L5X Components

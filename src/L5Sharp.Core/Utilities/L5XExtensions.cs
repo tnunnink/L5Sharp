@@ -455,26 +455,20 @@ internal static class L5XExtensions
 
         void TryReplaceAttribute(XAttribute attribute)
         {
-            if ((targets.Length > 0 && !targets.Contains(attribute.Name.LocalName)) || !attribute.Value.Contains(find))
-                return;
-
-            attribute.Value = attribute.Value.Replace(find, replace);
+            if (targets.Length == 0 || targets.Contains(attribute.Name.LocalName))
+                attribute.Value = attribute.Value.Replace(find, replace);
         }
 
         void TryReplaceData(XNode node, XCData data)
         {
-            if ((targets.Length > 0 && !targets.Contains(node.Parent?.Name.LocalName)) || !data.Value.Contains(find))
-                return;
-
-            data.ReplaceWith(new XCData(data.Value.Replace(find, replace)));
+            if (targets.Length == 0 || targets.Contains(node.Parent?.Name.LocalName))
+                data.ReplaceWith(new XCData(data.Value.Replace(find, replace)));
         }
 
         void TryReplaceText(XNode node, XText text)
         {
-            if ((targets.Length > 0 && !targets.Contains(node.Parent?.Name.LocalName)) || !text.Value.Contains(find))
-                return;
-
-            text.Value = text.Value.Replace(find, replace);
+            if (targets.Length == 0 || targets.Contains(node.Parent?.Name.LocalName))
+                text.Value = text.Value.Replace(find, replace);
         }
     }
 
