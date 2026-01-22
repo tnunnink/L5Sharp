@@ -14,19 +14,13 @@ namespace L5Sharp.Core;
 /// Implementations of this interface are used to encapsulate single, immutable value types with predefined semantics.
 /// These types generally support operations like comparisons, format transformations, and value extraction.
 /// </remarks>
-public interface IAtomicValue<out TValue> where TValue : struct
+public interface IAtomicValue<TValue> where TValue : struct
 {
     /// <summary>
-    /// Retrieves the value associated with the current instance.
+    /// Gets or sets the strongly typed value encapsulated by the atomic type.
     /// </summary>
-    /// <remarks>
-    /// This method is used to get the internal value stored within the instance. The returned value
-    /// will depend on the specific implementation of the method in the derived or base class.
-    /// </remarks>
-    /// <returns>
-    /// The value associated with the current instance.
-    /// </returns>
-    public TValue Value { get; }
+    /// <value>The underlying value of type <typeparamref name="TValue"/>.</value>
+    public TValue Value { get; set; }
 }
 
 /// <summary>
@@ -96,6 +90,18 @@ public abstract class AtomicData : LogixData
         Element.Annotation<XAttribute>()?.SetValue(formatted);
     }
 
+    /// <inheritdoc />
+    public override void Clear()
+    {
+        // Reset the value for atomic data to zero.
+        var value = Radix.Format(0);
+        Element.SetAttributeValue(L5XName.Value, value);
+
+        //Check if the underlying element contains an attribute annotation which can be injected as a "backing field" for the value.
+        //This is to support updating underlying XAttribute of custom data formats (ALARM_ANALOG and ALARM_DIGITAL)
+        Element.Annotation<XAttribute>()?.SetValue(value);
+    }
+
     /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
@@ -131,13 +137,16 @@ public abstract class AtomicData : LogixData
 
         if (radix == Radix.Float || radix == Radix.Exponential)
             return new LREAL(radix.Parse<double>(value));
-
         if (radix == Radix.DateTime)
             return new DT(radix.Parse<long>(value));
         if (radix == Radix.DateTimeNs)
             return new LDT(radix.Parse<long>(value));
-        if (radix == Radix.DateTimeNs)
-            return new LDT(radix.Parse<long>(value));
+        if (radix == Radix.Time)
+            return new TIME(radix.Parse<long>(value));
+        if (radix == Radix.Time32)
+            return new TIME32(radix.Parse<int>(value));
+        if (radix == Radix.TimeNs)
+            return new LTIME(radix.Parse<long>(value));
 
         return new DINT(radix.Parse<int>(value));
     }
@@ -228,8 +237,26 @@ public abstract class AtomicData : LogixData
     protected TValue GetAtomicValue<TValue>() where TValue : struct
     {
         var value = Element.Attribute(L5XName.Value)?.Value ?? throw Element.L5XError(L5XName.Value);
-        var radix = Radix.Infer(value);
-        return radix.Parse<TValue>(value);
+        //var radix = Radix.Infer(value);
+        return Radix.Parse<TValue>(value);
+    }
+
+    /// <summary>
+    /// Sets the atomic value of the current data element, formatting the value according to the current radix.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value being set. It must be a value type.</typeparam>
+    /// <param name="value">The value to set, which will be formatted and applied to the current element.</param>
+    protected void SetAtomicValue<TValue>(TValue value) where TValue : struct
+    {
+        // Format to the current radix of the value type.
+        var formatted = Radix.Format(value);
+
+        // Update the underlying data element.
+        Element.SetAttributeValue(L5XName.Value, formatted);
+
+        // Check if the underlying element contains an attribute annotation which can be injected as a "backing field" for the value.
+        // This is to support updating underlying XAttribute of custom data formats (ALARM_ANALOG and ALARM_DIGITAL)
+        Element.Annotation<XAttribute>()?.SetValue(formatted);
     }
 
     /// <summary>

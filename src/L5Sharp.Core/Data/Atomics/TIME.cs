@@ -35,8 +35,12 @@ public sealed class TIME : AtomicData, IComparable, IConvertible, IAtomicValue<l
     public override int Size => sizeof(long);
 
     /// <inheritdoc />
-    public long Value => GetAtomicValue<long>();
-    
+    public long Value
+    {
+        get => GetAtomicValue<long>();
+        set => SetAtomicValue(value);
+    }
+
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {

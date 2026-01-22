@@ -34,7 +34,11 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     public override int Size => sizeof(sbyte);
 
     /// <inheritdoc />
-    public sbyte Value => GetAtomicValue<sbyte>();
+    public sbyte Value
+    {
+        get => GetAtomicValue<sbyte>();
+        set => SetAtomicValue(value);
+    }
 
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
@@ -42,7 +46,7 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
         if (offset < 0 || offset > data.Length - 1)
             throw new ArgumentException("Offset is out of range for the provided data array.", nameof(offset));
         
-        var value = new SINT((sbyte)data[offset]);
+        var value = (sbyte)data[offset];
         Update(value);
         return offset + Size;
     }

@@ -45,7 +45,11 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
     public override int Size => sizeof(bool);
 
     /// <inheritdoc />
-    public bool Value => GetAtomicValue<bool>();
+    public bool Value
+    {
+        get => GetAtomicValue<bool>();
+        set => SetAtomicValue(value);
+    }
 
 
     /// <inheritdoc />

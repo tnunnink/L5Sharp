@@ -35,8 +35,12 @@ public sealed class LDT : AtomicData, IComparable, IConvertible, IAtomicValue<lo
     public override int Size => sizeof(long);
 
     /// <inheritdoc />
-    public long Value => GetAtomicValue<long>();
-    
+    public long Value
+    {
+        get => GetAtomicValue<long>();
+        set => SetAtomicValue(value);
+    }
+
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {

@@ -34,7 +34,11 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     public override int Size => sizeof(int);
 
     /// <inheritdoc />
-    public int Value => GetAtomicValue<int>();
+    public int Value
+    {
+        get => GetAtomicValue<int>();
+        set => SetAtomicValue(value);
+    }
 
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)

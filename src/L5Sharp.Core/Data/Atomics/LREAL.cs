@@ -32,15 +32,19 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     {
         Element.SetAttributeValue(L5XName.Value, value.ToString(DoubleFormat, CultureInfo.InvariantCulture));
     }
-    
+
     /// <inheritdoc />
     public override int Size => sizeof(double);
 
     /// <inheritdoc />
-    public double Value => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false
-        ? GetAtomicValue<double>()
-        : double.NaN;
-    
+    public double Value
+    {
+        get => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false
+            ? GetAtomicValue<double>()
+            : double.NaN;
+        set => SetAtomicValue(value);
+    }
+
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {
@@ -52,6 +56,18 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
         Update(value);
 
         return offset + Size;
+    }
+
+    /// <inheritdoc />
+    public override void Clear()
+    {
+        // Reset the value for atomic data to zero.
+        var value = Radix.Format(0.0);
+        Element.SetAttributeValue(L5XName.Value, value);
+
+        //Check if the underlying element contains an attribute annotation which can be injected as a "backing field" for the value.
+        //This is to support updating underlying XAttribute of custom data formats (ALARM_ANALOG and ALARM_DIGITAL)
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

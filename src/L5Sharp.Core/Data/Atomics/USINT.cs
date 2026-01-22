@@ -29,19 +29,23 @@ public sealed class USINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     {
         Element.SetAttributeValue(L5XName.Value, value);
     }
-    
+
     /// <inheritdoc />
     public override int Size => sizeof(byte);
 
     /// <inheritdoc />
-    public byte Value => GetAtomicValue<byte>();
-    
+    public byte Value
+    {
+        get => GetAtomicValue<byte>();
+        set => SetAtomicValue(value);
+    }
+
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {
         if (offset < 0 || offset > data.Length - 1)
             throw new ArgumentException("Offset is out of range for the provided data array.", nameof(offset));
-        
+
         var value = data[offset];
         Update(value);
         return offset + Size;

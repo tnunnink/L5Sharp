@@ -34,8 +34,12 @@ public sealed class UDINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     public override int Size => sizeof(uint);
 
     /// <inheritdoc />
-    public uint Value => GetAtomicValue<uint>();
-    
+    public uint Value
+    {
+        get => GetAtomicValue<uint>();
+        set => SetAtomicValue(value);
+    }
+
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {

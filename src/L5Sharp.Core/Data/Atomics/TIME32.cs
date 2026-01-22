@@ -35,8 +35,12 @@ public sealed class TIME32 : AtomicData, IComparable, IConvertible, IAtomicValue
     public override int Size => sizeof(int);
 
     /// <inheritdoc />
-    public int Value => GetAtomicValue<int>();
-    
+    public int Value
+    {
+        get => GetAtomicValue<int>();
+        set => SetAtomicValue(value);
+    }
+
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {

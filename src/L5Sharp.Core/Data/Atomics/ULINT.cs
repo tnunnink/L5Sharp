@@ -34,8 +34,12 @@ public sealed class ULINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     public override int Size => sizeof(ulong);
 
     /// <inheritdoc />
-    public ulong Value => GetAtomicValue<ulong>();
-    
+    public ulong Value
+    {
+        get => GetAtomicValue<ulong>();
+        set => SetAtomicValue(value);
+    }
+
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
     {

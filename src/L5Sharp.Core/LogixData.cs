@@ -132,6 +132,22 @@ public abstract class LogixData : LogixElement
 
         return offset;
     }
+    
+    /// <summary>
+    /// Clears the values of all members within the current LogixData instance.
+    /// </summary>
+    /// <remarks>
+    /// This method iterates through all existing members of the LogixData object
+    /// and invokes the `Clear` method on each member's value, effectively
+    /// resetting all member values.
+    /// </remarks>
+    public virtual void Clear()
+    {
+        foreach (var member in Members)
+        {
+            member.Value.Clear();
+        }
+    }
 
     /// <summary>
     /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
@@ -442,8 +458,6 @@ public abstract class LogixData : LogixElement
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator LogixData(Dictionary<string, LogixData> value)
-    {
-        return new StructureData(nameof(StructureData), value.Select(m => new LogixMember(m.Key, m.Value)));
-    }
+    public static implicit operator LogixData(Dictionary<string, LogixData> value) =>
+        new StructureData(nameof(StructureData), value.Select(m => new LogixMember(m.Key, m.Value)));
 }

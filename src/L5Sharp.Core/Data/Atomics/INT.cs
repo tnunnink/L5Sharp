@@ -34,7 +34,11 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     public override int Size => sizeof(short);
 
     /// <inheritdoc />
-    public short Value => GetAtomicValue<short>();
+    public short Value
+    {
+        get => GetAtomicValue<short>();
+        set => SetAtomicValue(value);
+    }
 
     /// <inheritdoc />
     public override int Update(byte[] data, int offset)
