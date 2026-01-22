@@ -77,4 +77,27 @@ public class WriteTagTests : PlcTestBase
         response.Tags.Should().HaveCount(1);
         response.Errors.Should().BeEmpty();
     }
+
+    [Test]
+    public async Task WriteTag_AlarmAnalogType_ShouldReturnSuccess()
+    {
+        using var client = CreateClient();
+
+        var response = await client.WriteTag<ALARM_ANALOG>("TestAlarm", d =>
+        {
+            d.HHEnabled = true;
+            d.HHLimit = 1234;
+            d.LLEnabled = true;
+            d.LLLimit = -123;
+            d.LLMinDurationEnable = true;
+            d.LLSeverity = 1000;
+        });
+
+        response.Success.Should().BeTrue();
+        response.Status.Should().Be(TagStatus.Ok);
+        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        response.Tags.Should().HaveCount(1);
+        response.Errors.Should().BeEmpty();
+    }
 }

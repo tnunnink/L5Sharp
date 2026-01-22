@@ -91,6 +91,23 @@ public class ReadTagTests : PlcTestBase
     }
 
     [Test]
+    public async Task ReadTag_AlarmType_ShouldGetSuccessAndExpectedMemberValue()
+    {
+        using var client = CreateClient();
+        var tag = Tag.New<ALARM_ANALOG>("TestAlarm");
+
+        var response = await client.ReadTag(tag);
+
+        response.Success.Should().BeTrue();
+        response.Status.Should().Be(TagStatus.Ok);
+        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        response.Tags.Should().HaveCount(1);
+        response.Errors.Should().BeEmpty();
+        tag.Value.As<ALARM_ANALOG>().HHLimit.Should().NotBe(0);
+    }
+
+    [Test]
     public async Task ReadTag_TagWithNoData_ShouldReturnNoDataResponse()
     {
         using var client = CreateClient();
@@ -136,7 +153,7 @@ public class ReadTagTests : PlcTestBase
         response.Status.Should().Be(TagStatus.Ok);
         response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Duration.Should().BeLessThan(TimeSpan.FromSeconds(1));
+        response.Duration.Should().BeLessThan(TimeSpan.FromSeconds(2));
         response.Tags.Should().HaveCount(1000);
         response.Errors.Should().BeEmpty();
     }

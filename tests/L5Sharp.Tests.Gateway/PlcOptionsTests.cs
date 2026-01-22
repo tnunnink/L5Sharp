@@ -16,7 +16,7 @@ public class PlcOptionsTests
         options.IP.Should().Be(IPAddress.Loopback.ToString());
         options.Slot.Should().Be(0);
         options.Timeout.Should().Be(5000);
-        options.ReadInterval.Should().Be(1000);
+        options.PollRate.Should().Be(1000);
         options.ThrowOn.Should().BeEmpty();
     }
 
@@ -28,14 +28,14 @@ public class PlcOptionsTests
             IP = "10.10.10.10",
             Slot = 2,
             Timeout = 30000,
-            ReadInterval = 100,
+            PollRate = 100,
             ThrowOn = { TagStatus.BadData, TagStatus.BadConnection, TagStatus.Timeout }
         };
 
         options.IP.Should().Be("10.10.10.10");
         options.Slot.Should().Be(2);
         options.Timeout.Should().Be(30000);
-        options.ReadInterval.Should().Be(100);
+        options.PollRate.Should().Be(100);
         options.ThrowOn.Should().HaveCount(3);
     }
 }
