@@ -9,7 +9,7 @@ namespace L5Sharp.Gateway.Internal;
 /// <summary>
 /// Represents a watcher for a specific tag, providing functionality to track and notify changes.
 /// </summary>
-internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagService, TagBuffer buffer) : IDisposable
+internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagService, TagBuffer buffer) : IDisposable
 {
     /// <summary>
     /// A private field that keeps track of the number of active subscribers
@@ -17,13 +17,6 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     /// as subscribers are added or removed, ensuring an up-to-date count.
     /// </summary>
     private int _subscribers;
-
-    /// <summary>
-    /// A private field representing the tag being monitored by the TagWatch instance.
-    /// It holds a reference to the associated <see cref="Tag"/> object, enabling access to its properties
-    /// and ensuring that operations within TagWatch are performed on the correct tag.
-    /// </summary>
-    private readonly Tag _tag = tag ?? throw new ArgumentNullException(nameof(tag));
 
     /// <summary>
     /// An instance of <see cref="ITagService"/> used to interact with and manage tag operations.
@@ -39,11 +32,11 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     private readonly TagBuffer _buffer = buffer;
 
     /// <summary>
-    /// A private field that specifies the interval, in milliseconds, at which the tag's state is automatically
-    /// synchronized. This value is initialized during object construction and determines the frequency of
-    /// updates in the watcher service.
+    /// A private field that specifies the polling interval in milliseconds used for automatic
+    /// synchronization of tag values. This rate determines how frequently the tag's value is
+    /// refreshed from the underlying tag service when active subscribers are present.
     /// </summary>
-    private readonly int _refreshRate = refreshRate;
+    private readonly int _pollRate = pollRate;
 
     /// <summary>
     /// A read-only property representing the handle identifier associated with a tag watcher.
@@ -52,25 +45,57 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     public int Handle { get; } = handle;
 
     /// <summary>
-    /// Represents the current operational state or condition of the tag being monitored.
-    /// This property reflects changes in the tag's lifecycle or monitoring status,
-    /// providing insight into its active or inactive state during runtime.
+    /// Represents the tag instance being monitored by this watch.
+    /// This property holds the reference to the tag whose state and value changes are tracked.
+    /// </summary>
+    public Tag Tag { get; } = tag ?? throw new ArgumentNullException(nameof(tag));
+
+    /// <summary>
+    /// Gets the current operational status of the tag watch.
+    /// This value is updated whenever the tag's state changes and reflects the most recent status
+    /// received from the tag service. A negative value indicates an error condition.
     /// </summary>
     public TagStatus Status { get; private set; }
 
     /// <summary>
+    /// Gets the timestamp of the last successful update for the associated tag.
+    /// This value is updated whenever the tag's status changes or when its data is refreshed.
+    /// Used to monitor the currency of the tag's data.
+    /// </summary>
+    public DateTime Timestamp { get; private set; } = DateTime.MinValue;
+
+    /// <summary>
+    /// Gets or sets the number of updates received for the associated tag.
+    /// This property is incremented each time the tag's value is refreshed
+    /// or modified, providing a cumulative count of changes.
+    /// </summary>
+    public int Updates { get; private set; }
+
+    /// <summary>
     /// Indicates whether the tag watch is currently idle, meaning there are no active subscribers
     /// monitoring the associated tag for changes.
-    /// Returns true if there are no subscribers; otherwise, false.
     /// </summary>
     public bool IsIdle => _subscribers == 0;
 
     /// <summary>
-    /// An event that is triggered whenever the associated <see cref="Tag"/> experiences a change.
-    /// Subscribers to this event will be notified and provided with the <see cref="Tag"/> instance
-    /// that has undergone the modification.
+    /// Gets a value indicating whether the current tag is in an errored state.
+    /// The errored state is determined by checking if the associated
+    /// <see cref="TagStatus"/> has a value less than zero.
     /// </summary>
-    public event Action<Tag>? OnChanged;
+    public bool IsErrored => Status < 0;
+
+    /// <summary>
+    /// An event that is triggered whenever the associated <see cref="Tag"/> experiences a change.
+    /// Subscribers to this event will be notified and provided with the instance that has undergone the modification.
+    /// </summary>
+    public event Action<Tag>? Changed;
+
+    /// <summary>
+    /// An event that is triggered whenever the associated <see cref="Tag"/> encounters an error condition.
+    /// Subscribers to this event will be notified and provided with the tag instance and the status code
+    /// indicating the specific error that occurred.
+    /// </summary>
+    public event Action<Tag, TagStatus>? Errored;
 
     /// <summary>
     /// Increments the subscriber count for the associated watch. If this call results in the first subscriber
@@ -80,10 +105,10 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     public void Increment()
     {
         Interlocked.Increment(ref _subscribers);
-        
+
         if (_subscribers == 1)
         {
-            var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", _refreshRate);
+            var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", _pollRate);
 
             if (status < 0)
                 throw new InvalidOperationException($"Unable to start auto sync service. Result: {status}");
@@ -98,7 +123,7 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     public void Decrement()
     {
         Interlocked.Decrement(ref _subscribers);
-        
+
         if (_subscribers == 0)
         {
             var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", 0);
@@ -109,19 +134,29 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
     }
 
     /// <summary>
-    /// Notifies the system of a status change for the associated tag. This triggers a value read operation
-    /// and invokes the change event if the tag's value has been altered.
+    /// Notifies the watch of a status change for the associated tag. Updates the current status,
+    /// timestamp, and update count, then triggers the appropriate event handler based on the status.
+    /// If the status indicates an error (negative value), the <see cref="Errored"/> event is invoked.
+    /// If the status is <see cref="TagStatus.Ok"/>, the tag's value is read from the buffer and the
+    /// <see cref="Changed"/> event is invoked.
     /// </summary>
-    /// <param name="status">The new status of the tag to be processed and monitored for changes.</param>
+    /// <param name="status">The new status of the tag, indicating its current operational state.</param>
     public void Notify(TagStatus status)
     {
-        //todo can we add a read if changed or something? We want to only invoke the event on change in value.
         Status = status;
+        Timestamp = DateTime.UtcNow;
+        Updates++;
 
-        if (Status == TagStatus.Ok)
+        switch (Status)
         {
-            _buffer.ReadValue(_tag, Handle);
-            OnChanged?.Invoke(_tag);
+            case < 0:
+                Errored?.Invoke(Tag, Status);
+                break;
+            case TagStatus.Ok:
+                //todo can we add a read if changed or something? We want to only invoke the event on change in value.
+                _buffer.ReadValue(Tag, Handle);
+                Changed?.Invoke(Tag);
+                break;
         }
     }
 
@@ -135,6 +170,7 @@ internal class TagWatch(int handle, Tag tag, int refreshRate, ITagService tagSer
         _subscribers = 0;
 
         // Detach all managed event handlers to avoid memory leaks
-        OnChanged = null;
+        Changed = null;
+        Errored = null;
     }
 }

@@ -111,41 +111,40 @@ public interface IPlcClient : IDisposable
     Task<TagResponse> WriteTags(IEnumerable<Tag> tags, CancellationToken token = default);
 
     /// <summary>
-    /// Subscribes to a tag on the PLC and monitors it for changes asynchronously.
+    /// Watches a tag on the PLC for changes asynchronously and returns a subscription to monitor its value.
     /// </summary>
-    /// <param name="tagName">The name of the tag to monitor.</param>
-    /// <param name="onChange">An optional action that is triggered when a change in the tag value is detected.</param>
-    /// <param name="token">A cancellation token that can be used to cancel the monitoring operation.</param>
-    /// <typeparam name="TData">The type of data expected for the tag being monitored. It must inherit from <see cref="LogixData"/>.</typeparam>
+    /// <param name="tagName">The name of the tag to watch on the PLC.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
+    /// <typeparam name="TData">
+    /// The data type of the tag being watched. This type must derive from <see cref="LogixData"/>
+    /// and have a parameterless constructor.
+    /// </typeparam>
     /// <returns>
-    /// A task that represents the asynchronous operation. The task result is an <see cref="IDisposable"/> instance
-    /// that can be used to stop monitoring the tag.
+    /// A task that represents the asynchronous operation. The task result contains an <see cref="ITagSubscription"/>
+    /// that can be used to monitor changes to the tag value and register callbacks for change and error events.
     /// </returns>
-    Task<IDisposable> WatchTag<TData>(TagName tagName, Action<Tag>? onChange = null, CancellationToken token = default)
+    Task<ITagSubscription> WatchTag<TData>(TagName tagName, CancellationToken token = default)
         where TData : LogixData, new();
 
     /// <summary>
-    /// Monitors the specified PLC tag for changes and executes a callback action when the tag value changes.
+    /// Watches a tag on the PLC for changes asynchronously and returns a subscription to monitor its value.
     /// </summary>
-    /// <param name="tag">The tag to be monitored for changes.</param>
-    /// <param name="onChange">An optional callback action to invoke when the tag value changes. If null, changes will still be monitored without invoking a callback.</param>
-    /// <param name="token">A cancellation token to cancel the monitoring operation.</param>
+    /// <param name="tag">The tag to watch on the PLC, including its name and metadata.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
     /// <returns>
-    /// A task that represents the asynchronous monitoring operation.
-    /// The task result is an <see cref="IDisposable"/> object that can be used to stop monitoring the tag.
+    /// A task that represents the asynchronous operation. The task result contains an <see cref="ITagSubscription"/>
+    /// that can be used to monitor changes to the tag value and register callbacks for change and error events.
     /// </returns>
-    Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChange = null, CancellationToken token = default);
+    Task<ITagSubscription> WatchTag(Tag tag, CancellationToken token = default);
 
     /// <summary>
-    /// Monitors the specified collection of PLC tags for changes asynchronously and invokes a callback action
-    /// when a tag's value changes.
+    /// Watches multiple tags on the PLC for changes asynchronously and returns a subscription to monitor their values.
     /// </summary>
-    /// <param name="tags">A collection of tags to monitor for value changes.</param>
-    /// <param name="onChange">An optional callback action that is invoked when a tag value changes, receiving the changed tag as a parameter.</param>
-    /// <param name="token">A cancellation token that can be used to cancel the monitoring operation.</param>
+    /// <param name="tags">A collection of tags to watch on the PLC.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
     /// <returns>
-    /// A task that represents the asynchronous operation. The task result is a disposable object
-    /// that can be used to stop the monitoring of the tags.
+    /// A task that represents the asynchronous operation. The task result contains an <see cref="ITagSubscription"/>
+    /// that can be used to monitor changes to the tag values and register callbacks for change and error events.
     /// </returns>
-    Task<IDisposable> WatchTags(IEnumerable<Tag> tags, Action<Tag>? onChange = null, CancellationToken token = default);
+    Task<ITagSubscription> WatchTags(IEnumerable<Tag> tags, CancellationToken token = default);
 }

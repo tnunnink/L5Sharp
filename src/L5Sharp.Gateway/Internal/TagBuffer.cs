@@ -19,22 +19,22 @@ internal class TagBuffer(ITagService service)
     {
         switch (tag.Value)
         {
-            case BOOL atomic: atomic.Update(service.GetByte(handle, 0) != 0); break;
-            case SINT atomic: atomic.Update(service.GetSByte(handle, 0)); break;
-            case INT atomic: atomic.Update(service.GetShort(handle, 0)); break;
-            case DINT atomic: atomic.Update(service.GetInt(handle, 0)); break;
-            case LINT atomic: atomic.Update(service.GetLong(handle, 0)); break;
-            case REAL atomic: atomic.Update(service.GetFloat(handle, 0)); break;
-            case LREAL atomic: atomic.Update(service.GetDouble(handle, 0)); break;
-            case USINT atomic: atomic.Update(service.GetByte(handle, 0)); break;
-            case UINT atomic: atomic.Update(service.GetUShort(handle, 0)); break;
-            case UDINT atomic: atomic.Update(service.GetUInt(handle, 0)); break;
-            case ULINT atomic: atomic.Update(service.GetULong(handle, 0)); break;
-            case DT atomic: atomic.Update(service.GetLong(handle, 0)); break;
-            case LDT atomic: atomic.Update(service.GetLong(handle, 0)); break;
-            case TIME32 atomic: atomic.Update(service.GetInt(handle, 0)); break;
-            case TIME atomic: atomic.Update(service.GetLong(handle, 0)); break;
-            case LTIME atomic: atomic.Update(service.GetLong(handle, 0)); break;
+            case BOOL atomic: atomic.Value = service.GetByte(handle, 0) != 0; break;
+            case SINT atomic: atomic.Value = service.GetSByte(handle, 0); break;
+            case INT atomic: atomic.Value = service.GetShort(handle, 0); break;
+            case DINT atomic: atomic.Value = service.GetInt(handle, 0); break;
+            case LINT atomic: atomic.Value = service.GetLong(handle, 0); break;
+            case REAL atomic: atomic.Value = service.GetFloat(handle, 0); break;
+            case LREAL atomic: atomic.Value = service.GetDouble(handle, 0); break;
+            case USINT atomic: atomic.Value = service.GetByte(handle, 0); break;
+            case UINT atomic: atomic.Value = service.GetUShort(handle, 0); break;
+            case UDINT atomic: atomic.Value = service.GetUInt(handle, 0); break;
+            case ULINT atomic: atomic.Value = service.GetULong(handle, 0); break;
+            case DT atomic: atomic.Value = service.GetLong(handle, 0); break;
+            case LDT atomic: atomic.Value = service.GetLong(handle, 0); break;
+            case TIME32 atomic: atomic.Value = service.GetInt(handle, 0); break;
+            case TIME atomic: atomic.Value = service.GetLong(handle, 0); break;
+            case LTIME atomic: atomic.Value = service.GetLong(handle, 0); break;
             case StringData stringData: stringData.Update(service.GetString(handle, 0)); break;
         }
     }

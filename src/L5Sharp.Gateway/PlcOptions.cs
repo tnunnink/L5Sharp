@@ -30,10 +30,10 @@ public class PlcOptions
     public int Timeout { get; set; } = 5000;
 
     /// <summary>
-    /// Gets or sets the interval, in milliseconds, at which data is read from the PLC.
-    /// Specifies the frequency of read operations to ensure up-to-date data retrieval.
+    /// Gets or sets the polling rate interval, in milliseconds, for monitoring tag subscriptions.
+    /// Determines how frequently the client polls the PLC for tag value updates when watching tags.
     /// </summary>
-    public int ReadInterval { get; set; } = 1000;
+    public int PollRate { get; set; } = 1000;
 
     /// <summary>
     /// Gets the set of statuses that the client should throw exceptions for.

@@ -86,7 +86,7 @@ public class PlcClient : IPlcClient
     /// </summary>
     /// <param name="options">
     /// The configuration options that define connection parameters such as IP address, slot number,
-    /// timeout settings, and read interval for PLC operations.
+    /// timeout settings, and poll rate for PLC operations.
     /// </param>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="options"/> parameter is null.</exception>
     public PlcClient(PlcOptions options)
@@ -103,7 +103,7 @@ public class PlcClient : IPlcClient
     /// </summary>
     /// <param name="options">
     /// The configuration options that define connection parameters such as IP address, slot number,
-    /// timeout settings, and read interval for PLC operations.
+    /// timeout settings, and read poll rate for PLC operations.
     /// </param>
     /// <param name="tagService">
     /// The tag service implementation to use for tag operations, allowing for custom or mock implementations.
@@ -181,7 +181,7 @@ public class PlcClient : IPlcClient
     }
 
     /// <inheritdoc />
-    public Task<TagResponse> WriteTag<TData>(TagName tagName, TData data, CancellationToken token = default) 
+    public Task<TagResponse> WriteTag<TData>(TagName tagName, TData data, CancellationToken token = default)
         where TData : LogixData, new()
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
@@ -228,8 +228,8 @@ public class PlcClient : IPlcClient
     }
 
     /// <inheritdoc />
-    public Task<IDisposable> WatchTag<TData>(TagName tagName, Action<Tag>? onChange = null,
-        CancellationToken token = default) where TData : LogixData, new()
+    public Task<ITagSubscription> WatchTag<TData>(TagName tagName, CancellationToken token = default)
+        where TData : LogixData, new()
     {
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         ThrowIfDisposed();
@@ -237,26 +237,25 @@ public class PlcClient : IPlcClient
         //Create new virtual tag instance to collect data.
         var tag = Tag.New<TData>(tagName);
 
-        return WatchAllTags([tag], onChange, token);
+        return CreateSubscription([tag], token);
     }
 
     /// <inheritdoc />
-    public Task<IDisposable> WatchTag(Tag tag, Action<Tag>? onChange = null, CancellationToken token = default)
+    public Task<ITagSubscription> WatchTag(Tag tag, CancellationToken token = default)
     {
         if (tag is null) throw new ArgumentNullException(nameof(tag));
         ThrowIfDisposed();
 
-        return WatchAllTags([tag], onChange, token);
+        return CreateSubscription([tag], token);
     }
 
     /// <inheritdoc />
-    public Task<IDisposable> WatchTags(IEnumerable<Tag> tags, Action<Tag>? onChange = null,
-        CancellationToken token = default)
+    public Task<ITagSubscription> WatchTags(IEnumerable<Tag> tags, CancellationToken token = default)
     {
         if (tags is null) throw new ArgumentNullException(nameof(tags));
         ThrowIfDisposed();
 
-        return WatchAllTags(tags.ToArray(), onChange, token);
+        return CreateSubscription(tags.ToArray(), token);
     }
 
     /// <inheritdoc />
@@ -288,7 +287,9 @@ public class PlcClient : IPlcClient
     private async Task<TagResponse> ReadAllTags(Tag[] tags, CancellationToken token = default)
     {
         var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-        if (members.Count == 0) return TagResponse.NoData(tags);
+
+        if (!IsValidMemberSet(members, tags, out var response))
+            return response;
 
         var tasks = members.Select(m => (Member: m, Read: ReadTagValue(m, token))).ToList();
 
@@ -298,69 +299,6 @@ public class PlcClient : IPlcClient
 
         var results = tasks.Select(t => (t.Member.TagName, t.Read.Result)).ToList();
         return TagResponse.Aggregate(tags, results, timer.Elapsed);
-    }
-
-    /// <summary>
-    /// Writes a collection of tag members to the PLC and returns a response containing the results of the operation.
-    /// </summary>
-    private async Task<TagResponse> WriteAllTags(Tag[] tags, CancellationToken token = default)
-    {
-        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-        if (members.Count == 0) return TagResponse.NoData(tags);
-
-        var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
-
-        var timer = Stopwatch.StartNew();
-        await Task.WhenAll(tasks.Select(t => t.Write));
-        timer.Stop();
-
-        var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
-        return TagResponse.Aggregate(tags, results, timer.Elapsed);
-    }
-
-    /// <summary>
-    /// Subscribes to changes in a collection of tag members and invokes a callback when changes occur.
-    /// </summary>
-    private async Task<IDisposable> WatchAllTags(ICollection<Tag> tags, Action<Tag>? onChanged, CancellationToken token)
-    {
-        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
-        if (members.Count == 0)
-            throw new InvalidOperationException("No atomic tag data members exist in the provided set of tags.");
-
-        var tasks = members.Select(m => (Member: m, Create: GetOrCreateHandle(m.TagName, token))).ToList();
-        await Task.WhenAll(tasks.Select(t => t.Create));
-
-        foreach (var (member, create) in tasks)
-        {
-            var handle = create.Result;
-            if (handle <= 1) continue;
-
-            var watch = _watches.GetOrAdd(
-                handle,
-                h => new TagWatch(h, member, _options.ReadInterval, _tagService, _tagBuffer)
-            );
-
-            watch.Increment();
-            if (onChanged is not null) watch.OnChanged += onChanged;
-        }
-
-        return new Unsubscriber(() =>
-        {
-            // If the caller already disposed of the client, then we can return.
-            if (_disposed) return;
-
-            foreach (var task in tasks)
-            {
-                var handle = task.Create.Result;
-
-                if (!_watches.TryGetValue(handle, out var watch))
-                    continue;
-
-                if (onChanged is not null) watch.OnChanged -= onChanged;
-                watch.Decrement();
-                if (watch.IsIdle) _watches.TryRemove(watch.Handle, out _);
-            }
-        });
     }
 
     /// <summary>
@@ -385,6 +323,26 @@ public class PlcClient : IPlcClient
     }
 
     /// <summary>
+    /// Writes a collection of tag members to the PLC and returns a response containing the results of the operation.
+    /// </summary>
+    private async Task<TagResponse> WriteAllTags(Tag[] tags, CancellationToken token = default)
+    {
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
+
+        if (!IsValidMemberSet(members, tags, out var response))
+            return response;
+
+        var tasks = members.Select(m => (Member: m, Write: WriteTagValue(m, token))).ToList();
+
+        var timer = Stopwatch.StartNew();
+        await Task.WhenAll(tasks.Select(t => t.Write));
+        timer.Stop();
+
+        var results = tasks.Select(t => (t.Member.TagName, t.Write.Result)).ToList();
+        return TagResponse.Aggregate(tags, results, timer.Elapsed);
+    }
+
+    /// <summary>
     /// Writes the value of the specified tag to the PLC asynchronously.
     /// </summary>
     /// <param name="tag">The tag object containing the value and metadata to be written.</param>
@@ -406,6 +364,50 @@ public class PlcClient : IPlcClient
         var status = (await ExecuteAsync(tagName, () => _tagService.Write(handle, AsyncTimeout), token)).AsStatus();
         TagException.ThrowIfRequested(status, _options.ThrowOn);
         return status;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private async Task<ITagSubscription> CreateSubscription(Tag[] tags, CancellationToken token)
+    {
+        var members = tags.SelectMany(t => t.Members(m => m.Value.IsAtomic())).ToList();
+
+        if (!IsValidMemberSet(members, tags, out var response))
+            throw new InvalidOperationException($"Failed to create subscription with error: {response.Status}");
+
+        var tasks = members.Select(m => (Member: m, Create: GetOrCreateHandle(m.TagName, token))).ToList();
+        await Task.WhenAll(tasks.Select(t => t.Create));
+
+        var watches = new List<TagWatch>();
+
+        foreach (var (tag, create) in tasks)
+        {
+            var handle = create.Result;
+
+            if (handle <= 1)
+                throw new InvalidOperationException(
+                    $"Failed to create handle for tag '{tag.TagName}' due to error {handle}");
+
+            var watch = _watches.GetOrAdd(
+                handle,
+                h => new TagWatch(h, tag, _options.PollRate, _tagService, _tagBuffer)
+            );
+
+            // This will make sure the watch reads the initial buffer value.
+            watch.Notify(TagStatus.Ok);
+            // This will increase the subscriber count and start polling.
+            watch.Increment();
+
+            watches.Add(watch);
+        }
+
+        return new TagSubscription(watches, w =>
+        {
+            if (_disposed) return;
+            w.Decrement();
+            if (w.IsIdle) _watches.TryRemove(w.Handle, out _);
+        });
     }
 
     /// <summary>
@@ -553,11 +555,45 @@ public class PlcClient : IPlcClient
         }
 
         // At this point we should see if any tag watch exists for this handle.
-        // If so and this event was a completed read, then notify the watch.
-        if (_watches.TryGetValue(handle, out var watch) && eventId == TagEvent.ReadCompleted)
+        if (_watches.TryGetValue(handle, out var watch))
         {
             watch.Notify(statusId.AsStatus());
         }
+    }
+
+    /// <summary>
+    /// Validates the set of tag members and checks for duplicates within the provided collection of tags.
+    /// </summary>
+    /// <param name="members">
+    /// A collection of tag members to validate. Each member represents a specific atomic tag element.
+    /// </param>
+    /// <param name="tags">
+    /// An array of tags related to the members being validated. Used to associate results with their original tags.
+    /// </param>
+    /// <param name="response">
+    /// An output parameter that provides a <see cref="TagResponse"/> indicating the validation result.
+    /// Will contain specific error details if validation fails.
+    /// </param>
+    /// <returns>
+    /// Returns <c>true</c> if the set of members is valid and contains no duplicates; otherwise, <c>false</c>.
+    /// </returns>
+    private static bool IsValidMemberSet(ICollection<Tag> members, Tag[] tags, out TagResponse response)
+    {
+        if (members.Count == 0)
+        {
+            response = TagResponse.NoData(tags);
+            return false;
+        }
+
+        var duplicates = members.GroupBy(m => m.TagName).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
+        if (duplicates.Length > 0)
+        {
+            response = TagResponse.Duplicate(tags, duplicates);
+            return false;
+        }
+
+        response = null!;
+        return true;
     }
 
     /// <summary>
@@ -572,14 +608,5 @@ public class PlcClient : IPlcClient
         {
             throw new InvalidOperationException("The client has been disposed and can no longer perform actions.");
         }
-    }
-
-    /// <summary>
-    /// Provides a mechanism to manage and handle the unsubscription of tag-related callbacks in a monitoring system.
-    /// This class is used internally to dispose of subscriptions when they are no longer needed.
-    /// </summary>
-    private class Unsubscriber(Action unsubscribe) : IDisposable
-    {
-        public void Dispose() => unsubscribe();
     }
 }

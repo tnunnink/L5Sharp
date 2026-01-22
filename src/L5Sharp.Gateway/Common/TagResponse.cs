@@ -126,6 +126,20 @@ public class TagResponse
     }
 
     /// <summary>
+    /// Creates a new <see cref="TagResponse"/> object indicating duplicate tags and their statuses within
+    /// the specified tag collection.
+    /// </summary>
+    /// <param name="tags">An array of tags to evaluate.</param>
+    /// <param name="duplicates">An array of duplicate tag names found in the collection.</param>
+    /// <returns>A <see cref="TagResponse"/> object containing information about duplicate tags.</returns>
+    public static TagResponse Duplicate(Tag[] tags, TagName[] duplicates)
+    {
+        var response = new TagResponse(tags, TimeSpan.Zero);
+        response._errors.AddRange(duplicates.Select(t => (t, TagStatus.Duplicate)));
+        return response;
+    }
+
+    /// <summary>
     /// Aggregates the provided tag data and results into a <see cref="TagResponse"/> object,
     /// including any errors identified during the operation.
     /// </summary>
