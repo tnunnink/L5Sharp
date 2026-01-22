@@ -131,7 +131,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </exception>
     public static Radix Infer(string value)
     {
-        var radix = All().FirstOrDefault(r => r.IsValidFormat(value));
+        var radix = All().FirstOrDefault(r => r.IsValid(value));
 
         if (radix is null)
         {
@@ -154,7 +154,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </returns>
     public static bool TryInfer(string? value, out Radix radix)
     {
-        radix = All().FirstOrDefault(r => r.IsValidFormat(value)) ?? Null;
+        radix = All().FirstOrDefault(r => r.IsValid(value)) ?? Null;
         return radix != Null;
     }
 
@@ -193,7 +193,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>
     /// <c>true</c> if the specified value matches the expected format of the <see cref="Radix"/>; otherwise, <c>false</c>.
     /// </returns>
-    protected virtual bool IsValidFormat(string? value)
+    protected virtual bool IsValid(string? value)
     {
         return false;
     }
@@ -236,7 +236,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int SegmentSize = 4;
         private const string Separator = "_";
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -280,7 +280,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int SegmentSize = 3;
         private const string Separator = "_";
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -317,7 +317,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     {
         private const int BaseNumber = 10;
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             if (value is null)
                 return false;
@@ -364,7 +364,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int SegmentSize = 4;
         private const string Separator = "_";
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -402,15 +402,20 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string QNAN = "1.#QNAN";
         private const string DoubleFormat = "0.0##############";
         private const string SingleFormat = "0.0######";
+        private static readonly HashSet<char> ValidCharacters = ['.', '+', '-'];
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
-            return value switch
+            if (value is null || string.IsNullOrEmpty(value)) return false;
+            if (value == QNAN) return true;
+
+            foreach (var c in value)
             {
-                null => false,
-                QNAN => true,
-                _ => value.All(c => char.IsDigit(c) || c == '.' || c == '+' || c == '-')
-            };
+                if (char.IsDigit(c)) continue;
+                if (!ValidCharacters.Contains(c)) return false;
+            }
+
+            return true;
         }
 
         protected override bool IsSupportedType(Type type)
@@ -457,14 +462,21 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string SingleExponent = "e8";
         private static readonly HashSet<char> ValidCharacters = ['.', '+', '-', 'e', 'E'];
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
-            return value switch
+            if (value is null || string.IsNullOrEmpty(value)) return false;
+            if (value == QNAN) return true;
+
+            var hasExponent = false;
+            foreach (var c in value)
             {
-                null => false,
-                QNAN => true,
-                _ => value.All(c => char.IsDigit(c) || ValidCharacters.Contains(c))
-            };
+                if (char.IsDigit(c)) continue;
+                if (!ValidCharacters.Contains(c)) return false;
+                if (c is 'e' or 'E') hasExponent = true;
+            }
+
+            // Strict: If there's no 'e'/'E', it's NOT exponential (it's likely Float or Decimal)
+            return hasExponent;
         }
 
         protected override bool IsSupportedType(Type type)
@@ -520,7 +532,7 @@ public abstract class Radix : LogixEnum<Radix, string>
             { "$'", "27" }
         };
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null &&
                    value.StartsWith(Specifier) &&
@@ -638,7 +650,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private static readonly Func<long, long> ValueConverter = l => l;
 
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -700,7 +712,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private static readonly Func<long, long> ValueConverter = l => l;
 
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -755,7 +767,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Separator = "_";
         private static readonly Func<int, int> ValueConverter = l => l;
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -834,7 +846,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Separator = "_";
         private static readonly Func<long, long> ValueConverter = l => l;
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -919,7 +931,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Separator = "_";
         private static readonly Func<long, long> ValueConverter = l => l;
 
-        protected override bool IsValidFormat(string? value)
+        protected override bool IsValid(string? value)
         {
             return value is not null && value.StartsWith(Specifier);
         }
@@ -1341,7 +1353,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         if (string.IsNullOrEmpty(value))
             throw new ArgumentException("Value can not be null or empty.", nameof(value));
 
-        if (!IsValidFormat(value))
+        if (!IsValid(value))
             throw new FormatException($"Invalid {Name} format: '{value}' ");
     }
 }
