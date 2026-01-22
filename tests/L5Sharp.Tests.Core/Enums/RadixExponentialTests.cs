@@ -15,6 +15,18 @@ namespace L5Sharp.Tests.Core.Enums
             radix.Should().NotBeNull();
             radix.Should().Be(Radix.Exponential);
         }
+        
+        [Test]
+        [TestCase("0.00000000e+00")]
+        [TestCase("1.23000000e+02")]
+        [TestCase("-1.23000000e+02")]
+        [TestCase("+1.23000000e+02")]
+        public void Infer_ValidFormats_ShouldBeExpected(string value)
+        {
+            var radix = Radix.Infer(value);
+
+            radix.Should().Be(Radix.Exponential);
+        }
 
         [Test]
         public void Format_Zero_ShouldBeExpectedFormat()

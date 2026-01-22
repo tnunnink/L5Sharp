@@ -17,6 +17,19 @@ namespace L5Sharp.Tests.Core.Enums
         }
 
         [Test]
+        [TestCase("0.0")]
+        [TestCase("1.0")]
+        [TestCase("1.23")]
+        [TestCase("-1.23")]
+        [TestCase("+1.23")]
+        public void Infer_ValidFormats_ShouldBeExpected(string value)
+        {
+            var radix = Radix.Infer(value);
+
+            radix.Should().Be(Radix.Float);
+        }
+
+        [Test]
         public void Format_Zero_ShouldBeExpectedFormat()
         {
             var result = Radix.Float.Format(0.0);

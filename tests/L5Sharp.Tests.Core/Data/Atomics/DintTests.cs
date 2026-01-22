@@ -75,7 +75,7 @@ public class DintTests
     {
         var atomic = new DINT();
 
-        atomic.Update(new DINT(123));
+        atomic.Update(123);
 
         atomic.Value.Should().Be(123);
     }
