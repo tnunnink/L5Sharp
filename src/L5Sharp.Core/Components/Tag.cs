@@ -639,6 +639,14 @@ public class Tag : LogixComponent<Tag>
     /// </returns>
     public IEnumerable<TagName> TagNames() => Members().Select(t => t.TagName);
 
+    /// <summary>
+    /// Determines if the tag is publicly accessible based on the external access configuration.
+    /// </summary>
+    /// <returns>
+    /// True if the tag has an external access configuration that is not <see cref="Access.None"/>; otherwise, false.
+    /// </returns>
+    public bool IsPublic() => ExternalAccess is not null && ExternalAccess != Access.None;
+
     /// <inheritdoc />
     public override string ToString() => TagName;
 
