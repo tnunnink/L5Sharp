@@ -13,15 +13,14 @@ public class ReadTagTests : PlcTestBase
     {
         using var client = CreateClient();
 
-        var response = await client.ReadTag<DINT>("TestDint");
+        var result = await client.ReadTag<DINT>("TestDint");
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
-        response.Tags.First().Value.Should().NotBe(0);
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Errors.Should().BeEmpty();
+        result.Tag.Value.Should().NotBe(0);
     }
 
     [Test]
@@ -30,33 +29,62 @@ public class ReadTagTests : PlcTestBase
         using var client = CreateClient();
         var tag = Tag.New<DINT>("TestDint");
 
-        var response = await client.ReadTag(tag);
+        var result = await client.ReadTag(tag);
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
-        tag.Value.Should().NotBe(0);
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Errors.Should().BeEmpty();
+        result.Tag.Value.Should().NotBe(0);
     }
 
     [Test]
     public async Task ReadTag_ProgramTagDint_ShouldReturnNotFoundResponse()
     {
         using var client = CreateClient();
-        var program = new Program("MainProgram");
-        var tag = Tag.New<DINT>("LocalDint");
-        program.Tags.Add(tag); //This should get the correct scope for the tag.
+        var tag = Tag.New<DINT>("Program:MainProgram.LocalDint");
 
-        var response = await client.ReadTag(tag);
+        var result = await client.ReadTag(tag);
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Errors.Should().BeEmpty();
+        result.Tag.Value.Should().NotBe(0);
+    }
+
+    [Test]
+    public async Task ReadTagControllerTagTimer_ShouldGetSuccessAndExpectedMemberValue()
+    {
+        using var client = CreateClient();
+        var tag = Tag.New<TIMER>("TestTimer");
+
+        var result = await client.ReadTag(tag);
+
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Errors.Should().BeEmpty();
+        result.Tag.Value.As<TIMER>().PRE.Should().NotBe(0);
+    }
+
+    [Test]
+    public async Task ReadTag_ProgramTagTimer_ShouldReturnNotFoundResponse()
+    {
+        using var client = CreateClient();
+        var tag = Tag.New<TIMER>("Program:MainProgram.LocalTimer");
+
+        var result = await client.ReadTag(tag);
+
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Errors.Should().BeEmpty();
+        result.Tag["PRE"].Value.Should().NotBe(0);
     }
 
     [Test]
@@ -67,27 +95,10 @@ public class ReadTagTests : PlcTestBase
 
         for (var i = 0; i < 10; i++)
         {
-            var response = await client.ReadTag(tag);
-            response.Success.Should().BeTrue();
-            Console.WriteLine($"{response.Timestamp} | {tag.Value}");
+            var result = await client.ReadTag(tag);
+            result.Success.Should().BeTrue();
+            Console.WriteLine($"{result.Timestamp} | {tag.Value}");
         }
-    }
-
-    [Test]
-    public async Task ReadTag_TimerType_ShouldGetSuccessAndExpectedMemberValue()
-    {
-        using var client = CreateClient();
-        var tag = Tag.New<TIMER>("TestTimer");
-
-        var response = await client.ReadTag(tag);
-
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
-        tag.Value.As<TIMER>().PRE.Should().NotBe(0);
     }
 
     [Test]
@@ -96,32 +107,25 @@ public class ReadTagTests : PlcTestBase
         using var client = CreateClient();
         var tag = Tag.New<ALARM_ANALOG>("TestAlarm");
 
-        var response = await client.ReadTag(tag);
+        var result = await client.ReadTag(tag);
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
-        tag.Value.As<ALARM_ANALOG>().HHLimit.Should().NotBe(0);
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Errors.Should().BeEmpty();
+        result.Tag.Value.As<ALARM_ANALOG>().HHLimit.Should().NotBe(0);
     }
 
     [Test]
-    public async Task ReadTag_TagWithNoData_ShouldReturnNoDataResponse()
+    public async Task ReadTag_TagWithNoData_ShouldThrowException()
     {
         using var client = CreateClient();
         var tag = new Tag { Name = "TestDint" };
 
-        var response = await client.ReadTag(tag);
-
-        response.Success.Should().BeFalse();
-        response.Status.Should().Be(TagStatus.NoData);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().Be(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().HaveCount(1);
-        response.HasError(TagStatus.NoData).Should().BeTrue();
+        // ReSharper disable once AccessToDisposedClosure just for testing purposes
+        await FluentActions.Awaiting(() => client.ReadTag(tag))
+            .Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -130,15 +134,15 @@ public class ReadTagTests : PlcTestBase
         using var client = CreateClient();
         var tag = Tag.New<DINT>("Fake");
 
-        var response = await client.ReadTag(tag);
+        var result = await client.ReadTag(tag);
 
-        response.Success.Should().BeFalse();
-        response.Status.Should().Be(TagStatus.NotFound);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().HaveCount(1);
-        response.HasError(TagStatus.NotFound).Should().BeTrue();
+        result.Success.Should().BeFalse();
+        result.Status.Should().Be(TagStatus.NotFound);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().HaveCount(1);
+        result.HasError(TagStatus.NotFound).Should().BeTrue();
     }
 
     [Test]
@@ -147,14 +151,14 @@ public class ReadTagTests : PlcTestBase
         using var client = CreateClient();
         var tags = Enumerable.Range(0, 1000).Select(i => new Tag($"Tag_{i}", new DINT())).ToList();
 
-        var response = await client.ReadTags(tags);
+        var result = await client.ReadTags(tags);
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Duration.Should().BeLessThan(TimeSpan.FromSeconds(2));
-        response.Tags.Should().HaveCount(1000);
-        response.Errors.Should().BeEmpty();
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Duration.Should().BeLessThan(TimeSpan.FromSeconds(2));
+        result.Tags.Should().HaveCount(1000);
+        result.Errors.Should().BeEmpty();
     }
 }

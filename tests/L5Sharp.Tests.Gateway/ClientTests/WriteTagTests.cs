@@ -13,14 +13,14 @@ public class WriteTagTests : PlcTestBase
     {
         using var client = CreateClient();
 
-        var response = await client.WriteTag<DINT>("TestDint", 123);
+        var result = await client.WriteTag<DINT>("TestDint", 123);
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().BeEmpty();
     }
     
     [Test]
@@ -28,19 +28,19 @@ public class WriteTagTests : PlcTestBase
     {
         using var client = CreateClient();
 
-        var response = await client.WriteTag<TIMER>("TestTimer", d =>
+        var result = await client.WriteTag<TIMER>("TestTimer", d =>
         {
             d.PRE = 12345;
             d.ACC = 123;
             d.EN = true;
         });
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().BeEmpty();
     }
 
     [Test]
@@ -50,14 +50,14 @@ public class WriteTagTests : PlcTestBase
         var tag = Tag.New<DINT>("TestDint");
         tag.Value = 123;
 
-        var response = await client.WriteTag(tag);
+        var result = await client.WriteTag(tag);
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().BeEmpty();
     }
 
     [Test]
@@ -68,14 +68,14 @@ public class WriteTagTests : PlcTestBase
         tag["PRE"].Value = 10000;
         tag["DN"].Value = 1;
 
-        var response = await client.WriteTag(tag);
+        var result = await client.WriteTag(tag);
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().BeEmpty();
     }
 
     [Test]
@@ -83,7 +83,7 @@ public class WriteTagTests : PlcTestBase
     {
         using var client = CreateClient();
 
-        var response = await client.WriteTag<ALARM_ANALOG>("TestAlarm", d =>
+        var result = await client.WriteTag<ALARM_ANALOG>("TestAlarm", d =>
         {
             d.HHEnabled = true;
             d.HHLimit = 1234;
@@ -93,11 +93,11 @@ public class WriteTagTests : PlcTestBase
             d.LLSeverity = 1000;
         });
 
-        response.Success.Should().BeTrue();
-        response.Status.Should().Be(TagStatus.Ok);
-        response.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        response.Duration.Should().BeGreaterThan(TimeSpan.Zero);
-        response.Tags.Should().HaveCount(1);
-        response.Errors.Should().BeEmpty();
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().BeEmpty();
     }
 }
