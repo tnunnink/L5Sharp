@@ -21,9 +21,9 @@ public static class Extensions
     /// <param name="project">The L5X project containing the tags to upload.</param>
     /// <param name="client">The PLC client used to communicate with the controller.</param>
     /// <param name="token">A cancellation token to cancel the upload operation.</param>
-    /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResponse"/> with the results.</returns>
+    /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResults"/> with the results.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> is null.</exception>
-    public static Task<TagResponse> Upload(this L5X project, IPlcClient client,
+    public static Task<TagResults> Upload(this L5X project, IPlcClient client,
         CancellationToken token = default)
     {
         if (client is null) throw new ArgumentNullException(nameof(client));
@@ -41,9 +41,9 @@ public static class Extensions
     /// <param name="client">The PLC client used to communicate with the controller.</param>
     /// <param name="predicate">A function to filter which tags should be uploaded.</param>
     /// <param name="token">A cancellation token to cancel the upload operation.</param>
-    /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResponse"/> with the results.</returns>
+    /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResults"/> with the results.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> or <paramref name="predicate"/> is null.</exception>
-    public static Task<TagResponse> Upload(this L5X project, IPlcClient client, Func<Tag, bool> predicate,
+    public static Task<TagResults> Upload(this L5X project, IPlcClient client, Func<Tag, bool> predicate,
         CancellationToken token = default)
     {
         if (client is null) throw new ArgumentNullException(nameof(client));
@@ -62,9 +62,9 @@ public static class Extensions
     /// <param name="client">The PLC client used to communicate with the controller.</param>
     /// <param name="scope">The scope that filters which tags should be uploaded (e.g., controller or program scope).</param>
     /// <param name="token">A cancellation token to cancel the upload operation.</param>
-    /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResponse"/> with the results.</returns>
+    /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResults"/> with the results.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> is null.</exception>
-    public static Task<TagResponse> Upload(this L5X project, IPlcClient client, Scope scope,
+    public static Task<TagResults> Upload(this L5X project, IPlcClient client, Scope scope,
         CancellationToken token = default)
     {
         if (client is null) throw new ArgumentNullException(nameof(client));
@@ -82,9 +82,9 @@ public static class Extensions
     /// <param name="client">The PLC client used to communicate with the controller.</param>
     /// <param name="savePath">The file path where the project snapshot should be saved.</param>
     /// <param name="token">A cancellation token to cancel the snapshot operation.</param>
-    /// <returns>A task that represents the asynchronous snapshot operation, containing a <see cref="TagResponse"/> with the results.</returns>
+    /// <returns>A task that represents the asynchronous snapshot operation, containing a <see cref="TagResults"/> with the results.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> is null.</exception>
-    public static async Task<TagResponse> Snapshot(this L5X project, IPlcClient client, string savePath,
+    public static async Task<TagResults> Snapshot(this L5X project, IPlcClient client, string savePath,
         CancellationToken token = default)
     {
         if (client is null) throw new ArgumentNullException(nameof(client));

@@ -62,7 +62,14 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     /// This value is updated whenever the tag's status changes or when its data is refreshed.
     /// Used to monitor the currency of the tag's data.
     /// </summary>
-    public DateTime Timestamp { get; private set; } = DateTime.MinValue;
+    public DateTime Timestamp { get; private set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// Represents the total time elapsed since the last status update for the associated tag.
+    /// This property is automatically updated whenever a status change or notification occurs,
+    /// reflecting the duration between the current and previous status updates.
+    /// </summary>
+    public TimeSpan Duration { get; private set; } = TimeSpan.Zero;
 
     /// <summary>
     /// Gets or sets the number of updates received for the associated tag.
@@ -85,17 +92,24 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     public bool IsErrored => Status < 0;
 
     /// <summary>
+    /// An event that is triggered whenever the associated tag's status is updated.
+    /// Subscribers can handle this event to react to status changes of the tag,
+    /// such as triggering actions or updating dependent systems.
+    /// </summary>
+    public event Action<TagWatch>? Updated;
+
+    /// <summary>
     /// An event that is triggered whenever the associated <see cref="Tag"/> experiences a change.
     /// Subscribers to this event will be notified and provided with the instance that has undergone the modification.
     /// </summary>
-    public event Action<Tag>? Changed;
+    public event Action<TagWatch>? Changed;
 
     /// <summary>
     /// An event that is triggered whenever the associated <see cref="Tag"/> encounters an error condition.
     /// Subscribers to this event will be notified and provided with the tag instance and the status code
     /// indicating the specific error that occurred.
     /// </summary>
-    public event Action<Tag, TagStatus>? Errored;
+    public event Action<TagWatch>? Errored;
 
     /// <summary>
     /// Increments the subscriber count for the associated watch. If this call results in the first subscriber
@@ -144,18 +158,20 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     public void Notify(TagStatus status)
     {
         Status = status;
+        Duration = DateTime.UtcNow - Timestamp;
         Timestamp = DateTime.UtcNow;
         Updates++;
+
+        Updated?.Invoke(this);
 
         switch (Status)
         {
             case < 0:
-                Errored?.Invoke(Tag, Status);
+                Errored?.Invoke(this);
                 break;
             case TagStatus.Ok:
-                //todo can we add a read if changed or something? We want to only invoke the event on change in value.
-                _buffer.ReadValue(Tag, Handle);
-                Changed?.Invoke(Tag);
+                if (!_buffer.ReadValue(Tag, Handle)) break;
+                Changed?.Invoke(this);
                 break;
         }
     }

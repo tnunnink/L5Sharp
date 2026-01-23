@@ -11,31 +11,46 @@ namespace L5Sharp.Gateway.Internal;
 internal class TagBuffer(ITagService service)
 {
     /// <summary>
-    /// Reads the value of a specified tag from the given handle and updates the tag's value accordingly.
+    /// Retrieves and updates the value of the specified tag from the given handle.
     /// </summary>
-    /// <param name="tag">The tag instance to be updated with the data obtained from the handle.</param>
-    /// <param name="handle">The handle identifier from which the tag value will be retrieved.</param>
-    internal void ReadValue(Tag tag, int handle)
+    /// <param name="tag">The tag instance whose value is to be read and updated.</param>
+    /// <param name="handle">The identifier for the data source from which the tag value is retrieved.</param>
+    /// <returns>A boolean value indicating whether the tag value was changed.</returns>
+    internal bool ReadValue(Tag tag, int handle)
     {
         switch (tag.Value)
         {
-            case BOOL atomic: atomic.Value = service.GetByte(handle, 0) != 0; break;
-            case SINT atomic: atomic.Value = service.GetSByte(handle, 0); break;
-            case INT atomic: atomic.Value = service.GetShort(handle, 0); break;
-            case DINT atomic: atomic.Value = service.GetInt(handle, 0); break;
-            case LINT atomic: atomic.Value = service.GetLong(handle, 0); break;
-            case REAL atomic: atomic.Value = service.GetFloat(handle, 0); break;
-            case LREAL atomic: atomic.Value = service.GetDouble(handle, 0); break;
-            case USINT atomic: atomic.Value = service.GetByte(handle, 0); break;
-            case UINT atomic: atomic.Value = service.GetUShort(handle, 0); break;
-            case UDINT atomic: atomic.Value = service.GetUInt(handle, 0); break;
-            case ULINT atomic: atomic.Value = service.GetULong(handle, 0); break;
-            case DT atomic: atomic.Value = service.GetLong(handle, 0); break;
-            case LDT atomic: atomic.Value = service.GetLong(handle, 0); break;
-            case TIME32 atomic: atomic.Value = service.GetInt(handle, 0); break;
-            case TIME atomic: atomic.Value = service.GetLong(handle, 0); break;
-            case LTIME atomic: atomic.Value = service.GetLong(handle, 0); break;
-            case StringData stringData: stringData.Update(service.GetString(handle, 0)); break;
+            case BOOL atomic when Update(atomic, service.GetByte(handle, 0) != 0): break;
+            case SINT atomic when Update(atomic, service.GetSByte(handle, 0)): break;
+            case INT atomic when Update(atomic, service.GetShort(handle, 0)): break;
+            case DINT atomic when Update(atomic, service.GetInt(handle, 0)): break;
+            case LINT atomic when Update(atomic, service.GetLong(handle, 0)): break;
+            case REAL atomic when Update(atomic, service.GetFloat(handle, 0)): break;
+            case LREAL atomic when Update(atomic, service.GetDouble(handle, 0)): break;
+            case USINT atomic when Update(atomic, service.GetByte(handle, 0)): break;
+            case UINT atomic when Update(atomic, service.GetUShort(handle, 0)): break;
+            case UDINT atomic when Update(atomic, service.GetUInt(handle, 0)): break;
+            case ULINT atomic when Update(atomic, service.GetULong(handle, 0)): break;
+            case DT atomic when Update(atomic, service.GetLong(handle, 0)): break;
+            case LDT atomic when Update(atomic, service.GetLong(handle, 0)): break;
+            case TIME32 atomic when Update(atomic, service.GetInt(handle, 0)): break;
+            case TIME atomic when Update(atomic, service.GetLong(handle, 0)): break;
+            case LTIME atomic when Update(atomic, service.GetLong(handle, 0)): break;
+            case StringData str:
+                var value = service.GetString(handle, 0);
+                if (string.Equals(value, str.ToString(), StringComparison.Ordinal)) return false;
+                str.Update(value);
+                break;
+            default: return false;
+        }
+
+        return true;
+
+        static bool Update<T>(IAtomicValue<T> atomic, T value) where T : struct, IEquatable<T>
+        {
+            if (atomic.Value.Equals(value)) return false;
+            atomic.Value = value;
+            return true;
         }
     }
 
