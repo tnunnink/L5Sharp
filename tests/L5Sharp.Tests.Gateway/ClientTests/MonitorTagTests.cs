@@ -18,9 +18,9 @@ public class MonitorTagTests : PlcTestBase
         monitor.IsActive.Should().BeTrue();
         monitor.HasErrors.Should().BeFalse();
         monitor.Status.Should().Be(TagStatus.Ok);
-        monitor.LastUpdate.Should().BeAfter(DateTime.Now.AddSeconds(-1));
-        monitor.UpdateRate.Should().BeGreaterThan(TimeSpan.FromMilliseconds(0));
-        monitor.UpdateCount.Should().BeGreaterThan(0);
+        monitor.Timestamp.Should().BeAfter(DateTime.Now.AddSeconds(-1));
+        monitor.Rate.Should().BeGreaterThan(TimeSpan.FromMilliseconds(0));
+        monitor.Updates.Should().BeGreaterThan(0);
         monitor.Tags.Should().HaveCount(1);
         monitor.Errors.Should().BeEmpty();
     }
@@ -132,7 +132,7 @@ public class MonitorTagTests : PlcTestBase
         // Have to wait for the next Monitor interval.
         await Task.Delay(1500);
 
-        monitor.UpdateCount.Should().Be(3);
+        monitor.Updates.Should().Be(3);
         invoked.Should().BeGreaterThan(0);
         invoked.Should().BeLessThan(6, "slow callbacks should throttle delivery if callbacks are serialized");
         overlapped.Should().Be(0, "callbacks should not run concurrently for the same monitor");
