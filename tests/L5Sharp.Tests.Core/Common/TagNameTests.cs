@@ -282,7 +282,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
 
-            var members = tagName.Slice().ToList();
+            var members = tagName.Members().ToList();
 
             members[0].Should().Be("Module:1:I");
             members[1].Should().Be("TagName");
@@ -307,7 +307,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName(value);
 
-            var members = tagName.Slice().ToList();
+            var members = tagName.Members().ToList();
 
             members.Should().HaveCount(expected);
         }
@@ -321,7 +321,7 @@ namespace L5Sharp.Tests.Core.Common
                 .ToList();
 
             var stopwatch = Stopwatch.StartNew();
-            var members = tags.SelectMany(t => t.Slice()).ToList();
+            var members = tags.SelectMany(t => t.Members()).ToList();
             stopwatch.Stop();
 
             Console.WriteLine(stopwatch.Elapsed);
