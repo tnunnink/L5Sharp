@@ -5,10 +5,10 @@ using Task = System.Threading.Tasks.Task;
 namespace L5Sharp.Tests.Gateway.ClientTests;
 
 [TestFixture]
-public class WaitTagTests : PlcTestBase
+public class PollTagTests : PlcTestBase
 {
     [Test]
-    public async Task WaitTag_ValidControllerDint_ShouldReturnExpected()
+    public async Task PollTag_ValidControllerDint_ShouldReturnExpected()
     {
         using var client = CreateClient();
 
@@ -19,7 +19,7 @@ public class WaitTagTests : PlcTestBase
     }
 
     [Test]
-    public async Task WaitTag_ValidControllerTimer_ShouldReturnExpected()
+    public async Task PollTag_ValidControllerTimer_ShouldReturnExpected()
     {
         using var client = CreateClient();
 
@@ -30,7 +30,7 @@ public class WaitTagTests : PlcTestBase
     }
 
     [Test]
-    public async Task WaitTag_InvalidTagName_ShouldReturnFailure()
+    public async Task PollTag_InvalidTagName_ShouldReturnFailure()
     {
         using var client = CreateClient();
 
