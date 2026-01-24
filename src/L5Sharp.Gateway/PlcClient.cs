@@ -366,14 +366,9 @@ public class PlcClient : IPlcClient
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
         ThrowIfDisposed();
 
-        // Build a tag instance to hold updates.
         var tag = Tag.New<TData>(tagName);
-
-        // Link the provided token with a timeout cancellation if specified.
-        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(token);
-        if (timeout.HasValue) cancellation.CancelAfter(timeout.Value);
-
-        return PullUntilCondition(tag, predicate, cancellation.Token);
+        
+        return PullUntilCondition(tag, predicate, timeout, token);
     }
 
     /// <inheritdoc />
@@ -384,11 +379,7 @@ public class PlcClient : IPlcClient
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
         ThrowIfDisposed();
 
-        // Link the provided token with a timeout cancellation if specified.
-        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(token);
-        if (timeout.HasValue) cancellation.CancelAfter(timeout.Value);
-
-        return PullUntilCondition(tag, predicate, cancellation.Token);
+        return PullUntilCondition(tag, predicate, timeout, token);
     }
 
     /// <inheritdoc />
@@ -506,28 +497,37 @@ public class PlcClient : IPlcClient
     /// Monitors a specified tag until it meets the provided condition defined by the predicate
     /// and returns the corresponding tag result upon satisfaction of the condition.
     /// </summary>
-    private async Task<TagResult> PullUntilCondition<TData>(Tag tag, Func<TData, bool> predicate,
+    private async Task<TagResult> PullUntilCondition<TData>(Tag tag,
+        Func<TData, bool> predicate,
+        TimeSpan? timeout = null,
         CancellationToken token = default) where TData : LogixData
     {
-        using var monitor = await CreateMonitor([tag], token).ConfigureAwait(false);
-        var waiter = new TaskCompletionSource<TagResult>(TaskCreationOptions.RunContinuationsAsynchronously);
-        using var cancellation = token.Register(() => waiter.TrySetCanceled(token));
+        // Link the provided token with a timeout cancellation if specified.
+        using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(token);
+        if (timeout.HasValue) cancellation.CancelAfter(timeout.Value);
 
-        // Response to any change on the tag but receive as the base tag to invoke the predicate
+        // Kick off a tag monitor to stream updates into the tag instance.
+        using var monitor = await CreateMonitor([tag], token).ConfigureAwait(false);
+
+        // Create a task completion source to make the event callback awaitable. Register the cancellation callback.
+        var poller = new TaskCompletionSource<TagResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var registration = cancellation.Token.Register(() => poller.TrySetCanceled(token));
+
+        // Response to any change on the tag and get the base tag to evaluate the entire data structure.
         monitor.OnChange(tag.TagName, r =>
         {
             try
             {
                 var value = r.Tag.Value.As<TData>();
-                if (predicate(value)) waiter.TrySetResult(r);
+                if (predicate(value)) poller.TrySetResult(r);
             }
             catch (Exception ex)
             {
-                waiter.TrySetException(ex);
+                poller.TrySetException(ex);
             }
         });
 
-        return await waiter.Task.ConfigureAwait(false);
+        return await poller.Task.ConfigureAwait(false);
     }
 
     /// <summary>
@@ -587,7 +587,7 @@ public class PlcClient : IPlcClient
         var route = $"{_uri}&name={tagName}";
 
         // Pass the tag name string as the unmanaged pointer.
-        // This user data will be available in the event callback, which is needed to lookup.
+        // This user data will be available in the event callback, which is needed for lookups.
         var tagPtr = Marshal.StringToHGlobalAnsi(tagName);
 
         // Execute the create function asynchronously.

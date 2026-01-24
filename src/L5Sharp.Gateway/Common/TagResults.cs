@@ -4,53 +4,59 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using L5Sharp.Core;
-using L5Sharp.Gateway.Abstractions;
 
 namespace L5Sharp.Gateway.Common;
 
 /// <summary>
-/// Represents the result of a tag-related operation performed by an <see cref="IPlcClient"/>.
+/// Represents a collection of <see cref="TagResult"/>, encapsulating the overall success status, metadata, and
+/// corresponding tag data.
 /// </summary>
+/// <remarks>
+/// This class provides information about the outcome of a tag operation, including individual results, any errors,
+/// and operation timing details.
+/// </remarks>
 public class TagResults : IReadOnlyCollection<TagResult>
 {
     private readonly TagResult[] _results;
 
     private TagResults(TagResult[] results)
     {
-        _results = results ?? throw new ArgumentNullException(nameof(results));
+        if (results is null)
+            throw new ArgumentNullException(nameof(results));
 
-        if (_results.Length == 0)
+        if (results.Length == 0)
             throw new ArgumentException("Results collection cannot be empty.", nameof(results));
 
+        _results = results;
         Tags = _results.Select(r => r.Tag);
         Errors = new ReadOnlyCollection<TagError>(_results.SelectMany(r => r.Errors).ToArray());
         Success = _results.All(r => r.Success);
         Status = _results.Min(e => e.Status);
         Timestamp = DateTime.UtcNow;
-        Duration = TimeSpan.FromMilliseconds(_results.Average(r => r.Duration.Milliseconds));
+        Duration = TimeSpan.FromMilliseconds(_results.Average(r => r.Duration.TotalMilliseconds));
     }
 
     /// <summary>
-    /// Indicates whether the tag operation completed successfully without errors.
+    /// Indicates whether all tag operations in the collection were completed successfully.
+    /// Returns true if every tag result resulted in success; otherwise, returns false if any operation failed.
     /// </summary>
     public bool Success { get; }
 
     /// <summary>
-    /// Gets the overall result status of the tag operation.
-    /// Returns the status of the first error encountered if any errors occurred during the operation;
-    /// otherwise, returns <see cref="TagStatus.Ok"/> indicating successful completion.
+    /// Represents the overall status of the tag operation results within the collection.
+    /// This will represent the minimum status for all tag results in the collection.
     /// </summary>
     public TagStatus Status { get; }
 
     /// <summary>
-    /// The timestamp representing the date and time when the operation was completed.
+    /// Gets the timestamp indicating when the tag operation results were recorded.
+    /// The value is expressed in Coordinated Universal Time (UTC).
     /// </summary>
     public DateTime Timestamp { get; }
 
     /// <summary>
-    /// The duration of the operation represented as a <see cref="TimeSpan"/>.
-    /// This property indicates the elapsed time required to complete the operation,
-    /// providing insight into the performance and timing of the process.
+    /// Represents the time elapsed during the execution of all tag-related operations in the collection.
+    /// The value is calculated as the average duration of individual operations included in the results.
     /// </summary>
     public TimeSpan Duration { get; }
 

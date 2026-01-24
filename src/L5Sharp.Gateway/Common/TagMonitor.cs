@@ -9,8 +9,8 @@ using L5Sharp.Gateway.Internal;
 namespace L5Sharp.Gateway.Common;
 
 /// <summary>
-/// Represents a monitoring entity for a collection of PLC tags, enabling continuous updates, error tracking,
-/// and status evaluation for the monitored tags.
+/// Represents a monitor for a collection of PLC tags, enabling observation of tag updates, status,
+/// and errors, as well as providing mechanisms for subscribing to various tag events.
 /// </summary>
 public class TagMonitor : IDisposable
 {
@@ -39,62 +39,92 @@ public class TagMonitor : IDisposable
     public bool IsActive => _watches.Any(x => !x.IsIdle);
 
     /// <summary>
-    /// Gets a value indicating whether any of the monitored tags have encountered errors.
+    /// Gets a value indicating whether any of the monitored tags are currently in an error state.
     /// </summary>
+    /// <remarks>
+    /// This property evaluates all monitored tags and returns true if any tag has encountered an error.
+    /// An error state is determined based on the <see cref="TagWatch.Status"/> of each tag being less than zero.
+    /// </remarks>
     public bool HasErrors => _watches.Any(x => x.IsErrored);
 
     /// <summary>
-    /// Gets the minimum status across all monitored tags, representing the overall status of the monitor.
+    /// Gets the current status of the monitored tags, reflecting the least favorable status among them.
     /// </summary>
-    /// <remarks>If any error exists on any monitored tag member, this will return the minimum error value
-    /// as defined in <see cref="TagStatus"/>. Negative number is an error. Zero is "Ok".
+    /// <remarks>
+    /// The returned status is derived by evaluating all monitored tags and selecting the one with the lowest status value.
+    /// This can provide insight into the overall health or state of the monitored system.
     /// </remarks>
     public TagStatus Status => _watches.Min(x => x.Status);
 
     /// <summary>
-    /// Gets the most recent update timestamp from any of the monitored tags.
+    /// Gets the most recent timestamp from the monitored tags.
     /// </summary>
-    public DateTime LastUpdate => _watches.Max(x => x.Timestamp);
+    /// <remarks>
+    /// The timestamp represents the latest update time among all the tags currently being monitored.
+    /// It is determined by identifying the maximum <c>Timestamp</c> value from the underlying tag watches.
+    /// </remarks>
+    public DateTime Timestamp => _watches.Max(x => x.Timestamp);
 
     /// <summary>
-    /// Gets the average update duration across all monitored tags. The duration is computed as the time between
-    /// successive updates on a tag.
+    /// Gets the average rate at which the monitored tags are being updated.
     /// </summary>
-    public TimeSpan UpdateRate => TimeSpan.FromMilliseconds(_watches.Average(x => x.Duration.TotalMilliseconds));
+    /// <remarks>
+    /// The property calculates the average duration across all active tag watches, representing the polling frequency.
+    /// A lower value indicates faster update cycles, while a higher value represents slower update intervals.
+    /// </remarks>
+    public TimeSpan Rate => TimeSpan.FromMilliseconds(_watches.Average(x => x.Duration.TotalMilliseconds));
 
     /// <summary>
-    /// Gets the total count of updates across all monitored tags in the current instance.
+    /// Gets the total number of updates received across all monitored tags within the current instance.
     /// </summary>
-    public int UpdateCount => _watches.Sum(x => x.Updates);
+    /// <remarks>
+    /// This value represents the cumulative count of updates processed for the monitored tags
+    /// and can be used to evaluate the activity level or usage of the monitor over time.
+    /// </remarks>
+    public int Updates => _watches.Sum(x => x.Updates);
 
     /// <summary>
-    /// Gets a collection of unique base tags being monitored within the current tag monitor.
+    /// Gets a collection of tags currently being monitored by the system.
     /// </summary>
+    /// <remarks>
+    /// The collection includes distinct base tags grouped by their tag name,
+    /// representing the unique set of tags actively tracked for updates or changes.
+    /// </remarks>
     public IEnumerable<Tag> Tags =>
         _watches.Select(x => x.Tag.Base).GroupBy(t => t.TagName).Select(t => t.First()).ToArray();
 
     /// <summary>
-    /// Gets a collection of tag errors for all tag watches with error status (status less than zero).
+    /// Gets a collection of errors associated with the monitored tags.
     /// </summary>
+    /// <remarks>
+    /// Each error in the collection contains information about the tag that encountered the issue
+    /// and the related error status.
+    /// </remarks>
     public IEnumerable<TagError> Errors =>
         _watches.Where(x => x.Status < 0).Select(x => new TagError(x.Tag.TagName, x.Status)).ToArray();
 
     /// <summary>
-    /// Retrieves the current result of the specified tag being monitored.
+    /// Retrieves the result of the specified tag based on the current monitoring data.
     /// </summary>
     /// <param name="tagName">
-    /// The tag name for which the monitoring result is requested.
+    /// The name of the tag for which the result is requested.
     /// Supports both member and base tag syntax.
     /// </param>
-    /// <returns>A <see cref="TagResult"/> object containing the tag information, errors, and average monitoring duration.</returns>
-    /// <exception cref="ArgumentException">Thrown if no tags with the specified name are being monitored.</exception>
+    /// <returns>
+    /// A <see cref="TagResult"/> representing the aggregated result of the monitored tag,
+    /// including any associated errors and the monitoring duration.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if no tags with the specified name are currently being monitored.
+    /// </exception>
     public TagResult GetResult(TagName tagName)
     {
-        var watches = _watches.Where(w => w.Tag.TagName.Contains(tagName)).ToArray();
+        var watches = _watches.Where(w => w.Tag.TagName.IsMemberOrSelf(tagName)).ToArray();
 
         if (watches.Length == 0)
             throw new ArgumentException($"No tags with name '{tagName}' are being monitored.");
 
+        // Get the single common denominator for all tags, aggregate the errors and duration, and build the result.
         var tag = watches.First().Tag.Base[tagName];
         var errors = watches.Where(w => w.Status < 0).Select(w => new TagError(w.Tag.TagName, w.Status)).ToArray();
         var duration = TimeSpan.FromMilliseconds(watches.Average(w => w.Duration.TotalMilliseconds));
@@ -103,17 +133,24 @@ public class TagMonitor : IDisposable
     }
 
     /// <summary>
-    /// Retrieves the minimum status for all tag watches matching the specified tag name.
+    /// Retrieves the current status of the specified tag being monitored.
     /// </summary>
-    /// <param name="tagName">The tag name to query for status.</param>
-    /// <returns>The minimum status of matching tag watches, or <see cref="TagStatus.NotFound"/> if no watches match.</returns>
+    /// <param name="tagName">
+    /// The tag name for which the monitoring status is requested.
+    /// Supports both member and base tag syntax.
+    /// </param>
+    /// <returns>A <see cref="TagStatus"/> representing the current status of the tag being monitored.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if no tags with the specified name are being monitored.
+    /// </exception>
     public TagStatus GetStatus(TagName tagName)
     {
-        var watches = _watches
-            .Where(t => t.Tag.TagName.Contains(tagName))
-            .ToArray();
+        var watches = _watches.Where(t => t.Tag.TagName.IsMemberOrSelf(tagName)).ToArray();
 
-        return watches.Length > 0 ? watches.Min(w => w.Status) : TagStatus.NotFound;
+        if (watches.Length == 0)
+            throw new ArgumentException($"No tags with name '{tagName}' are being monitored.");
+
+        return watches.Min(w => w.Status);
     }
 
     /// <summary>

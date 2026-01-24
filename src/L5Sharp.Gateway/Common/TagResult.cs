@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using L5Sharp.Core;
-using L5Sharp.Gateway.Abstractions;
 
 namespace L5Sharp.Gateway.Common;
 
 /// <summary>
-/// Represents the result for a single tag operation executed by the <see cref="IPlcClient"/>.
-/// This class provides detailed information about the operation outcome, including success status,
-/// timestamp, duration, and the associated tag data.
+/// Represents a single result of a tag operation, including its status, timing, and any errors encountered.
 /// </summary>
 public class TagResult
 {

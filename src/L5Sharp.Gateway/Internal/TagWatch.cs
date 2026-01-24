@@ -186,6 +186,7 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
         _subscribers = 0;
 
         // Detach all managed event handlers to avoid memory leaks
+        Updated = null;
         Changed = null;
         Errored = null;
     }
