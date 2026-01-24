@@ -626,7 +626,7 @@ public class Tag : LogixComponent<Tag>
         if (member is null) return [];
 
         var tag = new Tag(member, this);
-        var remaining = TagName.Combine(tagName.Slice().Skip(1));
+        var remaining = TagName.Combine(tagName.Members().Skip(1));
         return remaining.IsEmpty ? tag.Members() : tag.MembersOf(remaining);
     }
 

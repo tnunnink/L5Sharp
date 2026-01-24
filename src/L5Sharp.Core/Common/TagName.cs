@@ -182,13 +182,98 @@ public sealed class TagName : IComparable<TagName>
     public static TagName Empty => new(string.Empty);
 
     /// <summary>
-    /// Returns a collection of string names representing each member of the full tag name value.
+    /// Retrieves all member components of the tag name path in hierarchical order.
     /// </summary>
+    /// <returns>
+    /// An enumerable collection of strings representing each member component of the tag name,
+    /// including base name, member names, array indices, and bit operands.
+    /// </returns>
     /// <remarks>
-    /// Each member of a tag name can be represented by a string, array bracket, or bit index value.
-    /// For example, MyTag[1].MemberName.5 has 4 members.
+    /// This method breaks down the complete tag path into its constituent parts, making it useful
+    /// for analyzing tag structure and hierarchy. For example, "MyTag[1].Value.12" would return
+    /// ["MyTag", "[1]", "Value", "12"].
     /// </remarks>
-    public IEnumerable<string> Slice() => GetMembers(_path);
+    public IEnumerable<string> Members() => GetMembers(_path);
+
+    /// <summary>
+    /// Retrieves member components of the tag name path up to a specified depth.
+    /// </summary>
+    /// <param name="depth">
+    /// The maximum number of member components to retrieve. A value of 0 retrieves all members.
+    /// </param>
+    /// <returns>
+    /// An enumerable collection of strings representing each member component up to the specified depth.
+    /// </returns>
+    /// <remarks>
+    /// This method is useful for limiting the scope of tag name analysis to a specific hierarchical level.
+    /// For instance, calling Members(2) on "MyTag[1].Value.12" would return ["MyTag", "[1]"].
+    /// The depth parameter allows for efficient filtering of tag descendants without processing the entire path.
+    /// </remarks>
+    public IEnumerable<string> Members(int depth) => GetMembers(_path, depth);
+
+    /// <summary>
+    /// Determines whether the current tag name is a direct member (child) of the specified parent tag name.
+    /// A tag is considered a member of a parent if all the parent's members match the beginning of this tag's members,
+    /// and this tag has at least one additional member beyond the parent's path.
+    /// </summary>
+    /// <param name="parent">The parent tag name to check against.</param>
+    /// <returns>
+    /// <c>true</c> if the current tag name is a direct or nested member of the specified parent and has additional members beyond the parent's path;
+    /// otherwise, <c>false</c>. Returns <c>false</c> if either tag name is empty.
+    /// </returns>
+    /// <remarks>
+    /// This method performs a case-insensitive comparison of tag name members. For example, if the parent is "MyTag"
+    /// and this instance is "MyTag.Member", the method returns <c>true</c>. However, if this instance is "MyTag",
+    /// the method returns <c>false</c> because there are no additional members.
+    /// </remarks>
+    public bool IsMemberOf(TagName parent)
+    {
+        if (IsEmpty || parent.IsEmpty) return false;
+
+        using var eThis = Members().GetEnumerator();
+        using var eParent = parent.Members().GetEnumerator();
+
+        while (eParent.MoveNext())
+        {
+            if (!eThis.MoveNext()) return false;
+            if (!StringComparer.OrdinalIgnoreCase.Equals(eThis.Current, eParent.Current)) return false;
+        }
+
+        // Has to have at least one more member after the parent.
+        return eThis.MoveNext();
+    }
+
+    /// <summary>
+    /// Determines whether the current tag name is a member of the specified parent tag name or is equal to it.
+    /// A tag is considered a member or self if all the parent's members match the beginning of this tag's members.
+    /// Unlike <see cref="IsMemberOf"/>, this method returns <c>true</c> even when the tag names are identical.
+    /// </summary>
+    /// <param name="parent">The parent tag name to check against.</param>
+    /// <returns>
+    /// <c>true</c> if the current tag name is a member of the specified parent or is equal to it;
+    /// otherwise, <c>false</c>. Returns <c>false</c> if either tag name is empty.
+    /// </returns>
+    /// <remarks>
+    /// This method performs a case-insensitive comparison of tag name members. For example, if the parent is "MyTag"
+    /// and this instance is "MyTag", the method returns <c>true</c>. If this instance is "MyTag.Member", it also
+    /// returns <c>true</c>. This is useful for hierarchical filtering where you want to include the parent itself
+    /// in addition to its descendants.
+    /// </remarks>
+    public bool IsMemberOrSelf(TagName parent)
+    {
+        if (IsEmpty || parent.IsEmpty) return false;
+
+        using var eThis = Members().GetEnumerator();
+        using var eParent = parent.Members().GetEnumerator();
+
+        while (eParent.MoveNext())
+        {
+            if (!eThis.MoveNext()) return false;
+            if (!StringComparer.OrdinalIgnoreCase.Equals(eThis.Current, eParent.Current)) return false;
+        }
+
+        return true;
+    }
 
     /// <summary>
     /// Determines whether the current <see cref="TagName"/> contains the specified <paramref name="tagName"/>.
@@ -371,39 +456,30 @@ public sealed class TagName : IComparable<TagName>
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
     /// of tag names this can get called on.
     /// </summary>
-    private static IEnumerable<string> GetMembers(string path)
+    private static IEnumerable<string> GetMembers(string path, int depth = 0)
     {
+        // Only parse the local tag name string.
         var tagName = GetLocalTagName(path);
         var start = 0;
+        var count = 0;
 
         for (var i = 0; i < tagName.Length; i++)
         {
-            if (tagName[i] == Separator)
+            var current = tagName[i];
+
+            // e.g., MyTagName.Member[0]
+            // e.g., MyTagName.Member[0].Nested.Tag.12
+
+            if ((current is Separator or ArrayOpen or ArrayClose || i == tagName.Length - 1) && i > start)
             {
-                if (i > start) yield return tagName.Substring(start, i - start);
-                start = i + 1;
+                yield return tagName.Substring(start, i - start);
+                count++;
+                start = current is ArrayOpen ? i : i + 1;
             }
 
-            if (tagName[i] == ArrayOpen)
-            {
-                if (i > start) yield return tagName.Substring(start, i - start);
-
-                var end = tagName.IndexOf(ArrayClose, i);
-                if (end == -1)
-                {
-                    yield return tagName.Substring(i);
-                    yield break;
-                }
-
-                yield return tagName.Substring(i, end - i + 1);
-                start = end + 1;
-                i = end;
-            }
-        }
-
-        if (start < tagName.Length)
-        {
-            yield return tagName.Substring(start);
+            // If a depth is specified and we hit it, break the loop early.
+            if (depth > 0 && count == depth)
+                break;
         }
     }
 
