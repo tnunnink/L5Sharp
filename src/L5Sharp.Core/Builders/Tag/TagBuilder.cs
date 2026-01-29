@@ -7,7 +7,7 @@ namespace L5Sharp.Core;
 /// </summary>
 internal class TagBuilder(TagName tagName) : ITagBuilder
 {
-    private readonly Tag _instance = new() { Name = tagName.Base };
+    private readonly Tag _instance = new() { Name = tagName.LocalPath };
 
     public ITagBuilder AliasFor(TagName alias)
     {

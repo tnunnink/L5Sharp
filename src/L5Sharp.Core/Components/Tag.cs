@@ -662,7 +662,7 @@ public class Tag : LogixComponent<Tag>
     /// </remarks>
     public static Tag New<TData>(TagName tagName) where TData : LogixData, new()
     {
-        var tag = new Tag { Name = tagName.Base, Value = new TData() };
+        var tag = new Tag { Name = tagName.LocalPath, Value = new TData() };
 
         if (tagName.Scope.IsProgram)
         {
@@ -678,7 +678,7 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     /// <param name="tagName">The name of the tag to be created.</param>
     /// <returns>An instance of <see cref="ITagBuilder"/> for configuring and building the tag.</returns>
-    public static ITagBuilder Create(TagName tagName)
+    public static ITagBuilder Named(TagName tagName)
     {
         return new TagBuilder(tagName);
     }

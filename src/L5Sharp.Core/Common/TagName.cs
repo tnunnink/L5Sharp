@@ -198,7 +198,7 @@ public sealed class TagName : IComparable<TagName>
     /// <summary>
     /// Retrieves member components of the tag name path up to a specified depth.
     /// </summary>
-    /// <param name="depth">
+    /// <param name="count">
     /// The maximum number of member components to retrieve. A value of 0 retrieves all members.
     /// </param>
     /// <returns>
@@ -209,7 +209,7 @@ public sealed class TagName : IComparable<TagName>
     /// For instance, calling Members(2) on "MyTag[1].Value.12" would return ["MyTag", "[1]"].
     /// The depth parameter allows for efficient filtering of tag descendants without processing the entire path.
     /// </remarks>
-    public IEnumerable<string> Members(int depth) => GetMembers(_path, depth);
+    public IEnumerable<string> Members(int count) => GetMembers(_path, count);
 
     /// <summary>
     /// Determines whether the current tag name is a direct member (child) of the specified parent tag name.
@@ -456,31 +456,36 @@ public sealed class TagName : IComparable<TagName>
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
     /// of tag names this can get called on.
     /// </summary>
-    private static IEnumerable<string> GetMembers(string path, int depth = 0)
+    private static IEnumerable<string> GetMembers(string path, int count = 0)
     {
         // Only parse the local tag name string.
         var tagName = GetLocalTagName(path);
         var start = 0;
-        var count = 0;
+        var depth = 0;
 
         for (var i = 0; i < tagName.Length; i++)
         {
             var current = tagName[i];
 
-            // e.g., MyTagName.Member[0]
-            // e.g., MyTagName.Member[0].Nested.Tag.12
-
-            if ((current is Separator or ArrayOpen or ArrayClose || i == tagName.Length - 1) && i > start)
+            switch (current)
             {
-                yield return tagName.Substring(start, i - start);
-                count++;
-                start = current is ArrayOpen ? i : i + 1;
+                case Separator or ArrayOpen when i > start:
+                    yield return tagName.Substring(start, i - start);
+                    depth++;
+                    start = current is ArrayOpen ? i : i + 1;
+                    break;
+                case ArrayClose when i > start:
+                    yield return tagName.Substring(start, i - start + 1);
+                    start = i + 2;
+                    break;
             }
 
-            // If a depth is specified and we hit it, break the loop early.
-            if (depth > 0 && count == depth)
+            if (count > 0 && depth == count)
                 break;
         }
+
+        if (start < tagName.Length)
+            yield return tagName.Substring(start);
     }
 
     /// <summary>

@@ -26,8 +26,8 @@ data structures with ease.
 
 Install L5Sharp.Core via NuGet:
 
-```powershell
-Install-Package L5Sharp.Core
+```
+dotnet add package L5Sharp.Core
 ```
 
 ## Quick Start
