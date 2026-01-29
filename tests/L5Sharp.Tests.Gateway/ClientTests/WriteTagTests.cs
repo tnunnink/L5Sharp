@@ -9,11 +9,41 @@ namespace L5Sharp.Tests.Gateway.ClientTests;
 public class WriteTagTests : PlcTestBase
 {
     [Test]
-    public async Task WriteTag_ExistingNameAndValidData_ShouldReturnSuccess()
+    [TestCase("TestDint")]
+    [TestCase("TestTimer.PRE")]
+    [TestCase("Program:MainProgram.LocalDint")]
+    [TestCase("Program:MainProgram.LocalTimer.ACC")]
+    public async Task WriteTag_ValidDintTagName_ShouldReturnSuccess(string tagName)
     {
         using var client = CreateClient();
 
-        var result = await client.WriteTag<DINT>("TestDint", 123);
+        var result = await client.WriteTag<DINT>(tagName, Random.Shared.Next());
+
+        result.Success.Should().BeTrue();
+        result.Status.Should().Be(TagStatus.Ok);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().BeEmpty();
+        result.Tag.Value.Should().NotBe(0);
+    }
+
+    [Test]
+    [TestCase("TestTimer")]
+    [TestCase("Program:MainProgram.LocalTimer")]
+    public async Task WriteTag_ValidTimerTagName_ShouldReturnSuccess(string tagName)
+    {
+        using var client = CreateClient();
+
+        // Only sets a few members but note that all data will be overwritten, not just member set here.
+        var timer = new TIMER
+        {
+            PRE = Random.Shared.Next(),
+            ACC = Random.Shared.Next(),
+            DN = true
+        };
+
+        var result = await client.WriteTag(tagName, timer);
 
         result.Success.Should().BeTrue();
         result.Status.Should().Be(TagStatus.Ok);
@@ -22,7 +52,22 @@ public class WriteTagTests : PlcTestBase
         result.Tag.Should().NotBeNull();
         result.Errors.Should().BeEmpty();
     }
-    
+
+    [Test]
+    public async Task WriteTag_TagDoesNotExist_ShouldReturnFailedWithError()
+    {
+        using var client = CreateClient();
+
+        var result = await client.WriteTag<DINT>("FakeTag", 123);
+
+        result.Success.Should().BeFalse();
+        result.Status.Should().Be(TagStatus.NotFound);
+        result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
+        result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
+        result.Tag.Should().NotBeNull();
+        result.Errors.Should().HaveCount(1);
+    }
+
     [Test]
     public async Task WriteTag_ExistingNameAndValidType_ShouldReturnSuccess()
     {
@@ -44,11 +89,10 @@ public class WriteTagTests : PlcTestBase
     }
 
     [Test]
-    public async Task WriteTag_DintType_ShouldGetSuccessfulResult()
+    public async Task WriteTag_DintTagInstanceOverload_ShouldGetSuccessfulResult()
     {
         using var client = CreateClient();
-        var tag = Tag.New<DINT>("TestDint");
-        tag.Value = 123;
+        var tag = Tag.Named("TestDint").WithValue(123).Build();
 
         var result = await client.WriteTag(tag);
 
@@ -61,12 +105,18 @@ public class WriteTagTests : PlcTestBase
     }
 
     [Test]
-    public async Task WriteTag_TimerType_ShouldGetSuccessAndExpectedMemberValue()
+    public async Task WriteTag_TimerTagInstanceOverload_ShouldGetSuccessAndExpectedMemberValue()
     {
         using var client = CreateClient();
-        var tag = Tag.New<TIMER>("TestTimer");
-        tag["PRE"].Value = 10000;
-        tag["DN"].Value = 1;
+
+        var tag = Tag
+            .Named("TestTimer")
+            .WithValue<TIMER>(t =>
+            {
+                t.PRE = 10000;
+                t.DN = 1;
+            })
+            .Build();
 
         var result = await client.WriteTag(tag);
 
@@ -99,5 +149,21 @@ public class WriteTagTests : PlcTestBase
         result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         result.Tag.Should().NotBeNull();
         result.Errors.Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task WriteTag_SameTagMultipleTimes_ShouldBeFinalValue()
+    {
+        using var client = CreateClient();
+
+        for (var i = 0; i < 10; i++)
+        {
+            await client.WriteTag<DINT>("TestTimer.PRE", i);
+        }
+
+        var result = await client.ReadTag<DINT>("TestTimer.PRE");
+
+        result.Success.Should().BeTrue();
+        result.Tag.Value.Should().Be(9);
     }
 }

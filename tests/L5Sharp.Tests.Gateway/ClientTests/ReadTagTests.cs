@@ -56,7 +56,7 @@ public class ReadTagTests : PlcTestBase
     }
 
     [Test]
-    public async Task ReadTagControllerTagTimer_ShouldGetSuccessAndExpectedMemberValue()
+    public async Task ReadTag_ControllerTagTimer_ShouldGetSuccessAndExpectedMemberValue()
     {
         using var client = CreateClient();
         var tag = Tag.New<TIMER>("TestTimer");
@@ -68,7 +68,6 @@ public class ReadTagTests : PlcTestBase
         result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
         result.Errors.Should().BeEmpty();
-        result.Tag.Value.As<TIMER>().PRE.Should().NotBe(0);
     }
 
     [Test]

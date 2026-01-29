@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Core;
 using L5Sharp.Gateway;
+using L5Sharp.Gateway.Extensions;
 using L5Sharp.Samples;
 using Task = System.Threading.Tasks.Task;
 
