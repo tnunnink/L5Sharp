@@ -286,7 +286,7 @@ The libplctag library lets you configure tags for periodic read operations to st
 specified poll rate. This library exposes that feature through the client using the `MonitorTag` methods.
 
 ```csharp
-using var montitor = await client.MonitorTag<DINT>("MyDintTag");
+using var monitor = await client.MonitorTag<DINT>("MyDintTag");
 ```
 
 This method returns a `TagMonitor` object that will recieve updates on the tags it is monitoring.
