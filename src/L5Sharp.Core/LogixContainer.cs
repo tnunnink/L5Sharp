@@ -197,46 +197,6 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
         Element.Elements().Where(e => condition.Invoke(e.Deserialize<TElement>())).Remove();
     }
 
-    /// <summary>
-    /// Updates all elements in the container by applying the provided update action delegate.
-    /// </summary>
-    /// <param name="update">An update to apply to each element.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="update"/> is null.</exception>
-    public void Update(Action<TElement> update)
-    {
-        if (update is null)
-            throw new ArgumentNullException(nameof(update));
-
-        foreach (var child in Element.Elements())
-        {
-            var element = child.Deserialize<TElement>();
-            update.Invoke(element);
-        }
-    }
-
-    /// <summary>
-    /// Updates all elements in the container that satisfy the provided condition predicate by applying the provided
-    /// update action delegate.
-    /// </summary>
-    /// <param name="update">An update action to apply to each element.</param>
-    /// <param name="condition">The condition predicate for which elements must satisfy to apply the provided update.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="update"/> or <paramref name="condition"/> is null.</exception>
-    public void Update(Action<TElement> update, Func<TElement, bool> condition)
-    {
-        if (update is null) throw new ArgumentNullException(nameof(update));
-        if (condition is null) throw new ArgumentNullException(nameof(condition));
-
-        foreach (var child in Element.Elements())
-        {
-            var element = child.Deserialize<TElement>();
-
-            if (condition.Invoke(element))
-            {
-                update.Invoke(element);
-            }
-        }
-    }
-
     /// <inheritdoc />
     public IEnumerator<TElement> GetEnumerator()
     {
@@ -344,5 +304,54 @@ public static class ContainerExtensions
 
         component.Remove();
         return true;
+    }
+
+    /// <summary>
+    /// Applies an update action to each element in the collection and returns the modified elements.
+    /// </summary>
+    /// <param name="elements">The collection of elements to update.</param>
+    /// <param name="update">The action to apply to each element.</param>
+    /// <typeparam name="TElement">The type of elements in the collection, constrained to <see cref="ILogixElement"/>.</typeparam>
+    /// <returns>An <see cref="IEnumerable{TElement}"/> containing the updated elements.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="update"/> is null.</exception>
+    public static IEnumerable<TElement> Update<TElement>(this IEnumerable<TElement> elements, Action<TElement> update)
+        where TElement : ILogixElement
+    {
+        if (update is null)
+            throw new ArgumentNullException(nameof(update));
+
+        foreach (var element in elements)
+        {
+            update.Invoke(element);
+            yield return element;
+        }
+    }
+
+    /// <summary>
+    /// Applies an update action to elements in the collection that satisfy the specified condition and returns all elements.
+    /// </summary>
+    /// <param name="elements">The collection of elements to update.</param>
+    /// <param name="update">The action to apply to elements that meet the condition.</param>
+    /// <param name="condition">The predicate used to filter elements for updating.</param>
+    /// <typeparam name="TElement">The type of elements in the collection, constrained to <see cref="ILogixElement"/>.</typeparam>
+    /// <returns>An <see cref="IEnumerable{TElement}"/> containing all elements, with updates applied to those matching the condition.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="update"/> is null.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="condition"/> is null.</exception>
+    public static IEnumerable<TElement> Update<TElement>(this IEnumerable<TElement> elements, 
+        Action<TElement> update,
+        Func<TElement, bool> condition)
+    {
+        if (update is null) throw new ArgumentNullException(nameof(update));
+        if (condition is null) throw new ArgumentNullException(nameof(condition));
+
+        foreach (var element in elements)
+        {
+            if (condition.Invoke(element))
+            {
+                update.Invoke(element);
+            }
+            
+            yield return element;
+        }
     }
 }

@@ -18,12 +18,12 @@ public class ExtensionTests : PlcTestBase
         //To ensure we read updated data, clear all the in memory tag values first.
         content.Tags.Update(t => t.Value.Clear());
 
-        var response = await content.Upload(client);
+        var result = await content.Upload(client);
 
-        response.Success.Should().BeTrue();
-        response.Tags.Should().HaveCountGreaterThan(1000);
-        response.Errors.Should().BeEmpty();
-        response.Duration.Should().BeLessOrEqualTo(TimeSpan.FromSeconds(3));
+        result.Success.Should().BeTrue();
+        result.Tags.Should().HaveCountGreaterThan(1000);
+        result.Errors.Should().BeEmpty();
+        result.Duration.Should().BeLessOrEqualTo(TimeSpan.FromSeconds(3));
 
         //Get the 1000 auto-generated tags to verify they read a value.
         var tags = content.Query<Tag>()

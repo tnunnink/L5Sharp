@@ -83,7 +83,7 @@ To read a program scoped tag, prepend the `Program:{ProgramName}` specifier.
 var result = await client.ReadTag<REAL>("Program:MainProgram.SomeTag");
 ```
 
-You can also read nested atomic members of a complex structure directly. Specify the base structure type and
+You can also read nested members of a complex structure directly. Specify the base structure type and
 the tag name path to the member to read.
 
 ```csharp
@@ -94,18 +94,21 @@ The previous example requires knowledge of the base tag to create a valid tag da
 When the method returns, the result will reference the member tag that was specified, and that member tag object
 will have access to the base complex tag (`TIMER` in this example).
 
-It is also possible to read an atomic tag member of any given structure like this below. Note the specified tag type
-is the generic parameter.
+It is also possible to read a nested member of any given structure by specifying the type of the member as
+opposed to the type of the base tag as shown below.
 
 ```csharp
 var result = await client.ReadTag<DINT>("MyTimer.PRE")
 ```
 
-This will run without error and contain the correct tag value. However, the tag element it creates will
-be "invalid" in that the base name will be `MyTimer.PRE` and it will contain a simple atomic data element
-with no access to the base structure tag. This is only an issue if you then try to import this tag object
-as part of some other L5X file, as Logix will likely throw some error about the tag name being invalid.
-If you are just using this as a means to read the value from a PLC, then this is completely acceptable.
+> [!NOTE]
+> The previous example will run without error and contain the correct tag value when it returns.
+> However, the tag element it creates internally will be "invalid" in the sense that the base
+> name will be `MyTimer.PRE` and it will contain a simple atomic data element with no access to the
+> base structure tag. This is because there is not enough information here to construct the complex data element.
+> This is only an issue if you then try to import this tag object as part of some other L5X file,
+> as Logix will likely throw some error about the tag name being invalid. If you are just using this
+> as a means to read the value from a PLC, then you likely won't have any issues.
 
 All methods above will create a new `Tag` instance to hold the data read from the PLC. However, you can
 get a tag instance from an existing `L5X` and pass it to the client as well.
@@ -133,13 +136,9 @@ var tags = content.Query<Tag>(t => t.Scope.Container == "MyProgram");
 var results = await client.ReadTags(tags);
 ```
 
-When working with a collection of tags, the client returns a `TagResults` (pluralized) object, which is
-a collection of `TagResult` objects. This is discussed further in the Tag Result section.
-
 ### Writing Tags
 
-Use the client object to write a value to a known tag. For write methods, the type is inferred
-from the value argument provided to the function.
+Use the client object to write a value to a known tag.
 
 ```csharp
 var result = await client.WriteTag("MyRealTag", 1.34);
@@ -164,20 +163,21 @@ var result = await client.WriteTag<TIMER>("Program:SomeProgram.MyTimer", d =>
 
 > [!Warning]
 > When writing a complex tag structure, the entire tag data structure will be overwritten, regardless of
-> which members are configured in the value or update delegate. This means any unspecified member will write a default
-> data value.
-> If you want to only write specific tag members of a complex strucutre, either speciy the specific member or
-> use the `UpdateTag` methods discussed later.
+> which members are configured in the value or update delegate. This means any unspecified member will
+> write a default data value. If you want to only write to specific tag members of a complex strucutre,
+> either speciy the specific the member path or use the `UpdateTag` methods discussed later.
 
-To write to an single nested member of a complex structure, you can specify the tag name path and value.
+To write to a single nested member of a complex structure, you can specify the tag name path and value.
 
 ```csharp
 var result = await client.WriteTag("MyTimer.PRE", 5000);
 ```
 
-This approach is nice is that it only updates the `PRE` member of the base `MyTimer` tag structure.
-However, the returned `Tag` instance in the result object will contain an invalid name (same as read operations).
-This is not an issue unless you do something with the resulting tag object (like try to import it into Studio).
+> [!NOTE]
+> This approach is nice is that it only updates the `PRE` member of the base `MyTimer` tag structure.
+> However, as with the read operation, the returned `Tag` instance in the result object will contain
+> an invalid name ("MyTimer.PRE"). This is not an issue unless you do something with the resulting
+> tag object (like try to import it into Studio).
 
 As with read operations, you can pass in your own `Tag` object to write, either creating one in-memory or
 getting an existing one from an `L5X` file. The following example uses the tag builder API to construct
@@ -203,15 +203,29 @@ var results = await client.WriteTags(
 ]);
 ```
 
-Same as the read operation, this method returns a `TagResults` object that aggregates the results for all tags that
-were written by the operation.
+And since you can pass in any collection of tag objects, you can query any L5X using LINQ, update tag data,
+and provide that collection to the client. This makes bulk writes pretty seamless.
+
+```csharp
+var content = L5X.Load(@"C:\Path\To\MyFile.L5X");
+        
+var tags = content.Query<Tag>()
+    .Where(t => t.DataType == "ALARM_ANALOG" && t.Dimensions == Dimensions.Empty && t.Scope.IsController )
+    .Update(t =>
+    {
+        t.Value.As<ALARM_ANALOG>().HHEnabled = true;
+        t.Value.As<ALARM_ANALOG>().HHLimit = 100;
+    });
+
+var result = await client.WriteTags(tags);
+``` 
 
 ### Updating Tags
 
-While the `WriteTag` methods will completely replace the data structure for a tag, the `UpdateTag` methods will
-let you update specific members. There are a couple overloads available on the client.
+While the `WriteTag` methods will completely replace the data structure of a tag, the `UpdateTag` methods will
+let you update only specific members. There are a couple overloads available on the client.
 
-Update the members of a complex tag by providing a collection of name value pairs. These can be nested tag name
+Update the members of a complex tag by providing a collection of name/value pairs. These can be nested tag name
 paths or immediate child tags.
 
 ```csharp
@@ -231,6 +245,13 @@ var result = await client.UpdateTag<TIMER>("MyTimer", t =>
     t.DN = 1;
 });
 ```
+
+This is the same overload as the `WriteTag` method, but internally it will detect which members are updated and
+only create write operations for those specific members.
+
+> [!NOTE]
+> Both `WriteTag` and `UpdateTag` methods don't read data back from the PLC after writing.
+> This means the `Tag` instance in the result object will contain the same instance provided to the operation.
 
 ### Tag Result
 
@@ -252,10 +273,17 @@ Therefore, each operation can contain multiple "results" or errors. These are ag
 property, which will return the minimum error code found in the error collection. If no errors exist,
 then the status is OK and the operation was successful.
 
+### Tag Results (Bulk Methods)
+
+The bulk operations like `ReadTags` and `WriteTags` will return a composite or aggregate result object called
+`TagResults`. This is a collection of `TagResult` objects with the same summary properties mentioned above.
+This type simply aggregates the results for the bulk operation into a single structure. The main differece is that
+`TagResults` contains a `Tags` collection property representing all the tags associated with the operation.
+
 ### Monitoring Tags
 
-The libplctag library lets you configure tags for periodic read operations to stream data from the PLC.
-This library exposes that feature through the client using the `MonitorTag` methods.
+The libplctag library lets you configure tags for periodic read operations to stream data from the PLC at a
+specified poll rate. This library exposes that feature through the client using the `MonitorTag` methods.
 
 ```csharp
 using var montitor = await client.MonitorTag<DINT>("MyDintTag");
@@ -264,27 +292,37 @@ using var montitor = await client.MonitorTag<DINT>("MyDintTag");
 This method returns a `TagMonitor` object that will recieve updates on the tags it is monitoring.
 You can access the monitored tags and other health-related information on the monitor object.
 
-The result object contains the following properties:
+The monitor object contains the following properties:
 
-- **IsActive**: 
-- **Status**:
-- **Timestamp**:
-- **Rate**:
-- **Updates**:
-- **Tags**:
-- **Errors**:
+- **IsActive**: A `bool` indicating that at least one tag in the monitor is still polling for updates.
+- **Status**: A `TagStatus` that represents the minimum error for any tag in the monitor. If no errors, then `Ok`
+  status.
+- **Timestamp**: The `DateTime` of the last tag update received by the monitor.
+- **Rate**: The `TimeSpan` representing the average rate at which tags are reveiving updates.
+- **Updates**: An `int` representing the total number of updates per period that are
+- **Tags**: The collection of `Tag` objects that are being monitored and updated.
+- **Errors**: A collection of `TagError` containing errors for any member of the monitored tag collection.
 
-The `TagMonitor` implements `IDisposable` so that it can stop polling and clean up internal tag handles
+The `TagMonitor` class implements `IDisposable` so that it can stop polling and clean up internal tag handles
 once disposed of. While the monitor is in memory, all tags will continue to be updated with data from the PLC
 at the poll rate configured by the `PlcClient` object that created the monitor.
 
->[!WARNING]
+> [!WARNING]
 > Since the monitor is continuously updating data on the tag instance, attempting to write or manipulate the data could
-> unexpected issues. Just be cautious of the fact that these tag objects should be considered read-only and "owned" 
-> by the monitor until it is disposed of. If you need to write data, then create a separate tag instance or use
-> the tag name overloads of the client.
+> cause unexpected issues. Just be cautious of the fact that these tag objects should be considered read-only
+> and "owned" by the monitor until it is disposed of. If you need to write data, then create a separate
+> tag instance or use the tag name overloads of the client.
 
-To subscribe to updates or changes to tags on the monitor, you can register callback functions for
+> [!WARNING]
+> All tags in the monitor object are actually managed by the `PlcClient` that created the monitor. This means
+> that if you dispose of the client object, all internal tag watches will get disposed and the monitor will
+> become "Inactive."
+
+> [!NOTE]
+> Two different monitors can stream the same tag reference on the PLC client. The client will internally manage
+> subscriptions and only stop polling for a given tag once all subscribers are disposed of.
+
+To subscribe to updates to tags on the monitor, you can register callback functions for
 the three following events.
 
 - **OnUpdate**: Called when a tag value is read from the PLC, regardless of the value changing.
@@ -299,7 +337,32 @@ monitor.OnUpdate(result =>
 });
 ```
 
-These callbacks all receive a `TagResult` contianing the result of the operation at the given interval.
+These callbacks all receive a `TagResult` contianing the result of the operation at the given interval. Each
+result object will represent a single tag member that was read. This means if you are monitoring complex typed
+tags, the callback will get invoked with each nested member of the structure.
+
+If you want to subscribe to a specific tag member or base tag, there are overloads that take a tag name.
+
+```csharp
+monitor.OnChange("MyTimerTag.PRE", _ => 
+{
+    // This only gets called when the member tag "MyTimerTag.PRE" changes value.
+});
+```
+
+Or aggregate the changes by subscribing to the base tag.
+
+```csharp
+monitor.OnChange("MyCustomTag", _ => 
+{
+    // This gets called when any member of the base tag changes value, but the TagResult object passed to 
+    // the callback will reference the base tag as opposed to the nested member tag.
+});
+```
+
+> [!WARNING]
+> These callbacks are synchronous, so try to avoid heavy work in the callback to prevent backpressure on the
+> event stream. Offload work to separate thread as needed.
 
 ### Polling Tags
 
@@ -314,23 +377,28 @@ after 30 seconds with the final result.
 var result = await client.PollTag<DINT>("MyTagName", TimeSpan.FromSeconds(30));
 ```
 
-Poll a tag until its value satisfies a specified condition. You can provide a cancellation token if this needs to be
-aborted after some time period.
+Poll a tag until its value satisfies a specified condition.
 
 ```csharp
 var result = await client.PollTag<DINT>("MyTagName", d => d > 100);
 ```
 
-Poll a tag until a value condition is satisfied or a duration expires (whichever happens first). 
-This overload will not throw an error when the duration expires. It's up to the caller to determine if 
-the result matches the predicate specified.
+> [!NOTE]
+> You can provide a cancellation token if this needs to be aborted after some time period.
+
+Poll a tag until a value condition is satisfied or a duration expires (whichever happens first).
 
 ```csharp
 var result = await client.PollTag<DINT>("MyTagName", d => d > 100, TimeSpan.FromSeconds(30));
 ```
 
-These methods were intended for use cases like testing or writing procedural code that needs to first set a 
-tag value and then block continuation until some other tag is updated, which could take some arbitrary amount of time.
+> [!NOTE]
+> This overload will not throw an error when the duration expires. It's up to the caller to determine
+> if the result matches the predicate specified.
+
+These methods were intended for use cases like testing or writing procedural code that needs to first set a
+tag value and then block continuation until some other tag reaches a certain state, which could take 
+some arbitrary amount of time.
 
 ### Client Configuration
 
@@ -340,9 +408,7 @@ to configure various other settings, such as timeout and poll rate.
 ```csharp
 var options = new PlcOptions
 {
-    // IP address of the PLC
     IP = "10.10.10.10",
-    // Slot number of the PLC
     Slot = 2,
     // Duration in milliseconds before timeout error occurs. Default is 5000
     Timeout = 30000,
@@ -358,7 +424,7 @@ using var client = new PlcClient(options);
 
 ### Tag Service
 
-This library contains an interface wrapper called `ITagService` that mimics the native library API
+This library contains an interface wrapper called `ITagService` that mimics the native libplctag library API
 (but is reduced to only the methods that are used by PlcClient). This lets us inject a mock service implementation
 to the client in cases where we don't have PLC hardware available. This library also includes a default
 `VirtualTagService` implementation that mimics the native service, but uses a provided L5X as the backing store
