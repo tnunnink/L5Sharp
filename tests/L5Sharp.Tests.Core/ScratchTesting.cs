@@ -51,15 +51,34 @@ public class ScratchTesting
     }
 
     [Test]
-    public void METHOD()
+    public void CanWeDetectChangeMembers()
     {
-        var content = L5X.Load(Known.Simple);
-
-        for (var i = 0; i < 1000; i++)
+        var members = new HashSet<TagName>();
+        var initial = Tag.New<TIMER>("Test");
+        
+        initial.Serialize().Changed += OnChanged;
+        Action<TIMER> update = t =>
         {
-            content.Tags.Add(new Tag($"Tag_{i}", new DINT(i)));
-        }
+            t.PRE = 0;
+            t.ACC = 0;
+            t.DN = 0;
+        };
 
-        content.Save(Known.Simple);
+        update(initial.Value.As<TIMER>());
+
+
+        members.Should().HaveCount(3);
+        return;
+
+        // Local event handler to store updated member elements.
+        void OnChanged(object? sender, XObjectChangeEventArgs e)
+        {
+            if (e.ObjectChange != XObjectChange.Value) return; 
+            if (sender is not XObject obj) return;
+            var element = obj.Parent;
+            var name = element?.Attribute(L5XName.Name)?.Value;
+            if (name is null || string.IsNullOrEmpty(name)) return;
+            members.Add(name);
+        }
     }
 }

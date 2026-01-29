@@ -278,7 +278,7 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Slice_ComplexTag_ShouldContainExpectedValues()
+        public void Members_ComplexTag_ShouldContainExpectedValues()
         {
             var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
 
@@ -296,6 +296,19 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
+        public void Members_ToSpecifiedDepth_ShouldBeExpected()
+        {
+            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            
+            var members = tagName.Members(3).ToList();
+
+            members.Count.Should().Be(3);
+            members[0].Should().Be("Module:1:I");
+            members[1].Should().Be("TagName");
+            members[2].Should().Be("Member");
+        }
+
+        [Test]
         [TestCase("", 0)]
         [TestCase("MyTag.SomeMember.1", 3)]
         [TestCase("MyTag[1].SomeMember.1", 4)]
@@ -303,7 +316,7 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase(".Member[32].Value", 3)]
         [TestCase("Member[32].Value", 3)]
         [TestCase("[32].Value", 2)]
-        public void Sclice_ProvidedTagName_ShouldHaveExpectedCount(string value, int expected)
+        public void Members_ProvidedTagName_ShouldHaveExpectedCount(string value, int expected)
         {
             var tagName = new TagName(value);
 
@@ -313,7 +326,7 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Slice_WhenCalledManyTimes_ShouldBeEfficient()
+        public void Members_WhenCalledManyTimes_ShouldBeEfficient()
         {
             var tags = Enumerable.Range(0, 1000000)
                 .Select(i => $"Module:1:I.TagName.Member[{i}].SubTag.Another[12,13,14].Value.12")
@@ -327,6 +340,24 @@ namespace L5Sharp.Tests.Core.Common
             Console.WriteLine(stopwatch.Elapsed);
             members.Should().HaveCount(1000000 * 9);
             stopwatch.Elapsed.Seconds.Should().BeLessThan(3);
+        }
+
+        [Test]
+        [TestCase("MyTagName", true)]
+        [TestCase("MyTagName.Member", true)]
+        [TestCase("MyTagName.Member[1]", true)]
+        [TestCase("MyTagName.Member[1].Value", true)]
+        [TestCase("MyTagName.Member[1].Value.21", false)]
+        [TestCase("MyTagName.Member[2].Value", false)]
+        [TestCase("MyTagName.Something[1].Value", false)]
+        [TestCase("MyTag.Member[1].Value", false)]
+        public void IsMemberOf_ParentTwoLevelsUp_ShouldBeTrue(string parent, bool expected)
+        {
+            var tagName = new TagName("MyTagName.Member[1].Value.21");
+
+            var result = tagName.IsMemberOf(parent);
+
+            result.Should().Be(expected);
         }
 
         [Test]

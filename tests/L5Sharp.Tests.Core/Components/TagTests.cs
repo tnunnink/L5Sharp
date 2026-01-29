@@ -965,7 +965,7 @@ public class TagTests
     #region BuilderTests
 
     [Test]
-    public void Create_ValidParameters_ShouldBeExpected()
+    public void New_ValidParameters_ShouldBeExpected()
     {
         var tag = Tag.New<TIMER>("MyTimer");
 
@@ -977,7 +977,7 @@ public class TagTests
     [Test]
     public void Build_SimpleAtomicTypeWithValue_ShouldHaveExpectedValues()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .WithValue(123)
             .Build();
 
@@ -992,7 +992,7 @@ public class TagTests
     [Test]
     public void Build_SimpleNoneAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .WithAccess(Access.None)
             .Build();
 
@@ -1002,7 +1002,7 @@ public class TagTests
     [Test]
     public void Build_SimpleReadOnlyAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .ReadOnly()
             .Build();
 
@@ -1012,7 +1012,7 @@ public class TagTests
     [Test]
     public void Build_SimpleReadWriteAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .ReadWrite()
             .Build();
 
@@ -1022,7 +1022,7 @@ public class TagTests
     [Test]
     public void Build_SimpleWithUsage_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .WithUsage(TagUsage.Public)
             .Build();
 
@@ -1032,7 +1032,7 @@ public class TagTests
     [Test]
     public void Build_SimpleWithNormalUsage_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .Normal()
             .Build();
 
@@ -1042,7 +1042,7 @@ public class TagTests
     [Test]
     public void Build_SimpleWithDescription_ShouldHaveExpectedDescription()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .WithDescription("This is a test of the fluent tag builder")
             .Build();
 
@@ -1052,7 +1052,7 @@ public class TagTests
     [Test]
     public void Build_SimpleConstant_ShouldHaveExpectedConstant()
     {
-        var tag = Tag.Create("SomeAtomic")
+        var tag = Tag.Named("SomeAtomic")
             .Constant()
             .Build();
 
@@ -1062,7 +1062,7 @@ public class TagTests
     [Test]
     public void Build_SimpleConsumer_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.Create("ConsumerTag")
+        var tag = Tag.Named("ConsumerTag")
             .Consumes(cb => cb
                 .Provider("RemoteProviderName")
                 .RemoteTag("RemoteTagName.Member.Value")
@@ -1083,7 +1083,7 @@ public class TagTests
     [Test]
     public void Build_SimpleProducer_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.Create("ProducerTag")
+        var tag = Tag.Named("ProducerTag")
             .Produces(b => b
                 .WithMaxCount(5)
                 .SendEventTrigger()
@@ -1102,7 +1102,7 @@ public class TagTests
     [Test]
     public Task Build_SimpleAliasTag_ShouldBeVerified()
     {
-        var tag = Tag.Create("MyTagName")
+        var tag = Tag.Named("MyTagName")
             .AliasFor("SomeOtherTag")
             .Build();
 
@@ -1112,7 +1112,7 @@ public class TagTests
     [Test]
     public Task Build_PredefinedTypeDefaultValue_ShouldBeVerified()
     {
-        var tag = Tag.Create("MyTagName")
+        var tag = Tag.Named("MyTagName")
             .WithValue<TIMER>()
             .WithDescription("Builder example of creating a complex predefined data type with default data.")
             .Build();
@@ -1123,7 +1123,7 @@ public class TagTests
     [Test]
     public Task Build_PredefinedTypeConfiguredValue_ShouldBeVerified()
     {
-        var tag = Tag.Create("MyTagName")
+        var tag = Tag.Named("MyTagName")
             .WithValue<TIMER>(t =>
             {
                 t.PRE = 10000;
@@ -1140,7 +1140,7 @@ public class TagTests
     [Test]
     public Task Build_UserDefinedTypeDefaultValue_ShouldBeVerified()
     {
-        var tag = Tag.Create("MyTagName")
+        var tag = Tag.Named("MyTagName")
             .WithValue<MyNestedData>()
             .WithDescription("Builder example of creating a complex user defined data type with defualt data.")
             .Build();
@@ -1151,7 +1151,7 @@ public class TagTests
     [Test]
     public Task Build_UserDefinedTypeConfiguredValue_ShouldBeVerified()
     {
-        var tag = Tag.Create("MyTagName")
+        var tag = Tag.Named("MyTagName")
             .WithValue<MyNestedData>(d =>
             {
                 d.Simple.M2 = 123;
