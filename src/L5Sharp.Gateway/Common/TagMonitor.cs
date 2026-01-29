@@ -125,7 +125,7 @@ public class TagMonitor : IDisposable
             throw new ArgumentException($"No tags with name '{tagName}' are being monitored.");
 
         // Get the single common denominator for all tags, aggregate the errors and duration, and build the result.
-        var tag = watches.First().Tag.Base[tagName];
+        var tag = watches.First().Tag.Base.Members(t => t.TagName.Equals(tagName)).First();
         var errors = watches.Where(w => w.Status < 0).Select(w => new TagError(w.Tag.TagName, w.Status)).ToArray();
         var duration = TimeSpan.FromMilliseconds(watches.Average(w => w.Duration.TotalMilliseconds));
 

@@ -9,7 +9,7 @@ namespace L5Sharp.Gateway.Internal;
 /// <summary>
 /// Represents a watcher for a specific tag, providing functionality to track and notify changes.
 /// </summary>
-internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagService, TagBuffer buffer) : IDisposable
+internal class TagWatch(TagHandle handle, Tag tag, int pollRate, ITagService tagService, TagBuffer buffer) : IDisposable
 {
     /// <summary>
     /// A private field that keeps track of the number of active subscribers
@@ -39,10 +39,11 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     private readonly int _pollRate = pollRate;
 
     /// <summary>
-    /// A read-only property representing the handle identifier associated with a tag watcher.
-    /// This value is used to uniquely reference and manage the lifecycle of a specific tag watch instance.
+    /// A private field that holds the handle used to uniquely identify and interact with
+    /// the tag in the underlying tag service. This handle encapsulates both the tag identifier
+    /// and the pointer to the tag name in unmanaged memory.
     /// </summary>
-    public int Handle { get; } = handle;
+    private readonly TagHandle _handle = handle;
 
     /// <summary>
     /// Represents the tag instance being monitored by this watch.
@@ -114,15 +115,22 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     /// <summary>
     /// Increments the subscriber count for the associated watch. If this call results in the first subscriber
     /// being added, it enables automatic synchronization of read operations for the associated tag based
-    /// on the specified refresh rate.
+    /// on the specified refresh rate. If the current watch is in an error state, then no action is taken.
     /// </summary>
-    public void Increment()
+    public void StartOrIncrement()
     {
+        if (!_handle.IsValid)
+        {
+            Notify(_handle.TagId.AsStatus());
+            return;
+        }
+
+        Notify(TagStatus.Ok);
         Interlocked.Increment(ref _subscribers);
 
         if (_subscribers == 1)
         {
-            var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", _pollRate);
+            var status = _tagService.SetAttribute(_handle.TagId, "auto_sync_read_ms", _pollRate);
 
             if (status < 0)
                 throw new InvalidOperationException($"Unable to start auto sync service. Result: {status}");
@@ -132,15 +140,17 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     /// <summary>
     /// Decrements the subscriber count for the associated tag. If this call results in the subscriber count
     /// reaching zero, it disables automatic synchronization of read operations for the tag by setting the
-    /// synchronization rate to zero.
+    /// synchronization rate to zero. If the current watch is in an error state, then no action is taken.
     /// </summary>
-    public void Decrement()
+    public void StopOrDecrement()
     {
+        if (!_handle.IsValid) return;
+
         Interlocked.Decrement(ref _subscribers);
 
         if (_subscribers == 0)
         {
-            var status = _tagService.SetAttribute(Handle, "auto_sync_read_ms", 0);
+            var status = _tagService.SetAttribute(_handle.TagId, "auto_sync_read_ms", 0);
 
             if (status < 0)
                 throw new InvalidOperationException($"Unable to stop auto sync service. Result: {status}");
@@ -152,7 +162,8 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     /// timestamp, and update count, then triggers the appropriate event handler based on the status.
     /// If the status indicates an error (negative value), the <see cref="Errored"/> event is invoked.
     /// If the status is <see cref="TagStatus.Ok"/>, the tag's value is read from the buffer and the
-    /// <see cref="Changed"/> event is invoked.
+    /// <see cref="Changed"/> event is invoked. The <see cref="Updated"/> event is invoked regardless
+    /// of the provided status value.
     /// </summary>
     /// <param name="status">The new status of the tag, indicating its current operational state.</param>
     public void Notify(TagStatus status)
@@ -170,7 +181,7 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
                 Errored?.Invoke(this);
                 break;
             case TagStatus.Ok:
-                if (!_buffer.ReadValue(Tag, Handle)) break;
+                if (!_buffer.ReadValue(Tag, _handle.TagId)) break;
                 Changed?.Invoke(this);
                 break;
         }
@@ -180,7 +191,7 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
     public void Dispose()
     {
         // Stop the native polling immediately
-        _tagService.SetAttribute(Handle, "auto_sync_read_ms", 0);
+        _tagService.SetAttribute(_handle.TagId, "auto_sync_read_ms", 0);
 
         // Clear the subscriber count
         _subscribers = 0;
@@ -189,5 +200,8 @@ internal class TagWatch(int handle, Tag tag, int pollRate, ITagService tagServic
         Updated = null;
         Changed = null;
         Errored = null;
+
+        // Free the pointer and destroy the tag handle to clean up resource.
+        _handle.Free(_tagService);
     }
 }

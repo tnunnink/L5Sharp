@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
-using L5Sharp.Gateway.Abstractions;
 using L5Sharp.Gateway.Common;
 
 namespace L5Sharp.Gateway;

@@ -6,13 +6,13 @@ using L5Sharp.Core;
 using L5Sharp.Gateway.Abstractions;
 using L5Sharp.Gateway.Common;
 
-namespace L5Sharp.Gateway;
+namespace L5Sharp.Gateway.Extensions;
 
 /// <summary>
 /// Provides extension methods for working with the L5Sharp framework, enabling convenient operations
 /// such as uploading and managing tags in PLC projects using the provided client.
 /// </summary>
-public static class Extensions
+public static class L5XExtensions
 {
     /// <summary>
     /// Uploads all public tags from the L5X project to the PLC by reading their

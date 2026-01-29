@@ -7,8 +7,12 @@ using L5Sharp.Core;
 namespace L5Sharp.Gateway.Common;
 
 /// <summary>
-/// Represents a single result of a tag operation, including its status, timing, and any errors encountered.
+/// Represents the result of a tag operation, encapsulating the operation's outcome, execution details, and any errors that occurred.
 /// </summary>
+/// <remarks>
+/// This class provides comprehensive information about the tag operation, including success status, execution duration,
+/// timestamp, and a collection of errors associated with individual tag members.
+/// </remarks>
 public class TagResult
 {
     /// <summary>
