@@ -17,7 +17,6 @@ public class DataTypeMemberTests
         member.Radix.Should().Be(Radix.Null);
         member.ExternalAccess.Should().Be(Access.ReadWrite);
         member.Parent.Should().BeNull();
-        member.Definition.Should().NotBeNull();
     }
 
     [Test]
@@ -40,6 +39,20 @@ public class DataTypeMemberTests
         member.Dimension.Should().Be(new Dimensions(10));
         member.Radix.Should().Be(Radix.Decimal);
         member.ExternalAccess.Should().Be(Access.ReadOnly);
+    }
+
+    [Test]
+    public void Parent_WhenAddedToDataType_ShouldBeExpected()
+    {
+        var type = new DataType("test");
+        var member = new DataTypeMember("Member", "DINT");
+        type.Members.Add(member);
+
+        var parent = member.Parent;
+
+        parent.Should().NotBeNull();
+        parent.Name.Should().Be("test");
+        parent.Members.Should().HaveCount(1);
     }
 
     [Test]
@@ -84,6 +97,30 @@ public class DataTypeMemberTests
     }
 
     [Test]
+    public void TryGetDefinition_NotAttached_ShouldReturnFalse()
+    {
+        var member = new DataTypeMember();
+
+        var result = member.TryGetDefinition(out _);
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void TryGetDefinition_FromMemberInContext_ShouldReturnTrue()
+    {
+        var content = L5X.Load(Known.Test);
+        var type = content.DataTypes.Get("ComplexType");
+        var member = type.Members.First(m => m.DataType == "SimpleType");
+
+        var result = member.TryGetDefinition(out var definition);
+
+        result.Should().BeTrue();
+        definition.Should().NotBeNull();
+        definition.Name.Should().Be("SimpleType");
+    }
+
+    [Test]
     public void ToMember_AtomicData_ShouldBeExpectedValues()
     {
         var member = new DataTypeMember
@@ -103,5 +140,42 @@ public class DataTypeMemberTests
 
         instance.Name.Should().Be("Test");
         instance.Value.Should().Be(new REAL());
+    }
+
+    [Test]
+    [TestCase("BOOL", 1)]
+    [TestCase("SINT", 1)]
+    [TestCase("USINT", 1)]
+    [TestCase("INT", 2)]
+    [TestCase("UINT", 2)]
+    [TestCase("DINT", 4)]
+    [TestCase("UDINT", 4)]
+    [TestCase("REAL", 4)]
+    [TestCase("TIME32", 4)]
+    [TestCase("LINT", 8)]
+    [TestCase("ULINT", 8)]
+    [TestCase("LREAL", 8)]
+    [TestCase("DT", 8)]
+    [TestCase("LDT", 8)]
+    [TestCase("TIME", 8)]
+    [TestCase("LTIME", 8)]
+    public void GetSize_AtomicMember_ShouldBeExpected(string dataType, int expected)
+    {
+        var member = new DataTypeMember("Test", dataType);
+
+        var size = member.GetSize();
+
+        size.Should().Be(expected);
+    }
+
+    [Test]
+    [TestCase("TIMER", 12)]
+    public void GetSize_ComplexPredefinedMember_ShouldBeExpected(string dataType, int expected)
+    {
+        var member = new DataTypeMember("Test", dataType);
+
+        var size = member.GetSize();
+
+        size.Should().Be(expected);
     }
 }

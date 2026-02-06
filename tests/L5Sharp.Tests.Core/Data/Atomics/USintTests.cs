@@ -50,7 +50,7 @@ public class USintTests
     {
         var type = new USINT(123);
 
-        var bit = type.Member("100");
+        var bit = type.GetMember("100");
 
         bit.Should().BeNull();
     }

@@ -16,7 +16,7 @@ public class ExtensionTests : PlcTestBase
         using var client = CreateClient();
         var content = await L5X.LoadAsync(Known.Simple);
         //To ensure we read updated data, clear all the in memory tag values first.
-        content.Tags.Update(t => t.Value.Clear());
+        content.Tags.Update(t => t.Value.ResetData());
 
         var result = await content.Upload(client);
 
@@ -40,7 +40,7 @@ public class ExtensionTests : PlcTestBase
         using var client = CreateClient();
         var content = await L5X.LoadAsync(Known.Simple);
         //To ensure we read updated data, clear all the in memory tag values first.
-        content.Tags.Update(t => t.Value.Clear());
+        content.Tags.Update(t => t.Value.ResetData());
 
         var response = await content.Snapshot(client, @"C:\users\tnunnink\desktop\Snapshot.L5X");
 

@@ -59,7 +59,7 @@ public class BoolTests
     {
         var atomic = new BOOL();
         
-        FluentActions.Invoking(() => atomic.Update(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => atomic.UpdateData(null!)).Should().Throw<ArgumentNullException>();
     }
     
     [Test]
@@ -67,7 +67,7 @@ public class BoolTests
     {
         var atomic = new BOOL();
         
-        FluentActions.Invoking(() => atomic.Update(new TIMER())).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => atomic.UpdateData(new TIMER())).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -75,7 +75,7 @@ public class BoolTests
     {
         var atomic = new BOOL();
 
-        atomic.Update(new BOOL(true));
+        atomic.UpdateData(new BOOL(true));
 
         atomic.Value.Should().Be(true);
     }
@@ -85,7 +85,7 @@ public class BoolTests
     {
         var atomic = new BOOL();
 
-        atomic.Update(new INT(short.MaxValue));
+        atomic.UpdateData(new INT(short.MaxValue));
 
         atomic.Value.Should().Be(true);
     }

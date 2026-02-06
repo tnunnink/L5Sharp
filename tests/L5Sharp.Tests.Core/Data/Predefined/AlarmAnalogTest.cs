@@ -102,7 +102,7 @@ namespace L5Sharp.Tests.Core.Data.Predefined
         {
             var type = new ALARM_ANALOG();
             
-            type.Member("HHEnabled")?.Value.Update(true);
+            type.GetMember("HHEnabled")?.Value.UpdateData(true);
 
             type.HHEnabled.Should().Be(true);
         }

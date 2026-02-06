@@ -1,5 +1,5 @@
 ﻿using CliFx.Infrastructure;
-using L5Sharp.CLI.Commands.Projects;
+using L5Sharp.CLI.Commands;
 
 namespace L5Sharp.Tests.CLI.Commands;
 
@@ -12,7 +12,7 @@ public class ConvertCommandTests
         var command = new ConvertCommand
         {
             Project = @"C:\Users\tnunnink\Documents\Projects\L5Sharp\tests\L5Sharp.Samples\Empty.ACD",
-            Output = @"C:\Users\tnunnink\Documents\Projects\L5Sharp\tests\L5Sharp.Samples\Simple.L5X",
+            Out = @"C:\Users\tnunnink\Documents\Projects\L5Sharp\tests\L5Sharp.Samples\Simple.L5X",
             Force = true,
             Detailed = true
         };

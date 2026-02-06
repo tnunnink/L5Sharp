@@ -21,6 +21,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
+        <PackageReference Include="FluentAssertions" Version="7.2.0" AllowedVersions="(,8.0)" />
         <PackageReference Include="RockwellAutomation.LogixDesigner.CSClient" Version="2.1.974" />
         <PackageReference Include="Verify.NUnit" Version="30.13.0" />
     </ItemGroup>
@@ -41,74 +42,8 @@
       <None Update="Samples\Test.L5X">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectNameContains_ShouldHaveExpectedOutput_name=Main-.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectNameContains_ShouldHaveExpectedOutput_name=FolderProgram.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectNameContains_ShouldHaveExpectedOutput_name=Fake-.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectNameContains_ShouldHaveExpectedOutput_name=-Program.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectExpressionArg_ShouldHaveExpectedOutput_expression=Disabled=false.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectExpressionArg_ShouldHaveExpectedOutput_expression=Folder=true.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectExpressionArg_ShouldHaveExpectedOutput_expression=MainRoutine=-Main-.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectExpressionArg_ShouldHaveExpectedOutput_expression=np(Description, --).Contains(-Test-).verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProject_ShouldHaveExpectedOutput.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramCommandTests.Execute_WhenCalled_ShouldOutputExpectedTable.verified.txt">
-        <DependentUpon>ProgramCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramDeleteCommandTests.Execute_EmptyFile_ShouldReturnExpectedOutput.verified.xml">
-        <DependentUpon>ProgramDeleteCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramDeleteCommandTests.Execute_TestFileByName_ShouldReturnExpectedOutput_name=-Program.verified.xml">
-        <DependentUpon>ProgramDeleteCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramDeleteCommandTests.Execute_TestFileByName_ShouldReturnExpectedOutput_name=Fake.verified.xml">
-        <DependentUpon>ProgramDeleteCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramDeleteCommandTests.Execute_TestFileByName_ShouldReturnExpectedOutput_name=Folder-.verified.xml">
-        <DependentUpon>ProgramDeleteCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramDeleteCommandTests.Execute_TestFileByName_ShouldReturnExpectedOutput_name=MainProgram.verified.xml">
-        <DependentUpon>ProgramDeleteCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectSelectProperties_ShouldHaveExpectedOutput_select=.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectSelectProperties_ShouldHaveExpectedOutput_select=Name.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectSelectProperties_ShouldHaveExpectedOutput_select=Name Description MainRoutine Disabled.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectSelectProperties_ShouldHaveExpectedOutput_take=-1.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectSelectProperties_ShouldHaveExpectedOutput_take=0.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectSelectProperties_ShouldHaveExpectedOutput_take=1.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramListCommandTests.Execute_TestProjectSelectProperties_ShouldHaveExpectedOutput_take=10.verified.txt">
-        <DependentUpon>ProgramListCommandTests.cs</DependentUpon>
-      </None>
-      <None Update="Commands\ProgramCommands\ProgramGetCommandTests.Execute_TestFileValidName_ShouldWriteExpectedOutput.verified.txt">
-        <DependentUpon>ProgramGetCommandTests.cs</DependentUpon>
+      <None Update="Writers\TableRendererTests.Write_SingleItem_ShouldBeVerified.verified.txt">
+        <DependentUpon>TableWriterTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

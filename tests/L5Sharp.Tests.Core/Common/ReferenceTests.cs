@@ -18,7 +18,7 @@ public class ReferenceTests
         reference.Scope.Should().Be(Scope.None);
         reference.Id.Should().Be("Test");
     }
-    
+
     [Test]
     public void TagScope_ProgramTag_ShouldBeExpected()
     {

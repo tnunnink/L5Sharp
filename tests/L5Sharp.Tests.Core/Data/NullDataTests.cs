@@ -19,7 +19,7 @@ public class NullDataTests
     {
         var type = NullData.Instance;
         
-        FluentActions.Invoking(() => type.Update(new DINT(123))).Should().Throw<InvalidOperationException>();
+        FluentActions.Invoking(() => type.UpdateData(new DINT(123))).Should().Throw<InvalidOperationException>();
     }
 
     [Test]

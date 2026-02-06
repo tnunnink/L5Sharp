@@ -965,13 +965,35 @@ public class TagTests
     #region BuilderTests
 
     [Test]
-    public void New_ValidParameters_ShouldBeExpected()
+    public void New_AtomicTypeAndName_ShouldBeExpected()
+    {
+        var tag = Tag.New<DINT>("TestTag");
+
+        tag.Name.Should().Be("TestTag");
+        tag.Value.Should().NotBeNull();
+        tag.Value.Should().BeOfType<DINT>();
+        tag.Value.Should().Be(0);
+    }
+    
+    [Test]
+    public void New_ComplexTypeAndName_ShouldBeExpected()
     {
         var tag = Tag.New<TIMER>("MyTimer");
 
         tag.Name.Should().Be("MyTimer");
         tag.Value.Should().NotBeNull();
         tag.Value.Should().NotBe(LogixType.Null);
+    }
+
+    [Test]
+    public void New_ArrayOfAtomicData_ShouldBeExpected()
+    {
+        var tag = Tag.New<DINT>("ArrayTag", 10);
+
+        tag.Name.Should().Be("ArrayTag");
+        tag.Dimensions.Should().Be(10);
+        tag.Value.Should().NotBeNull();
+        tag.Value.Should().BeOfType<ArrayData<DINT>>();
     }
 
     [Test]

@@ -106,17 +106,7 @@ public class L5XBasicTests
     {
         var content = L5X.Load(Known.Test);
 
-        var tags = content.Query(nameof(Tag)).ToList();
-
-        tags.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void Query_TypeOverload_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var tags = content.Query(typeof(Tag)).ToList();
+        var tags = content.Query(ReferenceType.Tag).ToList();
 
         tags.Should().NotBeEmpty();
     }

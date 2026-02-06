@@ -247,16 +247,16 @@ public class StructureDataTests
 
         data.AddMany(expected);
 
-        var a = data.Member("Atomic");
+        var a = data.GetMember("Atomic");
         a?.Name.Should().Be("Atomic");
         a?.Value.Should().BeOfType<DINT>();
         a?.Value.Should().Be(123);
 
-        var b = data.Member("String");
+        var b = data.GetMember("String");
         b?.Name.Should().Be("String");
         b?.Value.Should().Be("Test Value");
 
-        var c = data.Member("Structure");
+        var c = data.GetMember("Structure");
         c?.Name.Should().Be("Structure");
         c?.Value.As<TIMER>().PRE.Should().Be(2000);
     }
@@ -527,7 +527,7 @@ public class StructureDataTests
 
         var value = new byte[] { 1, 123, 0, 0, 56, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0 };
 
-        var size = data.Update(value, 0);
+        var size = data.UpdateData(value, 0);
 
         size.Should().Be(16);
     }
@@ -552,7 +552,7 @@ public class StructureDataTests
             1, 123, 0, 0, 56, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 154, 153, 185, 63, 30, 1, 0, 0, 89, 1, 0, 0, 0, 0, 0, 0
         };
 
-        var size = data.Update(value, 0);
+        var size = data.UpdateData(value, 0);
 
         //not that rockwell is adding extra 4 bytes padding because the type contains a LINT,
         //which means the size must be divisible by 8. The last 4 bytes will be padding and not contain data so we are good. 
@@ -588,7 +588,7 @@ public class StructureDataTests
             0, 164, 112, 157, 63, 143, 194, 21, 64
         };
 
-        var size = data.Update(value, 0);
+        var size = data.UpdateData(value, 0);
 
         size.Should().Be(40);
     }

@@ -33,6 +33,16 @@ namespace L5Sharp.Tests.Core.Data.Predefined
         }
 
         [Test]
+        public void GetSize_WhenCalled_ShouldReturnExpectedSize()
+        {
+            var type = new STRING();
+
+            var size = type.GetSize();
+
+            size.Should().Be(88);
+        }
+
+        [Test]
         public void New_WithValue_ShouldHaveExpectedValue()
         {
             var type = new STRING("This is a test");

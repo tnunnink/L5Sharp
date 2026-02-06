@@ -49,7 +49,7 @@ public class DintTests
     {
         var atomic = new DINT();
 
-        var size = atomic.Size;
+        var size = atomic.GetSize();
 
         size.Should().Be(sizeof(int));
     }
@@ -59,7 +59,7 @@ public class DintTests
     {
         var atomic = new DINT();
 
-        FluentActions.Invoking(() => atomic.Update(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(() => atomic.UpdateData(null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -67,7 +67,7 @@ public class DintTests
     {
         var atomic = new DINT();
 
-        FluentActions.Invoking(() => atomic.Update(new TIMER())).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => atomic.UpdateData(new TIMER())).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -75,7 +75,7 @@ public class DintTests
     {
         var atomic = new DINT();
 
-        atomic.Update(123);
+        atomic.UpdateData(123);
 
         atomic.Value.Should().Be(123);
     }
@@ -85,7 +85,7 @@ public class DintTests
     {
         var atomic = new DINT();
 
-        atomic.Update(new INT(short.MaxValue));
+        atomic.UpdateData(new INT(short.MaxValue));
 
         atomic.Value.Should().Be(short.MaxValue);
     }
@@ -95,7 +95,7 @@ public class DintTests
     {
         var atomic = new DINT();
 
-        atomic.Update(new LINT(long.MaxValue));
+        atomic.UpdateData(new LINT(long.MaxValue));
 
         atomic.Value.Should().NotBe(int.MinValue);
     }

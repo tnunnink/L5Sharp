@@ -83,11 +83,11 @@ public class LogixMemberTests
 
         member.Name.Should().Be("Test");
         member.Value.Should().BeOfType<TIMER>();
-        member.Value.Member("PRE")!.Value.Should().Be(1000);
-        member.Value.Member("ACC")!.Value.Should().Be(2000);
-        member.Value.Member("EN")!.Value.Should().Be(1);
-        member.Value.Member("TT")!.Value.Should().Be(1);
-        member.Value.Member("DN")!.Value.Should().Be(1);
+        member.Value.GetMember("PRE")!.Value.Should().Be(1000);
+        member.Value.GetMember("ACC")!.Value.Should().Be(2000);
+        member.Value.GetMember("EN")!.Value.Should().Be(1);
+        member.Value.GetMember("TT")!.Value.Should().Be(1);
+        member.Value.GetMember("DN")!.Value.Should().Be(1);
     }
 
     [Test]
@@ -109,11 +109,11 @@ public class LogixMemberTests
 
         member.Name.Should().Be("Test");
         member.Value.Should().BeOfType<TIMER>();
-        member.Value.Member("PRE")!.Value.Should().Be(1000);
-        member.Value.Member("ACC")!.Value.Should().Be(2000);
-        member.Value.Member("EN")!.Value.Should().Be(1);
-        member.Value.Member("TT")!.Value.Should().Be(1);
-        member.Value.Member("DN")!.Value.Should().Be(1);
+        member.Value.GetMember("PRE")!.Value.Should().Be(1000);
+        member.Value.GetMember("ACC")!.Value.Should().Be(2000);
+        member.Value.GetMember("EN")!.Value.Should().Be(1);
+        member.Value.GetMember("TT")!.Value.Should().Be(1);
+        member.Value.GetMember("DN")!.Value.Should().Be(1);
     }
 
     [Test]
@@ -133,11 +133,11 @@ public class LogixMemberTests
         member.Name.Should().Be("Test");
         member.Value.Should().BeOfType<StructureData>();
         member.Value.Name.Should().Be("CustomType");
-        member.Value.Member("PRE")!.Value.Should().Be(1000);
-        member.Value.Member("ACC")!.Value.Should().Be(2000);
-        member.Value.Member("EN")!.Value.Should().Be(1);
-        member.Value.Member("TT")!.Value.Should().Be(1);
-        member.Value.Member("DN")!.Value.Should().Be(1);
+        member.Value.GetMember("PRE")!.Value.Should().Be(1000);
+        member.Value.GetMember("ACC")!.Value.Should().Be(2000);
+        member.Value.GetMember("EN")!.Value.Should().Be(1);
+        member.Value.GetMember("TT")!.Value.Should().Be(1);
+        member.Value.GetMember("DN")!.Value.Should().Be(1);
     }
 
     [Test]
