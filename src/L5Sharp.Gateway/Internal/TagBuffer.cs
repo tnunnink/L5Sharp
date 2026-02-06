@@ -39,7 +39,7 @@ internal class TagBuffer(ITagService service)
             case StringData str:
                 var value = service.GetString(handle, 0);
                 if (string.Equals(value, str.ToString(), StringComparison.Ordinal)) return false;
-                str.Update(value);
+                str.UpdateData(value);
                 break;
             default: return false;
         }

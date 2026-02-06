@@ -89,7 +89,7 @@ public class VirtualTagService : ITagService
         /// </summary>
         public void WriteBytes()
         {
-            tag.Value.Update(Buffer, 0);
+            tag.Value.UpdateData(Buffer, 0);
         }
 
         /// <summary>
