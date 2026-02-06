@@ -57,6 +57,9 @@ public sealed class ALARM_DIGITAL : AlarmData
 
     /// <inheritdoc />
     public override string Name => nameof(ALARM_DIGITAL);
+    
+    /// <inheritdoc />
+    public override int GetSize() => 152;
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.

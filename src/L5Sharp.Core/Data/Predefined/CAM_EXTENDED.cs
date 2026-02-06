@@ -29,6 +29,25 @@ public sealed partial class CAM_EXTENDED : StructureData
     public CAM_EXTENDED(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 24;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Master.UpdateData(data, offset + 0);
+        Slave.UpdateData(data, offset + 8);
+        SegmentType.UpdateData(data, offset + 16);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Master</c> member of the <see cref="CAM_EXTENDED"/> data type.

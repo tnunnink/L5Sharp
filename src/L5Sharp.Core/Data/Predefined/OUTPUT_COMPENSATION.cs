@@ -32,6 +32,28 @@ public sealed partial class OUTPUT_COMPENSATION : StructureData
     public OUTPUT_COMPENSATION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 24;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Offset.UpdateData(data, offset + 0);
+        LatchDelay.UpdateData(data, offset + 4);
+        UnlatchDelay.UpdateData(data, offset + 8);
+        Mode.UpdateData(data, offset + 12);
+        CycleTime.UpdateData(data, offset + 16);
+        DutyCycle.UpdateData(data, offset + 20);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Offset</c> member of the <see cref="OUTPUT_COMPENSATION"/> data type.

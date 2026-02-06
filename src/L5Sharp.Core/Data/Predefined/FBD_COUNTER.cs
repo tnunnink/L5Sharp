@@ -38,6 +38,34 @@ public sealed partial class FBD_COUNTER : StructureData
     public FBD_COUNTER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 24;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        CUEnable.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        CDEnable.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        PRE.UpdateData(data, offset + 5);
+        Reset.UpdateData((data[offset + 9] & (1 << 3)) != 0);
+        EnableOut.UpdateData((data[offset + 13] & (1 << 4)) != 0);
+        ACC.UpdateData(data, offset + 13);
+        CU.UpdateData((data[offset + 17] & (1 << 5)) != 0);
+        CD.UpdateData((data[offset + 17] & (1 << 6)) != 0);
+        DN.UpdateData((data[offset + 17] & (1 << 7)) != 0);
+        OV.UpdateData((data[offset + 18] & (1 << 0)) != 0);
+        UN.UpdateData((data[offset + 18] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="FBD_COUNTER"/> data type.

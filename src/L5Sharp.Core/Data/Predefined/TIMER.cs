@@ -31,6 +31,27 @@ public sealed partial class TIMER : StructureData
     public TIMER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        PRE.UpdateData(data, offset + 4);
+        ACC.UpdateData(data, offset + 8);
+        EN.UpdateData((data[offset + 13] & (1 << 0)) != 0);
+        TT.UpdateData((data[offset + 13] & (1 << 1)) != 0);
+        DN.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>PRE</c> member of the <see cref="TIMER"/> data type.

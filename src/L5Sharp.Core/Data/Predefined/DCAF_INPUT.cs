@@ -46,6 +46,42 @@ public sealed partial class DCAF_INPUT : StructureData
     public DCAF_INPUT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 108;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        ColdStartType.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        ChannelA.UpdateData(data, offset + 5);
+        ChannelB.UpdateData(data, offset + 9);
+        Tolerance.UpdateData(data, offset + 13);
+        HighLimit.UpdateData(data, offset + 17);
+        LowLimit.UpdateData(data, offset + 21);
+        DiscrepancyTime.UpdateData(data, offset + 25);
+        EnableOut.UpdateData((data[offset + 33] & (1 << 5)) != 0);
+        O1.UpdateData((data[offset + 33] & (1 << 6)) != 0);
+        FP.UpdateData((data[offset + 33] & (1 << 7)) != 0);
+        HTP.UpdateData((data[offset + 34] & (1 << 0)) != 0);
+        LTP.UpdateData((data[offset + 34] & (1 << 1)) != 0);
+        O1OnTime.UpdateData(data, offset + 34);
+        FaultCode.UpdateData(data, offset + 38);
+        DiagnosticCode.UpdateData(data, offset + 42);
+        Revision.UpdateData(data, offset + 46);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="DCAF_INPUT"/> data type.

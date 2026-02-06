@@ -41,6 +41,37 @@ public sealed partial class EXT_ROUTINE_CONTROL : StructureData
     public EXT_ROUTINE_CONTROL(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 136;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        ErrorCode.UpdateData(data, offset + 0);
+        NumParams.UpdateData(data, offset + 1);
+        ParameterDefs.UpdateData(data, offset + 4);
+        ReturnParamDef.UpdateData(data, offset + 124);
+        EN.UpdateData((data[offset + 137] & (1 << 0)) != 0);
+        ReturnsValue.UpdateData((data[offset + 137] & (1 << 1)) != 0);
+        DN.UpdateData((data[offset + 137] & (1 << 2)) != 0);
+        ER.UpdateData((data[offset + 137] & (1 << 3)) != 0);
+        FirstScan.UpdateData((data[offset + 137] & (1 << 4)) != 0);
+        EnableOut.UpdateData((data[offset + 137] & (1 << 5)) != 0);
+        EnableIn.UpdateData((data[offset + 137] & (1 << 6)) != 0);
+        User1.UpdateData((data[offset + 137] & (1 << 7)) != 0);
+        User0.UpdateData((data[offset + 138] & (1 << 0)) != 0);
+        ScanType1.UpdateData((data[offset + 138] & (1 << 1)) != 0);
+        ScanType0.UpdateData((data[offset + 138] & (1 << 2)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>ErrorCode</c> member of the <see cref="EXT_ROUTINE_CONTROL"/> data type.

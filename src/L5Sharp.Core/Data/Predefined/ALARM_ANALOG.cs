@@ -93,6 +93,9 @@ public sealed class ALARM_ANALOG : AlarmData
     /// <inheritdoc />
     public override string Name => nameof(ALARM_ANALOG);
 
+    /// <inheritdoc />
+    public override int GetSize() => 304;
+
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_ANALOG"/> data type.
     /// </summary>

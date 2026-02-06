@@ -34,6 +34,30 @@ public sealed partial class OUTPUT_CAM : StructureData
     public OUTPUT_CAM(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 32;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        OutputBit.UpdateData(data, offset + 0);
+        LatchType.UpdateData(data, offset + 4);
+        UnlatchType.UpdateData(data, offset + 8);
+        Left.UpdateData(data, offset + 12);
+        Right.UpdateData(data, offset + 16);
+        Duration.UpdateData(data, offset + 20);
+        EnableType.UpdateData(data, offset + 24);
+        EnableBit.UpdateData(data, offset + 28);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>OutputBit</c> member of the <see cref="OUTPUT_CAM"/> data type.

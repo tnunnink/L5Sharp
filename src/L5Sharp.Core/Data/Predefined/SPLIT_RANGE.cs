@@ -51,6 +51,47 @@ public sealed partial class SPLIT_RANGE : StructureData
     public SPLIT_RANGE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 108;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        CycleTime.UpdateData(data, offset + 9);
+        MaxHeatIn.UpdateData(data, offset + 13);
+        MinHeatIn.UpdateData(data, offset + 17);
+        MaxCoolIn.UpdateData(data, offset + 21);
+        MinCoolIn.UpdateData(data, offset + 25);
+        MaxHeatTime.UpdateData(data, offset + 29);
+        MinHeatTime.UpdateData(data, offset + 33);
+        MaxCoolTime.UpdateData(data, offset + 37);
+        MinCoolTime.UpdateData(data, offset + 41);
+        EnableOut.UpdateData((data[offset + 49] & (1 << 1)) != 0);
+        HeatOut.UpdateData((data[offset + 49] & (1 << 2)) != 0);
+        CoolOut.UpdateData((data[offset + 49] & (1 << 3)) != 0);
+        HeatTimePercent.UpdateData(data, offset + 49);
+        CoolTimePercent.UpdateData(data, offset + 53);
+        Status.UpdateData(data, offset + 57);
+        InstructFault.UpdateData((data[offset + 61] & (1 << 4)) != 0);
+        CycleTimeInv.UpdateData((data[offset + 61] & (1 << 5)) != 0);
+        MaxHeatTimeInv.UpdateData((data[offset + 61] & (1 << 6)) != 0);
+        MinHeatTimeInv.UpdateData((data[offset + 61] & (1 << 7)) != 0);
+        MaxCoolTimeInv.UpdateData((data[offset + 62] & (1 << 0)) != 0);
+        MinCoolTimeInv.UpdateData((data[offset + 62] & (1 << 1)) != 0);
+        HeatSpanInv.UpdateData((data[offset + 62] & (1 << 2)) != 0);
+        CoolSpanInv.UpdateData((data[offset + 62] & (1 << 3)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SPLIT_RANGE"/> data type.

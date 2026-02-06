@@ -27,6 +27,23 @@ public sealed partial class CAM_PROFILE : StructureData
     public CAM_PROFILE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 56;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Status.UpdateData(data, offset + 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Status</c> member of the <see cref="CAM_PROFILE"/> data type.

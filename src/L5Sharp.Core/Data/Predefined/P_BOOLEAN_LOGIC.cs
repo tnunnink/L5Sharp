@@ -80,6 +80,76 @@ public sealed partial class P_BOOLEAN_LOGIC : StructureData
     public P_BOOLEAN_LOGIC(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 472;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_0.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Inp_1.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Inp_2.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Inp_3.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Inp_4.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Inp_5.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Inp_6.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        Inp_7.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        Inp_Hold.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        Inp_Reset.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        Cfg_UseInpHold.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        Cfg_UsePCmd.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        Cfg_UseOCmd.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        Cfg_UseOut01.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        Cfg_UseOut10.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        Cfg_TimestampOnSnap.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        Cfg_SnapOver.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        Cfg_HasMoreObj.UpdateData((data[offset + 7] & (1 << 4)) != 0);
+        Cfg_OnDly.UpdateData(data, offset + 7);
+        Cfg_OffDly.UpdateData(data, offset + 11);
+        Cfg_CnfrmReqd.UpdateData(data, offset + 15);
+        PCmd_Snap.UpdateData((data[offset + 16] & (1 << 5)) != 0);
+        PCmd_Reset.UpdateData((data[offset + 16] & (1 << 6)) != 0);
+        Out_Live.UpdateData((data[offset + 16] & (1 << 7)) != 0);
+        Out_Snap.UpdateData((data[offset + 17] & (1 << 0)) != 0);
+        Val_DlyPctLive.UpdateData(data, offset + 17);
+        Val_DlyPctSnap.UpdateData(data, offset + 21);
+        Val_SnapInit.UpdateData(data, offset + 25);
+        Sts_Initialized.UpdateData((data[offset + 29] & (1 << 1)) != 0);
+        Sts_Snapped.UpdateData((data[offset + 29] & (1 << 2)) != 0);
+        Sts_RdyReset.UpdateData((data[offset + 29] & (1 << 3)) != 0);
+        Sts_InpLive.UpdateData(data, offset + 29);
+        Sts_GateLive.UpdateData(data, offset + 30);
+        Sts_InpSnap.UpdateData(data, offset + 31);
+        Sts_GateSnap.UpdateData(data, offset + 32);
+        Sts_GateSrc1Live.UpdateData(data, offset + 33);
+        Sts_GateSrc2Live.UpdateData(data, offset + 34);
+        Sts_GateSrc3Live.UpdateData(data, offset + 35);
+        Sts_GateSrc4Live.UpdateData(data, offset + 36);
+        Sts_GateSrc1Snap.UpdateData(data, offset + 37);
+        Sts_GateSrc2Snap.UpdateData(data, offset + 38);
+        Sts_GateSrc3Snap.UpdateData(data, offset + 39);
+        Sts_GateSrc4Snap.UpdateData(data, offset + 40);
+        Sts_OutInvertLive.UpdateData((data[offset + 41] & (1 << 4)) != 0);
+        Sts_OutInvertSnap.UpdateData((data[offset + 41] & (1 << 5)) != 0);
+        Sts_Err.UpdateData((data[offset + 41] & (1 << 6)) != 0);
+        Sts_ErrGateFunc.UpdateData(data, offset + 41);
+        Sts_ErrGateSrcPtr.UpdateData(data, offset + 42);
+        Sts_ErrGateSrcMask.UpdateData(data, offset + 43);
+        Sts_ErrOutSrcPtr.UpdateData((data[offset + 44] & (1 << 7)) != 0);
+        Sts_ErrTimer.UpdateData((data[offset + 45] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_BOOLEAN_LOGIC"/> data type.

@@ -59,6 +59,55 @@ public sealed partial class SEC_ORDER_CONTROLLER : StructureData
     public SEC_ORDER_CONTROLLER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 176;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        Initialize.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        InitialValue.UpdateData(data, offset + 9);
+        Gain.UpdateData(data, offset + 13);
+        WLag.UpdateData(data, offset + 17);
+        WLead.UpdateData(data, offset + 21);
+        ZetaLead.UpdateData(data, offset + 25);
+        HighLimit.UpdateData(data, offset + 29);
+        LowLimit.UpdateData(data, offset + 33);
+        HoldHigh.UpdateData((data[offset + 37] & (1 << 2)) != 0);
+        HoldLow.UpdateData((data[offset + 37] & (1 << 3)) != 0);
+        TimingMode.UpdateData(data, offset + 37);
+        OversampleDT.UpdateData(data, offset + 41);
+        RTSTime.UpdateData(data, offset + 45);
+        RTSTimeStamp.UpdateData(data, offset + 49);
+        EnableOut.UpdateData((data[offset + 57] & (1 << 4)) != 0);
+        Out.UpdateData(data, offset + 57);
+        HighAlarm.UpdateData((data[offset + 61] & (1 << 5)) != 0);
+        LowAlarm.UpdateData((data[offset + 61] & (1 << 6)) != 0);
+        DeltaT.UpdateData(data, offset + 61);
+        Status.UpdateData(data, offset + 65);
+        InstructFault.UpdateData((data[offset + 69] & (1 << 7)) != 0);
+        GainInv.UpdateData((data[offset + 70] & (1 << 0)) != 0);
+        WLagInv.UpdateData((data[offset + 70] & (1 << 1)) != 0);
+        WLeadInv.UpdateData((data[offset + 70] & (1 << 2)) != 0);
+        ZetaLeadInv.UpdateData((data[offset + 70] & (1 << 3)) != 0);
+        HighLowLimsInv.UpdateData((data[offset + 70] & (1 << 4)) != 0);
+        TimingModeInv.UpdateData((data[offset + 70] & (1 << 5)) != 0);
+        RTSMissed.UpdateData((data[offset + 70] & (1 << 6)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 70] & (1 << 7)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 71] & (1 << 0)) != 0);
+        DeltaTInv.UpdateData((data[offset + 71] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SEC_ORDER_CONTROLLER"/> data type.

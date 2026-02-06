@@ -164,6 +164,160 @@ public sealed partial class P_ANALOG_FANOUT : StructureData
     public P_ANALOG_FANOUT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 444;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_CV.UpdateData(data, offset + 5);
+        Inp_CV1InitializationVal.UpdateData(data, offset + 9);
+        Inp_CV2InitializationVal.UpdateData(data, offset + 13);
+        Inp_CV3InitializationVal.UpdateData(data, offset + 17);
+        Inp_CV4InitializationVal.UpdateData(data, offset + 21);
+        Inp_CV5InitializationVal.UpdateData(data, offset + 25);
+        Inp_CV6InitializationVal.UpdateData(data, offset + 29);
+        Inp_CV7InitializationVal.UpdateData(data, offset + 33);
+        Inp_CV8InitializationVal.UpdateData(data, offset + 37);
+        Inp_CV1InitializeReq.UpdateData((data[offset + 41] & (1 << 3)) != 0);
+        Inp_CV2InitializeReq.UpdateData((data[offset + 41] & (1 << 4)) != 0);
+        Inp_CV3InitializeReq.UpdateData((data[offset + 41] & (1 << 5)) != 0);
+        Inp_CV4InitializeReq.UpdateData((data[offset + 41] & (1 << 6)) != 0);
+        Inp_CV5InitializeReq.UpdateData((data[offset + 41] & (1 << 7)) != 0);
+        Inp_CV6InitializeReq.UpdateData((data[offset + 42] & (1 << 0)) != 0);
+        Inp_CV7InitializeReq.UpdateData((data[offset + 42] & (1 << 1)) != 0);
+        Inp_CV8InitializeReq.UpdateData((data[offset + 42] & (1 << 2)) != 0);
+        Cfg_HasCV2.UpdateData((data[offset + 42] & (1 << 3)) != 0);
+        Cfg_HasCV3.UpdateData((data[offset + 42] & (1 << 4)) != 0);
+        Cfg_HasCV4.UpdateData((data[offset + 42] & (1 << 5)) != 0);
+        Cfg_HasCV5.UpdateData((data[offset + 42] & (1 << 6)) != 0);
+        Cfg_HasCV6.UpdateData((data[offset + 42] & (1 << 7)) != 0);
+        Cfg_HasCV7.UpdateData((data[offset + 43] & (1 << 0)) != 0);
+        Cfg_HasCV8.UpdateData((data[offset + 43] & (1 << 1)) != 0);
+        Cfg_FixedInitializationVal.UpdateData(data, offset + 43);
+        Cfg_UseFixedInitialization.UpdateData((data[offset + 47] & (1 << 2)) != 0);
+        Cfg_ShedHold.UpdateData((data[offset + 47] & (1 << 3)) != 0);
+        Cfg_HasCVNav.UpdateData((data[offset + 47] & (1 << 4)) != 0);
+        Cfg_HasNav.UpdateData(data, offset + 47);
+        Cfg_CVEUMin.UpdateData(data, offset + 48);
+        Cfg_CVEUMax.UpdateData(data, offset + 52);
+        Cfg_CVLoLim.UpdateData(data, offset + 56);
+        Cfg_CVHiLim.UpdateData(data, offset + 60);
+        Cfg_CVRoCLim.UpdateData(data, offset + 64);
+        Cfg_CV1Ratio.UpdateData(data, offset + 68);
+        Cfg_CV1Offset.UpdateData(data, offset + 72);
+        Cfg_CV1LoLim.UpdateData(data, offset + 76);
+        Cfg_CV1HiLim.UpdateData(data, offset + 80);
+        Cfg_CV1TakeupRate.UpdateData(data, offset + 84);
+        Cfg_CV2Ratio.UpdateData(data, offset + 88);
+        Cfg_CV2Offset.UpdateData(data, offset + 92);
+        Cfg_CV2LoLim.UpdateData(data, offset + 96);
+        Cfg_CV2HiLim.UpdateData(data, offset + 100);
+        Cfg_CV2TakeupRate.UpdateData(data, offset + 104);
+        Cfg_CV3Ratio.UpdateData(data, offset + 108);
+        Cfg_CV3Offset.UpdateData(data, offset + 112);
+        Cfg_CV3LoLim.UpdateData(data, offset + 116);
+        Cfg_CV3HiLim.UpdateData(data, offset + 120);
+        Cfg_CV3TakeupRate.UpdateData(data, offset + 124);
+        Cfg_CV4Ratio.UpdateData(data, offset + 128);
+        Cfg_CV4Offset.UpdateData(data, offset + 132);
+        Cfg_CV4LoLim.UpdateData(data, offset + 136);
+        Cfg_CV4HiLim.UpdateData(data, offset + 140);
+        Cfg_CV4TakeupRate.UpdateData(data, offset + 144);
+        Cfg_CV5Ratio.UpdateData(data, offset + 148);
+        Cfg_CV5Offset.UpdateData(data, offset + 152);
+        Cfg_CV5LoLim.UpdateData(data, offset + 156);
+        Cfg_CV5HiLim.UpdateData(data, offset + 160);
+        Cfg_CV5TakeupRate.UpdateData(data, offset + 164);
+        Cfg_CV6Ratio.UpdateData(data, offset + 168);
+        Cfg_CV6Offset.UpdateData(data, offset + 172);
+        Cfg_CV6LoLim.UpdateData(data, offset + 176);
+        Cfg_CV6HiLim.UpdateData(data, offset + 180);
+        Cfg_CV6TakeupRate.UpdateData(data, offset + 184);
+        Cfg_CV7Ratio.UpdateData(data, offset + 188);
+        Cfg_CV7Offset.UpdateData(data, offset + 192);
+        Cfg_CV7LoLim.UpdateData(data, offset + 196);
+        Cfg_CV7HiLim.UpdateData(data, offset + 200);
+        Cfg_CV7TakeupRate.UpdateData(data, offset + 204);
+        Cfg_CV8Ratio.UpdateData(data, offset + 208);
+        Cfg_CV8Offset.UpdateData(data, offset + 212);
+        Cfg_CV8LoLim.UpdateData(data, offset + 216);
+        Cfg_CV8HiLim.UpdateData(data, offset + 220);
+        Cfg_CV8TakeupRate.UpdateData(data, offset + 224);
+        Cfg_CVDecPlcs.UpdateData(data, offset + 228);
+        Out_CV1.UpdateData(data, offset + 229);
+        Out_CV2.UpdateData(data, offset + 233);
+        Out_CV3.UpdateData(data, offset + 237);
+        Out_CV4.UpdateData(data, offset + 241);
+        Out_CV5.UpdateData(data, offset + 245);
+        Out_CV6.UpdateData(data, offset + 249);
+        Out_CV7.UpdateData(data, offset + 253);
+        Out_CV8.UpdateData(data, offset + 257);
+        Out_CVInitializationVal.UpdateData(data, offset + 261);
+        Out_CVInitializeReq.UpdateData((data[offset + 265] & (1 << 5)) != 0);
+        Val_CVEUMin.UpdateData(data, offset + 265);
+        Val_CVEUMax.UpdateData(data, offset + 269);
+        Val_InpCV.UpdateData(data, offset + 273);
+        Val_CV.UpdateData(data, offset + 277);
+        Val_MinCVIn1.UpdateData(data, offset + 281);
+        Val_MaxCVIn1.UpdateData(data, offset + 285);
+        Val_MinCVIn2.UpdateData(data, offset + 289);
+        Val_MaxCVIn2.UpdateData(data, offset + 293);
+        Val_MinCVIn3.UpdateData(data, offset + 297);
+        Val_MaxCVIn3.UpdateData(data, offset + 301);
+        Val_MinCVIn4.UpdateData(data, offset + 305);
+        Val_MaxCVIn4.UpdateData(data, offset + 309);
+        Val_MinCVIn5.UpdateData(data, offset + 313);
+        Val_MaxCVIn5.UpdateData(data, offset + 317);
+        Val_MinCVIn6.UpdateData(data, offset + 321);
+        Val_MaxCVIn6.UpdateData(data, offset + 325);
+        Val_MinCVIn7.UpdateData(data, offset + 329);
+        Val_MaxCVIn7.UpdateData(data, offset + 333);
+        Val_MinCVIn8.UpdateData(data, offset + 337);
+        Val_MaxCVIn8.UpdateData(data, offset + 341);
+        Sts_Initialized.UpdateData((data[offset + 345] & (1 << 6)) != 0);
+        Sts_CVInfNaN.UpdateData((data[offset + 345] & (1 << 7)) != 0);
+        Sts_CVLimited.UpdateData((data[offset + 346] & (1 << 0)) != 0);
+        Sts_CV1InitializationInfNaN.UpdateData((data[offset + 346] & (1 << 1)) != 0);
+        Sts_CV1Limited.UpdateData((data[offset + 346] & (1 << 2)) != 0);
+        Sts_CV2InitializationInfNaN.UpdateData((data[offset + 346] & (1 << 3)) != 0);
+        Sts_CV2Limited.UpdateData((data[offset + 346] & (1 << 4)) != 0);
+        Sts_CV3InitializationInfNaN.UpdateData((data[offset + 346] & (1 << 5)) != 0);
+        Sts_CV3Limited.UpdateData((data[offset + 346] & (1 << 6)) != 0);
+        Sts_CV4InitializationInfNaN.UpdateData((data[offset + 346] & (1 << 7)) != 0);
+        Sts_CV4Limited.UpdateData((data[offset + 351] & (1 << 0)) != 0);
+        Sts_CV5InitializationInfNaN.UpdateData((data[offset + 351] & (1 << 1)) != 0);
+        Sts_CV5Limited.UpdateData((data[offset + 351] & (1 << 2)) != 0);
+        Sts_CV6InitializationInfNaN.UpdateData((data[offset + 351] & (1 << 3)) != 0);
+        Sts_CV6Limited.UpdateData((data[offset + 351] & (1 << 4)) != 0);
+        Sts_CV7InitializationInfNaN.UpdateData((data[offset + 351] & (1 << 5)) != 0);
+        Sts_CV7Limited.UpdateData((data[offset + 351] & (1 << 6)) != 0);
+        Sts_CV8InitializationInfNaN.UpdateData((data[offset + 351] & (1 << 7)) != 0);
+        Sts_CV8Limited.UpdateData((data[offset + 352] & (1 << 0)) != 0);
+        Sts_Err.UpdateData((data[offset + 352] & (1 << 1)) != 0);
+        Sts_ErrLim.UpdateData((data[offset + 352] & (1 << 2)) != 0);
+        Sts_ErrEU.UpdateData((data[offset + 352] & (1 << 3)) != 0);
+        Sts_ErrCV1Lim.UpdateData((data[offset + 352] & (1 << 4)) != 0);
+        Sts_ErrCV2Lim.UpdateData((data[offset + 352] & (1 << 5)) != 0);
+        Sts_ErrCV3Lim.UpdateData((data[offset + 352] & (1 << 6)) != 0);
+        Sts_ErrCV4Lim.UpdateData((data[offset + 352] & (1 << 7)) != 0);
+        Sts_ErrCV5Lim.UpdateData((data[offset + 353] & (1 << 0)) != 0);
+        Sts_ErrCV6Lim.UpdateData((data[offset + 353] & (1 << 1)) != 0);
+        Sts_ErrCV7Lim.UpdateData((data[offset + 353] & (1 << 2)) != 0);
+        Sts_ErrCV8Lim.UpdateData((data[offset + 353] & (1 << 3)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_ANALOG_FANOUT"/> data type.

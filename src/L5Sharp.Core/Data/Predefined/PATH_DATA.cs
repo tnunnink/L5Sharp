@@ -33,6 +33,29 @@ public sealed partial class PATH_DATA : StructureData
     public PATH_DATA(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 68;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        InterpolationType.UpdateData(data, offset + 4);
+        Position.UpdateData(data, offset + 8);
+        RobotConfiguration.UpdateData(data, offset + 44);
+        TurnsCounters.UpdateData(data, offset + 48);
+        MoveType.UpdateData(data, offset + 56);
+        TerminationType.UpdateData(data, offset + 60);
+        CommandToleranceLinear.UpdateData(data, offset + 64);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>InterpolationType</c> member of the <see cref="PATH_DATA"/> data type.

@@ -65,6 +65,61 @@ public sealed partial class PIDE_AUTOTUNE : StructureData
     public PIDE_AUTOTUNE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 972;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        ProcessType.UpdateData(data, offset + 0);
+        ResponseSpeed.UpdateData(data, offset + 4);
+        TestLength.UpdateData(data, offset + 8);
+        PVTuneLimit.UpdateData(data, offset + 12);
+        StepSize.UpdateData(data, offset + 16);
+        TunedGood.UpdateData((data[offset + 25] & (1 << 0)) != 0);
+        TunedUncertain.UpdateData((data[offset + 25] & (1 << 1)) != 0);
+        ATuneAcquired.UpdateData((data[offset + 25] & (1 << 2)) != 0);
+        UsedProcessType.UpdateData(data, offset + 25);
+        Gain.UpdateData(data, offset + 29);
+        TimeConstant.UpdateData(data, offset + 33);
+        DeadTime.UpdateData(data, offset + 37);
+        PGainTunedFast.UpdateData(data, offset + 41);
+        IGainTunedFast.UpdateData(data, offset + 45);
+        DGainTunedFast.UpdateData(data, offset + 49);
+        PGainTunedMed.UpdateData(data, offset + 53);
+        IGainTunedMed.UpdateData(data, offset + 57);
+        DGainTunedMed.UpdateData(data, offset + 61);
+        PGainTunedSlow.UpdateData(data, offset + 65);
+        IGainTunedSlow.UpdateData(data, offset + 69);
+        DGainTunedSlow.UpdateData(data, offset + 73);
+        StepSizeUsed.UpdateData(data, offset + 77);
+        AtuneStatus.UpdateData(data, offset + 81);
+        ATuneFault.UpdateData((data[offset + 85] & (1 << 3)) != 0);
+        PVOutOfLimit.UpdateData((data[offset + 85] & (1 << 4)) != 0);
+        ModeInv.UpdateData((data[offset + 85] & (1 << 5)) != 0);
+        CVWindupFault.UpdateData((data[offset + 85] & (1 << 6)) != 0);
+        StepSizeZero.UpdateData((data[offset + 85] & (1 << 7)) != 0);
+        CVLimitsFault.UpdateData((data[offset + 86] & (1 << 0)) != 0);
+        CVInitFault.UpdateData((data[offset + 86] & (1 << 1)) != 0);
+        EUSpanChanged.UpdateData((data[offset + 86] & (1 << 2)) != 0);
+        CVChanged.UpdateData((data[offset + 86] & (1 << 3)) != 0);
+        ATuneTimedOut.UpdateData((data[offset + 86] & (1 << 4)) != 0);
+        PVNotSettled.UpdateData((data[offset + 86] & (1 << 5)) != 0);
+        PVChangeTooSmall.UpdateData((data[offset + 86] & (1 << 6)) != 0);
+        StepSizeTooSmall.UpdateData((data[offset + 86] & (1 << 7)) != 0);
+        GainTooLarge.UpdateData((data[offset + 87] & (1 << 0)) != 0);
+        GainTooSmall.UpdateData((data[offset + 87] & (1 << 1)) != 0);
+        LongDeadTime.UpdateData((data[offset + 87] & (1 << 2)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>ProcessType</c> member of the <see cref="PIDE_AUTOTUNE"/> data type.

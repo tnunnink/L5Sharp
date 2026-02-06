@@ -41,6 +41,37 @@ public sealed partial class CAMSHAFT_MONITOR : StructureData
     public CAMSHAFT_MONITOR(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 92;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        MotionRequest.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ChannelA.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        ChannelB.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        MechanicalDelayTime.UpdateData(data, offset + 5);
+        MaxPulsePeriod.UpdateData(data, offset + 9);
+        EnableOut.UpdateData((data[offset + 17] & (1 << 6)) != 0);
+        O1.UpdateData((data[offset + 17] & (1 << 7)) != 0);
+        FP.UpdateData((data[offset + 18] & (1 << 0)) != 0);
+        MeasuredStartTime.UpdateData(data, offset + 18);
+        MeasuredStopTime.UpdateData(data, offset + 22);
+        FaultCode.UpdateData(data, offset + 26);
+        DiagnosticCode.UpdateData(data, offset + 30);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="CAMSHAFT_MONITOR"/> data type.

@@ -77,6 +77,73 @@ public sealed partial class CHANNEL_HSC_I_0 : StructureData
     public CHANNEL_HSC_I_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 92;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Fault.UpdateData((data[offset + 3] & (1 << 0)) != 0);
+        Uncertain.UpdateData((data[offset + 3] & (1 << 1)) != 0);
+        RolloverLeqRollunder.UpdateData((data[offset + 3] & (1 << 2)) != 0);
+        NotANumber.UpdateData((data[offset + 3] & (1 << 3)) != 0);
+        MissingPulseAlarm.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        ZeroFrequencyAlarm.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        ZeroFrequencyAvgAlarm.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        FrequencyAlarm.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        FrequencyAvgAlarm.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        PulseWidthAlarm.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        PulseWidthAvgAlarm.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        AccelAlarm.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        AccelAvgAlarm.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        DecelAlarm.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        DecelAvgAlarm.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        FrequencyOverrange.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        PartialAvgFrequency.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        PartialAvgPulseWidth.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        Direction.UpdateData((data[offset + 11] & (1 << 2)) != 0);
+        StoredDirection.UpdateData((data[offset + 11] & (1 << 3)) != 0);
+        Rollover.UpdateData((data[offset + 11] & (1 << 4)) != 0);
+        Rollunder.UpdateData((data[offset + 11] & (1 << 5)) != 0);
+        DataA.UpdateData((data[offset + 11] & (1 << 6)) != 0);
+        DataB.UpdateData((data[offset + 11] & (1 << 7)) != 0);
+        DataZ.UpdateData((data[offset + 12] & (1 << 0)) != 0);
+        DataAOverridden.UpdateData((data[offset + 12] & (1 << 1)) != 0);
+        DataBOverridden.UpdateData((data[offset + 12] & (1 << 2)) != 0);
+        DataZOverridden.UpdateData((data[offset + 12] & (1 << 3)) != 0);
+        Count.UpdateData(data, offset + 12);
+        StoredCount.UpdateData(data, offset + 16);
+        ScaledCount.UpdateData(data, offset + 20);
+        ScaledStoredCount.UpdateData(data, offset + 24);
+        RevolutionCount.UpdateData(data, offset + 28);
+        StoredRevolutionCount.UpdateData(data, offset + 30);
+        Frequency.UpdateData(data, offset + 32);
+        FrequencyAvg.UpdateData(data, offset + 36);
+        StoredFrequency.UpdateData(data, offset + 40);
+        ScaledFrequency.UpdateData(data, offset + 44);
+        ScaledFrequencyAvg.UpdateData(data, offset + 48);
+        ScaledStoredFrequency.UpdateData(data, offset + 52);
+        PulseWidth.UpdateData(data, offset + 56);
+        PulseWidthAvg.UpdateData(data, offset + 60);
+        StoredPulseWidth.UpdateData(data, offset + 64);
+        QuadratureErrorCount.UpdateData(data, offset + 68);
+        CountChangeIndicator.UpdateData(data, offset + 69);
+        Accel.UpdateData(data, offset + 72);
+        AccelAvg.UpdateData(data, offset + 76);
+        StoredAccel.UpdateData(data, offset + 80);
+        ScaledAccel.UpdateData(data, offset + 84);
+        ScaledAccelAvg.UpdateData(data, offset + 88);
+        ScaledStoredAccel.UpdateData(data, offset + 92);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Fault</c> member of the <see cref="CHANNEL_HSC_I_0"/> data type.

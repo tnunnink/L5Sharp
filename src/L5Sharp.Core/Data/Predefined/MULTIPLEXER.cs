@@ -41,6 +41,37 @@ public sealed partial class MULTIPLEXER : StructureData
     public MULTIPLEXER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 60;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In1.UpdateData(data, offset + 5);
+        In2.UpdateData(data, offset + 9);
+        In3.UpdateData(data, offset + 13);
+        In4.UpdateData(data, offset + 17);
+        In5.UpdateData(data, offset + 21);
+        In6.UpdateData(data, offset + 25);
+        In7.UpdateData(data, offset + 29);
+        In8.UpdateData(data, offset + 33);
+        Selector.UpdateData(data, offset + 37);
+        EnableOut.UpdateData((data[offset + 45] & (1 << 1)) != 0);
+        Out.UpdateData(data, offset + 45);
+        Status.UpdateData(data, offset + 49);
+        InstructFault.UpdateData((data[offset + 53] & (1 << 2)) != 0);
+        SelectorInv.UpdateData((data[offset + 53] & (1 << 3)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="MULTIPLEXER"/> data type.

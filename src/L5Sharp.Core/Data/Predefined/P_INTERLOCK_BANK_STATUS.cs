@@ -43,6 +43,39 @@ public sealed partial class P_INTERLOCK_BANK_STATUS : StructureData
     public P_INTERLOCK_BANK_STATUS(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 16;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Val_FirstUpIndex.UpdateData(data, offset + 0);
+        Val_FirstUpBankID.UpdateData(data, offset + 2);
+        Val_BankMap.UpdateData(data, offset + 4);
+        Val_BankSts.UpdateData(data, offset + 8);
+        Inp_Reset.UpdateData((data[offset + 15] & (1 << 0)) != 0);
+        Inp_BypassActive.UpdateData((data[offset + 15] & (1 << 1)) != 0);
+        Inp_LatchDefeat.UpdateData((data[offset + 15] & (1 << 2)) != 0);
+        Inp_Available.UpdateData((data[offset + 15] & (1 << 3)) != 0);
+        Sts_BankIDError.UpdateData((data[offset + 15] & (1 << 4)) != 0);
+        Sts_IntlkOK.UpdateData((data[offset + 15] & (1 << 5)) != 0);
+        Sts_NBIntlkOK.UpdateData((data[offset + 15] & (1 << 6)) != 0);
+        Sts_IntlkTripInh.UpdateData((data[offset + 15] & (1 << 7)) != 0);
+        Sts_Available.UpdateData((data[offset + 16] & (1 << 0)) != 0);
+        Sts_FirstUpDetect.UpdateData((data[offset + 16] & (1 << 1)) != 0);
+        Sts_RdyReset.UpdateData((data[offset + 16] & (1 << 2)) != 0);
+        Sts_PrevIntlkOK.UpdateData((data[offset + 16] & (1 << 3)) != 0);
+        Sts_PrevNBIntlkOK.UpdateData((data[offset + 16] & (1 << 4)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Val_FirstUpIndex</c> member of the <see cref="P_INTERLOCK_BANK_STATUS"/> data type.

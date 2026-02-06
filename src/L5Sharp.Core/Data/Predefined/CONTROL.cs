@@ -36,6 +36,32 @@ public sealed partial class CONTROL : StructureData
     public CONTROL(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        LEN.UpdateData(data, offset + 4);
+        POS.UpdateData(data, offset + 8);
+        EN.UpdateData((data[offset + 13] & (1 << 0)) != 0);
+        EU.UpdateData((data[offset + 13] & (1 << 1)) != 0);
+        DN.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        EM.UpdateData((data[offset + 13] & (1 << 3)) != 0);
+        ER.UpdateData((data[offset + 13] & (1 << 4)) != 0);
+        UL.UpdateData((data[offset + 13] & (1 << 5)) != 0);
+        IN.UpdateData((data[offset + 13] & (1 << 6)) != 0);
+        FD.UpdateData((data[offset + 13] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>LEN</c> member of the <see cref="CONTROL"/> data type.

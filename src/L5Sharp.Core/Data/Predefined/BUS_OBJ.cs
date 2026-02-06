@@ -40,6 +40,36 @@ public sealed partial class BUS_OBJ : StructureData
     public BUS_OBJ(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 56;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Inp_Cmd.UpdateData(data, offset + 0);
+        Out_Cmd.UpdateData(data, offset + 4);
+        Inp_CmdLLH.UpdateData(data, offset + 8);
+        Out_CmdLLH.UpdateData(data, offset + 12);
+        Inp_Sts.UpdateData(data, offset + 16);
+        Out_Sts.UpdateData(data, offset + 20);
+        Inp_CmdAck.UpdateData(data, offset + 24);
+        Out_CmdAck.UpdateData(data, offset + 28);
+        Inp_SeverityMax.UpdateData(data, offset + 32);
+        Out_SeverityMax.UpdateData(data, offset + 36);
+        Cfg_CmdMask.UpdateData(data, offset + 40);
+        Cfg_CmdLLHMask.UpdateData(data, offset + 44);
+        Cfg_StsMask.UpdateData(data, offset + 48);
+        Ref_Index.UpdateData(data, offset + 52);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Inp_Cmd</c> member of the <see cref="BUS_OBJ"/> data type.

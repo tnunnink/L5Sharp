@@ -43,6 +43,39 @@ public sealed partial class THRS_ENHANCED : StructureData
     public THRS_ENHANCED(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 92;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Enable.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Disconnected.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        RightButtonNormallyOpen.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        RightButtonNormallyClosed.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        LeftButtonNormallyOpen.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        LeftButtonNormallyClosed.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Reset.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        DiscrepancyTime.UpdateData(data, offset + 6);
+        EnableOut.UpdateData((data[offset + 14] & (1 << 1)) != 0);
+        O1.UpdateData((data[offset + 14] & (1 << 2)) != 0);
+        FP.UpdateData((data[offset + 14] & (1 << 3)) != 0);
+        BR.UpdateData((data[offset + 14] & (1 << 4)) != 0);
+        SB.UpdateData((data[offset + 14] & (1 << 5)) != 0);
+        FaultCode.UpdateData(data, offset + 14);
+        DiagnosticCode.UpdateData(data, offset + 18);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="THRS_ENHANCED"/> data type.

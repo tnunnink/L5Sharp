@@ -28,6 +28,24 @@ public sealed partial class CONNECTION_STATUS : StructureData
     public CONNECTION_STATUS(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 4;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        RunMode.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        ConnectionFaulted.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>RunMode</c> member of the <see cref="CONNECTION_STATUS"/> data type.

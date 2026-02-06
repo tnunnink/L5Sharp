@@ -29,6 +29,25 @@ public sealed partial class RAC_ITF_DVC_PWRVELOCITY_SET : StructureData
     public RAC_ITF_DVC_PWRVELOCITY_SET(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 8;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Speed.UpdateData(data, offset + 1);
+        InhibitCmd.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        InhibitSet.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Speed</c> member of the <see cref="RAC_ITF_DVC_PWRVELOCITY_SET"/> data type.

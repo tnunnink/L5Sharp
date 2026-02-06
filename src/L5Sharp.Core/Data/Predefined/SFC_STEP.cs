@@ -44,6 +44,40 @@ public sealed partial class SFC_STEP : StructureData
     public SFC_STEP(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 28;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Status.UpdateData(data, offset + 0);
+        X.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        FS.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        SA.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        LS.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        DN.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        OV.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        AlarmEn.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        AlarmLow.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        AlarmHigh.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Reset.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        PauseTimer.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        PRE.UpdateData(data, offset + 6);
+        T.UpdateData(data, offset + 10);
+        TMax.UpdateData(data, offset + 14);
+        Count.UpdateData(data, offset + 18);
+        LimitLow.UpdateData(data, offset + 22);
+        LimitHigh.UpdateData(data, offset + 26);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Status</c> member of the <see cref="SFC_STEP"/> data type.

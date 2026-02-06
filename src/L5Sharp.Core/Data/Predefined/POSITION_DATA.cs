@@ -33,6 +33,29 @@ public sealed partial class POSITION_DATA : StructureData
     public POSITION_DATA(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 28;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        ID.UpdateData(data, offset + 0);
+        X.UpdateData(data, offset + 4);
+        Y.UpdateData(data, offset + 8);
+        Z.UpdateData(data, offset + 12);
+        Rx.UpdateData(data, offset + 16);
+        Ry.UpdateData(data, offset + 20);
+        Rz.UpdateData(data, offset + 24);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>ID</c> member of the <see cref="POSITION_DATA"/> data type.

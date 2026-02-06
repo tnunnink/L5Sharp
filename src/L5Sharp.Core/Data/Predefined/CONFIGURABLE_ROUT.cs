@@ -41,6 +41,37 @@ public sealed partial class CONFIGURABLE_ROUT : StructureData
     public CONFIGURABLE_ROUT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 52;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Actuate.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        FeedbackType.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Feedback1.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Feedback2.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        OutputStatus.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        FeedbackReactionTime.UpdateData(data, offset + 5);
+        EnableOut.UpdateData((data[offset + 14] & (1 << 0)) != 0);
+        O1.UpdateData((data[offset + 14] & (1 << 1)) != 0);
+        O2.UpdateData((data[offset + 14] & (1 << 2)) != 0);
+        FP.UpdateData((data[offset + 14] & (1 << 3)) != 0);
+        FaultCode.UpdateData(data, offset + 14);
+        DiagnosticCode.UpdateData(data, offset + 18);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="CONFIGURABLE_ROUT"/> data type.

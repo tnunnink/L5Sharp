@@ -88,6 +88,84 @@ public sealed partial class P_DISCRETE_INPUT : StructureData
     public P_DISCRETE_INPUT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 168;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_PVData.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Inp_ModFault.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Inp_ChanFault.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Inp_PVUncertain.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Inp_PVNotify.UpdateData(data, offset + 5);
+        Inp_Target.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        Inp_Gate.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        Inp_Reset.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        Cfg_AllowDisable.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        Cfg_AllowShelve.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        Cfg_NoSubstPV.UpdateData((data[offset + 7] & (1 << 4)) != 0);
+        Cfg_SubstTracksTarget.UpdateData((data[offset + 7] & (1 << 5)) != 0);
+        Cfg_NormTextVis.UpdateData((data[offset + 7] & (1 << 6)) != 0);
+        Cfg_HasMoreObj.UpdateData((data[offset + 7] & (1 << 7)) != 0);
+        Cfg_Debounce.UpdateData(data, offset + 7);
+        Cfg_GateDly.UpdateData(data, offset + 11);
+        Cfg_TgtDisagreeOffDly.UpdateData(data, offset + 15);
+        Cfg_TgtDisagreeOnDly.UpdateData(data, offset + 19);
+        Cfg_CnfrmReqd.UpdateData(data, offset + 23);
+        Set_VirtualPV.UpdateData((data[offset + 25] & (1 << 0)) != 0);
+        PCmd_Virtual.UpdateData((data[offset + 25] & (1 << 1)) != 0);
+        PCmd_Physical.UpdateData((data[offset + 25] & (1 << 2)) != 0);
+        PCmd_Reset.UpdateData((data[offset + 25] & (1 << 3)) != 0);
+        XCmd_Reset.UpdateData((data[offset + 25] & (1 << 4)) != 0);
+        XCmd_ResetAckAll.UpdateData((data[offset + 25] & (1 << 5)) != 0);
+        Out.UpdateData((data[offset + 25] & (1 << 6)) != 0);
+        Out_InpPV.UpdateData((data[offset + 25] & (1 << 7)) != 0);
+        Out_Reset.UpdateData((data[offset + 26] & (1 << 0)) != 0);
+        Sts_Initialized.UpdateData((data[offset + 26] & (1 << 1)) != 0);
+        Sts_PVUncertain.UpdateData((data[offset + 26] & (1 << 2)) != 0);
+        Sts_SubstPV.UpdateData((data[offset + 26] & (1 << 3)) != 0);
+        Sts_InpPV.UpdateData((data[offset + 26] & (1 << 4)) != 0);
+        Sts_Virtual.UpdateData((data[offset + 26] & (1 << 5)) != 0);
+        SrcQ_IO.UpdateData(data, offset + 26);
+        SrcQ.UpdateData(data, offset + 27);
+        Sts_eSts.UpdateData(data, offset + 28);
+        Sts_eFault.UpdateData(data, offset + 29);
+        Sts_eNotify.UpdateData(data, offset + 30);
+        Sts_eNotifyAll.UpdateData(data, offset + 31);
+        Sts_eNotifyIOFault.UpdateData(data, offset + 32);
+        Sts_eNotifyTgtDisagree.UpdateData(data, offset + 33);
+        Sts_UnackAlmCount.UpdateData(data, offset + 34);
+        Sts_MaintByp.UpdateData((data[offset + 38] & (1 << 6)) != 0);
+        Sts_Err.UpdateData((data[offset + 38] & (1 << 7)) != 0);
+        Sts_ErrGateDly.UpdateData((data[offset + 43] & (1 << 0)) != 0);
+        Sts_ErrTgtDisagreeOffDly.UpdateData((data[offset + 43] & (1 << 1)) != 0);
+        Sts_ErrTgtDisagreeOnDly.UpdateData((data[offset + 43] & (1 << 2)) != 0);
+        Sts_ErrDebounce.UpdateData((data[offset + 43] & (1 << 3)) != 0);
+        Sts_ErrAlm.UpdateData((data[offset + 43] & (1 << 4)) != 0);
+        Sts_Alm.UpdateData((data[offset + 43] & (1 << 5)) != 0);
+        Sts_AlmInh.UpdateData((data[offset + 43] & (1 << 6)) != 0);
+        Sts_IOFault.UpdateData((data[offset + 43] & (1 << 7)) != 0);
+        Sts_TgtDisagreeCmp.UpdateData((data[offset + 44] & (1 << 0)) != 0);
+        Sts_TgtDisagreeGate.UpdateData((data[offset + 44] & (1 << 1)) != 0);
+        Sts_TgtDisagree.UpdateData((data[offset + 44] & (1 << 2)) != 0);
+        Sts_RdyAck.UpdateData((data[offset + 44] & (1 << 3)) != 0);
+        Sts_RdyReset.UpdateData((data[offset + 44] & (1 << 4)) != 0);
+        XRdy_Reset.UpdateData((data[offset + 44] & (1 << 5)) != 0);
+        XRdy_ResetAckAll.UpdateData((data[offset + 44] & (1 << 6)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_DISCRETE_INPUT"/> data type.

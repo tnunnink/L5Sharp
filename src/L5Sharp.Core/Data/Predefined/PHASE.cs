@@ -73,6 +73,69 @@ public sealed partial class PHASE : StructureData
     public PHASE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 32;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        State.UpdateData(data, offset + 0);
+        Running.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Holding.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Restarting.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Stopping.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Aborting.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Resetting.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Idle.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Held.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Complete.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Stopped.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        Aborted.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        PauseControl.UpdateData(data, offset + 6);
+        PauseEnabled.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        Paused.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        AutoPauseEnabled.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        StepIndex.UpdateData(data, offset + 10);
+        Failure.UpdateData(data, offset + 14);
+        UnitID.UpdateData(data, offset + 18);
+        Owner.UpdateData(data, offset + 22);
+        PendingRequest.UpdateData(data, offset + 26);
+        DownloadInputParameters.UpdateData((data[offset + 30] & (1 << 6)) != 0);
+        DownloadInputParametersSubset.UpdateData((data[offset + 30] & (1 << 7)) != 0);
+        UploadOutputParameters.UpdateData((data[offset + 31] & (1 << 0)) != 0);
+        UploadOutputParametersSubset.UpdateData((data[offset + 31] & (1 << 1)) != 0);
+        DownloadOutputParameterLimits.UpdateData((data[offset + 31] & (1 << 2)) != 0);
+        AcquireResources.UpdateData((data[offset + 31] & (1 << 3)) != 0);
+        ReleaseResources.UpdateData((data[offset + 31] & (1 << 4)) != 0);
+        SendMessageToLinkedPhase.UpdateData((data[offset + 31] & (1 << 5)) != 0);
+        SendMessageToLinkedPhaseAndWait.UpdateData((data[offset + 31] & (1 << 6)) != 0);
+        ReceiveMessageFromLinkedPhase.UpdateData((data[offset + 31] & (1 << 7)) != 0);
+        CancelMessageToLinkedPhase.UpdateData((data[offset + 32] & (1 << 0)) != 0);
+        SendMessageToOperator.UpdateData((data[offset + 32] & (1 << 1)) != 0);
+        ClearMessageToOperator.UpdateData((data[offset + 32] & (1 << 2)) != 0);
+        GenerateESignature.UpdateData((data[offset + 32] & (1 << 3)) != 0);
+        DownloadBatchData.UpdateData((data[offset + 32] & (1 << 4)) != 0);
+        DownloadMaterialTrackDataContainerInUse.UpdateData((data[offset + 32] & (1 << 5)) != 0);
+        DownloadContainerBindingPriority.UpdateData((data[offset + 32] & (1 << 6)) != 0);
+        DownloadSufficientMaterial.UpdateData((data[offset + 32] & (1 << 7)) != 0);
+        DownloadMaterialTrackDatabaseData.UpdateData((data[offset + 33] & (1 << 0)) != 0);
+        UploadMaterialTrackDataContainerInUse.UpdateData((data[offset + 33] & (1 << 1)) != 0);
+        UploadContainerBindingPriority.UpdateData((data[offset + 33] & (1 << 2)) != 0);
+        UploadMaterialTrackDatabaseData.UpdateData((data[offset + 33] & (1 << 3)) != 0);
+        AbortingRequest.UpdateData((data[offset + 33] & (1 << 4)) != 0);
+        NewInputParameters.UpdateData((data[offset + 37] & (1 << 5)) != 0);
+        Producing.UpdateData((data[offset + 37] & (1 << 6)) != 0);
+        Standby.UpdateData((data[offset + 37] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>State</c> member of the <see cref="PHASE"/> data type.

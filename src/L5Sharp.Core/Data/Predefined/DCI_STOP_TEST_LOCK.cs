@@ -47,6 +47,43 @@ public sealed partial class DCI_STOP_TEST_LOCK : StructureData
     public DCI_STOP_TEST_LOCK(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 92;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        ChannelA.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ChannelB.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        ColdStartType.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        TestRequest.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        UnlockRequest.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        LockFeedback.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        HazardStopped.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        SafetyFunction.UpdateData(data, offset + 6);
+        InputType.UpdateData(data, offset + 10);
+        DiscrepancyTime.UpdateData(data, offset + 14);
+        EnableOut.UpdateData((data[offset + 22] & (1 << 3)) != 0);
+        O1.UpdateData((data[offset + 22] & (1 << 4)) != 0);
+        FP.UpdateData((data[offset + 22] & (1 << 5)) != 0);
+        TC.UpdateData((data[offset + 22] & (1 << 6)) != 0);
+        ULC.UpdateData((data[offset + 22] & (1 << 7)) != 0);
+        FaultCode.UpdateData(data, offset + 22);
+        DiagnosticCode.UpdateData(data, offset + 26);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="DCI_STOP_TEST_LOCK"/> data type.

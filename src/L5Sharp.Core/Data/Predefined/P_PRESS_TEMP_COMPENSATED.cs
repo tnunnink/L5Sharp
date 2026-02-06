@@ -48,6 +48,44 @@ public sealed partial class P_PRESS_TEMP_COMPENSATED : StructureData
     public P_PRESS_TEMP_COMPENSATED(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 64;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_TAct.UpdateData(data, offset + 5);
+        Inp_PAct.UpdateData(data, offset + 9);
+        Inp_DPAct.UpdateData(data, offset + 13);
+        Inp_FAct.UpdateData(data, offset + 17);
+        Cfg_LoFlowCutoff.UpdateData(data, offset + 21);
+        Cfg_TStd.UpdateData(data, offset + 25);
+        Cfg_PStd.UpdateData(data, offset + 29);
+        Cfg_TOffset.UpdateData(data, offset + 33);
+        Cfg_POffset.UpdateData(data, offset + 37);
+        Cfg_DPRef.UpdateData(data, offset + 41);
+        Cfg_FRef.UpdateData(data, offset + 45);
+        Cfg_UseDP.UpdateData((data[offset + 49] & (1 << 3)) != 0);
+        Out_Flow.UpdateData(data, offset + 49);
+        Sts_Initialized.UpdateData((data[offset + 53] & (1 << 4)) != 0);
+        Sts_Err.UpdateData((data[offset + 53] & (1 << 5)) != 0);
+        Sts_ErrTStd.UpdateData((data[offset + 53] & (1 << 6)) != 0);
+        Sts_ErrPStd.UpdateData((data[offset + 53] & (1 << 7)) != 0);
+        Sts_ErrDPRef.UpdateData((data[offset + 54] & (1 << 0)) != 0);
+        Sts_ErrFRef.UpdateData((data[offset + 54] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_PRESS_TEMP_COMPENSATED"/> data type.

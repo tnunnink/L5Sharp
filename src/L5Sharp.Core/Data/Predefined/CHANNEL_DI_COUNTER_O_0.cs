@@ -29,6 +29,25 @@ public sealed partial class CHANNEL_DI_COUNTER_O_0 : StructureData
     public CHANNEL_DI_COUNTER_O_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 8;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Reset.UpdateData((data[offset + 3] & (1 << 0)) != 0);
+        RolloverAck.UpdateData((data[offset + 3] & (1 << 1)) != 0);
+        Preset.UpdateData(data, offset + 5);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Reset</c> member of the <see cref="CHANNEL_DI_COUNTER_O_0"/> data type.

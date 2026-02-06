@@ -49,6 +49,45 @@ public sealed partial class DCI_STOP_TEST_MUTE : StructureData
     public DCI_STOP_TEST_MUTE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 100;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        ChannelA.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ChannelB.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        ColdStartType.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        TestRequest.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Mute.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        MutingLampStatus.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        SafetyFunction.UpdateData(data, offset + 6);
+        InputType.UpdateData(data, offset + 10);
+        DiscrepancyTime.UpdateData(data, offset + 14);
+        TestType.UpdateData(data, offset + 18);
+        TestTime.UpdateData(data, offset + 22);
+        EnableOut.UpdateData((data[offset + 30] & (1 << 2)) != 0);
+        O1.UpdateData((data[offset + 30] & (1 << 3)) != 0);
+        FP.UpdateData((data[offset + 30] & (1 << 4)) != 0);
+        TC.UpdateData((data[offset + 30] & (1 << 5)) != 0);
+        ML.UpdateData((data[offset + 30] & (1 << 6)) != 0);
+        SS.UpdateData((data[offset + 30] & (1 << 7)) != 0);
+        FaultCode.UpdateData(data, offset + 30);
+        DiagnosticCode.UpdateData(data, offset + 34);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="DCI_STOP_TEST_MUTE"/> data type.

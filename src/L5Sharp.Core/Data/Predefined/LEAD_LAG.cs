@@ -49,6 +49,45 @@ public sealed partial class LEAD_LAG : StructureData
     public LEAD_LAG(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 132;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        Initialize.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        Lead.UpdateData(data, offset + 9);
+        Lag.UpdateData(data, offset + 13);
+        Gain.UpdateData(data, offset + 17);
+        Bias.UpdateData(data, offset + 21);
+        TimingMode.UpdateData(data, offset + 25);
+        OversampleDT.UpdateData(data, offset + 29);
+        RTSTime.UpdateData(data, offset + 33);
+        RTSTimeStamp.UpdateData(data, offset + 37);
+        EnableOut.UpdateData((data[offset + 45] & (1 << 2)) != 0);
+        Out.UpdateData(data, offset + 45);
+        DeltaT.UpdateData(data, offset + 49);
+        Status.UpdateData(data, offset + 53);
+        InstructFault.UpdateData((data[offset + 57] & (1 << 3)) != 0);
+        LeadInv.UpdateData((data[offset + 57] & (1 << 4)) != 0);
+        LagInv.UpdateData((data[offset + 57] & (1 << 5)) != 0);
+        TimingModeInv.UpdateData((data[offset + 57] & (1 << 6)) != 0);
+        RTSMissed.UpdateData((data[offset + 57] & (1 << 7)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 58] & (1 << 0)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 58] & (1 << 1)) != 0);
+        DeltaTInv.UpdateData((data[offset + 58] & (1 << 2)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="LEAD_LAG"/> data type.

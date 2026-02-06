@@ -39,6 +39,35 @@ public sealed partial class MOVING_AVERAGE : StructureData
     public MOVING_AVERAGE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 52;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        InFault.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        Initialize.UpdateData((data[offset + 9] & (1 << 2)) != 0);
+        SampleEnable.UpdateData((data[offset + 9] & (1 << 3)) != 0);
+        NumberOfSamples.UpdateData(data, offset + 9);
+        UseWeights.UpdateData((data[offset + 13] & (1 << 4)) != 0);
+        EnableOut.UpdateData((data[offset + 17] & (1 << 5)) != 0);
+        Out.UpdateData(data, offset + 17);
+        Status.UpdateData(data, offset + 21);
+        InstructFault.UpdateData((data[offset + 25] & (1 << 6)) != 0);
+        InFaulted.UpdateData((data[offset + 25] & (1 << 7)) != 0);
+        NumberOfSampInv.UpdateData((data[offset + 26] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="MOVING_AVERAGE"/> data type.

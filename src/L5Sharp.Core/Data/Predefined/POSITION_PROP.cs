@@ -57,6 +57,53 @@ public sealed partial class POSITION_PROP : StructureData
     public POSITION_PROP(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 124;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        SP.UpdateData(data, offset + 5);
+        Position.UpdateData(data, offset + 9);
+        OpenedFB.UpdateData((data[offset + 13] & (1 << 1)) != 0);
+        ClosedFB.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        PositionEUMax.UpdateData(data, offset + 13);
+        PositionEUMin.UpdateData(data, offset + 17);
+        CycleTime.UpdateData(data, offset + 21);
+        OpenRate.UpdateData(data, offset + 25);
+        CloseRate.UpdateData(data, offset + 29);
+        MaxOnTime.UpdateData(data, offset + 33);
+        MinOnTime.UpdateData(data, offset + 37);
+        Deadtime.UpdateData(data, offset + 41);
+        EnableOut.UpdateData((data[offset + 49] & (1 << 3)) != 0);
+        OpenOut.UpdateData((data[offset + 49] & (1 << 4)) != 0);
+        CloseOut.UpdateData((data[offset + 49] & (1 << 5)) != 0);
+        PositionPercent.UpdateData(data, offset + 49);
+        SPPercent.UpdateData(data, offset + 53);
+        OpenTime.UpdateData(data, offset + 57);
+        CloseTime.UpdateData(data, offset + 61);
+        Status.UpdateData(data, offset + 65);
+        InstructFault.UpdateData((data[offset + 69] & (1 << 6)) != 0);
+        CycleTimeInv.UpdateData((data[offset + 69] & (1 << 7)) != 0);
+        OpenRateInv.UpdateData((data[offset + 70] & (1 << 0)) != 0);
+        CloseRateInv.UpdateData((data[offset + 70] & (1 << 1)) != 0);
+        MaxOnTimeInv.UpdateData((data[offset + 70] & (1 << 2)) != 0);
+        MinOnTimeInv.UpdateData((data[offset + 70] & (1 << 3)) != 0);
+        DeadtimeInv.UpdateData((data[offset + 70] & (1 << 4)) != 0);
+        PositionPctInv.UpdateData((data[offset + 70] & (1 << 5)) != 0);
+        SPPercentInv.UpdateData((data[offset + 70] & (1 << 6)) != 0);
+        PositionSpanInv.UpdateData((data[offset + 70] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="POSITION_PROP"/> data type.

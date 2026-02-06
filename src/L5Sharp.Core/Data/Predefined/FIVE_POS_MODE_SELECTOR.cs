@@ -42,6 +42,38 @@ public sealed partial class FIVE_POS_MODE_SELECTOR : StructureData
     public FIVE_POS_MODE_SELECTOR(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 36;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Input1.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Input2.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Input3.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Input4.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Input5.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        FaultReset.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        EnableOut.UpdateData((data[offset + 9] & (1 << 7)) != 0);
+        O1.UpdateData((data[offset + 10] & (1 << 0)) != 0);
+        O2.UpdateData((data[offset + 10] & (1 << 1)) != 0);
+        O3.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        O4.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        O5.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        NM.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        MMS.UpdateData((data[offset + 10] & (1 << 6)) != 0);
+        FP.UpdateData((data[offset + 10] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="FIVE_POS_MODE_SELECTOR"/> data type.

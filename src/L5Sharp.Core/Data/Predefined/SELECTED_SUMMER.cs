@@ -54,6 +54,50 @@ public sealed partial class SELECTED_SUMMER : StructureData
     public SELECTED_SUMMER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 84;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In1.UpdateData(data, offset + 5);
+        Gain1.UpdateData(data, offset + 9);
+        Select1.UpdateData((data[offset + 13] & (1 << 1)) != 0);
+        In2.UpdateData(data, offset + 13);
+        Gain2.UpdateData(data, offset + 17);
+        Select2.UpdateData((data[offset + 21] & (1 << 2)) != 0);
+        In3.UpdateData(data, offset + 21);
+        Gain3.UpdateData(data, offset + 25);
+        Select3.UpdateData((data[offset + 29] & (1 << 3)) != 0);
+        In4.UpdateData(data, offset + 29);
+        Gain4.UpdateData(data, offset + 33);
+        Select4.UpdateData((data[offset + 37] & (1 << 4)) != 0);
+        In5.UpdateData(data, offset + 37);
+        Gain5.UpdateData(data, offset + 41);
+        Select5.UpdateData((data[offset + 45] & (1 << 5)) != 0);
+        In6.UpdateData(data, offset + 45);
+        Gain6.UpdateData(data, offset + 49);
+        Select6.UpdateData((data[offset + 53] & (1 << 6)) != 0);
+        In7.UpdateData(data, offset + 53);
+        Gain7.UpdateData(data, offset + 57);
+        Select7.UpdateData((data[offset + 61] & (1 << 7)) != 0);
+        In8.UpdateData(data, offset + 61);
+        Gain8.UpdateData(data, offset + 65);
+        Select8.UpdateData((data[offset + 70] & (1 << 0)) != 0);
+        Bias.UpdateData(data, offset + 70);
+        EnableOut.UpdateData((data[offset + 78] & (1 << 1)) != 0);
+        Out.UpdateData(data, offset + 78);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SELECTED_SUMMER"/> data type.

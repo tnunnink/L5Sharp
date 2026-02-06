@@ -135,6 +135,131 @@ public sealed partial class P_ANALOG_INPUT_DUAL : StructureData
     public P_ANALOG_INPUT_DUAL(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 260;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_PVAData.UpdateData(data, offset + 5);
+        Inp_PVASrcQ.UpdateData(data, offset + 9);
+        Inp_PVANotify.UpdateData(data, offset + 10);
+        Inp_SmartDvcASts.UpdateData(data, offset + 11);
+        Inp_PVBData.UpdateData(data, offset + 15);
+        Inp_PVBSrcQ.UpdateData(data, offset + 19);
+        Inp_PVBNotify.UpdateData(data, offset + 20);
+        Inp_SmartDvcBSts.UpdateData(data, offset + 21);
+        Inp_PVABad.UpdateData((data[offset + 25] & (1 << 3)) != 0);
+        Inp_PVAUncertain.UpdateData((data[offset + 25] & (1 << 4)) != 0);
+        Inp_SmartDvcADiagAvailable.UpdateData((data[offset + 25] & (1 << 5)) != 0);
+        Inp_PVBBad.UpdateData((data[offset + 25] & (1 << 6)) != 0);
+        Inp_PVBUncertain.UpdateData((data[offset + 25] & (1 << 7)) != 0);
+        Inp_SmartDvcBDiagAvailable.UpdateData((data[offset + 26] & (1 << 0)) != 0);
+        Inp_DiffGate.UpdateData((data[offset + 26] & (1 << 1)) != 0);
+        Cfg_AllowDisable.UpdateData((data[offset + 26] & (1 << 2)) != 0);
+        Cfg_AllowShelve.UpdateData((data[offset + 26] & (1 << 3)) != 0);
+        Cfg_UseInpSrcQPVA.UpdateData((data[offset + 26] & (1 << 4)) != 0);
+        Cfg_UseInpSrcQPVB.UpdateData((data[offset + 26] & (1 << 5)) != 0);
+        Cfg_HasPVNav.UpdateData((data[offset + 26] & (1 << 6)) != 0);
+        Cfg_HasMoreObj.UpdateData((data[offset + 26] & (1 << 7)) != 0);
+        Cfg_HasNav.UpdateData(data, offset + 26);
+        Cfg_PVEUMin.UpdateData(data, offset + 27);
+        Cfg_PVEUMax.UpdateData(data, offset + 31);
+        Cfg_DiffLim.UpdateData(data, offset + 35);
+        Cfg_DiffDB.UpdateData(data, offset + 39);
+        Cfg_DiffGateDly.UpdateData(data, offset + 43);
+        Cfg_OoRHiLim.UpdateData(data, offset + 47);
+        Cfg_OoRLoLim.UpdateData(data, offset + 51);
+        Cfg_OoRDB.UpdateData(data, offset + 55);
+        Cfg_AllowOper.UpdateData((data[offset + 60] & (1 << 0)) != 0);
+        Cfg_AllowProg.UpdateData((data[offset + 60] & (1 << 1)) != 0);
+        Cfg_AllowExt.UpdateData((data[offset + 60] & (1 << 2)) != 0);
+        Cfg_PVDecPlcs.UpdateData(data, offset + 60);
+        Cfg_CnfrmReqd.UpdateData(data, offset + 61);
+        PSet_Owner.UpdateData(data, offset + 62);
+        PCmd_SelA.UpdateData((data[offset + 66] & (1 << 3)) != 0);
+        PCmd_SelB.UpdateData((data[offset + 66] & (1 << 4)) != 0);
+        PCmd_SelAvg.UpdateData((data[offset + 66] & (1 << 5)) != 0);
+        PCmd_SelMin.UpdateData((data[offset + 66] & (1 << 6)) != 0);
+        PCmd_SelMax.UpdateData((data[offset + 66] & (1 << 7)) != 0);
+        PCmd_Reset.UpdateData((data[offset + 67] & (1 << 0)) != 0);
+        XCmd_SelA.UpdateData((data[offset + 67] & (1 << 1)) != 0);
+        XCmd_SelB.UpdateData((data[offset + 67] & (1 << 2)) != 0);
+        XCmd_SelAvg.UpdateData((data[offset + 67] & (1 << 3)) != 0);
+        XCmd_SelMin.UpdateData((data[offset + 67] & (1 << 4)) != 0);
+        XCmd_SelMax.UpdateData((data[offset + 67] & (1 << 5)) != 0);
+        XCmd_Reset.UpdateData((data[offset + 67] & (1 << 6)) != 0);
+        XCmd_ResetAckAll.UpdateData((data[offset + 67] & (1 << 7)) != 0);
+        Val.UpdateData(data, offset + 67);
+        Val_PVA.UpdateData(data, offset + 71);
+        Val_PVB.UpdateData(data, offset + 75);
+        Val_AvgPV.UpdateData(data, offset + 79);
+        Val_MinPV.UpdateData(data, offset + 83);
+        Val_MaxPV.UpdateData(data, offset + 87);
+        Val_InpPV.UpdateData(data, offset + 91);
+        Val_Diff.UpdateData(data, offset + 95);
+        Val_PVEUMin.UpdateData(data, offset + 99);
+        Val_PVEUMax.UpdateData(data, offset + 103);
+        Out_SmartDvcSts.UpdateData(data, offset + 107);
+        Sts_Initialized.UpdateData((data[offset + 116] & (1 << 0)) != 0);
+        Sts_SmartDvcDiagAvailable.UpdateData((data[offset + 116] & (1 << 1)) != 0);
+        Sts_PVASel.UpdateData((data[offset + 116] & (1 << 2)) != 0);
+        Sts_PVBSel.UpdateData((data[offset + 116] & (1 << 3)) != 0);
+        Sts_AvgSel.UpdateData((data[offset + 116] & (1 << 4)) != 0);
+        Sts_MinSel.UpdateData((data[offset + 116] & (1 << 5)) != 0);
+        Sts_MaxSel.UpdateData((data[offset + 116] & (1 << 6)) != 0);
+        Sts_PVBad.UpdateData((data[offset + 116] & (1 << 7)) != 0);
+        Sts_PVUncertain.UpdateData((data[offset + 117] & (1 << 0)) != 0);
+        SrcQ_IOA.UpdateData(data, offset + 117);
+        SrcQ_IOB.UpdateData(data, offset + 118);
+        SrcQ_IO.UpdateData(data, offset + 119);
+        SrcQ.UpdateData(data, offset + 120);
+        Sts_eSts.UpdateData(data, offset + 121);
+        Sts_eFault.UpdateData(data, offset + 122);
+        Sts_eNotify.UpdateData(data, offset + 124);
+        Sts_eNotifyAll.UpdateData(data, offset + 125);
+        Sts_eNotifyOneGood.UpdateData(data, offset + 126);
+        Sts_eNotifyNoneGood.UpdateData(data, offset + 127);
+        Sts_eNotifyDiff.UpdateData(data, offset + 128);
+        Sts_eNotifyFail.UpdateData(data, offset + 129);
+        Sts_UnackAlmCount.UpdateData(data, offset + 130);
+        Sts_Err.UpdateData((data[offset + 134] & (1 << 1)) != 0);
+        Sts_ErrEU.UpdateData((data[offset + 134] & (1 << 2)) != 0);
+        Sts_ErrDiffDB.UpdateData((data[offset + 134] & (1 << 3)) != 0);
+        Sts_ErrDiffGateDly.UpdateData((data[offset + 134] & (1 << 4)) != 0);
+        Sts_ErrOoRDB.UpdateData((data[offset + 134] & (1 << 5)) != 0);
+        Sts_ErrAlm.UpdateData((data[offset + 134] & (1 << 6)) != 0);
+        Sts_Alm.UpdateData((data[offset + 134] & (1 << 7)) != 0);
+        Sts_AlmInh.UpdateData((data[offset + 135] & (1 << 0)) != 0);
+        Sts_OneGood.UpdateData((data[offset + 135] & (1 << 1)) != 0);
+        Sts_NoneGood.UpdateData((data[offset + 135] & (1 << 2)) != 0);
+        Sts_DiffCmp.UpdateData((data[offset + 135] & (1 << 3)) != 0);
+        Sts_DiffGate.UpdateData((data[offset + 135] & (1 << 4)) != 0);
+        Sts_Diff.UpdateData((data[offset + 135] & (1 << 5)) != 0);
+        Sts_Fail.UpdateData((data[offset + 135] & (1 << 6)) != 0);
+        Sts_RdyAck.UpdateData((data[offset + 135] & (1 << 7)) != 0);
+        Sts_RdyReset.UpdateData((data[offset + 136] & (1 << 0)) != 0);
+        XRdy_SelA.UpdateData((data[offset + 136] & (1 << 1)) != 0);
+        XRdy_SelB.UpdateData((data[offset + 136] & (1 << 2)) != 0);
+        XRdy_SelAvg.UpdateData((data[offset + 136] & (1 << 3)) != 0);
+        XRdy_SelMin.UpdateData((data[offset + 136] & (1 << 4)) != 0);
+        XRdy_SelMax.UpdateData((data[offset + 136] & (1 << 5)) != 0);
+        XRdy_Reset.UpdateData((data[offset + 136] & (1 << 6)) != 0);
+        XRdy_ResetAckAll.UpdateData((data[offset + 136] & (1 << 7)) != 0);
+        Val_Owner.UpdateData(data, offset + 136);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_ANALOG_INPUT_DUAL"/> data type.

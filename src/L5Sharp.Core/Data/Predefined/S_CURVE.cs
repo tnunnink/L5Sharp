@@ -55,6 +55,51 @@ public sealed partial class S_CURVE : StructureData
     public S_CURVE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 120;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        Initialize.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        InitialValue.UpdateData(data, offset + 9);
+        AbsAlgRamp.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        AccelRate.UpdateData(data, offset + 13);
+        DecelRate.UpdateData(data, offset + 17);
+        JerkRate.UpdateData(data, offset + 21);
+        HoldMode.UpdateData((data[offset + 25] & (1 << 3)) != 0);
+        HoldEnable.UpdateData((data[offset + 25] & (1 << 4)) != 0);
+        TimingMode.UpdateData(data, offset + 25);
+        OversampleDT.UpdateData(data, offset + 29);
+        RTSTime.UpdateData(data, offset + 33);
+        RTSTimeStamp.UpdateData(data, offset + 37);
+        EnableOut.UpdateData((data[offset + 45] & (1 << 5)) != 0);
+        S_Mode.UpdateData((data[offset + 45] & (1 << 6)) != 0);
+        Out.UpdateData(data, offset + 45);
+        Rate.UpdateData(data, offset + 49);
+        DeltaT.UpdateData(data, offset + 53);
+        Status.UpdateData(data, offset + 57);
+        InstructFault.UpdateData((data[offset + 61] & (1 << 7)) != 0);
+        AccelRateInv.UpdateData((data[offset + 62] & (1 << 0)) != 0);
+        DecelRateInv.UpdateData((data[offset + 62] & (1 << 1)) != 0);
+        JerkRateInv.UpdateData((data[offset + 62] & (1 << 2)) != 0);
+        TimingModeInv.UpdateData((data[offset + 62] & (1 << 3)) != 0);
+        RTSMissed.UpdateData((data[offset + 62] & (1 << 4)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 62] & (1 << 5)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 62] & (1 << 6)) != 0);
+        DeltaTInv.UpdateData((data[offset + 62] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="S_CURVE"/> data type.

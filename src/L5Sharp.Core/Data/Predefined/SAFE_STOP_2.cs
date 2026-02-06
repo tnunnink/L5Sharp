@@ -52,6 +52,48 @@ public sealed partial class SAFE_STOP_2 : StructureData
     public SAFE_STOP_2(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 128;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        ColdStartType.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Request.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        O1.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        RR.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        FP.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        StopMonitorDelayActive.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        CheckDelayActive.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        StopMonitorDelay.UpdateData(data, offset + 6);
+        StopDelay.UpdateData(data, offset + 8);
+        SS2StandstillSpeed.UpdateData(data, offset + 12);
+        DecelRefSpeed.UpdateData(data, offset + 16);
+        DecelSpeedTolerance.UpdateData(data, offset + 20);
+        Mode.UpdateData(data, offset + 24);
+        CheckDelay.UpdateData(data, offset + 25);
+        SOSStandstillSpeed.UpdateData(data, offset + 27);
+        StandstillDeadband.UpdateData(data, offset + 31);
+        SS2FaultType.UpdateData(data, offset + 35);
+        SOSFaultType.UpdateData(data, offset + 36);
+        DiagnosticCode.UpdateData(data, offset + 37);
+        SpeedLimit.UpdateData(data, offset + 38);
+        DecelerationRamp.UpdateData(data, offset + 42);
+        StandstillSetpoint.UpdateData(data, offset + 46);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SAFE_STOP_2"/> data type.

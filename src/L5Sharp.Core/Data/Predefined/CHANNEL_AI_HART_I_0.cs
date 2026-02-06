@@ -31,6 +31,27 @@ public sealed partial class CHANNEL_AI_HART_I_0 : StructureData
     public CHANNEL_AI_HART_I_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 4;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Ch.UpdateData(data, offset + 0);
+        Class.UpdateData(data, offset + 0);
+        Unit.UpdateData(data, offset + 1);
+        Manual.UpdateData((data[offset + 4] & (1 << 0)) != 0);
+        Constant.UpdateData((data[offset + 4] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Ch</c> member of the <see cref="CHANNEL_AI_HART_I_0"/> data type.

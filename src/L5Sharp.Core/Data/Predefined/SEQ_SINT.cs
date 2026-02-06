@@ -29,6 +29,25 @@ public sealed partial class SEQ_SINT : StructureData
     public SEQ_SINT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 8;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Value.UpdateData(data, offset + 0);
+        InitialValue.UpdateData(data, offset + 2);
+        Valid.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Value</c> member of the <see cref="SEQ_SINT"/> data type.

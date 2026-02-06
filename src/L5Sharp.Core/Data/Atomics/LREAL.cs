@@ -34,7 +34,7 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     }
 
     /// <inheritdoc />
-    public override int Size => sizeof(double);
+    public override int GetSize() => sizeof(double);
 
     /// <inheritdoc />
     public double Value
@@ -46,20 +46,20 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     }
 
     /// <inheritdoc />
-    public override int Update(byte[] data, int offset)
+    public override int UpdateData(byte[] data, int offset)
     {
         // If the size of this type overflows the boundary, we need to start at the next interval.
         // This can happen for only types larger than 1 byte.
-        offset = (offset + Size - 1) & ~(Size - 1);
+        offset = (offset + GetSize() - 1) & ~(GetSize() - 1);
 
         var value = BitConverter.ToDouble(data, offset);
-        Update(value);
+        UpdateData(value);
 
-        return offset + Size;
+        return offset + GetSize();
     }
 
     /// <inheritdoc />
-    public override void Clear()
+    public override void ResetData()
     {
         // Reset the value for atomic data to zero.
         var value = Radix.Format(0.0);

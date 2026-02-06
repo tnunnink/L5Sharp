@@ -27,6 +27,23 @@ public sealed partial class CHANNEL_DI_FT_O_0 : StructureData
     public CHANNEL_DI_FT_O_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 4;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        ResetFault.UpdateData((data[offset + 2] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>ResetFault</c> member of the <see cref="CHANNEL_DI_FT_O_0"/> data type.

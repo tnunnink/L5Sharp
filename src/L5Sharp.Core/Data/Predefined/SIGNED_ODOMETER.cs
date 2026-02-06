@@ -27,6 +27,23 @@ public sealed partial class SIGNED_ODOMETER : StructureData
     public SIGNED_ODOMETER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 16;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Data.UpdateData(data, offset + 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Data</c> member of the <see cref="SIGNED_ODOMETER"/> data type.

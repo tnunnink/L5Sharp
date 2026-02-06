@@ -33,6 +33,29 @@ public sealed partial class DATALOG_INSTRUCTION : StructureData
     public DATALOG_INSTRUCTION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        FLAGS.UpdateData(data, offset + 0);
+        EN.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        DN.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ER.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        PC.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        IP.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        ERR.UpdateData(data, offset + 5);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>FLAGS</c> member of the <see cref="DATALOG_INSTRUCTION"/> data type.

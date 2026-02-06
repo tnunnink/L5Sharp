@@ -36,7 +36,7 @@ public class MessageData : LogixData
     public override string Name => TypeName;
 
     /// <inheritdoc />
-    public override void Update(LogixData data)
+    public override void UpdateData(LogixData data)
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data));

@@ -94,6 +94,90 @@ public sealed partial class P_COMMAND_SOURCE : StructureData
     public P_COMMAND_SOURCE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 24;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_OwnerCmd.UpdateData(data, offset + 5);
+        Inp_InitializeReq.UpdateData((data[offset + 9] & (1 << 2)) != 0);
+        Inp_Hand.UpdateData((data[offset + 9] & (1 << 3)) != 0);
+        Inp_Ovrd.UpdateData((data[offset + 9] & (1 << 4)) != 0);
+        Inp_ExtInh.UpdateData((data[offset + 9] & (1 << 5)) != 0);
+        Cfg_HasOper.UpdateData((data[offset + 9] & (1 << 6)) != 0);
+        Cfg_HasOperLocked.UpdateData((data[offset + 9] & (1 << 7)) != 0);
+        Cfg_HasProg.UpdateData((data[offset + 10] & (1 << 0)) != 0);
+        Cfg_HasProgLocked.UpdateData((data[offset + 10] & (1 << 1)) != 0);
+        Cfg_HasExt.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        Cfg_HasMaint.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        Cfg_HasMaintOoS.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        Cfg_OvrdOverLock.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        Cfg_ExtOverLock.UpdateData((data[offset + 10] & (1 << 6)) != 0);
+        Cfg_ProgPwrUp.UpdateData((data[offset + 10] & (1 << 7)) != 0);
+        Cfg_ProgNormal.UpdateData((data[offset + 11] & (1 << 0)) != 0);
+        Cfg_PCmdPriority.UpdateData((data[offset + 11] & (1 << 1)) != 0);
+        Cfg_PCmdProgAsLevel.UpdateData((data[offset + 11] & (1 << 2)) != 0);
+        Cfg_PCmdLockAsLevel.UpdateData((data[offset + 11] & (1 << 3)) != 0);
+        Cfg_ExtAcqAsLevel.UpdateData((data[offset + 11] & (1 << 4)) != 0);
+        PCmd_Oper.UpdateData((data[offset + 11] & (1 << 5)) != 0);
+        PCmd_Prog.UpdateData((data[offset + 11] & (1 << 6)) != 0);
+        PCmd_Lock.UpdateData((data[offset + 11] & (1 << 7)) != 0);
+        PCmd_Unlock.UpdateData((data[offset + 12] & (1 << 0)) != 0);
+        PCmd_Normal.UpdateData((data[offset + 12] & (1 << 1)) != 0);
+        MCmd_OoS.UpdateData((data[offset + 12] & (1 << 2)) != 0);
+        MCmd_IS.UpdateData((data[offset + 12] & (1 << 3)) != 0);
+        MCmd_Acq.UpdateData((data[offset + 12] & (1 << 4)) != 0);
+        MCmd_Rel.UpdateData((data[offset + 12] & (1 << 5)) != 0);
+        XCmd_Acq.UpdateData((data[offset + 12] & (1 << 6)) != 0);
+        XCmd_Rel.UpdateData((data[offset + 12] & (1 << 7)) != 0);
+        OCmd_Oper.UpdateData((data[offset + 17] & (1 << 0)) != 0);
+        OCmd_Prog.UpdateData((data[offset + 17] & (1 << 1)) != 0);
+        OCmd_Lock.UpdateData((data[offset + 17] & (1 << 2)) != 0);
+        OCmd_Unlock.UpdateData((data[offset + 17] & (1 << 3)) != 0);
+        OCmd_Normal.UpdateData((data[offset + 17] & (1 << 4)) != 0);
+        Sts_Initialized.UpdateData((data[offset + 17] & (1 << 5)) != 0);
+        Sts_eSrc.UpdateData(data, offset + 17);
+        Sts_bSrc.UpdateData(data, offset + 19);
+        Sts_Hand.UpdateData((data[offset + 21] & (1 << 6)) != 0);
+        Sts_OoS.UpdateData((data[offset + 21] & (1 << 7)) != 0);
+        Sts_Maint.UpdateData((data[offset + 22] & (1 << 0)) != 0);
+        Sts_Ovrd.UpdateData((data[offset + 22] & (1 << 1)) != 0);
+        Sts_Ext.UpdateData((data[offset + 22] & (1 << 2)) != 0);
+        Sts_Prog.UpdateData((data[offset + 22] & (1 << 3)) != 0);
+        Sts_ProgLocked.UpdateData((data[offset + 22] & (1 << 4)) != 0);
+        Sts_Oper.UpdateData((data[offset + 22] & (1 << 5)) != 0);
+        Sts_OperLocked.UpdateData((data[offset + 22] & (1 << 6)) != 0);
+        Sts_ProgOperSel.UpdateData((data[offset + 22] & (1 << 7)) != 0);
+        Sts_ProgOperLock.UpdateData((data[offset + 23] & (1 << 0)) != 0);
+        Sts_Normal.UpdateData((data[offset + 23] & (1 << 1)) != 0);
+        Sts_ProgReqInh.UpdateData((data[offset + 23] & (1 << 2)) != 0);
+        Sts_ExtReqInh.UpdateData((data[offset + 23] & (1 << 3)) != 0);
+        Sts_MAcqRcvd.UpdateData((data[offset + 23] & (1 << 4)) != 0);
+        MRdy_OoS.UpdateData((data[offset + 23] & (1 << 5)) != 0);
+        MRdy_IS.UpdateData((data[offset + 23] & (1 << 6)) != 0);
+        MRdy_Acq.UpdateData((data[offset + 23] & (1 << 7)) != 0);
+        MRdy_Rel.UpdateData((data[offset + 24] & (1 << 0)) != 0);
+        XRdy_Acq.UpdateData((data[offset + 24] & (1 << 1)) != 0);
+        XRdy_Rel.UpdateData((data[offset + 24] & (1 << 2)) != 0);
+        ORdy_Oper.UpdateData((data[offset + 24] & (1 << 3)) != 0);
+        ORdy_Prog.UpdateData((data[offset + 24] & (1 << 4)) != 0);
+        ORdy_Lock.UpdateData((data[offset + 24] & (1 << 5)) != 0);
+        ORdy_Unlock.UpdateData((data[offset + 24] & (1 << 6)) != 0);
+        ORdy_Normal.UpdateData((data[offset + 24] & (1 << 7)) != 0);
+        Out_OwnerSts.UpdateData(data, offset + 24);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_COMMAND_SOURCE"/> data type.

@@ -30,6 +30,26 @@ public sealed partial class CHANNEL_DI_TIMESTAMP_FT_O_0 : StructureData
     public CHANNEL_DI_TIMESTAMP_FT_O_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 8;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        ResetFault.UpdateData((data[offset + 3] & (1 << 0)) != 0);
+        ResetTimestamps.UpdateData((data[offset + 3] & (1 << 1)) != 0);
+        TimestampOffOnNumberAck.UpdateData(data, offset + 5);
+        TimestampOnOffNumberAck.UpdateData(data, offset + 7);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>ResetFault</c> member of the <see cref="CHANNEL_DI_TIMESTAMP_FT_O_0"/> data type.

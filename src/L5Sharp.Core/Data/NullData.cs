@@ -26,7 +26,7 @@ public sealed class NullData : LogixData
     public override byte[] ToBytes() => [];
 
     /// <inheritdoc />
-    public override void Update(LogixData data) =>
+    public override void UpdateData(LogixData data) =>
         throw new InvalidOperationException("Can not update data for the null data instance.");
 
     /// <summary>

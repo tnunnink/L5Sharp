@@ -44,6 +44,40 @@ public sealed partial class CB_CRANKSHAFT_POS_MONITOR : StructureData
     public CB_CRANKSHAFT_POS_MONITOR(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 48;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        CamProfile.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Enable.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        BrakeCam.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        TakeoverCam.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        DynamicCam.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Reverse.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Reset.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        PressMotionStatus.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        EnableOut.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        TZ.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        DZ.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        UZ.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        FP.UpdateData((data[offset + 10] & (1 << 6)) != 0);
+        SlideZone.UpdateData(data, offset + 10);
+        FaultCode.UpdateData(data, offset + 14);
+        DiagnosticCode.UpdateData(data, offset + 18);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="CB_CRANKSHAFT_POS_MONITOR"/> data type.

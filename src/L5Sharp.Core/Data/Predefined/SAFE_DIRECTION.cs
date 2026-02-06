@@ -39,6 +39,35 @@ public sealed partial class SAFE_DIRECTION : StructureData
     public SAFE_DIRECTION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 28;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        ColdStartType.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        PositiveRequest.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        NegativeRequest.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        O1.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        RR.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        FP.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        PositionWindow.UpdateData(data, offset + 6);
+        FaultType.UpdateData(data, offset + 10);
+        DiagnosticCode.UpdateData(data, offset + 11);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SAFE_DIRECTION"/> data type.

@@ -41,6 +41,37 @@ public sealed partial class PULSE_MULTIPLIER : StructureData
     public PULSE_MULTIPLIER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 48;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        Initialize.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        InitialValue.UpdateData(data, offset + 9);
+        Mode.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        WordSize.UpdateData(data, offset + 13);
+        Multiplier.UpdateData(data, offset + 17);
+        EnableOut.UpdateData((data[offset + 25] & (1 << 3)) != 0);
+        Out.UpdateData(data, offset + 25);
+        Status.UpdateData(data, offset + 29);
+        InstructFault.UpdateData((data[offset + 33] & (1 << 4)) != 0);
+        WordSizeInv.UpdateData((data[offset + 33] & (1 << 5)) != 0);
+        OutOverflow.UpdateData((data[offset + 33] & (1 << 6)) != 0);
+        LostPrecision.UpdateData((data[offset + 33] & (1 << 7)) != 0);
+        MultiplierInv.UpdateData((data[offset + 34] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="PULSE_MULTIPLIER"/> data type.

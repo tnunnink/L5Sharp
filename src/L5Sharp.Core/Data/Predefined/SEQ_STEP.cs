@@ -80,6 +80,76 @@ public sealed partial class SEQ_STEP : StructureData
     public SEQ_STEP(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 60;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Status.UpdateData(data, offset + 0);
+        X.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        FS.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        SA.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        LS.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        DN.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        OV.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        AlarmEn.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        AlarmLow.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        AlarmHigh.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Reset.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        PRE.UpdateData(data, offset + 6);
+        T.UpdateData(data, offset + 10);
+        TMax.UpdateData(data, offset + 14);
+        Count.UpdateData(data, offset + 18);
+        LimitLow.UpdateData(data, offset + 22);
+        LimitHigh.UpdateData(data, offset + 26);
+        State.UpdateData(data, offset + 30);
+        Running.UpdateData((data[offset + 34] & (1 << 2)) != 0);
+        Holding.UpdateData((data[offset + 34] & (1 << 3)) != 0);
+        Restarting.UpdateData((data[offset + 34] & (1 << 4)) != 0);
+        Stopping.UpdateData((data[offset + 34] & (1 << 5)) != 0);
+        Aborting.UpdateData((data[offset + 34] & (1 << 6)) != 0);
+        Resetting.UpdateData((data[offset + 34] & (1 << 7)) != 0);
+        Idle.UpdateData((data[offset + 35] & (1 << 0)) != 0);
+        Held.UpdateData((data[offset + 35] & (1 << 1)) != 0);
+        Complete.UpdateData((data[offset + 35] & (1 << 2)) != 0);
+        Stopped.UpdateData((data[offset + 35] & (1 << 3)) != 0);
+        Aborted.UpdateData((data[offset + 35] & (1 << 4)) != 0);
+        Starting.UpdateData((data[offset + 35] & (1 << 5)) != 0);
+        Downloading.UpdateData((data[offset + 35] & (1 << 6)) != 0);
+        NotConnected.UpdateData((data[offset + 35] & (1 << 7)) != 0);
+        Inactive.UpdateData((data[offset + 36] & (1 << 0)) != 0);
+        Unknown.UpdateData((data[offset + 36] & (1 << 1)) != 0);
+        Mode.UpdateData(data, offset + 36);
+        Control.UpdateData(data, offset + 40);
+        PauseControl.UpdateData(data, offset + 44);
+        PauseEnabled.UpdateData((data[offset + 48] & (1 << 2)) != 0);
+        Paused.UpdateData((data[offset + 48] & (1 << 3)) != 0);
+        AutoPauseEnabled.UpdateData((data[offset + 48] & (1 << 4)) != 0);
+        Index.UpdateData(data, offset + 48);
+        Failure.UpdateData(data, offset + 52);
+        InternalFailure.UpdateData(data, offset + 56);
+        ValidCommands.UpdateData(data, offset + 60);
+        StartValid.UpdateData((data[offset + 64] & (1 << 5)) != 0);
+        HoldValid.UpdateData((data[offset + 64] & (1 << 6)) != 0);
+        StopValid.UpdateData((data[offset + 64] & (1 << 7)) != 0);
+        RestartValid.UpdateData((data[offset + 65] & (1 << 0)) != 0);
+        AbortValid.UpdateData((data[offset + 65] & (1 << 1)) != 0);
+        ResetValid.UpdateData((data[offset + 65] & (1 << 2)) != 0);
+        AutoPauseValid.UpdateData((data[offset + 65] & (1 << 3)) != 0);
+        PauseValid.UpdateData((data[offset + 65] & (1 << 4)) != 0);
+        ResumeValid.UpdateData((data[offset + 65] & (1 << 5)) != 0);
+        ClearFailureValid.UpdateData((data[offset + 65] & (1 << 6)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Status</c> member of the <see cref="SEQ_STEP"/> data type.

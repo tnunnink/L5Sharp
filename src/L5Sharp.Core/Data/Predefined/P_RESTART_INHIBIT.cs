@@ -47,6 +47,43 @@ public sealed partial class P_RESTART_INHIBIT : StructureData
     public P_RESTART_INHIBIT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 172;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_Stopped.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_Starting.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Inp_Running.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Cfg_ThreeColdStarts.UpdateData(data, offset + 5);
+        Cfg_FirstFailCold.UpdateData(data, offset + 9);
+        Cfg_SubseqFailCold.UpdateData(data, offset + 13);
+        Cfg_FirstFailHot.UpdateData(data, offset + 17);
+        Cfg_SubseqFailHot.UpdateData(data, offset + 21);
+        Cfg_HotRestartOK.UpdateData(data, offset + 25);
+        Cfg_RestartHot.UpdateData(data, offset + 29);
+        Cfg_HotToCold.UpdateData(data, offset + 33);
+        Val_MinToReady.UpdateData(data, offset + 37);
+        Val_SecToReady.UpdateData(data, offset + 41);
+        Sts_bFdbk.UpdateData(data, offset + 45);
+        Sts_State.UpdateData(data, offset + 46);
+        Sts_Ready.UpdateData((data[offset + 47] & (1 << 5)) != 0);
+        Sts_Err.UpdateData((data[offset + 47] & (1 << 6)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 47] & (1 << 7)) != 0);
+        Sts_Initialized.UpdateData((data[offset + 48] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_RESTART_INHIBIT"/> data type.

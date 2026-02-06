@@ -67,6 +67,63 @@ public sealed partial class SEQUENCE : StructureData
     public SEQUENCE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 144;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        State.UpdateData(data, offset + 0);
+        Running.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Holding.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Restarting.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Stopping.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Aborting.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Resetting.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Idle.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Held.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Complete.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Stopped.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        Aborted.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        Unknown.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        Mode.UpdateData(data, offset + 6);
+        Control.UpdateData(data, offset + 10);
+        PauseControl.UpdateData(data, offset + 14);
+        PauseEnabled.UpdateData((data[offset + 18] & (1 << 4)) != 0);
+        Paused.UpdateData((data[offset + 18] & (1 << 5)) != 0);
+        AutoPauseEnabled.UpdateData((data[offset + 18] & (1 << 6)) != 0);
+        Failure.UpdateData(data, offset + 18);
+        UnitID.UpdateData(data, offset + 22);
+        Owner.UpdateData(data, offset + 26);
+        InternalFailure.UpdateData(data, offset + 30);
+        ExecutionIdHI.UpdateData(data, offset + 34);
+        ExecutionIdLO.UpdateData(data, offset + 42);
+        ValidCommands.UpdateData(data, offset + 50);
+        StartValid.UpdateData((data[offset + 54] & (1 << 7)) != 0);
+        HoldValid.UpdateData((data[offset + 55] & (1 << 0)) != 0);
+        StopValid.UpdateData((data[offset + 55] & (1 << 1)) != 0);
+        RestartValid.UpdateData((data[offset + 55] & (1 << 2)) != 0);
+        AbortValid.UpdateData((data[offset + 55] & (1 << 3)) != 0);
+        ResetValid.UpdateData((data[offset + 55] & (1 << 4)) != 0);
+        AutoPauseValid.UpdateData((data[offset + 55] & (1 << 5)) != 0);
+        PauseValid.UpdateData((data[offset + 55] & (1 << 6)) != 0);
+        ResumeValid.UpdateData((data[offset + 55] & (1 << 7)) != 0);
+        ClearFailureValid.UpdateData((data[offset + 56] & (1 << 0)) != 0);
+        AutoModeValid.UpdateData((data[offset + 56] & (1 << 1)) != 0);
+        ManualModeValid.UpdateData((data[offset + 56] & (1 << 2)) != 0);
+        InitializeParamTagValid.UpdateData((data[offset + 56] & (1 << 3)) != 0);
+        DefineUSSIValid.UpdateData((data[offset + 56] & (1 << 4)) != 0);
+        USSI.UpdateData(data, offset + 56);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>State</c> member of the <see cref="SEQUENCE"/> data type.

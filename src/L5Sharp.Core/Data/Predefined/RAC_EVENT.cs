@@ -34,6 +34,30 @@ public sealed partial class RAC_EVENT : StructureData
     public RAC_EVENT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 144;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Type.UpdateData(data, offset + 0);
+        ID.UpdateData(data, offset + 4);
+        Category.UpdateData(data, offset + 8);
+        Action.UpdateData(data, offset + 12);
+        Value.UpdateData(data, offset + 16);
+        Message.UpdateData(data, offset + 20);
+        EventTime_L.UpdateData(data, offset + 108);
+        EventTime_D.UpdateData(data, offset + 116);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Type</c> member of the <see cref="RAC_EVENT"/> data type.

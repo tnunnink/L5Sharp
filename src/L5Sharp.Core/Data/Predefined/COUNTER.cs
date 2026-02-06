@@ -33,6 +33,29 @@ public sealed partial class COUNTER : StructureData
     public COUNTER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        PRE.UpdateData(data, offset + 4);
+        ACC.UpdateData(data, offset + 8);
+        CU.UpdateData((data[offset + 13] & (1 << 0)) != 0);
+        CD.UpdateData((data[offset + 13] & (1 << 1)) != 0);
+        DN.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        OV.UpdateData((data[offset + 13] & (1 << 3)) != 0);
+        UN.UpdateData((data[offset + 13] & (1 << 4)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>PRE</c> member of the <see cref="COUNTER"/> data type.

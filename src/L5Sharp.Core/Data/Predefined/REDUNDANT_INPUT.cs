@@ -38,6 +38,34 @@ public sealed partial class REDUNDANT_INPUT : StructureData
     public REDUNDANT_INPUT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 52;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        ResetType.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ChannelA.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        ChannelB.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        CircuitReset.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        FaultReset.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        EnableOut.UpdateData((data[offset + 9] & (1 << 6)) != 0);
+        O1.UpdateData((data[offset + 9] & (1 << 7)) != 0);
+        CI.UpdateData((data[offset + 10] & (1 << 0)) != 0);
+        CRHO.UpdateData((data[offset + 10] & (1 << 1)) != 0);
+        II.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        FP.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="REDUNDANT_INPUT"/> data type.

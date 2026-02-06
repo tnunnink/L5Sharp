@@ -42,6 +42,38 @@ public sealed partial class LIGHT_CURTAIN : StructureData
     public LIGHT_CURTAIN(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 52;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        ResetType.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ChannelA.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        ChannelB.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        MuteLightCurtain.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        CircuitReset.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        FaultReset.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        InputFilterTime.UpdateData(data, offset + 5);
+        EnableOut.UpdateData((data[offset + 13] & (1 << 7)) != 0);
+        O1.UpdateData((data[offset + 14] & (1 << 0)) != 0);
+        CI.UpdateData((data[offset + 14] & (1 << 1)) != 0);
+        CRHO.UpdateData((data[offset + 14] & (1 << 2)) != 0);
+        LCB.UpdateData((data[offset + 14] & (1 << 3)) != 0);
+        LCM.UpdateData((data[offset + 14] & (1 << 4)) != 0);
+        II.UpdateData((data[offset + 14] & (1 << 5)) != 0);
+        FP.UpdateData((data[offset + 14] & (1 << 6)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="LIGHT_CURTAIN"/> data type.

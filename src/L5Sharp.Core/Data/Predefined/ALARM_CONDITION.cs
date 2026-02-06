@@ -74,6 +74,70 @@ public sealed partial class ALARM_CONDITION : StructureData
     public ALARM_CONDITION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 96;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        InFault.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Condition.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        AckRequired.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Latched.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        ProgAck.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        OperAck.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        ProgReset.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        OperReset.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        ProgSuppress.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        OperSuppress.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        ProgUnsuppress.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        OperUnsuppress.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        OperShelve.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        ProgUnshelve.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        OperUnshelve.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        ProgDisable.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        OperDisable.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        ProgEnable.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        OperEnable.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        AlarmCountReset.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        Limit.UpdateData(data, offset + 7);
+        Severity.UpdateData(data, offset + 11);
+        OnDelay.UpdateData(data, offset + 15);
+        OffDelay.UpdateData(data, offset + 19);
+        ShelveDuration.UpdateData(data, offset + 23);
+        MaxShelveDuration.UpdateData(data, offset + 27);
+        Deadband.UpdateData(data, offset + 31);
+        InAlarm.UpdateData((data[offset + 37] & (1 << 4)) != 0);
+        Acked.UpdateData((data[offset + 37] & (1 << 5)) != 0);
+        InAlarmUnack.UpdateData((data[offset + 37] & (1 << 6)) != 0);
+        Suppressed.UpdateData((data[offset + 37] & (1 << 7)) != 0);
+        Shelved.UpdateData((data[offset + 38] & (1 << 0)) != 0);
+        Disabled.UpdateData((data[offset + 38] & (1 << 1)) != 0);
+        Used.UpdateData((data[offset + 38] & (1 << 2)) != 0);
+        AlarmCount.UpdateData(data, offset + 40);
+        InAlarmTime.UpdateData(data, offset + 44);
+        AckTime.UpdateData(data, offset + 52);
+        RetToNormalTime.UpdateData(data, offset + 60);
+        AlarmCountResetTime.UpdateData(data, offset + 68);
+        ShelveTime.UpdateData(data, offset + 76);
+        UnshelveTime.UpdateData(data, offset + 84);
+        Status.UpdateData(data, offset + 92);
+        AlarmFault.UpdateData((data[offset + 96] & (1 << 3)) != 0);
+        InFaulted.UpdateData((data[offset + 96] & (1 << 4)) != 0);
+        SeverityInv.UpdateData((data[offset + 96] & (1 << 5)) != 0);
+        LimitInv.UpdateData((data[offset + 96] & (1 << 6)) != 0);
+        DeadbandInv.UpdateData((data[offset + 96] & (1 << 7)) != 0);
+        Overflow.UpdateData((data[offset + 97] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>InFault</c> member of the <see cref="ALARM_CONDITION"/> data type.

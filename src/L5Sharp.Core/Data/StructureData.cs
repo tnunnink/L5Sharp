@@ -102,7 +102,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
     }
 
     /// <inheritdoc />
-    public override void Update(LogixData data)
+    public override void UpdateData(LogixData data)
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data));
@@ -119,7 +119,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
 
         foreach (var match in matches)
         {
-            match.Target.Update(match.Source);
+            match.Target.UpdateData(match.Source);
         }
     }
 
@@ -347,7 +347,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
             return;
         }
 
-        existing.Deserialize<LogixData>().Update(value);
+        existing.Deserialize<LogixData>().UpdateData(value);
     }
 
     /// <summary>
@@ -405,7 +405,7 @@ public class StructureData : LogixData, IDictionary<string, LogixData>
             return;
         }
 
-        existing.Deserialize<ArrayData<TData>>().Update(array);
+        existing.Deserialize<ArrayData<TData>>().UpdateData(array);
     }
 
     /// <summary>

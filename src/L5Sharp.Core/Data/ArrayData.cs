@@ -44,7 +44,7 @@ public class ArrayData : LogixData
     public Radix Radix => GetValue(Radix.Parse) ?? Radix.Null;
 
     /// <inheritdoc />
-    public override int Size => Members.Sum(m => m.Value.Size);
+    public override int GetSize() => Members.Sum(m => m.Value.GetSize());
 
     /// <summary>
     /// Gets the <see cref="LogixData"/> instance at the specified index.
@@ -83,7 +83,7 @@ public class ArrayData : LogixData
     }
 
     /// <inheritdoc />
-    public override void Update(LogixData data)
+    public override void UpdateData(LogixData data)
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data));
@@ -100,16 +100,16 @@ public class ArrayData : LogixData
 
         foreach (var match in matches)
         {
-            match.Target.Update(match.Source);
+            match.Target.UpdateData(match.Source);
         }
     }
 
     /// <inheritdoc />
-    public override int Update(byte[] data, int offset)
+    public override int UpdateData(byte[] data, int offset)
     {
         foreach (var member in Members)
         {
-            offset = member.Value.Update(data, offset);
+            offset = member.Value.UpdateData(data, offset);
         }
 
         return offset;
@@ -177,7 +177,7 @@ public class ArrayData : LogixData
             throw new ArgumentOutOfRangeException(nameof(index),
                 $"The index '{index}' is outside the bound of the array.");
 
-        element.Deserialize<TData>().Update(value);
+        element.Deserialize<TData>().UpdateData(value);
     }
 
     /// <summary>

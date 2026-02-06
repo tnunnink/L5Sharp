@@ -37,6 +37,33 @@ public sealed partial class DYNAMICS_DATA : StructureData
     public DYNAMICS_DATA(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 44;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        UnitsMode.UpdateData(data, offset + 0);
+        TimeUnits.UpdateData(data, offset + 4);
+        Profile.UpdateData(data, offset + 8);
+        Speed.UpdateData(data, offset + 12);
+        Acceleration.UpdateData(data, offset + 16);
+        Deceleration.UpdateData(data, offset + 20);
+        AccelerationJerk.UpdateData(data, offset + 24);
+        DecelerationJerk.UpdateData(data, offset + 28);
+        OrientationSpeed.UpdateData(data, offset + 32);
+        OrientationAcceleration.UpdateData(data, offset + 36);
+        OrientationDeceleration.UpdateData(data, offset + 40);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>UnitsMode</c> member of the <see cref="DYNAMICS_DATA"/> data type.

@@ -75,6 +75,71 @@ public sealed partial class P_VALVE_STATISTICS : StructureData
     public P_VALVE_STATISTICS(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 464;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_Closed.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Inp_Opened.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Inp_StopOther.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Cfg_HasStopOther.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Cfg_SlowOpenTime.UpdateData(data, offset + 5);
+        Cfg_SlowCloseTime.UpdateData(data, offset + 9);
+        PCmd_ClearTotTimes.UpdateData((data[offset + 13] & (1 << 7)) != 0);
+        PCmd_ClearMaxTimes.UpdateData((data[offset + 14] & (1 << 0)) != 0);
+        PCmd_ClearStrokeCounts.UpdateData((data[offset + 14] & (1 << 1)) != 0);
+        PCmd_ClearSlowCounts.UpdateData((data[offset + 14] & (1 << 2)) != 0);
+        PCmd_ClearMAvgs.UpdateData((data[offset + 14] & (1 << 3)) != 0);
+        Val_CurrClosedTime.UpdateData(data, offset + 14);
+        Val_LastClosedTime.UpdateData(data, offset + 18);
+        Val_TotClosedTime.UpdateData(data, offset + 22);
+        Val_MaxClosedTime.UpdateData(data, offset + 26);
+        Val_CurrOpeningTime.UpdateData(data, offset + 30);
+        Val_LastOpeningTime.UpdateData(data, offset + 34);
+        Val_TotOpeningTime.UpdateData(data, offset + 38);
+        Val_MaxOpeningTime.UpdateData(data, offset + 42);
+        Val_MAvgOpeningTime.UpdateData(data, offset + 46);
+        Val_CurrOpenedTime.UpdateData(data, offset + 50);
+        Val_LastOpenedTime.UpdateData(data, offset + 54);
+        Val_TotOpenedTime.UpdateData(data, offset + 58);
+        Val_MaxOpenedTime.UpdateData(data, offset + 62);
+        Val_CurrClosingTime.UpdateData(data, offset + 66);
+        Val_LastClosingTime.UpdateData(data, offset + 70);
+        Val_TotClosingTime.UpdateData(data, offset + 74);
+        Val_MaxClosingTime.UpdateData(data, offset + 78);
+        Val_MAvgClosingTime.UpdateData(data, offset + 82);
+        Val_CurrStopOtherTime.UpdateData(data, offset + 86);
+        Val_LastStopOtherTime.UpdateData(data, offset + 90);
+        Val_TotStopOtherTime.UpdateData(data, offset + 94);
+        Val_MaxStopOtherTime.UpdateData(data, offset + 98);
+        Val_CpltOpenCount.UpdateData(data, offset + 102);
+        Val_CpltCloseCount.UpdateData(data, offset + 106);
+        Val_IncpltOpenCount.UpdateData(data, offset + 110);
+        Val_IncpltCloseCount.UpdateData(data, offset + 114);
+        Val_StopOtherCount.UpdateData(data, offset + 118);
+        Val_SlowOpenCount.UpdateData(data, offset + 122);
+        Val_SlowCloseCount.UpdateData(data, offset + 126);
+        Sts_Initialized.UpdateData((data[offset + 130] & (1 << 4)) != 0);
+        Sts_SlowOpen.UpdateData((data[offset + 130] & (1 << 5)) != 0);
+        Sts_SlowClose.UpdateData((data[offset + 130] & (1 << 6)) != 0);
+        Sts_Err.UpdateData((data[offset + 130] & (1 << 7)) != 0);
+        Sts_ErrSlowCloseTime.UpdateData((data[offset + 131] & (1 << 0)) != 0);
+        Sts_ErrSlowOpenTime.UpdateData((data[offset + 131] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_VALVE_STATISTICS"/> data type.

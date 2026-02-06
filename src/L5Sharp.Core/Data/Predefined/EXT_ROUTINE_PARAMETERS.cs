@@ -29,6 +29,25 @@ public sealed partial class EXT_ROUTINE_PARAMETERS : StructureData
     public EXT_ROUTINE_PARAMETERS(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        ElementSize.UpdateData(data, offset + 0);
+        ElementCount.UpdateData(data, offset + 4);
+        ParamType.UpdateData(data, offset + 8);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>ElementSize</c> member of the <see cref="EXT_ROUTINE_PARAMETERS"/> data type.

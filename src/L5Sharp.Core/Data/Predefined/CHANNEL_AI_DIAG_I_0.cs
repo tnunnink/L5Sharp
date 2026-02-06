@@ -43,6 +43,39 @@ public sealed partial class CHANNEL_AI_DIAG_I_0 : StructureData
     public CHANNEL_AI_DIAG_I_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Fault.UpdateData((data[offset + 3] & (1 << 0)) != 0);
+        Uncertain.UpdateData((data[offset + 3] & (1 << 1)) != 0);
+        OpenWire.UpdateData((data[offset + 3] & (1 << 2)) != 0);
+        OverTemperature.UpdateData((data[offset + 3] & (1 << 3)) != 0);
+        FieldPowerOff.UpdateData((data[offset + 3] & (1 << 4)) != 0);
+        NotANumber.UpdateData((data[offset + 3] & (1 << 5)) != 0);
+        Underrange.UpdateData((data[offset + 4] & (1 << 6)) != 0);
+        Overrange.UpdateData((data[offset + 4] & (1 << 7)) != 0);
+        LLAlarm.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        LAlarm.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        HAlarm.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        HHAlarm.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        RateAlarm.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        CalFault.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        Calibrating.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        Data.UpdateData(data, offset + 6);
+        RollingTimestamp.UpdateData(data, offset + 10);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Fault</c> member of the <see cref="CHANNEL_AI_DIAG_I_0"/> data type.

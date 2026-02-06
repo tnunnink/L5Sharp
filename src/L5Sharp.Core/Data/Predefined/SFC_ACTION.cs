@@ -33,6 +33,29 @@ public sealed partial class SFC_ACTION : StructureData
     public SFC_ACTION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 16;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Status.UpdateData(data, offset + 0);
+        A.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Q.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        PauseTimer.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        PRE.UpdateData(data, offset + 5);
+        T.UpdateData(data, offset + 9);
+        Count.UpdateData(data, offset + 13);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Status</c> member of the <see cref="SFC_ACTION"/> data type.

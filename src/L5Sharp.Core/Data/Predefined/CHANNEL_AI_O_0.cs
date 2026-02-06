@@ -37,6 +37,33 @@ public sealed partial class CHANNEL_AI_O_0 : StructureData
     public CHANNEL_AI_O_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 8;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        LLAlarmEn.UpdateData((data[offset + 3] & (1 << 0)) != 0);
+        LAlarmEn.UpdateData((data[offset + 3] & (1 << 1)) != 0);
+        HAlarmEn.UpdateData((data[offset + 3] & (1 << 2)) != 0);
+        HHAlarmEn.UpdateData((data[offset + 3] & (1 << 3)) != 0);
+        RateAlarmEn.UpdateData((data[offset + 3] & (1 << 4)) != 0);
+        LLAlarmUnlatch.UpdateData((data[offset + 3] & (1 << 5)) != 0);
+        LAlarmUnlatch.UpdateData((data[offset + 3] & (1 << 6)) != 0);
+        HAlarmUnlatch.UpdateData((data[offset + 3] & (1 << 7)) != 0);
+        HHAlarmUnlatch.UpdateData((data[offset + 4] & (1 << 0)) != 0);
+        RateAlarmUnlatch.UpdateData((data[offset + 4] & (1 << 1)) != 0);
+        SensorOffset.UpdateData(data, offset + 6);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>LLAlarmEn</c> member of the <see cref="CHANNEL_AI_O_0"/> data type.

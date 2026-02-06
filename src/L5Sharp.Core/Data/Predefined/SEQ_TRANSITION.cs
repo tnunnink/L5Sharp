@@ -44,6 +44,40 @@ public sealed partial class SEQ_TRANSITION : StructureData
     public SEQ_TRANSITION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Status.UpdateData((data[offset + 1] & (1 << 0)) != 0);
+        State.UpdateData(data, offset + 1);
+        Idle.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Arming.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Armed.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Firing.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Stopped.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Aborted.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Held.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Holding.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Unknown.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        FiringAttr.UpdateData(data, offset + 6);
+        NotFiring.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        Acquiring.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        Committed.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        Stopping.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        Resetting.UpdateData((data[offset + 10] & (1 << 6)) != 0);
+        Paused.UpdateData((data[offset + 10] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Status</c> member of the <see cref="SEQ_TRANSITION"/> data type.

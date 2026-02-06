@@ -50,6 +50,46 @@ public sealed partial class EIGHT_POS_MODE_SELECTOR : StructureData
     public EIGHT_POS_MODE_SELECTOR(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 44;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Input1.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Input2.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Input3.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Input4.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Input5.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Input6.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Input7.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Input8.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        InputStatus.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        Lock.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        Reset.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        EnableOut.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        O1.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        O2.UpdateData((data[offset + 10] & (1 << 6)) != 0);
+        O3.UpdateData((data[offset + 10] & (1 << 7)) != 0);
+        O4.UpdateData((data[offset + 11] & (1 << 0)) != 0);
+        O5.UpdateData((data[offset + 11] & (1 << 1)) != 0);
+        O6.UpdateData((data[offset + 11] & (1 << 2)) != 0);
+        O7.UpdateData((data[offset + 11] & (1 << 3)) != 0);
+        O8.UpdateData((data[offset + 11] & (1 << 4)) != 0);
+        FP.UpdateData((data[offset + 11] & (1 << 5)) != 0);
+        FaultCode.UpdateData(data, offset + 11);
+        DiagnosticCode.UpdateData(data, offset + 15);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="EIGHT_POS_MODE_SELECTOR"/> data type.

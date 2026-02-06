@@ -39,6 +39,35 @@ public sealed partial class P_RUN_TIME : StructureData
     public P_RUN_TIME(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 68;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_Starting.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Inp_Running.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        PCmd_ClearStarts.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        PCmd_ClearMaxHrs.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        PCmd_ClearTotHrs.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Val_Starts.UpdateData(data, offset + 5);
+        Val_CurRunHrs.UpdateData(data, offset + 9);
+        Val_MaxRunHrs.UpdateData(data, offset + 13);
+        Val_TotRunHrs.UpdateData(data, offset + 17);
+        Sts_Initialized.UpdateData((data[offset + 22] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_RUN_TIME"/> data type.

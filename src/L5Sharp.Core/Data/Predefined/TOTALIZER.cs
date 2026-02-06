@@ -71,6 +71,67 @@ public sealed partial class TOTALIZER : StructureData
     public TOTALIZER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 116;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        InFault.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        TimeBase.UpdateData(data, offset + 9);
+        Gain.UpdateData(data, offset + 13);
+        ResetValue.UpdateData(data, offset + 17);
+        Target.UpdateData(data, offset + 21);
+        TargetDev1.UpdateData(data, offset + 25);
+        TargetDev2.UpdateData(data, offset + 29);
+        LowInCutoff.UpdateData(data, offset + 33);
+        ProgProgReq.UpdateData((data[offset + 37] & (1 << 2)) != 0);
+        ProgOperReq.UpdateData((data[offset + 37] & (1 << 3)) != 0);
+        ProgStartReq.UpdateData((data[offset + 37] & (1 << 4)) != 0);
+        ProgStopReq.UpdateData((data[offset + 37] & (1 << 5)) != 0);
+        ProgResetReq.UpdateData((data[offset + 37] & (1 << 6)) != 0);
+        OperProgReq.UpdateData((data[offset + 37] & (1 << 7)) != 0);
+        OperOperReq.UpdateData((data[offset + 38] & (1 << 0)) != 0);
+        OperStartReq.UpdateData((data[offset + 38] & (1 << 1)) != 0);
+        OperStopReq.UpdateData((data[offset + 38] & (1 << 2)) != 0);
+        OperResetReq.UpdateData((data[offset + 38] & (1 << 3)) != 0);
+        ProgValueReset.UpdateData((data[offset + 38] & (1 << 4)) != 0);
+        TimingMode.UpdateData(data, offset + 38);
+        OversampleDT.UpdateData(data, offset + 42);
+        RTSTime.UpdateData(data, offset + 46);
+        RTSTimeStamp.UpdateData(data, offset + 50);
+        EnableOut.UpdateData((data[offset + 58] & (1 << 5)) != 0);
+        Total.UpdateData(data, offset + 58);
+        OldTotal.UpdateData(data, offset + 62);
+        ProgOper.UpdateData((data[offset + 66] & (1 << 6)) != 0);
+        RunStop.UpdateData((data[offset + 66] & (1 << 7)) != 0);
+        ProgResetDone.UpdateData((data[offset + 67] & (1 << 0)) != 0);
+        TargetFlag.UpdateData((data[offset + 67] & (1 << 1)) != 0);
+        TargetDev1Flag.UpdateData((data[offset + 67] & (1 << 2)) != 0);
+        TargetDev2Flag.UpdateData((data[offset + 67] & (1 << 3)) != 0);
+        LowInCutoffFlag.UpdateData((data[offset + 67] & (1 << 4)) != 0);
+        DeltaT.UpdateData(data, offset + 67);
+        Status.UpdateData(data, offset + 71);
+        InstructFault.UpdateData((data[offset + 75] & (1 << 5)) != 0);
+        InFaulted.UpdateData((data[offset + 75] & (1 << 6)) != 0);
+        TimeBaseInv.UpdateData((data[offset + 75] & (1 << 7)) != 0);
+        TimingModeInv.UpdateData((data[offset + 76] & (1 << 0)) != 0);
+        RTSMissed.UpdateData((data[offset + 76] & (1 << 1)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 76] & (1 << 2)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 76] & (1 << 3)) != 0);
+        DeltaTInv.UpdateData((data[offset + 76] & (1 << 4)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="TOTALIZER"/> data type.

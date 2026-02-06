@@ -61,6 +61,57 @@ public sealed partial class SELECT_ENHANCED : StructureData
     public SELECT_ENHANCED(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 64;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In1.UpdateData(data, offset + 5);
+        In2.UpdateData(data, offset + 9);
+        In3.UpdateData(data, offset + 13);
+        In4.UpdateData(data, offset + 17);
+        In5.UpdateData(data, offset + 21);
+        In6.UpdateData(data, offset + 25);
+        In1Fault.UpdateData((data[offset + 29] & (1 << 1)) != 0);
+        In2Fault.UpdateData((data[offset + 29] & (1 << 2)) != 0);
+        In3Fault.UpdateData((data[offset + 29] & (1 << 3)) != 0);
+        In4Fault.UpdateData((data[offset + 29] & (1 << 4)) != 0);
+        In5Fault.UpdateData((data[offset + 29] & (1 << 5)) != 0);
+        In6Fault.UpdateData((data[offset + 29] & (1 << 6)) != 0);
+        InsUsed.UpdateData(data, offset + 29);
+        SelectorMode.UpdateData(data, offset + 33);
+        ProgSelector.UpdateData(data, offset + 37);
+        OperSelector.UpdateData(data, offset + 41);
+        ProgProgReq.UpdateData((data[offset + 45] & (1 << 7)) != 0);
+        ProgOperReq.UpdateData((data[offset + 46] & (1 << 0)) != 0);
+        ProgOverrideReq.UpdateData((data[offset + 46] & (1 << 1)) != 0);
+        OperProgReq.UpdateData((data[offset + 46] & (1 << 2)) != 0);
+        OperOperReq.UpdateData((data[offset + 46] & (1 << 3)) != 0);
+        ProgValueReset.UpdateData((data[offset + 46] & (1 << 4)) != 0);
+        EnableOut.UpdateData((data[offset + 50] & (1 << 5)) != 0);
+        Out.UpdateData(data, offset + 50);
+        SelectedIn.UpdateData(data, offset + 54);
+        ProgOper.UpdateData((data[offset + 58] & (1 << 6)) != 0);
+        Override.UpdateData((data[offset + 58] & (1 << 7)) != 0);
+        Status.UpdateData(data, offset + 58);
+        InstructFault.UpdateData((data[offset + 63] & (1 << 0)) != 0);
+        InsFaulted.UpdateData((data[offset + 63] & (1 << 1)) != 0);
+        InsUsedInv.UpdateData((data[offset + 63] & (1 << 2)) != 0);
+        SelectorModeInv.UpdateData((data[offset + 63] & (1 << 3)) != 0);
+        ProgSelectorInv.UpdateData((data[offset + 63] & (1 << 4)) != 0);
+        OperSelectorInv.UpdateData((data[offset + 63] & (1 << 5)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SELECT_ENHANCED"/> data type.

@@ -49,6 +49,45 @@ public sealed partial class SAFETY_FEEDBACK_INTERFACE : StructureData
     public SAFETY_FEEDBACK_INTERFACE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 104;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        TimeUnit.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        FeedbackValid.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        ConnectionFaulted.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        HomeTrigger.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        O1.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        FP.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        SFH.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        PositionScaling.UpdateData(data, offset + 6);
+        FeedbackResolution.UpdateData(data, offset + 10);
+        Unwind.UpdateData(data, offset + 14);
+        HomePosition.UpdateData(data, offset + 18);
+        FeedbackPosition.UpdateData(data, offset + 22);
+        FeedbackVelocity.UpdateData(data, offset + 26);
+        ActualPosition.UpdateData(data, offset + 30);
+        ActualCycles.UpdateData(data, offset + 34);
+        ActualSpeed.UpdateData(data, offset + 38);
+        FaultType.UpdateData(data, offset + 42);
+        DiagnosticCode.UpdateData(data, offset + 43);
+        PositionScalingOut.UpdateData(data, offset + 44);
+        UnwindOut.UpdateData(data, offset + 48);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SAFETY_FEEDBACK_INTERFACE"/> data type.

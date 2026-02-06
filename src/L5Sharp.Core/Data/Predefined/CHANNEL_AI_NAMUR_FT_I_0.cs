@@ -27,6 +27,23 @@ public sealed partial class CHANNEL_AI_NAMUR_FT_I_0 : StructureData
     public CHANNEL_AI_NAMUR_FT_I_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 0;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Ch.UpdateData(data, offset + 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Ch</c> member of the <see cref="CHANNEL_AI_NAMUR_FT_I_0"/> data type.

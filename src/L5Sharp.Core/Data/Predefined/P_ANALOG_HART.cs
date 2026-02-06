@@ -81,6 +81,77 @@ public sealed partial class P_ANALOG_HART : StructureData
     public P_ANALOG_HART(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 404;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Cfg_HasHARTPV.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Cfg_HasHARTSV.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Cfg_HasHARTTV.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Cfg_HasHARTQV.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Cfg_UseHARTVarSts.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Cfg_UseHARTText.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Cfg_HARTPVDecPlcs.UpdateData(data, offset + 6);
+        Cfg_HARTSVDecPlcs.UpdateData(data, offset + 7);
+        Cfg_HARTTVDecPlcs.UpdateData(data, offset + 8);
+        Cfg_HARTQVDecPlcs.UpdateData(data, offset + 9);
+        Cfg_HasMoreObj.UpdateData((data[offset + 10] & (1 << 1)) != 0);
+        Cfg_HasNav.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        Set_VirtualHARTPV.UpdateData(data, offset + 10);
+        Set_VirtualHARTSV.UpdateData(data, offset + 14);
+        Set_VirtualHARTTV.UpdateData(data, offset + 18);
+        Set_VirtualHARTQV.UpdateData(data, offset + 22);
+        PCmd_Virtual.UpdateData((data[offset + 26] & (1 << 3)) != 0);
+        PCmd_Physical.UpdateData((data[offset + 26] & (1 << 4)) != 0);
+        Val_HARTPV.UpdateData(data, offset + 26);
+        Val_HARTSV.UpdateData(data, offset + 30);
+        Val_HARTTV.UpdateData(data, offset + 34);
+        Val_HARTQV.UpdateData(data, offset + 38);
+        Val_HARTLoopCurrent.UpdateData(data, offset + 42);
+        Val_InpRawMinFromHART.UpdateData(data, offset + 46);
+        Val_InpRawMaxFromHART.UpdateData(data, offset + 50);
+        Val_PVEUMinFromHART.UpdateData(data, offset + 54);
+        Val_PVEUMaxFromHART.UpdateData(data, offset + 58);
+        Sts_eHARTDiagCode1.UpdateData(data, offset + 62);
+        Sts_eHARTDiagCode2.UpdateData(data, offset + 64);
+        Sts_eHARTDiagCode3.UpdateData(data, offset + 66);
+        Sts_bHARTDiagSts.UpdateData(data, offset + 68);
+        Sts_bHARTDiagSts1.UpdateData(data, offset + 69);
+        Sts_bHARTDiagSts2.UpdateData(data, offset + 70);
+        Sts_bHARTDiagSts3.UpdateData(data, offset + 71);
+        Sts_Initialized.UpdateData((data[offset + 72] & (1 << 5)) != 0);
+        Sts_Virtual.UpdateData((data[offset + 72] & (1 << 6)) != 0);
+        Sts_ConnectionFault.UpdateData((data[offset + 72] & (1 << 7)) != 0);
+        Sts_DvcMalfunction.UpdateData((data[offset + 73] & (1 << 0)) != 0);
+        Sts_CurrentSaturated.UpdateData((data[offset + 73] & (1 << 1)) != 0);
+        Sts_CurrentFixed.UpdateData((data[offset + 73] & (1 << 2)) != 0);
+        Sts_CurrentMismatch.UpdateData((data[offset + 73] & (1 << 3)) != 0);
+        Sts_DiagnosticActive.UpdateData((data[offset + 73] & (1 << 4)) != 0);
+        Val_DiagnosticSeqCount.UpdateData(data, offset + 73);
+        SrcQ_IO.UpdateData(data, offset + 74);
+        SrcQ.UpdateData(data, offset + 75);
+        SrcQ_HARTPV.UpdateData(data, offset + 76);
+        SrcQ_HARTSV.UpdateData(data, offset + 77);
+        SrcQ_HARTTV.UpdateData(data, offset + 78);
+        SrcQ_HARTQV.UpdateData(data, offset + 79);
+        SrcQ_HARTLoopCurrent.UpdateData(data, offset + 80);
+        Sts_eSts.UpdateData(data, offset + 81);
+        Sts_eFault.UpdateData(data, offset + 82);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_ANALOG_HART"/> data type.

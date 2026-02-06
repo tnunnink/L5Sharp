@@ -59,6 +59,55 @@ public sealed partial class CHANNEL_HSC_O_0 : StructureData
     public CHANNEL_HSC_O_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 28;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Reset.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Hold.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Load.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Store.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Direction.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        RolloverAck.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        RollunderAck.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        FrequencyAlarmUnlatch.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        FrequencyAvgAlarmUnlatch.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        PulseWidthAlarmUnlatch.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        PulseWidthAvgAlarmUnlatch.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        ZeroFrequencyAlarmUnlatch.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        ZeroFrequencyAvgAlarmUnlatch.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        MissingPulseAlarmEn.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        MissingPulseAlarmUnlatch.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        AccelAlarmUnlatch.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        DecelAlarmUnlatch.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        AccelAvgAlarmUnlatch.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        DecelAvgAlarmUnlatch.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        ResetFrequencyOverrange.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        ResetQuadratureErrorCount.UpdateData((data[offset + 7] & (1 << 4)) != 0);
+        RolloverValue.UpdateData(data, offset + 7);
+        RollunderValue.UpdateData(data, offset + 11);
+        ZeroFrequencyAlarmLimit.UpdateData(data, offset + 15);
+        LoadCountValue.UpdateData(data, offset + 19);
+        LoadRevolutionValue.UpdateData(data, offset + 23);
+        OverrideDataAEn.UpdateData((data[offset + 26] & (1 << 5)) != 0);
+        OverrideDataBEn.UpdateData((data[offset + 26] & (1 << 6)) != 0);
+        OverrideDataZEn.UpdateData((data[offset + 26] & (1 << 7)) != 0);
+        OverrideDataAValue.UpdateData((data[offset + 28] & (1 << 0)) != 0);
+        OverrideDataBValue.UpdateData((data[offset + 28] & (1 << 1)) != 0);
+        OverrideDataZValue.UpdateData((data[offset + 28] & (1 << 2)) != 0);
+        MissingPulseAlarmLimit.UpdateData(data, offset + 28);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Reset</c> member of the <see cref="CHANNEL_HSC_O_0"/> data type.

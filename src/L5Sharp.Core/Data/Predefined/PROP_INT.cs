@@ -69,6 +69,65 @@ public sealed partial class PROP_INT : StructureData
     public PROP_INT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 136;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        Initialize.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        InitialValue.UpdateData(data, offset + 9);
+        Kp.UpdateData(data, offset + 13);
+        Wld.UpdateData(data, offset + 17);
+        HighLimit.UpdateData(data, offset + 21);
+        LowLimit.UpdateData(data, offset + 25);
+        HoldHigh.UpdateData((data[offset + 29] & (1 << 2)) != 0);
+        HoldLow.UpdateData((data[offset + 29] & (1 << 3)) != 0);
+        ShapeKpPlus.UpdateData(data, offset + 29);
+        ShapeKpMinus.UpdateData(data, offset + 33);
+        KpInRange.UpdateData(data, offset + 37);
+        ShapeWldPlus.UpdateData(data, offset + 41);
+        ShapeWldMinus.UpdateData(data, offset + 45);
+        WldInRange.UpdateData(data, offset + 49);
+        NonLinearMode.UpdateData((data[offset + 53] & (1 << 4)) != 0);
+        ParabolicLinear.UpdateData((data[offset + 53] & (1 << 5)) != 0);
+        TimingMode.UpdateData(data, offset + 53);
+        OversampleDT.UpdateData(data, offset + 57);
+        RTSTime.UpdateData(data, offset + 61);
+        RTSTimeStamp.UpdateData(data, offset + 65);
+        EnableOut.UpdateData((data[offset + 73] & (1 << 6)) != 0);
+        Out.UpdateData(data, offset + 73);
+        HighAlarm.UpdateData((data[offset + 77] & (1 << 7)) != 0);
+        LowAlarm.UpdateData((data[offset + 78] & (1 << 0)) != 0);
+        DeltaT.UpdateData(data, offset + 78);
+        Status.UpdateData(data, offset + 82);
+        InstructFault.UpdateData((data[offset + 86] & (1 << 1)) != 0);
+        KpInv.UpdateData((data[offset + 86] & (1 << 2)) != 0);
+        WldInv.UpdateData((data[offset + 86] & (1 << 3)) != 0);
+        HighLowLimsInv.UpdateData((data[offset + 86] & (1 << 4)) != 0);
+        ShapeKpPlusInv.UpdateData((data[offset + 86] & (1 << 5)) != 0);
+        ShapeKpMinusInv.UpdateData((data[offset + 86] & (1 << 6)) != 0);
+        KpInRangeInv.UpdateData((data[offset + 86] & (1 << 7)) != 0);
+        ShapeWldPlusInv.UpdateData((data[offset + 87] & (1 << 0)) != 0);
+        ShapeWldMinusInv.UpdateData((data[offset + 87] & (1 << 1)) != 0);
+        WldInRangeInv.UpdateData((data[offset + 87] & (1 << 2)) != 0);
+        TimingModeInv.UpdateData((data[offset + 87] & (1 << 3)) != 0);
+        RTSMissed.UpdateData((data[offset + 87] & (1 << 4)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 87] & (1 << 5)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 87] & (1 << 6)) != 0);
+        DeltaTInv.UpdateData((data[offset + 87] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="PROP_INT"/> data type.

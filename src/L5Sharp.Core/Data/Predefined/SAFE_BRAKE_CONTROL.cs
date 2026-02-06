@@ -47,6 +47,43 @@ public sealed partial class SAFE_BRAKE_CONTROL : StructureData
     public SAFE_BRAKE_CONTROL(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 56;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        BrakeFeedback1.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        BrakeFeedback2.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        OutputStatus.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        BrakeEngageL.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Reset.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        BO1.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        BO2.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        TOR.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        RR.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        FP.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        STOtoSBCDelayActive.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        FdbkONChkDlyTimerActive.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        FdbkOFFChkDlyTimerActive.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        STOtoSBCDelay.UpdateData(data, offset + 7);
+        BrakeFeedbackCheckDelay.UpdateData(data, offset + 9);
+        FaultType.UpdateData(data, offset + 11);
+        DiagnosticCode.UpdateData(data, offset + 12);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SAFE_BRAKE_CONTROL"/> data type.

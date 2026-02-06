@@ -36,6 +36,32 @@ public sealed partial class ALARM_SET : StructureData
     public ALARM_SET(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 208;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        InAlarmUnackedCount.UpdateData(data, offset + 0);
+        InAlarmAckedCount.UpdateData(data, offset + 4);
+        NormalUnackedCount.UpdateData(data, offset + 8);
+        SuppressedCount.UpdateData(data, offset + 12);
+        ShelvedCount.UpdateData(data, offset + 16);
+        DisabledCount.UpdateData(data, offset + 20);
+        HasUnackedAlarm.UpdateData((data[offset + 25] & (1 << 0)) != 0);
+        HighestSeverity.UpdateData(data, offset + 28);
+        HighestSeverityAlarmName.UpdateData(data, offset + 32);
+        HighestSeverityAlarmType.UpdateData(data, offset + 120);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>InAlarmUnackedCount</c> member of the <see cref="ALARM_SET"/> data type.

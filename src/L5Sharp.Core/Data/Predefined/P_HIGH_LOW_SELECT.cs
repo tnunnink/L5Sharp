@@ -94,6 +94,90 @@ public sealed partial class P_HIGH_LOW_SELECT : StructureData
     public P_HIGH_LOW_SELECT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 164;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_1.UpdateData(data, offset + 5);
+        Inp_E1.UpdateData(data, offset + 9);
+        Inp_PGain1.UpdateData(data, offset + 13);
+        Inp_2.UpdateData(data, offset + 17);
+        Inp_E2.UpdateData(data, offset + 21);
+        Inp_PGain2.UpdateData(data, offset + 25);
+        Inp_3.UpdateData(data, offset + 29);
+        Inp_E3.UpdateData(data, offset + 33);
+        Inp_PGain3.UpdateData(data, offset + 37);
+        Inp_4.UpdateData(data, offset + 41);
+        Inp_E4.UpdateData(data, offset + 45);
+        Inp_PGain4.UpdateData(data, offset + 49);
+        Inp_5.UpdateData(data, offset + 53);
+        Inp_E5.UpdateData(data, offset + 57);
+        Inp_PGain5.UpdateData(data, offset + 61);
+        Inp_6.UpdateData(data, offset + 65);
+        Inp_E6.UpdateData(data, offset + 69);
+        Inp_PGain6.UpdateData(data, offset + 73);
+        Inp_UseInitializeVal.UpdateData((data[offset + 77] & (1 << 3)) != 0);
+        Inp_InitializeVal.UpdateData(data, offset + 77);
+        Cfg_HiLoSel.UpdateData((data[offset + 81] & (1 << 4)) != 0);
+        Cfg_HasInp1.UpdateData((data[offset + 81] & (1 << 5)) != 0);
+        Cfg_UseInp1.UpdateData((data[offset + 81] & (1 << 6)) != 0);
+        Cfg_Inp1Offset.UpdateData((data[offset + 81] & (1 << 7)) != 0);
+        Cfg_HasInp2.UpdateData((data[offset + 82] & (1 << 0)) != 0);
+        Cfg_UseInp2.UpdateData((data[offset + 82] & (1 << 1)) != 0);
+        Cfg_Inp2Offset.UpdateData((data[offset + 82] & (1 << 2)) != 0);
+        Cfg_HasInp3.UpdateData((data[offset + 82] & (1 << 3)) != 0);
+        Cfg_UseInp3.UpdateData((data[offset + 82] & (1 << 4)) != 0);
+        Cfg_Inp3Offset.UpdateData((data[offset + 82] & (1 << 5)) != 0);
+        Cfg_HasInp4.UpdateData((data[offset + 82] & (1 << 6)) != 0);
+        Cfg_UseInp4.UpdateData((data[offset + 82] & (1 << 7)) != 0);
+        Cfg_Inp4Offset.UpdateData((data[offset + 83] & (1 << 0)) != 0);
+        Cfg_HasInp5.UpdateData((data[offset + 83] & (1 << 1)) != 0);
+        Cfg_UseInp5.UpdateData((data[offset + 83] & (1 << 2)) != 0);
+        Cfg_Inp5Offset.UpdateData((data[offset + 83] & (1 << 3)) != 0);
+        Cfg_HasInp6.UpdateData((data[offset + 83] & (1 << 4)) != 0);
+        Cfg_UseInp6.UpdateData((data[offset + 83] & (1 << 5)) != 0);
+        Cfg_Inp6Offset.UpdateData((data[offset + 83] & (1 << 6)) != 0);
+        Cfg_DecPlcs.UpdateData(data, offset + 83);
+        Cfg_HasOutNav.UpdateData((data[offset + 84] & (1 << 7)) != 0);
+        Cfg_HasNav.UpdateData(data, offset + 84);
+        Cfg_OutLoLim.UpdateData(data, offset + 85);
+        Cfg_OutHiLim.UpdateData(data, offset + 89);
+        Val.UpdateData(data, offset + 93);
+        Val_Inp1Prev.UpdateData(data, offset + 97);
+        Sts_UseInp1Prev.UpdateData((data[offset + 102] & (1 << 0)) != 0);
+        Val_Inp2Prev.UpdateData(data, offset + 102);
+        Sts_UseInp2Prev.UpdateData((data[offset + 106] & (1 << 1)) != 0);
+        Val_Inp3Prev.UpdateData(data, offset + 106);
+        Sts_UseInp3Prev.UpdateData((data[offset + 110] & (1 << 2)) != 0);
+        Val_Inp4Prev.UpdateData(data, offset + 110);
+        Sts_UseInp4Prev.UpdateData((data[offset + 114] & (1 << 3)) != 0);
+        Val_Inp5Prev.UpdateData(data, offset + 114);
+        Sts_UseInp5Prev.UpdateData((data[offset + 118] & (1 << 4)) != 0);
+        Val_Inp6Prev.UpdateData(data, offset + 118);
+        Sts_UseInp6Prev.UpdateData((data[offset + 122] & (1 << 5)) != 0);
+        Val_Out.UpdateData(data, offset + 122);
+        Val_Sel.UpdateData(data, offset + 126);
+        Sts_Initialized.UpdateData((data[offset + 130] & (1 << 6)) != 0);
+        Sts_MaintByp.UpdateData((data[offset + 130] & (1 << 7)) != 0);
+        Sts_Err.UpdateData((data[offset + 135] & (1 << 0)) != 0);
+        Sts_ErrHas.UpdateData((data[offset + 135] & (1 << 1)) != 0);
+        Sts_ErrLim.UpdateData((data[offset + 135] & (1 << 2)) != 0);
+        Cfg_HasMoreObj.UpdateData((data[offset + 135] & (1 << 3)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_HIGH_LOW_SELECT"/> data type.

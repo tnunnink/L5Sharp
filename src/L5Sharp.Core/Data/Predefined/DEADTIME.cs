@@ -48,6 +48,44 @@ public sealed partial class DEADTIME : StructureData
     public DEADTIME(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 112;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        InFault.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        Deadtime.UpdateData(data, offset + 9);
+        Gain.UpdateData(data, offset + 13);
+        Bias.UpdateData(data, offset + 17);
+        TimingMode.UpdateData(data, offset + 21);
+        OversampleDT.UpdateData(data, offset + 25);
+        RTSTime.UpdateData(data, offset + 29);
+        RTSTimeStamp.UpdateData(data, offset + 33);
+        EnableOut.UpdateData((data[offset + 41] & (1 << 2)) != 0);
+        Out.UpdateData(data, offset + 41);
+        DeltaT.UpdateData(data, offset + 45);
+        Status.UpdateData(data, offset + 49);
+        InstructFault.UpdateData((data[offset + 53] & (1 << 3)) != 0);
+        InFaulted.UpdateData((data[offset + 53] & (1 << 4)) != 0);
+        DeadtimeInv.UpdateData((data[offset + 53] & (1 << 5)) != 0);
+        TimingModeInv.UpdateData((data[offset + 53] & (1 << 6)) != 0);
+        RTSMissed.UpdateData((data[offset + 53] & (1 << 7)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 54] & (1 << 0)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 54] & (1 << 1)) != 0);
+        DeltaTInv.UpdateData((data[offset + 54] & (1 << 2)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="DEADTIME"/> data type.

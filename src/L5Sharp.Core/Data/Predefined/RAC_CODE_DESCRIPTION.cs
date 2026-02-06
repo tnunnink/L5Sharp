@@ -28,6 +28,24 @@ public sealed partial class RAC_CODE_DESCRIPTION : StructureData
     public RAC_CODE_DESCRIPTION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 92;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Code.UpdateData(data, offset + 0);
+        Desc.UpdateData(data, offset + 4);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Code</c> member of the <see cref="RAC_CODE_DESCRIPTION"/> data type.

@@ -40,6 +40,36 @@ public sealed partial class CB_SINGLE_STROKE_MODE : StructureData
     public CB_SINGLE_STROKE_MODE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 36;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        AckType.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        TakeoverMode.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Enable.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        SafetyEnable.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        StandardEnable.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Start.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        PressInMotion.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        MotionMonitorFault.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        SafetyEnableAck.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        SlideZone.UpdateData(data, offset + 6);
+        EnableOut.UpdateData((data[offset + 14] & (1 << 2)) != 0);
+        O1.UpdateData((data[offset + 14] & (1 << 3)) != 0);
+        DiagnosticCode.UpdateData(data, offset + 14);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="CB_SINGLE_STROKE_MODE"/> data type.

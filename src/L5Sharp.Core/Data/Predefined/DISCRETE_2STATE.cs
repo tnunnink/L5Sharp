@@ -67,6 +67,63 @@ public sealed partial class DISCRETE_2STATE : StructureData
     public DISCRETE_2STATE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 40;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        ProgCommand.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Oper0Req.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Oper1Req.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        State0Perm.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        State1Perm.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        FB0.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        FB1.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        HandFB.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        FaultTime.UpdateData(data, offset + 6);
+        FaultAlarmLatch.UpdateData((data[offset + 10] & (1 << 1)) != 0);
+        FaultAlmUnlatch.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        OverrideOnInit.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        OverrideOnFault.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        OutReverse.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        OverrideState.UpdateData((data[offset + 10] & (1 << 6)) != 0);
+        FB0State0.UpdateData((data[offset + 10] & (1 << 7)) != 0);
+        FB0State1.UpdateData((data[offset + 11] & (1 << 0)) != 0);
+        FB1State0.UpdateData((data[offset + 11] & (1 << 1)) != 0);
+        FB1State1.UpdateData((data[offset + 11] & (1 << 2)) != 0);
+        ProgProgReq.UpdateData((data[offset + 11] & (1 << 3)) != 0);
+        ProgOperReq.UpdateData((data[offset + 11] & (1 << 4)) != 0);
+        ProgOverrideReq.UpdateData((data[offset + 11] & (1 << 5)) != 0);
+        ProgHandReq.UpdateData((data[offset + 11] & (1 << 6)) != 0);
+        OperProgReq.UpdateData((data[offset + 11] & (1 << 7)) != 0);
+        OperOperReq.UpdateData((data[offset + 12] & (1 << 0)) != 0);
+        ProgValueReset.UpdateData((data[offset + 12] & (1 << 1)) != 0);
+        EnableOut.UpdateData((data[offset + 16] & (1 << 2)) != 0);
+        Out.UpdateData((data[offset + 16] & (1 << 3)) != 0);
+        Device0State.UpdateData((data[offset + 16] & (1 << 4)) != 0);
+        Device1State.UpdateData((data[offset + 16] & (1 << 5)) != 0);
+        CommandStatus.UpdateData((data[offset + 16] & (1 << 6)) != 0);
+        FaultAlarm.UpdateData((data[offset + 16] & (1 << 7)) != 0);
+        ModeAlarm.UpdateData((data[offset + 17] & (1 << 0)) != 0);
+        ProgOper.UpdateData((data[offset + 17] & (1 << 1)) != 0);
+        Override.UpdateData((data[offset + 17] & (1 << 2)) != 0);
+        Hand.UpdateData((data[offset + 17] & (1 << 3)) != 0);
+        Status.UpdateData(data, offset + 17);
+        InstructFault.UpdateData((data[offset + 21] & (1 << 4)) != 0);
+        FaultTimeInv.UpdateData((data[offset + 21] & (1 << 5)) != 0);
+        OperReqInv.UpdateData((data[offset + 21] & (1 << 6)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="DISCRETE_2STATE"/> data type.

@@ -53,13 +53,13 @@ public class StringData : LogixData, IEnumerable<char>
     /// <remarks>
     /// Deriving classes must override this property to correctly updated or read data streams.
     /// </remarks>
-    public virtual int Capacity => 0;
+    protected virtual int Capacity => 0;
 
     /// <inheritdoc />
     /// <remarks>
     /// For strings, the size is the 4-byte DINT length plus the SINT array capacity.
     /// </remarks>
-    public override int Size => (sizeof(int) + Capacity + 3) & ~3;
+    public sealed override int GetSize() => (sizeof(int) + Capacity + 3) & ~3;
 
     /// <summary>
     /// Gets the length of the string represented by the current <see cref="StringData"/> instance.
@@ -84,7 +84,7 @@ public class StringData : LogixData, IEnumerable<char>
     }
 
     /// <inheritdoc />
-    public override void Update(LogixData data)
+    public override void UpdateData(LogixData data)
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data));
@@ -97,7 +97,7 @@ public class StringData : LogixData, IEnumerable<char>
     }
 
     /// <inheritdoc />
-    public override int Update(byte[] data, int offset)
+    public override int UpdateData(byte[] data, int offset)
     {
         // Align to the DINT offset to read the length data.
         offset = (offset + 3) & ~3;
@@ -107,11 +107,11 @@ public class StringData : LogixData, IEnumerable<char>
         //Read the remaining bytes to get the string value. If capacity is defined,
         //read the entire capacity length to return a more accurate offset.
         var totalLength = Capacity > 0 ? Capacity : length;
-        var value = System.Text.Encoding.ASCII.GetString(data, offset + sizeof(int), totalLength);
+        var value = Encoding.ASCII.GetString(data, offset + sizeof(int), totalLength);
         SetString(value);
 
         //Size will depend on the Capacity property getting set correctly.
-        return offset + Size;
+        return offset + GetSize();
     }
 
     /// <inheritdoc />

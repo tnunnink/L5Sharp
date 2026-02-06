@@ -35,6 +35,31 @@ public sealed partial class AB_5000_HART_Command_Control_Struct_I_0 : StructureD
     public AB_5000_HART_Command_Control_Struct_I_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 4;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        ReadyToExecute.UpdateData((data[offset + 2] & (1 << 0)) != 0);
+        Completed.UpdateData((data[offset + 2] & (1 << 1)) != 0);
+        Active.UpdateData((data[offset + 2] & (1 << 2)) != 0);
+        Overlap.UpdateData((data[offset + 2] & (1 << 3)) != 0);
+        ERR.UpdateData((data[offset + 2] & (1 << 4)) != 0);
+        Warning.UpdateData((data[offset + 2] & (1 << 5)) != 0);
+        ParameterError.UpdateData((data[offset + 2] & (1 << 6)) != 0);
+        ParameterErrorNumber.UpdateData(data, offset + 2);
+        ResponseCode.UpdateData(data, offset + 3);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>ReadyToExecute</c> member of the <see cref="AB_5000_HART_Command_Control_Struct_I_0"/> data type.

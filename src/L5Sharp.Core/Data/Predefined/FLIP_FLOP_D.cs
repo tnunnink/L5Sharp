@@ -33,6 +33,29 @@ public sealed partial class FLIP_FLOP_D : StructureData
     public FLIP_FLOP_D(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        D.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Clear.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Clock.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        EnableOut.UpdateData((data[offset + 9] & (1 << 4)) != 0);
+        Q.UpdateData((data[offset + 9] & (1 << 5)) != 0);
+        QNot.UpdateData((data[offset + 9] & (1 << 6)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="FLIP_FLOP_D"/> data type.

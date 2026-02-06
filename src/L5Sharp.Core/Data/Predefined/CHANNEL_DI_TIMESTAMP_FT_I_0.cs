@@ -42,6 +42,38 @@ public sealed partial class CHANNEL_DI_TIMESTAMP_FT_I_0 : StructureData
     public CHANNEL_DI_TIMESTAMP_FT_I_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 24;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Data.UpdateData((data[offset + 3] & (1 << 0)) != 0);
+        Fault.UpdateData((data[offset + 3] & (1 << 1)) != 0);
+        Uncertain.UpdateData((data[offset + 3] & (1 << 2)) != 0);
+        OpenWire.UpdateData((data[offset + 3] & (1 << 3)) != 0);
+        ShortCircuit.UpdateData((data[offset + 3] & (1 << 4)) != 0);
+        Chatter.UpdateData((data[offset + 3] & (1 << 5)) != 0);
+        FieldPowerOff.UpdateData((data[offset + 3] & (1 << 6)) != 0);
+        Indeterminate.UpdateData((data[offset + 3] & (1 << 7)) != 0);
+        TimestampOverflowOffOn.UpdateData((data[offset + 4] & (1 << 0)) != 0);
+        TimestampOverflowOnOff.UpdateData((data[offset + 4] & (1 << 1)) != 0);
+        CIPSyncValid.UpdateData((data[offset + 4] & (1 << 2)) != 0);
+        CIPSyncTimeout.UpdateData((data[offset + 4] & (1 << 3)) != 0);
+        TimestampOffOnNumber.UpdateData(data, offset + 6);
+        TimestampOnOffNumber.UpdateData(data, offset + 8);
+        TimestampOffOn.UpdateData(data, offset + 10);
+        TimestampOnOff.UpdateData(data, offset + 18);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Data</c> member of the <see cref="CHANNEL_DI_TIMESTAMP_FT_I_0"/> data type.

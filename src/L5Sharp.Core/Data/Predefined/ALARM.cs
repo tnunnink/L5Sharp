@@ -50,6 +50,46 @@ public sealed partial class ALARM : StructureData
     public ALARM(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 96;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        HHLimit.UpdateData(data, offset + 9);
+        HLimit.UpdateData(data, offset + 13);
+        LLimit.UpdateData(data, offset + 17);
+        LLLimit.UpdateData(data, offset + 21);
+        Deadband.UpdateData(data, offset + 25);
+        ROCPosLimit.UpdateData(data, offset + 29);
+        ROCNegLimit.UpdateData(data, offset + 33);
+        ROCPeriod.UpdateData(data, offset + 37);
+        EnableOut.UpdateData((data[offset + 45] & (1 << 1)) != 0);
+        HHAlarm.UpdateData((data[offset + 45] & (1 << 2)) != 0);
+        HAlarm.UpdateData((data[offset + 45] & (1 << 3)) != 0);
+        LAlarm.UpdateData((data[offset + 45] & (1 << 4)) != 0);
+        LLAlarm.UpdateData((data[offset + 45] & (1 << 5)) != 0);
+        ROCPosAlarm.UpdateData((data[offset + 45] & (1 << 6)) != 0);
+        ROCNegAlarm.UpdateData((data[offset + 45] & (1 << 7)) != 0);
+        ROC.UpdateData(data, offset + 45);
+        Status.UpdateData(data, offset + 49);
+        InstructFault.UpdateData((data[offset + 54] & (1 << 0)) != 0);
+        DeadbandInv.UpdateData((data[offset + 54] & (1 << 1)) != 0);
+        ROCPosLimitInv.UpdateData((data[offset + 54] & (1 << 2)) != 0);
+        ROCNegLimitInv.UpdateData((data[offset + 54] & (1 << 3)) != 0);
+        ROCPeriodInv.UpdateData((data[offset + 54] & (1 << 4)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="ALARM"/> data type.

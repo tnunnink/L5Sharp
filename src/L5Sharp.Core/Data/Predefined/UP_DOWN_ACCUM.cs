@@ -34,6 +34,30 @@ public sealed partial class UP_DOWN_ACCUM : StructureData
     public UP_DOWN_ACCUM(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 32;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Initialize.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        InitialValue.UpdateData(data, offset + 5);
+        InPlus.UpdateData(data, offset + 9);
+        InMinus.UpdateData(data, offset + 13);
+        Hold.UpdateData((data[offset + 17] & (1 << 2)) != 0);
+        EnableOut.UpdateData((data[offset + 21] & (1 << 3)) != 0);
+        Out.UpdateData(data, offset + 21);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="UP_DOWN_ACCUM"/> data type.

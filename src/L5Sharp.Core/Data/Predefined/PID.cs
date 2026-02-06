@@ -77,6 +77,73 @@ public sealed partial class PID : StructureData
     public PID(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 184;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        CTL.UpdateData(data, offset + 0);
+        EN.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        CT.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        CL.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        PVT.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        DOE.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        SWM.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        CA.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        MO.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        PE.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        NDF.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        NOBC.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        NOZC.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        INI.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        SPOR.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        OLL.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        OLH.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        EWD.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        DVNA.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        DVPA.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        PVLA.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        PVHA.UpdateData((data[offset + 7] & (1 << 4)) != 0);
+        SP.UpdateData(data, offset + 7);
+        KP.UpdateData(data, offset + 11);
+        KI.UpdateData(data, offset + 15);
+        KD.UpdateData(data, offset + 19);
+        BIAS.UpdateData(data, offset + 23);
+        MAXS.UpdateData(data, offset + 27);
+        MINS.UpdateData(data, offset + 31);
+        DB.UpdateData(data, offset + 35);
+        SO.UpdateData(data, offset + 39);
+        MAXO.UpdateData(data, offset + 43);
+        MINO.UpdateData(data, offset + 47);
+        UPD.UpdateData(data, offset + 51);
+        PV.UpdateData(data, offset + 55);
+        ERR.UpdateData(data, offset + 59);
+        OUT.UpdateData(data, offset + 63);
+        PVH.UpdateData(data, offset + 67);
+        PVL.UpdateData(data, offset + 71);
+        DVP.UpdateData(data, offset + 75);
+        DVN.UpdateData(data, offset + 79);
+        PVDB.UpdateData(data, offset + 83);
+        DVDB.UpdateData(data, offset + 87);
+        MAXI.UpdateData(data, offset + 91);
+        MINI.UpdateData(data, offset + 95);
+        TIE.UpdateData(data, offset + 99);
+        MAXCV.UpdateData(data, offset + 103);
+        MINCV.UpdateData(data, offset + 107);
+        MINTIE.UpdateData(data, offset + 111);
+        MAXTIE.UpdateData(data, offset + 115);
+        DATA.UpdateData(data, offset + 119);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>CTL</c> member of the <see cref="PID"/> data type.

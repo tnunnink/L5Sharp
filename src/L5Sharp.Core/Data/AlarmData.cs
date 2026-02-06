@@ -30,7 +30,7 @@ public abstract class AlarmData : LogixData
     public override IEnumerable<LogixMember> Members => GenerateVirtualMembers();
 
     /// <inheritdoc />
-    public override void Update(LogixData data)
+    public override void UpdateData(LogixData data)
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data));
@@ -39,7 +39,7 @@ public abstract class AlarmData : LogixData
             throw new ArgumentException($"Can not update alarm data with data of type '{data.GetType()}'");
 
         var pairs = Members.Join(alarm.Members, m => m.Name, m => m.Name, (a, b) => new { a, b });
-        pairs.ToList().ForEach(p => p.a.Value.Update(p.b.Value));
+        pairs.ToList().ForEach(p => p.a.Value.UpdateData(p.b.Value));
     }
 
     /// <summary>

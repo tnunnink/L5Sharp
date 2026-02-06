@@ -133,6 +133,129 @@ public sealed partial class P_INTERLOCK : StructureData
     public P_INTERLOCK(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 200;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_Intlk00.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Inp_Intlk01.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Inp_Intlk02.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Inp_Intlk03.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Inp_Intlk04.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Inp_Intlk05.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Inp_Intlk06.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        Inp_Intlk07.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        Inp_Intlk08.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        Inp_Intlk09.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        Inp_Intlk10.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        Inp_Intlk11.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        Inp_Intlk12.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        Inp_Intlk13.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        Inp_Intlk14.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        Inp_Intlk15.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        Inp_Intlk16.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        Inp_Intlk17.UpdateData((data[offset + 7] & (1 << 4)) != 0);
+        Inp_Intlk18.UpdateData((data[offset + 7] & (1 << 5)) != 0);
+        Inp_Intlk19.UpdateData((data[offset + 7] & (1 << 6)) != 0);
+        Inp_Intlk20.UpdateData((data[offset + 7] & (1 << 7)) != 0);
+        Inp_Intlk21.UpdateData((data[offset + 8] & (1 << 0)) != 0);
+        Inp_Intlk22.UpdateData((data[offset + 8] & (1 << 1)) != 0);
+        Inp_Intlk23.UpdateData((data[offset + 8] & (1 << 2)) != 0);
+        Inp_Intlk24.UpdateData((data[offset + 8] & (1 << 3)) != 0);
+        Inp_Intlk25.UpdateData((data[offset + 8] & (1 << 4)) != 0);
+        Inp_Intlk26.UpdateData((data[offset + 8] & (1 << 5)) != 0);
+        Inp_Intlk27.UpdateData((data[offset + 8] & (1 << 6)) != 0);
+        Inp_Intlk28.UpdateData((data[offset + 8] & (1 << 7)) != 0);
+        Inp_Intlk29.UpdateData((data[offset + 9] & (1 << 0)) != 0);
+        Inp_Intlk30.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        Inp_Intlk31.UpdateData((data[offset + 9] & (1 << 2)) != 0);
+        Inp_IOFault.UpdateData(data, offset + 9);
+        Inp_Available.UpdateData((data[offset + 13] & (1 << 3)) != 0);
+        Inp_BypActive.UpdateData((data[offset + 13] & (1 << 4)) != 0);
+        Inp_LatchDefeat.UpdateData((data[offset + 13] & (1 << 5)) != 0);
+        Inp_Reset.UpdateData((data[offset + 13] & (1 << 6)) != 0);
+        Cfg_OKState.UpdateData(data, offset + 13);
+        Cfg_Latched.UpdateData(data, offset + 17);
+        Cfg_StopOnly.UpdateData(data, offset + 21);
+        Cfg_Bypassable.UpdateData(data, offset + 25);
+        Cfg_HasNav.UpdateData(data, offset + 29);
+        Cfg_eType00.UpdateData(data, offset + 33);
+        Cfg_eType01.UpdateData(data, offset + 34);
+        Cfg_eType02.UpdateData(data, offset + 35);
+        Cfg_eType03.UpdateData(data, offset + 36);
+        Cfg_eType04.UpdateData(data, offset + 37);
+        Cfg_eType05.UpdateData(data, offset + 38);
+        Cfg_eType06.UpdateData(data, offset + 39);
+        Cfg_eType07.UpdateData(data, offset + 40);
+        Cfg_eType08.UpdateData(data, offset + 41);
+        Cfg_eType09.UpdateData(data, offset + 42);
+        Cfg_eType10.UpdateData(data, offset + 43);
+        Cfg_eType11.UpdateData(data, offset + 44);
+        Cfg_eType12.UpdateData(data, offset + 45);
+        Cfg_eType13.UpdateData(data, offset + 46);
+        Cfg_eType14.UpdateData(data, offset + 47);
+        Cfg_eType15.UpdateData(data, offset + 48);
+        Cfg_eType16.UpdateData(data, offset + 49);
+        Cfg_eType17.UpdateData(data, offset + 50);
+        Cfg_eType18.UpdateData(data, offset + 51);
+        Cfg_eType19.UpdateData(data, offset + 52);
+        Cfg_eType20.UpdateData(data, offset + 53);
+        Cfg_eType21.UpdateData(data, offset + 54);
+        Cfg_eType22.UpdateData(data, offset + 55);
+        Cfg_eType23.UpdateData(data, offset + 56);
+        Cfg_eType24.UpdateData(data, offset + 57);
+        Cfg_eType25.UpdateData(data, offset + 58);
+        Cfg_eType26.UpdateData(data, offset + 59);
+        Cfg_eType27.UpdateData(data, offset + 60);
+        Cfg_eType28.UpdateData(data, offset + 61);
+        Cfg_eType29.UpdateData(data, offset + 62);
+        Cfg_eType30.UpdateData(data, offset + 63);
+        Cfg_eType31.UpdateData(data, offset + 64);
+        Cfg_HasType.UpdateData(data, offset + 65);
+        Cfg_TypeDesc00.UpdateData((data[offset + 66] & (1 << 7)) != 0);
+        Cfg_TypeDesc01.UpdateData((data[offset + 67] & (1 << 0)) != 0);
+        Cfg_TypeDesc02.UpdateData((data[offset + 67] & (1 << 1)) != 0);
+        Cfg_TypeDesc03.UpdateData((data[offset + 67] & (1 << 2)) != 0);
+        Cfg_TypeDesc04.UpdateData((data[offset + 67] & (1 << 3)) != 0);
+        Cfg_TypeDesc05.UpdateData((data[offset + 67] & (1 << 4)) != 0);
+        Cfg_TypeDesc06.UpdateData((data[offset + 67] & (1 << 5)) != 0);
+        Cfg_TypeDesc07.UpdateData((data[offset + 67] & (1 << 6)) != 0);
+        Cfg_BankID.UpdateData(data, offset + 67);
+        Cfg_HasMoreObj.UpdateData((data[offset + 69] & (1 << 7)) != 0);
+        Cfg_CnfrmReqd.UpdateData(data, offset + 69);
+        PCmd_Reset.UpdateData((data[offset + 71] & (1 << 0)) != 0);
+        Out_Reset.UpdateData((data[offset + 71] & (1 << 1)) != 0);
+        Val_FirstUpBankID.UpdateData(data, offset + 71);
+        Val_FirstUpIndex.UpdateData(data, offset + 73);
+        Sts_Initialized.UpdateData((data[offset + 75] & (1 << 2)) != 0);
+        Sts_IntlkOK.UpdateData((data[offset + 75] & (1 << 3)) != 0);
+        Sts_NBIntlkOK.UpdateData((data[offset + 75] & (1 << 4)) != 0);
+        Sts_Available.UpdateData((data[offset + 75] & (1 << 5)) != 0);
+        Sts_IntlkTripInh.UpdateData((data[offset + 75] & (1 << 6)) != 0);
+        Sts_BypActive.UpdateData((data[offset + 75] & (1 << 7)) != 0);
+        Sts_FirstUpDetect.UpdateData((data[offset + 76] & (1 << 0)) != 0);
+        Sts_BankIDError.UpdateData((data[offset + 76] & (1 << 1)) != 0);
+        Sts_LatchDefeat.UpdateData((data[offset + 76] & (1 << 2)) != 0);
+        Sts_RdyReset.UpdateData((data[offset + 76] & (1 << 3)) != 0);
+        Sts_LatchMask.UpdateData(data, offset + 76);
+        Sts_BypassMask.UpdateData(data, offset + 80);
+        Sts_Intlk.UpdateData(data, offset + 84);
+        Sts_FirstOut.UpdateData(data, offset + 88);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_INTERLOCK"/> data type.

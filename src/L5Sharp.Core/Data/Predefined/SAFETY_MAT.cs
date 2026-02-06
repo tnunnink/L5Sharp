@@ -40,6 +40,36 @@ public sealed partial class SAFETY_MAT : StructureData
     public SAFETY_MAT(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 44;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ChannelA.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        ChannelB.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        InputStatus.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        ShortCircuitDetectDelayTime.UpdateData(data, offset + 5);
+        EnableOut.UpdateData((data[offset + 13] & (1 << 6)) != 0);
+        O1.UpdateData((data[offset + 13] & (1 << 7)) != 0);
+        SRCA.UpdateData((data[offset + 14] & (1 << 0)) != 0);
+        SRCB.UpdateData((data[offset + 14] & (1 << 1)) != 0);
+        FP.UpdateData((data[offset + 14] & (1 << 2)) != 0);
+        FaultCode.UpdateData(data, offset + 14);
+        DiagnosticCode.UpdateData(data, offset + 18);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SAFETY_MAT"/> data type.

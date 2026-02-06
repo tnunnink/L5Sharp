@@ -40,6 +40,36 @@ public sealed partial class SAFELY_LIMITED_SPEED : StructureData
     public SAFELY_LIMITED_SPEED(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 32;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        ColdStartType.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Request.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        O1.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        RR.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        FP.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        CheckDelayActive.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        CheckDelay.UpdateData(data, offset + 6);
+        ActiveLimit.UpdateData(data, offset + 8);
+        FaultType.UpdateData(data, offset + 12);
+        DiagnosticCode.UpdateData(data, offset + 13);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="SAFELY_LIMITED_SPEED"/> data type.

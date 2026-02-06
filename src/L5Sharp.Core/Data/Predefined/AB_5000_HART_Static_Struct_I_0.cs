@@ -34,6 +34,30 @@ public sealed partial class AB_5000_HART_Static_Struct_I_0 : StructureData
     public AB_5000_HART_Static_Struct_I_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 40;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Fault.UpdateData((data[offset + 3] & (1 << 0)) != 0);
+        PVUnit.UpdateData(data, offset + 3);
+        HARTRevision.UpdateData(data, offset + 4);
+        HARTTagName.UpdateData(data, offset + 5);
+        Descriptor.UpdateData(data, offset + 5);
+        PVAtSignal4.UpdateData(data, offset + 5);
+        PVAtSignal20.UpdateData(data, offset + 9);
+        AdditionalDeviceStatus.UpdateData(data, offset + 13);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Fault</c> member of the <see cref="AB_5000_HART_Static_Struct_I_0"/> data type.

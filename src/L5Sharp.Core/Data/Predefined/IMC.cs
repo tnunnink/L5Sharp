@@ -181,6 +181,177 @@ public sealed partial class IMC : StructureData
     public IMC(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 4312;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 1] & (1 << 0)) != 0);
+        PV.UpdateData(data, offset + 5);
+        PVFault.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        PVEUMax.UpdateData(data, offset + 9);
+        PVEUMin.UpdateData(data, offset + 13);
+        SPProg.UpdateData(data, offset + 17);
+        SPOper.UpdateData(data, offset + 21);
+        SPCascade.UpdateData(data, offset + 25);
+        SPHLimit.UpdateData(data, offset + 29);
+        SPLLimit.UpdateData(data, offset + 33);
+        UseRatio.UpdateData((data[offset + 37] & (1 << 2)) != 0);
+        RatioProg.UpdateData(data, offset + 37);
+        RatioOper.UpdateData(data, offset + 41);
+        RatioHLimit.UpdateData(data, offset + 45);
+        RatioLLimit.UpdateData(data, offset + 49);
+        CVFault.UpdateData((data[offset + 53] & (1 << 3)) != 0);
+        CVInitReq.UpdateData((data[offset + 53] & (1 << 4)) != 0);
+        CVInitValue.UpdateData(data, offset + 53);
+        CVProg.UpdateData(data, offset + 57);
+        CVOper.UpdateData(data, offset + 61);
+        CVOverrideValue.UpdateData(data, offset + 65);
+        CVTrackValue.UpdateData(data, offset + 69);
+        CVManLimiting.UpdateData((data[offset + 73] & (1 << 5)) != 0);
+        CVEUMax.UpdateData(data, offset + 73);
+        CVEUMin.UpdateData(data, offset + 77);
+        CVHLimit.UpdateData(data, offset + 81);
+        CVLLimit.UpdateData(data, offset + 85);
+        CVROCPosLimit.UpdateData(data, offset + 89);
+        CVROCNegLimit.UpdateData(data, offset + 93);
+        HandFB.UpdateData(data, offset + 97);
+        HandFBFault.UpdateData((data[offset + 101] & (1 << 6)) != 0);
+        WindupHIn.UpdateData((data[offset + 101] & (1 << 7)) != 0);
+        WindupLIn.UpdateData((data[offset + 102] & (1 << 0)) != 0);
+        GainEUSpan.UpdateData((data[offset + 102] & (1 << 1)) != 0);
+        ProcessGainSign.UpdateData((data[offset + 102] & (1 << 2)) != 0);
+        ProcessType.UpdateData(data, offset + 102);
+        ModelGain.UpdateData(data, offset + 106);
+        ModelTC.UpdateData(data, offset + 110);
+        ModelDT.UpdateData(data, offset + 114);
+        RespTC.UpdateData(data, offset + 118);
+        PVTracking.UpdateData((data[offset + 122] & (1 << 3)) != 0);
+        CVTrackReq.UpdateData((data[offset + 122] & (1 << 4)) != 0);
+        AllowCasRat.UpdateData((data[offset + 122] & (1 << 5)) != 0);
+        ManualAfterInit.UpdateData((data[offset + 122] & (1 << 6)) != 0);
+        ProgProgReq.UpdateData((data[offset + 122] & (1 << 7)) != 0);
+        ProgOperReq.UpdateData((data[offset + 123] & (1 << 0)) != 0);
+        ProgCasRatReq.UpdateData((data[offset + 123] & (1 << 1)) != 0);
+        ProgAutoReq.UpdateData((data[offset + 123] & (1 << 2)) != 0);
+        ProgManualReq.UpdateData((data[offset + 123] & (1 << 3)) != 0);
+        ProgOverrideReq.UpdateData((data[offset + 123] & (1 << 4)) != 0);
+        ProgHandReq.UpdateData((data[offset + 123] & (1 << 5)) != 0);
+        OperProgReq.UpdateData((data[offset + 123] & (1 << 6)) != 0);
+        OperOperReq.UpdateData((data[offset + 123] & (1 << 7)) != 0);
+        OperCasRatReq.UpdateData((data[offset + 124] & (1 << 0)) != 0);
+        OperAutoReq.UpdateData((data[offset + 124] & (1 << 1)) != 0);
+        OperManualReq.UpdateData((data[offset + 124] & (1 << 2)) != 0);
+        ProgValueReset.UpdateData((data[offset + 124] & (1 << 3)) != 0);
+        TimingMode.UpdateData(data, offset + 124);
+        OversampleDT.UpdateData(data, offset + 128);
+        RTSTime.UpdateData(data, offset + 132);
+        RTSTimeStamp.UpdateData(data, offset + 136);
+        PVTuneLimit.UpdateData(data, offset + 140);
+        AtuneTimeLimit.UpdateData(data, offset + 144);
+        NoiseLevel.UpdateData(data, offset + 148);
+        CVStepSize.UpdateData(data, offset + 152);
+        ResponseSpeed.UpdateData(data, offset + 156);
+        ModelInit.UpdateData((data[offset + 160] & (1 << 4)) != 0);
+        Factor.UpdateData(data, offset + 160);
+        AtuneStart.UpdateData((data[offset + 168] & (1 << 5)) != 0);
+        AtuneUseModel.UpdateData((data[offset + 168] & (1 << 6)) != 0);
+        AtuneAbort.UpdateData((data[offset + 168] & (1 << 7)) != 0);
+        EnableOut.UpdateData((data[offset + 169] & (1 << 0)) != 0);
+        CVEU.UpdateData(data, offset + 173);
+        CV.UpdateData(data, offset + 177);
+        DeltaCV.UpdateData(data, offset + 181);
+        CVInitializing.UpdateData((data[offset + 185] & (1 << 1)) != 0);
+        CVHAlarm.UpdateData((data[offset + 185] & (1 << 2)) != 0);
+        CVLAlarm.UpdateData((data[offset + 185] & (1 << 3)) != 0);
+        CVROCPosAlarm.UpdateData((data[offset + 185] & (1 << 4)) != 0);
+        CVROCNegAlarm.UpdateData((data[offset + 185] & (1 << 5)) != 0);
+        SP.UpdateData(data, offset + 185);
+        SPPercent.UpdateData(data, offset + 189);
+        SPHAlarm.UpdateData((data[offset + 193] & (1 << 6)) != 0);
+        SPLAlarm.UpdateData((data[offset + 193] & (1 << 7)) != 0);
+        PVPercent.UpdateData(data, offset + 193);
+        E.UpdateData(data, offset + 197);
+        EPercent.UpdateData(data, offset + 201);
+        InitPrimary.UpdateData((data[offset + 206] & (1 << 0)) != 0);
+        WindupHOut.UpdateData((data[offset + 206] & (1 << 1)) != 0);
+        WindupLOut.UpdateData((data[offset + 206] & (1 << 2)) != 0);
+        Ratio.UpdateData(data, offset + 206);
+        RatioHAlarm.UpdateData((data[offset + 210] & (1 << 3)) != 0);
+        RatioLAlarm.UpdateData((data[offset + 210] & (1 << 4)) != 0);
+        ProgOper.UpdateData((data[offset + 210] & (1 << 5)) != 0);
+        CasRat.UpdateData((data[offset + 210] & (1 << 6)) != 0);
+        Auto.UpdateData((data[offset + 210] & (1 << 7)) != 0);
+        Manual.UpdateData((data[offset + 211] & (1 << 0)) != 0);
+        Override.UpdateData((data[offset + 211] & (1 << 1)) != 0);
+        Hand.UpdateData((data[offset + 211] & (1 << 2)) != 0);
+        DeltaT.UpdateData(data, offset + 211);
+        StepSizeUsed.UpdateData(data, offset + 215);
+        GainTuned.UpdateData(data, offset + 219);
+        TCTuned.UpdateData(data, offset + 223);
+        DTTuned.UpdateData(data, offset + 227);
+        RespTCTunedS.UpdateData(data, offset + 231);
+        RespTCTunedM.UpdateData(data, offset + 235);
+        RespTCTunedF.UpdateData(data, offset + 239);
+        AtuneOn.UpdateData((data[offset + 247] & (1 << 3)) != 0);
+        AtuneDone.UpdateData((data[offset + 247] & (1 << 4)) != 0);
+        AtuneAborted.UpdateData((data[offset + 247] & (1 << 5)) != 0);
+        AtuneStatus.UpdateData(data, offset + 247);
+        AtuneFault.UpdateData((data[offset + 251] & (1 << 6)) != 0);
+        AtunePVOutOfLimit.UpdateData((data[offset + 251] & (1 << 7)) != 0);
+        AtuneModeInv.UpdateData((data[offset + 252] & (1 << 0)) != 0);
+        AtuneCVWindupFault.UpdateData((data[offset + 252] & (1 << 1)) != 0);
+        AtuneStepSize0.UpdateData((data[offset + 252] & (1 << 2)) != 0);
+        AtuneCVLimitsFault.UpdateData((data[offset + 252] & (1 << 3)) != 0);
+        AtuneCVInitFault.UpdateData((data[offset + 252] & (1 << 4)) != 0);
+        AtuneEUSpanChanged.UpdateData((data[offset + 252] & (1 << 5)) != 0);
+        AtuneCVChanged.UpdateData((data[offset + 252] & (1 << 6)) != 0);
+        AtuneTimeout.UpdateData((data[offset + 252] & (1 << 7)) != 0);
+        AtunePVNotSettled.UpdateData((data[offset + 253] & (1 << 0)) != 0);
+        Status1.UpdateData(data, offset + 253);
+        Status2.UpdateData(data, offset + 257);
+        InstructFault.UpdateData((data[offset + 261] & (1 << 1)) != 0);
+        PVFaulted.UpdateData((data[offset + 261] & (1 << 2)) != 0);
+        CVFaulted.UpdateData((data[offset + 261] & (1 << 3)) != 0);
+        HandFBFaulted.UpdateData((data[offset + 261] & (1 << 4)) != 0);
+        PVSpanInv.UpdateData((data[offset + 261] & (1 << 5)) != 0);
+        SPProgInv.UpdateData((data[offset + 261] & (1 << 6)) != 0);
+        SPOperInv.UpdateData((data[offset + 261] & (1 << 7)) != 0);
+        SPCascadeInv.UpdateData((data[offset + 262] & (1 << 0)) != 0);
+        SPLimitsInv.UpdateData((data[offset + 262] & (1 << 1)) != 0);
+        RatioLimitsInv.UpdateData((data[offset + 262] & (1 << 2)) != 0);
+        RatioProgInv.UpdateData((data[offset + 262] & (1 << 3)) != 0);
+        RatioOperInv.UpdateData((data[offset + 262] & (1 << 4)) != 0);
+        CVProgInv.UpdateData((data[offset + 262] & (1 << 5)) != 0);
+        CVOperInv.UpdateData((data[offset + 262] & (1 << 6)) != 0);
+        CVOverrideValueInv.UpdateData((data[offset + 262] & (1 << 7)) != 0);
+        CVTrackValueInv.UpdateData((data[offset + 263] & (1 << 0)) != 0);
+        CVEUSpanInv.UpdateData((data[offset + 263] & (1 << 1)) != 0);
+        CVLimitsInv.UpdateData((data[offset + 263] & (1 << 2)) != 0);
+        CVROCLimitInv.UpdateData((data[offset + 263] & (1 << 3)) != 0);
+        HandFBInv.UpdateData((data[offset + 263] & (1 << 4)) != 0);
+        SampleTimeTooSmall.UpdateData((data[offset + 263] & (1 << 5)) != 0);
+        FactorInv.UpdateData((data[offset + 263] & (1 << 6)) != 0);
+        ModelGainInv.UpdateData((data[offset + 263] & (1 << 7)) != 0);
+        ModelTCInv.UpdateData((data[offset + 264] & (1 << 0)) != 0);
+        ModelDTInv.UpdateData((data[offset + 264] & (1 << 1)) != 0);
+        RespTCInv.UpdateData((data[offset + 264] & (1 << 2)) != 0);
+        TimingModeInv.UpdateData((data[offset + 264] & (1 << 3)) != 0);
+        RTSMissed.UpdateData((data[offset + 264] & (1 << 4)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 264] & (1 << 5)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 264] & (1 << 6)) != 0);
+        DeltaTInv.UpdateData((data[offset + 264] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="IMC"/> data type.

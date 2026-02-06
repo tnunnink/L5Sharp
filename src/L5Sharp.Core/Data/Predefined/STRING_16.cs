@@ -35,5 +35,19 @@ public sealed partial class STRING_16 : StringData
     }
 
     /// <inheritdoc />
-    public override int Capacity => 16;
+    protected override int Capacity => 16;
+    
+    /// <summary>
+    /// Defines an implicit conversion to a native <c>string</c> type.
+    /// </summary>
+    /// <param name="value">The instance to be converted.</param>
+    /// <returns>A <see cref="string"/> representation of the value.</returns>
+    public static implicit operator string(STRING_16 value) => value.ToString();
+    
+    /// <summary>
+    /// Defines an implicit conversion from a native <c>string</c> type.
+    /// </summary>
+    /// <param name="value">The instance to be converted.</param>
+    /// <returns>A <see cref="STRING_16"/> representation of the value.</returns>
+    public static implicit operator STRING_16(string value) => new(value);
 }

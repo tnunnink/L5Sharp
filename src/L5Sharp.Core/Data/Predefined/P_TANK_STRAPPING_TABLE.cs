@@ -53,6 +53,49 @@ public sealed partial class P_TANK_STRAPPING_TABLE : StructureData
     public P_TANK_STRAPPING_TABLE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 108;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_Level.UpdateData(data, offset + 5);
+        Inp_FreeWaterLevel.UpdateData(data, offset + 9);
+        Inp_ObsAPI.UpdateData(data, offset + 13);
+        Inp_AvgProdTemp.UpdateData(data, offset + 17);
+        Inp_AmbTemp.UpdateData(data, offset + 21);
+        Cfg_MinorPerMajor.UpdateData(data, offset + 25);
+        Cfg_HasCorrTempShell.UpdateData((data[offset + 29] & (1 << 3)) != 0);
+        Cfg_HasFloatRoofAdj.UpdateData((data[offset + 29] & (1 << 4)) != 0);
+        Cfg_HasMoreObj.UpdateData((data[offset + 29] & (1 << 5)) != 0);
+        Cfg_CalTemp.UpdateData(data, offset + 29);
+        Cfg_ShellCoefOfExp.UpdateData(data, offset + 33);
+        Cfg_K.UpdateData(data, offset + 37);
+        Cfg_FloatRoofLevel.UpdateData(data, offset + 41);
+        Cfg_FloatRoofCalAPI.UpdateData(data, offset + 45);
+        Cfg_FloatRoofVolPerAPI.UpdateData(data, offset + 49);
+        Val_TotObsVol.UpdateData(data, offset + 53);
+        Val_FreeWater.UpdateData(data, offset + 57);
+        Val_TempShell.UpdateData(data, offset + 61);
+        Val_CorrTempShell.UpdateData(data, offset + 65);
+        Val_FloatRoofAdj.UpdateData(data, offset + 69);
+        Val_GrossObsVol.UpdateData(data, offset + 73);
+        Sts_Initialized.UpdateData((data[offset + 77] & (1 << 6)) != 0);
+        Sts_UnderMin.UpdateData((data[offset + 77] & (1 << 7)) != 0);
+        Sts_OverMax.UpdateData((data[offset + 78] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_TANK_STRAPPING_TABLE"/> data type.

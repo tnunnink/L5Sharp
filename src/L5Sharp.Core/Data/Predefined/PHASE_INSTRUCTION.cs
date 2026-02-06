@@ -35,6 +35,31 @@ public sealed partial class PHASE_INSTRUCTION : StructureData
     public PHASE_INSTRUCTION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 8;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Status.UpdateData(data, offset + 0);
+        EN.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        ER.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        PC.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        IP.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        WA.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        ABORT.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        ERR.UpdateData(data, offset + 5);
+        EXERR.UpdateData(data, offset + 7);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Status</c> member of the <see cref="PHASE_INSTRUCTION"/> data type.

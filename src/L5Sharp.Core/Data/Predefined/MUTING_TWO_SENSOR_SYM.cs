@@ -51,6 +51,47 @@ public sealed partial class MUTING_TWO_SENSOR_SYM : StructureData
     public MUTING_TWO_SENSOR_SYM(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 104;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        RestartType.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        LightCurtain.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Sensor1.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Sensor2.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Reserved1.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Reserved2.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        EnableMute.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Override.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        InputStatus.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        MutingLampStatus.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        Reset.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        S1S2DiscrepancyTime.UpdateData(data, offset + 6);
+        S1S2LCMinimumTime.UpdateData(data, offset + 10);
+        S1S2LCMaximumTime.UpdateData(data, offset + 14);
+        Reserved3.UpdateData(data, offset + 18);
+        MaximumMuteTime.UpdateData(data, offset + 22);
+        MaximumOverrideTime.UpdateData(data, offset + 26);
+        EnableOut.UpdateData((data[offset + 34] & (1 << 4)) != 0);
+        O1.UpdateData((data[offset + 34] & (1 << 5)) != 0);
+        ML.UpdateData((data[offset + 34] & (1 << 6)) != 0);
+        CA.UpdateData((data[offset + 34] & (1 << 7)) != 0);
+        FP.UpdateData((data[offset + 35] & (1 << 0)) != 0);
+        FaultCode.UpdateData(data, offset + 35);
+        DiagnosticCode.UpdateData(data, offset + 39);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="MUTING_TWO_SENSOR_SYM"/> data type.

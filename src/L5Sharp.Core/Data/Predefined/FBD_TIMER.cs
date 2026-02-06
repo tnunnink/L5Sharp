@@ -38,6 +38,34 @@ public sealed partial class FBD_TIMER : StructureData
     public FBD_TIMER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 48;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 9] & (1 << 0)) != 0);
+        TimerEnable.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        PRE.UpdateData(data, offset + 9);
+        Reset.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        EnableOut.UpdateData((data[offset + 13] & (1 << 3)) != 0);
+        ACC.UpdateData(data, offset + 13);
+        EN.UpdateData((data[offset + 17] & (1 << 4)) != 0);
+        TT.UpdateData((data[offset + 17] & (1 << 5)) != 0);
+        DN.UpdateData((data[offset + 17] & (1 << 6)) != 0);
+        Status.UpdateData(data, offset + 17);
+        InstructFault.UpdateData((data[offset + 21] & (1 << 7)) != 0);
+        PresetInv.UpdateData((data[offset + 22] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="FBD_TIMER"/> data type.

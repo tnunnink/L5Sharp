@@ -38,6 +38,34 @@ public sealed partial class FUNCTION_GENERATOR : StructureData
     public FUNCTION_GENERATOR(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 52;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        XY1Size.UpdateData(data, offset + 9);
+        XY2Size.UpdateData(data, offset + 13);
+        Select.UpdateData((data[offset + 17] & (1 << 1)) != 0);
+        EnableOut.UpdateData((data[offset + 21] & (1 << 2)) != 0);
+        Out.UpdateData(data, offset + 21);
+        Status.UpdateData(data, offset + 25);
+        InstructFault.UpdateData((data[offset + 29] & (1 << 3)) != 0);
+        XY1SizeInv.UpdateData((data[offset + 29] & (1 << 4)) != 0);
+        XY2SizeInv.UpdateData((data[offset + 29] & (1 << 5)) != 0);
+        XisOutofOrder.UpdateData((data[offset + 29] & (1 << 6)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="FUNCTION_GENERATOR"/> data type.

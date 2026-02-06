@@ -73,7 +73,7 @@ public abstract class AtomicData : LogixData
     public Radix Radix => GetValue(Radix.Parse) ?? Radix.Default(GetType());
 
     /// <inheritdoc />
-    public override void Update(LogixData data)
+    public override void UpdateData(LogixData data)
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data));
@@ -91,7 +91,7 @@ public abstract class AtomicData : LogixData
     }
 
     /// <inheritdoc />
-    public override void Clear()
+    public override void ResetData()
     {
         // Reset the value for atomic data to zero.
         var value = Radix.Format(0);

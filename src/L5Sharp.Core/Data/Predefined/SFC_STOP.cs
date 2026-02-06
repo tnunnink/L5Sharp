@@ -30,6 +30,26 @@ public sealed partial class SFC_STOP : StructureData
     public SFC_STOP(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 20;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Status.UpdateData(data, offset + 0);
+        X.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Reset.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Count.UpdateData(data, offset + 17);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Status</c> member of the <see cref="SFC_STOP"/> data type.

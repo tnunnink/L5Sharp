@@ -29,6 +29,25 @@ public sealed partial class P_HART_CODE_DESC_STATUS : StructureData
     public P_HART_CODE_DESC_STATUS(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 44;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Code.UpdateData(data, offset + 0);
+        Desc.UpdateData(data, offset + 4);
+        bSts.UpdateData(data, offset + 40);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Code</c> member of the <see cref="P_HART_CODE_DESC_STATUS"/> data type.

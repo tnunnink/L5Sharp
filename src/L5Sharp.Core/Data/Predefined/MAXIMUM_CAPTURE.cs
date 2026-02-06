@@ -32,6 +32,28 @@ public sealed partial class MAXIMUM_CAPTURE : StructureData
     public MAXIMUM_CAPTURE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 28;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        Reset.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        ResetValue.UpdateData(data, offset + 9);
+        EnableOut.UpdateData((data[offset + 17] & (1 << 2)) != 0);
+        Out.UpdateData(data, offset + 17);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="MAXIMUM_CAPTURE"/> data type.

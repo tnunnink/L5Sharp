@@ -41,6 +41,37 @@ public sealed partial class RAC_ITF_DVC_PWRMOTION_STS : StructureData
     public RAC_ITF_DVC_PWRMOTION_STS(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 304;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        eState.UpdateData(data, offset + 0);
+        FirstWarning.UpdateData(data, offset + 4);
+        FirstFault.UpdateData(data, offset + 148);
+        eCmdFail.UpdateData(data, offset + 292);
+        bSts.UpdateData(data, offset + 296);
+        Physical.UpdateData((data[offset + 299] & (1 << 0)) != 0);
+        Virtual.UpdateData((data[offset + 299] & (1 << 1)) != 0);
+        Connected.UpdateData((data[offset + 299] & (1 << 2)) != 0);
+        Available.UpdateData((data[offset + 299] & (1 << 3)) != 0);
+        Warning.UpdateData((data[offset + 299] & (1 << 4)) != 0);
+        Faulted.UpdateData((data[offset + 299] & (1 << 5)) != 0);
+        Ready.UpdateData((data[offset + 299] & (1 << 6)) != 0);
+        Active.UpdateData((data[offset + 299] & (1 << 7)) != 0);
+        ZeroSpeed.UpdateData((data[offset + 300] & (1 << 0)) != 0);
+        NoMotion.UpdateData((data[offset + 300] & (1 << 1)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>eState</c> member of the <see cref="RAC_ITF_DVC_PWRMOTION_STS"/> data type.

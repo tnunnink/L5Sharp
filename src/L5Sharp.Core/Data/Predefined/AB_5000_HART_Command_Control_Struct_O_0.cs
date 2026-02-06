@@ -27,6 +27,23 @@ public sealed partial class AB_5000_HART_Command_Control_Struct_O_0 : StructureD
     public AB_5000_HART_Command_Control_Struct_O_0(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 4;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Execute.UpdateData((data[offset + 2] & (1 << 0)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>Execute</c> member of the <see cref="AB_5000_HART_Command_Control_Struct_O_0"/> data type.

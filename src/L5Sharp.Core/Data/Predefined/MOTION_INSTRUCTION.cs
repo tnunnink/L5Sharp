@@ -42,6 +42,38 @@ public sealed partial class MOTION_INSTRUCTION : StructureData
     public MOTION_INSTRUCTION(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 16;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        FLAGS.UpdateData(data, offset + 0);
+        EN.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        DN.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        ER.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        PC.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        IP.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        AC.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        ACCEL.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        DECEL.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        TrackingMaster.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        CalculatedDataAvailable.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        ERR.UpdateData(data, offset + 6);
+        STATUS.UpdateData(data, offset + 8);
+        STATE.UpdateData(data, offset + 9);
+        SEGMENT.UpdateData(data, offset + 10);
+        EXERR.UpdateData(data, offset + 14);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>FLAGS</c> member of the <see cref="MOTION_INSTRUCTION"/> data type.

@@ -47,6 +47,43 @@ public sealed partial class RATE_LIMITER : StructureData
     public RATE_LIMITER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 96;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        In.UpdateData(data, offset + 5);
+        IncRate.UpdateData(data, offset + 9);
+        DecRate.UpdateData(data, offset + 13);
+        ByPass.UpdateData((data[offset + 17] & (1 << 1)) != 0);
+        TimingMode.UpdateData(data, offset + 17);
+        OversampleDT.UpdateData(data, offset + 21);
+        RTSTime.UpdateData(data, offset + 25);
+        RTSTimeStamp.UpdateData(data, offset + 29);
+        EnableOut.UpdateData((data[offset + 37] & (1 << 2)) != 0);
+        Out.UpdateData(data, offset + 37);
+        DeltaT.UpdateData(data, offset + 41);
+        Status.UpdateData(data, offset + 45);
+        InstructFault.UpdateData((data[offset + 49] & (1 << 3)) != 0);
+        IncRateInv.UpdateData((data[offset + 49] & (1 << 4)) != 0);
+        DecRateInv.UpdateData((data[offset + 49] & (1 << 5)) != 0);
+        TimingModeInv.UpdateData((data[offset + 49] & (1 << 6)) != 0);
+        RTSMissed.UpdateData((data[offset + 49] & (1 << 7)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 50] & (1 << 0)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 50] & (1 << 1)) != 0);
+        DeltaTInv.UpdateData((data[offset + 50] & (1 << 2)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="RATE_LIMITER"/> data type.

@@ -191,6 +191,187 @@ public sealed partial class PID_ENHANCED : StructureData
     public PID_ENHANCED(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 396;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 1] & (1 << 0)) != 0);
+        PV.UpdateData(data, offset + 5);
+        PVFault.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        PVEUMax.UpdateData(data, offset + 9);
+        PVEUMin.UpdateData(data, offset + 13);
+        SPProg.UpdateData(data, offset + 17);
+        SPOper.UpdateData(data, offset + 21);
+        SPCascade.UpdateData(data, offset + 25);
+        SPHLimit.UpdateData(data, offset + 29);
+        SPLLimit.UpdateData(data, offset + 33);
+        UseRatio.UpdateData((data[offset + 37] & (1 << 2)) != 0);
+        RatioProg.UpdateData(data, offset + 37);
+        RatioOper.UpdateData(data, offset + 41);
+        RatioHLimit.UpdateData(data, offset + 45);
+        RatioLLimit.UpdateData(data, offset + 49);
+        CVFault.UpdateData((data[offset + 53] & (1 << 3)) != 0);
+        CVInitReq.UpdateData((data[offset + 53] & (1 << 4)) != 0);
+        CVInitValue.UpdateData(data, offset + 53);
+        CVProg.UpdateData(data, offset + 57);
+        CVOper.UpdateData(data, offset + 61);
+        CVOverride.UpdateData(data, offset + 65);
+        CVPrevious.UpdateData(data, offset + 69);
+        CVSetPrevious.UpdateData((data[offset + 73] & (1 << 5)) != 0);
+        CVManLimiting.UpdateData((data[offset + 73] & (1 << 6)) != 0);
+        CVEUMax.UpdateData(data, offset + 73);
+        CVEUMin.UpdateData(data, offset + 77);
+        CVHLimit.UpdateData(data, offset + 81);
+        CVLLimit.UpdateData(data, offset + 85);
+        CVROCLimit.UpdateData(data, offset + 89);
+        FF.UpdateData(data, offset + 93);
+        FFPrevious.UpdateData(data, offset + 97);
+        FFSetPrevious.UpdateData((data[offset + 101] & (1 << 7)) != 0);
+        HandFB.UpdateData(data, offset + 101);
+        HandFBFault.UpdateData((data[offset + 106] & (1 << 0)) != 0);
+        WindupHIn.UpdateData((data[offset + 106] & (1 << 1)) != 0);
+        WindupLIn.UpdateData((data[offset + 106] & (1 << 2)) != 0);
+        ControlAction.UpdateData((data[offset + 106] & (1 << 3)) != 0);
+        DependIndepend.UpdateData((data[offset + 106] & (1 << 4)) != 0);
+        PGain.UpdateData(data, offset + 106);
+        IGain.UpdateData(data, offset + 110);
+        DGain.UpdateData(data, offset + 114);
+        PVEProportional.UpdateData((data[offset + 118] & (1 << 5)) != 0);
+        PVEDerivative.UpdateData((data[offset + 118] & (1 << 6)) != 0);
+        DSmoothing.UpdateData((data[offset + 118] & (1 << 7)) != 0);
+        PVTracking.UpdateData((data[offset + 119] & (1 << 0)) != 0);
+        ZCDeadband.UpdateData(data, offset + 119);
+        ZCOff.UpdateData((data[offset + 123] & (1 << 1)) != 0);
+        PVHHLimit.UpdateData(data, offset + 123);
+        PVHLimit.UpdateData(data, offset + 127);
+        PVLLimit.UpdateData(data, offset + 131);
+        PVLLLimit.UpdateData(data, offset + 135);
+        PVDeadband.UpdateData(data, offset + 139);
+        PVROCPosLimit.UpdateData(data, offset + 143);
+        PVROCNegLimit.UpdateData(data, offset + 147);
+        PVROCPeriod.UpdateData(data, offset + 151);
+        DevHHLimit.UpdateData(data, offset + 155);
+        DevHLimit.UpdateData(data, offset + 159);
+        DevLLimit.UpdateData(data, offset + 163);
+        DevLLLimit.UpdateData(data, offset + 167);
+        DevDeadband.UpdateData(data, offset + 171);
+        AllowCasRat.UpdateData((data[offset + 175] & (1 << 2)) != 0);
+        ManualAfterInit.UpdateData((data[offset + 175] & (1 << 3)) != 0);
+        ProgProgReq.UpdateData((data[offset + 175] & (1 << 4)) != 0);
+        ProgOperReq.UpdateData((data[offset + 175] & (1 << 5)) != 0);
+        ProgCasRatReq.UpdateData((data[offset + 175] & (1 << 6)) != 0);
+        ProgAutoReq.UpdateData((data[offset + 175] & (1 << 7)) != 0);
+        ProgManualReq.UpdateData((data[offset + 176] & (1 << 0)) != 0);
+        ProgOverrideReq.UpdateData((data[offset + 176] & (1 << 1)) != 0);
+        ProgHandReq.UpdateData((data[offset + 176] & (1 << 2)) != 0);
+        OperProgReq.UpdateData((data[offset + 176] & (1 << 3)) != 0);
+        OperOperReq.UpdateData((data[offset + 176] & (1 << 4)) != 0);
+        OperCasRatReq.UpdateData((data[offset + 176] & (1 << 5)) != 0);
+        OperAutoReq.UpdateData((data[offset + 176] & (1 << 6)) != 0);
+        OperManualReq.UpdateData((data[offset + 176] & (1 << 7)) != 0);
+        ProgValueReset.UpdateData((data[offset + 177] & (1 << 0)) != 0);
+        TimingMode.UpdateData(data, offset + 177);
+        OversampleDT.UpdateData(data, offset + 181);
+        RTSTime.UpdateData(data, offset + 185);
+        RTSTimeStamp.UpdateData(data, offset + 189);
+        AtuneAcquire.UpdateData((data[offset + 197] & (1 << 1)) != 0);
+        AtuneStart.UpdateData((data[offset + 197] & (1 << 2)) != 0);
+        AtuneUseGains.UpdateData((data[offset + 197] & (1 << 3)) != 0);
+        AtuneAbort.UpdateData((data[offset + 197] & (1 << 4)) != 0);
+        AtuneUnacquire.UpdateData((data[offset + 197] & (1 << 5)) != 0);
+        EnableOut.UpdateData((data[offset + 197] & (1 << 6)) != 0);
+        CVEU.UpdateData(data, offset + 201);
+        CV.UpdateData(data, offset + 205);
+        CVInitializing.UpdateData((data[offset + 209] & (1 << 7)) != 0);
+        CVHAlarm.UpdateData((data[offset + 210] & (1 << 0)) != 0);
+        CVLAlarm.UpdateData((data[offset + 210] & (1 << 1)) != 0);
+        CVROCAlarm.UpdateData((data[offset + 210] & (1 << 2)) != 0);
+        SP.UpdateData(data, offset + 210);
+        SPPercent.UpdateData(data, offset + 214);
+        SPHAlarm.UpdateData((data[offset + 218] & (1 << 3)) != 0);
+        SPLAlarm.UpdateData((data[offset + 218] & (1 << 4)) != 0);
+        PVPercent.UpdateData(data, offset + 218);
+        E.UpdateData(data, offset + 222);
+        EPercent.UpdateData(data, offset + 226);
+        InitPrimary.UpdateData((data[offset + 230] & (1 << 5)) != 0);
+        WindupHOut.UpdateData((data[offset + 230] & (1 << 6)) != 0);
+        WindupLOut.UpdateData((data[offset + 230] & (1 << 7)) != 0);
+        Ratio.UpdateData(data, offset + 230);
+        RatioHAlarm.UpdateData((data[offset + 235] & (1 << 0)) != 0);
+        RatioLAlarm.UpdateData((data[offset + 235] & (1 << 1)) != 0);
+        ZCDeadbandOn.UpdateData((data[offset + 235] & (1 << 2)) != 0);
+        PVHHAlarm.UpdateData((data[offset + 235] & (1 << 3)) != 0);
+        PVHAlarm.UpdateData((data[offset + 235] & (1 << 4)) != 0);
+        PVLAlarm.UpdateData((data[offset + 235] & (1 << 5)) != 0);
+        PVLLAlarm.UpdateData((data[offset + 235] & (1 << 6)) != 0);
+        PVROCPosAlarm.UpdateData((data[offset + 235] & (1 << 7)) != 0);
+        PVROCNegAlarm.UpdateData((data[offset + 236] & (1 << 0)) != 0);
+        DevHHAlarm.UpdateData((data[offset + 236] & (1 << 1)) != 0);
+        DevHAlarm.UpdateData((data[offset + 236] & (1 << 2)) != 0);
+        DevLAlarm.UpdateData((data[offset + 236] & (1 << 3)) != 0);
+        DevLLAlarm.UpdateData((data[offset + 236] & (1 << 4)) != 0);
+        ProgOper.UpdateData((data[offset + 236] & (1 << 5)) != 0);
+        CasRat.UpdateData((data[offset + 236] & (1 << 6)) != 0);
+        Auto.UpdateData((data[offset + 236] & (1 << 7)) != 0);
+        Manual.UpdateData((data[offset + 237] & (1 << 0)) != 0);
+        Override.UpdateData((data[offset + 237] & (1 << 1)) != 0);
+        Hand.UpdateData((data[offset + 237] & (1 << 2)) != 0);
+        DeltaT.UpdateData(data, offset + 237);
+        AtuneReady.UpdateData((data[offset + 245] & (1 << 3)) != 0);
+        AtuneOn.UpdateData((data[offset + 245] & (1 << 4)) != 0);
+        AtuneDone.UpdateData((data[offset + 245] & (1 << 5)) != 0);
+        AtuneAborted.UpdateData((data[offset + 245] & (1 << 6)) != 0);
+        AtuneBusy.UpdateData((data[offset + 245] & (1 << 7)) != 0);
+        Status1.UpdateData(data, offset + 245);
+        Status2.UpdateData(data, offset + 249);
+        InstructFault.UpdateData((data[offset + 254] & (1 << 0)) != 0);
+        PVFaulted.UpdateData((data[offset + 254] & (1 << 1)) != 0);
+        CVFaulted.UpdateData((data[offset + 254] & (1 << 2)) != 0);
+        HandFBFaulted.UpdateData((data[offset + 254] & (1 << 3)) != 0);
+        PVSpanInv.UpdateData((data[offset + 254] & (1 << 4)) != 0);
+        SPProgInv.UpdateData((data[offset + 254] & (1 << 5)) != 0);
+        SPOperInv.UpdateData((data[offset + 254] & (1 << 6)) != 0);
+        SPCascadeInv.UpdateData((data[offset + 254] & (1 << 7)) != 0);
+        SPLimitsInv.UpdateData((data[offset + 255] & (1 << 0)) != 0);
+        RatioProgInv.UpdateData((data[offset + 255] & (1 << 1)) != 0);
+        RatioOperInv.UpdateData((data[offset + 255] & (1 << 2)) != 0);
+        RatioLimitsInv.UpdateData((data[offset + 255] & (1 << 3)) != 0);
+        CVProgInv.UpdateData((data[offset + 255] & (1 << 4)) != 0);
+        CVOperInv.UpdateData((data[offset + 255] & (1 << 5)) != 0);
+        CVOverrideInv.UpdateData((data[offset + 255] & (1 << 6)) != 0);
+        CVPreviousInv.UpdateData((data[offset + 255] & (1 << 7)) != 0);
+        CVEUSpanInv.UpdateData((data[offset + 256] & (1 << 0)) != 0);
+        CVLimitsInv.UpdateData((data[offset + 256] & (1 << 1)) != 0);
+        CVROCLimitInv.UpdateData((data[offset + 256] & (1 << 2)) != 0);
+        FFInv.UpdateData((data[offset + 256] & (1 << 3)) != 0);
+        FFPreviousInv.UpdateData((data[offset + 256] & (1 << 4)) != 0);
+        HandFBInv.UpdateData((data[offset + 256] & (1 << 5)) != 0);
+        PGainInv.UpdateData((data[offset + 256] & (1 << 6)) != 0);
+        IGainInv.UpdateData((data[offset + 256] & (1 << 7)) != 0);
+        DGainInv.UpdateData((data[offset + 257] & (1 << 0)) != 0);
+        ZCDeadbandInv.UpdateData((data[offset + 257] & (1 << 1)) != 0);
+        PVDeadbandInv.UpdateData((data[offset + 257] & (1 << 2)) != 0);
+        PVROCLimitsInv.UpdateData((data[offset + 257] & (1 << 3)) != 0);
+        DevHLLimitsInv.UpdateData((data[offset + 257] & (1 << 4)) != 0);
+        DevDeadbandInv.UpdateData((data[offset + 257] & (1 << 5)) != 0);
+        AtuneDataInv.UpdateData((data[offset + 257] & (1 << 6)) != 0);
+        TimingModeInv.UpdateData((data[offset + 257] & (1 << 7)) != 0);
+        RTSMissed.UpdateData((data[offset + 258] & (1 << 0)) != 0);
+        RTSTimeInv.UpdateData((data[offset + 258] & (1 << 1)) != 0);
+        RTSTimeStampInv.UpdateData((data[offset + 258] & (1 << 2)) != 0);
+        DeltaTInv.UpdateData((data[offset + 258] & (1 << 3)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="PID_ENHANCED"/> data type.

@@ -197,6 +197,193 @@ public sealed partial class P_LEAD_LAG_STANDBY : StructureData
     public P_LEAD_LAG_STANDBY(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 1288;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_OwnerCmd.UpdateData(data, offset + 5);
+        Inp_PermOK.UpdateData((data[offset + 9] & (1 << 3)) != 0);
+        Inp_NBPermOK.UpdateData((data[offset + 9] & (1 << 4)) != 0);
+        Inp_IntlkOK.UpdateData((data[offset + 9] & (1 << 5)) != 0);
+        Inp_NBIntlkOK.UpdateData((data[offset + 9] & (1 << 6)) != 0);
+        Inp_IntlkAvailable.UpdateData((data[offset + 9] & (1 << 7)) != 0);
+        Inp_IntlkTripInh.UpdateData((data[offset + 10] & (1 << 0)) != 0);
+        Inp_RdyReset.UpdateData((data[offset + 10] & (1 << 1)) != 0);
+        Inp_Hand.UpdateData((data[offset + 10] & (1 << 2)) != 0);
+        Inp_Ovrd.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        Inp_OvrdDemand.UpdateData(data, offset + 10);
+        Inp_OvrdCmd.UpdateData(data, offset + 14);
+        Inp_ExtInh.UpdateData((data[offset + 18] & (1 << 4)) != 0);
+        Inp_Reset.UpdateData((data[offset + 18] & (1 << 5)) != 0);
+        Cfg_AllowDisable.UpdateData((data[offset + 18] & (1 << 6)) != 0);
+        Cfg_AllowShelve.UpdateData((data[offset + 18] & (1 << 7)) != 0);
+        Cfg_NumMotors.UpdateData(data, offset + 18);
+        Cfg_MaxDemand.UpdateData(data, offset + 22);
+        Cfg_MinDemand.UpdateData(data, offset + 26);
+        Cfg_StartDly.UpdateData(data, offset + 30);
+        Cfg_StopDly.UpdateData(data, offset + 34);
+        Cfg_FirstOnFirstOff.UpdateData((data[offset + 39] & (1 << 0)) != 0);
+        Cfg_AllowRotate.UpdateData((data[offset + 39] & (1 << 1)) != 0);
+        Cfg_RotateOnStop.UpdateData((data[offset + 39] & (1 << 2)) != 0);
+        Cfg_HasPermObj.UpdateData((data[offset + 39] & (1 << 3)) != 0);
+        Cfg_HasIntlkObj.UpdateData((data[offset + 39] & (1 << 4)) != 0);
+        Cfg_HasMoreObj.UpdateData((data[offset + 39] & (1 << 5)) != 0);
+        Cfg_HasNav0.UpdateData((data[offset + 39] & (1 << 6)) != 0);
+        Cfg_HasNav1.UpdateData((data[offset + 39] & (1 << 7)) != 0);
+        Cfg_HasNav2.UpdateData((data[offset + 40] & (1 << 0)) != 0);
+        Cfg_HasNav3.UpdateData((data[offset + 40] & (1 << 1)) != 0);
+        Cfg_HasNav4.UpdateData((data[offset + 40] & (1 << 2)) != 0);
+        Cfg_HasNav5.UpdateData((data[offset + 40] & (1 << 3)) != 0);
+        Cfg_HasNav6.UpdateData((data[offset + 40] & (1 << 4)) != 0);
+        Cfg_HasNav7.UpdateData((data[offset + 40] & (1 << 5)) != 0);
+        Cfg_HasNav8.UpdateData((data[offset + 40] & (1 << 6)) != 0);
+        Cfg_HasNav9.UpdateData((data[offset + 40] & (1 << 7)) != 0);
+        Cfg_HasNav10.UpdateData((data[offset + 41] & (1 << 0)) != 0);
+        Cfg_HasNav11.UpdateData((data[offset + 41] & (1 << 1)) != 0);
+        Cfg_HasNav12.UpdateData((data[offset + 41] & (1 << 2)) != 0);
+        Cfg_HasNav13.UpdateData((data[offset + 45] & (1 << 3)) != 0);
+        Cfg_HasNav14.UpdateData((data[offset + 45] & (1 << 4)) != 0);
+        Cfg_HasNav15.UpdateData((data[offset + 45] & (1 << 5)) != 0);
+        Cfg_HasNav16.UpdateData((data[offset + 45] & (1 << 6)) != 0);
+        Cfg_HasNav17.UpdateData((data[offset + 45] & (1 << 7)) != 0);
+        Cfg_HasNav18.UpdateData((data[offset + 46] & (1 << 0)) != 0);
+        Cfg_HasNav19.UpdateData((data[offset + 46] & (1 << 1)) != 0);
+        Cfg_HasNav20.UpdateData((data[offset + 46] & (1 << 2)) != 0);
+        Cfg_HasNav21.UpdateData((data[offset + 46] & (1 << 3)) != 0);
+        Cfg_HasNav22.UpdateData((data[offset + 46] & (1 << 4)) != 0);
+        Cfg_HasNav23.UpdateData((data[offset + 46] & (1 << 5)) != 0);
+        Cfg_HasNav24.UpdateData((data[offset + 46] & (1 << 6)) != 0);
+        Cfg_HasNav25.UpdateData((data[offset + 46] & (1 << 7)) != 0);
+        Cfg_HasNav26.UpdateData((data[offset + 47] & (1 << 0)) != 0);
+        Cfg_HasNav27.UpdateData((data[offset + 47] & (1 << 1)) != 0);
+        Cfg_HasNav28.UpdateData((data[offset + 47] & (1 << 2)) != 0);
+        Cfg_HasNav29.UpdateData((data[offset + 47] & (1 << 3)) != 0);
+        Cfg_SetTrack.UpdateData((data[offset + 47] & (1 << 4)) != 0);
+        Cfg_SetTrackOvrdHand.UpdateData((data[offset + 47] & (1 << 5)) != 0);
+        Cfg_OperStopPrio.UpdateData((data[offset + 47] & (1 << 6)) != 0);
+        Cfg_ExtStopPrio.UpdateData((data[offset + 47] & (1 << 7)) != 0);
+        Cfg_OCmdResets.UpdateData((data[offset + 48] & (1 << 0)) != 0);
+        Cfg_XCmdResets.UpdateData((data[offset + 48] & (1 << 1)) != 0);
+        Cfg_OvrdPermIntlk.UpdateData((data[offset + 48] & (1 << 2)) != 0);
+        Cfg_CnfrmReqd.UpdateData(data, offset + 48);
+        PSet_Demand.UpdateData(data, offset + 49);
+        PSet_Owner.UpdateData(data, offset + 53);
+        XSet_Demand.UpdateData(data, offset + 57);
+        PCmd_Start.UpdateData((data[offset + 61] & (1 << 3)) != 0);
+        PCmd_Stop.UpdateData((data[offset + 61] & (1 << 4)) != 0);
+        PCmd_Rotate.UpdateData((data[offset + 61] & (1 << 5)) != 0);
+        PCmd_Prog.UpdateData((data[offset + 61] & (1 << 6)) != 0);
+        PCmd_Oper.UpdateData((data[offset + 61] & (1 << 7)) != 0);
+        PCmd_Lock.UpdateData((data[offset + 62] & (1 << 0)) != 0);
+        PCmd_Unlock.UpdateData((data[offset + 62] & (1 << 1)) != 0);
+        PCmd_Normal.UpdateData((data[offset + 62] & (1 << 2)) != 0);
+        PCmd_Reset.UpdateData((data[offset + 62] & (1 << 3)) != 0);
+        XCmd_Start.UpdateData((data[offset + 62] & (1 << 4)) != 0);
+        XCmd_Stop.UpdateData((data[offset + 62] & (1 << 5)) != 0);
+        XCmd_Rotate.UpdateData((data[offset + 62] & (1 << 6)) != 0);
+        XCmd_Reset.UpdateData((data[offset + 62] & (1 << 7)) != 0);
+        XCmd_ResetAckAll.UpdateData((data[offset + 67] & (1 << 0)) != 0);
+        Val_Demand.UpdateData(data, offset + 67);
+        Val_RotateRank.UpdateData(data, offset + 71);
+        Val_RotateID.UpdateData(data, offset + 75);
+        Sts_eCmd.UpdateData(data, offset + 79);
+        Sts_Fdbk.UpdateData(data, offset + 80);
+        Sts_eSts.UpdateData(data, offset + 81);
+        Sts_eFault.UpdateData(data, offset + 83);
+        Sts_eNotifyAll.UpdateData(data, offset + 85);
+        Sts_Initialized.UpdateData((data[offset + 86] & (1 << 1)) != 0);
+        Sts_Stopped.UpdateData((data[offset + 86] & (1 << 2)) != 0);
+        Sts_Running.UpdateData((data[offset + 86] & (1 << 3)) != 0);
+        Sts_Stopping.UpdateData((data[offset + 86] & (1 << 4)) != 0);
+        Sts_Incr.UpdateData((data[offset + 86] & (1 << 5)) != 0);
+        Sts_Decr.UpdateData((data[offset + 86] & (1 << 6)) != 0);
+        Sts_Available.UpdateData((data[offset + 86] & (1 << 7)) != 0);
+        Sts_IntlkAvailable.UpdateData((data[offset + 87] & (1 << 0)) != 0);
+        Sts_Bypass.UpdateData((data[offset + 87] & (1 << 1)) != 0);
+        Sts_BypActive.UpdateData((data[offset + 87] & (1 << 2)) != 0);
+        Sts_NotRdy.UpdateData((data[offset + 87] & (1 << 3)) != 0);
+        Sts_NrdyCfgErr.UpdateData((data[offset + 87] & (1 << 4)) != 0);
+        Sts_NrdyIntlk.UpdateData((data[offset + 87] & (1 << 5)) != 0);
+        Sts_NrdyOoS.UpdateData((data[offset + 87] & (1 << 6)) != 0);
+        Sts_NrdyPrioStop.UpdateData((data[offset + 87] & (1 << 7)) != 0);
+        Sts_NrdyPerm.UpdateData((data[offset + 88] & (1 << 0)) != 0);
+        Sts_MaintByp.UpdateData((data[offset + 88] & (1 << 1)) != 0);
+        Sts_Alm.UpdateData((data[offset + 88] & (1 << 2)) != 0);
+        Sts_AlmInh.UpdateData((data[offset + 88] & (1 << 3)) != 0);
+        Sts_Err.UpdateData((data[offset + 88] & (1 << 4)) != 0);
+        Sts_ErrStartDly.UpdateData((data[offset + 88] & (1 << 5)) != 0);
+        Sts_ErrStopDly.UpdateData((data[offset + 88] & (1 << 6)) != 0);
+        Sts_ErrAlm.UpdateData((data[offset + 88] & (1 << 7)) != 0);
+        Val_Owner.UpdateData(data, offset + 88);
+        Sts_MotorAvailable.UpdateData(data, offset + 92);
+        Sts_MotorStopped.UpdateData(data, offset + 96);
+        Sts_MotorStarting.UpdateData(data, offset + 100);
+        Sts_MotorRunning.UpdateData(data, offset + 104);
+        Sts_MotorStopping.UpdateData(data, offset + 108);
+        Sts_Hand.UpdateData((data[offset + 113] & (1 << 0)) != 0);
+        Sts_OoS.UpdateData((data[offset + 113] & (1 << 1)) != 0);
+        Sts_Maint.UpdateData((data[offset + 113] & (1 << 2)) != 0);
+        Sts_Ovrd.UpdateData((data[offset + 113] & (1 << 3)) != 0);
+        Sts_Ext.UpdateData((data[offset + 113] & (1 << 4)) != 0);
+        Sts_Prog.UpdateData((data[offset + 113] & (1 << 5)) != 0);
+        Sts_ProgLocked.UpdateData((data[offset + 113] & (1 << 6)) != 0);
+        Sts_Oper.UpdateData((data[offset + 113] & (1 << 7)) != 0);
+        Sts_OperLocked.UpdateData((data[offset + 114] & (1 << 0)) != 0);
+        Sts_Normal.UpdateData((data[offset + 114] & (1 << 1)) != 0);
+        Sts_ExtReqInh.UpdateData((data[offset + 114] & (1 << 2)) != 0);
+        Sts_ProgReqInh.UpdateData((data[offset + 114] & (1 << 3)) != 0);
+        Sts_MAcqRcvd.UpdateData((data[offset + 114] & (1 << 4)) != 0);
+        Sts_CantStart.UpdateData((data[offset + 114] & (1 << 5)) != 0);
+        Sts_CantStop.UpdateData((data[offset + 114] & (1 << 6)) != 0);
+        Sts_IntlkTrip.UpdateData((data[offset + 114] & (1 << 7)) != 0);
+        Sts_RdyReset.UpdateData((data[offset + 115] & (1 << 0)) != 0);
+        Sts_RdyAck.UpdateData((data[offset + 115] & (1 << 1)) != 0);
+        Sts_UnackAlmCount.UpdateData(data, offset + 115);
+        Cfg_HasOper.UpdateData((data[offset + 119] & (1 << 2)) != 0);
+        Cfg_HasOperLocked.UpdateData((data[offset + 119] & (1 << 3)) != 0);
+        Cfg_HasProg.UpdateData((data[offset + 119] & (1 << 4)) != 0);
+        Cfg_HasProgLocked.UpdateData((data[offset + 119] & (1 << 5)) != 0);
+        Cfg_HasExt.UpdateData((data[offset + 119] & (1 << 6)) != 0);
+        Cfg_HasMaint.UpdateData((data[offset + 119] & (1 << 7)) != 0);
+        Cfg_HasMaintOoS.UpdateData((data[offset + 120] & (1 << 0)) != 0);
+        Cfg_OvrdOverLock.UpdateData((data[offset + 120] & (1 << 1)) != 0);
+        Cfg_ExtOverLock.UpdateData((data[offset + 120] & (1 << 2)) != 0);
+        Cfg_ProgPwrUp.UpdateData((data[offset + 120] & (1 << 3)) != 0);
+        Cfg_ProgNormal.UpdateData((data[offset + 120] & (1 << 4)) != 0);
+        Cfg_PCmdPriority.UpdateData((data[offset + 120] & (1 << 5)) != 0);
+        Cfg_PCmdProgAsLevel.UpdateData((data[offset + 120] & (1 << 6)) != 0);
+        Cfg_PCmdLockAsLevel.UpdateData((data[offset + 120] & (1 << 7)) != 0);
+        Cfg_ExtAcqAsLevel.UpdateData((data[offset + 121] & (1 << 0)) != 0);
+        XCmd_Acq.UpdateData((data[offset + 121] & (1 << 1)) != 0);
+        XCmd_Rel.UpdateData((data[offset + 121] & (1 << 2)) != 0);
+        Out_Reset.UpdateData((data[offset + 121] & (1 << 3)) != 0);
+        Out_OwnerSts.UpdateData(data, offset + 121);
+        Sts_eSrc.UpdateData(data, offset + 125);
+        Sts_bSrc.UpdateData(data, offset + 127);
+        Sts_ProgOperSel.UpdateData((data[offset + 129] & (1 << 4)) != 0);
+        Sts_ProgOperLock.UpdateData((data[offset + 129] & (1 << 5)) != 0);
+        XRdy_Acq.UpdateData((data[offset + 129] & (1 << 6)) != 0);
+        XRdy_Rel.UpdateData((data[offset + 129] & (1 << 7)) != 0);
+        XRdy_Reset.UpdateData((data[offset + 130] & (1 << 0)) != 0);
+        XRdy_ResetAckAll.UpdateData((data[offset + 130] & (1 << 1)) != 0);
+        XRdy_Stop.UpdateData((data[offset + 134] & (1 << 2)) != 0);
+        XRdy_Start.UpdateData((data[offset + 134] & (1 << 3)) != 0);
+        XRdy_Rotate.UpdateData((data[offset + 134] & (1 << 4)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_LEAD_LAG_STANDBY"/> data type.

@@ -71,6 +71,67 @@ public sealed partial class P_PERMISSIVE : StructureData
     public P_PERMISSIVE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 36;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        EnableIn.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        EnableOut.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Inp_InitializeReq.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Inp_Perm00.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Inp_Perm01.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Inp_Perm02.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Inp_Perm03.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Inp_Perm04.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Inp_Perm05.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Inp_Perm06.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        Inp_Perm07.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        Inp_Perm08.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        Inp_Perm09.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        Inp_Perm10.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        Inp_Perm11.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        Inp_Perm12.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        Inp_Perm13.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        Inp_Perm14.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        Inp_Perm15.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        Inp_Perm16.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        Inp_Perm17.UpdateData((data[offset + 7] & (1 << 4)) != 0);
+        Inp_Perm18.UpdateData((data[offset + 7] & (1 << 5)) != 0);
+        Inp_Perm19.UpdateData((data[offset + 7] & (1 << 6)) != 0);
+        Inp_Perm20.UpdateData((data[offset + 7] & (1 << 7)) != 0);
+        Inp_Perm21.UpdateData((data[offset + 8] & (1 << 0)) != 0);
+        Inp_Perm22.UpdateData((data[offset + 8] & (1 << 1)) != 0);
+        Inp_Perm23.UpdateData((data[offset + 8] & (1 << 2)) != 0);
+        Inp_Perm24.UpdateData((data[offset + 8] & (1 << 3)) != 0);
+        Inp_Perm25.UpdateData((data[offset + 8] & (1 << 4)) != 0);
+        Inp_Perm26.UpdateData((data[offset + 8] & (1 << 5)) != 0);
+        Inp_Perm27.UpdateData((data[offset + 8] & (1 << 6)) != 0);
+        Inp_Perm28.UpdateData((data[offset + 8] & (1 << 7)) != 0);
+        Inp_Perm29.UpdateData((data[offset + 9] & (1 << 0)) != 0);
+        Inp_Perm30.UpdateData((data[offset + 9] & (1 << 1)) != 0);
+        Inp_Perm31.UpdateData((data[offset + 9] & (1 << 2)) != 0);
+        Inp_BypActive.UpdateData((data[offset + 9] & (1 << 3)) != 0);
+        Cfg_OKState.UpdateData(data, offset + 9);
+        Cfg_Bypassable.UpdateData(data, offset + 13);
+        Cfg_HasMoreObj.UpdateData((data[offset + 17] & (1 << 4)) != 0);
+        Cfg_HasNav.UpdateData(data, offset + 17);
+        Sts_Initialized.UpdateData((data[offset + 21] & (1 << 5)) != 0);
+        Sts_PermOK.UpdateData((data[offset + 21] & (1 << 6)) != 0);
+        Sts_NBPermOK.UpdateData((data[offset + 21] & (1 << 7)) != 0);
+        Sts_BypActive.UpdateData((data[offset + 22] & (1 << 0)) != 0);
+        Sts_Perm.UpdateData(data, offset + 22);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
     /// The <c>EnableIn</c> member of the <see cref="P_PERMISSIVE"/> data type.
