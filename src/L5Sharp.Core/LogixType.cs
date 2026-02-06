@@ -257,6 +257,27 @@ public static class LogixType
     }
 
     /// <summary>
+    /// Retrieves the size in bytes of the specified atomic data type.
+    /// </summary>
+    /// <param name="atomicType">The name of the atomic data type for which to retrieve the size.</param>
+    /// <returns>The size in bytes of the specified atomic data type. BOOL returns 0 as it uses bit-level storage.</returns>
+    /// <exception cref="ArgumentException">Thrown when the specified type is not a registered atomic data type.</exception>
+    public static int SizeOf(string atomicType)
+    {
+        if (!Atomics.Contains(atomicType.ToUpper()))
+            throw new ArgumentException($"The specified type '{atomicType}' is not a registered atomic data type.");
+        
+        return atomicType switch
+        {
+            nameof(BOOL) => 0,
+            nameof(SINT) or nameof(USINT) => 1,
+            nameof(INT) or nameof(UINT) => 2,
+            nameof(DINT) or nameof(UDINT) or nameof(REAL) or nameof(TIME32) => 4,
+            _ => 8
+        };
+    }
+
+    /// <summary>
     /// Determines whether the specified type name represents an atomic data type in the Logix system.
     /// </summary>
     /// <param name="typeName">The name of the type to check for atomicity.</param>

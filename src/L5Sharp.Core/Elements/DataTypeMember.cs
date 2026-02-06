@@ -36,6 +36,17 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     }
 
     /// <summary>
+    /// Creates a new <see cref="DataTypeMember"/> initialized with the specified name and data type.
+    /// </summary>
+    /// <param name="name">The unique name of the member.</param>
+    /// <param name="dataType">The name of the data type of the member.</param>
+    public DataTypeMember(string name, string dataType) : this()
+    {
+        Name = name;
+        DataType = dataType;
+    }
+
+    /// <summary>
     /// The unique name of the <c>Member</c>.
     /// </summary>
     /// <value>A <see cref="string"/> representing the component name. This property is required for valid elements.</value>
@@ -161,51 +172,108 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     public DataType? Parent => GetAncestor<DataType>();
 
     /// <summary>
-    /// Gets the <see cref="Core.DataType"/> component that defines the structure of this <see cref="DataTypeMember"/>.
+    /// Attempts to retrieve the <see cref="DataType"/> definition associated with this member.
     /// </summary>
-    /// <remarks>
-    /// This uses the attached L5X to retrieve the data type component this member references by name. If this member is
-    /// not attached or the L5X does not container the data type reference, this will return a default component with the
-    /// name specified by this member.
-    /// </remarks>
-    public DataType Definition => GetDefinition();
-
-    /// <summary>
-    /// Converts the current instance of <see cref="DataTypeMember"/> to a <see cref="LogixMember"/>.
-    /// </summary>
-    /// <returns>A new instance of <see cref="LogixMember"/> based on the properties of the <see cref="DataTypeMember"/>.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the Name or DataType is null or empty.</exception>
-    public LogixMember ToMember()
+    /// <param name="definition">When this method returns, contains the <see cref="DataType"/> associated with this member if found; otherwise, null.</param>
+    /// <returns>True if the definition is successfully retrieved; otherwise, false.</returns>
+    /// <remarks>Typically, all member types are defined</remarks>
+    public bool TryGetDefinition(out DataType definition)
     {
-        var isArray = Dimension.Length > 0;
-
-        //If the type is registered, we can create the instance using the registered factory.
-        if (LogixType.TryCreate(DataType, out var registered))
+        // If this member has access to the document and can find the definition, return that.
+        if (TryGetDocument(out var doc) && doc.TryGet(DataType, out definition))
         {
-            var value = isArray ? ArrayData.New(registered, Dimension) : registered;
-            return new LogixMember(Name, value);
+            return true;
         }
 
-        //If not, we can try to get the data type definition from the l5X if attached
-        //and use that to recursively build up the complex type.
-        var data = GetDefinition().ToData();
-        var structure = isArray ? ArrayData.New(data, Dimension) : data;
-        return new LogixMember(Name, structure);
+        definition = null!;
+        return false;
     }
 
     /// <summary>
-    /// Attempts to get the <see cref="Core.DataType"/> object that represents this member's type definition.
+    /// Converts this <see cref="DataTypeMember"/> to a <see cref="LogixMember"/> instance with the appropriate
+    /// data type and dimensions.
     /// </summary>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    private DataType GetDefinition()
+    /// <returns>
+    /// A <see cref="LogixMember"/> containing the member name and corresponding data instance.
+    /// The data instance is created based on the member's data type definition and dimension configuration.
+    /// If the type is defined in the current L5X context, uses that definition. If the type is a registered predefined type,
+    /// creates an instance of that type. Otherwise, creates a default <see cref="StructureData"/> instance.
+    /// For members with dimensions, returns an <see cref="ArrayData"/> containing the appropriate data type.
+    /// </returns>
+    public LogixMember ToMember()
     {
-        if (TryGetDocument(out var doc) && doc.TryGet<DataType>(DataType, out var definition))
+        // Typically, a member type will be defined in the current L5X context if available.
+        if (TryGetDefinition(out var definition))
         {
-            return definition;
+            var instance = definition.ToData();
+            return new LogixMember(Name, Dimension.Length > 0 ? ArrayData.New(instance, Dimension) : instance);
         }
 
-        return new DataType(DataType);
+        // See if the type is registered (atomic/predefined or other registered user-defined).
+        if (LogixType.TryCreate(DataType, out var registered))
+        {
+            return new LogixMember(Name, Dimension.Length > 0 ? ArrayData.New(registered, Dimension) : registered);
+        }
+
+        // At this point the definition has to be some custom type that is not available.
+        // Just return a default structure or array based on the member config.
+        var structure = new StructureData(DataType);
+        return new LogixMember(Name, Dimension.Length > 0 ? ArrayData.New(structure, Dimension) : structure);
+    }
+
+    /// <summary>
+    /// Calculates the total size in bytes occupied by this member.
+    /// </summary>
+    /// <returns>
+    /// An <see cref="int"/> representing the size in bytes. Returns 0 for bit members that are backed by hidden members.
+    /// For array members, returns the size of the element type multiplied by the total dimension length.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the member's data type is a complex type that is not defined in the current L5X context
+    /// and cannot be resolved.
+    /// </exception>
+    /// <remarks>
+    /// The calculation logic varies based on the member type:
+    /// <list type="bullet">
+    /// <item>Bit-backed members (those with Target and BitNumber) return 0 as they don't occupy additional space.</item>
+    /// <item>Atomic types (BOOL, SINT, USINT, INT, UINT, DINT, UDINT, REAL, TIME32, LINT, ULINT, LREAL) use predefined sizes (1, 2, 4, or 8 bytes).</item>
+    /// <item>Array members multiply the element type size by the total dimension length.</item>
+    /// <item>Complex (structure) types require their definition to be available to determine size recursively.</item>
+    /// </list>
+    /// </remarks>
+    public int GetSize()
+    {
+        // We need to handle bit members that have a backing member field.
+        if (Target is not null && BitNumber is not null)
+            return 0;
+
+        // If the member is an atomic type, we can determine the size from the type name.
+        if (LogixType.IsAtomic(DataType))
+            return Dimension > 0 ? AtomicSize(DataType) * Dimension : AtomicSize(DataType);
+
+        // This is a complex type. We need the nested definition to know.
+        if (TryGetDefinition(out var definition))
+            return definition.GetSize();
+
+        // If nothing else, see if the type is a predefined or registered type that we can compute the size for.
+        if (LogixType.TryCreate(DataType, out var registered))
+            return registered.GetSize();
+
+        // We can't know the size of an undefined complex type. Report as error instead of silently miscalculating.
+        throw new InvalidOperationException($"Unable to determine size of undefined type {DataType} for member {Name}");
+
+        // Get the size of the atomic type.
+        int AtomicSize(string name)
+        {
+            return name switch
+            {
+                nameof(BOOL) => 0,
+                nameof(SINT) or nameof(USINT) => 1,
+                nameof(INT) or nameof(UINT) => 2,
+                nameof(DINT) or nameof(UDINT) or nameof(REAL) or nameof(TIME32) => 4,
+                _ => 8
+            };
+        }
     }
 
     /// <inheritdoc />

@@ -344,7 +344,7 @@ public sealed class Reference
 
         var schemaIndex = path.IndexOf("://");
         if (schemaIndex <= 0)
-            throw new FormatException($"Invalid reference path '{path}'. Expected format 'Type://[Container/][Routine/]Id[#Fragment]'");
+            throw new FormatException($"Invalid reference path '{path}'. Expected format 'Type://[Container/][Routine/][Id][#Fragment]'");
         
         var typeName = path.Substring(0, schemaIndex);
         if (!ReferenceType.TryParse(typeName, out var type))
@@ -357,7 +357,7 @@ public sealed class Reference
         var pathLength = pathEnd - pathStart;
         var segments = path.Substring(pathStart, pathLength).Split(Slash, StringSplitOptions.RemoveEmptyEntries);
         
-        var id = segments.Last();
+        var id = segments.LastOrDefault() ?? string.Empty;
         var fragment = fragmentIndex > 0 ? path.Substring(fragmentIndex + 1) : null;
 
         var scope = segments.Length switch

@@ -211,6 +211,12 @@ public sealed class Scope
         return levelHash ^ containerHash ^ routineHash;
     }
 
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return Routine is null ? Container : $"{Container}/{Routine}";
+    }
+
     /// <summary>
     /// Gets the default instance of <see cref="Scope"/> representing no specific scope in the Logix system.
     /// </summary>

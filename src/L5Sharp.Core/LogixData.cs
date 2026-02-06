@@ -65,25 +65,13 @@ public abstract class LogixData : LogixElement
     public virtual IEnumerable<LogixMember> Members => [];
 
     /// <summary>
-    /// The size, in bytes, of the LogixData representation.
+    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
+    /// Otherwise, returns <c>null</c>.
     /// </summary>
-    /// <value>An <see cref="int"/> value representing the total memory size of the Logix data object.</value>
-    public virtual int Size => Members.Sum(m => m.Value.Size);
-
-    /// <summary>
-    /// Serializes the current <see cref="LogixData"/> instance into a byte array representation.
-    /// </summary>
-    /// <returns>
-    /// A byte array containing the serialized data from all members of this <see cref="LogixData"/> instance.
-    /// </returns>
-    /// <remarks>
-    /// The default implementation will naively delegate to all nested members recursively to aggregate the bytes for the data type.
-    /// Eventially each atomic type will return the concrete byte data. In most use cases this will work.
-    /// However, Logix will pack contiguous bits (boolean members) into bytes for user-defined types, so if you use this
-    /// method as a means to read/write serialized data to/from real PLC, it might fail or incorrectly update tag buffers.
-    /// My primary use case for this functionality is the internal services and not PLC communication. 
-    /// </remarks>
-    public virtual byte[] ToBytes() => Members.SelectMany(m => m.Value.ToBytes()).ToArray();
+    /// <param name="name">The name of the member to get.</param>
+    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <remarks>This performs a case-insensitive comparison for the member name.</remarks>
+    public LogixMember? GetMember(string name) => Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
 
     /// <summary>
     /// Updates the current instance of the <see cref="LogixData"/> with the data from the specified instance.
@@ -94,7 +82,7 @@ public abstract class LogixData : LogixElement
     /// means through which we mutate data values once they are created. Each deriving type is responsible for implementing
     /// this method as necessary.
     /// </remarks>
-    public abstract void Update(LogixData data);
+    public abstract void UpdateData(LogixData data);
 
     /// <summary>
     /// Updates the current data structure or value using the provided byte array and offset.
@@ -103,62 +91,37 @@ public abstract class LogixData : LogixElement
     /// <param name="offset">The starting index in the byte array from which data will be read.</param>
     /// <returns>The number of bytes processed during the update operation.</returns>
     /// <remarks>
-    /// This method will recurse the member sturcutre and apply bytes to atomic data internally to update
-    /// the underlying data structure. The base method will hanle UDT bit-packing similar to Logix 5K.
+    /// The default implementation will naively delegate to all members recursively.
+    /// Eventually each atomic member will update the underlying value at the current byte segment.
+    /// Note that Logix packs booleans for user-defined types, so if you use this as a means to read/write
+    /// data to/from real PLC, it might fail or incorrectly update tag buffers. Deriving classes can
+    /// override the implementation to correctly map the byte array, or you can use the source generator project
+    /// which will automatically override this method based on the type definition.
     /// </remarks>
-    public virtual int Update(byte[] data, int offset)
+    public virtual int UpdateData(byte[] data, int offset)
     {
-        var bitNumber = 0;
-
         foreach (var member in Members)
         {
-            // Logix packs contiguous booleans into byte chunks, which this code will handle by default.
-            // Any non-standard formatting/layout will need to be handled in derived classes.
-            if (member.Value is BOOL bit)
-            {
-                if (bitNumber == 0) offset++;
-                var bitValue = (data[offset - 1] & (1 << bitNumber)) != 0;
-                bit.Update(bitValue);
-                bitNumber = (bitNumber + 1) % 8;
-                continue;
-            }
-
-            //Reset the bit block when we hit a non-BOOL member.
-            bitNumber = 0;
-
-            // Recurse and update offset to the next position in the array.
-            offset = member.Value.Update(data, offset);
+            offset = member.Value.UpdateData(data, offset);
         }
 
         return offset;
     }
-    
+
     /// <summary>
-    /// Clears the values of all members within the current LogixData instance.
+    /// Resets all member data within the current <see cref="LogixData"/> structure to their default values.
     /// </summary>
     /// <remarks>
-    /// This method iterates through all existing members of the LogixData object
-    /// and invokes the `Clear` method on each member's value, effectively
-    /// resetting all member values.
+    /// This method recursively resets all members to their initial state (typically zero for numeric types,
+    /// false for booleans, empty for strings, etc.). This is useful for clearing data structures before
+    /// reusing them or returning them to a known initial state.
     /// </remarks>
-    public virtual void Clear()
+    public virtual void ResetData()
     {
         foreach (var member in Members)
         {
-            member.Value.Clear();
+            member.Value.ResetData();
         }
-    }
-
-    /// <summary>
-    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
-    /// Otherwise, returns <c>null</c>.
-    /// </summary>
-    /// <param name="name">The name of the member to get.</param>
-    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
-    /// <remarks>This performs a case-insensitive comparison for the member name.</remarks>
-    public LogixMember? Member(string name)
-    {
-        return Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
     }
 
     /// <summary>
@@ -181,6 +144,27 @@ public abstract class LogixData : LogixElement
 
     /// <inheritdoc />
     public override int GetHashCode() => Name.GetHashCode();
+
+    /// <summary>
+    /// The size, in bytes, of the LogixData representation.
+    /// </summary>
+    /// <returns>An <see cref="int"/> value representing the total memory size of the Logix data object.</returns>
+    public virtual int GetSize() => Members.Sum(m => m.Value.GetSize());
+
+    /// <summary>
+    /// Serializes the current <see cref="LogixData"/> instance into a byte array representation.
+    /// </summary>
+    /// <returns>
+    /// A byte array containing the serialized data from all members of this <see cref="LogixData"/> instance.
+    /// </returns>
+    /// <remarks>
+    /// The default implementation will naively delegate to all nested members recursively to aggregate the bytes for the data type.
+    /// Eventually each atomic type will return the realized byte data. In most use cases this will work.
+    /// However, Logix will pack contiguous bits (boolean members) into bytes for user-defined types, so if you use this
+    /// method as a means to read/write serialized data to/from real PLC, it might fail or incorrectly update tag buffers.
+    /// My primary use case for this functionality is the internal services and not PLC communication. 
+    /// </remarks>
+    public virtual byte[] ToBytes() => Members.SelectMany(m => m.Value.ToBytes()).ToArray();
 
     /// <inheritdoc />
     public override string ToString() => Name;

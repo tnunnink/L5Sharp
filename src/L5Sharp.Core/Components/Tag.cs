@@ -459,7 +459,7 @@ public class Tag : LogixComponent<Tag>
             if (tagName is null) throw new ArgumentNullException(nameof(tagName));
             if (tagName.IsEmpty) return this;
 
-            var member = Value.Member(tagName.Base);
+            var member = Value.GetMember(tagName.Base);
 
             if (member is null)
                 throw new ArgumentException(
@@ -525,7 +525,7 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return this;
 
-        var member = Value.Member(tagName.Base);
+        var member = Value.GetMember(tagName.Base);
         if (member is null) return null;
 
         var tag = new Tag(member, this);
@@ -622,7 +622,7 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return Members();
 
-        var member = Value.Member(tagName.Base);
+        var member = Value.GetMember(tagName.Base);
         if (member is null) return [];
 
         var tag = new Tag(member, this);
@@ -663,6 +663,35 @@ public class Tag : LogixComponent<Tag>
     public static Tag New<TData>(TagName tagName) where TData : LogixData, new()
     {
         var tag = new Tag { Name = tagName.LocalPath, Value = new TData() };
+
+        if (tagName.Scope.IsProgram)
+        {
+            var context = new Program(tagName.Scope.Container) { Use = Use.Context };
+            context.Tags.Add(tag);
+        }
+
+        return tag;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Tag"/> instance with the specified name and array dimensions for a strongly typed data value.
+    /// </summary>
+    /// <param name="tagName">The name of the tag to create.</param>
+    /// <param name="dimensions">The <see cref="Dimensions"/> defining the array size and structure.</param>
+    /// <typeparam name="TData">The type of <see cref="LogixData"/> for the array elements. Must have a parameterless constructor.</typeparam>
+    /// <returns>A new <see cref="Tag"/> instance initialized with the specified name and array data type.</returns>
+    /// <remarks>
+    /// <para>
+    /// This factory method creates a tag containing an <see cref="ArrayData{TData}"/> with the specified dimensions.
+    /// </para>
+    /// <para>
+    /// If the <paramref name="tagName"/> contains a program scope, a virtual program container will be created and
+    /// this tag will be added to it to give the new tag instance a valid scope and tag name value.
+    /// </para>
+    /// </remarks>
+    public static Tag New<TData>(TagName tagName, Dimensions dimensions) where TData : LogixData, new()
+    {
+        var tag = new Tag { Name = tagName.LocalPath, Value = new ArrayData<TData>(dimensions) };
 
         if (tagName.Scope.IsProgram)
         {
@@ -746,7 +775,7 @@ public class Tag : LogixComponent<Tag>
         //This is a member tag if we have a parent. Forward to the setter of the LogixMember.
         if (_member is not null)
         {
-            _member.Value.Update(value);
+            _member.Value.UpdateData(value);
             return;
         }
 
@@ -754,14 +783,14 @@ public class Tag : LogixComponent<Tag>
         if (Element.Name.LocalName is L5XName.InAliasTag or L5XName.OutAliasTag)
         {
             var aliasData = GetModuleAliasData();
-            aliasData.Update(value);
+            aliasData.UpdateData(value);
             return;
         }
 
         //If we get here, we should be at the base tag element.
         if (Element.TryGetFormattedData(out var formatted))
         {
-            formatted.Update(value);
+            formatted.UpdateData(value);
             return;
         }
 

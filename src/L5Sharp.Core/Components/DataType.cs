@@ -147,9 +147,10 @@ public class DataType : LogixComponent<DataType>
     /// Removes a member with the specified name from the <see cref="Members"/> collection of the current DataType.
     /// </summary>
     /// <param name="name">The name of the member to be removed.</param>
-    public void RemoveMember(string name)
+    public DataType RemoveMember(string name)
     {
         Members.FirstOrDefault(m => m.Name == name)?.Remove();
+        return this;
     }
 
     /// <summary>
@@ -164,7 +165,7 @@ public class DataType : LogixComponent<DataType>
     /// <exception cref="InvalidOperationException">
     /// Thrown when no member with the specified name is found in the data type.
     /// </exception>
-    public void UpdateMember(string name, Action<DataTypeMember> config)
+    public DataType UpdateMember(string name, Action<DataTypeMember> config)
     {
         if (config is null)
             throw new ArgumentNullException(nameof(config));
@@ -175,6 +176,7 @@ public class DataType : LogixComponent<DataType>
             throw new InvalidOperationException($"No member with name '{name}' is defined for type '{Name}'");
 
         config.Invoke(member);
+        return this;
     }
 
     /// <summary>
@@ -189,7 +191,10 @@ public class DataType : LogixComponent<DataType>
     /// are not resolved, it will default to creating <see cref="StructureData"/> objects with no members
     /// as there is no way to know the structure. 
     /// </remarks>
-    public Tag ToTag(string tagName) => new(tagName, ToData());
+    public Tag ToTag(string tagName)
+    {
+        return new Tag(tagName, ToData());
+    }
 
     /// <summary>
     /// Converts the <see cref="DataType"/> component into a <see cref="LogixData"/> object using the configured
@@ -207,18 +212,31 @@ public class DataType : LogixComponent<DataType>
         //Need to intercept the BIT types and make them booleans.
         if (Name == "BIT") return new BOOL();
 
-        //Try to instantiate the type if registered
+        // Try to instantiate the type if registered. This will cover atomics, predefined, or custom UDTs that are registered.
+        // This way we can create strongly typed class representation instead of default structure or string data.
         if (LogixType.TryCreate(Name, out var registered))
             return registered;
 
-        //We need to handle strings types specifically to match a Logix custom format.
+        // We need to handle strings types specifically to match a Logix custom format.
         if (Family == DataTypeFamily.String)
             return new StringData(Name, string.Empty);
 
-        //Otherwise, we need to build the members using the configured Members collection.
-        var data = new StructureData(Name);
-        var members = Members.Where(m => m.Hidden is not true).Select(m => m.ToMember()).ToList();
-        data.AddMany(members);
-        return data;
+        // Otherwise, we need to build the members using the configured Members collection.
+        var members = Members.Where(m => !m.Hidden).Select(m => m.ToMember()).ToList();
+        return new StructureData(Name, members);
     }
+
+    /// <summary>
+    /// Gets the total size of the <c>DataType</c> in bytes.
+    /// </summary>
+    /// <returns>
+    /// An integer representing the total size in bytes, calculated by summing the sizes of all <see cref="Members"/>.
+    /// </returns>
+    /// <remarks>
+    /// <para>
+    /// This method provides the memory footprint of the data type structure by aggregating
+    /// the sizes of each member. The size calculation is delegated to each member's <c>GetSize</c> method.
+    /// </para>
+    /// </remarks>
+    public int GetSize() => Members.Sum(m => m.GetSize());
 }

@@ -227,59 +227,17 @@ public sealed class L5X
     }
 
     /// <summary>
-    /// Finds an element across the entire L5X with the provided type as a flat collection of objects. 
+    /// Retrieves a collection of <see cref="ILogixEntity"/> objects based on the specified <see cref="ReferenceType"/>.
     /// </summary>
-    /// <param name="type">The type name or element name to retrieve.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects with the provided type name.</returns>
-    /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
-    /// <remarks>
-    /// <para>
-    /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
-    /// specifying the type at runtime as opposed to the generic type but sacrifices the strong type querying of the
-    /// generic counterpart.
-    /// </para>
-    /// <para>
-    /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
-    /// element names for the provided type. This means the query will return all elements that the type supports.
-    /// This is in contrast to something list <see cref="Tags"/>, which just returns controller scoped tags.
-    /// </para>
-    /// </remarks>
-    public IEnumerable<ILogixElement> Query(string type)
-    {
-        if (string.IsNullOrEmpty(type))
-            throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
-
-        return Element.Descendants(type).Select(e => e.Deserialize());
-    }
-
-    /// <summary>
-    /// Finds an element across the entire L5X with the provided type as a flat collection of objects. 
-    /// </summary>
-    /// <param name="type">The type of the element type to retrieve.</param>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing all found objects with the provided type name.</returns>
-    /// <exception cref="ArgumentException"><c>type</c> is null.</exception>
-    /// <remarks>
-    /// <para>
-    /// This method provides a flexible and simple way to query the entire L5X for a specific type. This method allows
-    /// specifying the type at runtime as opposed to the generic type but sacrifices the strong type querying of the
-    /// generic counterpart.
-    /// </para>
-    /// <para>
-    /// Also note that this will call <c>L5XType</c> extension internally which returns all configured
-    /// element names for the provided type. This means the query will return all elements that the type supports.
-    /// This is in contrast to something list <see cref="Tags"/>, which just returns controller scoped tags.
-    /// </para>
-    /// </remarks>
-    public IEnumerable<ILogixElement> Query(Type type)
+    /// <param name="type">The <see cref="ReferenceType"/> that defines the criteria for the query.</param>
+    /// <returns>A collection of <see cref="ILogixEntity"/> objects that match the specified reference type.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="type"/> is null.</exception>
+    public IEnumerable<ILogixEntity> Query(ReferenceType type)
     {
         if (type is null)
-            throw new ArgumentNullException(nameof(type), "Type is required to retrieve elements from the L5X");
+            throw new ArgumentNullException(nameof(type));
 
-        var types = LogixSerializer.NamesFor(type);
-
-        return Element.Descendants()
-            .Where(e => types.Contains(e.Name.LocalName))
-            .Select(e => e.Deserialize());
+        return Element.Descendants(type.Value).Select(e => e.Deserialize<ILogixEntity>());
     }
 
     /// <summary>
