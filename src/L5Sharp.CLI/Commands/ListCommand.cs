@@ -1,25 +1,33 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
 using CliFx.Exceptions;
 using CliFx.Infrastructure;
-using L5Sharp.CLI.Internal;
+using JetBrains.Annotations;
+using L5Sharp.CLI.Abstractions;
+using L5Sharp.CLI.Common;
 using L5Sharp.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace L5Sharp.CLI.Commands;
 
 /// <summary>
-/// Represents a base command for listing components within a Logix project.
+/// Represents a command that queries and lists Logix components from an L5X project file.
+/// Supports filtering, ordering, selecting specific properties, limiting results, and formatting output.
 /// </summary>
-/// <typeparam name="TRecord">The type of the record that represents the output of the listing operation.</typeparam>
-public abstract class ListCommand<TRecord> : ICommand
+[PublicAPI]
+[Command("list", Description = "Lists Logix components from an L5X with optional filtering and formatting.")]
+public class ListCommand(IServiceProvider provider) : LogixCommand
 {
     /// <summary>
-    /// Gets or sets the name filter for the command. This property allows users to specify a pattern
-    /// for filtering records by their names. The filter supports wildcards, such as '*' and '?',
-    /// to match multiple or single characters, respectively.
+    /// Gets or sets the type filter for the command.
     /// </summary>
-    [CommandOption("name", 'n', Description = "Filters records by name (supports wildcards '*' and '?').")]
-    public string? Name { get; init; }
+    [CommandParameter(0, Name = "type", Description = "The type to query (e.g., tag, program, aoi, module, rung).")]
+    public string Type { get; init; } = string.Empty;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [CommandOption("match", 'm', Description = "")]
+    public string? Match { get; init; }
 
     /// <summary>
     /// Gets or sets the expression used to filter items in the command. This property allows users
@@ -30,11 +38,11 @@ public abstract class ListCommand<TRecord> : ICommand
     public string? Where { get; init; }
 
     /// <summary>
-    /// Gets or sets the expression used to filter items in the command. This property allows users
-    /// to define a filtering condition that is applied to the query, enabling more precise control
-    /// over the items to be included in the results.
+    /// Gets or sets the expression used to order items in the command. This property allows users
+    /// to define a sorting condition that is applied to the query results, enabling control
+    /// over the ordering of the items displayed.
     /// </summary>
-    [CommandOption("order-by", 'o', Description = "")]
+    [CommandOption("order", 'o', Description = "Orders items based on the specified property expression.")]
     public string? Order { get; init; }
 
     /// <summary>
@@ -58,30 +66,37 @@ public abstract class ListCommand<TRecord> : ICommand
     /// of the command is formatted and supports options such as table, JSON, CSV, or XML.
     /// </summary>
     [CommandOption("format", 'f', Description = "Command output format [table, xml, json, csv].")]
-    public Format? Format { get; init; } = Internal.Format.Table;
+    public Format Format { get; init; } = Format.Table;
 
     /// <inheritdoc />
-    public async ValueTask ExecuteAsync(IConsole console)
+    public override async ValueTask ExecuteAsync(IConsole console)
     {
+        if (!ReferenceType.TryParse(Type, out var type))
+        {
+            throw new CommandException(
+                $"Invalid type '{Type}'. Valid types are: {string.Join(", ", LogixEnum.Names<ReferenceType>())}",
+                ExitCodes.InvalidType
+            );
+        }
+
         try
         {
-            var project = await console.ReadXmlAsync();
-            var results = ExecuteQuery(project);
-            console.Write(results, Format, Select);
+            var project = await ReadProject(console);
+
+            var elements = project.Query(type)
+                //.FilterByPattern(x => x.Name, Name)
+                //.FilterByPattern(Match)
+                .FilterByExpression(Where)
+                .Take(Take);
+            //todo order by;
+
+            var renderer = provider.GetRequiredKeyedService<IElementRenderer>(Format);
+            var output = renderer.Render(elements, Select);
+            console.Ansi().Write(output);
         }
         catch (Exception e)
         {
             throw new CommandException($"Command Failed: {e.Message}", ExitCodes.InternalError);
         }
     }
-
-    /// <summary>
-    /// Executes a query against the specified Logix project and retrieves a collection of records
-    /// matching the defined criteria.
-    /// </summary>
-    /// <param name="project">The target Logix project to query.</param>
-    /// <returns>
-    /// A collection of records of type <typeparamref name="TRecord"/> that satisfy the query conditions.
-    /// </returns>
-    protected abstract IEnumerable<TRecord> ExecuteQuery(L5X project);
 }

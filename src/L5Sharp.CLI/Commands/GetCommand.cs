@@ -1,24 +1,35 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
+using CliFx.Exceptions;
 using CliFx.Infrastructure;
-using L5Sharp.CLI.Internal;
-using L5Sharp.Core;
+using JetBrains.Annotations;
+using L5Sharp.CLI.Abstractions;
+using L5Sharp.CLI.Common;
+using L5Sharp.CLI.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace L5Sharp.CLI.Commands;
 
 /// <summary>
-/// Represents a base command to retrieve information about a specific Logix component based on its name
-/// and output the result in a specified format.
+/// Represents the command to retrieve a specific reference from a Logix project and display it in the desired format.
 /// </summary>
-/// <typeparam name="TComponent">The type of the Logix component to retrieve, inheriting from <see cref="ILogixComponent"/>.</typeparam>
-public abstract class GetCommand<TComponent> : ICommand where TComponent : LogixComponent<TComponent>
+/// <remarks>
+/// The <c>GetCommand</c> allows users to extract data from a Logix project by specifying a reference name.
+/// The output format and property selection can be customized using additional options.
+/// </remarks>
+/// <example>
+/// This command is primarily used in CLI tools for interacting with Logix projects, facilitating easy data extraction and visualization.
+/// </example>
+[PublicAPI]
+[Command("get", Description = "")]
+public class GetCommand(IServiceProvider provider) : LogixCommand
 {
     /// <summary>
-    /// Gets or initializes the name of the Logix component to retrieve. This property is used as a key to
-    /// identify the specific component within the project to be processed by the command.
+    /// Gets or sets the hierarchical path to the specific reference within the Logix project.
+    /// This property specifies the unique identifier or navigation path to locate the target object
+    /// that the command should process or retrieve.
     /// </summary>
-    [CommandParameter(0, Name = "name", Description = "")]
-    public string Name { get; init; } = string.Empty;
+    [CommandParameter(0, Name = "path", Description = "")]
+    public string Path { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the property names to include in the command output. This property allows
@@ -33,13 +44,25 @@ public abstract class GetCommand<TComponent> : ICommand where TComponent : Logix
     /// of the command is formatted and supports options such as table, JSON, CSV, or XML.
     /// </summary>
     [CommandOption("format", 'f', Description = "Command output format [table, xml, json, csv].")]
-    public Format? Format { get; init; } = Internal.Format.Table;
+    public Format Format { get; init; } = Format.Table;
 
     /// <inheritdoc />
-    public async ValueTask ExecuteAsync(IConsole console)
+    public override async ValueTask ExecuteAsync(IConsole console)
     {
-        var project = await console.ReadXmlAsync();
-        var result = project.Get<TComponent>(Name).ToInfo();
-        console.Write(result, Format, Select);
+        try
+        {
+            var project = await ReadProject(console);
+
+            if (!project.TryGet(Path, out var entity))
+                throw new CommandException($"No item found at path: {Path}", ExitCodes.NotFound);
+
+            var renderer = provider.GetRequiredKeyedService<IElementRenderer>(Format);
+            var output = renderer.Render(entity, Select);
+            console.Write(output);
+        }
+        catch (Exception e)
+        {
+            throw new CommandException($"Command Failed: {e.Message}", ExitCodes.InternalError);
+        }
     }
 }

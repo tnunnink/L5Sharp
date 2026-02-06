@@ -1,6 +1,6 @@
 ﻿using CliFx.Attributes;
 using CliFx.Exceptions;
-using L5Sharp.CLI.Internal;
+using L5Sharp.CLI.Common;
 using L5Sharp.Core;
 
 namespace L5Sharp.CLI.Commands;
@@ -21,24 +21,26 @@ namespace L5Sharp.CLI.Commands;
 /// </remarks>
 public abstract class CloneCommand<TComponent> : MutateCommand where TComponent : LogixComponent<TComponent>
 {
-    [CommandParameter(0, Name = "source", Description = "")]
-    public string Source { get; init; } = string.Empty;
+    [CommandParameter(0, Name = "from", Description = "")]
+    public string From { get; init; } = string.Empty;
 
-    [CommandParameter(1, Name = "target", Description = "")]
-    public string Target { get; init; } = string.Empty;
+    [CommandParameter(1, Name = "to", Description = "")]
+    public string To { get; init; } = string.Empty;
 
     protected override void Mutate(L5X project)
     {
-        if (project.Contains(Reference.To<TComponent>(Target)))
+        if (project.Contains(Reference.To<TComponent>(To)))
             throw new CommandException(
-                $"Project already contains {typeof(TComponent).Name}: '{Target}'",
-                ExitCodes.ComponentNotFound
+                $"Project already contains {typeof(TComponent).Name}: '{To}'",
+                ExitCodes.NotFound
             );
 
-        if (!project.TryGet<TComponent>(Source, out var source))
-            throw new CommandException("");
+        if (!project.TryGet<TComponent>(From, out var source))
+            throw new CommandException(
+                $"Project does contain {typeof(TComponent).Name}: '{From}'",
+                ExitCodes.NotFound);
 
         //This will create/configure/add to the current project.
-        source.Duplicate(c => c.Name = Target);
+        source.Duplicate(c => c.Name = To);
     }
 }

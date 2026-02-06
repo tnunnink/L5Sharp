@@ -1,8 +1,6 @@
-﻿using CliFx;
-using CliFx.Attributes;
-using CliFx.Exceptions;
+﻿using CliFx.Exceptions;
 using CliFx.Infrastructure;
-using L5Sharp.CLI.Internal;
+using L5Sharp.CLI.Common;
 using L5Sharp.Core;
 
 namespace L5Sharp.CLI.Commands;
@@ -15,16 +13,16 @@ namespace L5Sharp.CLI.Commands;
 /// modifications or additions, and then writes the modified project back.
 /// Derived classes must implement the <see cref="Mutate"/> method to define the specific mutation logic.
 /// </remarks>
-public abstract class MutateCommand : ICommand
+public abstract class MutateCommand : LogixCommand
 {
     /// <inheritdoc />
-    public async ValueTask ExecuteAsync(IConsole console)
+    public override async ValueTask ExecuteAsync(IConsole console)
     {
         try
         {
-            var project = await console.ReadXmlAsync();
+            var project = await ReadProject(console);
             Mutate(project);
-            console.WriteXml(project);
+            WriteProject(console, project);
         }
         catch (Exception e)
         {

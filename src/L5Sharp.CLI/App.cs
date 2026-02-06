@@ -1,5 +1,6 @@
 ﻿using CliFx;
 using CliFx.Infrastructure;
+using L5Sharp.CLI.Common;
 
 namespace L5Sharp.CLI;
 
@@ -13,6 +14,7 @@ public static class App
             .SetExecutableName("logix")
             .UseConsole(new SystemConsole())
             .AddCommandsFromThisAssembly()
+            .AddLogixServices()
             .Build()
             .RunAsync();
     }
