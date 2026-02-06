@@ -12,16 +12,15 @@
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
         <Title>L5Sharp.Generators.Data</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>1.0.1.0</Version>
-        <AssemblyVersion>1.0.1.0</AssemblyVersion>
-        <AssemblyFileVersion>1.0.1.0</AssemblyFileVersion>
+        <Version>2.0.0</Version>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
         <Description>Includes source generators for automatically generating user defined data types from L5X projects.</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="L5Sharp" Version="6.0.0-beta.7" GeneratePathProperty="true" PrivateAssets="all" />
+        <!--<PackageReference Include="L5Sharp" Version="6.0.0-beta.7" GeneratePathProperty="true" PrivateAssets="all" />-->
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all"/>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,27 +28,41 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\L5Sharp.Core\L5Sharp.Core.csproj" OutputItemType="Analyzer"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
-        <None Include="$(PkgL5Sharp)\lib\netstandard2.0\L5Sharp.Core.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="$(TargetDir)L5Sharp.Core.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
     </ItemGroup>
 
     <PropertyGroup>
         <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
     </PropertyGroup>
 
+    <Target Name="CopyAnalyzerDependencies" AfterTargets="Build">
+        <ItemGroup>
+            <_AnalyzerDeps Include="@(ResolvedProjectReferencePaths)"
+                           Condition="'%(ResolvedProjectReferencePaths.Filename)%(ResolvedProjectReferencePaths.Extension)' == 'L5Sharp.Core.dll'"/>
+        </ItemGroup>
+
+        <Copy SourceFiles="@(_AnalyzerDeps)"
+              DestinationFolder="$(TargetDir)"
+              SkipUnchangedFiles="true"
+              Condition="'@(_AnalyzerDeps)' != ''"/>
+    </Target>
+
     <Target Name="GetDependencyTargetPaths">
         <ItemGroup>
-            <TargetPathWithTargetPlatformMoniker Include="$(PkgL5Sharp)\lib\netstandard2.0\L5Sharp.Core.dll" IncludeRuntimeDependency="false"/>
+            <TargetPathWithTargetPlatformMoniker
+                    Include="$(TargetDir)L5Sharp.Core.dll"
+                    IncludeRuntimeDependency="false"
+                    Condition="Exists('$(TargetDir)L5Sharp.Core.dll')"/>
         </ItemGroup>
     </Target>
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
-      <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
     </ItemGroup>
 
 </Project>

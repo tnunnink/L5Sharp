@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using L5Sharp.Core;
 
@@ -68,6 +69,43 @@ internal record LogixTypeInfo(
     }
 
     /// <summary>
+    /// Computes the memory offset for the current data type, taking into account its members and their alignments.
+    /// </summary>
+    /// <param name="context">
+    /// A dictionary containing metadata for various Logix data types, where the key is the data type name
+    /// and the value is its corresponding <see cref="LogixTypeInfo"/> instance.
+    /// </param>
+    /// <param name="alignment">
+    /// An output parameter representing the alignment requirement of the current data type,
+    /// as calculated based on its members.
+    /// </param>
+    /// <returns>
+    /// The total memory offset, adjusted for the computed alignment.
+    /// </returns>
+    public int ComputeSize(Dictionary<string, LogixTypeInfo> context, out int alignment)
+    {
+        var size = 0;
+        var bitNumber = 0;
+        alignment = 4;
+
+        foreach (var member in Members)
+        {
+            // We have to handle non-array boolean members without backing fields.
+            if (member is { Target: null, DataType: nameof(BOOL), Dimension: 0 })
+            {
+                if (bitNumber == 0) size++;
+                bitNumber = (bitNumber + 1) % 8;
+                continue;
+            }
+
+            size += member.ComputeSize(context, out var memberAlign);
+            alignment = Math.Max(alignment, memberAlign);
+        }
+
+        return (size + alignment - 1) & ~(alignment - 1);
+    }
+
+    /// <summary>
     /// Generates the source code for the Logix type based on the provided namespace and context information.
     /// </summary>
     /// <param name="nameSpace">
@@ -83,7 +121,7 @@ internal record LogixTypeInfo(
     {
         nameSpace ??= DefaultNameSpace;
         var derivedType = Family == DataTypeFamily.String ? "StringData" : "StructureData";
-        var implementation = Family == DataTypeFamily.String ? GenerateStringClass() : GenerateStandardClass();
+        var implementation = Family == DataTypeFamily.String ? GenerateStringClass() : GenerateStandardClass(context);
         var remarks = GetClassRemarks(Description);
 
         return
@@ -137,7 +175,7 @@ internal record LogixTypeInfo(
     /// A string containing the source code for the standard class implementation
     /// based on the associated Logix data type.
     /// </returns>
-    private string GenerateStandardClass()
+    private string GenerateStandardClass(Dictionary<string, LogixTypeInfo> context)
     {
         return
             $$"""
@@ -155,6 +193,22 @@ internal record LogixTypeInfo(
                   public {{TypeName}}(XElement element) : base(element)
                   {
                   }
+                  
+                  /// <inheritdoc />
+                  /// <remarks>
+                  /// This value was generated based on the type definition exported from Studio 5k.
+                  /// </remarks>
+                  public override int GetSize() => {{ComputeSize(context, out _)}};
+                  
+                  /// <inheritdoc />
+                  /// <remarks>
+                  /// This mapping was generated based on the type definition exported from Studio 5K.
+                  /// </remarks>
+                  public override int UpdateData(byte[] data, int offset)
+                  {
+                      {{Members.GenerateUpdateOverride(context)}}
+                      return offset + GetSize();
+                  }
 
               {{Members.GenerateProperties()}}
               """;
@@ -169,7 +223,7 @@ internal record LogixTypeInfo(
     private string GenerateStringClass()
     {
         var capacity = Members.SingleOrDefault(m => m.Name == "DATA")?.Dimension ?? 0;
-        
+
         return
             $$"""
                   /// <summary>
@@ -194,7 +248,21 @@ internal record LogixTypeInfo(
                   }
 
                   /// <inheritdoc />
-                  public override int Capacity => {{capacity}};
+                  protected override int Capacity => {{capacity}};
+                  
+                  /// <summary>
+                  /// Defines an implicit conversion to a native <c>string</c> type.
+                  /// </summary>
+                  /// <param name="value">The instance to be converted.</param>
+                  /// <returns>A <see cref="string"/> representation of the value.</returns>
+                  public static implicit operator string({{TypeName}} value) => value.ToString();
+                  
+                  /// <summary>
+                  /// Defines an implicit conversion from a native <c>string</c> type.
+                  /// </summary>
+                  /// <param name="value">The instance to be converted.</param>
+                  /// <returns>A <see cref="{{TypeName}}"/> representation of the value.</returns>
+                  public static implicit operator {{TypeName}}(string value) => new(value);
               """;
     }
 }

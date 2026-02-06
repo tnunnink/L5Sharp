@@ -79,7 +79,9 @@ public class LogixDataGenerator : IIncrementalGenerator
                 {
                     if (types.ContainsKey(t.Name))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, t.Name));
+                        context.ReportDiagnostic(
+                            Diagnostic.Create(DiagnosticDescriptors.DuplicateTypeWarning, Location.None, t.Name)
+                        );
                         return;
                     }
 
@@ -93,7 +95,9 @@ public class LogixDataGenerator : IIncrementalGenerator
                 {
                     if (types.ContainsKey(t.Name))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(DuplicateTypeWarning, Location.None, t.Name));
+                        context.ReportDiagnostic(
+                            Diagnostic.Create(DiagnosticDescriptors.DuplicateTypeWarning, Location.None, t.Name)
+                        );
                         return;
                     }
 
@@ -129,7 +133,9 @@ public class LogixDataGenerator : IIncrementalGenerator
         }
         catch (Exception e)
         {
-            context.ReportDiagnostic(Diagnostic.Create(L5XParseWarning, Location.None, project.Path, e.Message));
+            context.ReportDiagnostic(
+                Diagnostic.Create(DiagnosticDescriptors.L5XParseWarning, Location.None, project.Path, e.Message)
+            );
             content = null!;
             return false;
         }
@@ -211,21 +217,4 @@ public class LogixDataGenerator : IIncrementalGenerator
             return new Project(file.Path, content?.ToString());
         }
     }
-
-    private static readonly DiagnosticDescriptor L5XParseWarning = new(
-        id: "L5G001",
-        title: "Failed to parse L5X file",
-        messageFormat: "Could not parse L5X file '{0}': {1}",
-        category: "L5Sharp.Generation",
-        DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
-
-    private static readonly DiagnosticDescriptor DuplicateTypeWarning = new(
-        id: "L5G002",
-        title: "Duplicate Logix Type",
-        messageFormat:
-        "The type '{0}' was found in multiple L5X files. The first definition found will be used, and others will be ignored.",
-        category: "L5Sharp.Generation",
-        DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
 }
