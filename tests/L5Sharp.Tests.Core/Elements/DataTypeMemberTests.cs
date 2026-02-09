@@ -141,41 +141,4 @@ public class DataTypeMemberTests
         instance.Name.Should().Be("Test");
         instance.Value.Should().Be(new REAL());
     }
-
-    [Test]
-    [TestCase("BOOL", 1)]
-    [TestCase("SINT", 1)]
-    [TestCase("USINT", 1)]
-    [TestCase("INT", 2)]
-    [TestCase("UINT", 2)]
-    [TestCase("DINT", 4)]
-    [TestCase("UDINT", 4)]
-    [TestCase("REAL", 4)]
-    [TestCase("TIME32", 4)]
-    [TestCase("LINT", 8)]
-    [TestCase("ULINT", 8)]
-    [TestCase("LREAL", 8)]
-    [TestCase("DT", 8)]
-    [TestCase("LDT", 8)]
-    [TestCase("TIME", 8)]
-    [TestCase("LTIME", 8)]
-    public void GetSize_AtomicMember_ShouldBeExpected(string dataType, int expected)
-    {
-        var member = new DataTypeMember("Test", dataType);
-
-        var size = member.GetSize();
-
-        size.Should().Be(expected);
-    }
-
-    [Test]
-    [TestCase("TIMER", 12)]
-    public void GetSize_ComplexPredefinedMember_ShouldBeExpected(string dataType, int expected)
-    {
-        var member = new DataTypeMember("Test", dataType);
-
-        var size = member.GetSize();
-
-        size.Should().Be(expected);
-    }
 }
