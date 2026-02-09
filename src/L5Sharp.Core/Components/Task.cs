@@ -141,8 +141,13 @@ public sealed class Task : LogixComponent<Task>
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the event information configuration for this task.
     /// </summary>
+    /// <value>An <see cref="Core.EventInfo"/> object containing event configuration details, or <c>null</c> if not an event task.</value>
+    /// <remarks>
+    /// This property is only applicable when <see cref="Type"/> is <see cref="TaskType.Event"/>.
+    /// For Continuous and Periodic tasks, this value will typically be <c>null</c>.
+    /// </remarks>
     public EventInfo? EventInfo
     {
         get => GetComplex<EventInfo>();

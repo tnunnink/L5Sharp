@@ -257,24 +257,33 @@ public static class LogixType
     }
 
     /// <summary>
-    /// Retrieves the size in bytes of the specified atomic data type.
+    /// Calculates and returns the size in bytes of the specified Logix data type.
+    /// For atomic types, returns the predefined size without creating an instance.
+    /// For complex types, creates an instance and calculates its size.
     /// </summary>
-    /// <param name="atomicType">The name of the atomic data type for which to retrieve the size.</param>
-    /// <returns>The size in bytes of the specified atomic data type. BOOL returns 0 as it uses bit-level storage.</returns>
-    /// <exception cref="ArgumentException">Thrown when the specified type is not a registered atomic data type.</exception>
-    public static int SizeOf(string atomicType)
+    /// <param name="dataType">The name of the Logix data type for which to calculate the size.</param>
+    /// <returns>The size in bytes of the specified data type.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the specified data type is not registered in the system.</exception>
+    public static int SizeOf(string dataType)
     {
-        if (!Atomics.Contains(atomicType.ToUpper()))
-            throw new ArgumentException($"The specified type '{atomicType}' is not a registered atomic data type.");
-        
-        return atomicType switch
+        // compute atomic size from name to avoid creating the type instance.
+        if (Atomics.Contains(dataType.ToUpper()))
         {
-            nameof(BOOL) => 0,
-            nameof(SINT) or nameof(USINT) => 1,
-            nameof(INT) or nameof(UINT) => 2,
-            nameof(DINT) or nameof(UDINT) or nameof(REAL) or nameof(TIME32) => 4,
-            _ => 8
-        };
+            return dataType switch
+            {
+                nameof(BOOL) or nameof(SINT) or nameof(USINT) => 1,
+                nameof(INT) or nameof(UINT) => 2,
+                nameof(DINT) or nameof(UDINT) or nameof(REAL) or nameof(TIME32) => 4,
+                _ => 8
+            };
+        }
+
+        if (Factories.TryGetValue(dataType, out var factory))
+        {
+            return factory().GetSize();
+        }
+
+        throw new InvalidOperationException($"No registered type found for '{dataType}'");
     }
 
     /// <summary>

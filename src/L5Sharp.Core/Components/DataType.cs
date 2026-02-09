@@ -225,18 +225,4 @@ public class DataType : LogixComponent<DataType>
         var members = Members.Where(m => !m.Hidden).Select(m => m.ToMember()).ToList();
         return new StructureData(Name, members);
     }
-
-    /// <summary>
-    /// Gets the total size of the <c>DataType</c> in bytes.
-    /// </summary>
-    /// <returns>
-    /// An integer representing the total size in bytes, calculated by summing the sizes of all <see cref="Members"/>.
-    /// </returns>
-    /// <remarks>
-    /// <para>
-    /// This method provides the memory footprint of the data type structure by aggregating
-    /// the sizes of each member. The size calculation is delegated to each member's <c>GetSize</c> method.
-    /// </para>
-    /// </remarks>
-    public int GetSize() => Members.Sum(m => m.GetSize());
 }

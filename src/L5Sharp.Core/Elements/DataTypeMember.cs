@@ -221,61 +221,6 @@ public class DataTypeMember : LogixObject<DataTypeMember>
         return new LogixMember(Name, Dimension.Length > 0 ? ArrayData.New(structure, Dimension) : structure);
     }
 
-    /// <summary>
-    /// Calculates the total size in bytes occupied by this member.
-    /// </summary>
-    /// <returns>
-    /// An <see cref="int"/> representing the size in bytes. Returns 0 for bit members that are backed by hidden members.
-    /// For array members, returns the size of the element type multiplied by the total dimension length.
-    /// </returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when the member's data type is a complex type that is not defined in the current L5X context
-    /// and cannot be resolved.
-    /// </exception>
-    /// <remarks>
-    /// The calculation logic varies based on the member type:
-    /// <list type="bullet">
-    /// <item>Bit-backed members (those with Target and BitNumber) return 0 as they don't occupy additional space.</item>
-    /// <item>Atomic types (BOOL, SINT, USINT, INT, UINT, DINT, UDINT, REAL, TIME32, LINT, ULINT, LREAL) use predefined sizes (1, 2, 4, or 8 bytes).</item>
-    /// <item>Array members multiply the element type size by the total dimension length.</item>
-    /// <item>Complex (structure) types require their definition to be available to determine size recursively.</item>
-    /// </list>
-    /// </remarks>
-    public int GetSize()
-    {
-        // We need to handle bit members that have a backing member field.
-        if (Target is not null && BitNumber is not null)
-            return 0;
-
-        // If the member is an atomic type, we can determine the size from the type name.
-        if (LogixType.IsAtomic(DataType))
-            return Dimension > 0 ? AtomicSize(DataType) * Dimension : AtomicSize(DataType);
-
-        // This is a complex type. We need the nested definition to know.
-        if (TryGetDefinition(out var definition))
-            return definition.GetSize();
-
-        // If nothing else, see if the type is a predefined or registered type that we can compute the size for.
-        if (LogixType.TryCreate(DataType, out var registered))
-            return registered.GetSize();
-
-        // We can't know the size of an undefined complex type. Report as error instead of silently miscalculating.
-        throw new InvalidOperationException($"Unable to determine size of undefined type {DataType} for member {Name}");
-
-        // Get the size of the atomic type.
-        int AtomicSize(string name)
-        {
-            return name switch
-            {
-                nameof(BOOL) => 0,
-                nameof(SINT) or nameof(USINT) => 1,
-                nameof(INT) or nameof(UINT) => 2,
-                nameof(DINT) or nameof(UDINT) or nameof(REAL) or nameof(TIME32) => 4,
-                _ => 8
-            };
-        }
-    }
-
     /// <inheritdoc />
     public override string ToString() => Name;
 }

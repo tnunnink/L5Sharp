@@ -61,7 +61,7 @@ internal record LogixMemberInfo(
     public static LogixMemberInfo From(Parameter parameter)
     {
         return new LogixMemberInfo(
-            parameter.Instruction?.Name.SanitizeName() ?? "StructureData",
+            parameter.Parent?.Name.SanitizeName() ?? "StructureData",
             parameter.Name,
             parameter.DataType.SanitizeName(),
             parameter.Dimension.Length,

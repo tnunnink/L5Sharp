@@ -151,7 +151,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public TagType? TagType
     {
-        get => GetValue(TagType.Parse);
+        get => GetValue(TagType.Parse); 
         set => SetValue(value);
     }
 
@@ -221,7 +221,7 @@ public class Parameter : LogixObject<Parameter>
     /// This property navigates the hierarchy to find the nearest ancestor of type <see cref="AddOnInstruction"/>,
     /// or returns null if no such ancestor exists.
     /// </summary>
-    public AddOnInstruction? Instruction => GetAncestor<AddOnInstruction>();
+    public AddOnInstruction? Parent => GetAncestor<AddOnInstruction>();
 
     /// <summary>
     /// Represents the associated alias of the parameter if one is defined.
