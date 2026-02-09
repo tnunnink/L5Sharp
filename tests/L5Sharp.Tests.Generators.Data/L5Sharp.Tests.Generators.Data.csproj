@@ -28,7 +28,6 @@
         <!--<AdditionalFiles Include="Files\Empty.L5X"/>-->
         <!--<AdditionalFiles Include="Files\Definitions.L5X"/>-->
         <!--<AdditionalFiles Include="C:\Users\tnunnink\Documents\Rockwell\Template.L5X"/>-->
-        <AdditionalFiles Include="C:\Users\tnunnink\Documents\Rockwell\Butane_SE_Template.L5X"/>
     </ItemGroup>
 
 
