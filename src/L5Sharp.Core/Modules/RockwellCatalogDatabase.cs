@@ -146,36 +146,6 @@ public class RockwellCatalogDatabase : IModuleCatalog
     }
 
     /// <inheritdoc />
-    public IEnumerable<ModuleDefinition> FindBy(params ModuleCategory[] categories)
-    {
-        if (categories is null)
-            throw new ArgumentNullException(nameof(categories));
-
-        var database = LoadDatabaseFile();
-        var searchSet = new HashSet<string>(categories.Select(c => c.Value));
-
-        var devices = database
-            .Descendants(RaDevice)
-            .Where(e =>
-            {
-                if (searchSet.Count == 0) return true;
-
-                var values = e.Element("Categories")?
-                    .Elements("Category")
-                    .Select(c => c?.Attribute("Name")?.Value)
-                    .Where(v => v is not null)
-                    .Cast<string>();
-
-                if (values is null) return false;
-
-                var deviceSet = new HashSet<string>(values);
-                return searchSet.IsSubsetOf(deviceSet);
-            });
-
-        return devices.SelectMany(GenerateDefinitionsFromDevice);
-    }
-
-    /// <inheritdoc />
     public IEnumerable<ModuleDefinition> FindWhere(Func<ModuleDefinition, bool> predicate)
     {
         if (predicate is null)

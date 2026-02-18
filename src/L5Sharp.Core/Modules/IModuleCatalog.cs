@@ -62,17 +62,6 @@ public interface IModuleCatalog
     bool TryFindLatest(string catalogNumber, out ModuleDefinition definition);
 
     /// <summary>
-    /// Retrieves a collection of <see cref="ModuleDefinition"/> objects that belong to the
-    /// specified <see cref="ModuleCategory"/>.
-    /// </summary>
-    /// <param name="categories">The <see cref="ModuleCategory"/> used to filter the module definitions.</param>
-    /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of type <see cref="ModuleDefinition"/> containing all module definitions
-    /// that match the specified category.
-    /// </returns>
-    IEnumerable<ModuleDefinition> FindBy(params ModuleCategory[] categories);
-
-    /// <summary>
     /// Finds and returns module definitions that satisfy the specified predicate.
     /// </summary>
     /// <param name="predicate">A function that defines the criteria to filter <see cref="ModuleDefinition"/> objects.</param>

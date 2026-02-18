@@ -342,57 +342,6 @@
         </Rung>
       </RLLContent>
     </Routine>
-    <Routine Name="SFC" Type="SFC">
-      <SFCContent SheetSize="Letter - 8.5 x 11 in" SheetOrientation="Landscape" StepName="Step" TransitionName="Tran" ActionName="Action" StopName="Stop">
-        <Step ID="0" X="200" Y="100" Operand="Step_001" HideDesc="false" DescX="240" DescY="80" DescWidth="0" InitialStep="true" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true">
-          <Action ID="1" Operand="Action_000" Qualifier="NonStored" IsBoolean="false" PresetUsesExpr="false">
-            <Body>
-              <STContent>
-                <Line Number="0"><![CDATA[]]></Line>
-              </STContent>
-            </Body>
-          </Action>
-        </Step>
-        <Step ID="2" X="700" Y="120" Operand="Step_002" HideDesc="false" DescX="740" DescY="100" DescWidth="0" InitialStep="false" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true" />
-        <Step ID="3" X="420" Y="380" Operand="Step_003" HideDesc="false" DescX="460" DescY="360" DescWidth="0" InitialStep="false" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true" />
-        <Step ID="4" X="520" Y="380" Operand="Step_004" HideDesc="false" DescX="560" DescY="360" DescWidth="0" InitialStep="false" PresetUsesExpr="false" LimitHighUsesExpr="false" LimitLowUsesExpr="false" ShowActions="true" />
-        <Transition ID="5" X="200" Y="180" Operand="Tran_001" HideDesc="false" DescX="260" DescY="160" DescWidth="0">
-          <Condition>
-            <STContent>
-              <Line Number="0"><![CDATA[SimpleBool := TempComplexTag.SimpleMember.BoolMember;]]></Line>
-            </STContent>
-          </Condition>
-        </Transition>
-        <Transition ID="6" X="700" Y="200" Operand="Tran_002" HideDesc="false" DescX="760" DescY="180" DescWidth="0">
-          <Condition>
-            <STContent>
-              <Line Number="0"><![CDATA[]]></Line>
-            </STContent>
-          </Condition>
-        </Transition>
-        <Branch ID="7" Y="278" BranchType="Simultaneous" BranchFlow="Diverge">
-          <Leg ID="8" />
-          <Leg ID="9" />
-        </Branch>
-        <Branch ID="10" Y="300" BranchType="Selection" BranchFlow="Converge">
-          <Leg ID="11" />
-          <Leg ID="12" />
-        </Branch>
-        <Branch ID="13" Y="340" BranchType="Simultaneous" BranchFlow="Diverge">
-          <Leg ID="14" />
-          <Leg ID="15" />
-        </Branch>
-        <Stop ID="16" X="760" Y="380" Operand="Stop_000" HideDesc="false" DescX="840" DescY="360" DescWidth="0" />
-        <DirectedLink FromID="0" ToID="5" Show="true" />
-        <DirectedLink FromID="2" ToID="6" Show="true" />
-        <DirectedLink FromID="5" ToID="11" Show="true" />
-        <DirectedLink FromID="6" ToID="7" Show="true" />
-        <DirectedLink FromID="8" ToID="12" Show="true" />
-        <DirectedLink FromID="9" ToID="16" Show="true" />
-        <DirectedLink FromID="14" ToID="4" Show="true" />
-        <DirectedLink FromID="15" ToID="3" Show="true" />
-      </SFCContent>
-    </Routine>
     <Routine Name="ST" Type="ST">
       <STContent>
         <Line Number="0"><![CDATA[SimpleBool := TempComplexTag.SimpleMember.BoolMember;]]></Line>

@@ -306,6 +306,7 @@ public sealed class Dimensions
         {
             Dimensions other => X == other.X && Y == other.Y && Z == other.Z,
             string text => text.Equals(ToString()) || text.Equals(ToIndex()),
+            int number => Length == number,
             _ => false
         };
     }

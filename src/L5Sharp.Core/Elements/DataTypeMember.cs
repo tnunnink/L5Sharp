@@ -215,6 +215,12 @@ public class DataTypeMember : LogixObject<DataTypeMember>
             return new LogixMember(Name, Dimension.Length > 0 ? ArrayData.New(registered, Dimension) : registered);
         }
 
+        // Handle the BIT member case. We should just return a BOOL member
+        if (DataType == "BIT")
+        {
+            return new LogixMember(Name, Dimension.Length > 0 ? ArrayData.New(new BOOL(), Dimension) : new BOOL());
+        }
+
         // At this point the definition has to be some custom type that is not available.
         // Just return a default structure or array based on the member config.
         var structure = new StructureData(DataType);

@@ -307,14 +307,13 @@ public static class ContainerExtensions
     }
 
     /// <summary>
-    /// Applies an update action to each element in the collection and returns the modified elements.
+    /// Updates each element in the collection by invoking the specified update action.
     /// </summary>
-    /// <param name="elements">The collection of elements to update.</param>
-    /// <param name="update">The action to apply to each element.</param>
-    /// <typeparam name="TElement">The type of elements in the collection, constrained to <see cref="ILogixElement"/>.</typeparam>
-    /// <returns>An <see cref="IEnumerable{TElement}"/> containing the updated elements.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="update"/> is null.</exception>
-    public static IEnumerable<TElement> Update<TElement>(this IEnumerable<TElement> elements, Action<TElement> update)
+    /// <typeparam name="TElement">The type of elements in the collection, which must implement <see cref="ILogixElement"/>.</typeparam>
+    /// <param name="elements">The collection of elements to be updated.</param>
+    /// <param name="update">The action to apply to each element in the collection.</param>
+    /// <exception cref="ArgumentNullException"><c>update</c> is null.</exception>
+    public static void Update<TElement>(this IEnumerable<TElement> elements, Action<TElement> update)
         where TElement : ILogixElement
     {
         if (update is null)
@@ -323,21 +322,18 @@ public static class ContainerExtensions
         foreach (var element in elements)
         {
             update.Invoke(element);
-            yield return element;
         }
     }
 
     /// <summary>
-    /// Applies an update action to elements in the collection that satisfy the specified condition and returns all elements.
+    /// Updates elements in the collection that satisfy the specified condition by applying the provided update action.
     /// </summary>
-    /// <param name="elements">The collection of elements to update.</param>
-    /// <param name="update">The action to apply to elements that meet the condition.</param>
-    /// <param name="condition">The predicate used to filter elements for updating.</param>
-    /// <typeparam name="TElement">The type of elements in the collection, constrained to <see cref="ILogixElement"/>.</typeparam>
-    /// <returns>An <see cref="IEnumerable{TElement}"/> containing all elements, with updates applied to those matching the condition.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="update"/> is null.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="condition"/> is null.</exception>
-    public static IEnumerable<TElement> Update<TElement>(this IEnumerable<TElement> elements, 
+    /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
+    /// <param name="elements">The collection of elements to evaluate and update.</param>
+    /// <param name="update">The action to apply to elements that satisfy the condition.</param>
+    /// <param name="condition">The predicate used to determine which elements should be updated.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="update"/> or <paramref name="condition"/> is null.</exception>
+    public static void Update<TElement>(this IEnumerable<TElement> elements,
         Action<TElement> update,
         Func<TElement, bool> condition)
     {
@@ -350,8 +346,6 @@ public static class ContainerExtensions
             {
                 update.Invoke(element);
             }
-            
-            yield return element;
         }
     }
 }

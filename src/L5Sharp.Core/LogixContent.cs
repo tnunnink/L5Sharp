@@ -123,13 +123,12 @@ public class LogixContent : LogixElement
         if (string.IsNullOrEmpty(processor))
             throw new ArgumentNullException(nameof(processor));
 
-        var local = Module.Local(processor, revision);
-        var controller = new Controller(name, processor, local.Revision!);
-        controller.Modules.Add(local);
+        revision ??= new Revision();
+        var controller = new Controller(name, processor, revision);
 
         var content = new XElement(L5XName.RSLogix5000Content);
         content.Add(new XAttribute(L5XName.SchemaRevision, "1.0"));
-        content.Add(new XAttribute(L5XName.SoftwareRevision, local.Revision!));
+        content.Add(new XAttribute(L5XName.SoftwareRevision, revision));
         content.Add(new XAttribute(L5XName.TargetName, controller.Name));
         content.Add(new XAttribute(L5XName.TargetType, L5XName.Controller));
         content.Add(new XAttribute(L5XName.ContainsContext, false));

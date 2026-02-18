@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// Represents a revision number that is expressed by as {Major}.{Minor}.
+/// Represents a revision number expressed by as {Major}.{Minor}.{Build}.
 /// </summary>
 public sealed class Revision : IComparable
 {

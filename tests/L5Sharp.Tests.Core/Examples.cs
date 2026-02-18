@@ -20,7 +20,7 @@ namespace L5Sharp.Tests.Core
             results.Should().NotBeEmpty();
 
             var program = new Program();
-// Create a duplicate with updated config.
+            // Create a duplicate with updated config.
             var duplicate = program.Duplicate(p => 
             {
                 p.Name = "Program_02";

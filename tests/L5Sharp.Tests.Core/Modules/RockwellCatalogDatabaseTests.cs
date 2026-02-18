@@ -66,14 +66,4 @@ public class RockwellCatalogDatabaseTests
         result.ProductCode.Should().Be(166);
         result.Ports.Should().HaveCount(2);
     }
-
-    [Test]
-    public void FindBy_ValidTwoCategories_ShouldReturnOnlyMatchingDevices()
-    {
-        var catalog = new RockwellCatalogDatabase();
-
-        var results = catalog.FindBy(ModuleCategory.Input, ModuleCategory.Analog).ToList();
-
-        results.Should().NotBeEmpty();
-    }
 }

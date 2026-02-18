@@ -71,14 +71,17 @@
     </DataTypes>
     <Modules />
     <AddOnInstructionDefinitions>
-      <AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="DateTimeOffset_1" CreatedBy="ENE\tnunnink" EditedDate="DateTimeOffset_2" EditedBy="ENE\tnunnink" SoftwareRevision="v32.02">
+      <AddOnInstructionDefinition Name="aoi_Test" Revision="1.2" RevisionExtension="beta1" Vendor="company" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="DateTimeOffset_1" CreatedBy="ENE\tnunnink" EditedDate="DateTimeOffset_2" EditedBy="DESKTOP-4O0LTDD\tnunnink" SoftwareRevision="v36.00">
+        <Description><![CDATA[my aoi ]]></Description>
+        <RevisionNote><![CDATA[this is a test node]]></RevisionNote>
         <SignatureHistory>
           <HistoryEntry User="ENE\tnunnink" Timestamp="DateTimeOffset_3" SignatureID="16#cae1_ac8c">
             <Description><![CDATA[This is a signature history description
 ]]></Description>
           </HistoryEntry>
         </SignatureHistory>
-        <AdditionalHelpText><![CDATA[This is a test aoi definitio that was built for purposes of exporting data to examine the structure of the L5X]]></AdditionalHelpText>
+        <AdditionalHelpText><![CDATA[This is a test aoi definitio that was built for purposes of exporting data to examine the structure of the L5X
+]]></AdditionalHelpText>
         <Parameters>
           <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
             <Description><![CDATA[Enable Input - System Defined Parameter]]></Description>

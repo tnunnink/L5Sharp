@@ -281,7 +281,9 @@ public class L5XBasicTests
 
         content.Add(tag, Known.Program);
 
-        return VerifyXml(content.Content.Serialize().ToString()).ScrubMember("ExportDate");
+        return VerifyXml(content.Content.Serialize().ToString())
+            .ScrubMember("ExportDate")
+            .ScrubMember("LastModifiedDate");
     }
 
     [Test]

@@ -207,10 +207,11 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// The default is the currently open version of the application.
     /// </summary>
     /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>
+    /// <remarks>This property will handle the prefix 'v' for the revision value.</remarks>
     public Revision? SoftwareRevision
     {
-        get => GetValue(Revision.Parse);
-        set => SetValue(value);
+        get => GetValue(s => Revision.Parse(s.Trim('v')));
+        set => SetValue($"v{value}");
     }
 
     /// <summary>
@@ -242,7 +243,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         get => GetValue();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// The signature timestamp of the signed Add-On Instruction.
     /// </summary>

@@ -481,7 +481,7 @@ public sealed class TagName : IComparable<TagName>
             }
 
             if (count > 0 && depth == count)
-                break;
+                yield break;
         }
 
         if (start < tagName.Length)

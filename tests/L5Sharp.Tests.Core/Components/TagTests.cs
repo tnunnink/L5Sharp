@@ -993,7 +993,7 @@ public class TagTests
         tag.Name.Should().Be("ArrayTag");
         tag.Dimensions.Should().Be(10);
         tag.Value.Should().NotBeNull();
-        tag.Value.Should().BeOfType<ArrayData<DINT>>();
+        tag.Value.Should().BeOfType<ArrayData>();
     }
 
     [Test]
