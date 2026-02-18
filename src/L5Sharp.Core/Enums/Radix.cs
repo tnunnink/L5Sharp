@@ -129,16 +129,13 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <exception cref="FormatException">
     /// Thrown when the input value does not match any known <see cref="Radix"/> format.
     /// </exception>
-    public static Radix Infer(string value)
+    public static Radix Infer(string? value)
     {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("");
+        
         var radix = All().FirstOrDefault(r => r.IsValid(value));
-
-        if (radix is null)
-        {
-            throw new FormatException($"Could not determine radix from value: {value}");
-        }
-
-        return radix;
+        return radix ?? throw new FormatException($"Could not determine radix from value: {value}");
     }
 
     /// <summary>

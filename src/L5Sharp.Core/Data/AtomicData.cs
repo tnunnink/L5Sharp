@@ -66,11 +66,10 @@ public abstract class AtomicData : LogixData
     /// </summary>
     /// <value>A <see cref="Core.Radix"/> representing the format of the atomic type value.</value>
     /// <remarks>
-    /// Radix may not always represent the actual value format, so use this property with caution. When we parse the atomic value,
-    /// we are inferring the radix from the actual string value. This Radix property is read from the underlying XElement
-    /// for the data object if available. If not, it will return the default radix format for the atomic type. 
+    /// This will retrieve the value from the underlying element or parent element. If not found, the value will
+    /// attempt to infer from the underlying value 
     /// </remarks>
-    public Radix Radix => GetValue(Radix.Parse) ?? Radix.Default(GetType());
+    public Radix Radix => GetRadix();
 
     /// <inheritdoc />
     public override void UpdateData(LogixData data)
@@ -273,6 +272,24 @@ public abstract class AtomicData : LogixData
         element.Add(new XAttribute(L5XName.Radix, radix));
         element.Add(new XAttribute(L5XName.Value, value));
         return element;
+    }
+    
+    /// <summary>
+    /// Attempt to get the radix from the underlying element. For normal data value elements this is a local attribute.
+    /// For array elements, the attribute is on the parent array element. If non exists, we could attempt to infer the
+    /// radix from the value, and if all else fails, just return the default radix for the atomic type.
+    /// </summary>
+    private Radix GetRadix()
+    {
+        if (Element.TryGetAttribute(L5XName.Radix, out var local))
+            return Radix.Parse(local);
+
+        if (Element.Parent?.TryGetAttribute(L5XName.Radix, out var parent) is true)
+            return Radix.Parse(parent);
+
+        return Element.TryGetAttribute(L5XName.Value, out var value)
+            ? Radix.Infer(value)
+            : Radix.Default(GetType());
     }
 }
 
