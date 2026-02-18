@@ -236,8 +236,16 @@ public abstract class AtomicData : LogixData
     protected TValue GetAtomicValue<TValue>() where TValue : struct
     {
         var value = Element.Attribute(L5XName.Value)?.Value ?? throw Element.L5XError(L5XName.Value);
-        //var radix = Radix.Infer(value);
-        return Radix.Parse<TValue>(value);
+
+        // Sometimes Logix, for whatever reason, serializes the value in a format different from the one specified,
+        // so we have to check the format first. If it is valid, we can take the happy/faster path.
+        if (Radix.IsValid(value))
+        {
+            return Radix.Parse<TValue>(value);
+        }
+
+        var radix = Radix.Infer(value);
+        return radix.Parse<TValue>(value);
     }
 
     /// <summary>
@@ -273,7 +281,7 @@ public abstract class AtomicData : LogixData
         element.Add(new XAttribute(L5XName.Value, value));
         return element;
     }
-    
+
     /// <summary>
     /// Attempt to get the radix from the underlying element. For normal data value elements this is a local attribute.
     /// For array elements, the attribute is on the parent array element. If non exists, we could attempt to infer the

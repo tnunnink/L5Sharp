@@ -9,7 +9,6 @@ namespace L5Sharp.Samples
         public static readonly string Directory = Path.GetDirectoryName(GetThisFilePath())!;
 
         public static readonly string Test = Path.Combine(Directory, "Test.L5X");
-        public static readonly string TestAcd = Path.Combine(Directory, "Test.ACD");
         public static readonly string Empty = Path.Combine(Directory, "Empty.L5X");
         public static readonly string Simple = Path.Combine(Directory, "Simple.L5X");
         public static readonly string LotOfTags = Path.Combine(Directory, "LotOfTags.L5X");
