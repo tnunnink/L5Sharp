@@ -110,7 +110,7 @@ public class RoutineTests
     [Test]
     public void ListAllRoutinesInProjectShouldReturnNoneEmptyCollection()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var routines = content.Query<Routine>().ToList();
 
@@ -120,7 +120,7 @@ public class RoutineTests
     [Test]
     public void ListAllRoutinesInProjectWithRoutinesOfSameNameShouldReturnNoneEmptyCollection()
     {
-        var content = L5X.Load(Known.Example);
+        var content = TestContent.Example;
 
         var routines = content.Query<Routine>().ToList();
 
@@ -131,7 +131,7 @@ public class RoutineTests
     [Description("GitHub Issue #54: All routines should get correct parent program reference")]
     public void AllRoutinesParentProgramShouldMatchScopeProgramName()
     {
-        var content = L5X.Load(Known.Example);
+        var content = TestContent.Example;
 
         var results = content.Query<Routine>().ToList();
 

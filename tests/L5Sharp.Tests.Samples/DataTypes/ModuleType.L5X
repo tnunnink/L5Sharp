@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test of a type that references Module-Defined types-->
+<RSLogix5000Content SchemaRevision="1.0" TargetName="ModuleType" TargetType="DataType" ContainsContext="true">
+<Controller>
+<DataTypes>
+<DataType Use="Target" Name="ModuleType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a test of a type that references Module-Defined types]]>
+</Description>
+<Members>
+<Member Name="AIChannel" DataType="CHANNEL_AI:O:0" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is a test]]>
+</Description>
+</Member>
+<Member Name="TestChannel" DataType="CHANNEL_AI:O:0" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[This is a test]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+</DataTypes>
+</Controller>
+</RSLogix5000Content>

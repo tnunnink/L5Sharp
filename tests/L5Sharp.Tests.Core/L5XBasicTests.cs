@@ -30,7 +30,7 @@ public class L5XBasicTests
     [Test]
     public void Parse_ValidContent_ShouldNotBeNull()
     {
-        var xml = XDocument.Load(Known.Test).ToString();
+        var xml = TestContent.Test.Content.Serialize().ToString();
 
         var content = L5X.Parse(xml);
 
@@ -46,7 +46,7 @@ public class L5XBasicTests
     [Test]
     public void Info_ValidContent_ShouldHaveExpectedValues()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.Should().NotBeNull();
         content.Content.SchemaRevision.Should().Be("1.0");
@@ -60,7 +60,7 @@ public class L5XBasicTests
     [Test]
     public void Components_WhenCalled_ShouldAllDeriveFromLogixComponent()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var components = content.Components().ToArray();
 
@@ -71,7 +71,7 @@ public class L5XBasicTests
     [Test]
     public void Components_WithPredicate_ShouldReturnExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var components = content.Components(c => c.Name.Contains("Test")).ToArray();
 
@@ -82,7 +82,7 @@ public class L5XBasicTests
     [Test]
     public void Code_WhenCalled_ShouldNotBeEmptyAndAssignableToLogixCode()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var code = content.Code().ToArray();
 
@@ -93,7 +93,7 @@ public class L5XBasicTests
     [Test]
     public void Code_ValidPredicate_ShouldHaveExpectedResults()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var code = content.Code(c => c.Scope.IsIn("MainProgram")).ToArray();
 
@@ -104,7 +104,7 @@ public class L5XBasicTests
     [Test]
     public void Query_TypeNameOverload_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var tags = content.Query(ReferenceType.Tag).ToList();
 
@@ -114,7 +114,7 @@ public class L5XBasicTests
     [Test]
     public void Query_ContainsElement_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var results = content.Query<Tag>().ToList();
 
@@ -124,7 +124,7 @@ public class L5XBasicTests
     [Test]
     public void Query_NoElement_ShouldBeEmpty()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         var results = content.Query<Tag>().ToList();
 
@@ -134,7 +134,7 @@ public class L5XBasicTests
     [Test]
     public void Query_PredicateOverload_ShouldReturnExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var results = content.Query<Tag>(t => t.DataType == "TIMER").ToList();
 
@@ -145,7 +145,7 @@ public class L5XBasicTests
     [Test]
     public void Contains_KnownElement_ShouldBeTrue()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Contains(Reference.To<Tag>(Known.Tag));
 
@@ -155,7 +155,7 @@ public class L5XBasicTests
     [Test]
     public void Contains_NonExisting_ShouldBeFalse()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Contains("tag://FakeTag");
 
@@ -165,7 +165,7 @@ public class L5XBasicTests
     [Test]
     public void Get_KnownTagByReference_ShouldBeExpectedElement()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Get(Reference.To<Tag>(Known.Tag));
 
@@ -177,7 +177,7 @@ public class L5XBasicTests
     [Test]
     public void Get_NonExistingReference_ShouldThrowException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.Get<Tag>("FakeTag")).Should().Throw<KeyNotFoundException>();
     }
@@ -185,7 +185,7 @@ public class L5XBasicTests
     [Test]
     public void Get_NullReference_ShouldThrowException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.Get(null!)).Should().Throw<ArgumentNullException>();
     }
@@ -193,7 +193,7 @@ public class L5XBasicTests
     [Test]
     public void Get_EmptyReference_ShouldThrowException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.Get(string.Empty)).Should().Throw<ArgumentException>();
     }
@@ -201,7 +201,7 @@ public class L5XBasicTests
     [Test]
     public void Get_TypeAndName_ShouldBeExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Get<Tag>(Known.Tag);
 
@@ -213,7 +213,7 @@ public class L5XBasicTests
     [Test]
     public void Get_NonExistingName_ShouldThrowException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.Get<Tag>("FakeTag")).Should().Throw<KeyNotFoundException>();
     }
@@ -221,7 +221,7 @@ public class L5XBasicTests
     [Test]
     public void TryGet_InvalidPathReference_ShouldThrowFormatException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.TryGet(Known.DataType, out _)).Should().Throw<FormatException>();
     }
@@ -229,7 +229,7 @@ public class L5XBasicTests
     [Test]
     public void TryGet_ValidPathToKnownType_ShouldBeTrue()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.TryGet($"datatype://{Known.DataType}", out var entity);
 
@@ -241,7 +241,7 @@ public class L5XBasicTests
     [Test]
     public void TryGet_TypedKnownName_ShouldBeTrueAndExpectedComponent()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.TryGet<DataType>(Known.DataType, out var component);
 
@@ -253,7 +253,7 @@ public class L5XBasicTests
     [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.Count;
         var dataType = new DataType { Name = "TestAdd" };
 
@@ -265,7 +265,7 @@ public class L5XBasicTests
     [Test]
     public Task Add_ValidComponent_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var dataType = new DataType { Name = "TestAdd" };
 
         content.Add(dataType);
@@ -276,7 +276,7 @@ public class L5XBasicTests
     [Test]
     public Task Add_ToScopedContainer_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var tag = new Tag("TestAdd", 123);
 
         content.Add(tag, Known.Program);
@@ -289,7 +289,7 @@ public class L5XBasicTests
     [Test]
     public void Remove_ExistingComponent_ShouldReturnTrue()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Remove<Tag>(Known.Tag);
 
@@ -299,7 +299,7 @@ public class L5XBasicTests
     [Test]
     public void Remove_ExistingComponent_ShouldNotExist()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.Remove<Tag>(Known.Tag);
 
@@ -309,7 +309,7 @@ public class L5XBasicTests
     [Test]
     public void Remove_NonExistingComponent_ShouldReturnFalse()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Remove<Tag>("FakeTag");
 
@@ -319,7 +319,7 @@ public class L5XBasicTests
     [Test]
     public Task ToString_WhenCalled_ShouldBeValid()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         var result = content.ToString();
 
@@ -338,7 +338,7 @@ public class L5XBasicTests
         var isolator = new Action(() =>
         {
             // ReSharper disable once RedundantAssignment
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var tags = content.Query<Tag>().Where(t => t.TagName.Contains("Test"));
             tags.Should().NotBeEmpty();

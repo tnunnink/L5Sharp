@@ -133,7 +133,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("");
-        
+
         var radix = All().FirstOrDefault(r => r.IsValid(value));
         return radix ?? throw new FormatException($"Could not determine radix from value: {value}");
     }
@@ -396,7 +396,11 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     private class FloatRadix() : Radix(nameof(Float), nameof(Float))
     {
-        private const string QNAN = "1.#QNAN";
+        // This is IEEE 754 floating-point representation known as Indeterminate (NaN).
+        // Not sure why Rockwell uses both this and QNAN, but we want to avoid parsing exceptions.
+        // ReSharper disable once InconsistentNaming
+        private const string IND = "#IND";
+        private const string QNAN = "#QNAN";
         private const string DoubleFormat = "0.0##############";
         private const string SingleFormat = "0.0######";
         private static readonly HashSet<char> ValidCharacters = ['.', '+', '-'];
@@ -404,7 +408,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         public override bool IsValid(string? value)
         {
             if (value is null || string.IsNullOrEmpty(value)) return false;
-            if (value == QNAN) return true;
+            if (value.EndsWith(QNAN) || value.EndsWith(IND)) return true;
 
             foreach (var c in value)
             {
@@ -454,7 +458,11 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     private class ExponentialRadix() : Radix(nameof(Exponential), nameof(Exponential))
     {
-        private const string QNAN = "1.#QNAN";
+        // This is IEEE 754 floating-point representation known as Indeterminate (NaN).
+        // Not sure why Rockwell uses both this and QNAN, but we want to avoid parsing exceptions.
+        // ReSharper disable once InconsistentNaming
+        private const string IND = "#IND";
+        private const string QNAN = "#QNAN";
         private const string DoubleExponent = "e16";
         private const string SingleExponent = "e8";
         private static readonly HashSet<char> ValidCharacters = ['.', '+', '-', 'e', 'E'];
@@ -462,7 +470,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         public override bool IsValid(string? value)
         {
             if (value is null || string.IsNullOrEmpty(value)) return false;
-            if (value == QNAN) return true;
+            if (value.EndsWith(QNAN) || value.EndsWith(IND)) return true;
 
             var hasExponent = false;
             foreach (var c in value)
@@ -1230,7 +1238,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="byte"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static byte ConvertToByte(string value, int baseNumber)
     {
-        return Convert.ToByte(value, baseNumber);
+        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? (byte)Convert.ToSByte(value, baseNumber)
+            : Convert.ToByte(value, baseNumber);
     }
 
     /// <summary>
@@ -1274,7 +1285,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="ushort"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static ushort ConvertToUInt16(string value, int baseNumber)
     {
-        return Convert.ToUInt16(value, baseNumber);
+        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? (byte)Convert.ToInt16(value, baseNumber)
+            : Convert.ToUInt16(value, baseNumber);
     }
 
     /// <summary>
@@ -1285,7 +1299,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="uint"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static uint ConvertToUInt32(string value, int baseNumber)
     {
-        return Convert.ToUInt32(value, baseNumber);
+        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? (byte)Convert.ToUInt32(value, baseNumber)
+            : Convert.ToUInt32(value, baseNumber);
     }
 
     /// <summary>
@@ -1296,7 +1313,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="ulong"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static ulong ConvertToUInt64(string value, int baseNumber)
     {
-        return Convert.ToUInt64(value, baseNumber);
+        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? (byte)Convert.ToUInt64(value, baseNumber)
+            : Convert.ToUInt64(value, baseNumber);
     }
 
     /// <summary>
@@ -1309,7 +1329,11 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </returns>
     private static float ConvertToSingle(string value)
     {
-        return value == "1.#QNAN" ? float.NaN : Convert.ToSingle(value, CultureInfo.InvariantCulture);
+        //So far I have found Logix export both #QNAN and #IND for undefined or not-a-number floating point values.
+        if (value.EndsWith("#QNAN") || value.EndsWith("#IND"))
+            return float.NaN;
+
+        return Convert.ToSingle(value, CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -1322,7 +1346,11 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </returns>
     private static double ConvertToDouble(string value)
     {
-        return value == "1.#QNAN" ? double.NaN : Convert.ToDouble(value, CultureInfo.InvariantCulture);
+        //So far I have found Logix export both #QNAN and #IND for undefined or not-a-number floating point values.
+        if (value.EndsWith("#QNAN") || value.EndsWith("#IND"))
+            return float.NaN;
+
+        return Convert.ToDouble(value, CultureInfo.InvariantCulture);
     }
 
     /// <summary>

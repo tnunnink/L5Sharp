@@ -4,7 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{337B58B2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests.Core", "..\tests\L5Sharp.Tests.Core\L5Sharp.Tests.Core.csproj", "{FED5FACA-5568-4A3F-94C0-536D9E36CA26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Samples", "..\tests\L5Sharp.Samples\L5Sharp.Samples.csproj", "{EBD410F5-C4E8-4D12-86B4-08B190B50B63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Tests.Samples", "..\tests\L5Sharp.Tests.Samples\L5Sharp.Tests.Samples.csproj", "{EBD410F5-C4E8-4D12-86B4-08B190B50B63}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L5Sharp.Core", "L5Sharp.Core\L5Sharp.Core.csproj", "{927D481B-CB0E-4FA5-A5DC-98D8ECE5EF56}"
 EndProject

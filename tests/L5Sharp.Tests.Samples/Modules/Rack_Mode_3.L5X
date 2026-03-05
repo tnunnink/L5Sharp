@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="Rack_Mode_3" TargetType="Module" ContainsContext="false" ExportDate="Thu Apr 10 09:49:43 2025" ExportOptions="NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Module Use="Target" Name="Rack_Mode_3" CatalogNumber="1756-IB16" Vendor="1" ProductType="7" ProductCode="11" Major="3" Minor="1" ParentModule="RackIO" ParentModPortId="1" Inhibited="false"
+ MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="3" Type="ICP" Upstream="true"/>
+</Ports>
+<Communications CommMethod="1073741824">
+<ConfigTag ConfigSize="24" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[28,16,0,0,0,0,1,1,1,1,1,1,1,1,-1,-1]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1756_DI:C:1">
+<DataValueMember Name="FilterOffOn_0_7" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="FilterOnOff_0_7" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="FilterOffOn_8_15" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="FilterOnOff_8_15" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="FilterOffOn_16_23" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="FilterOnOff_16_23" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="FilterOffOn_24_31" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="FilterOnOff_24_31" DataType="SINT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="COSOnOffEn" DataType="DINT" Radix="Binary" Value="2#1111_1111_1111_1111_1111_1111_1111_1111"/>
+<DataValueMember Name="COSOffOnEn" DataType="DINT" Radix="Binary" Value="2#1111_1111_1111_1111_1111_1111_1111_1111"/>
+</Structure>
+</Data>
+</ConfigTag>
+<Connections>
+<RackConnection>
+<InAliasTag>
+<Comments>
+<Comment Operand=".DATA.0">
+<![CDATA[IO Description]]>
+</Comment>
+</Comments>
+</InAliasTag>
+</RackConnection>
+</Connections>
+</Communications>
+<ExtendedProperties>
+<public><ConfigID>262151</ConfigID><CatNum>1756-IB16</CatNum></public>
+</ExtendedProperties>
+</Module>
+</RSLogix5000Content>

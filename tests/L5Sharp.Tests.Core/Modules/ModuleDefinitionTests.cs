@@ -8,7 +8,7 @@ public class ModuleDefinitionTests
     [Test]
     public void Generate_ValidInstance_ShouldNotBeNull()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var module = content.Get<Module>(Known.Module);
 
         var definition = ModuleDefinition.Generate(module);
@@ -19,7 +19,7 @@ public class ModuleDefinitionTests
     [Test]
     public void Generate_KnownInstance_ShouldHaveExpectedValues()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var module = content.Get<Module>(Known.Module);
 
         var definition = ModuleDefinition.Generate(module);
@@ -35,7 +35,7 @@ public class ModuleDefinitionTests
     [Test]
     public void Generate_ModuleWithConnections_ShouldHaveExpectedValues()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var module = content.Get<Module>("L1M1D1");
 
         var definition = ModuleDefinition.Generate(module);
@@ -51,7 +51,7 @@ public class ModuleDefinitionTests
     [Test]
     public Task Serialize_KnownModule_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var module = content.Get<Module>(Known.Module);
 
         var definition = ModuleDefinition.Generate(module);
@@ -62,7 +62,7 @@ public class ModuleDefinitionTests
     [Test]
     public Task Serialize_ModuleWithConnections_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var module = content.Get<Module>("L1M1D1");
 
         var definition = ModuleDefinition.Generate(module);
@@ -73,7 +73,7 @@ public class ModuleDefinitionTests
     [Test]
     public Task Create_FromKnownDefinition_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var template = content.Get<Module>(Known.Module);
         var definition = ModuleDefinition.Generate(template);
 
@@ -85,7 +85,7 @@ public class ModuleDefinitionTests
     [Test]
     public Task Create_FromModuleWithConnections_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var template = content.Get<Module>("L1M1D1");
         var definition = ModuleDefinition.Generate(template);
 

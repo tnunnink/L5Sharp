@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test alarm type-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="AlarmType" TargetType="DataType" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Tue Mar 01 12:09:11 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+<DataType Use="Target" Name="AlarmType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a test alarm type]]>
+</Description>
+<Members>
+<Member Name="DigitalMember" DataType="CAM" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test digital member]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+</DataTypes>
+</Controller>
+</RSLogix5000Content>

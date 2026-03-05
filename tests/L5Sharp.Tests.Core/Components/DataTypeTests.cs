@@ -117,7 +117,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public void ToData_SimpleType_ShouldHaveExpectedStructure()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var simpleType = content.Get<DataType>(Known.DataType);
 
             var data = simpleType.ToData();
@@ -130,7 +130,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public void ToData_ComplexType_ShouldHaveExpectedMembers()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var simpleType = content.Get<DataType>("ComplexType");
 
             var data = simpleType.ToData();
@@ -146,7 +146,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public Task ToTag_SimpleType_ShouldBeVerified()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var type = content.Get<DataType>(Known.DataType);
 
             var tag = type.ToTag("MySimpleTag");
@@ -157,7 +157,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public Task ToTag_ComplexType_ShouldBeVerified()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var type = content.Get<DataType>("ComplexType");
 
             var tag = type.ToTag("MyComplexTag");

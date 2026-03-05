@@ -37,7 +37,8 @@ public interface IImportConfigBuilder<out TBuilder>
     /// <typeparam name="TComponent">The type of the components to be evaluated for overwriting.</typeparam>
     /// <param name="predicate">A function that determines whether a specific component instance should be overwritten.</param>
     /// <returns>The updated instance of the builder configuration.</returns>
-    TBuilder Overwrite<TComponent>(Func<TComponent, bool> predicate) where TComponent : LogixComponent<TComponent>;
+    TBuilder Overwrite<TComponent>(Func<TComponent, bool> predicate) 
+        where TComponent : LogixComponent<TComponent>;
 
     /// <summary>
     /// Configures the import process to discard the specified components that match the provided predicate.
@@ -45,7 +46,8 @@ public interface IImportConfigBuilder<out TBuilder>
     /// <typeparam name="TComponent">The type of the Logix component to evaluate.</typeparam>
     /// <param name="predicate">A function that determines which components to discard.</param>
     /// <returns>The updated instance of the builder configuration.</returns>
-    TBuilder Discard<TComponent>(Func<TComponent, bool> predicate) where TComponent : LogixComponent<TComponent>;
+    TBuilder Discard<TComponent>(Func<TComponent, bool> predicate) 
+        where TComponent : LogixComponent<TComponent>;
 
     /// <summary>
     /// Modifies components of the specified type that satisfy the given predicate with the provided configuration logic.

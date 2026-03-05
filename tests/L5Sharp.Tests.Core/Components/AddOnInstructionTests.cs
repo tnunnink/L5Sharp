@@ -188,7 +188,7 @@ public class AddOnInstructionTests
     [Test]
     public void Deserialize_SignedAoi_ShouldBeExpected()
     {
-        var content = L5X.Load(Known.AoiSignedExport);
+        var content = TestContent.AoiSignedExport;
 
         var result = content.AddOnInstructions.First();
 

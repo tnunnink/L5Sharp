@@ -232,7 +232,7 @@ public class TagTests
     [Test]
     public Task Duplicate_ValidConfig_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var tag = content.Get<Tag>(Known.Tag);
 
         var duplicate = tag.Duplicate(t =>
@@ -917,7 +917,7 @@ public class TagTests
     {
         const string expectedBase = "Base";
         var expectedMember = string.Concat(expectedBase, " ", "User defined complex type", " ", "Test Bool");
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var tag = content.Get<Tag>("TestComplexTag");
 
@@ -1238,7 +1238,7 @@ public class TagTests
     [Test]
     public void References_ForAllTagsExampleFile_ShouldNotTakeForever()
     {
-        var content = L5X.Load(Known.Example);
+        var content = TestContent.Example;
 
         var result = content.Query<Tag>().SelectMany(t => t.Members()).SelectMany(t => t.References()).ToList();
 
@@ -1248,7 +1248,7 @@ public class TagTests
     [Test]
     public void TagCount()
     {
-        var content = L5X.Load(Known.Example);
+        var content = TestContent.Example;
 
         var tags = content.Query<Tag>().ToList();
 

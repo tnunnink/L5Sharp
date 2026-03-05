@@ -442,7 +442,10 @@ public class Module : LogixComponent<Module>
     /// </summary>
     /// <param name="catalogNumber">The catalog number of the module to create.</param>
     /// <param name="config">An action to configure the properties of the created module.</param>
-    /// <param name="catalog"></param>
+    /// <param name="catalog">
+    /// An optional <see cref="IModuleCatalog"/> to use for finding the module definition.
+    /// If null, uses the default <see cref="RockwellCatalogDatabase"/>.
+    /// </param>
     /// <returns>A new configured <see cref="Module"/> instance.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="catalogNumber"/> or <paramref name="config"/> is null.</exception>
     /// <exception cref="InvalidOperationException">Thrown if no module with the specified catalog number is found in the module catalog.</exception>

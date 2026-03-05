@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="DataTypes\BoolTest.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\AlarmType.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\aoi_Test.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\ArrayType.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\ComplexType.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\InvalidType.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\ModuleType.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\MultipleDataTypes.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\NestedType.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="DataTypes\SimpleType.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\Flex_Mod_8.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\FlexBus.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\LM6C1.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\Local_Mod_1.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\Local_Mod_4.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\Local_Mod_9.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\TestCard.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\TestEtap.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\TestImport.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Programs\Empty.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Programs\TestProgram.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Routines\Main.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Routines\SFC.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Routines\ST.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Rungs\Rung0_from_Main.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Rungs\Rung1_from_Main.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Rungs\Rung2_from_Main.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Trends\Test.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Trends\TriggerTrend.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\RackIO.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\Rack_Mod_2.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Modules\Rack_Mode_3.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Instructions\aoiSigned_AOI.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Projects\Empty.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Projects\LotOfTags.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Projects\Test.L5X" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Projects\Test.ACD" CopyToOutputDirectory="PreserveNewest"/>
+        <EmbeddedResource Include="Projects\Simple.L5X" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
+</Project>

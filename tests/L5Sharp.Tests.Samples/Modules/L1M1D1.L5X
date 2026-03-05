@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="L1M1D1" TargetType="Module" ContainsContext="false" ExportDate="Fri May 02 12:54:06 2025" ExportOptions="NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Module Use="Target" Name="L1M1D1" CatalogNumber="1756-IT6I" Vendor="1" ProductType="10" ProductCode="2" Major="1" Minor="1" ParentModule="L1M1" ParentModPortId="1" Inhibited="false"
+ MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="1" Type="ICP" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870913">
+<ConfigTag ConfigSize="304" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[308,16,1,0,100,0.00000000e+000,67,67,67,67,67,67,0,[1026,0,0,0,-1.20000000e+001,7.80000000e+001,-1.20000000e+001
+		,7.80000000e+001,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001,0.00000000e+000
+		,0.00000000e+000],[1026,0,0,0,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001
+		,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001,0.00000000e+000,0.00000000e+000
+		],[1026,0,0,0,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001,-1.20000000e+001
+		,7.80000000e+001,-1.20000000e+001,7.80000000e+001,0.00000000e+000,0.00000000e+000],[1026,0
+		,0,0,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001
+		,-1.20000000e+001,7.80000000e+001,0.00000000e+000,0.00000000e+000],[1026,0,0,0,-1.20000000e+001
+		,7.80000000e+001,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001,-1.20000000e+001
+		,7.80000000e+001,0.00000000e+000,0.00000000e+000],[1026,0,0,0,-1.20000000e+001,7.80000000e+001
+		,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001,-1.20000000e+001,7.80000000e+001
+		,0.00000000e+000,0.00000000e+000]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1756_AI6_Float:C:0">
+<DataValueMember Name="RemoteTermination" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CJDisable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TempMode" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RealTimeSample" DataType="INT" Radix="Decimal" Value="100"/>
+<DataValueMember Name="CJOffset" DataType="REAL" Radix="Float" Value="0.0"/>
+<StructureMember Name="Ch0Config" DataType="AB:1756_AI6_Struct:C:0">
+<DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402"/>
+<DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+<StructureMember Name="Ch1Config" DataType="AB:1756_AI6_Struct:C:0">
+<DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402"/>
+<DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+<StructureMember Name="Ch2Config" DataType="AB:1756_AI6_Struct:C:0">
+<DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402"/>
+<DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+<StructureMember Name="Ch3Config" DataType="AB:1756_AI6_Struct:C:0">
+<DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402"/>
+<DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+<StructureMember Name="Ch4Config" DataType="AB:1756_AI6_Struct:C:0">
+<DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402"/>
+<DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+<StructureMember Name="Ch5Config" DataType="AB:1756_AI6_Struct:C:0">
+<DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402"/>
+<DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="-12.0"/>
+<DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="78.0"/>
+<DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+</Structure>
+</Data>
+</ConfigTag>
+<Connections>
+<Connection Name="CJ_Float" RPI="100000" Type="Input" EventID="0" ProgrammaticallySendEventTrigger="false" Unicast="true">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:1756_AI6_CJ_Float:I:0">
+<DataValueMember Name="ChannelFaults" DataType="INT" Radix="Binary" Value="2#0000_0000_0000_0000"/>
+<DataValueMember Name="Ch0Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5Fault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ModuleFaults" DataType="INT" Radix="Binary" Value="2#0000_0000_0000_0000"/>
+<DataValueMember Name="AnalogGroupFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="InGroupFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Calibrating" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CalFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CJUnderrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CJOverrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0Status" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="Ch0CalFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0Underrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0Overrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0RateAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0LAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0HAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0LLAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0HHAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1Status" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="Ch1CalFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1Underrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1Overrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1RateAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1LAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1HAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1LLAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch1HHAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2Status" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="Ch2CalFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2Underrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2Overrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2RateAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2LAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2HAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2LLAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch2HHAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3Status" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="Ch3CalFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3Underrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3Overrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3RateAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3LAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3HAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3LLAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch3HHAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4Status" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="Ch4CalFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4Underrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4Overrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4RateAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4LAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4HAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4LLAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch4HHAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5Status" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="Ch5CalFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5Underrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5Overrange" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5RateAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5LAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5HAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5LLAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch5HHAlarm" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ch0Data" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Ch1Data" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Ch2Data" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Ch3Data" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Ch4Data" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Ch5Data" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="CJData" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="RollingTimestamp" DataType="INT" Radix="Decimal" Value="0"/>
+</Structure>
+</Data>
+</InputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+</RSLogix5000Content>

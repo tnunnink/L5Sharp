@@ -281,7 +281,7 @@ public class ReferenceTests
     [Test]
     public void PerformanceOfGettingAllTagMemberReferencesShouldBeNotTerrible()
     {
-        var content = L5X.Load(Known.Example);
+        var content = TestContent.Example;
 
         var stopwatch = Stopwatch.StartNew();
 
@@ -300,7 +300,7 @@ public class ReferenceTests
     [Test]
     public void AllTagMembersShouldHaveTypeAndNameScopedProperty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var references = content.Query<Tag>()
             .SelectMany(t => t.Members())

@@ -1,14 +1,14 @@
 ﻿using L5Sharp.Gateway;
 using L5Sharp.Gateway.Abstractions;
 using L5Sharp.Gateway.Services;
-using L5Sharp.Samples;
+using L5Sharp.Tests.Samples;
 
 namespace L5Sharp.Tests.Gateway;
 
 public abstract class PlcTestBase
 {
     // Toggle this to switch all tests between Virtual and Physical PLC (ITagService)
-    private static bool UseVirtual => false;
+    private static bool UseVirtual => true;
 
     protected static IPlcClient CreateClient(Action<PlcOptions>? config = null)
     {
@@ -25,7 +25,8 @@ public abstract class PlcTestBase
         //When virtual setting is enabled, return a new client with the virtual tag service for in memory data access.
         if (UseVirtual)
         {
-            var service = VirtualTagService.Upload(Known.Simple, TimeSpan.FromMilliseconds(10));
+            var project = TestContent.Simple;
+            var service = new VirtualTagService(project, TimeSpan.FromMilliseconds(10));
             return new PlcClient(options, service);
         }
 

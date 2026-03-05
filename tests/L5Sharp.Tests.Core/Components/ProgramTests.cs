@@ -130,7 +130,7 @@ public class ProgramTests
     [Test]
     public Task Duplicate_ValidConfig_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var program = content.Get<Program>("MainProgram");
 
         var duplicate = program.Duplicate(p =>

@@ -168,25 +168,10 @@ public class VirtualTagService : ITagService
     /// Provides a virtual implementation of the <see cref="ITagService"/> interface, allowing for the management
     /// and manipulation of tags in a simulated environment. This class is typically used for testing or simulation purposes.
     /// </summary>
-    private VirtualTagService(L5X storage, TimeSpan? latency = null)
+    public VirtualTagService(L5X storage, TimeSpan? latency = null)
     {
         _storage = storage ?? throw new ArgumentNullException(nameof(storage));
         _latency = latency ?? TimeSpan.FromMilliseconds(50);
-    }
-
-    /// <summary>
-    /// Creates and initializes a new instance of <see cref="ITagService"/> using the specified file path and optional latency.
-    /// The service is built based on the provided L5X file.
-    /// </summary>
-    /// <param name="filePath">The file path to the L5X file containing the tag definitions.</param>
-    /// <param name="latency">An optional latency configuration for the service. Defaults to <c>null</c>.</param>
-    /// <returns>
-    /// An instance of <see cref="ITagService"/> initialized with the tag definitions from the specified L5X file.
-    /// </returns>
-    public static ITagService Upload(string filePath, TimeSpan? latency = null)
-    {
-        var storage = L5X.Load(filePath);
-        return new VirtualTagService(storage, latency);
     }
 
     /// <inheritdoc />

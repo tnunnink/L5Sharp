@@ -168,7 +168,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public void References_KnownTest_ShouldNotBeEmpty()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var task = content.Get<LTask>("Event");
 
             var references = task.References().ToArray();

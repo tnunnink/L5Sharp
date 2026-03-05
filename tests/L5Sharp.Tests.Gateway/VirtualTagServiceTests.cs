@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Gateway.Common;
 using L5Sharp.Gateway.Services;
-using L5Sharp.Samples;
+using L5Sharp.Tests.Samples;
 
 namespace L5Sharp.Tests.Gateway;
 
@@ -21,7 +21,7 @@ public class VirtualTagServiceTests
     public void Create_ValidPath_ShouldReturnHandleAboveTen(string tagName)
     {
         var path = $"{BasePath}&name={tagName}";
-        var service = VirtualTagService.Upload(Known.Simple);
+        var service = new VirtualTagService(TestContent.Simple);
 
         var handle = service.Create(path, EmptyCallback, IntPtr.Zero, Timeout);
 
@@ -32,7 +32,7 @@ public class VirtualTagServiceTests
     public void Create_ValidPath_ShouldBeAbleToGetStatus()
     {
         const string path = $"{BasePath}&name=TestDint";
-        var service = VirtualTagService.Upload(Known.Simple);
+        var service = new VirtualTagService(TestContent.Simple);
 
         var handle = service.Create(path, EmptyCallback, IntPtr.Zero, Timeout);
 
@@ -44,7 +44,7 @@ public class VirtualTagServiceTests
     public void Create_FakeTagName_ShouldReturnNotFound()
     {
         const string path = $"{BasePath}&name=FakeTag";
-        var service = VirtualTagService.Upload(Known.Simple);
+        var service = new VirtualTagService(TestContent.Simple);
 
         var handle = service.Create(path, EmptyCallback, IntPtr.Zero, Timeout);
 
@@ -55,7 +55,7 @@ public class VirtualTagServiceTests
     public void Create_WithCallback_ShouldGetInvokedExpectedNumberOfTimes()
     {
         const string path = $"{BasePath}&name=TestDint";
-        var service = VirtualTagService.Upload(Known.Simple);
+        var service = new VirtualTagService(TestContent.Simple);
         var count = 0;
 
         service.Create(path, Callback, IntPtr.Zero, Timeout);
@@ -73,7 +73,7 @@ public class VirtualTagServiceTests
     public void Create_TwiceForSameTag_ShouldReturnSuccessiveHandles()
     {
         const string path = $"{BasePath}&name=TestDint";
-        var service = VirtualTagService.Upload(Known.Simple);
+        var service = new VirtualTagService(TestContent.Simple);
 
         var first = service.Create(path, EmptyCallback, IntPtr.Zero, Timeout);
         var second = service.Create(path, EmptyCallback, IntPtr.Zero, Timeout);
@@ -90,7 +90,7 @@ public class VirtualTagServiceTests
     public void Status_ExistingHandle_ShouldReturnExpectedStatus()
     {
         const string path = $"{BasePath}&name=TestDint";
-        var service = VirtualTagService.Upload(Known.Simple);
+        var service = new VirtualTagService(TestContent.Simple);
         var handle = service.Create(path, EmptyCallback, IntPtr.Zero, Timeout);
 
         var status = service.Status(handle);
@@ -106,7 +106,7 @@ public class VirtualTagServiceTests
     public void Read_ExistingTagWithData_ShouldReturnOk()
     {
         const string path = $"{BasePath}&name=TestDint";
-        var service = VirtualTagService.Upload(Known.Simple);
+        var service = new VirtualTagService(TestContent.Simple);
         var handle = service.Create(path, EmptyCallback, IntPtr.Zero, Timeout);
 
         var status = service.Read(handle, 1000);

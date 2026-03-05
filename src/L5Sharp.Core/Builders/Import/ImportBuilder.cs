@@ -10,6 +10,12 @@ internal class ImportBuilder : IImportSourceBuilder, IImportTypeBuilder
         return this;
     }
 
+    public IImportTypeBuilder From(L5X content)
+    {
+        _import.Source = content;
+        return this;
+    }
+
     public IImportDefaultBuilder DataType(string? name = null)
     {
         if (name is not null && !name.IsEmpty())

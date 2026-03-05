@@ -6,10 +6,10 @@ public class L5XImportTests
     [Test]
     public Task Import_StructureDataTypeWithNotConfiguration_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(Known.DataTypeExport)
+            .From(TestContent.DataTypeExport)
             .DataType()
             .Force()
         );
@@ -20,10 +20,10 @@ public class L5XImportTests
     [Test]
     public Task Import_StructureDataTypeDiscardSimpleType_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(Known.DataTypeExport)
+            .From(TestContent.DataTypeExport)
             .DataType()
             .Discard<DataType>(d => d.Name == "SimpleType")
         );
@@ -34,10 +34,10 @@ public class L5XImportTests
     [Test]
     public Task Import_StructureDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(Known.DataTypeExport)
+            .From(TestContent.DataTypeExport)
             .DataType()
             .Discard<DataType>(d => d.Name == "SimpleType")
             .Modify<DataType>(
@@ -52,10 +52,10 @@ public class L5XImportTests
     [Test]
     public Task Import_ModuleComponent_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(Known.ModuleExport)
+            .From(TestContent.ModuleExport)
             .Module()
         );
 
@@ -65,10 +65,10 @@ public class L5XImportTests
     [Test]
     public Task Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(Known.ProgramExport)
+            .From(TestContent.ProgramExport)
             .Program()
             .Rename("ImportedProgram")
             .ScheduleIn("Standard", t =>
@@ -84,10 +84,10 @@ public class L5XImportTests
     [Test]
     public Task Import_SpecificTypeNameFromSource_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(Known.Test)
+            .From(TestContent.Test)
             .DataType("ComplexType")
         );
 

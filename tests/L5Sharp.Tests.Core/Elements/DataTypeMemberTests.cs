@@ -109,7 +109,7 @@ public class DataTypeMemberTests
     [Test]
     public void TryGetDefinition_FromMemberInContext_ShouldReturnTrue()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var type = content.DataTypes.Get("ComplexType");
         var member = type.Members.First(m => m.DataType == "SimpleType");
 

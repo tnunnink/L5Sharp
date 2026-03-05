@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="LM6C1" TargetType="Module" ContainsContext="false" Owner="tnunnink, EN Engineering" ExportDate="Fri Jan 28 15:40:30 2022" ExportOptions="NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Module Use="Target" Name="LM6C1" CatalogNumber="1407-CGCM" Vendor="1" ProductType="115" ProductCode="59" Major="4" Minor="1" ParentModule="Local_Mod_6" ParentModPortId="2" Inhibited="false"
+ MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="2" Address="2" Type="ControlNet" Upstream="true"/>
+</Ports>
+<Communications CommMethod="536870913">
+<ConfigTag ConfigSize="344" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[348,4,1,0,0,0,-82,19,64,0,4.80000000e+002,1.20000000e+002,4.80000000e+002,1.20000000e+002,4.80000000e+002
+		,1.20000000e+002,5.00000000e+002,5.00000000e+000,5.00000000e+002,5.00000000e+000,3,3,3.00000000e+005
+		,4.80000000e+002,1.00000000e+002,6.00000000e+001,7.50000000e+001,3.00000000e+000,4.00000000e+000
+		,1.00000000e+001,3.00000000e-001,1.00000000e-001,-1.00000000e-001,5.00000000e+000,-5.00000000e+000
+		,1.00000000e+001,-1.00000000e+001,0.00000000e+000,5.99500008e+001,6.00499992e+001,4.60000000e+002
+		,5.00000000e+002,0.00000000e+000,1.00000000e+000,0.00000000e+000,1.00000000e+000,5.70000000e+001
+		,1.00000000e+000,5.00000000e+001,2.00000000e+000,5.00000000e+000,15000,100,11000,100,8500,2000
+		,500,3000,1500,4,8,500,500,1000,2000,6050,100,5900,100,10500,50,1,0,0,50,500,2.50000000e+004,5.00000000e+004
+		,1.00000000e+005,2.00000000e+005,3.00000000e+005,2.75000000e+005,2.50000000e+005,2.00000000e+005
+		,1.00000000e+005,2.00000000e+004,3.00000000e+001,2.00000000e+000,1.50000000e+001,1.00000000e+001
+		,1.00000000e+001,2.00000000e+001,2.00000000e+000,1.00000000e+001,2.00000000e+001,2.00000000e+001
+		,2.00000000e+001,2.00000000e+001,5.00000000e+000,5.00000000e+000,5.00000000e+000,5.00000000e-001
+		,2.00000000e+000,1.00000000e-001,1.00000000e+000,0.00000000e+000,0.00000000e+000,[0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0,0]]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1407_CGCM:C:1">
+<DataValueMember Name="RevVARFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RevPwrFltOutEn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="OvrExcFltOutEn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="Ovr_I_FltOutEn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="Undr_V_FltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ovr_V_FltOutEn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="UndrFreqFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OvrFreqFltOutEn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="Spare1" DataType="BOOL" Value="1"/>
+<DataValueMember Name="LossExcFltOutEn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="OEL_En" DataType="BOOL" Value="0"/>
+<DataValueMember Name="UEL_En" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LossSensingFltOutEn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="LossPMGFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RotDiodeFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PhRotFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="BusRotABC_ACB_Select" DataType="BOOL" Value="0"/>
+<DataValueMember Name="GenRotABC_ACB_Select" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare2" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PMG_Shunt_Select" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare3" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare4" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Internal_Tracking_En" DataType="BOOL" Value="1"/>
+<DataValueMember Name="PMG_1Ph_3PhSelect" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare5_12" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="GenVT_Pri_V" DataType="REAL" Radix="Float" Value="480.0"/>
+<DataValueMember Name="GenVT_Sec_V" DataType="REAL" Radix="Float" Value="120.0"/>
+<DataValueMember Name="BusA_VT_Pri_V" DataType="REAL" Radix="Float" Value="480.0"/>
+<DataValueMember Name="BusA_VT_Sec_V" DataType="REAL" Radix="Float" Value="120.0"/>
+<DataValueMember Name="BusB_VT_Pri_V" DataType="REAL" Radix="Float" Value="480.0"/>
+<DataValueMember Name="BusB_VT_Sec_V" DataType="REAL" Radix="Float" Value="120.0"/>
+<DataValueMember Name="GenCT_Pri_I" DataType="REAL" Radix="Float" Value="500.0"/>
+<DataValueMember Name="GenCT_Sec_I" DataType="REAL" Radix="Float" Value="5.0"/>
+<DataValueMember Name="CCCT_Pri_I" DataType="REAL" Radix="Float" Value="500.0"/>
+<DataValueMember Name="CCCT_Sec_I" DataType="REAL" Radix="Float" Value="5.0"/>
+<DataValueMember Name="GenVT_Config" DataType="INT" Radix="Decimal" Value="3"/>
+<DataValueMember Name="BusVT_Config" DataType="INT" Radix="Decimal" Value="3"/>
+<DataValueMember Name="GenRated_W" DataType="REAL" Radix="Float" Value="300000.0"/>
+<DataValueMember Name="GenRated_V" DataType="REAL" Radix="Float" Value="480.0"/>
+<DataValueMember Name="GenRated_I" DataType="REAL" Radix="Float" Value="100.0"/>
+<DataValueMember Name="GenRatedFreq" DataType="REAL" Radix="Float" Value="60.0"/>
+<DataValueMember Name="GenRatedExcV" DataType="REAL" Radix="Float" Value="75.0"/>
+<DataValueMember Name="GenRatedExcI" DataType="REAL" Radix="Float" Value="3.0"/>
+<DataValueMember Name="LS_FS_V" DataType="REAL" Radix="Float" Value="4.0"/>
+<DataValueMember Name="LSRate" DataType="REAL" Radix="Float" Value="10.0"/>
+<DataValueMember Name="LSLimit" DataType="REAL" Radix="Float" Value="0.3"/>
+<DataValueMember Name="SyncFreqHiLim" DataType="REAL" Radix="Float" Value="0.1"/>
+<DataValueMember Name="SyncFreqLoLim" DataType="REAL" Radix="Float" Value="-0.1"/>
+<DataValueMember Name="SyncV_HiLim" DataType="REAL" Radix="Float" Value="5.0"/>
+<DataValueMember Name="SyncV_LoLim" DataType="REAL" Radix="Float" Value="-5.0"/>
+<DataValueMember Name="SyncPhHiLim" DataType="REAL" Radix="Float" Value="10.0"/>
+<DataValueMember Name="SyncPhLoLim" DataType="REAL" Radix="Float" Value="-10.0"/>
+<DataValueMember Name="SyncAcceptDly" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="DeadBusGenFreqLoLim" DataType="REAL" Radix="Float" Value="59.95"/>
+<DataValueMember Name="DeadBusGenFreqHiLim" DataType="REAL" Radix="Float" Value="60.05"/>
+<DataValueMember Name="DeadBusGenV_LoLim" DataType="REAL" Radix="Float" Value="460.0"/>
+<DataValueMember Name="DeadBusGenV_HiLim" DataType="REAL" Radix="Float" Value="500.0"/>
+<DataValueMember Name="BusA_PhOffset" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="BusA_V_Scaler" DataType="REAL" Radix="Float" Value="1.0"/>
+<DataValueMember Name="BusB_PhOffset" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="BusB_V_Scaler" DataType="REAL" Radix="Float" Value="1.0"/>
+<DataValueMember Name="VperHz_HiKneeFreq" DataType="REAL" Radix="Float" Value="57.0"/>
+<DataValueMember Name="VperHz_HiSlope" DataType="REAL" Radix="Float" Value="1.0"/>
+<DataValueMember Name="VperHz_LoKneeFreq" DataType="REAL" Radix="Float" Value="50.0"/>
+<DataValueMember Name="VperHz_LoSlope" DataType="REAL" Radix="Float" Value="2.0"/>
+<DataValueMember Name="V_DroopSetpt" DataType="REAL" Radix="Float" Value="5.0"/>
+<DataValueMember Name="OvrExcV_Setpt" DataType="INT" Radix="Decimal" Value="15000"/>
+<DataValueMember Name="OvrExcV_TimeDly" DataType="INT" Radix="Decimal" Value="100"/>
+<DataValueMember Name="Ovr_V_Setpt" DataType="INT" Radix="Decimal" Value="11000"/>
+<DataValueMember Name="Ovr_V_TimeDly" DataType="INT" Radix="Decimal" Value="100"/>
+<DataValueMember Name="Undr_V_Setpt" DataType="INT" Radix="Decimal" Value="8500"/>
+<DataValueMember Name="Undr_V_TimeDly" DataType="INT" Radix="Decimal" Value="2000"/>
+<DataValueMember Name="OpenDiodeMonitorLevel" DataType="INT" Radix="Decimal" Value="500"/>
+<DataValueMember Name="ShortedDiodeMonitorLevel" DataType="INT" Radix="Decimal" Value="3000"/>
+<DataValueMember Name="DiodeMonitorTimeDly" DataType="INT" Radix="Decimal" Value="1500"/>
+<DataValueMember Name="MainPole" DataType="INT" Radix="Decimal" Value="4"/>
+<DataValueMember Name="ExciterPole" DataType="INT" Radix="Decimal" Value="8"/>
+<DataValueMember Name="Rev_kW_Setpt" DataType="INT" Radix="Decimal" Value="500"/>
+<DataValueMember Name="Rev_kW_TimeDly" DataType="INT" Radix="Decimal" Value="500"/>
+<DataValueMember Name="Rev_kVAR_Setpt" DataType="INT" Radix="Decimal" Value="1000"/>
+<DataValueMember Name="Rev_kVAR_TimeDly" DataType="INT" Radix="Decimal" Value="2000"/>
+<DataValueMember Name="OvrFreqSetpt" DataType="INT" Radix="Decimal" Value="6050"/>
+<DataValueMember Name="OvrFreqTimeDly" DataType="INT" Radix="Decimal" Value="100"/>
+<DataValueMember Name="UndrFreqSetpt" DataType="INT" Radix="Decimal" Value="5900"/>
+<DataValueMember Name="UndrFreqTimeDly" DataType="INT" Radix="Decimal" Value="100"/>
+<DataValueMember Name="Ovr_I_Setpt" DataType="INT" Radix="Decimal" Value="10500"/>
+<DataValueMember Name="Ovr_I_TimeDial" DataType="INT" Radix="Decimal" Value="50"/>
+<DataValueMember Name="Ovr_I_Curve" DataType="INT" Radix="Decimal" Value="1"/>
+<DataValueMember Name="Ovr_I_VrestSetpt" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Spare13" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LossExc_I_Setpt" DataType="INT" Radix="Decimal" Value="50"/>
+<DataValueMember Name="LossExc_I_TimeDly" DataType="INT" Radix="Decimal" Value="500"/>
+<DataValueMember Name="UEL_Curve_W_Pt1" DataType="REAL" Radix="Float" Value="25000.0"/>
+<DataValueMember Name="UEL_Curve_W_Pt2" DataType="REAL" Radix="Float" Value="50000.0"/>
+<DataValueMember Name="UEL_Curve_W_Pt3" DataType="REAL" Radix="Float" Value="100000.0"/>
+<DataValueMember Name="UEL_Curve_W_Pt4" DataType="REAL" Radix="Float" Value="200000.0"/>
+<DataValueMember Name="UEL_Curve_W_Pt5" DataType="REAL" Radix="Float" Value="300000.0"/>
+<DataValueMember Name="UEL_Curve_VAR_Pt1" DataType="REAL" Radix="Float" Value="275000.0"/>
+<DataValueMember Name="UEL_Curve_VAR_Pt2" DataType="REAL" Radix="Float" Value="250000.0"/>
+<DataValueMember Name="UEL_Curve_VAR_Pt3" DataType="REAL" Radix="Float" Value="200000.0"/>
+<DataValueMember Name="UEL_Curve_VAR_Pt4" DataType="REAL" Radix="Float" Value="100000.0"/>
+<DataValueMember Name="UEL_Curve_VAR_Pt5" DataType="REAL" Radix="Float" Value="20000.0"/>
+<DataValueMember Name="OEL_OnLineHiSetpt" DataType="REAL" Radix="Float" Value="30.0"/>
+<DataValueMember Name="OEL_OnLineHiTimeDly" DataType="REAL" Radix="Float" Value="2.0"/>
+<DataValueMember Name="OEL_OnLineMedSetpt" DataType="REAL" Radix="Float" Value="15.0"/>
+<DataValueMember Name="OEL_OnLineMedTimeDly" DataType="REAL" Radix="Float" Value="10.0"/>
+<DataValueMember Name="OEL_OnLineLoSetpt" DataType="REAL" Radix="Float" Value="10.0"/>
+<DataValueMember Name="OEL_OffLineHiSetpt" DataType="REAL" Radix="Float" Value="20.0"/>
+<DataValueMember Name="OEL_OffLineHiTimeDly" DataType="REAL" Radix="Float" Value="2.0"/>
+<DataValueMember Name="OEL_OffLineLoSetpt" DataType="REAL" Radix="Float" Value="10.0"/>
+<DataValueMember Name="AVR_Traverse_Rate" DataType="REAL" Radix="Float" Value="20.0"/>
+<DataValueMember Name="FCR_Traverse_Rate" DataType="REAL" Radix="Float" Value="20.0"/>
+<DataValueMember Name="VAR_Traverse_Rate" DataType="REAL" Radix="Float" Value="20.0"/>
+<DataValueMember Name="PF_Traverse_Rate" DataType="REAL" Radix="Float" Value="20.0"/>
+<DataValueMember Name="SoftStart_InitLevel" DataType="REAL" Radix="Float" Value="5.0"/>
+<DataValueMember Name="SoftStartTime" DataType="REAL" Radix="Float" Value="5.0"/>
+<DataValueMember Name="InternalTrackRate" DataType="REAL" Radix="Float" Value="5.0"/>
+<DataValueMember Name="InternalTrackDly" DataType="REAL" Radix="Float" Value="0.5"/>
+<DataValueMember Name="RedndtTrackRate" DataType="REAL" Radix="Float" Value="2.0"/>
+<DataValueMember Name="RedndtTrackDly" DataType="REAL" Radix="Float" Value="0.1"/>
+<DataValueMember Name="CrossCurrentGain" DataType="REAL" Radix="Float" Value="1.0"/>
+<DataValueMember Name="AVR_FCRAuxGain" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="PF_VARAuxGain" DataType="REAL" Radix="Float" Value="0.0"/>
+<StructureMember Name="UnschWrite" DataType="AB:1407_CGCM_Unscheduled_Write3">
+<DataValueMember Name="LineDropComp" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="AVR_FCR_Kp" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="AVR_FCR_Ki" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="AVR_FCR_Kd" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="AVR_FCR_Td" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="AVR_Kg" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="FCR_Kg" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="PF_Kg" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="PF_Ki" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="VAR_Kg" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="VAR_Ki" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="OEL_Kg" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="OEL_Ki" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="UEL_Kg" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="UEL_Ki" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="V_Match_Gain" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kWHoursPreset" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVARHoursPreset" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVAHoursPreset" DataType="REAL" Radix="Float" Value="0.0"/>
+</StructureMember>
+</Structure>
+</Data>
+</ConfigTag>
+<Connections>
+<Connection Name="OutputData" RPI="5000" Type="Output" EventID="0" ProgrammaticallySendEventTrigger="false" Unicast="true">
+<InputTag ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="AB:1407_CGCM:I:0">
+<DataValueMember Name="Status_32_bit" DataType="DINT" Radix="Binary" Value="2#0000_0000_0000_0000_0000_0000_0000_0000"/>
+<DataValueMember Name="RevVARFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RevPwrFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OvrExcFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ovr_I_Flt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Undr_V_Flt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ovr_V_Flt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="UndrFreqFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OvrFreqFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CGCM_Flt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LossExcFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OEL_Active" DataType="BOOL" Value="0"/>
+<DataValueMember Name="UEL_Active" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LossSensingFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LossPMGFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RotDiodeFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PhRotFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="BusRot_ABC_ACB" DataType="BOOL" Value="0"/>
+<DataValueMember Name="GenRot_ABC_ACB" DataType="BOOL" Value="0"/>
+<DataValueMember Name="FltOut" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ExcOut" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PF_Var_Selection" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PF_Var_Control" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AVR_FCR_Selection" DataType="BOOL" Value="0"/>
+<DataValueMember Name="FltResetAck" DataType="BOOL" Value="0"/>
+<DataValueMember Name="BusV_Present" DataType="BOOL" Value="0"/>
+<DataValueMember Name="GenV_Present" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PhRotMatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="V_Match" DataType="BOOL" Value="0"/>
+<DataValueMember Name="FreqMatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PhMatch" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CGCMInControl" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ActiveBusA_B" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Raise_V" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Lower_V" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Raise_Freq" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Lower_Freq" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Raise_Ph" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Lower_Ph" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SyncFailure" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AutoSync" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CheckSync" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PermissiveSync" DataType="BOOL" Value="0"/>
+<DataValueMember Name="UndefinedSyncMode" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SyncModeConflict" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SyncDeadBus" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CloseBusA_Brkr" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CloseBusB_Brkr" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare2" DataType="BOOL" Value="0"/>
+<DataValueMember Name="FreqLessThan10Hz" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare3" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SetptTraverseActive" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ShortedRotDiodeFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OpenRotDiodeFlt" DataType="BOOL" Value="0"/>
+<DataValueMember Name="HardwareExcEned" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SoftwareExcEned" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ConfigRcvd" DataType="BOOL" Value="0"/>
+<DataValueMember Name="UnschdWriteRcvd" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare6" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare7" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare8" DataType="BOOL" Value="0"/>
+<DataValueMember Name="kVAR_LS_Active" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare9" DataType="BOOL" Value="0"/>
+<DataValueMember Name="kW_LS_Active" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Total_kW" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="LS_Err" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kW_LS_InputV" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kW_PU_Load" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kW_AnalogPU_Load" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVAR_LS_InputV" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVAR_PU_Load" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVAR_AnalogPU_Load" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="AvgLLGenV" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="V_MatchErr" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="FreqMatchErr" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="PhMatchErr" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="GenFreq" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="BusFreq" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Spare10" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Spare11" DataType="REAL" Radix="Float" Value="0.0"/>
+</Structure>
+</Data>
+</InputTag>
+<OutputTag ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[0,0,0,0,0,0,0,0,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+		,0.00000000e+000]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="AB:1407_CGCM:O:1">
+<DataValueMember Name="RevVARFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RevPwrFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OvrExcFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ovr_I_FltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Undr_V_FltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Ovr_V_FltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="UndrFreqFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OvrFreqFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare1" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LossExcFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="OEL_En" DataType="BOOL" Value="0"/>
+<DataValueMember Name="UEL_En" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LossSensingFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="LossPMGFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="RotDiodeFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PhRotFltOutEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare2" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare3" DataType="BOOL" Value="0"/>
+<DataValueMember Name="EngineIdle" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare4" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PF_VAR_Select" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PF_VAR_En" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AVR_FCR_Select" DataType="BOOL" Value="0"/>
+<DataValueMember Name="FltReset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="AutoSyncEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="CheckSyncEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PermissiveSyncEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare5" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare6" DataType="BOOL" Value="0"/>
+<DataValueMember Name="BusA_B_Select" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DeadBusClosureEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="InitiateSync" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Set_kW_Hrs" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Set_kVAR_Hrs" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Set_kVA_Hrs" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare7" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Droop_CCC_Select" DataType="BOOL" Value="0"/>
+<DataValueMember Name="V_DroopEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare8" DataType="BOOL" Value="0"/>
+<DataValueMember Name="SoftwareExcEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare9" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare10" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare11" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare12" DataType="BOOL" Value="0"/>
+<DataValueMember Name="kVAR_LS_BridgeEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="kVAR_LS_En" DataType="BOOL" Value="0"/>
+<DataValueMember Name="kW_LS_BridgeEn" DataType="BOOL" Value="0"/>
+<DataValueMember Name="kW_LS_En" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Spare13_20" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="Spare21_28" DataType="SINT" Radix="Binary" Value="2#0000_0000"/>
+<DataValueMember Name="AVRSetpt" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="FCRSetpt" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="PFSetpt" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="VARSetpt" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kW_LS_OutV" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kWAnalogTargetPUValue" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kWDigitalTargetPUValue" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVAR_LS_OutV" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVARAnalogTargetPUValue" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="kVARDigitalTargetPUValue" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Spare13" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Spare14" DataType="REAL" Radix="Float" Value="0.0"/>
+</Structure>
+</Data>
+</OutputTag>
+</Connection>
+</Connections>
+</Communications>
+</Module>
+</RSLogix5000Content>

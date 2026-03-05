@@ -2,7 +2,7 @@
 using L5Sharp.Core;
 using L5Sharp.Gateway;
 using L5Sharp.Gateway.Extensions;
-using L5Sharp.Samples;
+using L5Sharp.Tests.Samples;
 using Task = System.Threading.Tasks.Task;
 
 namespace L5Sharp.Tests.Gateway;
@@ -13,10 +13,11 @@ public class ExtensionTests : PlcTestBase
     [Test]
     public async Task Upload_AllTags_ShouldHaveExpectedResponse()
     {
-        using var client = CreateClient();
-        var content = await L5X.LoadAsync(Known.Simple);
+        var content = TestContent.Simple;
         //To ensure we read updated data, clear all the in memory tag values first.
         content.Tags.Update(t => t.Value.ResetData());
+
+        using var client = CreateClient();
 
         var result = await content.Upload(client);
 
@@ -32,18 +33,5 @@ public class ExtensionTests : PlcTestBase
             .ToList();
 
         tags.Should().AllSatisfy(t => t.Value.Should().NotBe(0));
-    }
-
-    [Test]
-    public async Task Snapshot_ValidFileAndPlc_ShouldCreateFile()
-    {
-        using var client = CreateClient();
-        var content = await L5X.LoadAsync(Known.Simple);
-        //To ensure we read updated data, clear all the in memory tag values first.
-        content.Tags.Update(t => t.Value.ResetData());
-
-        var response = await content.Snapshot(client, @"C:\users\tnunnink\desktop\Snapshot.L5X");
-
-        response.Success.Should().BeTrue();
     }
 }

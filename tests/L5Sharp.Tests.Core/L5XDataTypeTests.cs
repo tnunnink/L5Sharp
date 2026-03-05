@@ -9,7 +9,7 @@ public class L5XDataTypeTests
     [Test]
     public void ToList_KnownTest_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.DataTypes.ToList();
 
@@ -19,7 +19,7 @@ public class L5XDataTypeTests
     [Test]
     public void ToList_DataTypeExport_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.DataTypeExport);
+        var content = TestContent.DataTypeExport;
 
         var result = content.DataTypes.ToList();
 
@@ -29,7 +29,7 @@ public class L5XDataTypeTests
     [Test]
     public void Index_ValidIndex_ShouldNotBeNull()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.DataTypes[0];
 
@@ -39,7 +39,7 @@ public class L5XDataTypeTests
     [Test]
     public void Index_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.DataTypes[100]).Should().Throw<ArgumentOutOfRangeException>();
     }
@@ -47,7 +47,7 @@ public class L5XDataTypeTests
     [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
@@ -69,7 +69,7 @@ public class L5XDataTypeTests
     [Test]
     public Task Add_ValidComponent_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
             Name = "NewType",
@@ -93,7 +93,7 @@ public class L5XDataTypeTests
     [Test]
     public void AddAfter_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
@@ -115,7 +115,7 @@ public class L5XDataTypeTests
     [Test]
     public void AddAfter_ValidComponent_ShouldHaveExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
@@ -138,7 +138,7 @@ public class L5XDataTypeTests
     [Test]
     public void AddBefore_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
@@ -160,7 +160,7 @@ public class L5XDataTypeTests
     [Test]
     public void AddBefore_ValidComponent_ShouldHaveExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
@@ -182,7 +182,7 @@ public class L5XDataTypeTests
     [Test]
     public void Count_WhenCalled_ShouldNotBeZero()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var count = content.DataTypes.Count();
 
@@ -192,7 +192,7 @@ public class L5XDataTypeTests
     [Test]
     public void RemoveAt_ValidIndex_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
 
         content.DataTypes.RemoveAt(1);
@@ -203,7 +203,7 @@ public class L5XDataTypeTests
     [Test]
     public Task RemoveAt_ValidIndex_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.RemoveAt(1);
 
@@ -213,7 +213,7 @@ public class L5XDataTypeTests
     [Test]
     public void Replace_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
@@ -234,7 +234,7 @@ public class L5XDataTypeTests
     [Test]
     public void Replace_ValidComponent_ShouldHaveExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
             Name = "NewType",
@@ -257,7 +257,7 @@ public class L5XDataTypeTests
     [Test]
     public void Remove_ValidComponent_ShouldNotLongExists()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var component = content.DataTypes[0];
         var count = content.DataTypes.Count;
@@ -272,7 +272,7 @@ public class L5XDataTypeTests
     [Test]
     public void Update_ValidDelegate_ShouldUpdateAllComponents()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.Update(d => d.Description = "This is an update test");
 
@@ -285,7 +285,7 @@ public class L5XDataTypeTests
     [Test]
     public Task Update_ValidDelegate_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.Update(d => d.Description = "This is an update test");
 
@@ -295,7 +295,7 @@ public class L5XDataTypeTests
     [Test]
     public Task Update_ValidDelegateAndCondition_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.Update(d => d.Description = "This is a update", d => d.Name.Contains("Type"));
 
@@ -305,7 +305,7 @@ public class L5XDataTypeTests
     [Test]
     public void SetName_ValidName_ShouldUpdateIndex()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = content.DataTypes[0];
 
         component.Name = "NewType";
@@ -317,7 +317,7 @@ public class L5XDataTypeTests
     [Test]
     public void Dependencies_AttachedHasDependencies_ShouldNotBeEmpty()
     {
-        var file = L5X.Load(Known.Test);
+        var file = TestContent.Test;
         var dataType = file.Get<DataType>("ComplexType")!;
 
         var dependencies = dataType.Dependencies().ToList();

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test alarm type-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="AlarmType" TargetType="DataType" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Tue Mar 01 13:00:47 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+<DataType Use="Target" Name="AlarmType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a test alarm type]]>
+</Description>
+<Members>
+<Member Name="DigitalMember" DataType="CAM" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test digital member]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Use="Target" Name="ArrayType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a test type]]>
+</Description>
+<Members>
+<Member Name="SintArray" DataType="SINT" Dimension="5" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Sint Array]]>
+</Description>
+</Member>
+<Member Name="IntArray" DataType="INT" Dimension="5" Radix="Octal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Int Array]]>
+</Description>
+</Member>
+<Member Name="DintArray" DataType="DINT" Dimension="5" Radix="Hex" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test 
+Dint Array]]>
+</Description>
+</Member>
+<Member Name="LintArray" DataType="LINT" Dimension="5" Radix="Date/Time" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Lint Array]]>
+</Description>
+</Member>
+<Member Name="RealArray" DataType="REAL" Dimension="5" Radix="Exponential" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Real Array]]>
+</Description>
+</Member>
+<Member Name="BoolArray" DataType="BOOL" Dimension="32" Radix="Binary" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test Bool Array]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Use="Target" Name="BoolTest" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[This is a test]]>
+</Description>
+<Members>
+<Member Name="Member01" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Member02" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Member04" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Member05" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+</DataTypes>
+</Controller>
+</RSLogix5000Content>

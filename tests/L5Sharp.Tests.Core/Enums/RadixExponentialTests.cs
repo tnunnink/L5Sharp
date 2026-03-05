@@ -77,5 +77,17 @@ namespace L5Sharp.Tests.Core.Enums
 
             result.Should().Be(112.3f);
         }
+        
+        [Test]
+        [TestCase("1.#QNAN")]
+        [TestCase("-1.#QNAN")]
+        [TestCase("1.#IND")]
+        [TestCase("-1.#IND")]
+        public void Parse_Nan_ShouldBeExpected(string value)
+        {
+            var result = Radix.Exponential.Parse<float>(value);
+
+            result.Should().Be(float.NaN);
+        }
     }
 }

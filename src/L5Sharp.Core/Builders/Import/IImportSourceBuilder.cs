@@ -12,4 +12,11 @@ public interface IImportSourceBuilder
     /// <param name="fileName">The full path or name of the file to be used as the import source.</param>
     /// <returns>An instance of <see cref="IImportTypeBuilder"/> to allow further configuration of the import process.</returns>
     IImportTypeBuilder From(string fileName);
+
+    /// <summary>
+    /// Specifies the L5X from which data will be imported.
+    /// </summary>
+    /// <param name="content">The L5X content object to be used as the import source.</param>
+    /// <returns>An instance of <see cref="IImportTypeBuilder"/> to allow further configuration of the import process.</returns>
+    IImportTypeBuilder From(L5X content);
 }

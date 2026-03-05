@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--Testing type with invalid members-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetName="InvalidType" TargetType="DataType" ContainsContext="true" Owner="tnunnink, EN Engineering" ExportDate="Tue Mar 01 12:08:55 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+<DataType Use="Target" Name="InvalidType" Family="NoFamily" Class="User">
+<Description>
+<![CDATA[Testing type with invalid members]]>
+</Description>
+<Members>
+<Member Name="Invalid01" DataType="NULL" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Test]]>
+</Description>
+</Member>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="NULL"/>
+</Dependencies>
+</DataType>
+</DataTypes>
+</Controller>
+</RSLogix5000Content>

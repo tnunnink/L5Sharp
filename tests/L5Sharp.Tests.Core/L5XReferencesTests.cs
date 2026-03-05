@@ -11,7 +11,7 @@ public class L5XReferencesTests
     [Test]
     public void References_FromKnownTagInstanceWithUsagesShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var tag = content.Get<Tag>(Known.Tag);
 
         var usages = tag.References().ToList();
@@ -22,7 +22,7 @@ public class L5XReferencesTests
     [Test]
     public void References_KnownDataType_ShouldReturnElementsWithExpectedDataType()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var dataType = content.DataTypes.Get(Known.DataType);
 
         var usages = dataType.References().ToList();
@@ -33,7 +33,7 @@ public class L5XReferencesTests
     [Test]
     public void References_KnownInstruction_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var instruction = content.Get<AddOnInstruction>(Known.AddOnInstruction);
 
         var usages = instruction.References().ToList();
@@ -44,7 +44,7 @@ public class L5XReferencesTests
     [Test]
     public void References_AllDataTypes_DoesThatWork()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var usages = content.DataTypes.Select(d => new { d.Name, References = d.References().ToList() }).ToList();
 
@@ -54,7 +54,7 @@ public class L5XReferencesTests
     [Test]
     public void References_AllTags_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var usages = content.Query<Tag>().Select(t => new { t.TagName, Refernces = t.References().ToList() })
             .ToList();
@@ -65,7 +65,7 @@ public class L5XReferencesTests
     [Test]
     public void References_AllRoutines_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var usages = content.Query<Routine>()
             .Where(r => r.Program is not null)
@@ -82,7 +82,7 @@ public class L5XReferencesTests
     [Test]
     public void References_ExampleDataType_ShouldHaveNoUnused()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var unused = content.Query<DataType>()
             .Select(d => new { d.Name, References = d.References().ToList() })
@@ -95,7 +95,7 @@ public class L5XReferencesTests
     [Test]
     public void References_ExampleAgainstAllTags_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var tags = content.Query<Tag>().ToList();
 

@@ -8,7 +8,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void SampleQuery001()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
@@ -32,7 +32,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void SampleQuery002()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var results = content.Query<Tag>()
                 .SelectMany(t => t.Members())
@@ -46,7 +46,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void SampleQuery003()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var results = content.Query<Tag>().Where(t => t.Scope.IsLocal && t.DataType == "DINT");
 
@@ -56,7 +56,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void AddComponents()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var count = content.Tags.Count;
 
@@ -73,7 +73,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void GetControllerProperties()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var controller = content.Controller;
 
@@ -87,7 +87,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void AccessMultidimensionalArray()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var tags = content.Tags.Get("MultiDimensionalArray");
 
@@ -102,7 +102,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void GetComponentByName()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var type = content.DataTypes.Get("AlarmType");
 
@@ -115,7 +115,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void QueryAllRungsAndSelectDistinctTagNames()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var results = content.Query<Rung>().SelectMany(r => r.Tags()).Distinct().ToList();
 
@@ -125,7 +125,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void QueryAllRungsAndGetTagsInMovInstruction()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var results = content.Query<Rung>()
                 .SelectMany(r => r.Instructions().Where(i => i.Key == "MOVE").SelectMany(x => x.Tags))
@@ -137,7 +137,7 @@ namespace L5Sharp.Tests.Core
         [Test]
         public void SomeMoreTagQueriesAcrossTheL5XFile()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var allTags = content.Query<Tag>().ToList();
 
