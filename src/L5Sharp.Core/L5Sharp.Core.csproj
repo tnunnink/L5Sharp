@@ -15,8 +15,7 @@
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <Authors>Timothy Nunnink</Authors>
         <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
-        <Version>6.0.0-beta.10</Version>
-        <AssemblyVersion>6.0.0.10</AssemblyVersion>
+        <Version>6.0.0-beta.11</Version>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
