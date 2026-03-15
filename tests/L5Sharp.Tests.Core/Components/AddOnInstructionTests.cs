@@ -26,7 +26,8 @@ public class AddOnInstructionTests
         instruction.EditedBy.Should().Be(Environment.UserName);
         instruction.SoftwareRevision.Should().BeNull();
         instruction.AdditionalHelpText.Should().BeNull();
-        instruction.IsEncrypted.Should().BeNull();
+        instruction.IsEncrypted.Should().BeFalse();
+        instruction.EncryptionConfig.Should().BeNull();
         instruction.Parameters.Should().HaveCount(2);
         instruction.LocalTags.Should().BeEmpty();
         instruction.Routines.Should().HaveCount(1);
@@ -35,7 +36,7 @@ public class AddOnInstructionTests
     [Test]
     public void New_Override_ShouldHaveExpectedValues()
     {
-        var instruction = new AddOnInstruction()
+        var instruction = new AddOnInstruction
         {
             Name = "Test",
             Description = "This is another test",
@@ -53,10 +54,6 @@ public class AddOnInstructionTests
             EditedBy = "Test User",
             SoftwareRevision = new Revision(2, 3),
             AdditionalHelpText = "This is additional help text",
-            IsEncrypted = true,
-            Parameters = new LogixContainer<Parameter>(),
-            LocalTags = new LogixContainer<LocalTag>(),
-            Routines = new LogixContainer<Routine>()
         };
 
         instruction.Name.Should().Be("Test");
@@ -75,10 +72,6 @@ public class AddOnInstructionTests
         instruction.EditedBy.Should().Be("Test User");
         instruction.SoftwareRevision.Should().BeEquivalentTo(new Revision(2, 3));
         instruction.AdditionalHelpText.Should().Be("This is additional help text");
-        instruction.IsEncrypted.Should().BeTrue();
-        instruction.Parameters.Should().BeOfType<LogixContainer<Parameter>>();
-        instruction.LocalTags.Should().BeOfType<LogixContainer<LocalTag>>();
-        instruction.Routines.Should().BeOfType<LogixContainer<Routine>>();
     }
 
     [Test]
@@ -147,7 +140,7 @@ public class AddOnInstructionTests
 
         var referenceTags = aoi.Parameters
             .Where(p => p.Usage == TagUsage.InOut)
-            .Select(p => new Tag(p.Name, new StructureData(p.DataType!)));
+            .Select(p => new Tag(p.Name, new StructureData(p.DataType)));
 
         content.Tags.Add(tag);
         content.Tags.AddRange(referenceTags);
@@ -188,7 +181,7 @@ public class AddOnInstructionTests
     [Test]
     public void Deserialize_SignedAoi_ShouldBeExpected()
     {
-        var content = TestContent.AoiSignedExport;
+        var content = TestContent.Load(TestFiles.Aoi.AoiSigned);
 
         var result = content.AddOnInstructions.First();
 

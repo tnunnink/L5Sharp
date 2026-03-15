@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using FluentAssertions;
+// ReSharper disable StringLiteralTypo
 
 // ReSharper disable UseObjectOrCollectionInitializer
 
@@ -90,6 +91,9 @@ public class ModuleTests
     [Test]
     public Task Create_CatalogNumberAndConfig_ShouldBeVerified()
     {
+        var catalog = new InMemoryModuleCatalog();
+        catalog.Add(ModuleDefinition.Generate(new Module("Test", "1783-ETAP", "1.2")));
+        
         var module = Module.Create("1783-ETAP", m =>
         {
             m.Name = "MyModule";
@@ -97,7 +101,7 @@ public class ModuleTests
             m.Revision = "1.2";
             m.Description = "This is a test of the create factory method using the module catalog.";
             m.Keying = ElectronicKeying.ExactMatch;
-        });
+        }, catalog);
 
         return Verify(module.Serialize().ToString());
     }
@@ -119,13 +123,13 @@ public class ModuleTests
     }
 
     [Test]
-    public void Create_InvalidCatalogNumber_ShouldThrowInvalidOperationException()
+    public void Create_InvalidCatalogNumber_ShouldThrowKeyNotFoundException()
     {
         var action = () => Module.Create("1234-ABCD", m =>
         {
             m.Name = "MyCard";
             m.Description = "This will fail";
-        });
+        }, new InMemoryModuleCatalog());
 
         action.Should().Throw<KeyNotFoundException>();
     }
@@ -221,7 +225,7 @@ public class ModuleTests
     }
 
     [Test]
-    public void Connect_ChildWithMultipleMatchingAvilablePorts_ShouldConnectToFirstPort()
+    public void Connect_ChildWithMultipleMatchingAvailablePorts_ShouldConnectToFirstPort()
     {
         var module = Module.Create("1756-EN2T", m =>
         {

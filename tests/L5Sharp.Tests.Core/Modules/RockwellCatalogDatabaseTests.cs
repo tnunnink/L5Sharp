@@ -3,6 +3,7 @@
 namespace L5Sharp.Tests.Core.Modules;
 
 [TestFixture]
+[Explicit("These tests require access to the Rockwell Automation catalog database and should be run manually.")]
 public class RockwellCatalogDatabaseTests
 {
     [Test]

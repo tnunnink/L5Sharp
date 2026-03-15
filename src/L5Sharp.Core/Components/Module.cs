@@ -135,14 +135,10 @@ public class Module : LogixComponent<Module>
     /// <remarks>
     /// All modules must have a specified revision number.
     /// </remarks>
-    public Revision? Revision
+    public Revision Revision
     {
         get => GetRevision(L5XName.Major, L5XName.Minor);
-        set
-        {
-            Element.SetAttributeValue(L5XName.Major, value?.Major);
-            Element.SetAttributeValue(L5XName.Minor, value?.Minor);
-        }
+        set => SetRevision(value, L5XName.Major, L5XName.Minor);
     }
 
     /// <summary>

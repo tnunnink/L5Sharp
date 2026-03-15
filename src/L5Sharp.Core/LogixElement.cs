@@ -502,11 +502,12 @@ public abstract class LogixElement : ILogixElement
     /// This is a specialized helper since the date time formats are different for different component
     /// properties, we need to allow that to be specified.
     /// </remarks>
-    protected DateTime GetDateTime(string? format = null, [CallerMemberName] string? name = null)
+    protected DateTime? GetDateTime(string? format = null, [CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
+        //Default date/time format for Logix exports.
         format ??= "ddd MMM d HH:mm:ss yyyy";
 
         var attribute = Element.Attribute(name);
@@ -755,14 +756,39 @@ public abstract class LogixElement : ILogixElement
     /// This is a specialized helper since the date time formats are different for different component
     /// properties, we should allow that to be specified.
     /// </remarks>
-    protected void SetDateTime(DateTime value, string? format = null, [CallerMemberName] string? name = null)
+    protected void SetDateTime(DateTime? value, string? format = null, [CallerMemberName] string? name = null)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty", nameof(name));
 
         format ??= "ddd MMM d HH:mm:ss yyyy";
-        var formatted = value.ToString(format);
+        var formatted = value?.ToString(format);
         Element.SetAttributeValue(name, formatted);
+    }
+
+    /// <summary>
+    /// Sets the revision information on the current element using the specified major and minor attribute names.
+    /// </summary>
+    /// <param name="revision">The <see cref="Revision"/> object containing the major and minor version numbers.</param>
+    /// <param name="majorName">The name of the attribute representing the major version.</param>
+    /// <param name="minorName">The name of the attribute representing the minor version.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="revision"/> parameter is null.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="majorName"/> or <paramref name="minorName"/> is null or an empty string.
+    /// </exception>
+    protected void SetRevision(Revision revision, string majorName, string minorName)
+    {
+        if (revision is null)
+            throw new ArgumentNullException(nameof(revision));
+
+        if (string.IsNullOrEmpty(majorName))
+            throw new ArgumentException("majorName can not be null or empty", nameof(majorName));
+
+        if (string.IsNullOrEmpty(minorName))
+            throw new ArgumentException("minorName can not be null or empty", nameof(minorName));
+
+        Element.SetAttributeValue(majorName, revision.Major);
+        Element.SetAttributeValue(minorName, revision.Minor);
     }
 
     /// <summary>
@@ -772,8 +798,22 @@ public abstract class LogixElement : ILogixElement
     /// </summary>
     protected void EnsureOrder()
     {
-        if (ElementOrder.Count == 0) return;
-        var ordered = ElementOrder.Join(Element.Elements(), n => n, e => e.Name.LocalName, (_, e) => e).ToList();
-        Element.ReplaceNodes(ordered);
+        if (ElementOrder.Count == 0)
+            return;
+
+        var elements = Element.Elements().ToList();
+
+        // Get elements defined in the order list, sorted by their position in ElementOrder
+        var ordered = ElementOrder
+            .Join(elements, n => n, e => e.Name.LocalName, (_, e) => e)
+            .ToList();
+
+        // Get elements not defined in the order list
+        var remaining = elements
+            .Where(e => !ElementOrder.Contains(e.Name.LocalName))
+            .ToList();
+
+        // Combine both sets and update the underlying XElement
+        Element.ReplaceNodes(ordered.Concat(remaining));
     }
 }

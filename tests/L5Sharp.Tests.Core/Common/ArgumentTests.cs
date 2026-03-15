@@ -60,51 +60,51 @@ public class ArgumentTests
     }
 
     [Test]
-    public void Parse_NullValue_ShouldThrowException()
+    public void New_NullValue_ShouldThrowException()
     {
-        FluentActions.Invoking(() => Argument.Parse(null)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => new Argument(null!)).Should().Throw<ArgumentException>();
     }
 
     [Test]
-    public void Parse_EmptyValue_ShouldBeEmpty()
+    public void New_EmptyValue_ShouldBeEmpty()
     {
-        var argument = Argument.Parse(string.Empty);
+        var argument = new Argument(string.Empty);
 
         argument.Should().Be(string.Empty);
         argument.Type.Should().Be(ArgumentType.Empty);
     }
 
     [Test]
-    public void Parse_UnknownValue_ShouldBeUnknown()
+    public void New_UnknownValue_ShouldBeUnknown()
     {
-        var argument = Argument.Parse("?");
+        var argument = new Argument("?");
 
         argument.Should().Be("?");
         argument.Type.Should().Be(ArgumentType.Unknown);
     }
 
     [Test]
-    public void Parse_AtomicDecimalValue_ShouldHaveExpectedValueAndType()
+    public void New_AtomicDecimalValue_ShouldHaveExpectedValueAndType()
     {
-        var argument = Argument.Parse("12345");
+        var argument = new Argument("12345");
 
         argument.Should().Be("12345");
         argument.Type.Should().Be(ArgumentType.Atomic);
     }
 
     [Test]
-    public void Parse_AtomicBinaryValue_ShouldHaveExpectedValueAndType()
+    public void New_AtomicBinaryValue_ShouldHaveExpectedValueAndType()
     {
-        var argument = Argument.Parse("2#0010_0110");
+        var argument = new Argument("2#0010_0110");
 
         argument.Should().Be("2#0010_0110");
         argument.Type.Should().Be(ArgumentType.Atomic);
     }
 
     [Test]
-    public void Parse_StringValue_ShouldHaveExpectedValueAndType()
+    public void New_StringValue_ShouldHaveExpectedValueAndType()
     {
-        var argument = Argument.Parse("'Test String'");
+        var argument = new Argument("'Test String'");
 
         argument.Should().Be("'Test String'");
         argument.Type.Should().Be(ArgumentType.String);
@@ -112,18 +112,18 @@ public class ArgumentTests
 
 
     [Test]
-    public void Parse_TagNameValue_ShouldHaveExpectedValueAndType()
+    public void New_TagNameValue_ShouldHaveExpectedValueAndType()
     {
-        var argument = Argument.Parse("MyTagName.Member[1].Active.1");
+        var argument = new Argument("MyTagName.Member[1].Active.1");
 
         argument.Should().Be("MyTagName.Member[1].Active.1");
         argument.Type.Should().Be(ArgumentType.Tag);
     }
 
     [Test]
-    public void Parse_ExpressionValue_ShouldHaveExpectedValueAndType()
+    public void New_ExpressionValue_ShouldHaveExpectedValueAndType()
     {
-        var argument = Argument.Parse("ABS(MyTagName) >= 1000");
+        var argument = new Argument("ABS(MyTagName) >= 1000");
 
         argument.Should().Be("ABS(MyTagName) >= 1000");
         argument.Type.Should().Be(ArgumentType.Expression);
@@ -132,7 +132,7 @@ public class ArgumentTests
     [Test]
     public void Tags_ArgumentWithSingleTag_ShouldHaveExpectedCount()
     {
-        var argument = Argument.Parse("MyTagName.Member[1].Active.1");
+        var argument = new Argument("MyTagName.Member[1].Active.1");
 
         var tags = argument.Tags.ToArray();
 

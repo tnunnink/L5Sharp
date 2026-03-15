@@ -291,6 +291,20 @@ public sealed class TagName : IComparable<TagName>
 
         return _path.IndexOf(tagName._path, StringComparison.OrdinalIgnoreCase) >= 0;
     }
+    
+    /// <summary>
+    /// Creates a new <see cref="TagName"/> by replacing the base portion of the current tag name
+    /// with the specified base name while preserving the operand (member path, indices, and elements).
+    /// </summary>
+    /// <param name="baseName">The new base name to use for the tag. This will replace the current base portion
+    /// while maintaining all members, array indices, and other path components that follow.</param>
+    /// <returns>A new <see cref="TagName"/> instance with the updated base name and the original operand.</returns>
+    /// <remarks>
+    /// This method is useful when you need to change the root portion of a tag reference while keeping
+    /// the structural path intact. For example, renaming "OldTag.Member[1].Value" with base name "NewTag"
+    /// would result in "NewTag.Member[1].Value".
+    /// </remarks>
+    public TagName Rename(string baseName) => Combine(baseName, Operand);
 
     /// <inheritdoc />
     public int CompareTo(TagName? other)

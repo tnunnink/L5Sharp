@@ -40,22 +40,22 @@ public class L5XTagTests
     [Test]
     public void GetRackConnectionAliasTagsShouldReturnExpectedElements()
     {
-        var content = TestContent.ModuleRackIoExport;
+        var content = TestContent.Load(TestFiles.Modules.RackIo);
 
         var inAliasTag = content.Query<Tag>().FirstOrDefault(t => t.Name == "RackIO:1:I");
 
         inAliasTag.Should().NotBeNull();
-        inAliasTag?.Value.Should().NotBeNull();
+        inAliasTag.Value.Should().NotBeNull();
 
-        var member = inAliasTag?.Member("Data");
+        var member = inAliasTag.Member("Data");
         member.Should().NotBeNull();
-        member?.Value.Should().Be(0);
+        member.Value.Should().Be(0);
     }
 
     [Test]
     public Task SetValue_RackConnectionAliasTag_ShouldUpdateTheParentModuleTagElement()
     {
-        var content = TestContent.ModuleRackIoExport;
+        var content = TestContent.Load(TestFiles.Modules.RackIo);
         var member = content.Query<Tag>().First(t => t.Name == "RackIO:1:I")["Data"];
 
         member.Value = 1234;

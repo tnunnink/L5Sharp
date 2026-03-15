@@ -24,7 +24,7 @@ public class Rung : LogixCode<Rung>
     public Rung() : base(L5XName.Rung)
     {
         Element.Add(new XAttribute(L5XName.Number, 0));
-        Type = RungType.Normal;
+        Element.Add(new XAttribute(L5XName.Type, RungType.Normal.Value));
         Text = ";";
     }
 
@@ -49,13 +49,9 @@ public class Rung : LogixCode<Rung>
     }
 
     /// <summary>
-    /// The <see cref="RungType"/>, indicating edit state option of the rung.
+    /// The <see cref="RungType"/>, indicating an edit state option of the rung.
     /// </summary>
-    public RungType? Type
-    {
-        get => GetValue(RungType.Parse);
-        set => SetValue(value);
-    }
+    public RungType? Type => GetValue(RungType.Parse);
 
     /// <summary>
     /// Gets or sets the text content of the Rung element.
@@ -117,34 +113,6 @@ public class Rung : LogixCode<Rung>
     }
 
     /// <summary>
-    /// Returns a flat list of <see cref="Rung"/> representing all base and nested AOI logic in the
-    /// current rung instance.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing all the <see cref="Rung"/>, including nested instruction
-    /// text, found in the rung collection.
-    /// </returns>
-    /// <remarks>
-    /// This extension was specifically created to assist in getting a flat list of logic, including
-    /// nested AOI logic, for specialized querying purposes, such as finding tag references within nested logic.
-    /// This method will replace the instruction logic parameters with the neutral text operands of the instruction signature,
-    /// so to get the effective flattened list of executing <see cref="Rung"/> code.
-    /// </remarks>
-    public IEnumerable<Rung> Flatten()
-    {
-        var code = new List<Rung>();
-
-        foreach (var instruction in Instructions())
-        {
-            if (instruction.IsNative) continue;
-            if (!this.TryResolve<AddOnInstruction>(instruction.Key, out var aoi)) continue;
-            var logic = aoi.LogicFor(instruction);
-            code.AddRange(logic);
-        }
-
-        return code;
-    }
-
-    /// <summary>
     /// Allows implicit conversion of a <see cref="Rung"/> object to a string representation of its <see cref="Text"/> property.
     /// </summary>
     /// <param name="rung">The <see cref="Rung"/> instance to convert.</param>
@@ -157,56 +125,4 @@ public class Rung : LogixCode<Rung>
     /// <param name="text"></param>
     /// <returns></returns>
     public static implicit operator Rung(string text) => new(text);
-}
-
-/// <summary>
-/// Extension methods for a <see cref="Rung"/> element or collections or elements.
-/// </summary>
-public static class RungExtensions
-{
-    /*/// <summary>
-    /// Returns a flat list of <see cref="NeutralText"/> representing all base and nested AoiBlock logic in the
-    /// collection of <see cref="Rung"/> objects.
-    /// </summary>
-    /// <returns>A <see cref="IEnumerable{T}"/> containing all the <see cref="NeutralText"/>, including nested instruction
-    /// text, found in the rung collection.
-    /// </returns>
-    /// <remarks>
-    /// This extension was specifically created to assist in getting a flat list of logic, including
-    /// nested AoiBlock logic, for specialized querying purposes, such as finding tag references within nested logic.
-    /// This method will replace the instruction logic parameters with the neutral text operands of the instruction signature,
-    /// so to get the effective flattened list of executing <see cref="NeutralText"/> code.
-    /// </remarks>
-    public static IEnumerable<NeutralText> Flatten(this IEnumerable<Rung> rungs)
-    {
-        var code = new List<NeutralText>();
-        var collection = rungs.ToList();
-
-        var content = collection.FirstOrDefault()?.Document();
-        if (content is null)
-            throw new InvalidOperationException("Can not flatten rungs that are not attached to a L5X content file.");
-
-        var lookup = content.Instructions.ToDictionary(k => k.Name, v => v);
-        var text = collection.Select(r => r.Text);
-
-        foreach (var line in text)
-        {
-            var instructions = lookup.SelectMany(l => line.Instructions(l.Key)).ToList();
-
-            if (instructions.Count == 0)
-            {
-                code.Add(line);
-                continue;
-            }
-
-            foreach (var logic in from instruction in instructions
-                     let definition = lookup[instruction.Key]
-                     select definition.LogicFor(instruction))
-            {
-                code.AddRange(logic);
-            }
-        }
-
-        return code;
-    }*/
 }

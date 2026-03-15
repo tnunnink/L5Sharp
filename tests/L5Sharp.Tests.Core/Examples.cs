@@ -21,7 +21,7 @@ namespace L5Sharp.Tests.Core
 
             var program = new Program();
             // Create a duplicate with updated config.
-            var duplicate = program.Duplicate(p => 
+            var duplicate = program.Duplicate(p =>
             {
                 p.Name = "Program_02";
                 p.Description = "This is a different instance";

@@ -306,6 +306,8 @@ internal class LogixIndex
 
             foreach (var tag in instruction.Arguments.Where(a => a.Type.IsTag))
                 AddOrUpdateReference(tag, reference);
+            
+            
         }
     }
 

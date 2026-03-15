@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using JetBrains.dotMemoryUnit;
 
 namespace L5Sharp.Tests.Core;

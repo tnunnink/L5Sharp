@@ -80,9 +80,27 @@ public class L5XReferencesTests
     #region ExampleFile
 
     [Test]
+    public void References_TagMemberWithParentHavingAoiReference_ShouldGetAoiReference()
+    {
+        //todo
+        const string reference = "";
+        
+        var content = TestContent.Example;
+
+        var tag = content.Query<Tag>()
+            .SelectMany(t => t.Members())
+            .FirstOrDefault(t => t.TagName.LocalPath == reference);
+
+        tag.Should().NotBeNull();
+
+        var references = tag.References().ToList();
+        references.Should().NotBeEmpty();
+    }
+
+    [Test]
     public void References_ExampleDataType_ShouldHaveNoUnused()
     {
-        var content = TestContent.Test;
+        var content = TestContent.Example;
 
         var unused = content.Query<DataType>()
             .Select(d => new { d.Name, References = d.References().ToList() })
@@ -95,7 +113,7 @@ public class L5XReferencesTests
     [Test]
     public void References_ExampleAgainstAllTags_ShouldNotBeEmpty()
     {
-        var content = TestContent.Test;
+        var content = TestContent.Example;
 
         var tags = content.Query<Tag>().ToList();
 

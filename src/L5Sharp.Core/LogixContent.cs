@@ -69,7 +69,7 @@ public class LogixContent : LogixElement
     /// <summary>
     /// Gets the date time that the L5X file was exported.
     /// </summary>
-    public DateTime ExportDate => GetDateTime();
+    public DateTime? ExportDate => GetDateTime();
 
     /// <summary>
     /// Gets the set of configured export options for the L5X file.

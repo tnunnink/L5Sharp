@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core;
 
@@ -28,7 +27,7 @@ public class Argument
     /// </summary>
     /// <param name="value">An object representing the argument.</param>
     /// <exception cref="ArgumentNullException"><c>value</c> is <c>null</c>.</exception>
-    private Argument(string value)
+    public Argument(string value)
     {
         _value = value ?? throw new ArgumentNullException(nameof(value));
     }
@@ -77,30 +76,6 @@ public class Argument
     /// Some instruction has an empty/optional argument(s) (GSV), and therefore we will support empty arguments instances.
     /// </remarks>
     public static Argument Empty => new(string.Empty);
-
-    /// <summary>
-    /// Parses the provided string into a <see cref="Argument"/> value.
-    /// </summary>
-    /// <param name="value">Teh string to parse.</param>
-    /// <returns>An <see cref="Argument"/> representing the parsed value.</returns>
-    /// <exception cref="ArgumentException"><c>value</c> is null.</exception>
-    public static Argument Parse(string? value)
-    {
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
-
-        return new Argument(value);
-    }
-
-    /// <summary>
-    /// Attempts to parse the specified string into an <see cref="Argument"/>.
-    /// </summary>
-    /// <param name="value">The string value to be parsed into an <see cref="Argument"/>.</param>
-    /// <returns>An <see cref="Argument"/> instance created from the input value.</returns>
-    public static Argument TryParse(string? value)
-    {
-        return new Argument(value ?? string.Empty);
-    }
 
     #region Equality
 
@@ -263,8 +238,8 @@ public class Argument
 
         if (type == ArgumentType.Expression)
             //todo handle nested values in expression
-            throw new NotImplementedException();
-
+            return [];
+        
         return [];
     }
 

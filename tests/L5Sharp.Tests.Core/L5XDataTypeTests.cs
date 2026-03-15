@@ -17,9 +17,9 @@ public class L5XDataTypeTests
     }
 
     [Test]
-    public void ToList_DataTypeExport_ShouldNotBeEmpty()
+    public void ToList_ComplexTypeExport_ShouldNotBeEmpty()
     {
-        var content = TestContent.DataTypeExport;
+        var content = TestContent.Load(TestFiles.DataTypes.ComplexType);
 
         var result = content.DataTypes.ToList();
 
@@ -164,12 +164,12 @@ public class L5XDataTypeTests
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].AddBefore(component);
@@ -218,12 +218,12 @@ public class L5XDataTypeTests
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].Replace(component);
@@ -239,12 +239,12 @@ public class L5XDataTypeTests
         {
             Name = "NewType",
             Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].Replace(component);
@@ -318,7 +318,7 @@ public class L5XDataTypeTests
     public void Dependencies_AttachedHasDependencies_ShouldNotBeEmpty()
     {
         var file = TestContent.Test;
-        var dataType = file.Get<DataType>("ComplexType")!;
+        var dataType = file.Get<DataType>("ComplexType");
 
         var dependencies = dataType.Dependencies().ToList();
 

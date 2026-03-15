@@ -418,6 +418,15 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <inheritdoc />
+    public override IEnumerable<Reference> References()
+    {
+        if (!TryGetDocument(out var document))
+            return [];
+
+        return document.References(TagName.LocalPath).Where(r => r.Scope.IsVisibleTo(Scope));
+    }
+
+    /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {
         var dependencies = new List<ILogixEntity>();

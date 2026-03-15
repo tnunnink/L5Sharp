@@ -1,6 +1,5 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
-using NUnit.Framework.Internal;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 
@@ -340,7 +339,7 @@ public class LogixElementTests
 
         value.Should().NotBeNull();
         value.Should().BeOfType<ChildElement>();
-        value?.SomeValue.Should().Be("Value");
+        value.SomeValue.Should().Be("Value");
     }
 
     [Test]
@@ -539,7 +538,7 @@ public class LogixElementTests
         var xml = new XElement("Test", new XAttribute("Date", "Mon Sep 27 15:23:27 2021"));
         var element = new TestElement(xml);
 
-        element.Date = default;
+        element.Date = null;
 
         return Verify(element.Serialize().ToString());
     }
@@ -835,7 +834,7 @@ public class TestElement : LogixObject<TestElement>
         set => SetProperty(value);
     }
 
-    public DateTime Date
+    public DateTime? Date
     {
         get => GetDateTime();
         set => SetDateTime(value);

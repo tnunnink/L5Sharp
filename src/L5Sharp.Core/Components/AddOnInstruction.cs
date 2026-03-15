@@ -166,7 +166,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// The date and time that the instruction was created.
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the creation date and time.</value>
-    public DateTime CreatedDate
+    public DateTime? CreatedDate
     {
         get => GetDateTime(DateFormat);
         set => SetDateTime(value, DateFormat);
@@ -186,7 +186,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// The date and time that the instruction was last edited.
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the edit date and time.</value>
-    public DateTime EditedDate
+    public DateTime? EditedDate
     {
         get => GetDateTime(DateFormat);
         set => SetDateTime(value, DateFormat);
@@ -228,31 +228,35 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// Indicates whether the Add-On Instruction is protected with license-based Source Protection and locked
     /// </summary>
     /// <value><c>true</c> if the instruction is encrypted; otherwise, <c>false</c>.</value>
-    public bool? IsEncrypted
-    {
-        get => GetOptionalBool();
-        set => SetValue(value);
-    }
+    /// <remarks>
+    /// This property will look for the <c>IsEncrypted</c> attribute first. If not found then it will check the element
+    /// name for <c>EncodedData</c>. If either is found then this returns <c>true</c>.
+    /// I have not observed the property exported, only the encoded data element as documented by
+    /// Logix 5000 Controllers Import/Export
+    /// </remarks>
+    public bool IsEncrypted => GetOptionalBool() ?? Element.Name.LocalName is L5XName.EncodedData;
+
+    /// <summary>
+    /// A numeric value that identifies the type of encryption configuration used by the Add-On Instruction.
+    /// </summary>
+    /// <value>An integer representing the encryption configuration type.</value>
+    /// <remarks>
+    /// This property specifies the encryption configuration when the Add-On Instruction is protected with
+    /// license-based Source Protection. The value indicates which encryption algorithm or configuration is applied.
+    /// </remarks>
+    public int? EncryptionConfig => GetValue(int.Parse);
 
     /// <summary>
     /// The signature ID of the signed Add-On Instruction.
     /// </summary>
     /// <value>A <see cref="string"/> containing the signature ID of the signed Add-On Instruction</value>
-    public string? SignatureID
-    {
-        get => GetValue();
-        set => SetValue(value);
-    }
+    public string? SignatureID => GetValue();
 
     /// <summary>
     /// The signature timestamp of the signed Add-On Instruction.
     /// </summary>
     /// <value>A <see cref="DateTime"/> containing the signature timestamp of the signed Add-On Instruction</value>
-    public DateTime SignatureTimestamp
-    {
-        get => GetDateTime(DateFormat);
-        set => SetDateTime(value, DateFormat);
-    }
+    public DateTime? SignatureTimestamp => GetDateTime(DateFormat);
 
     /// <summary>
     /// The collection of <see cref="Parameter"/> that make up the structure of the instruction component.
@@ -364,51 +368,6 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
         var structure = new StructureData(Name);
         structure.AddMany(members.ToList());
         return structure;
-    }
-
-    /// <summary>
-    /// Returns the AoiBlock instruction logic with the parameter tag names replaced with the argument tag names of the
-    /// provided instruction instance.
-    /// </summary>
-    /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
-    /// <returns>
-    /// A <see cref="IEnumerable{T}"/> containing <see cref="Rung"/> representing all the instruction's
-    /// logic, with each instruction parameter tag name replaced with the arguments from the provided text.
-    /// </returns>
-    /// <remarks>
-    /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic, we can
-    /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
-    /// content or code type.
-    /// </remarks>
-    public IEnumerable<Rung> LogicFor(Instruction instruction)
-    {
-        if (instruction is null)
-            throw new ArgumentNullException(nameof(instruction));
-
-        // All-instructions primary logic is contained in the routine named 'Logic'
-        var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
-
-        var rungs = logic?.Content<Rung>();
-        if (rungs is null) return [];
-
-        //Skip the first operand as it is always the AOI instance tag, which does not have a corresponding
-        //parameter within the logic.
-        var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToArray();
-
-        //Only required parameters are part of the instruction signature
-        var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToArray();
-
-        //Generate a mapping of the provided instructions arguments to instruction parameters.
-        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToArray();
-
-        //Replace all parameter names with argument names in the instruction logic text and return the results.
-        return rungs.Select(r => mapping.Aggregate(r, (current, pair) =>
-        {
-            if (!TagName.IsTag(pair.Argument)) return current;
-            var pattern = $@"(?<=[^.]){pair.Parameter}\b";
-            var text = Regex.Replace(current.Text, pattern, pair.Argument.ToString());
-            return new Rung(text);
-        }));
     }
 
     /// <summary>

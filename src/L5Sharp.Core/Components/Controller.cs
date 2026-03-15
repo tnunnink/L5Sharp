@@ -44,6 +44,7 @@ public sealed class Controller : LogixElement
         L5XName.DataTypes,
         L5XName.Modules,
         L5XName.AddOnInstructionDefinitions,
+        L5XName.AlarmDefinitions,
         L5XName.Tags,
         L5XName.Programs,
         L5XName.Tasks,
@@ -54,7 +55,10 @@ public sealed class Controller : LogixElement
         L5XName.DataLogs,
         L5XName.QuickWatchLists,
         L5XName.TimeSynchronize,
-        L5XName.EthernetPorts
+        L5XName.InternetProtocol,
+        L5XName.CommPorts,
+        L5XName.EthernetPorts,
+        L5XName.EthernetNetwork
     ];
 
     /// <summary>
@@ -153,6 +157,16 @@ public sealed class Controller : LogixElement
     }
 
     /// <summary>
+    /// The revision or hardware version of the controller.
+    /// </summary>
+    /// <value>A <see cref="Core.Revision"/> value representing the major/minor version of the controller</value>
+    public Revision Revision
+    {
+        get => GetRevision(L5XName.MajorRev, L5XName.MinorRev);
+        set => SetRevision(value, L5XName.MajorRev, L5XName.MinorRev);
+    }
+
+    /// <summary>
     /// Percentage of available CPU time (10...90) that is assigned to communication.
     /// </summary>
     public string? TimeSlice
@@ -213,24 +227,10 @@ public sealed class Controller : LogixElement
     }
 
     /// <summary>
-    /// The revision or hardware version of the controller.
-    /// </summary>
-    /// <value>A <see cref="Core.Revision"/> value representing the major/minor version of the controller</value>
-    public Revision? Revision
-    {
-        get => GetRevision(L5XName.MajorRev, L5XName.MinorRev);
-        set
-        {
-            Element.SetAttributeValue(L5XName.MajorRev, value?.Major);
-            Element.SetAttributeValue(L5XName.MinorRev, value?.Minor);
-        }
-    }
-
-    /// <summary>
     /// The date/time the current project was created. 
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the date and time of creation.</value>
-    public DateTime ProjectCreationDate
+    public DateTime? ProjectCreationDate
     {
         get => GetDateTime(DateTimeFormat);
         set => SetDateTime(value, DateTimeFormat);
@@ -240,7 +240,7 @@ public sealed class Controller : LogixElement
     /// The date/time the current project was last modified. 
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the date and time of modification.</value>
-    public DateTime LastModifiedDate
+    public DateTime? LastModifiedDate
     {
         get => GetDateTime(DateTimeFormat);
         set => SetDateTime(value, DateTimeFormat);

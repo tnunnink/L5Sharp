@@ -1808,7 +1808,7 @@ public sealed class Instruction
 
         var signature = _text.Substring(start, length);
 
-        return Regex.Split(signature, ArgumentSplitPattern).Select(Argument.TryParse).ToArray();
+        return Regex.Split(signature, ArgumentSplitPattern).Select(a => new Argument(a)).ToArray();
     }
 
     /// <summary>
