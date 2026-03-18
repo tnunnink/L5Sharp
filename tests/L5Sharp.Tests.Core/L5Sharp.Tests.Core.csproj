@@ -440,10 +440,6 @@
       <EmbeddedResource Remove="Serialization\**" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Modules\" />
-    </ItemGroup>
-
 
 
 

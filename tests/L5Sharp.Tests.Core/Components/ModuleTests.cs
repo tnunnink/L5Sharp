@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using FluentAssertions;
-// ReSharper disable StringLiteralTypo
 
+// ReSharper disable StringLiteralTypo
 // ReSharper disable UseObjectOrCollectionInitializer
 
 namespace L5Sharp.Tests.Core.Components;
@@ -78,69 +78,6 @@ public class ModuleTests
         module.Keying.Should().Be(ElectronicKeying.Disabled);
     }
 
-    /*[Test]
-    public Task Create_ValidNameAndCatalogNumber_ShouldBeVerified()
-    {
-        var module = Module.Create("Test", "1756-EN2T");
-
-        var xml = module.Serialize().ToString();
-
-        return Verify(xml);
-    }
-
-    [Test]
-    public Task Create_CatalogNumberAndConfig_ShouldBeVerified()
-    {
-        var module = Module.Create("1783-ETAP", m =>
-        {
-            m.Name = "MyModule";
-            m.IP = IPAddress.Any;
-            m.Revision = "1.2";
-            m.Description = "This is a test of the create factory method using the module catalog.";
-            m.Keying = ElectronicKeying.ExactMatch;
-        });
-
-        return Verify(module.Serialize().ToString());
-    }
-
-    [Test]
-    public Task Create_ExistingValidCatalogNumber_ShouldBeVerified()
-    {
-        var template = Known.ModuleExport;
-
-        var module = Module.Create(template, "1756-EN2T", m =>
-        {
-            m.Name = "NewName";
-            m.Revision = 1.23;
-            m.Description = "This is a new module instance based on an existing template";
-            m.Inhibited = true;
-        });
-
-        return Verify(module.Serialize().ToString());
-    }
-
-    [Test]
-    public void Create_InvalidCatalogNumber_ShouldThrowKeyNotFoundException()
-    {
-        var action = () => Module.Create("1234-ABCD", m =>
-        {
-            m.Name = "MyCard";
-            m.Description = "This will fail";
-        });
-
-        action.Should().Throw<KeyNotFoundException>();
-    }
-
-    [Test]
-    public Task Local_ValidCatalogNumber_ShouldBeVerified()
-    {
-        var module = Module.Local("1756-L83E", "33.1");
-
-        var xml = module.Serialize().ToString();
-
-        return Verify(xml);
-    }*/
-
     [Test]
     public void IP_SetValue_ShouldBeUpdated()
     {
@@ -188,50 +125,4 @@ public class ModuleTests
 
         return Verify(xml);
     }
-
-    /*[Test]
-    public void Connect_ValidChildModule_ShouldHaveExpectedParentProperties()
-    {
-        var module = Module.Create("1756-EN2T", m =>
-        {
-            m.Name = "TestCard";
-            m.IP = IPAddress.Loopback;
-        });
-
-        var child = module.Connect("1756-IF8", m => { m.Name = "ChildCard"; });
-
-        child.ParentModule.Should().Be(module.Name);
-        child.ParentModPortId.Should().Be(1);
-        child.Ports.Should().Contain(p => p.Upstream && p.Type == "ICP");
-    }
-
-    [Test]
-    public void Connect_ChildWithNotMatchingPort_ShouldThrowException()
-    {
-        var module = Module.Create("1756-EN2T", m =>
-        {
-            m.Name = "TestCard";
-            m.IP = IPAddress.Loopback;
-        });
-
-        var action = () => module.Connect("5094-OF8", m => { m.Name = "ChildCard"; });
-
-        action.Should().Throw<InvalidOperationException>()
-            .WithMessage(
-                "Failed to connect (5094-OF8/A) to TestCard (1756-EN2T). No matching ports available for connection.");
-    }
-
-    [Test]
-    public void Connect_ChildWithMultipleMatchingAvailablePorts_ShouldConnectToFirstPort()
-    {
-        var module = Module.Create("1756-EN2T", m =>
-        {
-            m.Name = "TestCard";
-            m.IP = IPAddress.Loopback;
-        });
-
-        var result = module.Connect("1756-EN2T", m => { m.Name = "ChildCard"; });
-
-        result.Ports.Should().Contain(p => p.Upstream && p.Type == "ICP");
-    }*/
 }

@@ -31,9 +31,9 @@ public class ModuleCatalogBuilderTests
     public void WithModulesFromL5X_ValidFile_ShouldIncludeDefinitions()
     {
         var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.L5X");
-        var l5x = L5X.Empty();
-        l5x.Add(new Module { Name = "TestModule", CatalogNumber = "1756-IB16", Revision = new Revision(1, 1) });
-        l5x.Save(filePath);
+        var content = L5X.Empty();
+        content.Add(new Module { Name = "TestModule", CatalogNumber = "1756-IB16", Revision = new Revision(1, 1) });
+        content.Save(filePath);
 
         try
         {
