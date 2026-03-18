@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\L5Sharp.Core\L5Sharp.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Internal\ModuleDefinitions.xml" />
+      <EmbeddedResource Include="Internal\ModuleDefinitions.xml" />
+    </ItemGroup>
+
+</Project>

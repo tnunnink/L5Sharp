@@ -93,6 +93,12 @@ public abstract class LogixEnum
         return Enums.GetOrAdd(typeof(TEnum), t => GetOptions(t).ToArray()).Cast<TEnum>();
     }
 
+    /// <summary>
+    /// Retrieves a collection of <see cref="LogixEnum"/> instances defined in the specified type.
+    /// </summary>
+    /// <param name="type">The type from which to retrieve the enumeration options. Must derive from <see cref="LogixEnum"/>.</param>
+    /// <returns>A collection of <see cref="LogixEnum"/> instances associated with the specified type.</returns>
+    /// <exception cref="ArgumentException"><paramref name="type"/> does not derive from <see cref="LogixEnum"/>.</exception>
     private static IEnumerable<LogixEnum> GetOptions(Type type)
     {
         if (!typeof(LogixEnum).IsAssignableFrom(type))

@@ -90,7 +90,7 @@ public abstract class AtomicData : LogixData
     }
 
     /// <inheritdoc />
-    public override void ResetData()
+    public override void ClearData()
     {
         // Reset the value for atomic data to zero.
         var value = Radix.Format(0);

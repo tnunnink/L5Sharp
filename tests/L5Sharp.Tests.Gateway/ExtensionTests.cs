@@ -15,7 +15,7 @@ public class ExtensionTests : PlcTestBase
     {
         var content = TestContent.Simple;
         //To ensure we read updated data, clear all the in memory tag values first.
-        content.Tags.Update(t => t.Value.ResetData());
+        content.Tags.Update(t => t.Value.ClearData());
 
         using var client = CreateClient();
 

@@ -345,7 +345,7 @@ public class Module : LogixComponent<Module>
         TryAddModule(child);
     }
 
-    /// <summary>
+    /*/// <summary>
     /// Creates and connects a child module to the current module using the specified catalog number and configuration action.
     /// Also tries to add the child to the underlying L5X if possible
     /// </summary>
@@ -504,7 +504,7 @@ public class Module : LogixComponent<Module>
         var module = definition.Create(nameof(Local));
 
         return module;
-    }
+    }*/
 
     #region Internals
 
@@ -615,7 +615,7 @@ public class Module : LogixComponent<Module>
 
         foreach (var candidate in candidates)
         {
-            // If the parent port for this module exists, matches the port type for the cadidate,
+            // If the parent port for this module exists, matches the port type for the candidate,
             // and the candidate is set to upstream, then it is in use, and we must avoid it.
             if (parentPort is not null && parentPort.Type == candidate.Type && candidate.Upstream)
                 continue;
@@ -627,7 +627,7 @@ public class Module : LogixComponent<Module>
         }
 
         throw new InvalidOperationException(
-            $"Failed to connect {child.Name}({child.CatalogNumber}) to {Name} ({CatalogNumber}). No matching ports available for connection.");
+            $"Failed to connect {child.Name} ({child.CatalogNumber}) to {Name} ({CatalogNumber}). No matching ports available for connection.");
     }
 
     /// <summary>

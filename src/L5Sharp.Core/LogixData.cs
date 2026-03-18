@@ -116,11 +116,11 @@ public abstract class LogixData : LogixElement
     /// false for booleans, empty for strings, etc.). This is useful for clearing data structures before
     /// reusing them or returning them to a known initial state.
     /// </remarks>
-    public virtual void ResetData()
+    public virtual void ClearData()
     {
         foreach (var member in Members)
         {
-            member.Value.ResetData();
+            member.Value.ClearData();
         }
     }
 
