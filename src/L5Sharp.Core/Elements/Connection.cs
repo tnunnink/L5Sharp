@@ -7,7 +7,8 @@ namespace L5Sharp.Core;
 /// <summary>
 /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
 /// </summary>
-public class Connection : LogixObject
+[LogixElement(L5XName.Connection)]
+public class Connection : LogixObject<Connection>
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -15,7 +16,7 @@ public class Connection : LogixObject
         L5XName.InputTag,
         L5XName.OutputTag
     ];
-    
+
     /// <summary>
     /// Creates a new <see cref="Connection"/> with default values.
     /// </summary>
@@ -27,6 +28,10 @@ public class Connection : LogixObject
         Priority = ConnectionPriority.Scheduled;
         InputConnectionType = TransmissionType.Multicast;
         InputProductionTrigger = ProductionTrigger.Cyclic;
+
+        //By default, just add the input and output tags. This will let us set data.
+        Element.Add(new XElement(L5XName.InputTag, new XAttribute(L5XName.ExternalAccess, Access.ReadWrite)));
+        Element.Add(new XElement(L5XName.OutputTag, new XAttribute(L5XName.ExternalAccess, Access.ReadWrite)));
     }
 
     /// <summary>
@@ -43,7 +48,7 @@ public class Connection : LogixObject
     /// </summary>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -52,7 +57,7 @@ public class Connection : LogixObject
     /// </summary>
     public int RPI
     {
-        get => GetRequiredValue<int>();
+        get => GetRequiredValue(int.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -61,7 +66,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort InputCxnPoint
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -70,7 +75,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort InputSize
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -79,7 +84,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort OutputCxnPoint
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -88,7 +93,7 @@ public class Connection : LogixObject
     /// </summary>
     public ushort OutputSize
     {
-        get => GetValue<ushort>();
+        get => GetValue(ushort.Parse);
         set => SetValue(value);
     }
 
@@ -97,7 +102,7 @@ public class Connection : LogixObject
     /// </summary>
     public ConnectionType? Type
     {
-        get => GetValue<ConnectionType>();
+        get => GetValue(ConnectionType.Parse);
         set => SetValue(value);
     }
 
@@ -106,7 +111,7 @@ public class Connection : LogixObject
     /// </summary>
     public ConnectionPriority? Priority
     {
-        get => GetValue<ConnectionPriority>();
+        get => GetValue(ConnectionPriority.Parse);
         set => SetValue(value);
     }
 
@@ -115,16 +120,16 @@ public class Connection : LogixObject
     /// </summary>
     public TransmissionType? InputConnectionType
     {
-        get => GetValue<TransmissionType>();
+        get => GetValue(TransmissionType.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="Connection"/> output is a redundant owner.
     /// </summary>
-    public bool OutputRedundantOwner
+    public bool? OutputRedundantOwner
     {
-        get => GetValue<bool>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -133,16 +138,16 @@ public class Connection : LogixObject
     /// </summary>
     public ProductionTrigger? InputProductionTrigger
     {
-        get => GetValue<ProductionTrigger>();
+        get => GetValue(ProductionTrigger.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the value indicating whether the EtherNet/IP connection is unicast.
     /// </summary>
-    public bool Unicast
+    public bool? Unicast
     {
-        get => GetValue<bool>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -151,7 +156,28 @@ public class Connection : LogixObject
     /// </summary>
     public int? EventId
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether an event trigger can be sent programmatically.
+    /// </summary>
+    /// <remarks>
+    /// This property allows controlling the ability to send an event trigger through code rather than relying on predefined configurations.
+    /// </remarks>
+    public bool? ProgrammaticallySendEventTrigger
+    {
+        get => GetOptionalBool();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the path used to define the connection between the module and the field device.
+    /// </summary>
+    public string? ConnectionPath
+    {
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -160,12 +186,12 @@ public class Connection : LogixObject
     /// </summary>
     /// <value>A <see cref="string"/> containing the suffix character if it exists; Otherwise, will default as 'I'.</value>
     /// <remarks>
-    /// This value is used in determining the module tag name. Not all modules serialize this property,
+    /// This value is used in determining the module tag name. Not all modules serialize this property
     /// but still use 'I' as the suffix character for input tags. Therefore, we will default to 'I' if not found.
     /// </remarks>
     public string InputTagSuffix
     {
-        get => GetValue<string>() ?? "I";
+        get => GetValue() ?? "I";
         set => SetValue(value);
     }
 
@@ -174,12 +200,12 @@ public class Connection : LogixObject
     /// </summary>
     /// <value>A <see cref="string"/> containing the suffix character if it exists; Otherwise, will default as 'O'.</value>
     /// <remarks>
-    /// This value is used in determining the module tag name. Not all modules serialize this property,
+    /// This value is used in determining the module tag name. Not all modules serialize this property
     /// but still use 'O' as the suffix character for output tags. Therefore, we will default to 'O' if not found.
     /// </remarks>
     public string OutputTagSuffix
     {
-        get => GetValue<string>() ?? "O";
+        get => GetValue() ?? "O";
         set => SetValue(value);
     }
 
@@ -187,19 +213,11 @@ public class Connection : LogixObject
     /// Gets the Tag that represents the input channel data for the <see cref="Connection"/> element.
     /// </summary>
     /// <value>A <see cref="Tag"/> component containing the module defined data structure for the input connection data.</value>
-    public Tag? InputTag
-    {
-        get => GetComplex<Tag>();
-        set => SetComplex(value?.Convert(L5XName.InputTag));
-    }
+    public Tag? InputTag => GetComplex<Tag>();
 
     /// <summary>
     /// Gets the Tag that represents the output channel data for the <see cref="Connection"/> element.
     /// </summary>
     /// <value>A <see cref="Tag"/> component containing the module defined data structure for the output connection data.</value>
-    public Tag? OutputTag
-    {
-        get => GetComplex<Tag>();
-        set => SetComplex(value?.Convert(L5XName.OutputTag));
-    }
+    public Tag? OutputTag => GetComplex<Tag>();
 }

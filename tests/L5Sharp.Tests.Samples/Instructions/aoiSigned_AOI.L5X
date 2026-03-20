@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is a test of a signed AOI-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="36.00" TargetName="aoiSigned" TargetType="AddOnInstructionDefinition" TargetRevision="1.0 " TargetLastEdited="2025-12-08T19:51:23.108Z" TargetSignature="16#b9e2_6bef" ContainsContext="true" ExportDate="Mon Dec 08 13:51:55 2025" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<EncodedData EncodedType="AddOnInstructionDefinition" Name="aoiSigned" Revision="1.0" SignatureID="B9E26BEF" SignatureTimestamp="2025-12-08T19:51:23.108Z" EditedDate="2025-12-08T19:51:23.108Z" SoftwareRevision="v36.00" EncryptionConfig="9">
+<Description>
+<![CDATA[This is a test of a signed AOI]]>
+</Description>
+<SignatureHistory>
+<HistoryEntry User="DESKTOP-4O0LTDD\tnunnink" Timestamp="2025-12-08T19:51:23.108Z" SignatureID="16#b9e2_6bef">
+<Description>
+<![CDATA[This is as test signature]]>
+</Description>
+</HistoryEntry>
+</SignatureHistory>
+<Parameters>
+<Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Input - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Output - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="test" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="None">
+<DefaultData Format="L5K">
+<![CDATA[0]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</DefaultData>
+</Parameter>
+</Parameters>
+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</EncodedData>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>

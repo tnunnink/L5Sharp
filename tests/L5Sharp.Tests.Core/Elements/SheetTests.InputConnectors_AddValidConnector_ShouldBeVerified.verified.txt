@@ -1,3 +1,0 @@
-﻿<Sheet Number="0">
-  <ICon ID="0" X="100" Y="100" Name="Test" />
-</Sheet>

@@ -1,26 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined or built in data type in Logix that is a part of the alarm instruction set.
+/// A predefined or built-in data type in Logix that is a part of the alarm instruction set.
 /// </summary>
-[L5XType(L5XName.AlarmDigitalParameters)]
-public sealed class ALARM_DIGITAL : StructureData
+[LogixElement(L5XName.AlarmDigitalParameters)]
+[LogixData(nameof(ALARM_DIGITAL))]
+public sealed class ALARM_DIGITAL : AlarmData
 {
     /// <summary>
     /// Creates a new <see cref="ALARM_DIGITAL"/> data type instance.
     /// </summary>
-    public ALARM_DIGITAL() : base(new XElement(L5XName.AlarmDigitalParameters))
+    public ALARM_DIGITAL() : base(L5XName.AlarmDigitalParameters)
     {
         Severity = new DINT();
         MinDurationPRE = new DINT();
         ShelveDuration = new DINT();
         MaxShelveDuration = new DINT();
-        ProgTime = new LINT(Radix.DateTime);
+        ProgTime = Radix.DateTime.Format<long>(new LINT());
         EnableIn = new BOOL();
         In = new BOOL();
         InFault = new BOOL();
@@ -53,21 +57,16 @@ public sealed class ALARM_DIGITAL : StructureData
 
     /// <inheritdoc />
     public override string Name => nameof(ALARM_DIGITAL);
-
+    
     /// <inheritdoc />
-    /// <remarks>
-    /// A <see cref="ALARM_ANALOG"/> is a special Rockwell defined data type that does not contain decorated member elements.
-    /// All values are stored as local attributes on the data element. When using this type with a tag, you must cast
-    /// the tag <c>Value</c> as the message type and set these properties statically.
-    /// </remarks>
-    public override IEnumerable<Member> Members => GenerateVirtualMembers();
+    public override int GetSize() => 152;
 
     /// <summary>
     /// Gets the <see cref="EnableIn"/> member of the <see cref="ALARM_DIGITAL"/> data type.
     /// </summary>
     public BOOL EnableIn
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -76,7 +75,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL In
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -85,7 +84,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL InFault
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -94,7 +93,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL Condition
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -103,7 +102,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL AckRequired
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -112,7 +111,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL Latched
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -121,7 +120,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -130,7 +129,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperAck
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -139,7 +138,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgReset
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -148,7 +147,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperReset
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -157,7 +156,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgSuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -166,7 +165,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperSuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -175,7 +174,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgUnsuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -184,7 +183,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperUnsuppress
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -193,7 +192,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperShelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -202,7 +201,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -211,7 +210,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperUnshelve
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -220,7 +219,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgDisable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -229,7 +228,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperDisable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -238,7 +237,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL ProgEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -247,7 +246,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL OperEnable
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -256,7 +255,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL AlarmCountReset
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -265,7 +264,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public BOOL UseProgTime
     {
-        get => GetRequiredValue<BOOL>();
+        get => GetRequiredValue(BOOL.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -274,7 +273,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public LINT ProgTime
     {
-        get => GetRequiredValue<LINT>();
+        get => GetRequiredValue(LINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -283,7 +282,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT Severity
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -292,7 +291,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT MinDurationPRE
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -301,7 +300,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT ShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
     }
 
@@ -310,44 +309,7 @@ public sealed class ALARM_DIGITAL : StructureData
     /// </summary>
     public DINT MaxShelveDuration
     {
-        get => GetRequiredValue<DINT>();
+        get => GetRequiredValue(DINT.Parse);
         set => SetRequiredValue(value);
-    }
-
-    /// <summary>
-    /// Creates the collection of virtual members for this custom predefined type.
-    /// </summary>
-    private IEnumerable<Member> GenerateVirtualMembers()
-    {
-        yield return new Member(nameof(Severity), () => Severity, t => { Severity = t.As<DINT>(); });
-        yield return new Member(nameof(MinDurationPRE), () => MinDurationPRE, t => { MinDurationPRE = t.As<DINT>(); });
-        yield return new Member(nameof(ShelveDuration), () => ShelveDuration, t => { ShelveDuration = t.As<DINT>(); });
-        yield return new Member(nameof(MaxShelveDuration), () => MaxShelveDuration,
-            t => { MaxShelveDuration = t.As<DINT>(); });
-        yield return new Member(nameof(ProgTime), () => ProgTime, t => { ProgTime = t.As<LINT>(); });
-        yield return new Member(nameof(EnableIn), () => EnableIn, t => { EnableIn = t.As<BOOL>(); });
-        yield return new Member(nameof(In), () => In, t => { In = t.As<BOOL>(); });
-        yield return new Member(nameof(InFault), () => InFault, t => { InFault = t.As<BOOL>(); });
-        yield return new Member(nameof(Condition), () => Condition, t => { Condition = t.As<BOOL>(); });
-        yield return new Member(nameof(AckRequired), () => AckRequired, t => { AckRequired = t.As<BOOL>(); });
-        yield return new Member(nameof(Latched), () => Latched, t => { Latched = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgAck), () => ProgAck, t => { ProgAck = t.As<BOOL>(); });
-        yield return new Member(nameof(OperAck), () => OperAck, t => { OperAck = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgReset), () => ProgReset, t => { ProgReset = t.As<BOOL>(); });
-        yield return new Member(nameof(OperReset), () => OperReset, t => { OperReset = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgSuppress), () => ProgSuppress, t => { ProgSuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(OperSuppress), () => OperSuppress, t => { OperSuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgUnsuppress), () => ProgUnsuppress, t => { ProgUnsuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(OperUnsuppress), () => OperUnsuppress, t => { OperUnsuppress = t.As<BOOL>(); });
-        yield return new Member(nameof(OperShelve), () => OperShelve, t => { OperShelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgUnshelve), () => ProgUnshelve, t => { ProgUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(OperUnshelve), () => OperUnshelve, t => { OperUnshelve = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgDisable), () => ProgDisable, t => { ProgDisable = t.As<BOOL>(); });
-        yield return new Member(nameof(OperDisable), () => OperDisable, t => { OperDisable = t.As<BOOL>(); });
-        yield return new Member(nameof(ProgEnable), () => ProgEnable, t => { ProgEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(OperEnable), () => OperEnable, t => { OperEnable = t.As<BOOL>(); });
-        yield return new Member(nameof(AlarmCountReset), () => AlarmCountReset,
-            t => { AlarmCountReset = t.As<BOOL>(); });
-        yield return new Member(nameof(UseProgTime), () => UseProgTime, t => { UseProgTime = t.As<BOOL>(); });
     }
 }

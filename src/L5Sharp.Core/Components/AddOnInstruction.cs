@@ -15,7 +15,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-[L5XType(L5XName.AddOnInstructionDefinition)]
+[LogixElement(L5XName.AddOnInstructionDefinition)]
 public class AddOnInstruction : LogixComponent<AddOnInstruction>
 {
     private const string DateFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
@@ -67,20 +67,10 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <param name="name">The name of the instruction.</param>
     /// <param name="type">The <see cref="RoutineType"/> for the logic of the instruction.</param>
     /// <param name="revision">The optional revision of the instruction.</param>
-    public AddOnInstruction(string name, RoutineType? type = default, Revision? revision = default) :
-        base(L5XName.AddOnInstructionDefinition)
+    public AddOnInstruction(string name, RoutineType? type = null, Revision? revision = null) : this()
     {
         Element.SetAttributeValue(L5XName.Name, name);
         Revision = revision ?? new Revision();
-        ExecutePreScan = false;
-        ExecutePostScan = false;
-        ExecuteEnableInFalse = false;
-        CreatedDate = DateTime.Now;
-        CreatedBy = Environment.UserName;
-        EditedDate = DateTime.Now;
-        EditedBy = Environment.UserName;
-        Parameters = [EnableIn(), EnableOut()];
-        LocalTags = [];
         Routines = [new Routine("Logic", type)];
     }
 
@@ -93,7 +83,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// </remarks>
     public ComponentClass? Class
     {
-        get => GetValue<ComponentClass>();
+        get => GetValue(ComponentClass.Parse);
         set => SetValue(value);
     }
 
@@ -108,7 +98,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// </remarks>
     public Revision? Revision
     {
-        get => GetValue<Revision>();
+        get => GetValue(Revision.Parse);
         set => SetValue(value);
     }
 
@@ -118,7 +108,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> containing text of the revision extension.</value>
     public string? RevisionExtension
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -128,7 +118,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> containing the text of the revision note.</value>
     public string? RevisionNote
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -138,37 +128,37 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> value representing the name of the vendor.</value>
     public string? Vendor
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Indicates that the instruction has and executes a pre scan routine.
+    /// Indicates that the instruction has and executes a pre-scan routine.
     /// </summary>
-    /// <value><c>true</c> if the instruction executes a pre scan routine; otherwise, <c>false</c>.</value>
+    /// <value><c>true</c> if the instruction executes a pre-scan routine; otherwise, <c>false</c>.</value>
     public bool ExecutePreScan
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Indicates that the instruction has and executes a post scan routine.
+    /// Indicates that the instruction has and executes a post-scan routine.
     /// </summary>
-    /// <value><c>true</c> if the instruction executes a post scan routine; otherwise, <c>false</c>.</value>
+    /// <value><c>true</c> if the instruction executes a post-scan routine; otherwise, <c>false</c>.</value>
     public bool ExecutePostScan
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Indicates that the instruction has and executes a enable in false routine.
+    /// Indicates that the instruction has and executes an enabled in false routine.
     /// </summary>
-    /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes a enable in false routine; otherwise, <c>false</c>.</value>
+    /// <value>A <see cref="bool"/> - <c>true</c> if the instruction executes an enabled in false routine; otherwise, <c>false</c>.</value>
     public bool ExecuteEnableInFalse
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -188,7 +178,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> representing the name of the user.</value>
     public string? CreatedBy
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -208,7 +198,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> representing the name of the user.</value>
     public string? EditedBy
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -217,10 +207,11 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// The default is the currently open version of the application.
     /// </summary>
     /// <value>A <see cref="Core.Revision"/> representing the version of the instruction.</value>
+    /// <remarks>This property will handle the prefix 'v' for the revision value.</remarks>
     public Revision? SoftwareRevision
     {
-        get => GetValue<Revision>();
-        set => SetValue(value);
+        get => GetValue(s => Revision.Parse(s.Trim('v')));
+        set => SetValue($"v{value}");
     }
 
     /// <summary>
@@ -229,7 +220,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// <value>A <see cref="string"/> containing the help text.</value>
     public string? AdditionalHelpText
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -237,11 +228,35 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// Indicates whether the Add-On Instruction is protected with license-based Source Protection and locked
     /// </summary>
     /// <value><c>true</c> if the instruction is encrypted; otherwise, <c>false</c>.</value>
-    public bool? IsEncrypted
-    {
-        get => GetValue<bool>();
-        set => SetValue(value);
-    }
+    /// <remarks>
+    /// This property will look for the <c>IsEncrypted</c> attribute first. If not found then it will check the element
+    /// name for <c>EncodedData</c>. If either is found then this returns <c>true</c>.
+    /// I have not observed the property exported, only the encoded data element as documented by
+    /// Logix 5000 Controllers Import/Export
+    /// </remarks>
+    public bool IsEncrypted => GetOptionalBool() ?? Element.Name.LocalName is L5XName.EncodedData;
+
+    /// <summary>
+    /// A numeric value that identifies the type of encryption configuration used by the Add-On Instruction.
+    /// </summary>
+    /// <value>An integer representing the encryption configuration type.</value>
+    /// <remarks>
+    /// This property specifies the encryption configuration when the Add-On Instruction is protected with
+    /// license-based Source Protection. The value indicates which encryption algorithm or configuration is applied.
+    /// </remarks>
+    public int EncryptionConfig => GetValue(int.Parse);
+
+    /// <summary>
+    /// The signature ID of the signed Add-On Instruction.
+    /// </summary>
+    /// <value>A <see cref="string"/> containing the signature ID of the signed Add-On Instruction</value>
+    public string? SignatureID => GetValue();
+
+    /// <summary>
+    /// The signature timestamp of the signed Add-On Instruction.
+    /// </summary>
+    /// <value>A <see cref="DateTime"/> containing the signature timestamp of the signed Add-On Instruction</value>
+    public DateTime? SignatureTimestamp => GetDateTime(DateFormat);
 
     /// <summary>
     /// The collection of <see cref="Parameter"/> that make up the structure of the instruction component.
@@ -277,29 +292,42 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// This is an extension to make accessing the code for the instruction easier. All instructions have at
     /// least a single routine called Logic which contains the code for the instruction.
     /// </remarks>
-    public Routine Logic => Routines.SingleOrDefault(r => r.Name == nameof(Logic)) ??
-                            throw new InvalidOperationException("No Logic routine is defined for AOI.");
+    public Routine Logic => Routines.Single(r => r.Name == nameof(Logic));
+
+    /// <inheritdoc />
+    public override IEnumerable<ILogixEntity> Dependencies()
+    {
+        var dependencies = new List<ILogixEntity>();
+
+        foreach (var parameter in Parameters)
+        {
+            if (parameter.DataType is null || !TryResolveType(parameter.DataType, out var type)) continue;
+            dependencies.Add(type);
+            dependencies.AddRange(type.Dependencies());
+        }
+
+        foreach (var tag in LocalTags)
+        {
+            if (!TryResolveType(tag.DataType, out var type)) continue;
+            dependencies.Add(type);
+            dependencies.AddRange(type.Dependencies());
+        }
+
+        return dependencies.Distinct(c => c.Reference);
+    }
 
     /// <summary>
-    /// Creates a new <see cref="Instruction"/> instance using the provided tagname and optional arguments.
+    /// Creates a new <see cref="Instruction"/> instance using the provided tagnames and optional arguments.
     /// </summary>
     /// <param name="tagName">The tag name of the AOI instance.</param>
-    /// <param name="arguments">The optional arguments to supply the instruction signatrue with.</param>
+    /// <param name="arguments">The optional arguments to supply the instruction signature with.</param>
     /// <returns>A <see cref="Instruction"/> having this AOI's key and provided arguments.</returns>
-    public Instruction ToInstruction(TagName tagName, params Argument[] arguments)
+    public Instruction Instantiate(TagName tagName, params Argument[] arguments)
     {
         var args = new List<Argument> { tagName };
         args.AddRange(arguments);
-        return Instruction.New(Name, args.ToArray());
+        return new Instruction(Name, args.ToArray());
     }
-    
-    /// <summary>
-    /// Creates a new <see cref="NeutralText"/> instance using the provided tagname and optional arguments.
-    /// </summary>
-    /// <param name="tagName">The tag name of the AOI instance.</param>
-    /// <param name="arguments">The optional arguments to supply the instruction signatrue with.</param>
-    /// <returns>A <see cref="NeutralText"/> having this AOI's key and provided arguments.</returns>
-    public NeutralText ToText(TagName tagName, params Argument[] arguments) => ToInstruction(tagName, arguments).Text;
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> instance with data configured from this <see cref="AddOnInstruction"/> component. 
@@ -316,7 +344,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// Creates a new <see cref="LogixData"/> object given the current AOI configuration.
     /// </summary>
     /// <returns>
-    /// An <see cref="ComplexData"/> instance having the name of the current instruction and members generated
+    /// An <see cref="StructureData"/> instance having the name of the current instruction and members generated
     /// from the configured <see cref="Parameters"/>.
     /// </returns>
     /// <remarks>
@@ -327,70 +355,23 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     {
         if (string.IsNullOrEmpty(Name))
             throw new InvalidOperationException("Can not create data with null or empty data type name");
-        
-        //This will be some predefined type or a generic complex type, depending on whether it is statically defined.
-        var data = LogixData.Create(Name);
 
-        //If it is not a complex data (meaning more derived) then it was defined, and we can return it.
-        if (data is not ComplexData complexData) return data;
-        
+        if (LogixType.TryCreate(Name, out var registered))
+            return registered;
+
         //Generate the members from the parameters that are configured as input/output parameters.
         //These are the only members that are used as members of an AOI tag structure.
         var members = Parameters
             .Where(p => p.Usage == TagUsage.Input || p.Usage == TagUsage.Output)
             .Select(p => p.ToMember());
 
-        complexData.AddRange(members.ToList());
-        return complexData;
+        var structure = new StructureData(Name);
+        structure.AddMany(members.ToList());
+        return structure;
     }
 
     /// <summary>
-    /// Returns the AoiBlock instruction logic with the parameters tag names replaced with the argument tag names of the
-    /// provided instruction instance.
-    /// </summary>
-    /// <param name="instruction">The instruction instance for which to generate the underlying logic.</param>
-    /// <returns>
-    /// A <see cref="IEnumerable{T}"/> containing <see cref="NeutralText"/> representing all the instruction's
-    /// logic, with each instruction parameter tag name replaced with the arguments from the provided text.
-    /// </returns>
-    /// <remarks>
-    /// This is helpful when trying to perform deep analysis on logic. By "flattening" the logic we can
-    /// reason or evaluate it as if it was written in line. Currently only supports <see cref="Rung"/>
-    /// content or code type.
-    /// </remarks>
-    public IEnumerable<NeutralText> LogicFor(Instruction instruction)
-    {
-        if (instruction is null)
-            throw new ArgumentNullException(nameof(instruction));
-
-        // All instructions primary logic is contained in the routine named 'Logic'
-        var logic = Routines.FirstOrDefault(r => r.Name == "Logic");
-
-        var rungs = logic?.Content<Rung>();
-        if (rungs is null) return Enumerable.Empty<NeutralText>();
-
-        //Skip first operand as it is always the AoiBlock tag, which does not have corresponding parameter within the logic.
-        var arguments = instruction.Arguments.Select(a => a.ToString()).Skip(1).ToList();
-
-        //Only required parameters are part of the instruction signature
-        var parameters = Parameters.Where(p => p.Required is true).Select(p => p.Name).ToList();
-
-        //Generate a mapping of the provided instructions arguments to instruction parameters.
-        var mapping = arguments.Zip(parameters, (a, p) => new { Argument = a, Parameter = p }).ToList();
-
-        //Replace all parameter names with argument names in the instruction logic text, and return the results.
-        return rungs.Select(r => r.Text)
-            .Select(t => mapping.Aggregate(t, (current, pair) =>
-            {
-                if (!TagName.IsTag(pair.Argument)) return current;
-                var replace = $@"(?<=[^.]){pair.Parameter}\b";
-                return Regex.Replace(current, replace, pair.Argument.ToString());
-            }))
-            .ToList();
-    }
-
-    /// <summary>
-    /// Returns the default built in EnableIn parameter.
+    /// Returns the default built-in EnableIn parameter.
     /// </summary>
     private static Parameter EnableIn()
     {
@@ -404,13 +385,13 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
             Radix = Radix.Decimal,
             Required = false,
             Visible = false,
-            ExternalAccess = ExternalAccess.ReadOnly,
+            ExternalAccess = Access.ReadOnly,
             Default = new BOOL()
         };
     }
 
     /// <summary>
-    /// Returns the default built in EnableOut parameter.
+    /// Returns the default built-in EnableOut parameter.
     /// </summary>
     private static Parameter EnableOut()
     {
@@ -424,7 +405,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
             Radix = Radix.Decimal,
             Required = false,
             Visible = false,
-            ExternalAccess = ExternalAccess.ReadOnly,
+            ExternalAccess = Access.ReadOnly,
             Default = new BOOL()
         };
     }

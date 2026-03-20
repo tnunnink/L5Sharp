@@ -4,9 +4,10 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Tag"/> component that contains properties or configuration
+/// An element of the <see cref="Tag"/> component that contains properties or configuration
 /// consumer tag types.
 /// </summary>
+[LogixElement(L5XName.ConsumeInfo)]
 public class ConsumeInfo : LogixElement
 {
     /// <summary>
@@ -31,17 +32,17 @@ public class ConsumeInfo : LogixElement
     /// <value>A <see cref="string"/> representing the name of the remote device from which to consume data.</value>
     public string Producer
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specifies a remote tag name to consume.
     /// </summary>
     /// <value>A <see cref="TagName"/> representing the name of the remote tag to consume.</value>
     public TagName RemoteTag
     {
-        get => GetRequiredValue<TagName>();
+        get => GetRequiredValue().ToTagName();
         set => SetValue(value);
     }
 
@@ -53,17 +54,17 @@ public class ConsumeInfo : LogixElement
     /// Will leave it here for know but am unsure what this does.</remarks>
     public int RemoteInstance
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specifies the amount of time between updates of data from the remote controller.
     /// </summary>
     /// <value>A <see cref="double"/> representing the request packet interval.</value>
     public double RPI
     {
-        get => GetValue<double>();
+        get => GetValue(double.Parse);
         set => SetValue(value);
     }
 
@@ -73,7 +74,7 @@ public class ConsumeInfo : LogixElement
     /// <value><c>true</c> when the tag is configured enable unicast; Otherwise, <c>false</c>.</value>
     public bool Unicast
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 }

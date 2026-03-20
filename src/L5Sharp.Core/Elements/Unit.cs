@@ -10,13 +10,13 @@ namespace L5Sharp.Core;
 /// A comment contains the <see cref="Operand"/> representing the nested tag member the unit is associated with,
 /// as well as the actual unit <see cref="Value"/>.
 /// </remarks>\
-[L5XType(L5XName.EngineeringUnit)]
-public class Unit : LogixObject
+[LogixElement(L5XName.EngineeringUnit)]
+public class Unit : LogixObject<Unit>
 {
     /// <summary>
     /// Creates a new <see cref="Unit"/> element with the provided operand tag and comment text.
     /// </summary>
-    public Unit(TagName operand, string? value = default) : base(L5XName.EngineeringUnit)
+    public Unit(TagName operand, string? value = null) : base(L5XName.EngineeringUnit)
     {
         Operand = operand;
         Value = value ?? string.Empty;
@@ -40,12 +40,12 @@ public class Unit : LogixObject
     /// </value>
     public TagName Operand
     {
-        get => GetRequiredValue<TagName>();
+        get => GetRequiredValue().ToTagName();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
-    /// The text containting the unit value.
+    /// Get or sets the value of the unit.
     /// </summary>
     /// <value>A <see cref="string"/> containsing the unit text.</value>
     public string Value

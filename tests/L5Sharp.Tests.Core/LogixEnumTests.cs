@@ -16,7 +16,7 @@ public class LogixEnumTests
     {
         FluentActions.Invoking(() => LogixEnum.Names(null!)).Should().Throw<ArgumentNullException>();
     }
-    
+
     [Test]
     public void Options_NullType_ShouldThrowException()
     {
@@ -28,7 +28,7 @@ public class LogixEnumTests
     {
         FluentActions.Invoking(() => LogixEnum.Options(null!)).Should().Throw<ArgumentNullException>();
     }
-    
+
     [Test]
     public void Names_ValidEnumType_ShouldReturnExpected()
     {
@@ -69,19 +69,11 @@ public class LogixEnumTests
     [Test]
     public void Options_NonGenericValidType_ShouldReturnExpected()
     {
-        var options = LogixEnum.Options(typeof(ExternalAccess)).ToList();
+        var options = LogixEnum.Options(typeof(Access)).ToList();
 
         options.Should().NotBeEmpty();
-        options.Should().Contain(ExternalAccess.None);
-        options.Should().Contain(ExternalAccess.ReadOnly);
-        options.Should().Contain(ExternalAccess.ReadWrite);
-    }
-
-    [Test]
-    public void Options_WhenCalled_ShouldNotBeEmpty()
-    {
-        var options = LogixEnum.Options().ToList();
-
-        options.Should().NotBeEmpty();
+        options.Should().Contain(Access.None);
+        options.Should().Contain(Access.ReadOnly);
+        options.Should().Contain(Access.ReadWrite);
     }
 }

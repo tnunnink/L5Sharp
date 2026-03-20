@@ -1,18 +1,22 @@
 ﻿using System.Xml.Linq;
 
-// ReSharper disable InconsistentNaming RSLogix naming
+// Auto-generated type definition
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined data type that is built into Logix and used with timer instructions.
+/// Represents a <c>TIMER</c> data type structure.
 /// </summary>
-public sealed class TIMER : StructureData
+[LogixData("TIMER")]
+public sealed partial class TIMER : StructureData
 {
     /// <summary>
-    /// Creates a new <see cref="TIMER"/> data type instance.
+    /// Creates a new <see cref="TIMER"/> instance initialized with default values.
     /// </summary>
-    public TIMER() : base(nameof(TIMER))
+    public TIMER() : base("TIMER")
     {
         PRE = new DINT();
         ACC = new DINT();
@@ -20,19 +24,38 @@ public sealed class TIMER : StructureData
         TT = new BOOL();
         DN = new BOOL();
     }
-
-    /// <inheritdoc />
+    
+    /// <summary>
+    /// Creates a new <see cref="TIMER"/> instance initialized with the provided element.
+    /// </summary>
     public TIMER(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 12;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        PRE.UpdateData(data, offset + 4);
+        ACC.UpdateData(data, offset + 8);
+        EN.UpdateData((data[offset + 13] & (1 << 0)) != 0);
+        TT.UpdateData((data[offset + 13] & (1 << 1)) != 0);
+        DN.UpdateData((data[offset + 13] & (1 << 2)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
-    /// Gets the <see cref="PRE"/> member of the <see cref="TIMER"/> data type.
+    /// The <c>PRE</c> member of the <see cref="TIMER"/> data type.
     /// </summary>
-    /// <remarks>
-    /// The preset value specifies the value (1 msec units) which the accumulated value must reach
-    /// before the instruction sets the .DN bit.
-    /// </remarks>
     public DINT PRE
     {
         get => GetMember<DINT>();
@@ -40,12 +63,8 @@ public sealed class TIMER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="ACC"/> member of the <see cref="TIMER"/> data type.
+    /// The <c>ACC</c> member of the <see cref="TIMER"/> data type.
     /// </summary>
-    /// <remarks>
-    /// The accumulated value specifies the number of milliseconds that have elapsed since the
-    /// Timer instruction was enabled.
-    /// </remarks>
     public DINT ACC
     {
         get => GetMember<DINT>();
@@ -53,11 +72,8 @@ public sealed class TIMER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="EN"/> member of the <see cref="TIMER"/> data type.
+    /// The <c>EN</c> member of the <see cref="TIMER"/> data type.
     /// </summary>
-    /// <remarks>
-    /// The enable bit indicates that the Timer instruction is enabled.
-    /// </remarks>
     public BOOL EN
     {
         get => GetMember<BOOL>();
@@ -65,11 +81,8 @@ public sealed class TIMER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="TT"/> member of the <see cref="TIMER"/> data type.
+    /// The <c>TT</c> member of the <see cref="TIMER"/> data type.
     /// </summary>
-    /// <remarks>
-    /// The timing bit indicates that a timing operation is in process
-    /// </remarks>
     public BOOL TT
     {
         get => GetMember<BOOL>();
@@ -77,11 +90,8 @@ public sealed class TIMER : StructureData
     }
 
     /// <summary>
-    /// Gets the <see cref="DN"/> member of the <see cref="TIMER"/> data type.
+    /// The <c>DN</c> member of the <see cref="TIMER"/> data type.
     /// </summary>
-    /// <remarks>
-    /// The done bit is set when .ACC ≥ .PRE.
-    /// </remarks>
     public BOOL DN
     {
         get => GetMember<BOOL>();

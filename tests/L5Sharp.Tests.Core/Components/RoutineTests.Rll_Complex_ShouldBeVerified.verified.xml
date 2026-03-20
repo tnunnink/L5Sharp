@@ -1,0 +1,12 @@
+﻿<Routine Name="ComplexRoutine" Type="RLL">
+  <RLLContent>
+    <Rung Number="0" Type="N">
+      <Comment><![CDATA[Basic logic]]></Comment>
+      <Text><![CDATA[XIC(Input)OTE(Output);]]></Text>
+    </Rung>
+    <Rung Number="0" Type="N">
+      <Comment><![CDATA[Branching logic]]></Comment>
+      <Text><![CDATA[BST XIC(Step1) NXB XIC(Step2) BND OTE(StepComplete);]]></Text>
+    </Rung>
+  </RLLContent>
+</Routine>

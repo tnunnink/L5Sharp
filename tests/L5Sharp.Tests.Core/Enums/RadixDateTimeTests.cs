@@ -11,19 +11,8 @@ namespace L5Sharp.Tests.Core.Enums
             var radix = Radix.DateTime;
 
             radix.Should().NotBeNull();
-            radix.Should().Be(Radix.DateTime);
-        }
-
-        [Test]
-        public void Format_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => Radix.DateTime.FormatValue(null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
-        {
-            FluentActions.Invoking(() => Radix.DateTime.FormatValue(new REAL())).Should().Throw<NotSupportedException>();
+            radix.Name.Should().Be("DateTime");
+            radix.Value.Should().Be("Date/Time");
         }
 
         [Test]
@@ -31,9 +20,9 @@ namespace L5Sharp.Tests.Core.Enums
         {
             var radix = Radix.DateTime;
 
-            var result = radix.FormatValue(new LINT(1638277952000000));
+            var result = radix.Format(1638277952000000);
 
-            result.Should().Be("DT#2021-11-30-13:12:32.000_000Z");
+            result.Should().Be("DT#2021-11-30-13:12:32.000000Z");
         }
 
         [Test]
@@ -41,16 +30,16 @@ namespace L5Sharp.Tests.Core.Enums
         {
             var radix = Radix.DateTime;
 
-            var result = radix.FormatValue(new LINT(1641016800100100));
+            var result = radix.Format(1641016800100100);
 
-            result.Should().Be("DT#2022-01-01-06:00:00.100_100Z");
+            result.Should().Be("DT#2022-01-01-06:00:00.100100Z");
         }
 
         [Test]
         public void Parse_NoSpecifier_ShouldThrowFormatException()
         {
-            FluentActions.Invoking(() => Radix.DateTime.ParseValue("2021-11-30-07:12:32.000_000Z")).Should()
-                .Throw<FormatException>();
+            FluentActions.Invoking(() => Radix.DateTime.Parse<long>("2021-11-30-07:12:32.000000Z"))
+                .Should().Throw<FormatException>();
         }
 
         [Test]
@@ -58,7 +47,7 @@ namespace L5Sharp.Tests.Core.Enums
         {
             var radix = Radix.DateTime;
 
-            var result = radix.ParseValue("DT#2021-11-30-13:12:32.000_000Z");
+            var result = radix.Parse<long>("DT#2021-11-30-13:12:32.000_000Z");
 
             result.Should().Be(1638277952000000);
         }
@@ -68,7 +57,7 @@ namespace L5Sharp.Tests.Core.Enums
         {
             var radix = Radix.DateTime;
 
-            var result = radix.ParseValue("DT#2022-01-01-06:00:00.100_100Z");
+            var result = radix.Parse<long>("DT#2022-01-01-06:00:00.100_100Z");
 
             result.Should().Be(1641016800100100);
         }

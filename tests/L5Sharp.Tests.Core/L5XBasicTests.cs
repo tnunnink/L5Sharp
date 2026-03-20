@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using JetBrains.dotMemoryUnit;
 
 namespace L5Sharp.Tests.Core;
@@ -8,126 +7,105 @@ namespace L5Sharp.Tests.Core;
 public class L5XBasicTests
 {
     [Test]
-    public void New_WithControllerAndProcessorNames_ShouldNotBeNullAndExpectedValues()
-    {
-        var content = L5X.New("ControllerName", "1756-L83E", new Revision(33, 1));
-
-        content.Should().NotBeNull();
-        content.Controller.Name.Should().Be("ControllerName");
-        content.Controller.ProcessorType.Should().Be("1756-L83E");
-        content.Controller.Revision.Should().BeEquivalentTo(new Revision(33, 1));
-    }
-
-    [Test]
-    public Task New_ValidValues_ShouldBeVerified()
-    {
-        var content = L5X.New("ControllerName", "1756-L83E", 34.11);
-
-        return VerifyXml(content.Serialize().ToString())
-            .ScrubMember("ExportDate")
-            .ScrubMember("Owner")
-            .ScrubMember("ProjectCreationDate")
-            .ScrubMember("LastModifiedDate");
-    }
-
-    [Test]
-    public void New_NullName_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New(null!, "Test", new Revision())).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_NullProcessor_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New("Test", null!, new Revision())).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_NullRevision_ShouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New("Test", "1756-L83E", null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public Task New_ValidComponent_ShouldBeVerified()
-    {
-        var component = new DataType
-        {
-            Name = "TestType",
-            Description = "This is a test component",
-        };
-
-        var content = L5X.New(component);
-
-        return VerifyXml(content.Serialize().ToString())
-            .ScrubMember("ExportDate")
-            .ScrubMember("Owner")
-            .ScrubMember("ProjectCreationDate")
-            .ScrubMember("LastModifiedDate");
-    }
-
-    [Test]
-    public void New_NullComponent_shouldThrowException()
-    {
-        FluentActions.Invoking(() => L5X.New(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
     public void Empty_NoOverride_ShouldBeExpected()
     {
         var content = L5X.Empty();
 
         content.Should().NotBeNull();
-        content.Info.TargetName.Should().BeEmpty();
-        content.Info.TargetType.Should().Be("Controller");
+        content.Content.TargetName.Should().BeEmpty();
+        content.Content.TargetType.Should().Be("Controller");
+    }
+
+    [Test]
+    public Task New_ValidNameAndProcessor_ShouldBeVerified()
+    {
+        var content = L5X.New("Test", "1756-L83E");
+
+        return VerifyXml(content.ToString())
+            .ScrubInlineDateTimes("ddd MMM d HH:mm:ss yyyy")
+            .ScrubMember("Owner");
     }
 
     [Test]
     public void Parse_ValidContent_ShouldNotBeNull()
     {
-        var xml = XDocument.Load(Known.Test).ToString();
+        var xml = TestContent.Test.Content.Serialize().ToString();
 
         var content = L5X.Parse(xml);
 
-        content.Info.Should().NotBeNull();
-        content.Info.SchemaRevision.Should().Be("1.0");
-        content.Info.SoftwareRevision.Should().Be("32.02");
-        content.Info.TargetName.Should().Be("TestController");
-        content.Info.TargetType.Should().Be("Controller");
-        content.Info.ContainsContext.Should().Be(false);
-        content.Info.ExportDate.Should().NotBeNull();
+        content.Should().NotBeNull();
+        content.Content.SchemaRevision.Should().Be("1.0");
+        content.Content.SoftwareRevision.Should().Be("36.0");
+        content.Content.TargetName.Should().Be("TestController");
+        content.Content.TargetType.Should().Be("Controller");
+        content.Content.ContainsContext.Should().Be(false);
+        content.Content.ExportDate.Should().BeAfter(default);
     }
 
     [Test]
     public void Info_ValidContent_ShouldHaveExpectedValues()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
-        content.Info.Should().NotBeNull();
-        content.Info.SchemaRevision.Should().Be("1.0");
-        content.Info.SoftwareRevision.Should().Be("32.02");
-        content.Info.TargetName.Should().Be("TestController");
-        content.Info.TargetType.Should().Be("Controller");
-        content.Info.ContainsContext.Should().Be(false);
-        content.Info.ExportDate.Should().NotBeNull();
+        content.Should().NotBeNull();
+        content.Content.SchemaRevision.Should().Be("1.0");
+        content.Content.SoftwareRevision.Should().Be("36.0");
+        content.Content.TargetName.Should().Be("TestController");
+        content.Content.TargetType.Should().Be("Controller");
+        content.Content.ContainsContext.Should().Be(false);
+        content.Content.ExportDate.Should().BeAfter(default);
+    }
+
+    [Test]
+    public void Components_WhenCalled_ShouldAllDeriveFromLogixComponent()
+    {
+        var content = TestContent.Test;
+
+        var components = content.Components().ToArray();
+
+        components.Should().NotBeEmpty();
+        components.Should().AllSatisfy(c => c.Should().BeAssignableTo<ILogixComponent>());
+    }
+
+    [Test]
+    public void Components_WithPredicate_ShouldReturnExpected()
+    {
+        var content = TestContent.Test;
+
+        var components = content.Components(c => c.Name.Contains("Test")).ToArray();
+
+        components.Should().NotBeEmpty();
+        components.Should().AllSatisfy(c => c.Name.Should().Contain("Test"));
+    }
+
+    [Test]
+    public void Code_WhenCalled_ShouldNotBeEmptyAndAssignableToLogixCode()
+    {
+        var content = TestContent.Test;
+
+        var code = content.Code().ToArray();
+
+        code.Should().NotBeEmpty();
+        code.Should().AllSatisfy(c => c.Should().BeAssignableTo<ILogixCode>());
+    }
+
+    [Test]
+    public void Code_ValidPredicate_ShouldHaveExpectedResults()
+    {
+        var content = TestContent.Test;
+
+        var code = content.Code(c => c.Scope.IsIn("MainProgram")).ToArray();
+
+        code.Should().NotBeEmpty();
+        code.Should().AllSatisfy(c => c.Reference.Scope.Container.Should().Be("MainProgram"));
     }
 
     [Test]
     public void Query_TypeNameOverload_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
-        var tags = content.Query(nameof(Tag)).ToList();
-
-        tags.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void Query_TypeOverload_ShouldNotBeEmpty()
-    {
-        var content = L5X.Load(Known.Test);
-
-        var tags = content.Query(typeof(Tag)).ToList();
+        var tags = content.Query(ReferenceType.Tag).ToList();
 
         tags.Should().NotBeEmpty();
     }
@@ -135,7 +113,7 @@ public class L5XBasicTests
     [Test]
     public void Query_ContainsElement_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var results = content.Query<Tag>().ToList();
 
@@ -145,7 +123,7 @@ public class L5XBasicTests
     [Test]
     public void Query_NoElement_ShouldBeEmpty()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
         var results = content.Query<Tag>().ToList();
 
@@ -153,9 +131,9 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void Query_PreidcateOverload_ShouldReturnExpected()
+    public void Query_PredicateOverload_ShouldReturnExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var results = content.Query<Tag>(t => t.DataType == "TIMER").ToList();
 
@@ -164,9 +142,117 @@ public class L5XBasicTests
     }
 
     [Test]
+    public void Contains_KnownElement_ShouldBeTrue()
+    {
+        var content = TestContent.Test;
+
+        var result = content.Contains(Reference.To<Tag>(Known.Tag));
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void Contains_NonExisting_ShouldBeFalse()
+    {
+        var content = TestContent.Test;
+
+        var result = content.Contains("tag://FakeTag");
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void Get_KnownTagByReference_ShouldBeExpectedElement()
+    {
+        var content = TestContent.Test;
+
+        var result = content.Get(Reference.To<Tag>(Known.Tag));
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Tag>();
+        result.As<Tag>().Name.Should().Be(Known.Tag);
+    }
+
+    [Test]
+    public void Get_NonExistingReference_ShouldThrowException()
+    {
+        var content = TestContent.Test;
+
+        FluentActions.Invoking(() => content.Get<Tag>("FakeTag")).Should().Throw<KeyNotFoundException>();
+    }
+
+    [Test]
+    public void Get_NullReference_ShouldThrowException()
+    {
+        var content = TestContent.Test;
+
+        FluentActions.Invoking(() => content.Get(null!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void Get_EmptyReference_ShouldThrowException()
+    {
+        var content = TestContent.Test;
+
+        FluentActions.Invoking(() => content.Get(string.Empty)).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Get_TypeAndName_ShouldBeExpected()
+    {
+        var content = TestContent.Test;
+
+        var result = content.Get<Tag>(Known.Tag);
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<Tag>();
+        result.As<Tag>().Name.Should().Be(Known.Tag);
+    }
+
+    [Test]
+    public void Get_NonExistingName_ShouldThrowException()
+    {
+        var content = TestContent.Test;
+
+        FluentActions.Invoking(() => content.Get<Tag>("FakeTag")).Should().Throw<KeyNotFoundException>();
+    }
+
+    [Test]
+    public void TryGet_InvalidPathReference_ShouldThrowFormatException()
+    {
+        var content = TestContent.Test;
+
+        FluentActions.Invoking(() => content.TryGet(Known.DataType, out _)).Should().Throw<FormatException>();
+    }
+
+    [Test]
+    public void TryGet_ValidPathToKnownType_ShouldBeTrue()
+    {
+        var content = TestContent.Test;
+
+        var result = content.TryGet($"datatype://{Known.DataType}", out var entity);
+
+        result.Should().BeTrue();
+        entity.Should().NotBeNull();
+        entity.As<DataType>().Name.Should().Be(Known.DataType);
+    }
+
+    [Test]
+    public void TryGet_TypedKnownName_ShouldBeTrueAndExpectedComponent()
+    {
+        var content = TestContent.Test;
+
+        var result = content.TryGet<DataType>(Known.DataType, out var component);
+
+        result.Should().BeTrue();
+        component.Should().NotBeNull();
+        component.Name.Should().Be(Known.DataType);
+    }
+
+    [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.Count;
         var dataType = new DataType { Name = "TestAdd" };
 
@@ -178,7 +264,7 @@ public class L5XBasicTests
     [Test]
     public Task Add_ValidComponent_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var dataType = new DataType { Name = "TestAdd" };
 
         content.Add(dataType);
@@ -187,9 +273,19 @@ public class L5XBasicTests
     }
 
     [Test]
+    public void Remove_ExistingComponent_ShouldReturnTrue()
+    {
+        var content = TestContent.Test;
+
+        var result = content.Remove<Tag>(Known.Tag);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
     public void Remove_ExistingComponent_ShouldNotExist()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.Remove<Tag>(Known.Tag);
 
@@ -197,31 +293,21 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void Remove_ScopeBuilder_ShouldNotExist()
+    public void Remove_NonExistingComponent_ShouldReturnFalse()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
-        content.Remove(s => s.Tag(Known.Tag));
+        var result = content.Remove<Tag>("FakeTag");
 
-        content.TryGet<Tag>(Known.Tag, out _).Should().BeFalse();
+        result.Should().BeFalse();
     }
 
     [Test]
-    public void Serialize_WhenCalled_ShouldNotBeNull()
+    public Task ToString_WhenCalled_ShouldBeValid()
     {
-        var content = L5X.Load(Known.Empty);
+        var content = TestContent.Empty;
 
-        var result = content.Serialize();
-
-        result.Should().NotBeNull();
-    }
-
-    [Test]
-    public Task Serialize_WhenCalled_ShouldBeValid()
-    {
-        var content = L5X.Load(Known.Empty);
-
-        var result = content.Serialize().ToString();
+        var result = content.ToString();
 
         return VerifyXml(result)
             .ScrubMember("ExportDate")
@@ -230,6 +316,7 @@ public class L5XBasicTests
             .ScrubMember("LastModifiedDate");
     }
 
+
     [DotMemoryUnit(FailIfRunWithoutSupport = false)]
     [Test]
     public void CheckForMemoryLeaksTest()
@@ -237,7 +324,7 @@ public class L5XBasicTests
         var isolator = new Action(() =>
         {
             // ReSharper disable once RedundantAssignment
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
 
             var tags = content.Query<Tag>().Where(t => t.TagName.Contains("Test"));
             tags.Should().NotBeEmpty();

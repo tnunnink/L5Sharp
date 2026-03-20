@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Verify.NUnit" Version="31.13.0" />
+        <PackageReference Include="FluentAssertions" Version="7.2.0" AllowedVersions="(,8.0)" />
+        <PackageReference Include="coverlet.collector" Version="6.0.4"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0"/>
+        <PackageReference Include="NUnit" Version="4.5.1" />
+        <PackageReference Include="NUnit.Analyzers" Version="4.7.0"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="NUnit.Framework"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\L5Sharp.Catalog\L5Sharp.Catalog.csproj" />
+      <ProjectReference Include="..\L5Sharp.Tests.Samples\L5Sharp.Tests.Samples.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="ModuleDefinitionTests.Create_FromKnownDefinition_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleDefinitionTests.Create_FromModuleWithConnections_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleDefinitionTests.Serialize_KnownModule_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleDefinitionTests.Serialize_ModuleWithConnections_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleCatalogTests.Create_CatalogNumberAndConfig_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleCatalogTests.Create_ExistingValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleCatalogTests.Create_ValidNameAndCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleCatalogTests.Local_ValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
+    </ItemGroup>
+
+</Project>

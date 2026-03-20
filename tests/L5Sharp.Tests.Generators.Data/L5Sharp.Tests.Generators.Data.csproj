@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>-->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="8.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
+        <PackageReference Include="NUnit" Version="4.4.0"/>
+        <PackageReference Include="NUnit.Analyzers" Version="4.11.2">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
+        <PackageReference Include="FluentAssertions" Version="6.12.0"/>
+        <PackageReference Include="Verify.NUnit" Version="31.13.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="NUnit.Framework"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--<AdditionalFiles Include="Files\Empty.L5X"/>-->
+        <!--<AdditionalFiles Include="Files\Definitions.L5X"/>-->
+        <!--<AdditionalFiles Include="C:\Users\tnunnink\Documents\Rockwell\Template.L5X"/>-->
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj" />
+        <ProjectReference Include="..\..\src\L5Sharp.Generators.Data\L5Sharp.Generators.Data.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Files\Definitions.L5X">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

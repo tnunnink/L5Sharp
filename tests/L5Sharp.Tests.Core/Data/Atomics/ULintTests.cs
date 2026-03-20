@@ -16,7 +16,7 @@ public class ULintTests
         var fixture = new Fixture();
         _random = fixture.Create<ulong>();
     }
-        
+
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
@@ -28,63 +28,20 @@ public class ULintTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var type = new ULINT();
+        var atomic = new ULINT();
 
-        type.Should().NotBeNull();
-        type.Should().Be(0);
-        type.Name.Should().Be(nameof(ULINT).ToUpper());
-        type.Members.Should().BeEmpty();
-        type.Radix.Should().Be(Radix.Decimal);
+        atomic.Name.Should().Be(nameof(ULINT).ToUpper());
+        atomic.Members.Should().BeEmpty();
+        atomic.Value.Should().Be(0);
+        atomic.Radix.Should().Be(Radix.Decimal);
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var type = new ULINT(_random);
+        var atomic = new ULINT(_random);
 
-        type.Should().Be(_random);
-    }
-
-    [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
-    {
-        var type = new ULINT(Radix.Binary);
-
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000");
-    }
-
-    [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new ULINT(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new ULINT(Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
-    {
-        var type = new ULINT(123, Radix.Hex);
-
-        type.Should().Be(123);
-        type.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new ULINT(123, null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new ULINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
+        atomic.Should().Be(_random);
     }
 
     [Test]
@@ -168,7 +125,7 @@ public class ULintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new ULINT(123, Radix.Hex);
+        ULINT type = Radix.Hex.Format(123);
 
         var xml = type.Serialize().ToString();
 
@@ -808,7 +765,7 @@ public class ULintTests
 
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
@@ -819,7 +776,7 @@ public class ULintTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

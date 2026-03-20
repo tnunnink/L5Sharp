@@ -28,13 +28,11 @@ public class ConnectionTests
         connection.Priority.Should().Be(ConnectionPriority.Scheduled);
         connection.InputConnectionType.Should().Be(TransmissionType.Multicast);
         connection.InputProductionTrigger.Should().Be(ProductionTrigger.Cyclic);
-        connection.OutputRedundantOwner.Should().BeFalse();
-        connection.Unicast.Should().BeFalse();
+        connection.OutputRedundantOwner.Should().BeNull();
+        connection.Unicast.Should().BeNull();
         connection.EventId.Should().Be(0);
         connection.InputTagSuffix.Should().Be("I");
         connection.OutputTagSuffix.Should().Be("O");
-        connection.InputTag.Should().BeNull();
-        connection.OutputTag.Should().BeNull();
     }
 
     [Test]
@@ -57,8 +55,6 @@ public class ConnectionTests
             EventId = 1,
             InputTagSuffix = "II",
             OutputTagSuffix = "OO",
-            InputTag = new Tag { Value = ArrayData.New<DINT>(100) },
-            OutputTag = new Tag { Value = ArrayData.New<BOOL>(100) }
         };
 
         connection.Should().NotBeNull();
@@ -77,10 +73,8 @@ public class ConnectionTests
         connection.EventId.Should().Be(1);
         connection.InputTagSuffix.Should().Be("II");
         connection.OutputTagSuffix.Should().Be("OO");
-        connection.InputTag.Should().NotBeNull();
-        connection.OutputTag.Should().NotBeNull();
     }
-    
+
     [Test]
     public Task New_Overridden_ShouldBeVerified()
     {
@@ -101,11 +95,8 @@ public class ConnectionTests
             EventId = 1,
             InputTagSuffix = "II",
             OutputTagSuffix = "OO",
-            InputTag = new Tag { Value = ArrayData.New<DINT>(100) },
-            OutputTag = new Tag { Value = ArrayData.New<BOOL>(100) }
         };
 
         return Verify(connection.Serialize().ToString());
     }
-
 }

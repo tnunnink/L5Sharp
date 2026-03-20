@@ -9,7 +9,7 @@ public sealed class DataTypeClass : LogixEnum<DataTypeClass, string>
     private DataTypeClass(string name, string value) : base(name, value)
     {
     }
-        
+
     /// <summary>
     /// Represents an <b>Unknown</b> <see cref="DataTypeClass"/>.
     /// </summary>
@@ -21,23 +21,12 @@ public sealed class DataTypeClass : LogixEnum<DataTypeClass, string>
     public static readonly DataTypeClass User = new(nameof(User), nameof(User));
 
     /// <summary>
-    /// Represents an <b>Atomic</b> <see cref="DataTypeClass"/>.
+    /// Represents an <b>IO</b> <see cref="DataTypeClass"/>.
     /// </summary>
-    /// <example>
-    /// BOOL, Sint, Int, Dint, Lint, Real.
-    /// </example>
-    public static readonly DataTypeClass Atomic = new(nameof(Atomic), nameof(Atomic));
-
+    public static readonly DataTypeClass IO = new(nameof(IO), nameof(IO));
+    
     /// <summary>
-    /// Represents an <b>Predefined</b> <see cref="DataTypeClass"/>.
+    /// Represents a <b>Predefined</b> <see cref="DataTypeClass"/>.
     /// </summary>
-    /// <example>
-    /// String, Timer, Counter, Message.
-    /// </example>
-    public static readonly DataTypeClass Predefined = new(nameof(Predefined), nameof(Predefined));
-
-    /// <summary>
-    /// Represents an <b>ModuleDefined</b> <see cref="DataTypeClass"/>.
-    /// </summary>
-    public static readonly DataTypeClass Module = new(nameof(Module), nameof(Module));
+    public static readonly DataTypeClass Predefined = new(nameof(Predefined), "ProductDefined");
 }

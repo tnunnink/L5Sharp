@@ -7,7 +7,7 @@ namespace L5Sharp.Tests.Core.Data.Predefined
     public class AlarmAnalogTest
     {
         [Test]
-        public void New__WhenCalled_ShouldNotBeNull()
+        public void New_WhenCalled_ShouldNotBeNull()
         {
             var type = new ALARM_ANALOG();
 
@@ -20,7 +20,6 @@ namespace L5Sharp.Tests.Core.Data.Predefined
             var type = new ALARM_ANALOG();
 
             type.Name.Should().Be(nameof(ALARM_ANALOG));
-            type.Members.Should().HaveCount(65);
             type.EnableIn.Should().Be(false);
             type.In.Should().Be(0);
             type.InFault.Should().Be(false);
@@ -86,6 +85,26 @@ namespace L5Sharp.Tests.Core.Data.Predefined
             type.ROCNegLimit.Should().Be(0);
             type.ROCNegSeverity.Should().Be(0);
             type.ROCPeriod.Should().Be(0);
+        }
+
+        [Test]
+        public void Members_WhenCalled_ShouldReturnExpectedCount()
+        {
+            var type = new ALARM_ANALOG();
+
+            var members = type.Members.ToList();
+            
+            members.Should().HaveCount(65);
+        }
+
+        [Test]
+        public void SettingAMemberValueShouldWork()
+        {
+            var type = new ALARM_ANALOG();
+            
+            type.GetMember("HHEnabled")?.Value.UpdateData(true);
+
+            type.HHEnabled.Should().Be(true);
         }
 
         [Test]

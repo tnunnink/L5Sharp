@@ -1,23 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-        <LangVersion>12</LangVersion>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-        <Title>L5Sharp</Title>
-        <Authors>Timothy Nunnink</Authors>
-        <Version>5.3.0</Version>
-        <AssemblyVersion>5.3.0</AssemblyVersion>
-        <FileVersion>5.3.0.0</FileVersion>
-        <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
-        <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
-        <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <Title>L5Sharp</Title>
+        <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
+        <Authors>Timothy Nunnink</Authors>
+        <Version>6.0.0</Version>
+        <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
+        <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageId>L5Sharp</PackageId>
         <PackageProjectUrl>https://github.com/tnunnink/L5Sharp</PackageProjectUrl>
@@ -25,18 +23,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
-        <None Remove="L5Sharp.csproj.DotSettings"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
         <None Remove="L5Sharp.Core.csproj.DotSettings"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="L5Sharp.sln.DotSettings"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-            <_Parameter1>L5Sharp.Tests.Core</_Parameter1>
-        </AssemblyAttribute>
+        <ProjectReference
+                Include="..\L5Sharp.Generators\L5Sharp.Generators.csproj"
+                OutputItemType="Analyzer"
+                ReferenceOutputAssembly="false"/>
     </ItemGroup>
 </Project>

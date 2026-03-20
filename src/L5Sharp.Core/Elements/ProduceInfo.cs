@@ -4,9 +4,10 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Tag"/> component that contains properties or configuration
+/// An element of the <see cref="Tag"/> component that contains properties or configuration
 /// producer tag types.
 /// </summary>
+[LogixElement(L5XName.ProduceInfo)]
 public class ProduceInfo : LogixElement
 {
     /// <summary>
@@ -31,7 +32,7 @@ public class ProduceInfo : LogixElement
     /// <value>A <see cref="int"/> representing the number of consumers allowed.</value>
     public int ProduceCount
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -41,7 +42,7 @@ public class ProduceInfo : LogixElement
     /// <value><c>true</c> when the tag is configured to send the event trigger; Otherwise, <c>false</c>.</value>
     public bool ProgrammaticallySendEventTrigger
     {
-        get => GetValue<bool>();
+        get => GetRequiredBool();
         set => SetValue(value);
     }
 
@@ -51,7 +52,7 @@ public class ProduceInfo : LogixElement
     /// <value><c>true</c> when the tag is configured enable multiple consumers; Otherwise, <c>false</c>.</value>
     public bool UnicastPermitted
     {
-        get => GetValue<bool>();
+        get => GetRequiredBool();
         set => SetValue(value);
     }
 
@@ -61,7 +62,7 @@ public class ProduceInfo : LogixElement
     /// <value>A <see cref="double"/> representing the min duration in ms that the tag may be requested.</value>
     public double MinimumRPI
     {
-        get => GetValue<double>();
+        get => GetValue(double.Parse);
         set => SetValue(value);
     }
 
@@ -71,17 +72,17 @@ public class ProduceInfo : LogixElement
     /// <value>A <see cref="double"/> representing the max duration in ms that the tag may be requested.</value>
     public double MaximumRPI
     {
-        get => GetValue<double>();
+        get => GetValue(double.Parse);
         set => SetValue(value);
     }
 
     /// <summary>
     /// Specifies the RPI to use for an out-of-range consumer of the tag.
     /// </summary>
-    /// <value>A <see cref="double"/> representing the duration in ms that the tag may be requested by out of range consumer.</value>
+    /// <value>A <see cref="double"/> representing the duration in ms that the tag may be requested by out-of-range consumer.</value>
     public double DefaultRPI
     {
-        get => GetValue<double>();
+        get => GetValue(double.Parse);
         set => SetValue(value);
     }
 }

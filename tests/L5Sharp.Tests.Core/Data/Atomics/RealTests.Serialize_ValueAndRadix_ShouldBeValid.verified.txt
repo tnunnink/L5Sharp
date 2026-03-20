@@ -1,1 +1,1 @@
-﻿<DataValue DataType="REAL" Radix="Exponential" Value="1.23000002e+000" />
+﻿<DataValue DataType="REAL" Radix="Exponential" Value="1.23456703e+002" />

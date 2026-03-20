@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-
-namespace L5Sharp.Core;
+﻿namespace L5Sharp.Core;
 
 /// <summary>
 /// Represents an enumeration of all Logix <see cref="ScopeLevel"/> options.
@@ -13,44 +10,38 @@ public class ScopeLevel : LogixEnum<ScopeLevel, string>
     }
 
     /// <summary>
-    /// Finds the container element in the ancestral chain and returns the logix name of the element. This will be either
-    /// the name of the program container or the name of the controller, depending on the scope of the element. 
+    /// Represents the <see cref="ScopeLevel"/> option for a null or undefined scope in a Logix application.
     /// </summary>
-    /// <param name="element">The element for which to find the container name of.</param>
-    /// <returns>A <see cref="string"/> representing the name of the containing program, instruction, or controller
-    /// if found; Otherwise, an empty string.</returns>
-    public static string Container(XElement element) => FindContainer(element)?.LogixName() ?? string.Empty;
+    /// <remarks>
+    /// The <c>None</c> scope typically signifies the absence of a defined scope level,
+    /// serving as a default or placeholder value in scenarios where no specific scope is applicable.
+    /// </remarks>
+    public static readonly ScopeLevel None = new(nameof(None), nameof(None));
 
     /// <summary>
-    /// Represents a Null <see cref="ScopeLevel"/> value.
+    /// Represents the <see cref="ScopeLevel"/> for a Controller-level scope in a Logix application.
     /// </summary>
-    /// <remarks>A <c>Null</c> scope will occur on elements objects that have not been added to a container.</remarks>
-    public static readonly ScopeLevel Null = new(nameof(Null), "NullScope");
+    /// <remarks>
+    /// The <c>Controller</c> scope typically signifies tags or configurations accessible globally
+    /// across the project, without being constrained to a specific program or routine.
+    /// </remarks>
+    public static readonly ScopeLevel Controller = new(nameof(Controller), nameof(Controller));
 
     /// <summary>
-    /// Represents a Controller <see cref="ScopeLevel"/> value.
+    /// Represents the <see cref="ScopeLevel"/> option corresponding to a program-level scope in a Logix environment.
     /// </summary>
-    public static readonly ScopeLevel Controller = new(nameof(Controller), "ControllerScope");
+    /// <remarks>
+    /// This scope level is used to identify elements or tags that are associated specifically with a program.
+    /// The program-level scope can define properties and behavior distinct from other levels such as controller or AOI.
+    /// </remarks>
+    public static readonly ScopeLevel Program = new(nameof(Program), nameof(Program));
 
     /// <summary>
-    /// Represents a Program <see cref="ScopeLevel"/> value.
+    /// Represents the AOI (Add-On Instruction) scope level within the Logix system.
     /// </summary>
-    public static readonly ScopeLevel Program = new(nameof(Program), "ProgramScope");
-
-    /// <summary>
-    /// Represents a Program <see cref="ScopeLevel"/> value.
-    /// </summary>
-    public static readonly ScopeLevel Routine = new(nameof(Routine), "RoutineScope");
-
-    /// <summary>
-    /// Finds the first ancestor element that is either a <c>Program</c>, <c>Controller</c>, or
-    /// <c>AddOnInstructionDefinition</c> element.
-    /// </summary>
-    /// <param name="node">The <see cref="XNode"/> to examine.</param>
-    /// <returns>The first matching ancestor <see cref="XElement"/> if found or <c>null</c>.</returns>
-    private static XElement? FindContainer(XNode node)
-    {
-        return node.Ancestors().FirstOrDefault(e => e.Name.LocalName
-            is L5XName.Program or L5XName.Controller or L5XName.AddOnInstructionDefinition);
-    }
+    /// <remarks>
+    /// The AOI scope corresponds to a scope level associated with Add-On Instructions in a Logix controller project.
+    /// It is used to define and manage elements that belong specifically to an AOI context.
+    /// </remarks>
+    public static readonly ScopeLevel Aoi = new(nameof(Aoi), nameof(Aoi));
 }

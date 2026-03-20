@@ -1,20 +1,22 @@
 ﻿using System.Xml.Linq;
 
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
-// ReSharper disable IdentifierTypo
-// ReSharper disable CommentTypo
+// ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined data type that is built into Logix and used with PID instructions.
+/// Represents a <c>PID</c> data type structure.
 /// </summary>
-public sealed class PID : StructureData
+[LogixData("PID")]
+public sealed partial class PID : StructureData
 {
     /// <summary>
-    /// Creates a new <see cref="PID"/> data type instance.
+    /// Creates a new <see cref="PID"/> instance initialized with default values.
     /// </summary>
-    public PID() : base(nameof(PID))
+    public PID() : base("PID")
     {
         CTL = new DINT();
         EN = new BOOL();
@@ -66,18 +68,86 @@ public sealed class PID : StructureData
         MINCV = new REAL();
         MINTIE = new REAL();
         MAXTIE = new REAL();
-        DATA = ArrayData.New<REAL>(17);
+        DATA = new ArrayData<REAL>(17);
     }
-
-    /// <inheritdoc />
+    
+    /// <summary>
+    /// Creates a new <see cref="PID"/> instance initialized with the provided element.
+    /// </summary>
     public PID(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 184;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        CTL.UpdateData(data, offset + 0);
+        EN.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        CT.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        CL.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        PVT.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        DOE.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        SWM.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        CA.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        MO.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        PE.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        NDF.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        NOBC.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        NOZC.UpdateData((data[offset + 6] & (1 << 3)) != 0);
+        INI.UpdateData((data[offset + 6] & (1 << 4)) != 0);
+        SPOR.UpdateData((data[offset + 6] & (1 << 5)) != 0);
+        OLL.UpdateData((data[offset + 6] & (1 << 6)) != 0);
+        OLH.UpdateData((data[offset + 6] & (1 << 7)) != 0);
+        EWD.UpdateData((data[offset + 7] & (1 << 0)) != 0);
+        DVNA.UpdateData((data[offset + 7] & (1 << 1)) != 0);
+        DVPA.UpdateData((data[offset + 7] & (1 << 2)) != 0);
+        PVLA.UpdateData((data[offset + 7] & (1 << 3)) != 0);
+        PVHA.UpdateData((data[offset + 7] & (1 << 4)) != 0);
+        SP.UpdateData(data, offset + 7);
+        KP.UpdateData(data, offset + 11);
+        KI.UpdateData(data, offset + 15);
+        KD.UpdateData(data, offset + 19);
+        BIAS.UpdateData(data, offset + 23);
+        MAXS.UpdateData(data, offset + 27);
+        MINS.UpdateData(data, offset + 31);
+        DB.UpdateData(data, offset + 35);
+        SO.UpdateData(data, offset + 39);
+        MAXO.UpdateData(data, offset + 43);
+        MINO.UpdateData(data, offset + 47);
+        UPD.UpdateData(data, offset + 51);
+        PV.UpdateData(data, offset + 55);
+        ERR.UpdateData(data, offset + 59);
+        OUT.UpdateData(data, offset + 63);
+        PVH.UpdateData(data, offset + 67);
+        PVL.UpdateData(data, offset + 71);
+        DVP.UpdateData(data, offset + 75);
+        DVN.UpdateData(data, offset + 79);
+        PVDB.UpdateData(data, offset + 83);
+        DVDB.UpdateData(data, offset + 87);
+        MAXI.UpdateData(data, offset + 91);
+        MINI.UpdateData(data, offset + 95);
+        TIE.UpdateData(data, offset + 99);
+        MAXCV.UpdateData(data, offset + 103);
+        MINCV.UpdateData(data, offset + 107);
+        MINTIE.UpdateData(data, offset + 111);
+        MAXTIE.UpdateData(data, offset + 115);
+        DATA.UpdateData(data, offset + 119);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
-    /// Gets the <c>CTL</c> member of the <see cref="PID"/> type.
+    /// The <c>CTL</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT CTL
     {
         get => GetMember<DINT>();
@@ -85,9 +155,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>EN</c> member of the <see cref="PID"/> type.
+    /// The <c>EN</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL EN
     {
         get => GetMember<BOOL>();
@@ -95,9 +164,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>CT</c> member of the <see cref="PID"/> type.
+    /// The <c>CT</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL CT
     {
         get => GetMember<BOOL>();
@@ -105,9 +173,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>CL</c> member of the <see cref="PID"/> type.
+    /// The <c>CL</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL CL
     {
         get => GetMember<BOOL>();
@@ -115,9 +182,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PVT</c> member of the <see cref="PID"/> type.
+    /// The <c>PVT</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL PVT
     {
         get => GetMember<BOOL>();
@@ -125,9 +191,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DOE</c> member of the <see cref="PID"/> type.
+    /// The <c>DOE</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DOE
     {
         get => GetMember<BOOL>();
@@ -135,9 +200,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>SWM</c> member of the <see cref="PID"/> type.
+    /// The <c>SWM</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL SWM
     {
         get => GetMember<BOOL>();
@@ -145,9 +209,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>CA</c> member of the <see cref="PID"/> type.
+    /// The <c>CA</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL CA
     {
         get => GetMember<BOOL>();
@@ -155,9 +218,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MO</c> member of the <see cref="PID"/> type.
+    /// The <c>MO</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL MO
     {
         get => GetMember<BOOL>();
@@ -165,9 +227,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PE</c> member of the <see cref="PID"/> type.
+    /// The <c>PE</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL PE
     {
         get => GetMember<BOOL>();
@@ -175,9 +236,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>NDF</c> member of the <see cref="PID"/> type.
+    /// The <c>NDF</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL NDF
     {
         get => GetMember<BOOL>();
@@ -185,9 +245,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>NOBC</c> member of the <see cref="PID"/> type.
+    /// The <c>NOBC</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL NOBC
     {
         get => GetMember<BOOL>();
@@ -195,9 +254,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>NOZC</c> member of the <see cref="PID"/> type.
+    /// The <c>NOZC</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL NOZC
     {
         get => GetMember<BOOL>();
@@ -205,9 +263,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>INI</c> member of the <see cref="PID"/> type.
+    /// The <c>INI</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL INI
     {
         get => GetMember<BOOL>();
@@ -215,9 +272,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>SPOR</c> member of the <see cref="PID"/> type.
+    /// The <c>SPOR</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL SPOR
     {
         get => GetMember<BOOL>();
@@ -225,9 +281,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>OLL</c> member of the <see cref="PID"/> type.
+    /// The <c>OLL</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL OLL
     {
         get => GetMember<BOOL>();
@@ -235,9 +290,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>OLH</c> member of the <see cref="PID"/> type.
+    /// The <c>OLH</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL OLH
     {
         get => GetMember<BOOL>();
@@ -245,9 +299,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>EWD</c> member of the <see cref="PID"/> type.
+    /// The <c>EWD</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL EWD
     {
         get => GetMember<BOOL>();
@@ -255,9 +308,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DVNA</c> member of the <see cref="PID"/> type.
+    /// The <c>DVNA</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DVNA
     {
         get => GetMember<BOOL>();
@@ -265,9 +317,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DVPA</c> member of the <see cref="PID"/> type.
+    /// The <c>DVPA</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DVPA
     {
         get => GetMember<BOOL>();
@@ -275,9 +326,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PVLA</c> member of the <see cref="PID"/> type.
+    /// The <c>PVLA</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL PVLA
     {
         get => GetMember<BOOL>();
@@ -285,9 +335,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PVHA</c> member of the <see cref="PID"/> type.
+    /// The <c>PVHA</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL PVHA
     {
         get => GetMember<BOOL>();
@@ -295,9 +344,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>SP</c> member of the <see cref="PID"/> type.
+    /// The <c>SP</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL SP
     {
         get => GetMember<REAL>();
@@ -305,9 +353,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>KP</c> member of the <see cref="PID"/> type.
+    /// The <c>KP</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL KP
     {
         get => GetMember<REAL>();
@@ -315,9 +362,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>KI</c> member of the <see cref="PID"/> type.
+    /// The <c>KI</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL KI
     {
         get => GetMember<REAL>();
@@ -325,9 +371,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>KD</c> member of the <see cref="PID"/> type.
+    /// The <c>KD</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL KD
     {
         get => GetMember<REAL>();
@@ -335,9 +380,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>BIAS</c> member of the <see cref="PID"/> type.
+    /// The <c>BIAS</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL BIAS
     {
         get => GetMember<REAL>();
@@ -345,9 +389,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MAXS</c> member of the <see cref="PID"/> type.
+    /// The <c>MAXS</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MAXS
     {
         get => GetMember<REAL>();
@@ -355,9 +398,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MINS</c> member of the <see cref="PID"/> type.
+    /// The <c>MINS</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MINS
     {
         get => GetMember<REAL>();
@@ -365,9 +407,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DB</c> member of the <see cref="PID"/> type.
+    /// The <c>DB</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL DB
     {
         get => GetMember<REAL>();
@@ -375,9 +416,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>SO</c> member of the <see cref="PID"/> type.
+    /// The <c>SO</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL SO
     {
         get => GetMember<REAL>();
@@ -385,9 +425,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MAXO</c> member of the <see cref="PID"/> type.
+    /// The <c>MAXO</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MAXO
     {
         get => GetMember<REAL>();
@@ -395,9 +434,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MINO</c> member of the <see cref="PID"/> type.
+    /// The <c>MINO</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MINO
     {
         get => GetMember<REAL>();
@@ -405,9 +443,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>UPD</c> member of the <see cref="PID"/> type.
+    /// The <c>UPD</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL UPD
     {
         get => GetMember<REAL>();
@@ -415,9 +452,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PV</c> member of the <see cref="PID"/> type.
+    /// The <c>PV</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL PV
     {
         get => GetMember<REAL>();
@@ -425,9 +461,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>ERR</c> member of the <see cref="PID"/> type.
+    /// The <c>ERR</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL ERR
     {
         get => GetMember<REAL>();
@@ -435,9 +470,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>OUT</c> member of the <see cref="PID"/> type.
+    /// The <c>OUT</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL OUT
     {
         get => GetMember<REAL>();
@@ -445,9 +479,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PVH</c> member of the <see cref="PID"/> type.
+    /// The <c>PVH</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL PVH
     {
         get => GetMember<REAL>();
@@ -455,9 +488,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PVL</c> member of the <see cref="PID"/> type.
+    /// The <c>PVL</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL PVL
     {
         get => GetMember<REAL>();
@@ -465,9 +497,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DVP</c> member of the <see cref="PID"/> type.
+    /// The <c>DVP</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL DVP
     {
         get => GetMember<REAL>();
@@ -475,9 +506,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DVN</c> member of the <see cref="PID"/> type.
+    /// The <c>DVN</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL DVN
     {
         get => GetMember<REAL>();
@@ -485,9 +515,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PVDB</c> member of the <see cref="PID"/> type.
+    /// The <c>PVDB</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL PVDB
     {
         get => GetMember<REAL>();
@@ -495,9 +524,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DVDB</c> member of the <see cref="PID"/> type.
+    /// The <c>DVDB</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL DVDB
     {
         get => GetMember<REAL>();
@@ -505,9 +533,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MAXI</c> member of the <see cref="PID"/> type.
+    /// The <c>MAXI</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MAXI
     {
         get => GetMember<REAL>();
@@ -515,9 +542,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MINI</c> member of the <see cref="PID"/> type.
+    /// The <c>MINI</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MINI
     {
         get => GetMember<REAL>();
@@ -525,9 +551,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>TIE</c> member of the <see cref="PID"/> type.
+    /// The <c>TIE</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL TIE
     {
         get => GetMember<REAL>();
@@ -535,9 +560,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MAXCV</c> member of the <see cref="PID"/> type.
+    /// The <c>MAXCV</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MAXCV
     {
         get => GetMember<REAL>();
@@ -545,9 +569,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MINCV</c> member of the <see cref="PID"/> type.
+    /// The <c>MINCV</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MINCV
     {
         get => GetMember<REAL>();
@@ -555,9 +578,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MINTIE</c> member of the <see cref="PID"/> type.
+    /// The <c>MINTIE</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MINTIE
     {
         get => GetMember<REAL>();
@@ -565,9 +587,8 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>MAXTIE</c> member of the <see cref="PID"/> type.
+    /// The <c>MAXTIE</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="REAL"/> atomic value.</value>
     public REAL MAXTIE
     {
         get => GetMember<REAL>();
@@ -575,12 +596,11 @@ public sealed class PID : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DATA</c> member of the <see cref="PID"/> type.
+    /// The <c>DATA</c> member of the <see cref="PID"/> data type.
     /// </summary>
-    /// <value>A <see cref="ArrayData{TLogixType}"/> atomic value.</value>
     public ArrayData<REAL> DATA
     {
-        get => GetMember<ArrayData<REAL>>();
-        set => SetMember(value);
+        get => GetArray<REAL>();
+        set => SetArray(value);
     }
 }

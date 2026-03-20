@@ -9,7 +9,7 @@ public class L5XTasksTests
     [Test]
     public void ToList_WhenCalled_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var tasks = content.Tasks.ToList();
 
@@ -19,7 +19,7 @@ public class L5XTasksTests
     [Test]
     public void Index_ValidIndex_ShouldNotBeNull()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Tasks[0];
 
@@ -29,7 +29,7 @@ public class L5XTasksTests
     [Test]
     public void Index_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.Tasks[100]).Should().Throw<ArgumentOutOfRangeException>();
     }
@@ -37,7 +37,7 @@ public class L5XTasksTests
     [Test]
     public void Get_KnownTask_ShouldBeExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.Tasks.Get(Known.Task);
 

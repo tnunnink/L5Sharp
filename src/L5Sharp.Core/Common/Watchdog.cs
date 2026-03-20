@@ -12,7 +12,7 @@ namespace L5Sharp.Core;
 /// <see cref="ArgumentOutOfRangeException"/>.
 /// This parameter will control how long a task can rung before triggering a major fault.
 /// </remarks>
-public readonly struct Watchdog : IEquatable<Watchdog>, ILogixParsable<Watchdog>
+public readonly struct Watchdog : IEquatable<Watchdog>
 {
     private readonly float _value;
 

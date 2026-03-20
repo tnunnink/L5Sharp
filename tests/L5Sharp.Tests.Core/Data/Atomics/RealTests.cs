@@ -16,7 +16,7 @@ public class RealTests
         var fixture = new Fixture();
         _random = fixture.Create<float>();
     }
-        
+
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
@@ -28,72 +28,20 @@ public class RealTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var type = new REAL();
+        var atomic = new REAL();
 
-        type.Should().NotBeNull();
-        type.Should().Be(0);
-        type.Name.Should().Be(nameof(REAL).ToUpper());
-        type.Members.Should().HaveCount(0);
-        type.Radix.Should().Be(Radix.Float);
+        atomic.Name.Should().Be(nameof(REAL).ToUpper());
+        atomic.Members.Should().HaveCount(0);
+        atomic.Value.Should().Be(0);
+        atomic.Radix.Should().Be(Radix.Float);
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var type = new REAL(_random);
+        var atomic = new REAL(_random);
 
-        type.Should().Be(_random);
-    }
-
-    [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
-    {
-        var type = new REAL(Radix.Exponential);
-
-        type.Radix.Should().Be(Radix.Exponential);
-        type.ToString().Should().Be("0.00000000e+000");
-    }
-
-    [Test]
-    public void Test_ValidRadix_ShouldHaveExpectedValues()
-    {
-        var type = new REAL(1.23f, Radix.Exponential);
-
-        type.Radix.Should().Be(Radix.Exponential);
-        type.ToString().Should().Be("1.23000002e+000");
-    }
-
-    [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new REAL(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new REAL(Radix.Binary)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
-    {
-        var type = new REAL(1.23f, Radix.Float);
-
-        type.Should().Be(1.23f);
-        type.Radix.Should().Be(Radix.Float);
-    }
-
-    [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new REAL(1.23f, null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new REAL(1.23f, Radix.Binary)).Should().Throw<ArgumentException>();
+        atomic.Should().Be(_random);
     }
 
     [Test]
@@ -157,7 +105,7 @@ public class RealTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new REAL(1.23f, Radix.Exponential);
+        REAL type = "1.234567e2";
 
         var xml = type.Serialize().ToString();
 
@@ -167,7 +115,7 @@ public class RealTests
     [Test]
     public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
     {
-        var type = new REAL() as IConvertible;
+        IConvertible type = new REAL();
 
         var result = type.ToBoolean(CultureInfo.InvariantCulture);
 
@@ -281,7 +229,7 @@ public class RealTests
 
         result.Should().Be(expected);
     }
-        
+
     [Test]
     public void ToString_WhenCalled_ShouldBeExpectedValue()
     {
@@ -351,7 +299,7 @@ public class RealTests
     public void ToType_Char_ShouldBeExpectedValue()
     {
         var type = new REAL(1) as IConvertible;
-            
+
         FluentActions.Invoking(() => type.ToType(typeof(char), CultureInfo.InvariantCulture))
             .Should().Throw<InvalidCastException>();
     }
@@ -793,7 +741,7 @@ public class RealTests
 
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
@@ -804,7 +752,7 @@ public class RealTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

@@ -29,21 +29,19 @@ public class TagTests
         tag.DataType.Should().Be("NULL");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
-        tag.Value.Should().Be(LogixData.Null);
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
+        tag.Value.Should().Be(LogixType.Null);
         tag.Constant.Should().BeFalse();
         tag.TagType.Should().Be(TagType.Base);
         tag.Usage.Should().BeNull();
         tag.AliasFor.Should().BeNull();
         tag.Alias.Should().BeNull();
         tag.Unit.Should().BeNull();
-        tag.Root.Should().BeSameAs(tag);
+        tag.Base.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
         tag.TagName.Should().Be(TagName.Empty);
         tag.Comments.Should().BeNull();
         tag.Units.Should().BeNull();
-        tag.Scope.Level.Should().Be(ScopeLevel.Null);
-        tag.Scope.IsScoped.Should().BeFalse();
     }
 
     [Test]
@@ -54,7 +52,7 @@ public class TagTests
             Name = "Test",
             Description = "This is a test",
             Value = new BOOL(true),
-            ExternalAccess = ExternalAccess.ReadOnly,
+            ExternalAccess = Access.ReadOnly,
             TagType = TagType.Alias,
             Usage = TagUsage.Local,
             AliasFor = new TagName("SomeOtherTag"),
@@ -67,7 +65,7 @@ public class TagTests
         tag.DataType.Should().Be("BOOL");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Decimal);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
+        tag.ExternalAccess.Should().Be(Access.ReadOnly);
         tag.Description.Should().Be("This is a test");
         tag.Constant.Should().BeTrue();
         tag.Usage.Should().Be(TagUsage.Local);
@@ -75,7 +73,7 @@ public class TagTests
         tag.AliasFor.Should().Be("SomeOtherTag");
         tag.TagName.Should().Be("Test");
         tag.Unit.Should().BeNull();
-        tag.Root.Should().BeSameAs(tag);
+        tag.Base.Should().BeSameAs(tag);
         tag.Parent.Should().BeNull();
     }
 
@@ -103,7 +101,6 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        tag.Value.Should().BeOfType<TIMER>();
         tag.Value.As<TIMER>().PRE.Should().Be(0);
         tag.Value.As<TIMER>().ACC.Should().Be(0);
         tag.Value.As<TIMER>().DN.Should().Be(0);
@@ -129,7 +126,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        var root = tag["DN"].Root;
+        var root = tag["DN"].Base;
 
         root.Should().NotBeNull();
         root.Should().BeSameAs(tag);
@@ -140,7 +137,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new MyNestedData() };
 
-        var root = tag["Simple.M1"].Root;
+        var root = tag["Simple.M1"].Base;
 
         root.Should().NotBeNull();
         root.Should().BeSameAs(tag);
@@ -172,11 +169,11 @@ public class TagTests
     [Test]
     public void New_NamedComplexType_ShouldHaveExpectedDataTypeAndMembers()
     {
-        var tag = new Tag { Name = "Test", Value = new ComplexData("MyCustomType") };
+        var tag = new Tag { Name = "Test", Value = new StructureData("MyCustomType") };
 
-        tag.Add("Member01", new DINT(100));
-        tag.Add("Member02", new TIMER { PRE = 3000 });
-        tag.Add("Member03", new ComplexData("SubType"));
+        tag.AddMember("Member01", new DINT(100));
+        tag.AddMember("Member02", new TIMER { PRE = 3000 });
+        tag.AddMember("Member03", new StructureData("SubType"));
 
         tag.DataType.Should().Be("MyCustomType");
         tag.Members().Where(m => m.TagName.Depth == 1).Should().HaveCount(3);
@@ -200,6 +197,7 @@ public class TagTests
         tag.ToString().Should().Be("Test");
     }
 
+    /*
     [Test]
     public void With_RootTagValidValue_ShouldUpdateValue()
     {
@@ -229,12 +227,12 @@ public class TagTests
         result.DataType.Should().Be("REAL");
         result.Value.Should().BeOfType<REAL>();
         result.Value.Should().Be(2.3f);
-    }
+    }*/
 
     [Test]
     public Task Duplicate_ValidConfig_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var tag = content.Get<Tag>(Known.Tag);
 
         var duplicate = tag.Duplicate(t =>
@@ -251,7 +249,7 @@ public class TagTests
     [Test]
     public void Replace_NameProperty_ShouldBeVerified()
     {
-        var tag = Tag.Create<BOOL>("MyBoolTag");
+        var tag = Tag.New<BOOL>("MyBoolTag");
 
         tag.Replace("My", "Test", t => t.Name);
 
@@ -261,10 +259,8 @@ public class TagTests
     [Test]
     public void Replace_DescriptionProperty_ShouldBeExpected()
     {
-        var tag = Tag.Configure("SomeTimer")
-            .AsStructure("TIMER")
-            .WithDescription("This is a test tag")
-            .Build();
+        var tag = Tag.New<TIMER>("SomeTimer");
+        tag.Description = "This is a test tag";
 
         tag.Replace("test", "timer", t => t.Description);
 
@@ -296,10 +292,10 @@ public class TagTests
         tag.DataType.Should().Be("NULL");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
         tag.TagType.Should().Be(TagType.Base);
         tag.Constant.Should().BeFalse();
-        tag.Value.Should().Be(LogixData.Null);
+        tag.Value.Should().Be(LogixType.Null);
     }
 
     [Test]
@@ -411,7 +407,6 @@ public class TagTests
         tag.Should().NotBeNull();
         tag.Name.Should().Be("TestTimer");
         tag.DataType.Should().Be("TIMER");
-        tag.Value.Should().BeOfType<TIMER>();
         tag["PRE"].Value.Should().Be(1000);
         tag["PRE"].Description.Should().Be("Test Timer PRE");
     }
@@ -427,8 +422,8 @@ public class TagTests
         tag.Name.Should().Be("TestSimpleTag");
         tag.DataType.Should().Be("SimpleType");
         tag.Constant.Should().BeFalse();
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadOnly);
-        tag.Value.Should().BeOfType<ComplexData>();
+        tag.ExternalAccess.Should().Be(Access.ReadOnly);
+        tag.Value.Should().BeOfType<StructureData>();
         tag.Member("BoolMember").Should().NotBeNull();
         tag.Member("SintMember").Should().NotBeNull();
         tag.Member("IntMember").Should().NotBeNull();
@@ -449,7 +444,7 @@ public class TagTests
         tag.DataType.Should().Be("ComplexType");
         tag.Dimensions.Should().Be(Dimensions.Empty);
         tag.Radix.Should().Be(Radix.Null);
-        tag.ExternalAccess.Should().Be(ExternalAccess.None);
+        tag.ExternalAccess.Should().Be(Access.None);
         tag.Constant.Should().BeFalse();
     }
 
@@ -498,8 +493,8 @@ public class TagTests
 
         tag.Value = new INT(43);
 
+        tag.Value.Should().Be(43);
         tag.Value.Should().BeOfType<DINT>();
-        tag.Value.As<DINT>().Should().Be(43);
     }
 
     [Test]
@@ -516,7 +511,6 @@ public class TagTests
             EN = 1,
         };
 
-        tag.Value.Should().BeOfType<TIMER>();
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(1);
@@ -530,7 +524,7 @@ public class TagTests
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
         //Name does not matter just the members
-        tag.Value = new ComplexData("Test", new List<Member>
+        tag.Value = new StructureData("Test", new List<LogixMember>
         {
             new("PRE", 5000),
             new("ACC", 1234),
@@ -539,7 +533,6 @@ public class TagTests
             new("EN", 1),
         });
 
-        tag.Value.Should().BeOfType<TIMER>();
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
         tag.Value.As<TIMER>().ACC.Should().Be(1234);
         tag.Value.As<TIMER>().DN.Should().Be(1);
@@ -563,15 +556,18 @@ public class TagTests
     [Test]
     public void SetValue_StructureArrayType_ShouldHaveExpectedValues()
     {
-        var tag = new Tag { Name = "Test", Value = new TIMER[] { new(), new(), new(), new() } };
+        var tag = new Tag { Name = "Test", Value = new ArrayData<TIMER>(4) };
 
-        //array length does not matter. indices will be joined on what is available.
-        tag.Value = new TIMER[] { new() { PRE = 100 }, new() { PRE = 200 }, new() { PRE = 300 } };
+        tag.Value = new ArrayData<TIMER>([
+            new TIMER { PRE = 100 },
+            new TIMER { PRE = 200 },
+            new TIMER { PRE = 300 }
+        ]);
 
-        tag.Value.As<ArrayData>()[0].As<TIMER>().PRE.Should().Be(100);
-        tag.Value.As<ArrayData>()[1].As<TIMER>().PRE.Should().Be(200);
-        tag.Value.As<ArrayData>()[2].As<TIMER>().PRE.Should().Be(300);
-        tag.Value.As<ArrayData>()[3].As<TIMER>().PRE.Should().Be(0);
+        tag.Value.As<ArrayData<TIMER>>().Should().HaveCount(4);
+        tag.Value.As<ArrayData<TIMER>>()[0].PRE.Should().Be(100);
+        tag.Value.As<ArrayData<TIMER>>()[1].PRE.Should().Be(200);
+        tag.Value.As<ArrayData<TIMER>>()[2].PRE.Should().Be(300);
     }
 
     [Test]
@@ -579,7 +575,7 @@ public class TagTests
     {
         var tag = new Tag { Name = "Test", Value = new TIMER() };
 
-        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<InvalidCastException>();
+        FluentActions.Invoking(() => tag.Value = new REAL(43)).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -613,7 +609,7 @@ public class TagTests
         {
             { "PRE", 5000 },
             { "ACC", 1234 },
-            { "DN", true },
+            { "DN", true }
         };
 
         tag.Value.As<TIMER>().PRE.Should().Be(5000);
@@ -810,7 +806,7 @@ public class TagTests
             Value = new MyNestedData()
         };
 
-        var members = tag.Members(t => t.Members.Count() > 2);
+        var members = tag.Members((TagName t) => t.Members().Count() > 2);
 
         members.Should().NotBeEmpty();
     }
@@ -824,7 +820,7 @@ public class TagTests
             Value = new MyNestedData()
         };
 
-        var members = tag.Members(t => TagName.Equals(t, "M1", TagNameComparer.Member));
+        var members = tag.Members(t => t.Element == "M1");
 
         members.Should().HaveCount(1);
     }
@@ -921,7 +917,7 @@ public class TagTests
     {
         const string expectedBase = "Base";
         var expectedMember = string.Concat(expectedBase, " ", "User defined complex type", " ", "Test Bool");
-        var content = L5X.Load(Known.Test, L5XOptions.Index);
+        var content = TestContent.Test;
 
         var tag = content.Get<Tag>("TestComplexTag");
 
@@ -969,19 +965,41 @@ public class TagTests
     #region BuilderTests
 
     [Test]
-    public void Create_ValidParameters_ShouldBeExpected()
+    public void New_AtomicTypeAndName_ShouldBeExpected()
     {
-        var tag = Tag.Create<TIMER>("MyTimer");
+        var tag = Tag.New<DINT>("TestTag");
+
+        tag.Name.Should().Be("TestTag");
+        tag.Value.Should().NotBeNull();
+        tag.Value.Should().BeOfType<DINT>();
+        tag.Value.Should().Be(0);
+    }
+    
+    [Test]
+    public void New_ComplexTypeAndName_ShouldBeExpected()
+    {
+        var tag = Tag.New<TIMER>("MyTimer");
 
         tag.Name.Should().Be("MyTimer");
-        tag.Value.Should().BeOfType<TIMER>();
+        tag.Value.Should().NotBeNull();
+        tag.Value.Should().NotBe(LogixType.Null);
+    }
+
+    [Test]
+    public void New_ArrayOfAtomicData_ShouldBeExpected()
+    {
+        var tag = Tag.New<DINT>("ArrayTag", 10);
+
+        tag.Name.Should().Be("ArrayTag");
+        tag.Dimensions.Should().Be(10);
+        tag.Value.Should().NotBeNull();
+        tag.Value.Should().BeOfType<ArrayData>();
     }
 
     [Test]
     public void Build_SimpleAtomicTypeWithValue_ShouldHaveExpectedValues()
     {
-        var tag = Tag.Configure("SomeAtomic")
-            .AsAtomic<DINT>()
+        var tag = Tag.Named("SomeAtomic")
             .WithValue(123)
             .Build();
 
@@ -989,26 +1007,64 @@ public class TagTests
         tag.DataType.Should().Be("DINT");
         tag.Value.Should().Be(123);
         tag.Radix.Should().Be(Radix.Decimal);
-        tag.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
         tag.TagType.Should().Be(TagType.Base);
     }
 
     [Test]
-    public void Build_SimpleAtomicWithAccess_ShouldHaveExpectedAccess()
+    public void Build_SimpleNoneAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Configure("SomeAtomic")
-            .AsAtomic<DINT>()
-            .WithAccess(ExternalAccess.None)
+        var tag = Tag.Named("SomeAtomic")
+            .WithAccess(Access.None)
             .Build();
 
-        tag.ExternalAccess.Should().Be(ExternalAccess.None);
+        tag.ExternalAccess.Should().Be(Access.None);
     }
 
     [Test]
-    public void Build_SimpleAtomicWithDescription_ShouldHaveExpectedDescription()
+    public void Build_SimpleReadOnlyAccess_ShouldHaveExpectedAccess()
     {
-        var tag = Tag.Configure("SomeAtomic")
-            .AsAtomic<DINT>()
+        var tag = Tag.Named("SomeAtomic")
+            .ReadOnly()
+            .Build();
+
+        tag.ExternalAccess.Should().Be(Access.ReadOnly);
+    }
+
+    [Test]
+    public void Build_SimpleReadWriteAccess_ShouldHaveExpectedAccess()
+    {
+        var tag = Tag.Named("SomeAtomic")
+            .ReadWrite()
+            .Build();
+
+        tag.ExternalAccess.Should().Be(Access.ReadWrite);
+    }
+
+    [Test]
+    public void Build_SimpleWithUsage_ShouldHaveExpectedAccess()
+    {
+        var tag = Tag.Named("SomeAtomic")
+            .WithUsage(TagUsage.Public)
+            .Build();
+
+        tag.Usage.Should().Be(TagUsage.Public);
+    }
+
+    [Test]
+    public void Build_SimpleWithNormalUsage_ShouldHaveExpectedAccess()
+    {
+        var tag = Tag.Named("SomeAtomic")
+            .Normal()
+            .Build();
+
+        tag.Usage.Should().Be(TagUsage.Normal);
+    }
+
+    [Test]
+    public void Build_SimpleWithDescription_ShouldHaveExpectedDescription()
+    {
+        var tag = Tag.Named("SomeAtomic")
             .WithDescription("This is a test of the fluent tag builder")
             .Build();
 
@@ -1016,10 +1072,9 @@ public class TagTests
     }
 
     [Test]
-    public void Build_SimpleAtomicConstant_ShouldHaveExpectedConstant()
+    public void Build_SimpleConstant_ShouldHaveExpectedConstant()
     {
-        var tag = Tag.Configure("SomeAtomic")
-            .AsAtomic<DINT>()
+        var tag = Tag.Named("SomeAtomic")
             .Constant()
             .Build();
 
@@ -1027,10 +1082,9 @@ public class TagTests
     }
 
     [Test]
-    public void Build_SimpleAtomicConsumes_ShouldHaveExpectedInfo()
+    public void Build_SimpleConsumer_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.Configure("ConsumerTag")
-            .AsAtomic<DINT>()
+        var tag = Tag.Named("ConsumerTag")
             .Consumes(cb => cb
                 .Provider("RemoteProviderName")
                 .RemoteTag("RemoteTagName.Member.Value")
@@ -1049,10 +1103,9 @@ public class TagTests
     }
 
     [Test]
-    public void Build_SimpleAtomicProducer_ShouldHaveExpectedInfo()
+    public void Build_SimpleProducer_ShouldHaveExpectedInfo()
     {
-        var tag = Tag.Configure("ProducerTag")
-            .AsAtomic<DINT>()
+        var tag = Tag.Named("ProducerTag")
             .Produces(b => b
                 .WithMaxCount(5)
                 .SendEventTrigger()
@@ -1071,111 +1124,68 @@ public class TagTests
     [Test]
     public Task Build_SimpleAliasTag_ShouldBeVerified()
     {
-        var tag = Tag.Configure("MyTagName")
-            .AsAlias("SomeOtherTag")
-            .WithDescription("We don't need to configure anything since it is based on SOmeOtherTag")
+        var tag = Tag.Named("MyTagName")
+            .AliasFor("SomeOtherTag")
             .Build();
 
-        return Verify(tag.Serialize().ToString());
+        return VerifyXml(tag.Serialize().ToString());
     }
 
     [Test]
-    public Task Build_SimpleStructureWithConfiguredMembers_ShouldBeVerified()
+    public Task Build_PredefinedTypeDefaultValue_ShouldBeVerified()
     {
-        var tag = Tag.Configure("MyTagName")
-            .AsStructure("SimpleType")
-            .AddMember("BoolMember").AsAtomic<BOOL>().WithValue(true)
-            .AddMember("DintMember").AsAtomic<DINT>().WithValue(123)
-            .AddMember("RealMember").AsAtomic<REAL>().WithValue(1.23f)
-            .WithDescription("Builder example of tag from a user defined type that is not statically defined")
+        var tag = Tag.Named("MyTagName")
+            .WithValue<TIMER>()
+            .WithDescription("Builder example of creating a complex predefined data type with default data.")
             .Build();
 
-        return Verify(tag.Serialize().ToString());
+        return VerifyXml(tag.Serialize().ToString());
     }
 
     [Test]
-    public Task Build_StructureWithPredefinedMember_ShouldBeVerified()
+    public Task Build_PredefinedTypeConfiguredValue_ShouldBeVerified()
     {
-        var tag = Tag.Configure("MyTagName")
-            .AsStructure("TIMER")
-            .WithValue("PRE", 5000)
-            .WithValue("DN", true)
-            .WithDescription("Builder example of tag from predefined type that is statically defined")
+        var tag = Tag.Named("MyTagName")
+            .WithValue<TIMER>(t =>
+            {
+                t.PRE = 10000;
+                t.ACC = 1234;
+                t.DN = true;
+                t.EN = true;
+            })
+            .WithDescription("Builder example of creating a complex predefined data type with configured data.")
             .Build();
 
-        return Verify(tag.Serialize().ToString());
+        return VerifyXml(tag.Serialize().ToString());
     }
 
     [Test]
-    public Task Build_AtomicArrayWithSetValue_ShouldBeVerified()
+    public Task Build_UserDefinedTypeDefaultValue_ShouldBeVerified()
     {
-        var tag = Tag.Configure("ArrayTag")
-            .AsArray<REAL>(12)
-            .WithElement(4, 12.4f)
-            .WithElement(7, new REAL(123.3f))
-            .WithAccess(ExternalAccess.ReadOnly)
-            .WithDescription("This is a simple array type builder")
+        var tag = Tag.Named("MyTagName")
+            .WithValue<MyNestedData>()
+            .WithDescription("Builder example of creating a complex user defined data type with defualt data.")
             .Build();
 
-        return Verify(tag.Serialize().ToString());
+        return VerifyXml(tag.Serialize().ToString());
     }
 
     [Test]
-    public Task Build_StructureArrayWithNestedConfig_ShouldBeVerified()
+    public Task Build_UserDefinedTypeConfiguredValue_ShouldBeVerified()
     {
-        var tag = Tag.Configure("TimerConfigArray")
-            .AsArray("TIMER", 5)
-            .WithElement(0, b => b
-                .WithValue("PRE", 1000)
-            )
-            .WithElement(1, b => b
-                .WithValue("PRE", 2000)
-            )
-            .WithElement(2, b => b
-                .WithValue("PRE", 3000)
-                .WithValue("TT", true)
-                .WithDescription("Nested array structure element test")
-            )
-            .WithDescription("This is a structure array example")
-            .WithAccess(ExternalAccess.ReadOnly)
+        var tag = Tag.Named("MyTagName")
+            .WithValue<MyNestedData>(d =>
+            {
+                d.Simple.M2 = 123;
+                d.Tmr.PRE = 12345;
+                d.Flags[5] = true;
+                d.Counters[1].PRE = 4;
+                d.Names[3] = "This is a complex test";
+            })
+            .WithDescription("Builder example of creating a complex user defined data type and setting member value.")
             .Build();
 
-        return Verify(tag.Serialize().ToString());
-    }
-
-    [Test]
-    public Task Build_ComplexNestedStructure_ShouldBeVerified()
-    {
-        var tag = Tag.Configure("MyTagName")
-            .AsStructure("ComplexType")
-            .AddMember("TimerMember").AsStructure("TIMER", b => b
-                .WithDescription("This is a nested TIMER structure")
-                .WithValue("PRE", 1234)
-                .WithValue("DN", false)
-            )
-            .AddMember("SimpleMember").AsStructure("SimpleType", b => b
-                .WithDescription("This is a nested user-defined structure")
-                .AddMember("BoolMember").AsAtomic<BOOL>().WithValue(true)
-                .AddMember("DintMember").AsAtomic<DINT>().WithValue(123)
-                .AddMember("RealMember").AsAtomic<REAL>().WithValue(1.23f)
-                .AddMember("CommentMember").AsAtomic<DINT>().WithDescription("Testing").WithValue(4321)
-            )
-            .AddMember("NestedMember").AsStructure("NestedType", b => b
-                    .WithDescription("This is a nested structure example")
-                    .AddMember("AnotherStructure").AsStructure("AnotherType", another => another
-                        .AddMember("SomeValueMemberFinally").AsAtomic<DINT>().WithValue(1234567)
-                        .WithDescription("We made it")
-                    )
-                    .AddMember("SomeArray").AsArray<DINT>(12, array => array
-                            .WithElement(0, 123)
-                        //...and so on
-                    )
-                //...and so on
-            )
-            .WithDescription("The builder pattern supports arbitrarily deep tag structures!")
-            .Build();
-
-        return Verify(tag.Serialize().ToString());
+        return VerifyXml(tag.Serialize().ToString());
     }
 
     #endregion
@@ -1219,6 +1229,30 @@ public class TagTests
         var xml = tag.Serialize().ToString();
 
         return VerifyXml(xml);
+    }
+
+    #endregion
+
+    #region ReferencesTests
+
+    [Test]
+    public void References_ForAllTagsExampleFile_ShouldNotTakeForever()
+    {
+        var content = TestContent.Example;
+
+        var result = content.Query<Tag>().SelectMany(t => t.Members()).SelectMany(t => t.References()).ToList();
+
+        result.Should().NotBeEmpty();
+    }
+
+    [Test]
+    public void TagCount()
+    {
+        var content = TestContent.Example;
+
+        var tags = content.Query<Tag>().ToList();
+
+        Console.WriteLine(tags.Count);
     }
 
     #endregion

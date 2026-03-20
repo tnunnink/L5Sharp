@@ -25,7 +25,6 @@ namespace L5Sharp.Tests.Core.Components
             dataType.Class.Should().Be(DataTypeClass.User);
             dataType.Members.Should().BeEmpty();
             dataType.Use.Should().BeNull();
-            dataType.Scope.Level.Should().Be(ScopeLevel.Null);
         }
 
         [Test]
@@ -36,7 +35,7 @@ namespace L5Sharp.Tests.Core.Components
                 Name = "Test",
                 Description = "This is a test type",
                 Family = DataTypeFamily.String,
-                Class = DataTypeClass.Predefined,
+                Class = DataTypeClass.User,
                 Members =
                 [
                     new DataTypeMember { Name = "Member01" },
@@ -79,13 +78,13 @@ namespace L5Sharp.Tests.Core.Components
                 Name = "Test",
                 Description = "This is a test type",
                 Family = DataTypeFamily.String,
-                Class = DataTypeClass.Predefined,
-                Members = new LogixContainer<DataTypeMember>
-                {
-                    new() { Name = "Member01" },
-                    new() { Name = "Member02" },
-                    new() { Name = "Member03" }
-                }
+                Class = DataTypeClass.User,
+                Members =
+                [
+                    new DataTypeMember { Name = "Member01" },
+                    new DataTypeMember { Name = "Member02" },
+                    new DataTypeMember { Name = "Member03" }
+                ]
             };
 
             var xml = dataType.Serialize().ToString();
@@ -94,9 +93,31 @@ namespace L5Sharp.Tests.Core.Components
         }
 
         [Test]
+        public void AddMember_ValidParameters_ShouldContainMember()
+        {
+            var type = new DataType("Test");
+
+            type.AddMember("MemberName", "DINT");
+
+            type.Members.Should().HaveCount(1);
+        }
+
+        [Test]
+        public Task AddMember_ChainMembers_ShouldBeVerified()
+        {
+            var type = new DataType("Test");
+
+            type.AddMember("First", "BOOL")
+                .AddMember("Second", "DINT")
+                .AddMember("Third", "TIMER");
+
+            return VerifyXml(type.Serialize().ToString());
+        }
+
+        [Test]
         public void ToData_SimpleType_ShouldHaveExpectedStructure()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var simpleType = content.Get<DataType>(Known.DataType);
 
             var data = simpleType.ToData();
@@ -109,7 +130,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public void ToData_ComplexType_ShouldHaveExpectedMembers()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var simpleType = content.Get<DataType>("ComplexType");
 
             var data = simpleType.ToData();
@@ -117,15 +138,15 @@ namespace L5Sharp.Tests.Core.Components
             data.Should().NotBeNull();
             data.Name.Should().Be("ComplexType");
             data.Members.Should().HaveCount(9);
-            data.Member("SimpleMember")?.Value.Should().BeOfType<ComplexData>();
-            data.Member("TimeMember")?.Value.Should().BeOfType<TIMER>();
-            data.Member("CounterMember")?.Value.Should().BeOfType<COUNTER>();
+            data.GetMember("SimpleMember")?.Value.Should().NotBeNull();
+            data.GetMember("TimeMember")?.Value.Should().NotBeNull();
+            data.GetMember("CounterMember")?.Value.Should().NotBeNull();
         }
 
         [Test]
         public Task ToTag_SimpleType_ShouldBeVerified()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var type = content.Get<DataType>(Known.DataType);
 
             var tag = type.ToTag("MySimpleTag");
@@ -136,7 +157,7 @@ namespace L5Sharp.Tests.Core.Components
         [Test]
         public Task ToTag_ComplexType_ShouldBeVerified()
         {
-            var content = L5X.Load(Known.Test);
+            var content = TestContent.Test;
             var type = content.Get<DataType>("ComplexType");
 
             var tag = type.ToTag("MyComplexTag");

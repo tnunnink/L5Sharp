@@ -20,135 +20,148 @@ public class DintTests
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        type.Should().NotBeNull();
+        atomic.Should().NotBeNull();
     }
 
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        type.Should().NotBeNull();
-        type.Should().Be(0);
-        type.Name.Should().Be(nameof(DINT).ToUpper());
-        type.Members.Should().BeEmpty();
-        type.Radix.Should().Be(Radix.Decimal);
+        atomic.Name.Should().Be(nameof(DINT).ToUpper());
+        atomic.Members.Should().BeEmpty();
+        atomic.Value.Should().Be(0);
+        atomic.Radix.Should().Be(Radix.Decimal);
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var type = new DINT(_random);
+        var atomic = new DINT(_random);
 
-        type.Should().Be(_random);
+        atomic.Should().Be(_random);
     }
 
     [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
+    public void Size_WhenCalled_ShouldBeExpected()
     {
-        var type = new DINT(Radix.Binary);
+        var atomic = new DINT();
 
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
+        var size = atomic.GetSize();
+
+        size.Should().Be(sizeof(int));
     }
 
     [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
+    public void Update_Null_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new DINT(null!)).Should().Throw<ArgumentException>();
+        var atomic = new DINT();
+
+        FluentActions.Invoking(() => atomic.UpdateData(null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
+    public void Update_InvalidType_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new DINT(Radix.Exponential)).Should().Throw<ArgumentException>();
+        var atomic = new DINT();
+
+        FluentActions.Invoking(() => atomic.UpdateData(new TIMER())).Should().Throw<ArgumentException>();
     }
 
     [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
+    public void Update_MatchingValueType_ShouldBeUpdated()
     {
-        var type = new DINT(123, Radix.Hex);
+        var atomic = new DINT();
 
-        type.Should().Be(123);
-        type.Radix.Should().Be(Radix.Hex);
+        atomic.UpdateData(123);
+
+        atomic.Value.Should().Be(123);
     }
 
     [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
+    public void Update_DifferentTypeValidSize_ShouldBeUpdated()
     {
-        FluentActions.Invoking(() => new DINT(123, null!)).Should().Throw<ArgumentException>();
+        var atomic = new DINT();
+
+        atomic.UpdateData(new INT(short.MaxValue));
+
+        atomic.Value.Should().Be(short.MaxValue);
     }
 
     [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
+    public void Update_DifferentTypeTooLarge_ShouldCauseOverflow()
     {
-        FluentActions.Invoking(() => new DINT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
+        var atomic = new DINT();
+
+        atomic.UpdateData(new LINT(long.MaxValue));
+
+        atomic.Value.Should().NotBe(int.MinValue);
     }
 
     [Test]
     public void GetBits_WhenCalled_ShouldHaveExpectedCount()
     {
-        var type = new DINT(123);
+        var atomic = new DINT(123);
 
-        var bits = type.GetBits();
+        var bits = atomic.ToBitArray();
 
-        bits.Should().HaveCount(32);
+        bits.Count.Should().Be(32);
     }
 
     [Test]
     public void Bit_ValidIndex_ShouldBeExpectedValue()
     {
-        var type = new DINT(123);
+        var atomic = new DINT(123);
 
-        var bit = type[1];
-            
+        var bit = atomic[1];
+
         bit.Should().Be(true);
     }
 
     [Test]
     public void Bit_InvalidIndex_ShouldBeThrowException()
     {
-        var type = new DINT(123);
+        var atomic = new DINT(123);
 
-        FluentActions.Invoking(() => type[100]) .Should().Throw<ArgumentOutOfRangeException>();
+        FluentActions.Invoking(() => atomic[100]).Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
     public void As_AtomicType_ShouldNotBeNull()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var atomic = type.As<AtomicData>();
+        var casted = atomic.As<AtomicData>();
 
-        atomic.Should().NotBeNull();
+        casted.Should().NotBeNull();
     }
 
     [Test]
     public void As_InvalidType_ShouldThrowInvalidCastException()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        FluentActions.Invoking(() => type.As<StructureData>()).Should().Throw<InvalidCastException>();
+        FluentActions.Invoking(() => atomic.As<StructureData>()).Should().Throw<InvalidCastException>();
     }
 
     [Test]
     public void Clone_WhenCalled_ReturnsDifferentInstance()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var clone = type.Clone();
+        var clone = atomic.Clone();
 
-        clone.Should().NotBeSameAs(type);
+        clone.Should().NotBeSameAs(atomic);
     }
 
     [Test]
     public void Clone_WhenCalled_ShouldHaveSameValue()
     {
-        var type = new DINT(123);
+        var atomic = new DINT(123);
 
-        var clone = type.Clone();
+        var clone = atomic.Clone();
 
         clone.Should().Be(123);
     }
@@ -156,10 +169,10 @@ public class DintTests
     [Test]
     public void Index_ValidIndex_ShouldBeExpected()
     {
-        var type = new DINT(1);
+        var atomic = new DINT(1);
 
-        var bit0 = type[0];
-        var bit1 = type[1];
+        var bit0 = atomic[0];
+        var bit1 = atomic[1];
 
         bit0.Should().Be(true);
         bit1.Should().Be(false);
@@ -168,28 +181,28 @@ public class DintTests
     [Test]
     public void Index_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
     {
-        var type = new DINT(1);
+        var atomic = new DINT(1);
 
-        FluentActions.Invoking(() => type[32]).Should().Throw<ArgumentOutOfRangeException>();
+        FluentActions.Invoking(() => atomic[32]).Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public void GetBytes_WhenCalled_ReturnsExpected()
+    public void ToBytes_WhenCalled_ReturnsExpected()
     {
         var expected = BitConverter.GetBytes(_random);
-        var type = new DINT(_random);
+        var atomic = new DINT(_random);
 
-        var bytes = type.GetBytes();
+        var bytes = atomic.ToBytes();
 
-        CollectionAssert.AreEqual(bytes, expected);
+        bytes.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public Task Serialize_Default_ShouldBeValid()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var xml = type.Serialize().ToString();
+        var xml = atomic.Serialize().ToString();
 
         return Verify(xml);
     }
@@ -197,9 +210,9 @@ public class DintTests
     [Test]
     public Task Serialize_Value_ShouldBeValid()
     {
-        var type = new DINT(123);
+        DINT atomic = 123;
 
-        var xml = type.Serialize().ToString();
+        var xml = atomic.Serialize().ToString();
 
         return Verify(xml);
     }
@@ -207,9 +220,9 @@ public class DintTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new DINT(123, Radix.Hex);
+        DINT atomic = Radix.Hex.Format(123);
 
-        var xml = type.Serialize().ToString();
+        var xml = atomic.Serialize().ToString();
 
         return Verify(xml);
     }
@@ -217,9 +230,9 @@ public class DintTests
     [Test]
     public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
     {
-        var type = new DINT() as IConvertible;
+        IConvertible atomic = new DINT();
 
-        var result = type.ToBoolean(CultureInfo.InvariantCulture);
+        var result = atomic.ToBoolean(CultureInfo.InvariantCulture);
 
         result.Should().BeFalse();
     }
@@ -230,9 +243,9 @@ public class DintTests
         var fixture = new Fixture();
         var value = fixture.Create<byte>();
         var expected = (byte)Convert.ChangeType(value, typeof(byte));
-        var type = new DINT(value) as IConvertible;
+        IConvertible atomic = new DINT(value);
 
-        var result = type.ToByte(CultureInfo.InvariantCulture);
+        var result = atomic.ToByte(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -241,9 +254,9 @@ public class DintTests
     public void ToChar_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (char)Convert.ChangeType(_random, typeof(char));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToChar(CultureInfo.InvariantCulture);
+        var result = atomic.ToChar(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -251,18 +264,18 @@ public class DintTests
     [Test]
     public void ToDateTime_WhenCalled_ShouldThrowInvalidCastException()
     {
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        FluentActions.Invoking(() => type.ToDateTime(CultureInfo.InvariantCulture)).Should()
+        FluentActions.Invoking(() => atomic.ToDateTime(CultureInfo.InvariantCulture)).Should()
             .Throw<InvalidCastException>();
     }
 
     [Test]
     public void ToDecimal_WhenCalled_ShouldThrowInvalidCastException()
     {
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        FluentActions.Invoking(() => type.ToDecimal(CultureInfo.InvariantCulture)).Should()
+        FluentActions.Invoking(() => atomic.ToDecimal(CultureInfo.InvariantCulture)).Should()
             .Throw<InvalidCastException>();
     }
 
@@ -270,9 +283,9 @@ public class DintTests
     public void ToDouble_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (double)Convert.ChangeType(_random, typeof(double));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToDouble(CultureInfo.InvariantCulture);
+        var result = atomic.ToDouble(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -281,9 +294,9 @@ public class DintTests
     public void ToInt16_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (short)Convert.ChangeType(_random, typeof(short));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToInt16(CultureInfo.InvariantCulture);
+        var result = atomic.ToInt16(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -292,9 +305,9 @@ public class DintTests
     public void ToInt32_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (int)Convert.ChangeType(_random, typeof(int));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToInt32(CultureInfo.InvariantCulture);
+        var result = atomic.ToInt32(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -303,9 +316,9 @@ public class DintTests
     public void ToInt64_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (long)Convert.ChangeType(_random, typeof(long));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToInt64(CultureInfo.InvariantCulture);
+        var result = atomic.ToInt64(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -316,9 +329,9 @@ public class DintTests
         var fixture = new Fixture();
         var value = fixture.Create<sbyte>();
         var expected = (sbyte)Convert.ChangeType(value, typeof(sbyte));
-        var type = new DINT(value) as IConvertible;
+        var atomic = new DINT(value) as IConvertible;
 
-        var result = type.ToSByte(CultureInfo.InvariantCulture);
+        var result = atomic.ToSByte(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -327,9 +340,9 @@ public class DintTests
     public void ToSingle_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (float)Convert.ChangeType(_random, typeof(float));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToSingle(CultureInfo.InvariantCulture);
+        var result = atomic.ToSingle(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -338,9 +351,9 @@ public class DintTests
     public void ToString_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = _random.ToString();
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToString(CultureInfo.InvariantCulture);
+        var result = atomic.ToString(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -349,9 +362,9 @@ public class DintTests
     public void ToUInt16_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (ushort)Convert.ChangeType(_random, typeof(ushort));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToUInt16(CultureInfo.InvariantCulture);
+        var result = atomic.ToUInt16(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -360,9 +373,9 @@ public class DintTests
     public void ToUInt32_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (uint)Convert.ChangeType(_random, typeof(uint));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToUInt32(CultureInfo.InvariantCulture);
+        var result = atomic.ToUInt32(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -371,9 +384,9 @@ public class DintTests
     public void ToUInt64_WhenCalled_ShouldBeExpectedValue()
     {
         var expected = (ulong)Convert.ChangeType(_random, typeof(ulong));
-        var type = new DINT(_random) as IConvertible;
+        IConvertible atomic = new DINT(_random);
 
-        var result = type.ToUInt64(CultureInfo.InvariantCulture);
+        var result = atomic.ToUInt64(CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -381,9 +394,9 @@ public class DintTests
     [Test]
     public void ToType_Boolean_ShouldBeExpectedValue()
     {
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (bool)type.ToType(typeof(bool), CultureInfo.InvariantCulture);
+        var result = (bool)atomic.ToType(typeof(bool), CultureInfo.InvariantCulture);
 
         result.Should().BeTrue();
     }
@@ -392,9 +405,9 @@ public class DintTests
     public void ToType_Byte_ShouldBeExpectedValue()
     {
         const byte expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (byte)type.ToType(typeof(byte), CultureInfo.InvariantCulture);
+        var result = (byte)atomic.ToType(typeof(byte), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -403,9 +416,9 @@ public class DintTests
     public void ToType_Char_ShouldBeExpectedValue()
     {
         const char expected = (char)1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (char)type.ToType(typeof(char), CultureInfo.InvariantCulture);
+        var result = (char)atomic.ToType(typeof(char), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -413,18 +426,18 @@ public class DintTests
     [Test]
     public void ToType_DateTime_ShouldThrowInvalidCastException()
     {
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        FluentActions.Invoking(() => type.ToType(typeof(DateTime), CultureInfo.InvariantCulture))
+        FluentActions.Invoking(() => atomic.ToType(typeof(DateTime), CultureInfo.InvariantCulture))
             .Should().Throw<InvalidCastException>();
     }
 
     [Test]
     public void ToType_Decimal_ShouldThrowInvalidCastException()
     {
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        FluentActions.Invoking(() => type.ToType(typeof(decimal), CultureInfo.InvariantCulture))
+        FluentActions.Invoking(() => atomic.ToType(typeof(decimal), CultureInfo.InvariantCulture))
             .Should().Throw<InvalidCastException>();
     }
 
@@ -432,9 +445,9 @@ public class DintTests
     public void ToType_Double_ShouldBeExpectedValue()
     {
         const double expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (double)type.ToType(typeof(double), CultureInfo.InvariantCulture);
+        var result = (double)atomic.ToType(typeof(double), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -443,9 +456,9 @@ public class DintTests
     public void ToType_Int16_ShouldBeExpectedValue()
     {
         const short expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (short)type.ToType(typeof(short), CultureInfo.InvariantCulture);
+        var result = (short)atomic.ToType(typeof(short), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -454,9 +467,9 @@ public class DintTests
     public void ToType_Int32_ShouldBeExpectedValue()
     {
         const int expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (int)type.ToType(typeof(int), CultureInfo.InvariantCulture);
+        var result = (int)atomic.ToType(typeof(int), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -465,9 +478,9 @@ public class DintTests
     public void ToType_Int64_ShouldBeExpectedValue()
     {
         const long expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (long)type.ToType(typeof(long), CultureInfo.InvariantCulture);
+        var result = (long)atomic.ToType(typeof(long), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -476,9 +489,9 @@ public class DintTests
     public void ToType_Sbyte_ShouldBeExpectedValue()
     {
         const sbyte expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (sbyte)type.ToType(typeof(sbyte), CultureInfo.InvariantCulture);
+        var result = (sbyte)atomic.ToType(typeof(sbyte), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -487,9 +500,9 @@ public class DintTests
     public void ToType_Float_ShouldBeExpectedValue()
     {
         const float expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (float)type.ToType(typeof(float), CultureInfo.InvariantCulture);
+        var result = (float)atomic.ToType(typeof(float), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -498,9 +511,9 @@ public class DintTests
     public void ToType_String_ShouldBeExpectedValue()
     {
         const string expected = "1";
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (string)type.ToType(typeof(string), CultureInfo.InvariantCulture);
+        var result = (string)atomic.ToType(typeof(string), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -509,9 +522,9 @@ public class DintTests
     public void ToType_UInt16_ShouldBeExpectedValue()
     {
         const ushort expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (ushort)type.ToType(typeof(ushort), CultureInfo.InvariantCulture);
+        var result = (ushort)atomic.ToType(typeof(ushort), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -520,9 +533,9 @@ public class DintTests
     public void ToType_UInt32_ShouldBeExpectedValue()
     {
         const uint expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (uint)type.ToType(typeof(uint), CultureInfo.InvariantCulture);
+        var result = (uint)atomic.ToType(typeof(uint), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -530,27 +543,27 @@ public class DintTests
     [Test]
     public void ToType_DbNull_ShouldBeExpectedValue()
     {
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        FluentActions.Invoking(() => type.ToType(typeof(DBNull), CultureInfo.InvariantCulture)).Should()
+        FluentActions.Invoking(() => atomic.ToType(typeof(DBNull), CultureInfo.InvariantCulture)).Should()
             .Throw<InvalidCastException>();
     }
 
     [Test]
     public void ToType_Null_ShouldBeExpectedValue()
     {
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        FluentActions.Invoking(() => type.ToType(null!, CultureInfo.InvariantCulture)).Should()
+        FluentActions.Invoking(() => atomic.ToType(null!, CultureInfo.InvariantCulture)).Should()
             .Throw<ArgumentNullException>();
     }
 
     [Test]
     public void ToType_Invalid_ShouldBeExpectedValue()
     {
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        FluentActions.Invoking(() => type.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
+        FluentActions.Invoking(() => atomic.ToType(typeof(StructureData), CultureInfo.InvariantCulture)).Should()
             .Throw<InvalidCastException>();
     }
 
@@ -558,9 +571,9 @@ public class DintTests
     public void ToType_UInt64_ShouldBeExpectedValue()
     {
         const ulong expected = 1;
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (ulong)type.ToType(typeof(ulong), CultureInfo.InvariantCulture);
+        var result = (ulong)atomic.ToType(typeof(ulong), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -568,9 +581,9 @@ public class DintTests
     [Test]
     public void ToType_BOOL_ShouldBeExpectedValue()
     {
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (BOOL)type.ToType(typeof(BOOL), CultureInfo.InvariantCulture);
+        var result = (BOOL)atomic.ToType(typeof(BOOL), CultureInfo.InvariantCulture);
 
         result.Should().Be(true);
     }
@@ -579,9 +592,9 @@ public class DintTests
     public void ToType_SINT_ShouldBeExpectedValue()
     {
         var expected = new SINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (SINT)type.ToType(typeof(SINT), CultureInfo.InvariantCulture);
+        var result = (SINT)atomic.ToType(typeof(SINT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -590,9 +603,9 @@ public class DintTests
     public void ToType_INT_ShouldBeExpectedValue()
     {
         var expected = new DINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (INT)type.ToType(typeof(INT), CultureInfo.InvariantCulture);
+        var result = (INT)atomic.ToType(typeof(INT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -601,9 +614,9 @@ public class DintTests
     public void ToType_DINT_ShouldBeExpectedValue()
     {
         var expected = new DINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (DINT)type.ToType(typeof(DINT), CultureInfo.InvariantCulture);
+        var result = (DINT)atomic.ToType(typeof(DINT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -612,9 +625,9 @@ public class DintTests
     public void ToType_LINT_ShouldBeExpectedValue()
     {
         var expected = new LINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (LINT)type.ToType(typeof(LINT), CultureInfo.InvariantCulture);
+        var result = (LINT)atomic.ToType(typeof(LINT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -623,9 +636,9 @@ public class DintTests
     public void ToType_REAL_ShouldBeExpectedValue()
     {
         var expected = new REAL(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (REAL)type.ToType(typeof(REAL), CultureInfo.InvariantCulture);
+        var result = (REAL)atomic.ToType(typeof(REAL), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -634,9 +647,9 @@ public class DintTests
     public void ToType_USINT_ShouldBeExpectedValue()
     {
         var expected = new USINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (USINT)type.ToType(typeof(USINT), CultureInfo.InvariantCulture);
+        var result = (USINT)atomic.ToType(typeof(USINT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -645,9 +658,9 @@ public class DintTests
     public void ToType_UINT_ShouldBeExpectedValue()
     {
         var expected = new UINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (UINT)type.ToType(typeof(UINT), CultureInfo.InvariantCulture);
+        var result = (UINT)atomic.ToType(typeof(UINT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -656,9 +669,9 @@ public class DintTests
     public void ToType_UDINT_ShouldBeExpectedValue()
     {
         var expected = new UDINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (UDINT)type.ToType(typeof(UDINT), CultureInfo.InvariantCulture);
+        var result = (UDINT)atomic.ToType(typeof(UDINT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -667,9 +680,9 @@ public class DintTests
     public void ToType_ULINT_ShouldBeExpectedValue()
     {
         var expected = new ULINT(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (ULINT)type.ToType(typeof(ULINT), CultureInfo.InvariantCulture);
+        var result = (ULINT)atomic.ToType(typeof(ULINT), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -678,9 +691,9 @@ public class DintTests
     public void ToType_LREAL_ShouldBeExpectedValue()
     {
         var expected = new LREAL(1);
-        var type = new DINT(1) as IConvertible;
+        IConvertible atomic = new DINT(1);
 
-        var result = (LREAL)type.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
+        var result = (LREAL)atomic.ToType(typeof(LREAL), CultureInfo.InvariantCulture);
 
         result.Should().Be(expected);
     }
@@ -688,17 +701,17 @@ public class DintTests
     [Test]
     public void Conversion_FromInt_ShouldBeExpectedValue()
     {
-        DINT type = _random;
+        DINT atomic = _random;
 
-        type.Should().Be(_random);
+        atomic.Should().Be(_random);
     }
 
     [Test]
     public void Conversion_ToInt_ShouldBeExpectedValue()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        int value = type;
+        int value = atomic;
 
         value.Should().Be(0);
     }
@@ -714,9 +727,9 @@ public class DintTests
     [Test]
     public void Conversion_ToString_ShouldBeExpectedValue()
     {
-        var type = new DINT(1);
+        var atomic = new DINT(1);
 
-        var value = (string)type;
+        var value = (string)atomic;
 
         value.Should().Be("1");
     }
@@ -724,9 +737,9 @@ public class DintTests
     [Test]
     public void ToString_DefaultRadix_ShouldBeExpected()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var format = type.ToString();
+        var format = atomic.ToString();
 
         format.Should().Be("0");
     }
@@ -734,9 +747,9 @@ public class DintTests
     [Test]
     public void ToString_OverloadedRadix_ShouldBeExpected()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var format = type.ToString(Radix.Binary);
+        var format = atomic.ToString(Radix.Binary);
 
         format.Should().Be("2#0000_0000_0000_0000_0000_0000_0000_0000");
     }
@@ -748,9 +761,9 @@ public class DintTests
     [TestCase("16#0000_007b")]
     public void Parse_ValidFormat_ShouldBeExpectedValue(string value)
     {
-        var type = DINT.Parse(value);
+        var atomic = DINT.Parse(value);
 
-        type.Should().Be(123);
+        atomic.Should().Be(123);
     }
 
     [Test]
@@ -760,9 +773,9 @@ public class DintTests
     [TestCase("16#0000_007b")]
     public void TryParse_ValidFormat_ShouldBeExpectedValue(string value)
     {
-        var atomic = DINT.TryParse(value);
+        var result = DINT.TryParse(value, out var atomic);
 
-        atomic.Should().NotBeNull();
+        result.Should().BeTrue();
         atomic.Should().Be(123);
     }
 
@@ -889,9 +902,9 @@ public class DintTests
     [Test]
     public void GetHashCode_RandomValue_ShouldBeHashOfValue()
     {
-        var type = new DINT(_random);
+        var atomic = new DINT(_random);
 
-        var hash = type.GetHashCode();
+        var hash = atomic.GetHashCode();
 
         hash.Should().Be(_random.GetHashCode());
     }
@@ -899,9 +912,9 @@ public class DintTests
     [Test]
     public void GetTypeCode_WhenCalled_ShouldBeObjectType()
     {
-        var type = new DINT() as IConvertible;
+        IConvertible atomic = new DINT();
 
-        var code = type.GetTypeCode();
+        var code = atomic.GetTypeCode();
 
         code.Should().Be(TypeCode.Object);
     }
@@ -920,9 +933,9 @@ public class DintTests
     [Test]
     public void CompareTo_Same_ShouldBeZero()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var compare = type.CompareTo(type);
+        var compare = atomic.CompareTo(atomic);
 
         compare.Should().Be(0);
     }
@@ -930,9 +943,9 @@ public class DintTests
     [Test]
     public void CompareTo_ValueTypeEqual_ShouldBeZero()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var compare = type.CompareTo(0);
+        var compare = atomic.CompareTo(0);
 
         compare.Should().Be(0);
     }
@@ -940,9 +953,9 @@ public class DintTests
     [Test]
     public void CompareTo_Null_ShouldBeOne()
     {
-        var type = new DINT();
+        var atomic = new DINT();
 
-        var compare = type.CompareTo(null);
+        var compare = atomic.CompareTo(null);
 
         compare.Should().Be(1);
     }

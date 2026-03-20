@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using L5Sharp.Tests.Core.Data.Custom;
 
-namespace L5Sharp.Tests.Core.Types.Custom;
+namespace L5Sharp.Tests.Core.Data.Custom;
 
 [TestFixture]
 public class MySimpleTypeTests

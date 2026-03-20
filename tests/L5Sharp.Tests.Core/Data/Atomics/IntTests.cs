@@ -28,64 +28,20 @@ public class IntTests
     [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
-        var type = new INT();
+        var atomic = new INT();
 
-        type.Should().NotBeNull();
-        type.Should().Be(0);
-        type.Name.Should().Be(nameof(INT).ToUpper());
-        type.Members.Should().BeEmpty();
-        type.Radix.Should().Be(Radix.Decimal);
+        atomic.Name.Should().Be(nameof(INT).ToUpper());
+        atomic.Members.Should().BeEmpty();
+        atomic.Value.Should().Be(0);
+        atomic.Radix.Should().Be(Radix.Decimal);
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
-        var type = new INT(_random);
+        var atomic = new INT(_random);
 
-        type.Should().Be(_random);
-    }
-
-    [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
-    {
-        var type = new INT(Radix.Binary);
-
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0000_0000_0000_0000");
-    }
-
-    [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new INT(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new INT(Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
-    {
-        var type = new INT(123, Radix.Hex);
-
-        type.Should().Be(123);
-        type.Radix.Should().Be(Radix.Hex);
-    }
-
-    [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
-    {
-            
-        FluentActions.Invoking(() => new INT(123, null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new INT(123, Radix.Exponential)).Should().Throw<ArgumentException>();
+        atomic.Should().Be(_random);
     }
 
     [Test]
@@ -169,9 +125,9 @@ public class IntTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new INT(123, Radix.Hex);
+        INT atomic = Radix.Hex.Format(123);
 
-        var xml = type.Serialize().ToString();
+        var xml = atomic.Serialize().ToString();
 
         return Verify(xml);
     }
@@ -179,7 +135,7 @@ public class IntTests
     [Test]
     public void ToBoolean_WhenCalled_ShouldBeExpectedValue()
     {
-        var type = new INT() as IConvertible;
+        IConvertible type = new INT();
 
         var result = type.ToBoolean(CultureInfo.InvariantCulture);
 
@@ -295,7 +251,7 @@ public class IntTests
 
         result.Should().Be(expected);
     }
-        
+
     [Test]
     public void ToString_WhenCalled_ShouldBeExpectedValue()
     {
@@ -811,7 +767,7 @@ public class IntTests
 
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     public void EquivalentTo_AreEqual_ShouldBeTrue()
     {
@@ -822,7 +778,7 @@ public class IntTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

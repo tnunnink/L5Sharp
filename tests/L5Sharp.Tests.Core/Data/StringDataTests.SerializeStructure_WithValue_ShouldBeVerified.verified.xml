@@ -1,0 +1,4 @@
+﻿<Structure DataType="MyString">
+  <DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="24" />
+  <DataValueMember Name="DATA" DataType="MyString" Radix="ASCII"><![CDATA['This is the string value']]></DataValueMember>
+</Structure>

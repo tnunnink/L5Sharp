@@ -1,18 +1,22 @@
 ﻿using System.Xml.Linq;
 
+// Auto-generated type definition
 // ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A predefined data type that is built into Logix and used with PID instructions.
+/// Represents a <c>PHASE</c> data type structure.
 /// </summary>
-public sealed class PHASE : StructureData
+[LogixData("PHASE")]
+public sealed partial class PHASE : StructureData
 {
     /// <summary>
-    /// Creates a new <see cref="PID"/> data type instance.
+    /// Creates a new <see cref="PHASE"/> instance initialized with default values.
     /// </summary>
-    public PHASE() : base(nameof(PHASE))
+    public PHASE() : base("PHASE")
     {
         State = new DINT();
         Running = new BOOL();
@@ -62,27 +66,89 @@ public sealed class PHASE : StructureData
         Producing = new BOOL();
         Standby = new BOOL();
     }
-
-    /// <inheritdoc />
+    
+    /// <summary>
+    /// Creates a new <see cref="PHASE"/> instance initialized with the provided element.
+    /// </summary>
     public PHASE(XElement element) : base(element)
     {
     }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 32;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        State.UpdateData(data, offset + 0);
+        Running.UpdateData((data[offset + 5] & (1 << 0)) != 0);
+        Holding.UpdateData((data[offset + 5] & (1 << 1)) != 0);
+        Restarting.UpdateData((data[offset + 5] & (1 << 2)) != 0);
+        Stopping.UpdateData((data[offset + 5] & (1 << 3)) != 0);
+        Aborting.UpdateData((data[offset + 5] & (1 << 4)) != 0);
+        Resetting.UpdateData((data[offset + 5] & (1 << 5)) != 0);
+        Idle.UpdateData((data[offset + 5] & (1 << 6)) != 0);
+        Held.UpdateData((data[offset + 5] & (1 << 7)) != 0);
+        Complete.UpdateData((data[offset + 6] & (1 << 0)) != 0);
+        Stopped.UpdateData((data[offset + 6] & (1 << 1)) != 0);
+        Aborted.UpdateData((data[offset + 6] & (1 << 2)) != 0);
+        PauseControl.UpdateData(data, offset + 6);
+        PauseEnabled.UpdateData((data[offset + 10] & (1 << 3)) != 0);
+        Paused.UpdateData((data[offset + 10] & (1 << 4)) != 0);
+        AutoPauseEnabled.UpdateData((data[offset + 10] & (1 << 5)) != 0);
+        StepIndex.UpdateData(data, offset + 10);
+        Failure.UpdateData(data, offset + 14);
+        UnitID.UpdateData(data, offset + 18);
+        Owner.UpdateData(data, offset + 22);
+        PendingRequest.UpdateData(data, offset + 26);
+        DownloadInputParameters.UpdateData((data[offset + 30] & (1 << 6)) != 0);
+        DownloadInputParametersSubset.UpdateData((data[offset + 30] & (1 << 7)) != 0);
+        UploadOutputParameters.UpdateData((data[offset + 31] & (1 << 0)) != 0);
+        UploadOutputParametersSubset.UpdateData((data[offset + 31] & (1 << 1)) != 0);
+        DownloadOutputParameterLimits.UpdateData((data[offset + 31] & (1 << 2)) != 0);
+        AcquireResources.UpdateData((data[offset + 31] & (1 << 3)) != 0);
+        ReleaseResources.UpdateData((data[offset + 31] & (1 << 4)) != 0);
+        SendMessageToLinkedPhase.UpdateData((data[offset + 31] & (1 << 5)) != 0);
+        SendMessageToLinkedPhaseAndWait.UpdateData((data[offset + 31] & (1 << 6)) != 0);
+        ReceiveMessageFromLinkedPhase.UpdateData((data[offset + 31] & (1 << 7)) != 0);
+        CancelMessageToLinkedPhase.UpdateData((data[offset + 32] & (1 << 0)) != 0);
+        SendMessageToOperator.UpdateData((data[offset + 32] & (1 << 1)) != 0);
+        ClearMessageToOperator.UpdateData((data[offset + 32] & (1 << 2)) != 0);
+        GenerateESignature.UpdateData((data[offset + 32] & (1 << 3)) != 0);
+        DownloadBatchData.UpdateData((data[offset + 32] & (1 << 4)) != 0);
+        DownloadMaterialTrackDataContainerInUse.UpdateData((data[offset + 32] & (1 << 5)) != 0);
+        DownloadContainerBindingPriority.UpdateData((data[offset + 32] & (1 << 6)) != 0);
+        DownloadSufficientMaterial.UpdateData((data[offset + 32] & (1 << 7)) != 0);
+        DownloadMaterialTrackDatabaseData.UpdateData((data[offset + 33] & (1 << 0)) != 0);
+        UploadMaterialTrackDataContainerInUse.UpdateData((data[offset + 33] & (1 << 1)) != 0);
+        UploadContainerBindingPriority.UpdateData((data[offset + 33] & (1 << 2)) != 0);
+        UploadMaterialTrackDatabaseData.UpdateData((data[offset + 33] & (1 << 3)) != 0);
+        AbortingRequest.UpdateData((data[offset + 33] & (1 << 4)) != 0);
+        NewInputParameters.UpdateData((data[offset + 37] & (1 << 5)) != 0);
+        Producing.UpdateData((data[offset + 37] & (1 << 6)) != 0);
+        Standby.UpdateData((data[offset + 37] & (1 << 7)) != 0);
+        
+        return offset + GetSize();
+    }
 
     /// <summary>
-    /// Gets the <c>State</c> member of the <see cref="PHASE"/> type.
+    /// The <c>State</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT State
     {
         get => GetMember<DINT>();
         set => SetMember(value);
     }
 
-
     /// <summary>
-    /// Gets the <c>Running</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Running</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Running
     {
         get => GetMember<BOOL>();
@@ -90,9 +156,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Holding</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Holding</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Holding
     {
         get => GetMember<BOOL>();
@@ -100,9 +165,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Restarting</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Restarting</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Restarting
     {
         get => GetMember<BOOL>();
@@ -110,9 +174,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Stopping</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Stopping</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Stopping
     {
         get => GetMember<BOOL>();
@@ -120,9 +183,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Aborting</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Aborting</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Aborting
     {
         get => GetMember<BOOL>();
@@ -130,9 +192,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Resetting</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Resetting</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Resetting
     {
         get => GetMember<BOOL>();
@@ -140,9 +201,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Idle</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Idle</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Idle
     {
         get => GetMember<BOOL>();
@@ -150,9 +210,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Held</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Held</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Held
     {
         get => GetMember<BOOL>();
@@ -160,9 +219,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Complete</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Complete</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Complete
     {
         get => GetMember<BOOL>();
@@ -170,9 +228,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Stopped</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Stopped</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Stopped
     {
         get => GetMember<BOOL>();
@@ -180,9 +237,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Aborted</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Aborted</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Aborted
     {
         get => GetMember<BOOL>();
@@ -190,9 +246,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PauseControl</c> member of the <see cref="PHASE"/> type.
+    /// The <c>PauseControl</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT PauseControl
     {
         get => GetMember<DINT>();
@@ -200,9 +255,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PauseEnabled</c> member of the <see cref="PHASE"/> type.
+    /// The <c>PauseEnabled</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL PauseEnabled
     {
         get => GetMember<BOOL>();
@@ -210,9 +264,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Paused</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Paused</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Paused
     {
         get => GetMember<BOOL>();
@@ -220,9 +273,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>AutoPauseEnabled</c> member of the <see cref="PHASE"/> type.
+    /// The <c>AutoPauseEnabled</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL AutoPauseEnabled
     {
         get => GetMember<BOOL>();
@@ -230,9 +282,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>StepIndex</c> member of the <see cref="PHASE"/> type.
+    /// The <c>StepIndex</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT StepIndex
     {
         get => GetMember<DINT>();
@@ -240,9 +291,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Failure</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Failure</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT Failure
     {
         get => GetMember<DINT>();
@@ -250,9 +300,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>UnitID</c> member of the <see cref="PHASE"/> type.
+    /// The <c>UnitID</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT UnitID
     {
         get => GetMember<DINT>();
@@ -260,9 +309,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Owner</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Owner</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT Owner
     {
         get => GetMember<DINT>();
@@ -270,9 +318,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>PendingRequest</c> member of the <see cref="PHASE"/> type.
+    /// The <c>PendingRequest</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="DINT"/> atomic value.</value>
     public DINT PendingRequest
     {
         get => GetMember<DINT>();
@@ -280,9 +327,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadInputParameters</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadInputParameters</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadInputParameters
     {
         get => GetMember<BOOL>();
@@ -290,9 +336,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadInputParametersSubset</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadInputParametersSubset</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadInputParametersSubset
     {
         get => GetMember<BOOL>();
@@ -300,9 +345,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>UploadOutputParameters</c> member of the <see cref="PHASE"/> type.
+    /// The <c>UploadOutputParameters</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL UploadOutputParameters
     {
         get => GetMember<BOOL>();
@@ -310,9 +354,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>UploadOutputParametersSubset</c> member of the <see cref="PHASE"/> type.
+    /// The <c>UploadOutputParametersSubset</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL UploadOutputParametersSubset
     {
         get => GetMember<BOOL>();
@@ -320,9 +363,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadOutputParameterLimits</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadOutputParameterLimits</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadOutputParameterLimits
     {
         get => GetMember<BOOL>();
@@ -330,9 +372,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>AcquireResources</c> member of the <see cref="PHASE"/> type.
+    /// The <c>AcquireResources</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL AcquireResources
     {
         get => GetMember<BOOL>();
@@ -340,9 +381,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>ReleaseResources</c> member of the <see cref="PHASE"/> type.
+    /// The <c>ReleaseResources</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL ReleaseResources
     {
         get => GetMember<BOOL>();
@@ -350,9 +390,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>SendMessageToLinkedPhase</c> member of the <see cref="PHASE"/> type.
+    /// The <c>SendMessageToLinkedPhase</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL SendMessageToLinkedPhase
     {
         get => GetMember<BOOL>();
@@ -360,9 +399,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>SendMessageToLinkedPhaseAndWait</c> member of the <see cref="PHASE"/> type.
+    /// The <c>SendMessageToLinkedPhaseAndWait</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL SendMessageToLinkedPhaseAndWait
     {
         get => GetMember<BOOL>();
@@ -370,9 +408,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>ReceiveMessageFromLinkedPhase</c> member of the <see cref="PHASE"/> type.
+    /// The <c>ReceiveMessageFromLinkedPhase</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL ReceiveMessageFromLinkedPhase
     {
         get => GetMember<BOOL>();
@@ -380,9 +417,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>CancelMessageToLinkedPhase</c> member of the <see cref="PHASE"/> type.
+    /// The <c>CancelMessageToLinkedPhase</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL CancelMessageToLinkedPhase
     {
         get => GetMember<BOOL>();
@@ -390,9 +426,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>SendMessageToOperator</c> member of the <see cref="PHASE"/> type.
+    /// The <c>SendMessageToOperator</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL SendMessageToOperator
     {
         get => GetMember<BOOL>();
@@ -400,9 +435,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>ClearMessageToOperator</c> member of the <see cref="PHASE"/> type.
+    /// The <c>ClearMessageToOperator</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL ClearMessageToOperator
     {
         get => GetMember<BOOL>();
@@ -410,9 +444,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>GenerateESignature</c> member of the <see cref="PHASE"/> type.
+    /// The <c>GenerateESignature</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL GenerateESignature
     {
         get => GetMember<BOOL>();
@@ -420,9 +453,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadBatchData</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadBatchData</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadBatchData
     {
         get => GetMember<BOOL>();
@@ -430,9 +462,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadMaterialTrackDataContainerInUse</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadMaterialTrackDataContainerInUse</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadMaterialTrackDataContainerInUse
     {
         get => GetMember<BOOL>();
@@ -440,9 +471,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadContainerBindingPriority</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadContainerBindingPriority</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadContainerBindingPriority
     {
         get => GetMember<BOOL>();
@@ -450,9 +480,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadSufficientMaterial</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadSufficientMaterial</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadSufficientMaterial
     {
         get => GetMember<BOOL>();
@@ -460,9 +489,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>DownloadMaterialTrackDatabaseData</c> member of the <see cref="PHASE"/> type.
+    /// The <c>DownloadMaterialTrackDatabaseData</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL DownloadMaterialTrackDatabaseData
     {
         get => GetMember<BOOL>();
@@ -470,9 +498,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>UploadMaterialTrackDataContainerInUse</c> member of the <see cref="PHASE"/> type.
+    /// The <c>UploadMaterialTrackDataContainerInUse</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL UploadMaterialTrackDataContainerInUse
     {
         get => GetMember<BOOL>();
@@ -480,9 +507,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>UploadContainerBindingPriority</c> member of the <see cref="PHASE"/> type.
+    /// The <c>UploadContainerBindingPriority</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL UploadContainerBindingPriority
     {
         get => GetMember<BOOL>();
@@ -490,9 +516,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>UploadMaterialTrackDatabaseData</c> member of the <see cref="PHASE"/> type.
+    /// The <c>UploadMaterialTrackDatabaseData</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL UploadMaterialTrackDatabaseData
     {
         get => GetMember<BOOL>();
@@ -500,9 +525,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>AbortingRequest</c> member of the <see cref="PHASE"/> type.
+    /// The <c>AbortingRequest</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL AbortingRequest
     {
         get => GetMember<BOOL>();
@@ -510,9 +534,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>NewInputParameters</c> member of the <see cref="PHASE"/> type.
+    /// The <c>NewInputParameters</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL NewInputParameters
     {
         get => GetMember<BOOL>();
@@ -520,9 +543,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Producing</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Producing</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Producing
     {
         get => GetMember<BOOL>();
@@ -530,9 +552,8 @@ public sealed class PHASE : StructureData
     }
 
     /// <summary>
-    /// Gets the <c>Standby</c> member of the <see cref="PHASE"/> type.
+    /// The <c>Standby</c> member of the <see cref="PHASE"/> data type.
     /// </summary>
-    /// <value>A <see cref="BOOL"/> atomic value.</value>
     public BOOL Standby
     {
         get => GetMember<BOOL>();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 
@@ -11,13 +12,13 @@ namespace L5Sharp.Core;
 /// <remarks>
 /// <para>A controller component may or may not contain various properties depending on if the exported L5X file
 /// was a full project file or just a component export file. This is indicated in the <see cref="L5X"/> by the property
-/// <c>ContainsContext</c>, which if true, means the controller element exists simply to contain other components that
+/// <c>ContainsContext</c>, which is true, means the controller element exists simply to contain other components that
 /// are needed by the <c>TargetName</c> for successful re-imports of the content, and therefore will typically only have
 /// a name, revision, and processor type.</para>
 /// <para>
 /// Observe these guidelines when defining a controller:<br/>
 ///     • All declarations must be ordered in the prescribed syntax.<br/>
-///     • The maximum number of tasks vary by the controller type.<br/>
+///     • The maximum number of tasks varies by the controller type.<br/>
 ///     • There can be only one continuous task.<br/>
 ///     • Programs can be scheduled under only one task.<br/>
 ///     • There can be a maximum of 1000 programs under a task.<br/>
@@ -28,7 +29,8 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Controller : LogixComponent<Controller>
+[LogixElement(L5XName.Controller)]
+public sealed class Controller : LogixElement
 {
     private const string DateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
 
@@ -42,6 +44,7 @@ public class Controller : LogixComponent<Controller>
         L5XName.DataTypes,
         L5XName.Modules,
         L5XName.AddOnInstructionDefinitions,
+        L5XName.AlarmDefinitions,
         L5XName.Tags,
         L5XName.Programs,
         L5XName.Tasks,
@@ -52,22 +55,24 @@ public class Controller : LogixComponent<Controller>
         L5XName.DataLogs,
         L5XName.QuickWatchLists,
         L5XName.TimeSynchronize,
+        L5XName.InternetProtocol,
+        L5XName.CommPorts,
         L5XName.EthernetPorts,
+        L5XName.EthernetNetwork
     ];
-
 
     /// <summary>
     /// Creates a new <see cref="Controller"/> with default values.
     /// </summary>
     public Controller() : base(L5XName.Controller)
     {
-        Use = Use.Context;
+        Element.SetAttributeValue(L5XName.Name, string.Empty);
         Revision = new Revision();
         ProjectCreationDate = DateTime.Now;
         LastModifiedDate = DateTime.Now;
 
         DataTypes = [];
-        Instructions = [];
+        AddOnInstructions = [];
         Modules = [];
         Tags = [];
         Programs = [];
@@ -84,6 +89,7 @@ public class Controller : LogixComponent<Controller>
     /// <exception cref="ArgumentNullException"><c>element</c> is null.</exception>
     public Controller(XElement element) : base(element)
     {
+        EnsureContainersExist();
     }
 
     /// <summary>
@@ -99,8 +105,46 @@ public class Controller : LogixComponent<Controller>
         Revision = revision;
     }
 
-    /// <inheritdoc />
-    public override Scope Scope => Scope.Empty;
+    /// <summary>
+    /// The <see cref="Use"/> of the component within the L5X file.
+    /// </summary>
+    /// <remarks>
+    /// Typically used when exporting individual components (DataType, AoiBlock, Module) to indicate whether the component
+    /// is the target of the L5X content or exists solely as a context or dependency of the target component. When
+    /// saving a project as an L5X, the top-level controller component is the target, and all other components will
+    /// not have this property. 
+    /// </remarks>
+    public Use? Use
+    {
+        get => GetValue(Use.Parse);
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The unique name of the component.
+    /// </summary>
+    /// <value>A <see cref="string"/> representing the component name.</value>
+    /// <remarks>
+    /// The name servers as a unique identifier for various types of components.
+    /// In most cases, the component name should satisfy Logix naming constraints of alphanumeric and
+    /// underscore ('_') characters, start with a letter, and be between 1 and 40 characters.
+    /// Validation is not performed by this library, so importing components with invalid names may fail.
+    /// </remarks>
+    public string Name
+    {
+        get => GetRequiredValue();
+        set => SetRequiredValue(value);
+    }
+
+    /// <summary>
+    /// The description of the component.
+    /// </summary>
+    /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
+    public string? Description
+    {
+        get => GetProperty();
+        set => SetProperty(value);
+    }
 
     /// <summary>
     /// The catalog number representing the processor of the controller component.
@@ -108,8 +152,18 @@ public class Controller : LogixComponent<Controller>
     /// <value>A <see cref="string"/> representing the alphanumeric catalog number.</value>
     public string? ProcessorType
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The revision or hardware version of the controller.
+    /// </summary>
+    /// <value>A <see cref="Core.Revision"/> value representing the major/minor version of the controller</value>
+    public Revision Revision
+    {
+        get => GetRevision(L5XName.MajorRev, L5XName.MinorRev);
+        set => SetRevision(value, L5XName.MajorRev, L5XName.MinorRev);
     }
 
     /// <summary>
@@ -117,7 +171,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public string? TimeSlice
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -126,7 +180,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public bool? ShareUnusedTimeSlice
     {
-        get => GetValue<bool?>();
+        get => GetOptionalBool();
         set => SetBit(value);
     }
 
@@ -136,7 +190,7 @@ public class Controller : LogixComponent<Controller>
     /// <value>A <see cref="string"/> representing the name of the program.</value>
     public string? PowerLossProgram
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -146,7 +200,7 @@ public class Controller : LogixComponent<Controller>
     /// <value>A <see cref="string"/> representing the name of the program.</value>
     public string? MajorFaultProgram
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -157,7 +211,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public string? CommPath
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -168,36 +222,17 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public string? CommDriver
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
-    }
-
-    /// <summary>
-    /// The revision or hardware version of the controller.
-    /// </summary>
-    /// <value>A <see cref="Core.Revision"/> value representing the major/minor version of the controller</value>
-    public Revision? Revision
-    {
-        get
-        {
-            var major = Element.Attribute(L5XName.MajorRev)?.Value.Parse<ushort>();
-            var minor = Element.Attribute(L5XName.MinorRev)?.Value.Parse<ushort>();
-            return major.HasValue && minor.HasValue ? new Revision(major.Value, minor.Value) : default;
-        }
-        set
-        {
-            Element.SetAttributeValue(L5XName.MajorRev, value?.Major);
-            Element.SetAttributeValue(L5XName.MinorRev, value?.Minor);
-        }
     }
 
     /// <summary>
     /// The date/time the current project was created. 
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the date and time of creation.</value>
-    public DateTime ProjectCreationDate
+    public DateTime? ProjectCreationDate
     {
-        get => GetDateTime(DateTimeFormat) ?? default;
+        get => GetDateTime(DateTimeFormat);
         set => SetDateTime(value, DateTimeFormat);
     }
 
@@ -205,9 +240,9 @@ public class Controller : LogixComponent<Controller>
     /// The date/time the current project was last modified. 
     /// </summary>
     /// <value>A <see cref="DateTime"/> representing the date and time of modification.</value>
-    public DateTime LastModifiedDate
+    public DateTime? LastModifiedDate
     {
-        get => GetDateTime(DateTimeFormat) ?? default;
+        get => GetDateTime(DateTimeFormat);
         set => SetDateTime(value, DateTimeFormat);
     }
 
@@ -218,7 +253,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public SFCExecutionControl? SFCExecutionControl
     {
-        get => GetValue<SFCExecutionControl>();
+        get => GetValue(SFCExecutionControl.Parse);
         set => SetValue(value);
     }
 
@@ -228,7 +263,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public SFCRestartPosition? SFCRestartPosition
     {
-        get => GetValue<SFCRestartPosition>();
+        get => GetValue(SFCRestartPosition.Parse);
         set => SetValue(value);
     }
 
@@ -238,7 +273,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public SFCLastScan? SFCLastScan
     {
-        get => GetValue<SFCLastScan>();
+        get => GetValue(SFCLastScan.Parse);
         set => SetValue(value);
     }
 
@@ -250,7 +285,7 @@ public class Controller : LogixComponent<Controller>
     // ReSharper disable once InconsistentNaming to match logix name.
     public string? ProjectSN
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -259,7 +294,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public bool? MatchProjectToController
     {
-        get => GetValue<string>() is not null ? GetValue<string>() == "Yes" : null;
+        get => GetValue() is not null ? GetValue() == "Yes" : null;
         set => SetValue(value is true ? "Yes" : "No");
     }
 
@@ -268,7 +303,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public bool? InhibitAutomaticFirmwareUpdate
     {
-        get => GetValue<int?>() is not null ? GetValue<int?>() == 1 : null;
+        get => GetOptionalBool();
         set => SetValue(value is true ? 1 : 0);
     }
 
@@ -277,25 +312,25 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public string? CurrentProjectLanguage
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Specify the default project language for a project document at on project.
+    /// Specify the default project language for a project document at on a project.
     /// </summary>
     public string? DefaultProjectLanguage
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Specify the controller project language for a project document at on project.
+    /// Specify the controller project language for a project document at on a project.
     /// </summary>
     public string? ControllerLanguage
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -305,7 +340,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public bool? CanUseRPIFromProducer
     {
-        get => GetValue<bool?>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -315,7 +350,7 @@ public class Controller : LogixComponent<Controller>
     /// <value>A <see cref="PassThroughOption"/> representing the configured value.</value>
     public PassThroughOption? PassThroughConfiguration
     {
-        get => GetValue<PassThroughOption>();
+        get => GetValue(PassThroughOption.Parse);
         set => SetValue(value);
     }
 
@@ -324,7 +359,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public bool? DownloadProjectDocumentationAndExtendedProperties
     {
-        get => GetValue<bool?>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -339,7 +374,7 @@ public class Controller : LogixComponent<Controller>
     /// </remarks>
     public bool? DownloadProjectCustomProperties
     {
-        get => GetValue<bool?>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -350,7 +385,7 @@ public class Controller : LogixComponent<Controller>
     /// </summary>
     public string? EtherNetIPMode
     {
-        get => GetValue<string?>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -387,18 +422,18 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<DataType> DataTypes
     {
         get => GetContainer<DataType>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
     /// The collection of <see cref="AddOnInstruction"/> objects defined for the controller component.
     /// </summary>
-    public LogixContainer<AddOnInstruction> Instructions
+    public LogixContainer<AddOnInstruction> AddOnInstructions
     {
         // ReSharper disable once ExplicitCallerInfoArgument
         get => GetContainer<AddOnInstruction>(L5XName.AddOnInstructionDefinitions);
         // ReSharper disable once ExplicitCallerInfoArgument
-        set => SetContainer(value, L5XName.AddOnInstructionDefinitions);
+        private set => SetContainer(value, L5XName.AddOnInstructionDefinitions);
     }
 
     /// <summary>
@@ -407,7 +442,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Module> Modules
     {
         get => GetContainer<Module>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -416,7 +451,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Tag> Tags
     {
         get => GetContainer<Tag>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -425,7 +460,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Program> Programs
     {
         get => GetContainer<Program>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -434,7 +469,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Task> Tasks
     {
         get => GetContainer<Task>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -443,7 +478,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<ParameterConnection> ParameterConnections
     {
         get => GetContainer<ParameterConnection>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -452,7 +487,7 @@ public class Controller : LogixComponent<Controller>
     public LogixContainer<Trend> Trends
     {
         get => GetContainer<Trend>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -463,6 +498,25 @@ public class Controller : LogixComponent<Controller>
         // ReSharper disable once ExplicitCallerInfoArgument
         get => GetContainer<WatchList>(L5XName.QuickWatchLists);
         // ReSharper disable once ExplicitCallerInfoArgument
-        set => SetContainer(value, L5XName.QuickWatchLists);
+        private set => SetContainer(value, L5XName.QuickWatchLists);
     }
+
+    #region Internal
+
+    /// <summary>
+    /// Will ensure that all known component container elements are created and ordered according to the defined L5X
+    /// element order. This will ensure that no container element returns null and which would cause exceptions.
+    /// </summary>
+    private void EnsureContainersExist()
+    {
+        foreach (var container in ElementOrder.Where(e => e.IsContainerName()))
+        {
+            if (Element.Element(container) is not null) continue;
+            Element.Add(new XElement(container));
+        }
+
+        EnsureOrder();
+    }
+
+    #endregion
 }

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="**\*.L5X" Exclude="bin\**;obj\**" CopyToOutputDirectory="PreserveNewest"/>
+        <None Include="**\*.ACD" Exclude="bin\**;obj\**" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
+</Project>

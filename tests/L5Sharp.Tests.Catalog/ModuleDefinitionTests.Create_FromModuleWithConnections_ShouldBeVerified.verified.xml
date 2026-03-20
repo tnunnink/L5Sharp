@@ -1,0 +1,133 @@
+﻿<Module Name="Test" CatalogNumber="1756-IT6I" Vendor="1" ProductType="10" ProductCode="2" Major="1" Minor="1" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="false">
+  <EKey State="CompatibleModule" />
+  <Ports>
+    <Port Id="1" Type="ICP" Address="0" Upstream="true" />
+  </Ports>
+  <Communications CommMethod="536870913">
+    <ConfigTag ConfigSize="304" ExternalAccess="Read/Write" OpcUaAccess="None">
+      <Data Format="Decorated">
+        <Structure DataType="AB:1756_AI6_Float:C:0">
+          <DataValueMember Name="RemoteTermination" DataType="BOOL" Value="0" />
+          <DataValueMember Name="CJDisable" DataType="BOOL" Value="0" />
+          <DataValueMember Name="TempMode" DataType="BOOL" Value="0" />
+          <DataValueMember Name="RealTimeSample" DataType="INT" Radix="Decimal" Value="0" />
+          <DataValueMember Name="CJOffset" DataType="REAL" Radix="Float" Value="0.0" />
+          <StructureMember Name="Ch0Config" DataType="AB:1756_AI6_Struct:C:0">
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
+            <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
+            <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
+          </StructureMember>
+          <StructureMember Name="Ch1Config" DataType="AB:1756_AI6_Struct:C:0">
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
+            <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
+            <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
+          </StructureMember>
+          <StructureMember Name="Ch2Config" DataType="AB:1756_AI6_Struct:C:0">
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
+            <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
+            <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
+          </StructureMember>
+          <StructureMember Name="Ch3Config" DataType="AB:1756_AI6_Struct:C:0">
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
+            <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
+            <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
+          </StructureMember>
+          <StructureMember Name="Ch4Config" DataType="AB:1756_AI6_Struct:C:0">
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
+            <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
+            <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
+          </StructureMember>
+          <StructureMember Name="Ch5Config" DataType="AB:1756_AI6_Struct:C:0">
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
+            <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
+            <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
+            <DataValueMember Name="DigitalFilter" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="TenOhmOffset" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="RateAlarmLimit" DataType="INT" Radix="Decimal" Value="0" />
+            <DataValueMember Name="LowSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighSignal" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LowEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HighEngineering" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="LLAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="HHAlarmLimit" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="AlarmDeadband" DataType="REAL" Radix="Float" Value="0.0" />
+            <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
+          </StructureMember>
+        </Structure>
+      </Data>
+    </ConfigTag>
+  </Communications>
+</Module>

@@ -16,7 +16,7 @@ public class BoolTests
         var fixture = new Fixture();
         _random = fixture.Create<bool>();
     }
-        
+
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
@@ -38,7 +38,7 @@ public class BoolTests
     }
 
     [Test]
-    public void New_Value_ShouldHaveExpectedValues()
+    public void New_TypedValue_ShouldHaveExpectedValues()
     {
         var type = new BOOL(_random);
 
@@ -46,47 +46,50 @@ public class BoolTests
     }
 
     [Test]
-    public void New_ValidRadix_ShouldHaveExpectedValues()
+    public void New_StringValue_ShouldHaveExpectedValues()
     {
-        var type = new BOOL(Radix.Binary);
-
-        type.Radix.Should().Be(Radix.Binary);
-        type.ToString().Should().Be("2#0");
-    }
-
-    [Test]
-    public void New_NullRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new BOOL(null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_InvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new BOOL(Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadix_ShouldHaveExpectedValues()
-    {
-        var type = new BOOL(true, Radix.Binary);
+        BOOL type = "2#1";
 
         type.Should().Be(true);
         type.Radix.Should().Be(Radix.Binary);
     }
-
+    
     [Test]
-    public void New_ValueAndRadixNullRadix_ShouldThrowArgumentException()
+    public void Update_Null_ShouldThrowException()
     {
-        FluentActions.Invoking(() => new BOOL(true, null!)).Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void New_ValueAndRadixInvalidRadix_ShouldThrowArgumentException()
-    {
-        FluentActions.Invoking(() => new BOOL(true, Radix.Exponential)).Should().Throw<ArgumentException>();
-    }
+        var atomic = new BOOL();
         
+        FluentActions.Invoking(() => atomic.UpdateData(null!)).Should().Throw<ArgumentNullException>();
+    }
+    
+    [Test]
+    public void Update_InvalidType_ShouldThrowException()
+    {
+        var atomic = new BOOL();
+        
+        FluentActions.Invoking(() => atomic.UpdateData(new TIMER())).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
+    public void Update_MatchingValueType_ShouldBeUpdated()
+    {
+        var atomic = new BOOL();
+
+        atomic.UpdateData(new BOOL(true));
+
+        atomic.Value.Should().Be(true);
+    }
+
+    [Test]
+    public void Update_DifferentType_ShouldBeUpdated()
+    {
+        var atomic = new BOOL();
+
+        atomic.UpdateData(new INT(short.MaxValue));
+
+        atomic.Value.Should().Be(true);
+    }
+
     [Test]
     public void As_AtomicType_ShouldNotBeNull()
     {
@@ -148,9 +151,9 @@ public class BoolTests
     [Test]
     public Task Serialize_ValueAndRadix_ShouldBeValid()
     {
-        var type = new BOOL(true, Radix.Binary);
+        BOOL atomic = Radix.Hex.Format(true);
 
-        var xml = type.Serialize().ToString();
+        var xml = atomic.Serialize().ToString();
 
         return Verify(xml);
     }
@@ -268,7 +271,7 @@ public class BoolTests
 
         result.Should().Be(expected);
     }
-        
+
     [Test]
     public void ToString_WhenCalled_ShouldBeExpectedValue()
     {
@@ -491,7 +494,7 @@ public class BoolTests
     public void ToType_UInt64_ShouldBeExpectedValue()
     {
         const ulong expected = 1;
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (ulong)type.ToType(typeof(ulong), CultureInfo.InvariantCulture);
 
@@ -501,7 +504,7 @@ public class BoolTests
     [Test]
     public void ToType_BOOL_ShouldBeExpectedValue()
     {
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (BOOL)type.ToType(typeof(BOOL), CultureInfo.InvariantCulture);
 
@@ -512,7 +515,7 @@ public class BoolTests
     public void ToType_SINT_ShouldBeExpectedValue()
     {
         var expected = new SINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (SINT)type.ToType(typeof(SINT), CultureInfo.InvariantCulture);
 
@@ -523,7 +526,7 @@ public class BoolTests
     public void ToType_INT_ShouldBeExpectedValue()
     {
         var expected = new BOOL(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (INT)type.ToType(typeof(INT), CultureInfo.InvariantCulture);
 
@@ -534,7 +537,7 @@ public class BoolTests
     public void ToType_DINT_ShouldBeExpectedValue()
     {
         var expected = new DINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (DINT)type.ToType(typeof(DINT), CultureInfo.InvariantCulture);
 
@@ -545,7 +548,7 @@ public class BoolTests
     public void ToType_LINT_ShouldBeExpectedValue()
     {
         var expected = new LINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (LINT)type.ToType(typeof(LINT), CultureInfo.InvariantCulture);
 
@@ -556,7 +559,7 @@ public class BoolTests
     public void ToType_REAL_ShouldBeExpectedValue()
     {
         var expected = new REAL(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (REAL)type.ToType(typeof(REAL), CultureInfo.InvariantCulture);
 
@@ -567,7 +570,7 @@ public class BoolTests
     public void ToType_USINT_ShouldBeExpectedValue()
     {
         var expected = new USINT(1);
-        var type = new BOOL(1) as IConvertible;
+        IConvertible type = new BOOL(1);
 
         var result = (USINT)type.ToType(typeof(USINT), CultureInfo.InvariantCulture);
 
@@ -783,7 +786,7 @@ public class BoolTests
         Console.WriteLine(stopwatch.ElapsedMilliseconds);
         result.Count.Should().Be(capacity);
     }
-        
+
     [Test]
     [TestCase(1000)]
     [TestCase(10000)]
@@ -813,7 +816,7 @@ public class BoolTests
 
         result.Should().BeTrue();
     }
-        
+
     [Test]
     public void EquivalentTo_AreNotEqual_ShouldBeFalse()
     {

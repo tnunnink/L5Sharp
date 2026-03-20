@@ -6,30 +6,44 @@ namespace L5Sharp.Tests.Core.Enums
     public class ScopeLevelTests
     {
         [Test]
-        public void New_Controller_ShouldBeExpected()
+        public void None_WhenCalled_ShouldBeExpected()
         {
-            var sut = ScopeLevel.Controller;
+            var level = ScopeLevel.None;
 
-            sut.Should().NotBeNull();
-            sut.Value.Should().Be("ControllerScope");
+            level.Should().NotBeNull();
+            level.Name.Should().Be("None");
+            level.Value.Should().Be("None");
+        }
+
+        [Test]
+        public void Controller_WhenCalled_ShouldBeExpected()
+        {
+            var level = ScopeLevel.Controller;
+
+            level.Should().NotBeNull();
+            level.Name.Should().Be("Controller");
+            level.Value.Should().Be("Controller");
+        }
+
+        [Test]
+        public void Program_WhenCalled_ShouldBeExpected()
+        {
+            var level = ScopeLevel.Program;
+
+            level.Should().NotBeNull();
+            level.Name.Should().Be("Program");
+            level.Value.Should().Be("Program");
         }
         
         [Test]
-        public void New_Program_ShouldBeExpected()
+        public void Aoi_WhenCalled_ShouldBeExpected()
         {
-            var sut = ScopeLevel.Program;
+            var level = ScopeLevel.Aoi;
 
-            sut.Should().NotBeNull();
-            sut.Value.Should().Be("ProgramScope");
+            level.Should().NotBeNull();
+            level.Name.Should().Be("Aoi");
+            level.Value.Should().Be("Aoi");
         }
-        
-        [Test]
-        public void New_Null_ShouldBeExpected()
-        {
-            var sut = ScopeLevel.Null;
 
-            sut.Should().NotBeNull();
-            sut.Value.Should().Be("NullScope");
-        }
     }
 }

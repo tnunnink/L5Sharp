@@ -3,25 +3,26 @@
     <PropertyGroup>
         <IsPackable>false</IsPackable>
         <ImplicitUsings>true</ImplicitUsings>
-        <LangVersion>12</LangVersion>
+        <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoFixture" Version="4.18.0" />
-        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="AutoFixture" Version="4.18.1" />
+        <PackageReference Include="FluentAssertions" Version="7.2.0" AllowedVersions="(,8.0)" />
         <PackageReference Include="JetBrains.dotMemoryUnit" Version="3.2.20220510" />
-        <PackageReference Include="NUnit" Version="3.13.3" />
-        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+        <PackageReference Include="NUnit" Version="4.4.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-        <PackageReference Include="Verify.NUnit" Version="22.1.4" />
+        <PackageReference Include="Verify.NUnit" Version="31.13.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\L5Sharp.Core\L5Sharp.Core.csproj" />
-        <ProjectReference Include="..\L5Sharp.Samples\L5Sharp.Samples.csproj" />
+        <ProjectReference Include="..\..\src\L5Sharp.Generators\L5Sharp.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\L5Sharp.Tests.Samples\L5Sharp.Tests.Samples.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -110,8 +111,8 @@
       <None Update="Types\Atomics\SintTests.Serialize_ValueAndRadix_ShouldBeValid.verified.txt">
         <DependentUpon>SintTests.cs</DependentUpon>
       </None>
-      <None Update="Types\ComplexDataTests.Serialize_Default_ShouldBeVerified.verified.txt">
-        <DependentUpon>ComplexDataTests.cs</DependentUpon>
+      <None Update="Types\StructureDataTests.Serialize_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>StructureDataTests.cs</DependentUpon>
       </None>
       <None Update="Components\TagTests.SetValue_StaticMemberOfNestedType_ShouldBeVerifiedXml.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
@@ -123,13 +124,13 @@
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
       <None Update="L5XDataTypeTests.Update_ValidDelegate_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
+        <DependentUpon>L5XDataTypeTests.cs</DependentUpon>
       </None>
       <None Update="L5XDataTypeTests.Update_ValidDelegateAndCondition_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
+        <DependentUpon>L5XDataTypeTests.cs</DependentUpon>
       </None>
       <None Update="L5XDataTypeTests.RemoveAt_ValidIndex_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixContentDataTypeTests.cs</DependentUpon>
+        <DependentUpon>L5XDataTypeTests.cs</DependentUpon>
       </None>
       <None Update="Components\ModuleTests.Serialize_Default_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
@@ -198,33 +199,6 @@
         <DependentUpon>DataTypeMemberTests.cs</DependentUpon>
         <ParentFile>DataTypeMemberTests</ParentFile>
       </None>
-      <None Update="Elements\SheetTests.InputReferences_AddValidReference_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.OutputReferences_AddValidReference_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.InputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.OutputReferences_AddAfterFirstElement_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.InputConnectors_AddValidConnector_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.InputConnectors_AddAfterConnector_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.Add_BlocksOutOfOrder_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\BlockTests.New_Overriden_ShouldBeVerified.verified.txt">
-        <DependentUpon>BlockTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\SheetTests.Wire_ValidOperands_ShouldBeVerified.verified.txt">
-        <DependentUpon>SheetTests.cs</DependentUpon>
-      </None>
       <None Update="LogixElementTests.SetValue_ToValueHasValue_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
@@ -232,12 +206,6 @@
         <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
       <None Update="LogixElementTests.AddAfter_ValidElement_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixElementTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixElementTests.AddAfter_AlternateType_ShouldBeVerified.verified.txt">
-        <DependentUpon>LogixElementTests.cs</DependentUpon>
-      </None>
-      <None Update="LogixElementTests.AddBefore_AlternateType_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
       <None Update="LogixElementTests.Replace_ValidElement_ShouldBeVerified.verified.txt">
@@ -269,9 +237,6 @@
       </None>
       <None Update="Components\TagTests.Class_SetValidValue_ShouldBeVerified.verified.xml">
         <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\RungTests.SetTextToNullThenCommentThenTextAgainShouldBeValid.verified.xml">
-        <DependentUpon>RungTests.cs</DependentUpon>
       </None>
       <None Update="Types\MemberTests.Serialize_AtomicDataType_ShouldBeVerified.verified.txt">
         <DependentUpon>MemberTests.cs</DependentUpon>
@@ -354,32 +319,119 @@
       <None Update="Components\ModuleTests.Create_CatalogNumberAndConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>ModuleTests.cs</DependentUpon>
       </None>
-      <None Update="L5XTagTests.SetValue_RackConnectionAliasTag_ShouldUpdateTheParentModuleTagElement.verified.txt">
-        <DependentUpon>L5XTagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_SimpleStructureWithConfiguredMembers_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_StructureWithPredefinedMember_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_AtomicArrayWithSetValue_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_ComplexNestedStructure_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_StructureArrayWithNestedConfig_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
-      <None Update="Components\TagTests.Build_SimpleAliasTag_ShouldBeVerified.verified.txt">
-        <DependentUpon>TagTests.cs</DependentUpon>
-      </None>
       <None Update="Components\TagTests.Duplicate_ValidConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>TagTests.cs</DependentUpon>
       </None>
       <None Update="Components\ProgramTests.Duplicate_ValidConfig_ShouldBeVerified.verified.txt">
         <DependentUpon>ProgramTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XTagTests.SetValue_RackConnectionAliasTag_ShouldUpdateTheParentModuleTagElement.verified.xml">
+        <DependentUpon>L5XTagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ControllerTests.Import_SimpleDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
+        <DependentUpon>ControllerTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ControllerTests.Import_SimpleDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>ControllerTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\ControllerTests.Import_StructureDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>ControllerTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XImportTests.Import_ProgramWithSpecifiedTaskSchedule_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XImportTests.Import_StructureDataTypeWithNotConfiguration_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XImportTests.Import_StructureDataTypeDiscardSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XImportTests.Import_StructureDataTypeDiscardAndModifyToRemoveSimpleType_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XImportTests.Import_ModuleComponent_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XImportTests.Import_SpecificTypeNameFromSource_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XImportTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.New_ValidNameAndProcessor_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixContainerTests.Add_ValidType_ShouldBeVerified.verified.xml">
+        <DependentUpon>LogixContainerTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ParameterTests.Serialize_NameAndValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>ParameterTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ParameterTests.Serialize_OverrideParameters_ShouldBeVerified.verified.xml">
+        <DependentUpon>ParameterTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixSerializerTests.Serialize_WhenCalled_ShouldBeVerified.verified.xml">
+        <DependentUpon>LogixSerializerTests.cs</DependentUpon>
+      </None>
+      <None Update="Code\SheetTests.AddBlock_BlocksOutOfOrder_ShouldBeVerified.verified.xml">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="Code\SheetTests.BuildSheet_Example1_ShouldBeVerified.verified.xml">
+        <DependentUpon>SheetTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.ToString_WhenCalled_ShouldBeValid.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\DataTypeTests.AddMember_ChainMembers_ShouldBeVerified.verified.xml">
+        <DependentUpon>DataTypeTests.cs</DependentUpon>
+      </None>
+      <None Update="LogixContainerTests.AddRange_ValidElements_ShouldBeVerified.verified.xml">
+        <DependentUpon>LogixContainerTests.cs</DependentUpon>
+      </None>
+      <None Update="Devices\ModuleDefinitionTests.Serialize_ModuleWithConnections_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="Devices\ModuleDefinitionTests.Serialize_KnownModule_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="Devices\ModuleDefinitionTests.Create_FromKnownDefinition_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="Devices\ModuleDefinitionTests.Create_FromModuleWithConnections_ShouldBeVerified.verified.xml">
+        <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
+      </None>
+      <None Update="L5XBasicTests.Add_ToScopedContainer_ShouldBeVerified.verified.xml">
+        <DependentUpon>L5XBasicTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_PredefinedTypeConfiguredValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_PredefinedTypeDefaultValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_SimpleAliasTag_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_UserDefinedTypeDefaultValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\TagTests.Build_UserDefinedTypeConfiguredValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>TagTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.Serialize_NameAndEmptyValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.Serialize_WithValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.SerializeStructure_EmptyValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Data\StringDataTests.SerializeStructure_WithValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>StringDataTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\RoutineTests.Rll_NameOnly_ShouldBeVerified.verified.xml">
+        <DependentUpon>RoutineTests.cs</DependentUpon>
+      </None>
+      <None Update="Components\RoutineTests.Rll_Complex_ShouldBeVerified.verified.xml">
+        <DependentUpon>RoutineTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 

@@ -4,9 +4,10 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Controller"/> component that contains properties or configuration
+/// A element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller security.
 /// </summary>
+[LogixElement(L5XName.Security)]
 public class Security : LogixElement
 {
     /// <summary>
@@ -31,7 +32,7 @@ public class Security : LogixElement
     /// </summary>
     public int Code
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -40,7 +41,7 @@ public class Security : LogixElement
     /// </summary>
     public string? SecurityAuthorityID
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -49,7 +50,7 @@ public class Security : LogixElement
     /// </summary>
     public string? SecurityAuthorityURI
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -58,7 +59,7 @@ public class Security : LogixElement
     /// </summary>
     public string? PermissionSet
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -67,7 +68,7 @@ public class Security : LogixElement
     /// </summary>
     public string? ChangesToDetect
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -76,7 +77,7 @@ public class Security : LogixElement
     /// </summary>
     public string? TrustedSlots
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 }

@@ -6,19 +6,7 @@ namespace L5Sharp.Tests.Core.Common
     [TestFixture]
     public class TagNameTests
     {
-        private const string TestTagName = "MyTag_01.SomeMember[1].Some_Element_Property";
-        private const string Base = "MyTag_01";
-        private const string Path = "SomeMember[1].Some_Element_Property";
-
-
-        private static readonly IEnumerable<string> Members = new List<string>
-        {
-            "MyTag_01",
-            "SomeMember",
-            "[1]",
-            "Some_Element_Property"
-        };
-
+        private const string TestTagName = "MyTag.SomeMember.Array[1, 2].SubTag.12";
 
         [Test]
         public void New_Null_ShouldThrowArgumentNullException()
@@ -36,51 +24,342 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void New_SimpleTagName_ShouldNotBeNull()
+        public void Empty_WhenCalled_ShouldHaveExpectedValues()
         {
-            var tagName = new TagName("Test");
+            var tagName = TagName.Empty;
 
-            tagName.Should().NotBeNull();
-        }
-
-        [Test]
-        public void New_SimpleTagName_ShouldBeExpected()
-        {
-            var tagName = new TagName("Test");
-
-            tagName.Root.Should().Be("Test");
+            tagName.Base.Should().BeEmpty();
             tagName.Operand.Should().BeEmpty();
-            tagName.Path.Should().BeEmpty();
-            tagName.Member.Should().Be("Test");
+            tagName.Member.Should().BeEmpty();
+            tagName.Element.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
-            tagName.Members.Should().HaveCount(1);
-            tagName.IsEmpty.Should().BeFalse();
-            tagName.IsQualified.Should().BeTrue();
+            tagName.IsEmpty.Should().BeTrue();
+            tagName.IsQualified.Should().BeFalse();
         }
 
         [Test]
-        public void New_ComplexName_ShouldNotBeNull()
+        public void New_BaseTagOnly_ShouldHaveExpectedProperties()
         {
-            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            var tagName = new TagName("MyTag");
 
-            tagName.Should().NotBeNull();
+            tagName.Path.Should().Be("MyTag");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().BeEmpty();
+            tagName.Member.Should().BeEmpty();
+            tagName.Element.Should().BeEmpty();
+            tagName.Depth.Should().Be(0);
         }
 
         [Test]
-        public void New_ComplexName_ShouldBeExpected()
+        public void New_SingleMemberTagName_ShouldHaveExpectedValues()
+        {
+            var tagName = new TagName("MyTag.MemberName");
+
+            tagName.Path.Should().Be("MyTag.MemberName");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".MemberName");
+            tagName.Member.Should().Be("MemberName");
+            tagName.Element.Should().Be("MemberName");
+            tagName.Depth.Should().Be(1);
+        }
+
+        [Test]
+        public void New_MultipleMemberTagName_ShouldHaveExpectedValues()
+        {
+            var tagName = new TagName("MyTag.MemberName.SubMember");
+
+            tagName.Path.Should().Be("MyTag.MemberName.SubMember");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".MemberName.SubMember");
+            tagName.Member.Should().Be("MemberName.SubMember");
+            tagName.Element.Should().Be("SubMember");
+            tagName.Depth.Should().Be(2);
+        }
+
+        [Test]
+        public void New_TagNameWithArrayIndex_ShouldHaveExpectedValues()
+        {
+            var tagName = new TagName("MyTag[13].MemberName");
+
+            tagName.Path.Should().Be("MyTag[13].MemberName");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be("[13].MemberName");
+            tagName.Member.Should().Be("[13].MemberName");
+            tagName.Element.Should().Be("MemberName");
+            tagName.Depth.Should().Be(2);
+        }
+
+        [Test]
+        public void New_TagNameWithBitReference_ShouldHaveExpectedValues()
+        {
+            var tagName = new TagName("MyTag.MemberName.1");
+
+            tagName.Path.Should().Be("MyTag.MemberName.1");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".MemberName.1");
+            tagName.Member.Should().Be("MemberName.1");
+            tagName.Element.Should().Be("1");
+            tagName.Depth.Should().Be(2);
+        }
+
+        [Test]
+        public void New_ComplexTagName_ShouldBeExpected()
         {
             var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
 
-            tagName.Root.Should().Be("Module:1:I");
+            tagName.Path.Should().Be("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            tagName.Base.Should().Be("Module:1:I");
             tagName.Operand.Should().Be(".TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-            tagName.Path.Should().Be("TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-            tagName.Member.Should().Be("12");
+            tagName.Member.Should().Be("TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            tagName.Element.Should().Be("12");
             tagName.Depth.Should().Be(8);
-            tagName.Members.Should().HaveCount(9);
-            tagName.IsEmpty.Should().BeFalse();
-            tagName.IsQualified.Should().BeTrue();
+        }
+
+        [Test]
+        public void Scope_NoProgramPrefix_ShouldBeControllerAndEmptyContainer()
+        {
+            var tagName = new TagName("MyTag");
+
+            tagName.Scope.Level.Should().Be(ScopeLevel.Controller);
+            tagName.Scope.Container.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Scope_WithProgramPrefix_ShouldBeControllerAndEmptyContainer()
+        {
+            var tagName = new TagName("Program:SomeProgram.MyTag");
+
+            tagName.Scope.Level.Should().Be(ScopeLevel.Program);
+            tagName.Scope.Container.Should().Be("SomeProgram");
+        }
+
+        [Test]
+        public void Scope_WithProgramPrefix_ShouldHaveExpectedProperties()
+        {
+            var tagName = new TagName("Program:SomeProgram.MyTag");
+
+            tagName.Path.Should().Be("Program:SomeProgram.MyTag");
+            tagName.LocalPath.Should().Be("MyTag");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().BeEmpty();
+            tagName.Member.Should().BeEmpty();
+            tagName.Element.Should().BeEmpty();
+            tagName.Depth.Should().Be(0);
+        }
+
+        [Test]
+        public void Scope_WithProgramPrefixAndMemberTag_ShouldHaveExpectedProperties()
+        {
+            var tagName = new TagName("Program:SomeProgram.MyTag.Member[0].Value.12");
+
+            tagName.Path.Should().Be("Program:SomeProgram.MyTag.Member[0].Value.12");
+            tagName.LocalPath.Should().Be("MyTag.Member[0].Value.12");
+            tagName.Base.Should().Be("MyTag");
+            tagName.Operand.Should().Be(".Member[0].Value.12");
+            tagName.Member.Should().Be("Member[0].Value.12");
+            tagName.Element.Should().Be("12");
+            tagName.Depth.Should().Be(4);
+        }
+
+        [Test]
+        [TestCase("", "")]
+        [TestCase("MyTag.SomeMember.1", "MyTag")]
+        [TestCase("MyTag[1].SomeMember.1", "MyTag")]
+        [TestCase("Module:1:I.Data[1].SubTag.Value.12", "Module:1:I")]
+        [TestCase(".Member[32].Value", "")]
+        [TestCase("Member[32].Value", "Member")]
+        [TestCase("[32].Value", "[32]")]
+        public void Base_WhenCalled_ShouldBeExpected(string value, string expected)
+        {
+            var tagName = new TagName(value);
+
+            var path = tagName.Base;
+
+            path.Should().Be(expected);
+        }
+
+        [Test]
+        public void Base_WhenCalledManyTimes_ShouldBeEfficient()
+        {
+            var tags = Enumerable.Range(0, 1000000)
+                .Select(i => $"MyTagName_{i}.SomeMember.21")
+                .Select(s => s.ToTagName())
+                .ToList();
+
+            var stopwatch = Stopwatch.StartNew();
+            var elements = tags.Select(t => t.Base).ToList();
+            stopwatch.Stop();
+
+            Console.WriteLine(stopwatch.Elapsed);
+            elements.Should().HaveCount(1000000);
+            elements.Should().AllSatisfy(s => s.Should().StartWith("MyTagName"));
+            stopwatch.Elapsed.Seconds.Should().BeLessThan(1);
+        }
+
+        [Test]
+        [TestCase("", "")]
+        [TestCase("MyTag.SomeMember.1", "SomeMember.1")]
+        [TestCase("MyTag[1].SomeMember.1", "[1].SomeMember.1")]
+        [TestCase("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12",
+            "TagName.Member[1].SubTag.Another[12,13,14].Value.12")]
+        public void Member_WhenCalled_ShouldBeExpected(string value, string expected)
+        {
+            var tagName = new TagName(value);
+
+            var path = tagName.Member;
+
+            path.Should().Be(expected);
+        }
+
+        [Test]
+        public void Member_CalledOnLargeList_ShouldExecuteInExpectedTime()
+        {
+            var tags = Enumerable.Range(0, 1000000)
+                .Select(i => $"MyTagName_{i}.SomeMember.Target")
+                .Select(s => s.ToTagName())
+                .ToList();
+
+            var stopwatch = Stopwatch.StartNew();
+            var elements = tags.Select(t => t.Member).ToList();
+            stopwatch.Stop();
+
+            Console.WriteLine(stopwatch.Elapsed);
+            elements.Should().HaveCount(1000000);
+            elements.Should().AllSatisfy(s => s.Should().Be("SomeMember.Target"));
+            stopwatch.Elapsed.Seconds.Should().BeLessThan(1);
+        }
+
+        [Test]
+        [TestCase("", "")]
+        [TestCase("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12", "12")]
+        [TestCase("MyTag.Member[1]", "[1]")]
+        public void Element_WhenCalled_ShouldBeExpected(string value, string expected)
+        {
+            var tagName = new TagName(value);
+
+            var element = tagName.Element;
+
+            element.Should().Be(expected);
+        }
+
+        [Test]
+        public void Element_CalledOnLargeList_ShouldExecuteInExpectedTime()
+        {
+            var tags = Enumerable.Range(0, 1000000)
+                .Select(i => $"MyTagName_{i}.SomeMember.Target")
+                .Select(s => s.ToTagName())
+                .ToList();
+
+            var stopwatch = Stopwatch.StartNew();
+            var elements = tags.Select(t => t.Element).ToList();
+            stopwatch.Stop();
+
+            Console.WriteLine(stopwatch.Elapsed);
+            elements.Should().HaveCount(1000000);
+            elements.Should().AllSatisfy(s => s.Should().Be("Target"));
+            stopwatch.Elapsed.Seconds.Should().BeLessThan(1);
         }
         
+        [Test]
+        [TestCase("", 0)]
+        [TestCase("MyTag.SomeMember.1", 2)]
+        [TestCase("MyTag[1].SomeMember.1", 3)]
+        [TestCase("Module:1:I.Data[1].SubTag.Value.12", 5)]
+        [TestCase(".Member[32].Value", 2)]
+        [TestCase("Member[32].Value", 2)]
+        [TestCase("[32].Value", 1)]
+        public void Depth_ValidTagName_ShouldBeExpected(string value, int expected)
+        {
+            var tagName = new TagName(value);
+
+            var path = tagName.Depth;
+
+            path.Should().Be(expected);
+        }
+
+        [Test]
+        public void Members_ComplexTag_ShouldContainExpectedValues()
+        {
+            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+
+            var members = tagName.Members().ToList();
+
+            members[0].Should().Be("Module:1:I");
+            members[1].Should().Be("TagName");
+            members[2].Should().Be("Member");
+            members[3].Should().Be("[1]");
+            members[4].Should().Be("SubTag");
+            members[5].Should().Be("Another");
+            members[6].Should().Be("[12,13,14]");
+            members[7].Should().Be("Value");
+            members[8].Should().Be("12");
+        }
+
+        [Test]
+        public void Members_ToSpecifiedDepth_ShouldBeExpected()
+        {
+            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            
+            var members = tagName.Members(3).ToList();
+
+            members.Count.Should().Be(3);
+            members[0].Should().Be("Module:1:I");
+            members[1].Should().Be("TagName");
+            members[2].Should().Be("Member");
+        }
+
+        [Test]
+        [TestCase("", 0)]
+        [TestCase("MyTag.SomeMember.1", 3)]
+        [TestCase("MyTag[1].SomeMember.1", 4)]
+        [TestCase("Module:1:I.Data[1].SubTag.Value.12", 6)]
+        [TestCase(".Member[32].Value", 3)]
+        [TestCase("Member[32].Value", 3)]
+        [TestCase("[32].Value", 2)]
+        public void Members_ProvidedTagName_ShouldHaveExpectedCount(string value, int expected)
+        {
+            var tagName = new TagName(value);
+
+            var members = tagName.Members().ToList();
+
+            members.Should().HaveCount(expected);
+        }
+
+        [Test]
+        public void Members_WhenCalledManyTimes_ShouldBeEfficient()
+        {
+            var tags = Enumerable.Range(0, 1000000)
+                .Select(i => $"Module:1:I.TagName.Member[{i}].SubTag.Another[12,13,14].Value.12")
+                .Select(s => s.ToTagName())
+                .ToList();
+
+            var stopwatch = Stopwatch.StartNew();
+            var members = tags.SelectMany(t => t.Members()).ToList();
+            stopwatch.Stop();
+
+            Console.WriteLine(stopwatch.Elapsed);
+            members.Should().HaveCount(1000000 * 9);
+            stopwatch.Elapsed.Seconds.Should().BeLessThan(3);
+        }
+
+        [Test]
+        [TestCase("MyTagName", true)]
+        [TestCase("MyTagName.Member", true)]
+        [TestCase("MyTagName.Member[1]", true)]
+        [TestCase("MyTagName.Member[1].Value", true)]
+        [TestCase("MyTagName.Member[1].Value.21", false)]
+        [TestCase("MyTagName.Member[2].Value", false)]
+        [TestCase("MyTagName.Something[1].Value", false)]
+        [TestCase("MyTag.Member[1].Value", false)]
+        public void IsMemberOf_ParentTwoLevelsUp_ShouldBeTrue(string parent, bool expected)
+        {
+            var tagName = new TagName("MyTagName.Member[1].Value.21");
+
+            var result = tagName.IsMemberOf(parent);
+
+            result.Should().Be(expected);
+        }
+
         [Test]
         public void IsQualified_QualifiedTagNameWithAllPossibleMemberTypes_ShouldBeTrue()
         {
@@ -95,224 +374,58 @@ namespace L5Sharp.Tests.Core.Common
         public void IsQualified_ArraySegmentOnly_ShouldBeFalse()
         {
             var tagName = new TagName("[1]");
-            
+
             var result = tagName.IsQualified;
-            
+
             result.Should().BeFalse();
         }
-        
+
         [Test]
         [Description("GitHub Issue #52: A tag with a bit index reference tag should be qualified")]
         public void IsQualified_BitIndexAddressing_ShouldBeFalse()
         {
             var tagName = new TagName("DintTest.[Offset]");
-            
+
             var result = tagName.IsQualified;
-            
+
             result.Should().BeTrue();
         }
 
         [Test]
-        public void Root_WhenCalledManyTimes_ShouldBeEfficient()
+        public void Contains_NameNotInTagName_ShouldBeFalse()
         {
-            var stopwatch = new Stopwatch();
-            var tags = new List<TagName>();
+            var tagName = new TagName("MyTagName.SomeMember.12");
 
-            for (var i = 0; i < 1000000; i++)
-            {
-                var tag = TagName.Concat("MyTag_01.SomeMember[1].Some_Element_Property", i.ToString());
-                tags.Add(tag);
-            }
+            var result = tagName.Contains("FakeName");
 
-            stopwatch.Start();
-
-            foreach (var tag in tags)
-            {
-                var member = tag.Root;
-                member.Should().NotBeNull();
-            }
-
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.Elapsed);
+            result.Should().BeFalse();
         }
 
         [Test]
-        public void Operand_MemberSeparator_ShouldBeExpected()
+        public void Contains_NameContainsTagName_ShouldBeTrue()
         {
-            var tagName = new TagName("MyTag.SomeMember.1");
+            var tagName = new TagName("MyTagName.SomeMember.12");
 
-            var operand = tagName.Operand;
+            var result = tagName.Contains("SomeMember");
 
-            operand.Should().Be(".SomeMember.1");
+            result.Should().BeTrue();
         }
 
         [Test]
-        public void Operand_ArrayBracket_ShouldBeExpected()
+        public void Contains_NullName_ShouldThrowArgumentNullException()
         {
-            var tagName = new TagName("MyTag[1].SomeMember.1");
+            var tagName = new TagName(TestTagName);
 
-            var operand = tagName.Operand;
-
-            operand.Should().Be("[1].SomeMember.1");
+            FluentActions.Invoking(() => tagName.Contains(null!)).Should().Throw<ArgumentNullException>();
         }
 
-        [Test]
-        public void Path_MemberSeparator_ShouldBeExpected()
-        {
-            var tagName = new TagName("MyTag.SomeMember.1");
-
-            var path = tagName.Path;
-
-            path.Should().Be("SomeMember.1");
-        }
-
-        [Test]
-        public void Path_ArrayBracket_ShouldBeExpected()
-        {
-            var tagName = new TagName("MyTag[1].SomeMember.1");
-
-            var path = tagName.Path;
-
-            path.Should().Be("[1].SomeMember.1");
-        }
-
-        [Test]
-        public void Member_ValidTag_ShouldBeExpected()
-        {
-            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-
-            var member = tagName.Member;
-
-            member.Should().Be("12");
-        }
-
-        [Test]
-        public void Member_Empty_ShouldBeExpected()
-        {
-            var tagName = new TagName("");
-
-            var member = tagName.Member;
-
-            member.Should().BeEmpty();
-        }
-
-        [Test]
-        public void Member_ArrayPart_ShouldBeExpected()
-        {
-            var tagName = new TagName("MyTag.Member[1]");
-
-            var member = tagName.Member;
-
-            member.Should().Be("[1]");
-        }
-
-        [Test]
-        public void Member_WhenRetrievedLargeNumberOfTimes_ShouldBeFast()
-        {
-            var stopwatch = new Stopwatch();
-            var tags = new List<TagName>();
-
-            for (var i = 0; i < 1000000; i++)
-            {
-                var tag = TagName.Concat("MyTagName.Member[1].Some_Other_Longer_Name", i.ToString());
-                tags.Add(tag);
-            }
-
-            stopwatch.Start();
-
-            foreach (var tag in tags)
-            {
-                var member = tag.Member;
-                member.Should().NotBeNull();
-            }
-
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.Elapsed);
-        }
-
-        [Test]
-        public void Members_WhenIterated_ShouldNotBeEmptyAndOfTypeString()
-        {
-            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-
-            foreach (var member in tagName.Members)
-            {
-                member.Should().BeOfType<string>();
-                member.Should().NotBeEmpty();
-            }
-        }
-
-        [Test]
-        public void Members_WhenCalled_ShouldContainExpectedValues()
-        {
-            var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-
-            var members = tagName.Members.ToList();
-
-            members[0].Should().Be("Module:1:I");
-            members[1].Should().Be("TagName");
-            members[2].Should().Be("Member");
-            members[3].Should().Be("[1]");
-            members[4].Should().Be("SubTag");
-            members[5].Should().Be("Another");
-            members[6].Should().Be("[12,13,14]");
-            members[7].Should().Be("Value");
-            members[8].Should().Be("12");
-        }
-
-        [Test]
-        public void Members_WhenCalledManyTimes_ShouldBeEfficient()
-        {
-            var stopwatch = new Stopwatch();
-            var tags = new List<TagName>();
-
-            for (var i = 0; i < 1000000; i++)
-            {
-                var tag = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-                tags.Add(tag);
-            }
-
-            stopwatch.Start();
-
-            foreach (var tag in tags)
-            {
-                var member = tag.Members.ToList();
-                member.Should().HaveCount(9);
-            }
-
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.Elapsed);
-        }
-
-        [Test]
-        public void Empty_WhenCalled_ShouldBeEmptyValue()
-        {
-            var tagName = TagName.Empty;
-
-            tagName.Should().Be(string.Empty);
-        }
-
-        [Test]
-        public void Empty_WhenCalled_ShouldHaveExpectedValues()
-        {
-            var tagName = TagName.Empty;
-
-            tagName.Root.Should().BeEmpty();
-            tagName.Operand.Should().BeEmpty();
-            tagName.Path.Should().BeEmpty();
-            tagName.Member.Should().BeEmpty();
-            tagName.Members.Should().BeEmpty();
-            tagName.Depth.Should().Be(0);
-            tagName.IsEmpty.Should().BeTrue();
-            tagName.IsQualified.Should().BeFalse();
-        }
 
         [Test]
         public void Combine_TwoMemberNames_ShouldBeExpected()
         {
-            var tagName = TagName.Combine(Base, Path);
+            var tagName = TagName.Combine("MyTag", "SomeMember");
 
-            tagName.Should().Be(TestTagName);
+            tagName.Should().Be("MyTag.SomeMember");
         }
 
         [Test]
@@ -326,135 +439,29 @@ namespace L5Sharp.Tests.Core.Common
         [Test]
         public void Combine_CollectionOfValidMembers_ShouldBeExpectedValue()
         {
-            var tagName = TagName.Combine(Members);
+            var tagName = TagName.Combine(["MyTag", "SomeArray", "[1]", "ArrayElement", "SomeMember", ".1"]);
 
-            tagName.Should().Be(TestTagName);
+            tagName.Should().Be("MyTag.SomeArray[1].ArrayElement.SomeMember.1");
         }
 
         [Test]
-        public void Contains_NullName_ShouldThrowArgumentNullException()
+        public void ImplicitOperator_ValidName_ShouldBeExpected()
         {
-            var tagName = new TagName(TestTagName);
+            TagName tagName = "MyTagName";
 
-            FluentActions.Invoking(() => tagName.Contains(null!)).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Contains_NameNotInTagName_ShouldBeFalse()
-        {
-            var tagName = new TagName(TestTagName);
-
-            var result = tagName.Contains("SomeName");
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void Contains_NameContainsTagName_ShouldBeTrue()
-        {
-            var tagName = new TagName(TestTagName);
-
-            var result = tagName.Contains(Base);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void Rename_ValidTagName_ShouldReturnExpected()
-        {
-            var tag = new TagName(TestTagName);
-
-            var result = tag.Rename("MyNewTagName");
-
-            result.ToString().Should().StartWith("MyNewTagName");
-        }
-
-        [Test]
-        public void StaticEqualsFullTagName_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag", "MyTag", TagNameComparer.Qualified);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsFullTagName_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag", "AnotherTag", TagNameComparer.Qualified);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void StaticEqualsBase_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember", "MyTag.AnotherMember", TagNameComparer.Root);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsBase_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember", "AnotherTag.SomeMember", TagNameComparer.Root);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void StaticEqualsPath_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.SomeMember.SubPathMember",
-                TagNameComparer.Path);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsPath_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath",
-                TagNameComparer.Path);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void StaticEqualsMember_EqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "DifferentTag.AnotherMember.SubPathMember",
-                TagNameComparer.Member);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void StaticEqualsMember_NotEqualTagName_ShouldBeTrue()
-        {
-            var result = TagName.Equals("MyTag.SomeMember.SubPathMember", "MyTag.SomeMember.SubPath",
-                TagNameComparer.Member);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void ImplicitOperator_Byte_ShouldBeExpected()
-        {
-            TagName tagName = TestTagName;
-
-            tagName.Equals(TestTagName).Should().BeTrue();
+            tagName.Should().Be("MyTagName");
         }
 
         [Test]
         public void ImplicitOperator_ScanRate_ShouldBeExpected()
         {
-            string tagName = new TagName(TestTagName);
+            string tagName = new TagName("MyTagName");
 
-            tagName.Equals(TestTagName).Should().BeTrue();
+            tagName.Should().Be("MyTagName");
         }
 
         [Test]
-        public void TypedEquals_AreEqual_ShouldBeTrue()
+        public void Equals_AreEqual_ShouldBeTrue()
         {
             var first = new TagName(TestTagName);
             var second = new TagName(TestTagName);
@@ -465,53 +472,12 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void TypedEquals_AreNotEqual_ShouldBeFalse()
-        {
-            var first = new TagName(TestTagName);
-            var second = new TagName(Path);
-
-            var result = first.Equals(second);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void TypedEquals_Null_ShouldBeFalse()
+        public void Equals_AreSame_ShouldBeTrue()
         {
             var first = new TagName(TestTagName);
 
-            var result = first.Equals(null!);
-
-            result.Should().BeFalse();
-        }
-
-        [Test]
-        public void TypedEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new TagName(TestTagName);
-
+            // ReSharper disable once EqualExpressionComparison we need to test overriden logic
             var result = first.Equals(first);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreEqual_ShouldBeTrue()
-        {
-            var first = new TagName(TestTagName);
-            var second = new TagName(TestTagName);
-
-            var result = first.Equals((object)second);
-
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void ObjectEquals_AreSame_ShouldBeTrue()
-        {
-            var first = new TagName(TestTagName);
-
-            var result = first.Equals((object)first);
 
             result.Should().BeTrue();
         }
@@ -573,7 +539,7 @@ namespace L5Sharp.Tests.Core.Common
         public void CompareTo_Different_ShouldNotBeZero()
         {
             var first = new TagName(TestTagName);
-            var second = new TagName(Path);
+            var second = new TagName("OtherTag.WithMember");
 
             var result = first.CompareTo(second);
 

@@ -1,4 +1,0 @@
-﻿<Container>
-  <Test RequiredValue="Test_3" />
-  <Test RequiredValue="Test_2" />
-</Container>

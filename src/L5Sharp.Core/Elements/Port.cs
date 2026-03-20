@@ -12,7 +12,8 @@ namespace L5Sharp.Core;
 /// or the network address (IP) of the device. Each port may (or may not) have a <see cref="BusSize"/>.
 /// Each port is identifiable by the <see cref="Id"/> property. 
 /// </remarks>
-public class Port : LogixObject
+[LogixElement(L5XName.Port)]
+public class Port : LogixObject<Port>
 {
     /// <summary>
     /// Creates a new <see cref="Port"/> with default values.
@@ -42,7 +43,7 @@ public class Port : LogixObject
     /// </remarks>
     public int Id
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -55,7 +56,7 @@ public class Port : LogixObject
     /// </remarks>
     public string? Type
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -68,7 +69,7 @@ public class Port : LogixObject
     /// </remarks>
     public Address? Address
     {
-        get => GetValue<Address>();
+        get => GetValue(Address.Parse);
         set => SetValue(value);
     }
 
@@ -83,7 +84,7 @@ public class Port : LogixObject
     /// </remarks>
     public bool Upstream
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -96,24 +97,8 @@ public class Port : LogixObject
     /// </remarks>
     public byte? BusSize
     {
-        get => Element.Element(L5XName.Bus)?.Attribute(L5XName.Size)?.Value.Parse<byte>();
-        set
-        {
-            if (value is null)
-            {
-                Element.Element(L5XName.Bus)?.Remove();
-                return;
-            }
-
-            var bus = Element.Element(L5XName.Bus);
-            if (bus is null)
-            {
-                bus = new XElement(L5XName.Bus);
-                Element.Add(bus);
-            }
-
-            bus.SetAttributeValue(L5XName.Size, value);
-        }
+        get => GetBusSize();
+        set => SetBusSize(value);
     }
 
     /// <summary>
@@ -124,4 +109,49 @@ public class Port : LogixObject
     /// The IsEthernet property is true if the Type property of the Port is set to "Ethernet".
     /// </remarks>
     public bool IsEthernet => Type == "Ethernet";
+
+    /// <summary>
+    /// Gets a value indicating whether the <see cref="Port"/> represents a chassis connection.
+    /// </summary>
+    /// <remarks>
+    /// A <see cref="Port"/> is considered a chassis if its associated <see cref="Address"/> indicates
+    /// a slot within the chassis or backplane. This property determines if the <see cref="Port"/>
+    /// configuration corresponds to such a slot.
+    /// </remarks>
+    public bool IsChassis => Address?.IsSlot is true;
+
+    /// <summary>
+    /// Retrieves the size of the bus if it is defined for the current <see cref="Port"/>.
+    /// </summary>
+    /// <returns>
+    /// A nullable <see cref="byte"/> representing the size of the bus, or null if the size is not specified.
+    /// </returns>
+    private byte? GetBusSize()
+    {
+        var value = Element.Element(L5XName.Bus)?.Attribute(L5XName.Size)?.Value;
+        return value is not null ? byte.Parse(value) : null;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetBusSize(byte? value)
+    {
+        if (value is null)
+        {
+            Element.Element(L5XName.Bus)?.Remove();
+            return;
+        }
+
+        var bus = Element.Element(L5XName.Bus);
+        
+        if (bus is null)
+        {
+            bus = new XElement(L5XName.Bus);
+            Element.Add(bus);
+        }
+
+        bus.SetAttributeValue(L5XName.Size, value);
+    }
 }

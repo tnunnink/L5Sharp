@@ -11,19 +11,20 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-/// A DataType represents a user defined type structure that one can define and reuse within a PLC project.
-/// This type inherits <see cref="LogixComponent"/> which specifies <c>Name</c> and <c>Description</c> properties along with other
+/// A DataType represents a user-defined type structure that one can define and reuse within a PLC project.
+/// This type inherits <see cref="ILogixComponent"/> which specifies <c>Name</c> and <c>Description</c> properties along with other
 /// common component functionality. DataTypes also contain <see cref="Members"/> that define the structure of the
-/// complex type. This class does not actually represent the type value, but rather the configuration of how a tag structure
+/// complex type. This class does not represent the type value, but rather the configuration of how a tag structure
 /// would look if it referenced this type.
 /// </para>
 /// <para>DataType components can be defined out of order within an L5X. This means a type that is dependent on another
-/// type can be defined first and Logix will import just fine.</para>
+/// type can be defined first, and Logix will import just fine.</para>
 /// </remarks>
 /// <footer>
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.DataType)]
 public class DataType : LogixComponent<DataType>
 {
     /// <inheritdoc />
@@ -69,9 +70,9 @@ public class DataType : LogixComponent<DataType>
     /// A <see cref="DataTypeFamily"/> option indicating the family for which the current data type belongs.
     /// This is just string for string types and none for all others.
     /// </value>
-    public DataTypeFamily? Family
+    public DataTypeFamily Family
     {
-        get => GetValue<DataTypeFamily>();
+        get => GetValue(DataTypeFamily.Parse) ?? DataTypeFamily.None;
         set => SetValue(value);
     }
 
@@ -82,9 +83,9 @@ public class DataType : LogixComponent<DataType>
     /// A <see cref="DataTypeClass"/> option indicating the class for which the current data type belongs.
     /// L5X files will only ever contain <see cref="DataTypeClass.User"/> class types.
     /// </value>
-    public DataTypeClass? Class
+    public DataTypeClass Class
     {
-        get => GetValue<DataTypeClass>();
+        get => GetValue(DataTypeClass.Parse) ?? DataTypeClass.Unknown;
         set => SetValue(value);
     }
 
@@ -98,20 +99,84 @@ public class DataType : LogixComponent<DataType>
     }
 
     /// <inheritdoc />
-    public override IEnumerable<LogixComponent> Dependencies()
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        if (L5X is null) return [];
-
-        var dependencies = new List<LogixComponent>();
+        var dependencies = new List<ILogixEntity>();
 
         foreach (var member in Members)
         {
-            if (!L5X.TryGet<DataType>(member.DataType, out var dataType)) continue;
-            dependencies.Add(dataType);
-            dependencies.AddRange(dataType.Dependencies());
+            if (!TryResolveType(member.DataType, out var type)) continue;
+            dependencies.Add(type);
+            dependencies.AddRange(type.Dependencies());
         }
 
-        return dependencies.Distinct();
+        return dependencies.Distinct(c => c.Reference);
+    }
+
+    /// <summary>
+    /// Adds a new member to the current <see cref="DataType"/> with the specified name, data type, and optional configuration.
+    /// </summary>
+    /// <param name="name">The name of the member to add. Must not be null or empty.</param>
+    /// <param name="dataType">The data type of the member. Must not be null or empty.</param>
+    /// <param name="config">An optional configuration action to modify the member after creation.</param>
+    /// <returns>The newly added <see cref="DataTypeMember"/>.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the <paramref name="name"/> or <paramref name="dataType"/> is null or empty.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if a member with the given <paramref name="name"/> already exists in the <see cref="DataType"/>.
+    /// </exception>
+    public DataType AddMember(string name, string dataType, Action<DataTypeMember>? config = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Member property 'Name' can not be null or empty");
+
+        if (string.IsNullOrEmpty(dataType))
+            throw new ArgumentException("Member property 'DataType' can not be null or empty");
+
+        if (Members.Any(m => m.Name == name))
+            throw new InvalidOperationException($"A member with the name '{name}' already exists for type '{Name}'");
+
+        var member = new DataTypeMember { Name = name, DataType = dataType };
+        config?.Invoke(member);
+        Members.Add(member);
+        return this;
+    }
+
+    /// <summary>
+    /// Removes a member with the specified name from the <see cref="Members"/> collection of the current DataType.
+    /// </summary>
+    /// <param name="name">The name of the member to be removed.</param>
+    public DataType RemoveMember(string name)
+    {
+        Members.FirstOrDefault(m => m.Name == name)?.Remove();
+        return this;
+    }
+
+    /// <summary>
+    /// Updates the specified member of the data type by applying the provided configuration.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the member to be updated. Must correspond to an existing member of the data type.
+    /// </param>
+    /// <param name="config">
+    /// An action that defines the configuration to apply to the selected member.
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when no member with the specified name is found in the data type.
+    /// </exception>
+    public DataType UpdateMember(string name, Action<DataTypeMember> config)
+    {
+        if (config is null)
+            throw new ArgumentNullException(nameof(config));
+
+        var member = Members.FirstOrDefault(m => m.Name == name);
+
+        if (member is null)
+            throw new InvalidOperationException($"No member with name '{name}' is defined for type '{Name}'");
+
+        config.Invoke(member);
+        return this;
     }
 
     /// <summary>
@@ -123,10 +188,13 @@ public class DataType : LogixComponent<DataType>
     /// <remarks>
     /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
     /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
-    /// are not resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// are not resolved, it will default to creating <see cref="StructureData"/> objects with no members
     /// as there is no way to know the structure. 
     /// </remarks>
-    public Tag ToTag(string tagName) => new(tagName, ToData());
+    public Tag ToTag(string tagName)
+    {
+        return new Tag(tagName, ToData());
+    }
 
     /// <summary>
     /// Converts the <see cref="DataType"/> component into a <see cref="LogixData"/> object using the configured
@@ -136,26 +204,25 @@ public class DataType : LogixComponent<DataType>
     /// <remarks>
     /// If this data type has nested (user) data types, then internally this feature will attempt to retrieve
     /// and create them either statically or from the attached L5X. If this type is not attached or the nested types
-    /// are not resolved, it will default to creating <see cref="ComplexData"/> objects with no members
+    /// are not resolved, it will default to creating <see cref="StructureData"/> objects with no members
     /// as there is no way to know the structure. 
     /// </remarks>
     public LogixData ToData()
     {
-        if (string.IsNullOrEmpty(Name))
-            throw new InvalidOperationException("Can not create data with null or empty data type name");
-        
-        //We need to handle strings types specifically to match Logix custom format.
-        if (Family is not null && Family == DataTypeFamily.String) return new StringData(Name, string.Empty);
+        //Need to intercept the BIT types and make them booleans.
+        if (Name == "BIT") return new BOOL();
 
-        //This will be some predefined type or a complex data instance, depending on whether it is statically defined.
-        var data = LogixData.Create(Name);
+        // Try to instantiate the type if registered. This will cover atomics, predefined, or custom UDTs that are registered.
+        // This way we can create strongly typed class representation instead of default structure or string data.
+        if (LogixType.TryCreate(Name, out var registered))
+            return registered;
 
-        //If it is not a complex data, then it was defined, and we can return it.
-        if (data is not ComplexData complexData) return data;
+        // We need to handle strings types specifically to match a Logix custom format.
+        if (Family == DataTypeFamily.String)
+            return new StringData(Name, string.Empty);
 
-        //Otherwise, we need to build the members using the configured Members collection.
-        var members = Members.Where(m => m.Hidden is not true).Select(m => m.ToMember()).ToList();
-        complexData.AddRange(members);
-        return complexData;
+        // Otherwise, we need to build the members using the configured Members collection.
+        var members = Members.Where(m => !m.Hidden).Select(m => m.ToMember()).ToList();
+        return new StructureData(Name, members);
     }
 }

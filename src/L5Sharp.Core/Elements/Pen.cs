@@ -14,7 +14,8 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class Pen : LogixObject
+[LogixElement(L5XName.Pen)]
+public class Pen : LogixObject<Pen>
 {
     /// <summary>
     /// Creates a new <see cref="Pen"/> with default values.
@@ -40,14 +41,14 @@ public class Pen : LogixObject
     public Pen(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// The unique name of the <c>Pen</c>.
     /// </summary>
     /// <value>A <see cref="string"/> representing the component name. This property is required for valid elements.</value>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -57,7 +58,7 @@ public class Pen : LogixObject
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -66,17 +67,17 @@ public class Pen : LogixObject
     /// </summary>
     public string? Color
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Specify whether or not the line should be visible
+    /// Specify whether the line should be visible.
     /// </summary>
     /// <value><c>true</c> if the pen is visible; otherwise, false.</value>
     public bool? Visible
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
 
@@ -85,7 +86,7 @@ public class Pen : LogixObject
     /// </summary>
     public int? Width
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
 
@@ -94,7 +95,7 @@ public class Pen : LogixObject
     /// </summary>
     public PenType? Type
     {
-        get => GetValue<PenType>();
+        get => GetValue(PenType.Parse);
         set => SetValue(value);
     }
 
@@ -111,43 +112,43 @@ public class Pen : LogixObject
     /// </value>
     public int Style
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the line marker (0...83)
     /// </summary>
     public int? Marker
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
     }
-    
+
     /// <summary>
     /// Specify the minimum value for the pen. The minimum cannot be greater than or equal to the maximum.
     /// </summary>
     public double? Min
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
-    } 
-    
+    }
+
     /// <summary>
     /// Specify the maximum value for the pen. The maximum cannot be less than or equal to the minimum.
     /// </summary>
     public double? Max
     {
-        get => GetValue<int>();
+        get => GetValue(int.Parse);
         set => SetValue(value);
-    } 
-    
+    }
+
     /// <summary>
     /// Specify engineering units. For example, rpm, gallon, fps, and degrees.
     /// </summary>
     public string? EngUnits
     {
-        get => GetValue<string>();
+        get => GetValue();
         set => SetValue(value);
     }
 }

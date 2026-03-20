@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Types.Predefined
+namespace L5Sharp.Tests.Core.Data.Predefined
 {
     [TestFixture]
     public class AlarmDigitalTests
@@ -60,7 +60,7 @@ namespace L5Sharp.Tests.Core.Types.Predefined
         [Test]
         public void New_InvalidElement_ShouldNotBeNull()
         {
-            const string xml = @"<AlarmDigitalParameters />";
+            const string xml = "<AlarmDigitalParameters />";
             var element = XElement.Parse(xml);
 
             var type = new ALARM_DIGITAL(element);
@@ -71,7 +71,7 @@ namespace L5Sharp.Tests.Core.Types.Predefined
         [Test]
         public void New_InvalidElement_ShouldThrowInvalidOperationExceptionWhenGettingProperty()
         {
-            const string xml = @"<AlarmDigitalParameters />";
+            const string xml = "<AlarmDigitalParameters />";
             var element = XElement.Parse(xml);
 
             var type = new ALARM_DIGITAL(element);
@@ -83,15 +83,17 @@ namespace L5Sharp.Tests.Core.Types.Predefined
         public void New_RealElement_ShouldHaveExpectedValues()
         {
             const string xml =
-                @"<AlarmDigitalParameters Severity=""500"" MinDurationPRE=""0"" ShelveDuration=""0"" MaxShelveDuration=""0""
-            ProgTime=""DT#1970-01-01-00:00:00.000_000Z"" EnableIn=""false"" In=""false""
-            InFault=""false"" Condition=""true"" AckRequired=""true"" Latched=""false""
-            ProgAck=""false"" OperAck=""false"" ProgReset=""false"" OperReset=""false""
-            ProgSuppress=""false"" OperSuppress=""false"" ProgUnsuppress=""false""
-            OperUnsuppress=""false"" OperShelve=""false"" ProgUnshelve=""false""
-            OperUnshelve=""false""
-            ProgDisable=""false"" OperDisable=""false"" ProgEnable=""false""
-            OperEnable=""false"" AlarmCountReset=""false"" UseProgTime=""false""/>";
+                """
+                <AlarmDigitalParameters Severity="500" MinDurationPRE="0" ShelveDuration="0" MaxShelveDuration="0"
+                            ProgTime="DT#1970-01-01-00:00:00.000_000Z" EnableIn="false" In="false"
+                            InFault="false" Condition="true" AckRequired="true" Latched="false"
+                            ProgAck="false" OperAck="false" ProgReset="false" OperReset="false"
+                            ProgSuppress="false" OperSuppress="false" ProgUnsuppress="false"
+                            OperUnsuppress="false" OperShelve="false" ProgUnshelve="false"
+                            OperUnshelve="false"
+                            ProgDisable="false" OperDisable="false" ProgEnable="false"
+                            OperEnable="false" AlarmCountReset="false" UseProgTime="false"/>
+                """;
             var element = XElement.Parse(xml);
 
             var type = new ALARM_DIGITAL(element);

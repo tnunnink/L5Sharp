@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -15,7 +12,7 @@ namespace L5Sharp.Core;
 /// <para>
 /// <see cref="LogixData"/> is a special type of <see cref="LogixElement"/> which models the tag data structure found
 /// in L5X files. This class contains a <see cref="Name"/> and <see cref="Members"/> which comprise the hierarchy of
-/// data for a given type. This class has built in conversion for implicitly converting .NET primitives and collections
+/// data for a given type. This class has built-in conversion for implicitly converting .NET primitives and collections
 /// (arrays and dictionaries) to the corresponding <see cref="LogixData"/> derived class.
 /// </para>
 /// <para>
@@ -25,8 +22,8 @@ namespace L5Sharp.Core;
 /// This applies for <see cref="AtomicData"/>, <see cref="ArrayData"/>, and all derived instance of <see cref="StructureData"/>.
 /// </para>
 /// <para>
-/// If you wish to create in memory complex data structures, use the <see cref="ComplexData"/> class which exposes
-/// methods for adding, removing, replacing, and inserting <see cref="Core.Member"/> objects for the data structure.
+/// If you wish to create in memory complex data structures, use the <see cref="StructureData"/> class which exposes
+/// methods for adding, removing, replacing, and inserting <see cref="LogixMember"/> objects for the data structure.
 /// </para>
 /// </remarks>
 /// <seealso cref="AtomicData"/>
@@ -57,25 +54,84 @@ public abstract class LogixData : LogixElement
     public virtual string Name => Element.DataType() ?? throw Element.L5XError(L5XName.DataType);
 
     /// <summary>
-    /// The collection of <see cref="Core.Member"/> objects that make up the structure of the data.
+    /// The collection of <see cref="LogixMember"/> objects that make up the structure of the data.
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="Core.Member"/> objects.</value>
+    /// <value>A <see cref="IEnumerable{T}"/> containing <see cref="LogixMember"/> objects.</value>
     /// <remarks>
-    /// Complex data structures such as <see cref="StructureData"/> and <see cref="ArrayData{TLogixType}"/> will return
+    /// Complex data structures such as <see cref="StructureData"/> and <see cref="ArrayData"/> will return
     /// members. <see cref="AtomicData"/> will not return the bit members since they are not present in the underlying
     /// XML and having them would exponentially increase the number of members given tags have.
     /// </remarks>
-    public virtual IEnumerable<Member> Members => [];
+    public virtual IEnumerable<LogixMember> Members => [];
 
     /// <summary>
-    /// Gets a <see cref="Core.Member"/> with the specified name if it exists for the <see cref="LogixData"/>;
+    /// Gets a <see cref="LogixMember"/> with the specified name if it exists for the <see cref="LogixData"/>;
     /// Otherwise, returns <c>null</c>.
     /// </summary>
     /// <param name="name">The name of the member to get.</param>
-    /// <returns>A <see cref="Core.Member"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
+    /// <returns>A <see cref="LogixMember"/> with the specified name if found; Otherwise, <c>null</c>.</returns>
     /// <remarks>This performs a case-insensitive comparison for the member name.</remarks>
-    public Member? Member(string name) =>
-        Members.SingleOrDefault(m => string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase));
+    public LogixMember? GetMember(string name) => Members.SingleOrDefault(m => m.Name.IsEquivalent(name));
+
+    /// <summary>
+    /// Updates the current instance of the <see cref="LogixData"/> with the data from the specified instance.
+    /// </summary>
+    /// <param name="data">The <see cref="LogixData"/> instance containing the data to update from.</param>
+    /// <remarks>
+    /// This method can be used to update data without changing the type structure for complex types. This is the primary
+    /// means through which we mutate data values once they are created. Each deriving type is responsible for implementing
+    /// this method as necessary.
+    /// </remarks>
+    public abstract void UpdateData(LogixData data);
+
+    /// <summary>
+    /// Updates the current data structure or value using the provided byte array and offset.
+    /// </summary>
+    /// <param name="data">The byte array containing the data to update the object with.</param>
+    /// <param name="offset">The starting index in the byte array from which data will be read.</param>
+    /// <returns>The number of bytes processed during the update operation.</returns>
+    /// <remarks>
+    /// The default implementation will naively delegate to all members recursively.
+    /// Eventually each atomic member will update the underlying value at the current byte segment.
+    /// Note that Logix packs booleans for user-defined types, so if you use this as a means to read/write
+    /// data to/from real PLC, it might fail or incorrectly update tag buffers. Deriving classes can
+    /// override the implementation to correctly map the byte array, or you can use the source generator project
+    /// which will automatically override this method based on the type definition.
+    /// </remarks>
+    public virtual int UpdateData(byte[] data, int offset)
+    {
+        foreach (var member in Members)
+        {
+            offset = member.Value.UpdateData(data, offset);
+        }
+
+        return offset;
+    }
+
+    /// <summary>
+    /// Resets all member data within the current <see cref="LogixData"/> structure to their default values.
+    /// </summary>
+    /// <remarks>
+    /// This method recursively resets all members to their initial state (typically zero for numeric types,
+    /// false for booleans, empty for strings, etc.). This is useful for clearing data structures before
+    /// reusing them or returning them to a known initial state.
+    /// </remarks>
+    public virtual void ClearData()
+    {
+        foreach (var member in Members)
+        {
+            member.Value.ClearData();
+        }
+    }
+
+    /// <summary>
+    /// Determines whether the current LogixData instance represents an atomic data type.
+    /// </summary>
+    /// <returns>True if the data type is atomic; otherwise, false.</returns>
+    public bool IsAtomic()
+    {
+        return LogixType.IsAtomic(Name);
+    }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
@@ -89,36 +145,29 @@ public abstract class LogixData : LogixElement
     /// <inheritdoc />
     public override int GetHashCode() => Name.GetHashCode();
 
+    /// <summary>
+    /// The size, in bytes, of the LogixData representation.
+    /// </summary>
+    /// <returns>An <see cref="int"/> value representing the total memory size of the Logix data object.</returns>
+    public virtual int GetSize() => Members.Sum(m => m.Value.GetSize());
+
+    /// <summary>
+    /// Serializes the current <see cref="LogixData"/> instance into a byte array representation.
+    /// </summary>
+    /// <returns>
+    /// A byte array containing the serialized data from all members of this <see cref="LogixData"/> instance.
+    /// </returns>
+    /// <remarks>
+    /// The default implementation will naively delegate to all nested members recursively to aggregate the bytes for the data type.
+    /// Eventually each atomic type will return the realized byte data. In most use cases this will work.
+    /// However, Logix will pack contiguous bits (boolean members) into bytes for user-defined types, so if you use this
+    /// method as a means to read/write serialized data to/from real PLC, it might fail or incorrectly update tag buffers.
+    /// My primary use case for this functionality is the internal services and not PLC communication. 
+    /// </remarks>
+    public virtual byte[] ToBytes() => Members.SelectMany(m => m.Value.ToBytes()).ToArray();
+
     /// <inheritdoc />
     public override string ToString() => Name;
-
-    /// <summary>
-    /// Returns the singleton null <see cref="LogixData"/> object.
-    /// </summary>
-    public static LogixData Null => NullData.Instance;
-
-    /// <summary>
-    /// Creates a concrete instance of a <see cref="LogixData"/> using the specified data type name.
-    /// </summary>
-    /// <param name="dataType">The name of the data type to create.</param>
-    /// <returns>A new <see cref="LogixData"/> representing the provided data type name.</returns>
-    /// <remarks>
-    /// <para>
-    /// Internally, we are again using reflection and expression builders and caching them for efficiency.
-    /// This method will create concrete instances for types defined in this library which have a default parameterless
-    /// constructor to generate the type and its structure /members for a given type name.
-    ///</para>
-    /// <para>
-    /// If the type name is not
-    /// statically defined (i.e., not an AtomicData or known/predeinfed StructureData object), then this method will
-    /// return a default <see cref="ComplexData"/> instance with the provided name and no members, as it is impossible to
-    /// know what the structure of the type is.
-    /// </para>
-    /// </remarks>
-    public static LogixData Create(string dataType)
-    {
-        return Factories.Value.TryGetValue(dataType, out var factory) ? factory() : new ComplexData(dataType);
-    }
 
     /// <summary>
     /// Determines whether the <see cref="LogixData"/> values are equal.
@@ -281,21 +330,112 @@ public abstract class LogixData : LogixElement
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator LogixData(LogixData[] value) => new ArrayData<LogixData>(value);
+    public static implicit operator LogixData(BOOL[] value) => new ArrayData<BOOL>(value);
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator LogixData(LogixData[,] value) => new ArrayData<LogixData>(value);
+    public static implicit operator LogixData(SINT[] value) => new ArrayData<SINT>(value);
 
     /// <summary>
     /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
-    public static implicit operator LogixData(LogixData[,,] value) => new ArrayData<LogixData>(value);
+    public static implicit operator LogixData(USINT[] value) => new ArrayData<USINT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(INT[] value) => new ArrayData<INT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(UINT[] value) => new ArrayData<UINT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(DINT[] value) => new ArrayData<DINT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(UDINT[] value) => new ArrayData<UDINT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LINT[] value) => new ArrayData<LINT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(ULINT[] value) => new ArrayData<ULINT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(REAL[] value) => new ArrayData<REAL>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LREAL[] value) => new ArrayData<LREAL>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(DT[] value) => new ArrayData<DT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LDT[] value) => new ArrayData<LDT>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(TIME[] value) => new ArrayData<TIME>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(TIME32[] value) => new ArrayData<TIME32>(value);
+
+    /// <summary>
+    /// Converts the provided <see cref="Array"/> to a <see cref="LogixData"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
+    public static implicit operator LogixData(LTIME[] value) => new ArrayData<LTIME>(value);
 
     /// <summary>
     /// Converts the provided <see cref="Dictionary{TKey,TValue}"/> to a <see cref="LogixData"/>.
@@ -303,88 +443,5 @@ public abstract class LogixData : LogixElement
     /// <param name="value">The value to convert.</param>
     /// <returns>A <see cref="LogixData"/> representing the converted value.</returns>
     public static implicit operator LogixData(Dictionary<string, LogixData> value) =>
-        new ComplexData(nameof(ComplexData), value.Select(m => new Member(m.Key, m.Value)));
-
-    /// <summary>
-    /// The global cache for all <see cref="LogixData"/> object factory delegate functions.
-    /// </summary>
-    private static readonly Lazy<Dictionary<string, Func<LogixData>>> Factories = new(DataFactories,
-        LazyThreadSafetyMode.ExecutionAndPublication);
-
-    /// <summary>
-    /// Provides factory methods for creating instances of LogixData-derived classes.
-    /// </summary>
-    /// <returns>A dictionary containing the LogixData types as keys and factory functions as values.</returns>
-    private static Dictionary<string, Func<LogixData>> DataFactories()
-    {
-        var factories = new List<KeyValuePair<string, Func<LogixData>>>();
-
-        //Scan and add types from this assembly first.
-        var sharp = typeof(LogixData).Assembly;
-        factories.AddRange(Scan(sharp));
-
-        //Scan other loaded assemblies for use-defined types.
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a != sharp);
-        foreach (var assembly in assemblies)
-            factories.AddRange(Scan(assembly));
-
-        return factories.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-    }
-
-    /// <summary>
-    /// Scans the provided assembly for types satisfying the LogixData factory condition and creates a collection of
-    /// key value pairs where the key is a name of the type and the value is a function that instantiates the type.
-    /// </summary>
-    /// <param name="assembly">The assembly to scan.</param>
-    /// <returns>A collection of key value pairs for all logix data factories in the scanned assembly.</returns>
-    private static IEnumerable<KeyValuePair<string, Func<LogixData>>> Scan(Assembly assembly)
-    {
-        var factories = new List<KeyValuePair<string, Func<LogixData>>>();
-
-        var logixTypes = assembly.GetTypes().Where(IsLogixDataType).ToList();
-
-        foreach (var logixType in logixTypes)
-        {
-            var factory = BuildFactory(logixType);
-            var names = logixType.L5XTypes().ToList();
-            var functions = names.Select(n => new KeyValuePair<string, Func<LogixData>>(n, factory));
-            factories.AddRange(functions);
-        }
-
-        return factories;
-    }
-
-    /// <summary>
-    /// Determines whether the given type is a LogixData derivative that we can instantiate a default instance of
-    /// a given a type name.
-    /// </summary>
-    /// <param name="type">The type to check.</param>
-    /// <returns>Returns true if the type is a LogixDataType; otherwise, false.</returns>
-    private static bool IsLogixDataType(Type type)
-    {
-        HashSet<Type> exclude =
-        [
-            typeof(ComplexData),
-            typeof(StringData),
-            typeof(ArrayData<>),
-            typeof(NullData)
-        ];
-
-        return typeof(LogixData).IsAssignableFrom(type) &&
-               !exclude.Contains(type) &&
-               type is { IsAbstract: false, IsPublic: true } &&
-               type.GetConstructor(Type.EmptyTypes) is not null;
-    }
-
-    /// <summary>
-    /// Creates and compiles a function expression for a given logix data type to create new instances efficiently. 
-    /// </summary>
-    /// <param name="type">The type of LogixData to instantiate.</param>
-    /// <returns>A Func delegate that can be invoked to create a new instance of the specified type.</returns>
-    private static Func<LogixData> BuildFactory(Type type)
-    {
-        var constructor = type.GetConstructor(Type.EmptyTypes)!;
-        var expression = Expression.New(constructor);
-        return Expression.Lambda<Func<LogixData>>(expression).Compile();
-    }
+        new StructureData(nameof(StructureData), value.Select(m => new LogixMember(m.Key, m.Value)));
 }

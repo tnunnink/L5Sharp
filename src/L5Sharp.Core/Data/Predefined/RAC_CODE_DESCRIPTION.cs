@@ -1,0 +1,67 @@
+﻿using System.Xml.Linq;
+
+// Auto-generated type definition
+// ReSharper disable InconsistentNaming
+// ReSharper disable PartialTypeWithSinglePart
+// ReSharper disable MemberCanBePrivate.Global
+
+namespace L5Sharp.Core;
+
+/// <summary>
+/// Represents a <c>RAC_CODE_DESCRIPTION</c> data type structure.
+/// </summary>
+[LogixData("RAC_CODE_DESCRIPTION")]
+public sealed partial class RAC_CODE_DESCRIPTION : StructureData
+{
+    /// <summary>
+    /// Creates a new <see cref="RAC_CODE_DESCRIPTION"/> instance initialized with default values.
+    /// </summary>
+    public RAC_CODE_DESCRIPTION() : base("RAC_CODE_DESCRIPTION")
+    {
+        Code = new DINT();
+        Desc = new STRING();
+    }
+    
+    /// <summary>
+    /// Creates a new <see cref="RAC_CODE_DESCRIPTION"/> instance initialized with the provided element.
+    /// </summary>
+    public RAC_CODE_DESCRIPTION(XElement element) : base(element)
+    {
+    }
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This value was generated based on the type definition exported from Studio 5k.
+    /// </remarks>
+    public override int GetSize() => 92;
+    
+    /// <inheritdoc />
+    /// <remarks>
+    /// This mapping was generated based on the type definition exported from Studio 5K.
+    /// </remarks>
+    public override int UpdateData(byte[] data, int offset)
+    {
+        Code.UpdateData(data, offset + 0);
+        Desc.UpdateData(data, offset + 4);
+        
+        return offset + GetSize();
+    }
+
+    /// <summary>
+    /// The <c>Code</c> member of the <see cref="RAC_CODE_DESCRIPTION"/> data type.
+    /// </summary>
+    public DINT Code
+    {
+        get => GetMember<DINT>();
+        set => SetMember(value);
+    }
+
+    /// <summary>
+    /// The <c>Desc</c> member of the <see cref="RAC_CODE_DESCRIPTION"/> data type.
+    /// </summary>
+    public STRING Desc
+    {
+        get => GetMember<STRING>();
+        set => SetMember(value);
+    }
+}

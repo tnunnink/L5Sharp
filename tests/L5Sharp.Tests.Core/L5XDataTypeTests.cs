@@ -9,7 +9,7 @@ public class L5XDataTypeTests
     [Test]
     public void ToList_KnownTest_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.DataTypes.ToList();
 
@@ -17,9 +17,9 @@ public class L5XDataTypeTests
     }
 
     [Test]
-    public void ToList_DataTypeExport_ShouldNotBeEmpty()
+    public void ToList_ComplexTypeExport_ShouldNotBeEmpty()
     {
-        var content = L5X.Load(Known.DataTypeExport);
+        var content = TestContent.Load(TestFiles.DataTypes.ComplexType);
 
         var result = content.DataTypes.ToList();
 
@@ -29,7 +29,7 @@ public class L5XDataTypeTests
     [Test]
     public void Index_ValidIndex_ShouldNotBeNull()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var result = content.DataTypes[0];
 
@@ -39,7 +39,7 @@ public class L5XDataTypeTests
     [Test]
     public void Index_InvalidIndex_ShouldThrowArgumentOutOfRangeException()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         FluentActions.Invoking(() => content.DataTypes[100]).Should().Throw<ArgumentOutOfRangeException>();
     }
@@ -47,17 +47,18 @@ public class L5XDataTypeTests
     [Test]
     public void Add_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember
+                    { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes.Add(component);
@@ -68,16 +69,18 @@ public class L5XDataTypeTests
     [Test]
     public Task Add_ValidComponent_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
-            Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
-            }
+            Name = "NewType",
+            Description = "This is a test",
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember
+                    { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes.Add(component);
@@ -88,18 +91,9 @@ public class L5XDataTypeTests
     }
 
     [Test]
-    public void AddAfter_InvalidComponentType_ShouldThrowArgumentException()
-    {
-        var content = L5X.Load(Known.Test);
-        var dataType = content.DataTypes.Get(Known.DataType);
-
-        FluentActions.Invoking(() => dataType.AddAfter(new Tag())).Should().Throw<InvalidOperationException>();
-    }
-
-    [Test]
     public void AddAfter_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
@@ -109,7 +103,7 @@ public class L5XDataTypeTests
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new DataTypeMember
                     { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
             ]
         };
 
@@ -121,7 +115,7 @@ public class L5XDataTypeTests
     [Test]
     public void AddAfter_ValidComponent_ShouldHaveExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
@@ -130,7 +124,7 @@ public class L5XDataTypeTests
                 new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
                 new DataTypeMember
                     { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly }
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
             ]
         };
 
@@ -144,17 +138,18 @@ public class L5XDataTypeTests
     [Test]
     public void AddBefore_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember
+                    { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].AddBefore(component);
@@ -165,16 +160,16 @@ public class L5XDataTypeTests
     [Test]
     public void AddBefore_ValidComponent_ShouldHaveExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].AddBefore(component);
@@ -187,7 +182,7 @@ public class L5XDataTypeTests
     [Test]
     public void Count_WhenCalled_ShouldNotBeZero()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var count = content.DataTypes.Count();
 
@@ -197,7 +192,7 @@ public class L5XDataTypeTests
     [Test]
     public void RemoveAt_ValidIndex_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
 
         content.DataTypes.RemoveAt(1);
@@ -208,7 +203,7 @@ public class L5XDataTypeTests
     [Test]
     public Task RemoveAt_ValidIndex_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.RemoveAt(1);
 
@@ -218,17 +213,17 @@ public class L5XDataTypeTests
     [Test]
     public void Replace_ValidComponent_ShouldHaveExpectedCount()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var count = content.DataTypes.ToList().Count;
         var component = new DataType
         {
             Name = "NewType", Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].Replace(component);
@@ -239,17 +234,17 @@ public class L5XDataTypeTests
     [Test]
     public void Replace_ValidComponent_ShouldHaveExpected()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = new DataType
         {
             Name = "NewType",
             Description = "This is a test",
-            Members = new LogixContainer<DataTypeMember>
-            {
-                new() { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
-                new() { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
-                new() { Name = "Member3", DataType = "SomeType", ExternalAccess = ExternalAccess.ReadOnly },
-            }
+            Members =
+            [
+                new DataTypeMember { Name = "Member1", DataType = "DINT", Radix = Radix.Binary },
+                new DataTypeMember { Name = "Member2", DataType = "BOOL", Hidden = true, Target = "Other", BitNumber = 0 },
+                new DataTypeMember { Name = "Member3", DataType = "SomeType", ExternalAccess = Access.ReadOnly }
+            ]
         };
 
         content.DataTypes[0].Replace(component);
@@ -262,7 +257,7 @@ public class L5XDataTypeTests
     [Test]
     public void Remove_ValidComponent_ShouldNotLongExists()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         var component = content.DataTypes[0];
         var count = content.DataTypes.Count;
@@ -277,7 +272,7 @@ public class L5XDataTypeTests
     [Test]
     public void Update_ValidDelegate_ShouldUpdateAllComponents()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.Update(d => d.Description = "This is an update test");
 
@@ -290,7 +285,7 @@ public class L5XDataTypeTests
     [Test]
     public Task Update_ValidDelegate_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.Update(d => d.Description = "This is an update test");
 
@@ -300,7 +295,7 @@ public class L5XDataTypeTests
     [Test]
     public Task Update_ValidDelegateAndCondition_ShouldBeVerified()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
 
         content.DataTypes.Update(d => d.Description = "This is a update", d => d.Name.Contains("Type"));
 
@@ -310,20 +305,20 @@ public class L5XDataTypeTests
     [Test]
     public void SetName_ValidName_ShouldUpdateIndex()
     {
-        var content = L5X.Load(Known.Test);
+        var content = TestContent.Test;
         var component = content.DataTypes[0];
 
         component.Name = "NewType";
 
-        var result = content.Find<DataType>("NewType");
-        result.Should().NotBeNull();
+        var result = content.TryGet<DataType>("NewType", out _);
+        result.Should().BeTrue();
     }
 
     [Test]
     public void Dependencies_AttachedHasDependencies_ShouldNotBeEmpty()
     {
-        var file = L5X.Load(Known.Test);
-        var dataType = file.Get<DataType>("ComplexType")!;
+        var file = TestContent.Test;
+        var dataType = file.Get<DataType>("ComplexType");
 
         var dependencies = dataType.Dependencies().ToList();
 

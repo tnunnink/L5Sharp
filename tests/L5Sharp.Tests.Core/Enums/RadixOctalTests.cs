@@ -11,134 +11,219 @@ namespace L5Sharp.Tests.Core.Enums
             var radix = Radix.Octal;
 
             radix.Should().NotBeNull();
-            radix.Should().Be(Radix.Octal);
-        }
-        
-        [Test]
-        public void Format_Null_ShouldThrowArgumentNullException()
-        {
-            FluentActions.Invoking(() => Radix.Octal.FormatValue(null!)).Should().Throw<ArgumentNullException>();
+            radix.Name.Should().Be("Octal");
+            radix.Value.Should().Be("Octal");
         }
 
         [Test]
-        public void Format_NonSupportedAtomic_ShouldThrowNotSupportedException()
+        public void Octal_WhenCalled_ShouldBeSameAsOtherInstance()
         {
-            FluentActions.Invoking(() => Radix.Octal.FormatValue(new REAL())).Should().Throw<NotSupportedException>();
+            var first = Radix.Octal;
+            var second = Radix.Octal;
+
+            first.Should().BeSameAs(second);
         }
 
         [Test]
-        public void Format_BoolFalse_ShouldBeExpected()
+        [TestCase(false, "8#0")]
+        [TestCase(true, "8#1")]
+        public void Format_Boolean_ShouldBeExpected(bool value, string expected)
         {
-            var result = Radix.Octal.FormatValue(new BOOL());
+            var radix = Radix.Octal;
 
-            result.Should().Be("8#0");
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_BoolTrue_ShouldBeExpected()
+        [TestCase(0, "8#000")]
+        [TestCase(1, "8#001")]
+        [TestCase(sbyte.MaxValue, "8#177")]
+        public void Format_SByte_ShouldBeExpectedFormat(sbyte value, string expected)
         {
-            var result = Radix.Octal.FormatValue(new BOOL(true));
+            var radix = Radix.Octal;
 
-            result.Should().Be("8#1");
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_ValidSint_ShouldBeExpectedFormat()
+        [TestCase(0, "8#000")]
+        [TestCase(1, "8#001")]
+        [TestCase(byte.MaxValue, "8#377")]
+        public void Format_Byte_ShouldBeExpectedFormat(byte value, string expected)
         {
-            var result = Radix.Octal.FormatValue(new SINT(20));
+            var radix = Radix.Octal;
 
-            result.Should().Be("8#024");
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_ValidInt_ShouldBeExpectedFormat()
+        [TestCase(0, "8#000_000")]
+        [TestCase(1, "8#000_001")]
+        [TestCase(short.MaxValue, "8#077_777")]
+        [TestCase(short.MinValue, "8#100_000")]
+        public void Format_Short_ShouldBeExpectedFormat(short value, string expected)
         {
-            var result = Radix.Octal.FormatValue(new INT(20));
+            var radix = Radix.Octal;
 
-            result.Should().Be("8#000_024");
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_ValidDint_ShouldBeExpectedFormat()
+        [TestCase((ushort)0, "8#000_000")]
+        [TestCase((ushort)1, "8#000_001")]
+        [TestCase(ushort.MaxValue, "8#177_777")]
+        public void Format_UShort_ShouldBeExpectedFormat(ushort value, string expected)
         {
-            var result = Radix.Octal.FormatValue(new DINT(20));
+            var radix = Radix.Octal;
 
-            result.Should().Be("8#000_000_000_024");
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Format_ValidLint_ShouldBeExpectedFormat()
+        [TestCase(0, "8#00_000_000_000")]
+        [TestCase(1, "8#00_000_000_001")]
+        [TestCase(int.MaxValue, "8#17_777_777_777")]
+        [TestCase(int.MinValue, "8#20_000_000_000")]
+        public void Format_Int_ShouldBeExpectedFormat(int value, string expected)
         {
-            var result = Radix.Octal.FormatValue(new LINT(20));
+            var radix = Radix.Octal;
 
-            result.Should().Be("8#000_000_000_000_000_000_000_024");
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        [TestCase((uint)0, "8#00_000_000_000")]
+        [TestCase((uint)1, "8#00_000_000_001")]
+        [TestCase(uint.MaxValue, "8#37_777_777_777")]
+        public void Format_UInt_ShouldBeExpectedFormat(uint value, string expected)
+        {
+            var radix = Radix.Octal;
+
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        [TestCase(0, "8#0_000_000_000_000_000_000_000")]
+        [TestCase(1, "8#0_000_000_000_000_000_000_001")]
+        [TestCase(long.MaxValue, "8#0_777_777_777_777_777_777_777")]
+        [TestCase(long.MinValue, "8#1_000_000_000_000_000_000_000")]
+        public void Format_Long_ShouldBeExpectedFormat(long value, string expected)
+        {
+            var radix = Radix.Octal;
+
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        [TestCase((ulong)0, "8#0_000_000_000_000_000_000_000")]
+        [TestCase((ulong)1, "8#0_000_000_000_000_000_000_001")]
+        [TestCase(ulong.MaxValue, "8#1_777_777_777_777_777_777_777")]
+        public void Format_ULong_ShouldBeExpectedFormat(ulong value, string expected)
+        {
+            var radix = Radix.Octal;
+
+            var result = radix.Format(value);
+
+            result.Should().Be(expected);
         }
 
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Octal.ParseValue(null!)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Octal.Parse<int>(null!))
+                .Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void Parse_InvalidSpecifier_ShouldThrowArgumentException()
+        public void Parse_NoSpecifier_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Octal.ParseValue("00_000_000_024")).Should().Throw<FormatException>()
-                .WithMessage("Input '00_000_000_024' does not have expected Octal format.");
+            FluentActions.Invoking(() => Radix.Octal.Parse<int>("00_000_000_024"))
+                .Should().Throw<FormatException>();
         }
 
         [Test]
-        public void Parse_LengthZero_ShouldThrowArgumentException()
+        public void Parse_LengthZero_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Octal.ParseValue("8#")).Should().Throw<ArgumentException>();
-        }
-        
-        [Test]
-        public void Parse_OutOfRangeValue_ShouldThrowArgumentOutOfRangeException()
-        {
-            FluentActions.Invoking(() => Radix.Octal.ParseValue(
-                "8#000_000_000_000_000_000_000_000_024")).Should().Throw<ArgumentOutOfRangeException>();
+            FluentActions.Invoking(() => Radix.Octal.Parse<int>("8#"))
+                .Should().Throw<ArgumentException>();
         }
 
         [Test]
-        public void Parse_ValidBool_ShouldBeExpected()
+        public void Parse_LengthGreaterThan68_ShouldThrowException()
         {
-            var value = Radix.Octal.ParseValue("8#0");
-
-            value.Should().Be(false);
+            FluentActions.Invoking(() => Radix.Octal.Parse<long>("8#700_000_000_000_000_000_000_000_024"))
+                .Should().Throw<OverflowException>();
         }
 
         [Test]
-        public void Parse_ValidSint_ShouldBeExpected()
+        [TestCase("8#0", false)]
+        [TestCase("8#1", true)]
+        public void Parse_BooleanValue_ShouldBeFalse(string value, bool expected)
         {
-            var value = Radix.Octal.ParseValue("8#024");
+            var atomic = Radix.Octal.Parse<bool>(value);
 
-            value.Should().Be(20);
+            atomic.Should().Be(expected);
         }
 
         [Test]
-        public void Parse_ValidInt_ShouldBeExpected()
+        [TestCase("8#000", 0)]
+        [TestCase("8#001", 1)]
+        [TestCase("8#177", 127)]
+        public void Parse_SByteValue_ShouldBeExpected(string value, sbyte expected)
         {
-            var value = Radix.Octal.ParseValue("8#000_024");
+            var result = Radix.Octal.Parse<sbyte>(value);
 
-            value.Should().Be(20);
+            result.Should().Be(expected);
         }
 
         [Test]
-        public void Parse_ValidDint_ShouldBeExpected()
+        [TestCase("8#000_000", 0)]
+        [TestCase("8#000_001", 1)]
+        [TestCase("8#077_777", short.MaxValue)]
+        public void Parse_ShortValue_ShouldBeExpected(string value, short expected)
         {
-            var value = Radix.Octal.ParseValue("8#00_000_000_024");
+            var result = Radix.Octal.Parse<short>(value);
 
-            value.Should().Be(20);
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        [TestCase("8#00_000_000_000", 0)]
+        [TestCase("8#00_000_000_001", 1)]
+        [TestCase("8#17_777_777_777", int.MaxValue)]
+        public void Parse_IntValue_ShouldBeExpected(string value, int expected)
+        {
+            var result = Radix.Octal.Parse<int>(value);
+
+            result.Should().Be(expected);
         }
 
 
         [Test]
-        public void Parse_ValidLint_ShouldBeExpected()
+        [TestCase("8#0_000_000_000_000_000_000_000", 0)]
+        [TestCase("8#0_000_000_000_000_000_000_001", 1)]
+        [TestCase("8#0_777_777_777_777_777_777_777", long.MaxValue)]
+        public void Parse_ValidLint_ShouldBeExpected(string value, long expected)
         {
-            var value = Radix.Octal.ParseValue("8#0_000_000_000_000_000_000_024");
+            var result = Radix.Octal.Parse<long>(value);
 
-            value.Should().Be(20);
+            result.Should().Be(expected);
         }
     }
 }

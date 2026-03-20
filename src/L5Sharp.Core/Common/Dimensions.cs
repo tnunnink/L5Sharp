@@ -13,7 +13,7 @@ namespace L5Sharp.Core;
 /// These dimensions are represented by the properties X, Y, and Z.
 /// This class also provides helpful methods and properties for working with dimensions of an array.
 /// </remarks>
-public sealed class Dimensions : ILogixParsable<Dimensions>
+public sealed class Dimensions
 {
     private Dimensions()
     {
@@ -306,6 +306,7 @@ public sealed class Dimensions : ILogixParsable<Dimensions>
         {
             Dimensions other => X == other.X && Y == other.Y && Z == other.Z,
             string text => text.Equals(ToString()) || text.Equals(ToIndex()),
+            int number => Length == number,
             _ => false
         };
     }

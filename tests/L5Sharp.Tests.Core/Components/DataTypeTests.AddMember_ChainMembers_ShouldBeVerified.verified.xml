@@ -1,0 +1,7 @@
+﻿<DataType Name="Test" Family="NoFamily" Class="User">
+  <Members>
+    <Member Name="First" DataType="BOOL" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="false" />
+    <Member Name="Second" DataType="DINT" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="false" />
+    <Member Name="Third" DataType="TIMER" Dimension="0" Radix="NullType" ExternalAccess="Read/Write" Hidden="false" />
+  </Members>
+</DataType>

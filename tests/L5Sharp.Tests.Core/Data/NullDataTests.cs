@@ -15,6 +15,14 @@ public class NullDataTests
     }
 
     [Test]
+    public void Update_AtomicValue_ShouldThrowException()
+    {
+        var type = NullData.Instance;
+        
+        FluentActions.Invoking(() => type.UpdateData(new DINT(123))).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
     public Task SerializeShouldBeVerified()
     {
         var type = NullData.Instance;

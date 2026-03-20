@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Xml.Linq;
 
 namespace L5Sharp.Core;
 
@@ -32,30 +33,74 @@ public class DataFormat : LogixEnum<DataFormat, string>
     public static readonly DataFormat Message = new(nameof(Message), nameof(Message));
 
     /// <summary>
+    /// Represents Axis formatted data structure.
+    /// </summary>
+    public static readonly DataFormat Axis = new(nameof(Axis), nameof(Axis));
+
+    /// <summary>
+    /// Represents CoordinateSystem formatted data structure.
+    /// </summary>
+    public static readonly DataFormat CoordinateSystem = new(nameof(CoordinateSystem), nameof(CoordinateSystem));
+
+    /// <summary>
+    /// Represents MotionGroup formatted data structure.
+    /// </summary>
+    public static readonly DataFormat MotionGroup = new(nameof(MotionGroup), nameof(MotionGroup));
+
+    /// <summary>
+    /// Represents BEO (Energy_Base type) formatted data structure.
+    /// </summary>
+    public static readonly DataFormat BEO = new(nameof(BEO), nameof(BEO));
+
+    /// <summary>
+    /// Represents EEO (Energy_Electrical type) formatted data structure.
+    /// </summary>
+    public static readonly DataFormat EEO = new(nameof(EEO), nameof(EEO));
+
+    /// <summary>
+    /// Represents HMIBC (HMIBC type) formatted data structure.
+    /// </summary>
+    public static readonly DataFormat HMIBC = new(nameof(HMIBC), nameof(HMIBC));
+
+    /// <summary>
     /// Represents L5K formatted data structure.
     /// </summary>
     public static readonly DataFormat L5K = new(nameof(L5K), nameof(L5K));
 
     /// <summary>
-    /// A list of all data formats that are supported for deserialization by this library (everything but L5K).
+    /// Wraps the provided <see cref="LogixData"/> instance in the proper data formatted XML element based on the type
+    /// of the data instance provided.
     /// </summary>
-    public static readonly IEnumerable<DataFormat> Supported = new List<DataFormat>
-        { Decorated, String, Alarm, Message };
-
-    /// <summary>
-    /// Returns the corresponding <see cref="DataFormat"/> for the provided <see cref="LogixData"/>.
-    /// </summary>
-    /// <param name="data">The <see cref="LogixData"/> to get the data format for.</param>
-    /// <returns>The <see cref="DataFormat"/> option indicating how the type's data is formatted in the L5X.</returns>
-    public static DataFormat FromData(LogixData data)
+    /// <param name="data">The <see cref="LogixData"/> instance to be formatted into the XML element.</param>
+    /// <param name="type">
+    /// The element type that the data is formatting for. This is used to determine the name of the data element.
+    /// <see cref="Parameter"/> and <see cref="LocalTag"/> must have name <c>DefaultData</c>, and everything else
+    /// (<see cref="Tag"/>), will have the normal <c>Data</c> name.
+    /// </param>
+    /// <returns>An <see cref="XElement"/> representing the formatted data with the appropriate format attribute and child elements.</returns>
+    public static XElement Format(LogixData? data, Type? type = null)
     {
-        return data switch
+        //Determine the proper data element name from the specified element type.
+        var name = type == typeof(Parameter) || type == typeof(LocalTag)
+            ? L5XName.DefaultData
+            : L5XName.Data;
+
+        data ??= LogixType.Null;
+
+        //First check for a string type since there is no child element (Data is the element in this case)
+        if (data is StringData stringData)
+            return stringData.Serialize();
+
+        var format = data switch
         {
-            StringData => String,
-            ALARM_ANALOG => Alarm,
-            ALARM_DIGITAL => Alarm,
-            MESSAGE => Message,
+            AlarmData => Alarm,
+            MessageData => Message,
             _ => Decorated
         };
+
+        //All other format types are wrapped in a containing data element with a format attribute.
+        var formatted = new XElement(name, new XAttribute(L5XName.Format, format));
+        formatted.Add(data.Serialize());
+        return formatted;
     }
 }

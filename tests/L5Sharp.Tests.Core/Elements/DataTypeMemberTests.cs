@@ -15,38 +15,44 @@ public class DataTypeMemberTests
         member.DataType.Should().Be("BOOL");
         member.Dimension.Should().BeEquivalentTo(Dimensions.Empty);
         member.Radix.Should().Be(Radix.Null);
-        member.ExternalAccess.Should().Be(ExternalAccess.ReadWrite);
+        member.ExternalAccess.Should().Be(Access.ReadWrite);
         member.Parent.Should().BeNull();
-        member.Definition.Should().NotBeNull();
     }
 
     [Test]
-    public void DataTypeMember_ConstructorWithParameters_ShouldSetPropertiesToSpecifiedValues()
+    public void New_OverloadedProperties_ShouldHaveExpectedValues()
     {
-        var name = "member1";
-        var description = "description1";
-        var dataType = "INT";
-        var dimension = new Dimensions(10);
-        var radix = Radix.Decimal;
-        var externalAccess = ExternalAccess.ReadOnly;
-
         var member = new DataTypeMember
         {
-            Name = name,
-            Description = description,
-            DataType = dataType,
-            Dimension = dimension,
-            Radix = radix,
-            ExternalAccess = externalAccess
+            Name = "Test",
+            Description = "This is a test",
+            DataType = "INT",
+            Dimension = 10,
+            Radix = Radix.Decimal,
+            ExternalAccess = Access.ReadOnly
         };
 
 
-        member.Name.Should().Be(name);
-        member.Description.Should().Be(description);
-        member.DataType.Should().Be(dataType);
-        member.Dimension.Should().BeEquivalentTo(dimension);
-        member.Radix.Should().Be(radix);
-        member.ExternalAccess.Should().Be(externalAccess);
+        member.Name.Should().Be("Test");
+        member.Description.Should().Be("This is a test");
+        member.DataType.Should().Be("INT");
+        member.Dimension.Should().Be(new Dimensions(10));
+        member.Radix.Should().Be(Radix.Decimal);
+        member.ExternalAccess.Should().Be(Access.ReadOnly);
+    }
+
+    [Test]
+    public void Parent_WhenAddedToDataType_ShouldBeExpected()
+    {
+        var type = new DataType("test");
+        var member = new DataTypeMember("Member", "DINT");
+        type.Members.Add(member);
+
+        var parent = member.Parent;
+
+        parent.Should().NotBeNull();
+        parent.Name.Should().Be("test");
+        parent.Members.Should().HaveCount(1);
     }
 
     [Test]
@@ -58,7 +64,7 @@ public class DataTypeMemberTests
             DataType = "REAL",
             Dimension = new Dimensions(3),
             Radix = Radix.Exponential,
-            ExternalAccess = ExternalAccess.ReadWrite,
+            ExternalAccess = Access.ReadWrite,
             Description = "This is a test",
             Hidden = true,
             Target = "SomeOtherMember",
@@ -88,5 +94,51 @@ public class DataTypeMemberTests
         var xml = member.Serialize().ToString();
 
         return Verify(xml);
+    }
+
+    [Test]
+    public void TryGetDefinition_NotAttached_ShouldReturnFalse()
+    {
+        var member = new DataTypeMember();
+
+        var result = member.TryGetDefinition(out _);
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void TryGetDefinition_FromMemberInContext_ShouldReturnTrue()
+    {
+        var content = TestContent.Test;
+        var type = content.DataTypes.Get("ComplexType");
+        var member = type.Members.First(m => m.DataType == "SimpleType");
+
+        var result = member.TryGetDefinition(out var definition);
+
+        result.Should().BeTrue();
+        definition.Should().NotBeNull();
+        definition.Name.Should().Be("SimpleType");
+    }
+
+    [Test]
+    public void ToMember_AtomicData_ShouldBeExpectedValues()
+    {
+        var member = new DataTypeMember
+        {
+            Name = "Test",
+            DataType = "REAL",
+            Dimension = new Dimensions(3),
+            Radix = Radix.Exponential,
+            ExternalAccess = Access.ReadWrite,
+            Description = "This is a test",
+            Hidden = true,
+            Target = "SomeOtherMember",
+            BitNumber = 12
+        };
+
+        var instance = member.ToMember();
+
+        instance.Name.Should().Be("Test");
+        instance.Value.Should().Be(new REAL());
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
 
 namespace L5Sharp.Tests.Core.Enums
 {
@@ -7,27 +6,37 @@ namespace L5Sharp.Tests.Core.Enums
     public class DataTypeClassTests
     {
         [Test]
-        public void New_User_ShouldNotBeNull()
+        public void New_Unknown_ShouldNotBeNull()
         {
-            var sut = DataTypeClass.User;
+            var type = DataTypeClass.Unknown;
 
-            sut.Should().NotBeNull();
+            type.Should().NotBeNull();
         }
         
         [Test]
-        public void New_Io_ShouldNotBeNull()
+        public void New_User_ShouldNotBeNull()
         {
-            var sut = DataTypeClass.Module;
+            var type = DataTypeClass.User;
 
-            sut.Should().NotBeNull();
+            type.Should().NotBeNull();
+        }
+
+        [Test]
+        public void New_IO_ShouldNotBeNull()
+        {
+            var type = DataTypeClass.IO;
+
+            type.Should().NotBeNull();
         }
         
         [Test]
         public void New_Predefined_ShouldNotBeNull()
         {
-            var sut = DataTypeClass.Predefined;
+            var type = DataTypeClass.Predefined;
 
-            sut.Should().NotBeNull();
+            type.Should().NotBeNull();
+            type.Name.Should().Be("Predefined");
+            type.Value.Should().Be("ProductDefined");
         }
     }
 }

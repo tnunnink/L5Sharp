@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -11,196 +12,214 @@ namespace L5Sharp.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-/// A logix string type has predefined members <see cref="LEN"/> and <see cref="DATA"/>, which contain the
-/// current string length and set of ASCII characters representing the string value, respectively.
+/// This data type corresponds to any variable length string type value in .NET. 
 /// This class is inherited by <see cref="STRING"/>, which is Rockwell's built-in base string type.
-/// Users can derive from this base class to create user defined string types if desired.
+/// Users can derive from this base class to create user-defined string types if desired.
 /// </para>
 /// <para>
-/// <see cref="StringData"/> will not pass the provided element to the base class but rather extract
-/// the data type name and string value and act as a wrapper over that data. The element will be reconstructed
-/// when <see cref="Serialize"/> or <see cref="SerializeStructure"/> is called. We need to do all this due to how
-/// strings are serialized in an L5X which is in a special format. Also, we want to treat strings similar to atomics
-/// as if they are immutable values types.
+/// Strings are weird in L5X format.
 /// </para>
 /// </remarks>
-public class StringData : StructureData, IEnumerable<SINT>
+public class StringData : LogixData, IEnumerable<char>
 {
-    /// <summary>
-    /// The pattern that extracts the ASCII character segments from a string value.
-    /// </summary>
-    private static readonly Regex LogixAsciiPattern = new(@"\$[A-Fa-f0-9]{2}|\$[tlpr'$]{1}|[\x00-\x7F]");
-
-    /// <summary>
-    /// The underlying string value for the type.
-    /// </summary>
-    private readonly string _value;
-
     /// <inheritdoc />
-    public StringData(XElement element) : base(new XElement(L5XName.Data))
+    public StringData(XElement element) : base(element)
     {
-        Name = element.DataType() ?? string.Empty;
-        _value = GetStringValue(element);
     }
 
     /// <summary>
-    /// Creates a new <see cref="StringData"/> initialized with the provided string type name and data value. 
+    /// Creates a new <see cref="StringData"/> instance initialized with the provided type name and string value.
     /// </summary>
-    /// <param name="name">The type name of this string data type. If null then defaults to an empty string.</param>
-    /// <param name="value">The value of the string data type. If null then defaults to an empty string.</param>
-    /// <remarks>
-    /// This constructor allows the caller to create a generic string type instance that could represent a
-    /// user defined string type class without having to actually create a custom class.
-    /// </remarks>
-    public StringData(string? name, string? value) : base(new XElement(L5XName.Data))
+    /// <param name="name">The name of the string data type instance.</param>
+    /// <param name="value">The value of the string data instance.</param>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is null or empty.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
+    public StringData(string name, string? value = null) : base(new XElement(L5XName.Data))
     {
-        Name = name ?? string.Empty;
-        _value = ParseValue(value);
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty");
+
+        value ??= string.Empty;
+
+        Element.SetAttributeValue(L5XName.DataType, name);
+        Element.SetAttributeValue(L5XName.Format, DataFormat.String);
+        Element.SetAttributeValue(L5XName.Length, value.Length);
+        Element.Add(new XCData($"'{value}'"));
+    }
+
+    /// <summary>
+    /// Gets the maximum number of characters this string type can hold.
+    /// </summary>
+    /// <remarks>
+    /// Deriving classes must override this property to correctly updated or read data streams.
+    /// </remarks>
+    protected virtual int Capacity => 0;
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// For strings, the size is the 4-byte DINT length plus the SINT array capacity.
+    /// </remarks>
+    public sealed override int GetSize() => (sizeof(int) + Capacity + 3) & ~3;
+
+    /// <summary>
+    /// Gets the length of the string represented by the current <see cref="StringData"/> instance.
+    /// </summary>
+    /// <remarks>
+    /// This property returns the number of characters in the string. It is equivalent to
+    /// accessing the <see cref="string.Length"/> property of the underlying string value.
+    /// This is not tied to the underlying element value for the LEN member when present.
+    /// </remarks>
+    public int Length => GetLength();
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// String data types don't have members, so this implementation is overriden. Since we know there is a length and
+    /// data member, which we have the data for, we can statically return the serialized byte array for these types.
+    /// </remarks>
+    public override byte[] ToBytes()
+    {
+        var length = BitConverter.GetBytes(Length);
+        var data = Encoding.ASCII.GetBytes(GetString());
+        return length.Concat(data).ToArray();
     }
 
     /// <inheritdoc />
-    public override string Name { get; }
+    public override void UpdateData(LogixData data)
+    {
+        if (data is null)
+            throw new ArgumentNullException(nameof(data));
 
-    /// <summary>
-    /// Gets the current length of the string value.
-    /// </summary>
-    /// <value>A <see cref="DINT"/> value representing the integer length of the string value.</value>
-    /// <remarks>
-    /// This member property is not returned in the <c>Members</c> collection because it is not serialized.
-    /// It would also generate an extemely large number of member tags, which would consume more memeory.
-    /// To reduce space/file size, Rockwell formats strings as a single element value in a Data member element.
-    /// This property is only here as a helper to allow the caller to conveniently obtain the length of the
-    /// underlying string value.
-    /// </remarks>
-    public DINT LEN => _value.Length;
+        if (data is not StringData stringData)
+            throw new ArgumentException($"Can not update string with data of type '{data.GetType()}'.");
 
-    /// <summary>
-    /// Gets the array of <see cref="SINT"/> characters that represent the ASCII encoded string value.
-    /// </summary>
-    /// <returns>An array of <see cref="SINT"/> logix atomic values representing the bytes of the string.</returns>
-    /// <remarks>
-    /// This member property is not returned in the <c>Members</c> collection because it is not serialized.
-    /// It would also generate an extemely large number of member tags, which would consume more memeory.
-    /// To reduce space/file size, Rockwell formats strings as a single element value in a Data or DataValueMember element.
-    /// This property is only here as a helper to allow the caller to conveniently obtain the SINT array
-    /// representation of the underlying string by converting the underlying value.
-    /// </remarks>
-    public ArrayData<SINT> DATA => ToDataArray(_value);
+        SetLength(stringData.Length);
+        SetString(stringData);
+    }
+
+    /// <inheritdoc />
+    public override int UpdateData(byte[] data, int offset)
+    {
+        // Align to the DINT offset to read the length data.
+        offset = (offset + 3) & ~3;
+        var length = BitConverter.ToInt32(data, offset);
+        SetLength(length);
+
+        //Read the remaining bytes to get the string value. If capacity is defined,
+        //read the entire capacity length to return a more accurate offset.
+        var totalLength = Capacity > 0 ? Capacity : length;
+        var value = Encoding.ASCII.GetString(data, offset + sizeof(int), totalLength);
+        SetString(value);
+
+        //Size will depend on the Capacity property getting set correctly.
+        return offset + GetSize();
+    }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj switch
         {
-            StringData value => _value == value._value,
-            string value => _value == value,
+            StringData value => GetString() == value.GetString(),
+            string value => GetString() == value,
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode() => GetString().GetHashCode();
 
     /// <inheritdoc />
-    public override string ToString() => _value;
+    public override string ToString() => GetString();
 
     /// <inheritdoc />
-    public IEnumerator<SINT> GetEnumerator() => ToDataArray(_value).ToList().GetEnumerator();
+    public IEnumerator<char> GetEnumerator() => GetString().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    /// <inheritdoc />
-    public override XElement Serialize()
+    /// <summary>
+    /// Defines an implicit conversion from a <see cref="StringData"/> instance to a <see cref="string"/>.
+    /// </summary>
+    /// <param name="value">The <see cref="StringData"/> instance to be converted.</param>
+    /// <returns>A <see cref="string"/> representation of the <see cref="StringData"/> value.</returns>
+    public static implicit operator string(StringData value) => value.ToString();
+
+    /// <summary>
+    /// Retrieves the string value from the underlying XElement. Since this could be either a Data or Structure element,
+    /// we will just look for the first descendent CDATA node and get the value.
+    /// Trims surrounding single quotes if present.
+    /// </summary>
+    private string GetString()
     {
-        var element = new XElement(L5XName.Data);
-        element.Add(new XAttribute(L5XName.Format, DataFormat.String));
-        element.Add(new XAttribute(L5XName.Length, LEN));
-        element.Add(new XCData($"'{_value}'"));
-        return element;
+        return Element.DescendantNodes().OfType<XCData>().First()?.Value.Trim('\'') ?? string.Empty;
     }
 
     /// <summary>
-    /// Serializes this current <see cref="StringData"/> as a structure data element. This is a custom serialization
-    /// method which is need to format a string as a nested structure within an array or other structure type.
+    /// Sets the string value within the underlying XML element.
     /// </summary>
-    /// <returns>A <see cref="XElement"/> containing the serialized data.</returns>
-    /// <remarks>
-    /// This is a special serialization overload since <see cref="StringData"/> can be different depending
-    /// on where it exists in the data structure.
-    /// </remarks>
-    public XElement SerializeStructure()
+    /// <param name="value">The string value to be assigned to the XML element.</param>
+    private void SetString(string value)
     {
+        Element.DescendantNodes().OfType<XCData>().First().ReplaceWith(new XCData($"'{value}'"));
+    }
+
+    /// <summary>
+    /// Retrieves the length of the string data from the underlying XML element.
+    /// </summary>
+    /// <returns>The length of the string data as an integer.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the length attribute or element is not found in the XML.</exception>
+    private int GetLength()
+    {
+        var value = Element.Name.LocalName is L5XName.Data
+            ? Element.Attribute(L5XName.Length)?.Value
+            : Element.Elements().FirstOrDefault(e => e.MemberName() == "LEN")?.Attribute(L5XName.Value)?.Value;
+
+        if (value is null)
+            throw Element.L5XError(L5XName.Length);
+
+        return int.Parse(value);
+    }
+
+    /// <summary>
+    /// Sets the length attribute for the underlying XML element of the StringData instance.
+    /// </summary>
+    /// <param name="length">The new length to be set for the string representation within the XML structure.</param>
+    private void SetLength(int length)
+    {
+        if (Element.Name.LocalName is L5XName.Data)
+        {
+            Element.SetAttributeValue(L5XName.Length, length);
+            return;
+        }
+
+        Element.Elements().Single(e => e.MemberName() == "LEN").SetAttributeValue(L5XName.Value, length);
+    }
+
+    /// <summary>
+    /// Converts the current StringData instance into an XElement representation
+    /// structured according to the L5X specification.
+    /// </summary>
+    /// <returns>An XElement object representing the structure of the StringData instance.</returns>
+    public XElement ToStructureElement()
+    {
+        var value = GetString();
+
         var element = new XElement(L5XName.Structure);
         element.Add(new XAttribute(L5XName.DataType, Name));
 
         var len = new XElement(L5XName.DataValueMember);
-        len.Add(new XAttribute(L5XName.Name, nameof(LEN)));
-        len.Add(new XAttribute(L5XName.DataType, LEN.Name));
+        len.Add(new XAttribute(L5XName.Name, "LEN"));
+        len.Add(new XAttribute(L5XName.DataType, "DINT"));
         len.Add(new XAttribute(L5XName.Radix, Radix.Decimal));
-        len.Add(new XAttribute(L5XName.Value, LEN));
+        len.Add(new XAttribute(L5XName.Value, value.Length));
         element.Add(len);
 
         var data = new XElement(L5XName.DataValueMember);
-        data.Add(new XAttribute(L5XName.Name, nameof(DATA)));
+        data.Add(new XAttribute(L5XName.Name, "DATA"));
         data.Add(new XAttribute(L5XName.DataType, Name));
         data.Add(new XAttribute(L5XName.Radix, Radix.Ascii));
-        data.Add(new XCData($"'{_value}'"));
+        data.Add(new XCData($"'{value}'"));
         element.Add(data);
 
         return element;
-    }
-
-    /// <summary>
-    /// Gets the value of the string form the provided element object. Where this value exists depends on if the
-    /// element is a root data element or a nested structure or structure member element. If neither is found this
-    /// returns and empty string.
-    /// </summary>
-    private static string GetStringValue(XElement element)
-    {
-        if (element.Name == L5XName.Data && element.Attribute(L5XName.Format)?.Value == DataFormat.String)
-        {
-            return ParseValue(element.Value.TrimStart('\'').TrimEnd('\''));
-        }
-
-        var data = element.Elements().FirstOrDefault(e => e.MemberName() == nameof(DATA));
-        return data is not null ? ParseValue(data.Value.TrimStart('\'').TrimEnd('\'')) : string.Empty;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    private static string ParseValue(string? input)
-    {
-        if (input is null) return string.Empty;
-        var data = ToDataArray(input);
-        var ascii = data.Where(s => s > 0).Select(s => s.ToString(Radix.Ascii).TrimSingle('\''));
-        return $"{string.Join(string.Empty, ascii)}";
-    }
-
-    /// <summary>
-    /// Converts the provided string value to a SINT array. Handles empty or null string by returning empty array.
-    /// Matches characters using known <see cref="LogixAsciiPattern"/>.
-    /// Trims start and end single quotes.
-    /// </summary>
-    private static SINT[] ToDataArray(string value)
-    {
-        var result = new List<SINT>();
-
-        //Logix encloses strings in single quotes, so we need to remove those if they are present.
-        value = value.TrimStart('\'').TrimEnd('\'');
-
-        //If we get a null or empty string then return an empty array.
-        if (string.IsNullOrEmpty(value)) return [];
-
-        //Breaks apart the string into single ASCII characters to be parsed.
-        var matches = LogixAsciiPattern.Matches(value);
-
-        foreach (Match match in matches)
-        {
-            var parsed = (SINT)Radix.Ascii.ParseValue($"'{match.Value}'");
-            result.Add(new SINT(parsed, Radix.Ascii));
-        }
-
-        return result.ToArray();
     }
 }

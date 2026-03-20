@@ -4,9 +4,10 @@ using System.Xml.Linq;
 namespace L5Sharp.Core;
 
 /// <summary>
-/// A sub element of the <see cref="Controller"/> component that contains properties or configuration
+/// An element of the <see cref="Controller"/> component that contains properties or configuration
 /// related to the controller redundancy.
 /// </summary>
+[LogixElement(L5XName.RedundancyInfo)]
 public class RedundancyInfo : LogixElement
 {
     
@@ -32,7 +33,7 @@ public class RedundancyInfo : LogixElement
     /// <value><c>true</c> if enabled; otherwise, <c>false</c>. Default id <c>false</c>.</value>
     public bool Enabled
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
     
@@ -42,7 +43,7 @@ public class RedundancyInfo : LogixElement
     /// <value><c>true</c> if enabled; otherwise, <c>false</c>. Default id <c>false</c>.</value>
     public bool KeepTestEditsOnSwitchOver
     {
-        get => GetValue<bool>();
+        get => GetValue(bool.Parse);
         set => SetValue(value);
     }
     
@@ -53,7 +54,7 @@ public class RedundancyInfo : LogixElement
     /// <value>A <see cref="float"/> indicating the percentage 0-100.</value>
     public float IOMemoryPadPercentage
     {
-        get => GetValue<float>();
+        get => GetValue(float.Parse);
         set => SetValue(value);
     }
     
@@ -67,7 +68,7 @@ public class RedundancyInfo : LogixElement
     /// </remarks>
     public float DataTablePadPercentage
     {
-        get => GetValue<float>();
+        get => GetValue(float.Parse);
         set => SetValue(value);
     }
 }

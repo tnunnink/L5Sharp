@@ -10,6 +10,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.WatchTag)]
 public class WatchTag : LogixElement
 {
     /// <summary>
@@ -18,7 +19,7 @@ public class WatchTag : LogixElement
     public WatchTag() : base(L5XName.WatchTag)
     {
         Specifier = TagName.Empty;
-        ScopeName = string.Empty;
+        Scope = string.Empty;
     }
 
     /// <summary>
@@ -29,29 +30,24 @@ public class WatchTag : LogixElement
     public WatchTag(XElement element) : base(element)
     {
     }
-    
+
     /// <summary>
     /// Specify the tag or part of a tag to watch.
     /// </summary>
     /// <value>A <see cref="string"/> representing the tag specifier.</value>
     public TagName Specifier
     {
-        get => GetRequiredValue<TagName>();
+        get => GetRequiredValue().ToTagName();
         set => SetRequiredValue(value);
     }
 
     /// <summary>
-    /// Specify the name of program, equipment phase, or Add-On Instruction that contains the watch tag.
+    /// Specify the name of the program, equipment phase, or Add-On Instruction that contains the watch tag.
     /// </summary>
-    /// <value>A <see cref="string"/> representing the scope of the tag. If controller scope set to empty.</value>
-    /// <remarks>
-    /// This property internally (in the L5X) is named Scope, but we are renaming it to ScopeName to avoid
-    /// the property name issues. I wanted Scope to remain the same at the logix element level since more types will
-    /// make use of that property.
-    /// </remarks>
-    public string ScopeName
+    /// <value>A <see cref="string"/> representing the scope of the tag. Will return empty for controller scoped tags.</value>
+    public string Scope
     {
-        get => GetRequiredValue<string>(nameof(ScopeLevel));
-        set => SetRequiredValue(value, nameof(ScopeLevel));
+        get => GetRequiredValue();
+        set => SetRequiredValue(value);
     }
 }

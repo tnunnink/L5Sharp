@@ -10,7 +10,8 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
-public class ParameterConnection : LogixObject
+[LogixElement(L5XName.ParameterConnection)]
+public class ParameterConnection : LogixObject<ParameterConnection>
 {
     /// <summary>
     /// Creates a new <see cref="ParameterConnection"/> with default values.
@@ -37,7 +38,7 @@ public class ParameterConnection : LogixObject
     /// is program_name.parameter_name</value>
     public string EndPoint1
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -48,7 +49,7 @@ public class ParameterConnection : LogixObject
     /// is program_name.parameter_name</value>
     public string EndPoint2
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 }

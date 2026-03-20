@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -11,6 +12,7 @@ namespace L5Sharp.Core;
 /// See <a href="https://literature.rockwellautomation.com/idc/groups/literature/documents/rm/1756-rm084_-en-p.pdf">
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
+[LogixElement(L5XName.Parameter)]
 public class Parameter : LogixObject<Parameter>
 {
     /// <inheritdoc />
@@ -27,13 +29,13 @@ public class Parameter : LogixObject<Parameter>
     {
         Name = string.Empty;
         TagType = TagType.Base;
-        DataType = nameof(DINT);
+        DataType = string.Empty;
         Dimension = Dimensions.Empty;
         Usage = TagUsage.Input;
-        Radix = Radix.Decimal;
+        Radix = Radix.Null;
         Required = false;
         Visible = false;
-        ExternalAccess = ExternalAccess.ReadWrite;
+        ExternalAccess = Access.ReadWrite;
         Constant = false;
     }
 
@@ -71,7 +73,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>A <see cref="string"/> representing the component name. This property is required for valid elements.</value>
     public string Name
     {
-        get => GetRequiredValue<string>();
+        get => GetRequiredValue();
         set => SetRequiredValue(value);
     }
 
@@ -81,7 +83,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>A <see cref="string"/> containing the component description if it exists; Otherwise, <c>null</c>.</value>
     public string? Description
     {
-        get => GetProperty<string>();
+        get => GetProperty();
         set => SetProperty(value);
     }
 
@@ -93,9 +95,9 @@ public class Parameter : LogixObject<Parameter>
     /// Default is <see cref="string.Empty"/>.
     /// Valid value is required for valid import.
     /// </value>
-    public string? DataType
+    public string DataType
     {
-        get => GetValue<string>();
+        get => GetValue() ?? Alias?.DataType ?? throw Element.L5XError(L5XName.DataType);
         set => SetValue(value);
     }
 
@@ -107,9 +109,9 @@ public class Parameter : LogixObject<Parameter>
     /// Default is <see cref="Dimensions.Empty"/>.
     /// Members should not have multidimensional arrays.
     /// </value>
-    public Dimensions? Dimension
+    public Dimensions Dimension
     {
-        get => GetValue<Dimensions>();
+        get => GetValue(Dimensions.Parse) ?? Dimensions.Empty;
         set => SetValue(value);
     }
 
@@ -123,7 +125,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public Radix? Radix
     {
-        get => GetValue<Radix>();
+        get => GetValue(Radix.Parse);
         set => SetValue(value?.Value);
     }
 
@@ -131,12 +133,12 @@ public class Parameter : LogixObject<Parameter>
     /// The external access of the <c>Parameter</c>. 
     /// </summary>
     /// <value>
-    /// A <see cref="Core.ExternalAccess"/> representing read/write access of the <c>Parameter</c>.
-    /// Default is <see cref="L5Sharp.Core.ExternalAccess.ReadWrite"/>.
+    /// A <see cref="Access"/> representing read/write access of the <c>Parameter</c>.
+    /// Default is <see cref="Access.ReadWrite"/>.
     /// </value>
-    public ExternalAccess? ExternalAccess
+    public Access? ExternalAccess
     {
-        get => GetValue<ExternalAccess>();
+        get => GetValue(Access.Parse);
         set => SetValue(value);
     }
 
@@ -149,42 +151,37 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public TagType? TagType
     {
-        get => GetValue<TagType>();
+        get => GetValue(TagType.Parse); 
         set => SetValue(value);
     }
 
     /// <summary>
-    /// The usage option indicating the scope in which the <c>Parameter</c> is visible or usable from.
+    /// The <see cref="TagUsage"/> option indicating the scope in which the parameter is visible or usable from.
     /// </summary>
-    /// <value>
-    /// A <see cref="TagUsage"/> option representing the <c>Parameter</c> scope.
-    /// Default for AoiBlock is <see cref="TagUsage.Input"/>. The only valid options for AoiBlock are Input, Output,
-    /// and InOut.
-    /// </value>
+    /// <remarks>
+    /// Default is <see cref="TagUsage.Input"/>. The only valid options for AoiBlock are Input, Output, and InOut.
+    /// </remarks>
     public TagUsage Usage
     {
-        get => GetRequiredValue<TagUsage>();
+        get => GetRequiredValue(TagUsage.Parse);
         set => SetRequiredValue(value);
     }
 
     /// <summary>
-    /// Indicates whether the <c>Parameter</c> is required from the instruction code clock.
+    /// Indicates whether the <see cref="Parameter"/> is required from the instruction code clock.
     /// </summary>
-    /// <value>
-    /// <c>true</c> if the <c>Parameter</c> is required; otherwise, false. Default is <c>false</c>.</value>
     public bool? Required
     {
-        get => GetValue<bool>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
     /// <summary>
-    /// Indicates whether the <c>Parameter</c> is visible from the instruction code block.
+    /// Indicates whether the <see cref="Parameter"/> is visible from the instruction code block.
     /// </summary>
-    /// <value><c>true</c> if the <c>Parameter</c> is visible; otherwise, false. Default is <c>false</c>.</value>
     public bool? Visible
     {
-        get => GetValue<bool>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
 
@@ -194,7 +191,7 @@ public class Parameter : LogixObject<Parameter>
     /// <value>A <see cref="TagName"/> string representing the full tag name of the alias tag.</value>
     public TagName? AliasFor
     {
-        get => GetValue<TagName>();
+        get => GetValue()?.ToTagName();
         set => SetValue(value);
     }
 
@@ -202,10 +199,10 @@ public class Parameter : LogixObject<Parameter>
     /// A default value of the <c>Parameter</c> when instantiated.
     /// </summary>
     /// <value>An <see cref="AtomicData"/> representing the default value/data. Default is <c>null</c>.</value>
-    public LogixData Default
+    public AtomicData? Default
     {
-        get => GetData();
-        set => SetData(value);
+        get => Element.TryGetFormattedData(out var data) ? data.As<AtomicData>() : null;
+        set => SetElement(DataFormat.Format(value, GetType()));
     }
 
     /// <summary>
@@ -215,9 +212,22 @@ public class Parameter : LogixObject<Parameter>
     /// <remarks>Only value type tags can be set as a constant. Default is <c>false</c>.</remarks>
     public bool? Constant
     {
-        get => GetValue<bool>();
+        get => GetOptionalBool();
         set => SetValue(value);
     }
+
+    /// <summary>
+    /// Gets the parent <see cref="AddOnInstruction"/> of the current <see cref="Parameter"/> instance.
+    /// This property navigates the hierarchy to find the nearest ancestor of type <see cref="AddOnInstruction"/>,
+    /// or returns null if no such ancestor exists.
+    /// </summary>
+    public AddOnInstruction? Parent => GetAncestor<AddOnInstruction>();
+
+    /// <summary>
+    /// Represents the associated alias of the parameter if one is defined.
+    /// Provides a way to reference a <see cref="LocalTag"/> that serves as an alias for this parameter.
+    /// </summary>
+    public LocalTag? Alias => GetAncestor<AddOnInstruction>()?.LocalTags.SingleOrDefault(t => t.Name == AliasFor);
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> instance from this <see cref="Parameter"/> configuration.
@@ -231,38 +241,59 @@ public class Parameter : LogixObject<Parameter>
     /// </remarks>
     public Tag ToTag(string tagName)
     {
-        if (DataType is null || DataType.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
-            throw new InvalidOperationException("Can not generate Tag with null or empty DataType name.");
+        var isArray = Dimension.Length > 0;
 
-        var isArray = Dimension is not null && Dimension.Length > 0;
-        var data = Default is not NullData ? Default : LogixData.Create(DataType);
-        var value = !isArray ? data.As<LogixData>() : new ArrayData<LogixData>(data, Dimension!);
+        var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
+            ? registered
+            : new StructureData(DataType));
+
+        var value = !isArray ? data : ArrayData.New(data, Dimension);
+
         return new Tag(tagName, value);
     }
 
     /// <summary>
-    /// Creates a new <see cref="Member"/> from the given <see cref="Parameter"/> configuration, which uses the
+    /// Creates a new <see cref="LogixMember"/> from the given <see cref="Parameter"/> configuration, which uses the
     /// <see cref="DataType"/> <see cref="Default"/> and <see cref="Name"/> in order to generate a new member instance.
     /// </summary>
     /// <exception cref="InvalidOperationException"><see cref="DataType"/> is null or empty -or- <see cref="Usage"/>
     /// is not configured as Input or Output.</exception>
-    /// <returns>A <see cref="Member"/> instance with the name and default value of the current parameter.</returns>
+    /// <returns>A <see cref="LogixMember"/> instance with the name and default value of the current parameter.</returns>
     /// <remarks>
     /// This is a helper to allow us to generate default tag members from a given parameter so that we
     /// can easily build up an in memory instance of an AOI tag component. Note that this method is intended to only be
     /// called on Input or Output parameters, which Logix requires to be atomic type parameters.
     /// These are the only parameter types that are available on an AOI tag instance.
     /// </remarks>
-    public Member ToMember()
+    public LogixMember ToMember()
     {
-        if (DataType is null || DataType.IsEmpty()) //this satisfies the .NET 2.0 compiler warnings about null.
-            throw new InvalidOperationException("Can not generate Member with null or empty DataType name.");
-
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)
             throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
 
-        var value = Default is not NullData ? Default : AtomicData.Default(DataType);
-        return new Member(Name, value);
+        var isArray = Dimension.Length > 0;
+
+        //If the parameter has default data, we can opt to return a member with the correcly initialized data value.
+        if (Default is not null)
+        {
+            LogixData defaultValue = isArray ? ArrayData.New(Default, Dimension) : Default;
+            return new LogixMember(Name, defaultValue);
+        }
+
+        //If the type is registered, we can create the instance using the registered factory.
+        if (LogixType.TryCreate(DataType, out var registered))
+        {
+            var value = isArray ? ArrayData.New(registered, Dimension) : registered;
+            return new LogixMember(Name, value);
+        }
+
+        //If not, we can try to get the data type definition from the l5X if attached
+        //and use that to recursively build up the complex type.
+        var data = TryGetDocument(out var doc) && doc.TryGet<DataType>(DataType, out var definition)
+            ? definition.ToData()
+            : new StructureData(DataType);
+
+        var structure = isArray ? ArrayData.New(data, Dimension) : data;
+        return new LogixMember(Name, structure);
     }
 
     /// <inheritdoc />
