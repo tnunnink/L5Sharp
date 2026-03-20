@@ -8546,7 +8546,7 @@
  HProgAck="false" HOperAck="false" LProgAck="false" LOperAck="false" LLProgAck="false" LLOperAck="false" ROCPosProgAck="false" ROCPosOperAck="false" ROCNegProgAck="false" ROCNegOperAck="false" ProgSuppress="false"
  OperSuppress="false" ProgUnsuppress="false" OperUnsuppress="false" HHOperShelve="false" HOperShelve="false" LOperShelve="false" LLOperShelve="false" ROCPosOperShelve="false" ROCNegOperShelve="false" ProgUnshelveAll="false" HHOperUnshelve="false"
  HOperUnshelve="false" LOperUnshelve="false" LLOperUnshelve="false" ROCPosOperUnshelve="false" ROCNegOperUnshelve="false" ProgDisable="false" OperDisable="false" ProgEnable="false" OperEnable="false" AlarmCountReset="false" HHMinDurationEnable="true"
- HMinDurationEnable="true" LMinDurationEnable="true" LLMinDurationEnable="true" In="0.0" HHLimit="0.0" HHSeverity="500" HLimit="0.0" HSeverity="500" LLimit="0.0" LSeverity="500" LLLimit="0.0"
+ HMinDurationEnable="true" LMinDurationEnable="true" LLMinDurationEnable="true" In="0.0" HHLimit="100.0" HHSeverity="500" HLimit="0.0" HSeverity="500" LLimit="0.0" LSeverity="500" LLLimit="0.0"
  LLSeverity="500" MinDurationPRE="0" ShelveDuration="0" MaxShelveDuration="0" Deadband="0.0" ROCPosLimit="0.0" ROCPosSeverity="500" ROCNegLimit="0.0" ROCNegSeverity="500" ROCPeriod="0.0"/>
 <AlarmConfig/>
 </Data>
@@ -8557,11 +8557,11 @@
 </Data>
 <Data Format="Decorated">
 <Array DataType="DINT" Dimensions="5" Radix="Decimal">
-<Element Index="[0]" Value="0"/>
-<Element Index="[1]" Value="0"/>
-<Element Index="[2]" Value="0"/>
-<Element Index="[3]" Value="0"/>
-<Element Index="[4]" Value="0"/>
+<Element Index="[0]" Value="1"/>
+<Element Index="[1]" Value="2"/>
+<Element Index="[2]" Value="3"/>
+<Element Index="[3]" Value="4"/>
+<Element Index="[4]" Value="5"/>
 </Array>
 </Data>
 </Tag>
@@ -8589,6 +8589,22 @@
 <DataValue DataType="INT" Radix="Decimal" Value="456"/>
 </Data>
 </Tag>
+<Tag Name="TestSint" TagType="Base" DataType="SINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write" OpcUaAccess="None">
+<Data Format="L5K">
+<![CDATA[13]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="SINT" Radix="Decimal" Value="13"/>
+</Data>
+</Tag>
+<Tag Name="TestReal" TagType="Base" DataType="REAL" Radix="Float" Constant="false" ExternalAccess="Read/Write" OpcUaAccess="None">
+<Data Format="L5K">
+<![CDATA[1.234]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="1.234"/>
+</Data>
+</Tag>
 <Tag Name="TestTimer" TagType="Base" DataType="TIMER" Constant="false" ExternalAccess="Read/Write" OpcUaAccess="None">
 <Data Format="L5K">
 <![CDATA[[536870912,10000,0]]]>
@@ -8613,6 +8629,20 @@
 </Data>
 <Data Format="Decorated">
 <DataValue DataType="DINT" Radix="Decimal" Value="15541"/>
+</Data>
+</Tag>
+<Tag Name="LocalTimer" TagType="Base" DataType="TIMER" Constant="false" ExternalAccess="Read/Write" OpcUaAccess="None">
+<Data Format="L5K">
+<![CDATA[[536870912,10000,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="TIMER">
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="10000"/>
+<DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="1"/>
+</Structure>
 </Data>
 </Tag>
 </Tags>

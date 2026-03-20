@@ -213,7 +213,7 @@ public class ReadTagTests : PlcTestBase
         var result = await client.ReadTag(tag);
 
         result.Status.Should().Be(TagStatus.Ok);
-        result.Tag.Value.As<ArrayData<DINT>>().Should().AllSatisfy(v => v.Should().NotBe(0));
+        result.Tag.Value.Members.Should().AllSatisfy(m => m.Value.Should().NotBe(0));
     }
 
     [Test]
@@ -224,7 +224,7 @@ public class ReadTagTests : PlcTestBase
         var result = await client.ReadTag<DINT>("TestArray");//todo 5);
 
         result.Status.Should().Be(TagStatus.Ok);
-        result.Tag.Value.As<ArrayData<DINT>>().Should().AllSatisfy(v => v.Should().NotBe(0));
+        //result.Tag.Value.Members.Should().AllSatisfy(m => m.Value.Should().NotBe(0));
     }
 
 

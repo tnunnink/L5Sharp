@@ -26,8 +26,8 @@ public class ModuleTests
         module.Description.Should().BeNull();
         module.CatalogNumber.Should().BeEmpty();
         module.Revision.Should().Be("1.0");
-        module.Vendor.Should().Be(Vendor.Unknown);
-        module.ProductType.Should().Be(ProductType.Unknown);
+        module.Vendor.Should().Be(0);
+        module.ProductType.Should().Be(0);
         module.ProductCode.Should().Be(0);
         module.ParentModule.Should().BeEmpty();
         module.ParentModPortId.Should().Be(0);
@@ -49,8 +49,8 @@ public class ModuleTests
             Description = "This is a test module",
             CatalogNumber = "ABCD-1234",
             Revision = 1.3,
-            Vendor = Vendor.Rockwell,
-            ProductType = ProductType.Analog,
+            Vendor = 1,
+            ProductType = 10,
             ProductCode = 1,
             ParentModule = "Local",
             ParentModPortId = 1,
@@ -67,8 +67,8 @@ public class ModuleTests
         module.Description.Should().Be("This is a test module");
         module.CatalogNumber.Should().Be("ABCD-1234");
         module.Revision.Should().Be("1.3");
-        module.Vendor.Should().Be(Vendor.Rockwell);
-        module.ProductType.Should().Be(ProductType.Analog);
+        module.Vendor.Should().Be(1);
+        module.ProductType.Should().Be(10);
         module.ProductCode.Should().Be(1);
         module.ParentModule.Should().Be("Local");
         module.ParentModPortId.Should().Be(1);
@@ -108,8 +108,8 @@ public class ModuleTests
             Description = "This is a test module",
             CatalogNumber = "ABCD-1234",
             Revision = 1.3,
-            Vendor = Vendor.Rockwell,
-            ProductType = ProductType.Analog,
+            Vendor = 1,
+            ProductType = 10,
             ProductCode = 1,
             ParentModule = "Local",
             ParentModPortId = 1,

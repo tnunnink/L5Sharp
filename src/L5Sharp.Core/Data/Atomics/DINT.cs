@@ -31,14 +31,14 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
     }
 
     /// <inheritdoc />
-    public override int GetSize() => sizeof(int);
-
-    /// <inheritdoc />
     public int Value
     {
         get => GetAtomicValue<int>();
         set => SetAtomicValue(value);
     }
+
+    /// <inheritdoc />
+    public override int GetSize() => sizeof(int);
 
     /// <inheritdoc />
     public override int UpdateData(byte[] data, int offset)
@@ -51,6 +51,14 @@ public sealed class DINT : AtomicData, IComparable, IConvertible, IAtomicValue<i
         UpdateData(value);
 
         return offset + GetSize();
+    }
+
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format(0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

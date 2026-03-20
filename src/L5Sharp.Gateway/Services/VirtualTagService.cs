@@ -30,7 +30,7 @@ public class VirtualTagService : ITagService
 
         public int Handle { get; } = handle;
         public TagStatus Status { get; private set; } = TagStatus.Ok;
-        public byte[] Buffer { get; private set; } = [];
+        public byte[] Buffer { get; private set; } = tag.Value.ToBytes();
 
         /// <summary>
         /// Initiates a new operation for the current tag instance, setting its status to pending and
@@ -205,9 +205,7 @@ public class VirtualTagService : ITagService
             }
 
             store.Notify(TagEvent.Created, TagStatus.Ok);
-
             //libplctag will read once after creating the handle to get data.
-            store.ReadBytes();
             store.Notify(TagEvent.ReadCompleted, TagStatus.Ok);
         }, token);
 

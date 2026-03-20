@@ -40,6 +40,18 @@
       <None Update="ModuleDefinitionTests.Serialize_ModuleWithConnections_ShouldBeVerified.verified.xml">
         <DependentUpon>ModuleDefinitionTests.cs</DependentUpon>
       </None>
+      <None Update="ModuleCatalogTests.Create_CatalogNumberAndConfig_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleCatalogTests.Create_ExistingValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleCatalogTests.Create_ValidNameAndCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
+      <None Update="ModuleCatalogTests.Local_ValidCatalogNumber_ShouldBeVerified.verified.txt">
+        <DependentUpon>ModuleCatalogTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
 </Project>

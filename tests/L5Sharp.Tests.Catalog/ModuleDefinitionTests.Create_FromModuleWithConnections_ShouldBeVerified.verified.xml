@@ -13,7 +13,7 @@
           <DataValueMember Name="RealTimeSample" DataType="INT" Radix="Decimal" Value="0" />
           <DataValueMember Name="CJOffset" DataType="REAL" Radix="Float" Value="0.0" />
           <StructureMember Name="Ch0Config" DataType="AB:1756_AI6_Struct:C:0">
-            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402" />
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
             <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
             <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
             <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
@@ -32,7 +32,7 @@
             <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
           </StructureMember>
           <StructureMember Name="Ch1Config" DataType="AB:1756_AI6_Struct:C:0">
-            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402" />
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
             <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
             <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
             <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
@@ -51,7 +51,7 @@
             <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
           </StructureMember>
           <StructureMember Name="Ch2Config" DataType="AB:1756_AI6_Struct:C:0">
-            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402" />
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
             <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
             <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
             <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
@@ -70,7 +70,7 @@
             <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
           </StructureMember>
           <StructureMember Name="Ch3Config" DataType="AB:1756_AI6_Struct:C:0">
-            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402" />
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
             <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
             <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
             <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
@@ -89,7 +89,7 @@
             <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
           </StructureMember>
           <StructureMember Name="Ch4Config" DataType="AB:1756_AI6_Struct:C:0">
-            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402" />
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
             <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
             <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
             <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />
@@ -108,7 +108,7 @@
             <DataValueMember Name="CalBias" DataType="REAL" Radix="Float" Value="0.0" />
           </StructureMember>
           <StructureMember Name="Ch5Config" DataType="AB:1756_AI6_Struct:C:0">
-            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0402" />
+            <DataValueMember Name="RangeTypeNotch" DataType="INT" Radix="Hex" Value="16#0000" />
             <DataValueMember Name="AlarmDisable" DataType="BOOL" Value="0" />
             <DataValueMember Name="ProcessAlarmLatch" DataType="BOOL" Value="0" />
             <DataValueMember Name="RateAlarmLatch" DataType="BOOL" Value="0" />

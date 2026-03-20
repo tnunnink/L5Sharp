@@ -244,7 +244,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     /// This property specifies the encryption configuration when the Add-On Instruction is protected with
     /// license-based Source Protection. The value indicates which encryption algorithm or configuration is applied.
     /// </remarks>
-    public int? EncryptionConfig => GetValue(int.Parse);
+    public int EncryptionConfig => GetValue(int.Parse);
 
     /// <summary>
     /// The signature ID of the signed Add-On Instruction.

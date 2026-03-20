@@ -31,14 +31,14 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
     }
 
     /// <inheritdoc />
-    public override int GetSize() => sizeof(sbyte);
-
-    /// <inheritdoc />
     public sbyte Value
     {
         get => GetAtomicValue<sbyte>();
         set => SetAtomicValue(value);
     }
+
+    /// <inheritdoc />
+    public override int GetSize() => sizeof(sbyte);
 
     /// <inheritdoc />
     public override int UpdateData(byte[] data, int offset)
@@ -49,6 +49,14 @@ public sealed class SINT : AtomicData, IComparable, IConvertible, IAtomicValue<s
         var value = (sbyte)data[offset];
         UpdateData(value);
         return offset + GetSize();
+    }
+    
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format((sbyte)0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

@@ -53,6 +53,14 @@ public sealed class LDT : AtomicData, IComparable, IConvertible, IAtomicValue<lo
 
         return offset + GetSize();
     }
+    
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format((long)0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
+    }
 
     /// <inheritdoc />
     public int CompareTo(object? obj)

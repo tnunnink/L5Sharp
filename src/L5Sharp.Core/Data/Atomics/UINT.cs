@@ -31,14 +31,14 @@ public sealed class UINT : AtomicData, IComparable, IConvertible, IAtomicValue<u
     }
 
     /// <inheritdoc />
-    public override int GetSize() => sizeof(ushort);
-
-    /// <inheritdoc />
     public ushort Value
     {
         get => GetAtomicValue<ushort>();
         set => SetAtomicValue(value);
     }
+
+    /// <inheritdoc />
+    public override int GetSize() => sizeof(ushort);
 
     /// <inheritdoc />
     public override int UpdateData(byte[] data, int offset)
@@ -51,6 +51,14 @@ public sealed class UINT : AtomicData, IComparable, IConvertible, IAtomicValue<u
         UpdateData(value);
 
         return offset + GetSize();
+    }
+    
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format((ushort)0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

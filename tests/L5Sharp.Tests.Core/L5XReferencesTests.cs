@@ -6,6 +6,22 @@ namespace L5Sharp.Tests.Core;
 [TestFixture]
 public class L5XReferencesTests
 {
+    [Test]
+    public void TagReferences_ProjectWithSimpleRungReferences_ShouldBeExpectedCount()
+    {
+        var project = L5X.New("MyProject", "1756-L84E", 34.1)
+            .Add(Tag.Named("MyTag").WithValue(123).Build())
+            .Add(Tag.Named("Program:MyProgram.LocalTag").WithValue<TIMER>(t => t.PRE = 5000).Build())
+            .Add(Routine.Rll("MyRoutine").InProgram("MyProgram")
+                .WithRung("XIC(MyTag)TON(LocalTag,?,?);")
+                .WithRung("XIC(MyTag)OTE(MyTag);")
+                .Build());
+
+        var references = project.Tags.Get("MyTag").References().ToList();
+        
+        references.Should().HaveCount(3);
+    }
+
     #region TestFile
 
     [Test]
@@ -78,24 +94,6 @@ public class L5XReferencesTests
     #endregion
 
     #region ExampleFile
-
-    [Test]
-    public void References_TagMemberWithParentHavingAoiReference_ShouldGetAoiReference()
-    {
-        //todo
-        const string reference = "";
-        
-        var content = TestContent.Example;
-
-        var tag = content.Query<Tag>()
-            .SelectMany(t => t.Members())
-            .FirstOrDefault(t => t.TagName.LocalPath == reference);
-
-        tag.Should().NotBeNull();
-
-        var references = tag.References().ToList();
-        references.Should().NotBeEmpty();
-    }
 
     [Test]
     public void References_ExampleDataType_ShouldHaveNoUnused()

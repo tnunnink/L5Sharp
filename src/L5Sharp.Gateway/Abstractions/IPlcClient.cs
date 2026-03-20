@@ -14,16 +14,6 @@ namespace L5Sharp.Gateway.Abstractions;
 public interface IPlcClient : IDisposable
 {
     /// <summary>
-    /// Verifies the connectivity to the PLC by performing a ping operation asynchronously.
-    /// </summary>
-    /// <param name="token">A cancellation token that can be used to cancel the operation before completion.</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation. The task result indicates whether the ping operation
-    /// was successful.
-    /// </returns>
-    Task<bool> Ping(CancellationToken token = default);
-
-    /// <summary>
     /// Reads the value of a specified tag from the PLC asynchronously.
     /// </summary>
     /// <param name="tagName">The name of the tag to be read from the PLC.</param>

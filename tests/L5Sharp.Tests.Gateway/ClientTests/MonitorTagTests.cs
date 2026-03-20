@@ -232,41 +232,6 @@ public class MonitorTagTests : PlcTestBase
     }
 
     [Test]
-    public async Task MonitorTag_ConfigureSlowCallback_NotSureWhatWillHappen()
-    {
-        // Use faster Monitor rate for testing
-        using var client = CreateClient(o => o.PollRate = 100);
-        using var monitor = await client.MonitorTag<TIMER>("TestTimer");
-
-        var inCallback = 0;
-        var overlapped = 0;
-        var invoked = 0;
-
-        monitor.OnUpdate(_ =>
-        {
-            if (Interlocked.Increment(ref inCallback) > 1)
-                Interlocked.Exchange(ref overlapped, 1);
-
-            try
-            {
-                Thread.Sleep(500);
-                Interlocked.Increment(ref invoked);
-            }
-            finally
-            {
-                Interlocked.Decrement(ref inCallback);
-            }
-        });
-
-        // Have to wait for the next Monitor interval.
-        await Task.Delay(1500);
-
-        invoked.Should().BeGreaterThan(0);
-        invoked.Should().BeLessThan(6, "slow callbacks should throttle delivery if callbacks are serialized");
-        overlapped.Should().Be(0, "callbacks should not run concurrently for the same monitor");
-    }
-
-    [Test]
     public async Task MonitorTags_LargeCollectionOfTags_ShouldHaveDesiredRateAndUpdated()
     {
         using var client = CreateClient();

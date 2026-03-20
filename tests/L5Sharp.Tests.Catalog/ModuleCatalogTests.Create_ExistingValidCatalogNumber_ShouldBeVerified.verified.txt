@@ -1,0 +1,9 @@
+﻿<Module Name="NewName" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="1" Minor="23" ParentModule="Local" ParentModPortId="1" Inhibited="true" MajorFault="false">
+  <Description><![CDATA[This is a new module instance based on an existing template]]></Description>
+  <EKey State="CompatibleModule" />
+  <Ports>
+    <Port Id="1" Type="ICP" Address="0" Upstream="true" />
+    <Port Id="2" Type="Ethernet" Address="192.168.0.1" Upstream="false" />
+  </Ports>
+  <Communications CommMethod="536870914" />
+</Module>

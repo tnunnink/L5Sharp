@@ -105,6 +105,26 @@ public class RoutineTests
         routine.Type.Should().Be(RoutineType.ST);
     }
 
+    [Test]
+    public Task Rll_NameOnly_ShouldBeVerified()
+    {
+        var routine = Routine.Rll("MyRoutine").Build();
+
+        return VerifyXml(routine.Serialize().ToString());
+    }
+    
+    [Test]
+    public void Rll_InProgram_ShouldHaveReferenceProperty()
+    {
+        var routine = Routine.Rll("MyRoutine").InProgram("SomeProgram").Build();
+
+        var program = routine.Program;
+
+        program.Should().NotBeNull();
+        routine.Scope.Container.Should().Be("SomeProgram");
+        routine.Scope.IsLocal.Should().BeTrue();
+    }
+
     #region L5XTest
 
     [Test]

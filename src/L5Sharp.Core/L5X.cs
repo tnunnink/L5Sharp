@@ -465,56 +465,108 @@ public sealed class L5X
     }
 
     /// <summary>
-    /// Adds the specified <see cref="ILogixComponent"/> to the current L5X content.
+    /// Adds the specified <see cref="ILogixEntity"/> to the appropriate container within the L5X structure.
+    /// This method automatically provisions the required <see cref="Program"/> and <see cref="Routine"/> containers
+    /// if they do not already exist, based on the entity's scope and type.
     /// </summary>
-    /// <param name="component">The <see cref="ILogixComponent"/> to be added to the L5X content.</param>
-    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="component"/> is null.</exception>
+    /// <param name="entity">The <see cref="ILogixEntity"/> to add to the L5X structure.</param>
+    /// <returns>The current <see cref="L5X"/> instance, enabling fluent method chaining.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="entity"/> is null.</exception>
     /// <exception cref="InvalidOperationException">
-    /// Thrown if the L5X container corresponding to the <paramref name="component"/> could not be found for adding.
+    /// Thrown when the appropriate container for the entity type cannot be found at the specified scope.
     /// </exception>
     /// <remarks>
-    /// This provides a more dynamic way to add content to an L5X file, and since most components have a single top-level
-    /// container, it will work most of the time. If the provided component has a defined scope, then this method will
-    /// attempt to find the corresponding container to add this component to the correct scope. If this component is not
-    /// scoped, then we will build a simple global relative scope using the type and name.
+    /// <para>
+    /// This method provides a fluent API for building L5X projects in memory. It returns the current
+    /// <see cref="L5X"/> instance, allowing multiple <c>Add</c> operations to be chained together.
+    /// </para>
+    /// <para>
+    /// <b>Auto-Provisioning Behavior:</b>
+    /// </para>
+    /// <list type="bullet">
+    /// <item>
+    /// <description>
+    /// If the entity is scoped to a <see cref="Program"/> that does not exist, the method will automatically
+    /// create and add a new <see cref="Program"/> with the specified name to the <see cref="Programs"/> collection.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <description>
+    /// If the entity is an <see cref="ILogixCode"/> element (such as a <see cref="Rung"/>) and its parent
+    /// <see cref="Routine"/> does not exist, the method will automatically create and add a new <see cref="Routine"/>
+    /// with the appropriate name and type to the program's <see cref="Program.Routines"/> collection.
+    /// </description>
+    /// </item>
+    /// </list>
+    /// <para>
+    /// This auto-provisioning simplifies the process of building L5X structures, eliminating the need to manually
+    /// create intermediate containers before adding child elements.
+    /// </para>
     /// </remarks>
-    public void Add(ILogixComponent component)
+    public L5X Add(ILogixEntity entity)
     {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
+        if (entity is null) throw new ArgumentNullException(nameof(entity));
 
-        var typeName = LogixSerializer.NamesFor(component.GetType()).First();
-        var container = Element.Descendants($"{typeName}s").FirstOrDefault();
+        // 1. Auto-provision Program if it doesn't exist
+        if (entity.Scope.IsProgram && !Programs.Contains(entity.Scope.Container))
+        {
+            Programs.Add(new Program(entity.Scope.Container));
+        }
 
-        if (container is null)
-            throw new InvalidOperationException($"Could not find container for type: '{component.GetType()}'");
+        // 2. Auto-provision Routine if it's a code element and the routine doesn't exist
+        if (entity is ILogixCode { Routine: not null } code)
+        {
+            var program = Programs.Get(entity.Scope.Container);
+            if (!program.Routines.Contains(code.Routine.Name))
+            {
+                program.Routines.Add(new Routine(code.Routine.Name, code.Routine.Type));
+            }
+        }
 
-        container.Add(component.Serialize());
-    }
-
-    /// <summary>
-    /// Adds a specified <see cref="ILogixComponent"/> to the container associated with the specified program name.
-    /// </summary>
-    /// <param name="component">The <see cref="ILogixComponent"/> to be added.</param>
-    /// <param name="programName">The name of the program that contains the target container.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="component"/> is null.</exception>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when a container for the <paramref name="component"/> type cannot be found
-    /// within the specified program scope.
-    /// </exception>
-    public void Add(ILogixComponent component, string programName)
-    {
-        if (component is null)
-            throw new ArgumentNullException(nameof(component));
-
-        var typeName = LogixSerializer.NamesFor(component.GetType()).First();
-        var container = Element.Descendants($"{typeName}s").FirstOrDefault(e => Scope.Of(e).IsIn(programName));
+        // 3. Resolve the target container and add the serialized element
+        var typeName = LogixSerializer.NamesFor(entity.GetType()).First();
+        var container = Element
+            .Descendants($"{typeName}s")
+            .FirstOrDefault(e => entity.Scope.Level == ScopeLevel.None || entity.Scope == Scope.Of(e));
 
         if (container is null)
             throw new InvalidOperationException(
-                $"Could not find container for type {component.GetType()} in scope: '{programName}'");
+                $"Could not find container for type: '{entity.GetType()}' at scope {entity.Scope}");
 
-        container.Add(component.Serialize());
+        container.Add(entity.Serialize());
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a collection of <see cref="ILogixEntity"/> objects to the appropriate containers within the L5X structure.
+    /// This method iterates through each entity in the provided collection and adds them individually,
+    /// automatically provisioning any required <see cref="Program"/> and <see cref="Routine"/> containers as needed.
+    /// </summary>
+    /// <param name="entities">The collection of <see cref="ILogixEntity"/> objects to add to the L5X structure.</param>
+    /// <returns>The current <see cref="L5X"/> instance, enabling fluent method chaining.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="entities"/> is null.</exception>
+    /// <remarks>
+    /// <para>
+    /// This method provides a fluent API for building L5X projects in memory by adding multiple entities
+    /// in a single operation. It returns the current <see cref="L5X"/> instance, allowing multiple
+    /// <c>Add</c> operations to be chained together.
+    /// </para>
+    /// <para>
+    /// Each entity in the collection is processed by calling the <see cref="Add(ILogixEntity)"/> method,
+    /// which means all auto-provisioning behavior applies to each entity individually. See the documentation
+    /// for <see cref="Add(ILogixEntity)"/> for details on auto-provisioning of programs and routines.
+    /// </para>
+    /// </remarks>
+    public L5X Add(IEnumerable<ILogixEntity> entities)
+    {
+        if (entities is null) throw new ArgumentNullException(nameof(entities));
+
+        foreach (var entity in entities)
+        {
+            Add(entity);
+        }
+
+        return this;
     }
 
     /// <summary>

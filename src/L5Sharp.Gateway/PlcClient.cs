@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -137,17 +136,6 @@ public class PlcClient : IPlcClient
     /// </exception>
     public PlcClient(string ip, ushort slot = 0) : this(new PlcOptions { IP = ip, Slot = slot })
     {
-    }
-
-    /// <inheritdoc />
-    public Task<bool> Ping(CancellationToken token = default)
-    {
-        return Task.Run(async () =>
-        {
-            using var ping = new Ping();
-            var reply = await ping.SendPingAsync(_options.IP).ConfigureAwait(false);
-            return reply.Status == IPStatus.Success;
-        }, token);
     }
 
     /// <inheritdoc />

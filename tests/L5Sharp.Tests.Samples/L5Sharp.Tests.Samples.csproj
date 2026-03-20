@@ -11,17 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="**\*.L5X" CopyToOutputDirectory="PreserveNewest" />
-        <None Include="**\*.ACD" CopyToOutputDirectory="PreserveNewest" />
-        <None Remove="bin\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="bin\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="bin\**" />
+        <None Include="**\*.L5X" Exclude="bin\**;obj\**" CopyToOutputDirectory="PreserveNewest"/>
+        <None Include="**\*.ACD" Exclude="bin\**;obj\**" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
 
 </Project>

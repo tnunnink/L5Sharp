@@ -30,8 +30,8 @@ public class ModuleDefinitionTests
 
         definition.CatalogNumber.Should().Be(module.CatalogNumber);
         definition.Revision.Should().Be(module.Revision);
-        definition.Vendor.Should().Be(module.Vendor?.Id);
-        definition.ProductType.Should().Be(module.ProductType?.Id);
+        definition.Vendor.Should().Be(module.Vendor);
+        definition.ProductType.Should().Be(module.ProductType);
         definition.ProductCode.Should().Be(module.ProductCode);
         definition.Ports.Should().HaveCount(module.Ports.Count);
     }
@@ -46,8 +46,8 @@ public class ModuleDefinitionTests
 
         definition.CatalogNumber.Should().Be(module.CatalogNumber);
         definition.Revision.Should().Be(module.Revision);
-        definition.Vendor.Should().Be(module.Vendor?.Id);
-        definition.ProductType.Should().Be(module.ProductType?.Id);
+        definition.Vendor.Should().Be(module.Vendor);
+        definition.ProductType.Should().Be(module.ProductType);
         definition.ProductCode.Should().Be(module.ProductCode);
         definition.Ports.Should().HaveCount(module.Ports.Count);
     }
@@ -60,7 +60,7 @@ public class ModuleDefinitionTests
 
         var definition = ModuleDefinition.Generate(module);
 
-        return VerifyXml(definition.Serialize().ToString());
+        return VerifyXml(definition.ToString());
     }
 
     [Test]
@@ -71,7 +71,7 @@ public class ModuleDefinitionTests
 
         var definition = ModuleDefinition.Generate(module);
 
-        return VerifyXml(definition.Serialize().ToString());
+        return VerifyXml(definition.ToString());
     }
 
     [Test]

@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using L5Sharp.Core;
 
 namespace L5Sharp.Catalog;
@@ -8,10 +9,36 @@ namespace L5Sharp.Catalog;
 /// configuration type, ports, connections, and safety-related information. This class provides functionality
 /// for creating module definitions and generating new module instances based on the definition.
 /// </summary>
-public class ModuleDefinition : LogixElement
+public class ModuleDefinition
 {
-    private ModuleDefinition(XElement element) : base(element)
+    /// <summary>
+    /// Represents the underlying XML element encapsulating the definition details of a module.
+    /// </summary>
+    /// <remarks>
+    /// This field stores the internal XML structure from which the module definition's data is
+    /// extracted and manipulated. It contains key information about catalog number, revision,
+    /// vendor, product type, product code, ports, and other metadata required for module
+    /// representation and functionality.
+    /// </remarks>
+    private readonly XElement _element;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleDefinition"/> class using the specified XML element.
+    /// </summary>
+    /// <param name="element">
+    /// The <see cref="XElement"/> containing the module definition data, including attributes such as
+    /// catalog number, revision, vendor, product type, product code, ports, and communications configuration.
+    /// This element serves as the source of all module definition properties and metadata.
+    /// </param>
+    /// <remarks>
+    /// This constructor is private and is intended for internal use within the class. It is called by
+    /// factory methods such as <see cref="Generate"/> to create module definition instances from
+    /// serialized module data. The provided XML element is stored and used to extract module properties
+    /// on demand through the various property accessors.
+    /// </remarks>
+    private ModuleDefinition(XElement element)
     {
+        _element = element;
     }
 
     /// <summary>
@@ -71,6 +98,18 @@ public class ModuleDefinition : LogixElement
     public IEnumerable<string> Ports => GetPortTypes();
 
     /// <summary>
+    /// Returns a string representation of the current <see cref="ModuleDefinition"/> instance.
+    /// </summary>
+    /// <returns>
+    /// A string that represents the XML content of the module definition, including all attributes,
+    /// properties, and metadata stored within the underlying <see cref="XElement"/>.
+    /// </returns>
+    public override string ToString()
+    {
+        return _element.ToString();
+    }
+
+    /// <summary>
     /// Creates a new instance of <see cref="ModuleDefinition"/> using the provided <see cref="Module"/> instance.
     /// </summary>
     /// <param name="module">
@@ -103,7 +142,7 @@ public class ModuleDefinition : LogixElement
     /// </returns>
     public Module Create(string name, Action<Module>? config = null)
     {
-        var module = new Module(Element) { Name = name };
+        var module = new Module(_element) { Name = name };
         config?.Invoke(module);
         return module;
     }
@@ -114,7 +153,7 @@ public class ModuleDefinition : LogixElement
     /// </summary>
     private IEnumerable<string> GetPortTypes()
     {
-        return Element.Descendants(L5XName.Port)
+        return _element.Descendants(L5XName.Port)
             .Select(p => p.Attribute(L5XName.Type)?.Value)
             .Where(t => t is not null)
             .Cast<string>();
@@ -245,5 +284,83 @@ public class ModuleDefinition : LogixElement
             return null;
 
         return new XElement(element);
+    }
+
+    /// <summary>
+    /// Retrieves the required value of a specified attribute by its name from the underlying XML element.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the attribute whose value is to be retrieved.
+    /// If not explicitly provided, the caller member name is used as the default.
+    /// </param>
+    /// <returns>
+    /// A string containing the value of the specified attribute.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the provided attribute name is null or empty.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the attribute with the specified name does not exist in the XML element.
+    /// </exception>
+    private string GetRequiredValue([CallerMemberName] string? name = null)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        return _element.Attribute(name)?.Value
+               ?? throw new InvalidOperationException($"Property with name '{name}' not found");
+    }
+
+    /// <summary>
+    /// Retrieves a required attribute value from the current element and parses it using the provided parser function.
+    /// </summary>
+    /// <typeparam name="T">The type of the value to be parsed and returned.</typeparam>
+    /// <param name="parser">The function used to parse the string value into the specified type <typeparamref name="T"/>.</param>
+    /// <param name="name">The name of the attribute to retrieve. Defaults to the calling member's name if not provided.</param>
+    /// <returns>The parsed value of the specified type <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown if the attribute name is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the required attribute is not found in the element.</exception>
+    private T GetRequiredValue<T>(Func<string, T> parser, [CallerMemberName] string? name = null)
+    {
+        if (parser is null)
+            throw new ArgumentNullException(nameof(parser));
+
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name can not be null or empty", nameof(name));
+
+        var value = _element.Attribute(name)?.Value;
+
+        return value is not null
+            ? parser(value)
+            : throw new InvalidOperationException($"Property with name '{name}' not found");
+    }
+
+    /// <summary>
+    /// Retrieves the revision of the module based on the specified major and minor attribute names.
+    /// </summary>
+    /// <param name="majorName">
+    /// The name of the attribute representing the major revision of the module. This value must not be null or empty.
+    /// </param>
+    /// <param name="minorName">
+    /// The name of the attribute representing the minor revision of the module. This value must not be null or empty.
+    /// </param>
+    /// <returns>
+    /// A new instance of <see cref="Revision"/> representing the major and minor revisions extracted from the module.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="majorName"/> or <paramref name="minorName"/> is null or empty.
+    /// </exception>
+    private Revision GetRevision(string majorName, string minorName)
+    {
+        if (string.IsNullOrEmpty(majorName))
+            throw new ArgumentException("majorName can not be null or empty", nameof(majorName));
+
+        if (string.IsNullOrEmpty(minorName))
+            throw new ArgumentException("minorName can not be null or empty", nameof(minorName));
+
+        var majorValue = _element.Attribute(majorName)?.Value ?? "0";
+        var minorValue = _element.Attribute(minorName)?.Value ?? "0";
+
+        return new Revision(ushort.Parse(majorValue), ushort.Parse(minorValue));
     }
 }

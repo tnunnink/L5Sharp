@@ -32,14 +32,14 @@ public sealed class LTIME : AtomicData, IComparable, IConvertible, IAtomicValue<
     }
 
     /// <inheritdoc />
-    public override int GetSize() => sizeof(long);
-
-    /// <inheritdoc />
     public long Value
     {
         get => GetAtomicValue<long>();
         set => SetAtomicValue(value);
     }
+
+    /// <inheritdoc />
+    public override int GetSize() => sizeof(long);
 
     /// <inheritdoc />
     public override int UpdateData(byte[] data, int offset)
@@ -52,6 +52,14 @@ public sealed class LTIME : AtomicData, IComparable, IConvertible, IAtomicValue<
         UpdateData(value);
 
         return offset + GetSize();
+    }
+
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format((long)0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

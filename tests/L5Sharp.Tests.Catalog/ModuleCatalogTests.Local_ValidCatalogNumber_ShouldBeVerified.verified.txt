@@ -1,0 +1,10 @@
+﻿<Module Name="Local" CatalogNumber="1756-L83E" Vendor="1" ProductType="14" ProductCode="166" Major="33" Minor="1" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="false" SafetyEnabled="false">
+  <EKey State="CompatibleModule" />
+  <Ports>
+    <Port Id="1" Type="ICP" Address="0" Upstream="true" />
+    <Port Id="2" Type="Ethernet" Address="192.168.0.1" Upstream="false" />
+  </Ports>
+  <Communications>
+    <ConfigTag />
+  </Communications>
+</Module>

@@ -42,14 +42,14 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
     }
 
     /// <inheritdoc />
-    public override int GetSize() => sizeof(bool);
-
-    /// <inheritdoc />
     public bool Value
     {
         get => GetAtomicValue<bool>();
         set => SetAtomicValue(value);
     }
+
+    /// <inheritdoc />
+    public override int GetSize() => sizeof(bool);
 
 
     /// <inheritdoc />
@@ -77,6 +77,14 @@ public sealed class BOOL : AtomicData, IComparable, IConvertible, IAtomicValue<b
             ValueType value => Value.CompareTo((bool)Convert.ChangeType(value, typeof(bool))),
             _ => throw new ArgumentException($"Cannot compare logix type {obj.GetType().Name} with {GetType().Name}.")
         };
+    }
+    
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format(0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

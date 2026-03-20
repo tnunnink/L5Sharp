@@ -31,14 +31,14 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
     }
 
     /// <inheritdoc />
-    public override int GetSize() => sizeof(short);
-
-    /// <inheritdoc />
     public short Value
     {
         get => GetAtomicValue<short>();
         set => SetAtomicValue(value);
     }
+
+    /// <inheritdoc />
+    public override int GetSize() => sizeof(short);
 
     /// <inheritdoc />
     public override int UpdateData(byte[] data, int offset)
@@ -51,6 +51,14 @@ public sealed class INT : AtomicData, IComparable, IConvertible, IAtomicValue<sh
         UpdateData(value);
 
         return offset + GetSize();
+    }
+    
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format((short)0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

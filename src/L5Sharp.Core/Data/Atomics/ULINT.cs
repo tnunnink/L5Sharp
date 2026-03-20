@@ -31,14 +31,14 @@ public sealed class ULINT : AtomicData, IComparable, IConvertible, IAtomicValue<
     }
 
     /// <inheritdoc />
-    public override int GetSize() => sizeof(ulong);
-
-    /// <inheritdoc />
     public ulong Value
     {
         get => GetAtomicValue<ulong>();
         set => SetAtomicValue(value);
     }
+
+    /// <inheritdoc />
+    public override int GetSize() => sizeof(ulong);
 
     /// <inheritdoc />
     public override int UpdateData(byte[] data, int offset)
@@ -51,6 +51,14 @@ public sealed class ULINT : AtomicData, IComparable, IConvertible, IAtomicValue<
         UpdateData(value);
 
         return offset + GetSize();
+    }
+    
+    /// <inheritdoc />
+    public override void ClearData()
+    {
+        var value = Radix.Format((ulong)0);
+        Element.SetAttributeValue(L5XName.Value, value);
+        Element.Annotation<XAttribute>()?.SetValue(value);
     }
 
     /// <inheritdoc />

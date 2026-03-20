@@ -89,18 +89,6 @@ public abstract class AtomicData : LogixData
         Element.Annotation<XAttribute>()?.SetValue(formatted);
     }
 
-    /// <inheritdoc />
-    public override void ClearData()
-    {
-        // Reset the value for atomic data to zero.
-        var value = Radix.Format(0);
-        Element.SetAttributeValue(L5XName.Value, value);
-
-        //Check if the underlying element contains an attribute annotation which can be injected as a "backing field" for the value.
-        //This is to support updating underlying XAttribute of custom data formats (ALARM_ANALOG and ALARM_DIGITAL)
-        Element.Annotation<XAttribute>()?.SetValue(value);
-    }
-
     /// <summary>
     /// Gets bit member's data type value at the specified bit index. 
     /// </summary>
@@ -298,41 +286,5 @@ public abstract class AtomicData : LogixData
         return Element.TryGetAttribute(L5XName.Value, out var value)
             ? Radix.Infer(value)
             : Radix.Default(GetType());
-    }
-}
-
-/// <summary>
-/// Provides a set of extension methods for working with <see cref="AtomicData"/> instances.
-/// </summary>
-/// <remarks>
-/// This static class defines utility methods that enhance the functionality of <see cref="AtomicData"/> objects.
-/// These methods are designed to simplify common tasks such as value extraction while ensuring type safety and
-/// error handling for unsupported data types.
-/// </remarks>
-public static class AtomicDataExtensions
-{
-    /// <summary>
-    /// Retrieves the underlying value of the provided <see cref="AtomicData"/> instance.
-    /// </summary>
-    /// <param name="data">The <see cref="AtomicData"/> instance from which to retrieve the value.</param>
-    /// <returns>The underlying value of the specified <see cref="AtomicData"/>, or throws an exception if the data type is not supported.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the provided <see cref="AtomicData"/> is of an unsupported type.</exception>
-    public static object GetValue(this AtomicData data)
-    {
-        return data switch
-        {
-            IAtomicValue<bool> x => x.Value,
-            IAtomicValue<sbyte> x => x.Value,
-            IAtomicValue<byte> x => x.Value,
-            IAtomicValue<short> x => x.Value,
-            IAtomicValue<ushort> x => x.Value,
-            IAtomicValue<int> x => x.Value,
-            IAtomicValue<uint> x => x.Value,
-            IAtomicValue<long> x => x.Value,
-            IAtomicValue<ulong> x => x.Value,
-            IAtomicValue<float> x => x.Value,
-            IAtomicValue<double> x => x.Value,
-            _ => throw new ArgumentOutOfRangeException(nameof(data), data, null)
-        };
     }
 }

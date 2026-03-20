@@ -9,6 +9,7 @@ namespace L5Sharp.Tests.Gateway.ClientTests;
 public class WriteTagTests : PlcTestBase
 {
     [Test]
+    [NonParallelizable]
     [TestCase("TestDint")]
     [TestCase("TestTimer.PRE")]
     [TestCase("Program:MainProgram.LocalDint")]
@@ -19,7 +20,6 @@ public class WriteTagTests : PlcTestBase
 
         var result = await client.WriteTag<DINT>(tagName, Random.Shared.Next());
 
-        result.Success.Should().BeTrue();
         result.Status.Should().Be(TagStatus.Ok);
         result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         result.Duration.Should().BeGreaterThan(TimeSpan.Zero);
@@ -80,7 +80,6 @@ public class WriteTagTests : PlcTestBase
             d.EN = true;
         });
 
-        result.Success.Should().BeTrue();
         result.Status.Should().Be(TagStatus.Ok);
         result.Timestamp.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
         result.Duration.Should().BeGreaterThan(TimeSpan.Zero);

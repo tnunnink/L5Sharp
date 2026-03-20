@@ -273,19 +273,6 @@ public class L5XBasicTests
     }
 
     [Test]
-    public Task Add_ToScopedContainer_ShouldBeVerified()
-    {
-        var content = TestContent.Test;
-        var tag = new Tag("TestAdd", 123);
-
-        content.Add(tag, Known.Program);
-
-        return VerifyXml(content.Content.Serialize().ToString())
-            .ScrubMember("ExportDate")
-            .ScrubMember("LastModifiedDate");
-    }
-
-    [Test]
     public void Remove_ExistingComponent_ShouldReturnTrue()
     {
         var content = TestContent.Test;

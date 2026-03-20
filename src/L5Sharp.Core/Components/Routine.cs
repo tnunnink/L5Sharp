@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using L5Sharp.Core.Rungs;
 
 
 namespace L5Sharp.Core;
@@ -205,6 +206,16 @@ public class Routine : LogixComponent<Routine>
         if (Type == RoutineType.ST) return Lines.SelectMany(r => r.Dependencies());
         if (Type == RoutineType.FBD) return Sheets.SelectMany(r => r.Dependencies());
         return [];
+    }
+
+    /// <summary>
+    /// Creates a new RLL routine builder with the specified name.
+    /// </summary>
+    /// <param name="name">The name of the RLL routine to be created.</param>
+    /// <returns>An <see cref="IRllBuilder"/> instance for defining RLL routine content.</returns>
+    public static IRllBuilder Rll(string name)
+    {
+        return new RllBuilder(name);
     }
 
     /// <summary>

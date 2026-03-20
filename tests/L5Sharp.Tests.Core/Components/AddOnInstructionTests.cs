@@ -27,7 +27,7 @@ public class AddOnInstructionTests
         instruction.SoftwareRevision.Should().BeNull();
         instruction.AdditionalHelpText.Should().BeNull();
         instruction.IsEncrypted.Should().BeFalse();
-        instruction.EncryptionConfig.Should().BeNull();
+        instruction.EncryptionConfig.Should().Be(0);
         instruction.Parameters.Should().HaveCount(2);
         instruction.LocalTags.Should().BeEmpty();
         instruction.Routines.Should().HaveCount(1);
