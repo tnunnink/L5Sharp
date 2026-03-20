@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Core.Rungs;
+﻿namespace L5Sharp.Core;
 
 /// <summary>
 /// Provides a fluent interface for building <see cref="Routine"/> objects in memory.

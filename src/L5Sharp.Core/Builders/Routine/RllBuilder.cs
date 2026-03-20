@@ -1,4 +1,4 @@
-﻿namespace L5Sharp.Core.Rungs;
+﻿namespace L5Sharp.Core;
 
 /// <summary>
 /// Provides a concrete implementation for building Ladder Logic (RLL) <see cref="Routine"/> objects.
