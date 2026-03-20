@@ -1,4 +1,6 @@
 ﻿
+using System.IO;
+
 // ReSharper disable InconsistentNaming
 
 namespace L5Sharp.Tests.Samples;
@@ -13,10 +15,10 @@ public static class TestFiles
     /// </summary>
     public static class Projects
     {
-        public const string Empty = "Projects\\Empty.L5X";
-        public const string LotOfTags = "Projects\\LotOfTags.L5X";
-        public const string Simple = "Projects\\Simple.L5X";
-        public const string Test = "Projects\\Test.L5X";
+        public static readonly string Empty = Path.Combine("Projects", "Empty.L5X");
+        public static readonly string LotOfTags = Path.Combine("Projects", "LotOfTags.L5X");
+        public static readonly string Simple = Path.Combine("Projects", "Simple.L5X");
+        public static readonly string Test = Path.Combine("Projects", "Test.L5X");
     }
 
     /// <summary>
@@ -24,16 +26,16 @@ public static class TestFiles
     /// </summary>
     public static class DataTypes
     {
-        public const string AlarmType = "DataTypes\\AlarmType.L5X";
-        public const string AoiTest = "DataTypes\\aoi_Test.L5X";
-        public const string ArrayType = "DataTypes\\ArrayType.L5X";
-        public const string BoolTest = "DataTypes\\BoolTest.L5X";
-        public const string ComplexType = "DataTypes\\ComplexType.L5X";
-        public const string InvalidType = "DataTypes\\InvalidType.L5X";
-        public const string ModuleType = "DataTypes\\ModuleType.L5X";
-        public const string MultipleDataTypes = "DataTypes\\MultipleDataTypes.L5X";
-        public const string NestedType = "DataTypes\\NestedType.L5X";
-        public const string SimpleType = "DataTypes\\SimpleType.L5X";
+        public static readonly string AlarmType = Path.Combine("DataTypes", "AlarmType.L5X");
+        public static readonly string AoiTest = Path.Combine("DataTypes", "aoi_Test.L5X");
+        public static readonly string ArrayType = Path.Combine("DataTypes", "ArrayType.L5X");
+        public static readonly string BoolTest = Path.Combine("DataTypes", "BoolTest.L5X");
+        public static readonly string ComplexType = Path.Combine("DataTypes", "ComplexType.L5X");
+        public static readonly string InvalidType = Path.Combine("DataTypes", "InvalidType.L5X");
+        public static readonly string ModuleType = Path.Combine("DataTypes", "ModuleType.L5X");
+        public static readonly string MultipleDataTypes = Path.Combine("DataTypes", "MultipleDataTypes.L5X");
+        public static readonly string NestedType = Path.Combine("DataTypes", "NestedType.L5X");
+        public static readonly string SimpleType = Path.Combine("DataTypes", "SimpleType.L5X");
     }
 
     /// <summary>
@@ -41,8 +43,8 @@ public static class TestFiles
     /// </summary>
     public static class Aoi
     {
-        public const string AoiSigned = "Instructions\\aoiSigned_AOI.L5X";
-        public const string AoiTest = "Instructions\\aoi_Test.L5X";
+        public static readonly string AoiSigned = Path.Combine("Instructions", "aoiSigned_AOI.L5X");
+        public static readonly string AoiTest = Path.Combine("Instructions", "aoi_Test.L5X");
     }
 
     /// <summary>
@@ -50,21 +52,21 @@ public static class TestFiles
     /// </summary>
     public static class Modules
     {
-        public const string FlexBus = "Modules\\FlexBus.L5X";
-        public const string FlexMod1 = "Modules\\Flex_Mod_1_Module.L5X";
-        public const string FlexMod8 = "Modules\\Flex_Mod_8.L5X";
-        public const string L1M1 = "Modules\\L1M1.L5X";
-        public const string L1M1D1 = "Modules\\L1M1D1.L5X";
-        public const string LM6C1 = "Modules\\LM6C1.L5X";
-        public const string LocalMod1 = "Modules\\Local_Mod_1.L5X";
-        public const string LocalMod4 = "Modules\\Local_Mod_4.L5X";
-        public const string LocalMod9 = "Modules\\Local_Mod_9.L5X";
-        public const string RackIo = "Modules\\RackIO.L5X";
-        public const string RackMode3 = "Modules\\Rack_Mode_3.L5X";
-        public const string RackMod2 = "Modules\\Rack_Mod_2.L5X";
-        public const string TestCard = "Modules\\TestCard.L5X";
-        public const string TestEtap = "Modules\\TestEtap.L5X";
-        public const string TestImport = "Modules\\TestImport.L5X";
+        public static readonly string FlexBus = Path.Combine("Modules", "FlexBus.L5X");
+        public static readonly string FlexMod1 = Path.Combine("Modules", "Flex_Mod_1_Module.L5X");
+        public static readonly string FlexMod8 = Path.Combine("Modules", "Flex_Mod_8.L5X");
+        public static readonly string L1M1 = Path.Combine("Modules", "L1M1.L5X");
+        public static readonly string L1M1D1 = Path.Combine("Modules", "L1M1D1.L5X");
+        public static readonly string LM6C1 = Path.Combine("Modules", "LM6C1.L5X");
+        public static readonly string LocalMod1 = Path.Combine("Modules", "Local_Mod_1.L5X");
+        public static readonly string LocalMod4 = Path.Combine("Modules", "Local_Mod_4.L5X");
+        public static readonly string LocalMod9 = Path.Combine("Modules", "Local_Mod_9.L5X");
+        public static readonly string RackIo = Path.Combine("Modules", "RackIO.L5X");
+        public static readonly string RackMode3 = Path.Combine("Modules", "Rack_Mode_3.L5X");
+        public static readonly string RackMod2 = Path.Combine("Modules", "Rack_Mod_2.L5X");
+        public static readonly string TestCard = Path.Combine("Modules", "TestCard.L5X");
+        public static readonly string TestEtap = Path.Combine("Modules", "TestEtap.L5X");
+        public static readonly string TestImport = Path.Combine("Modules", "TestImport.L5X");
     }
 
     /// <summary>
@@ -72,8 +74,8 @@ public static class TestFiles
     /// </summary>
     public static class Programs
     {
-        public const string Empty = "Programs\\Empty.L5X";
-        public const string TestProgram = "Programs\\TestProgram.L5X";
+        public static readonly string Empty = Path.Combine("Programs", "Empty.L5X");
+        public static readonly string TestProgram = Path.Combine("Programs", "TestProgram.L5X");
     }
 
     /// <summary>
@@ -81,10 +83,10 @@ public static class TestFiles
     /// </summary>
     public static class Routines
     {
-        public const string Fbd = "Routines\\FBD.L5X";
-        public const string Main = "Routines\\Main.L5X";
-        public const string Sfc = "Routines\\SFC.L5X";
-        public const string St = "Routines\\ST.L5X";
+        public static readonly string Fbd = Path.Combine("Routines", "FBD.L5X");
+        public static readonly string Main = Path.Combine("Routines", "Main.L5X");
+        public static readonly string Sfc = Path.Combine("Routines", "SFC.L5X");
+        public static readonly string St = Path.Combine("Routines", "ST.L5X");
     }
 
     /// <summary>
@@ -92,10 +94,10 @@ public static class TestFiles
     /// </summary>
     public static class Rungs
     {
-        public const string MessageRung = "Rungs\\Message_Rung.L5X";
-        public const string Rung0 = "Rungs\\Rung0_from_Main.L5X";
-        public const string Rung1 = "Rungs\\Rung1_from_Main.L5X";
-        public const string Rung2 = "Rungs\\Rung2_from_Main.L5X";
+        public static readonly string MessageRung = Path.Combine("Rungs", "Message_Rung.L5X");
+        public static readonly string Rung0 = Path.Combine("Rungs", "Rung0_from_Main.L5X");
+        public static readonly string Rung1 = Path.Combine("Rungs", "Rung1_from_Main.L5X");
+        public static readonly string Rung2 = Path.Combine("Rungs", "Rung2_from_Main.L5X");
     }
 
     /// <summary>
@@ -103,7 +105,7 @@ public static class TestFiles
     /// </summary>
     public static class Trends
     {
-        public const string Test = "Trends\\Test.L5X";
-        public const string TriggerTrend = "Trends\\TriggerTrend.L5X";
+        public static readonly string Test = Path.Combine("Trends", "Test.L5X");
+        public static readonly string TriggerTrend = Path.Combine("Trends", "TriggerTrend.L5X");
     }
 }
