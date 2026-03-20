@@ -2,9 +2,23 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <Title>L5Sharp.Catalog</Title>
+        <Description>.</Description>
+        <Authors>Timothy Nunnink</Authors>
+        <Version>1.0.0-beta.1</Version>
+        <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageId>L5Sharp.Catalog</PackageId>
+        <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/tnunnink/L5Sharp</PackageProjectUrl>
+        <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>

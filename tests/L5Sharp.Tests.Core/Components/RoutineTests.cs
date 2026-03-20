@@ -125,6 +125,44 @@ public class RoutineTests
         routine.Scope.IsLocal.Should().BeTrue();
     }
 
+    [Test]
+    public void Rll_WithRungs_ShouldHaveExpectedRungs()
+    {
+        var routine = Routine.Rll("MyRoutine")
+            .WithRung("XIC(Tag1)OTE(Tag2);")
+            .WithRung("XIC(Tag3)OTE(Tag4);")
+            .Build();
+
+        routine.Rungs.Should().HaveCount(2);
+        routine.Rungs.ElementAt(0).Text.Should().Be("XIC(Tag1)OTE(Tag2);");
+        routine.Rungs.ElementAt(1).Text.Should().Be("XIC(Tag3)OTE(Tag4);");
+    }
+
+    [Test]
+    public void Rll_WithRungsAndComments_ShouldHaveExpectedRungsAndComments()
+    {
+        var routine = Routine.Rll("MyRoutine")
+            .WithRung("XIC(Tag1)OTE(Tag2);", "This is a comment")
+            .WithRung("XIC(Tag3)OTE(Tag4);", "This is another comment")
+            .Build();
+
+        routine.Rungs.Should().HaveCount(2);
+        routine.Rungs.ElementAt(0).Comment.Should().Be("This is a comment");
+        routine.Rungs.ElementAt(1).Comment.Should().Be("This is another comment");
+    }
+
+    [Test]
+    public Task Rll_Complex_ShouldBeVerified()
+    {
+        var routine = Routine.Rll("ComplexRoutine")
+            .InProgram("MainProgram")
+            .WithRung("XIC(Input)OTE(Output);", "Basic logic")
+            .WithRung("BST XIC(Step1) NXB XIC(Step2) BND OTE(StepComplete);", "Branching logic")
+            .Build();
+
+        return VerifyXml(routine.Serialize().ToString());
+    }
+
     #region L5XTest
 
     [Test]

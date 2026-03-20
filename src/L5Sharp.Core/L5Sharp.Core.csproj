@@ -6,15 +6,11 @@
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeBuildOutput>true</IncludeBuildOutput>
         <Title>L5Sharp</Title>
         <Description>A library for intuitively interacting with Rockwell's L5X import/export files.</Description>
         <Authors>Timothy Nunnink</Authors>
-        <Copyright>Copyright (c) Timothy Nunnink 2022</Copyright>
         <Version>6.0.0-beta.11</Version>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

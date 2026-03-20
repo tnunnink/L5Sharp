@@ -430,6 +430,9 @@
       <None Update="Components\RoutineTests.Rll_NameOnly_ShouldBeVerified.verified.xml">
         <DependentUpon>RoutineTests.cs</DependentUpon>
       </None>
+      <None Update="Components\RoutineTests.Rll_Complex_ShouldBeVerified.verified.xml">
+        <DependentUpon>RoutineTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
