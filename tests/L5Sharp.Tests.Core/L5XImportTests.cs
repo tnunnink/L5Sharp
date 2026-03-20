@@ -9,7 +9,7 @@ public class L5XImportTests
         var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(TestFiles.DataTypes.ComplexType)
+            .From(TestContent.PathTo(TestFiles.DataTypes.ComplexType))
             .DataType()
             .Force()
         );
@@ -23,7 +23,7 @@ public class L5XImportTests
         var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(TestFiles.DataTypes.ComplexType)
+            .From(TestContent.PathTo(TestFiles.DataTypes.ComplexType))
             .DataType()
             .Discard<DataType>(d => d.Name == "SimpleType")
         );
@@ -37,7 +37,7 @@ public class L5XImportTests
         var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(TestFiles.DataTypes.ComplexType)
+            .From(TestContent.PathTo(TestFiles.DataTypes.ComplexType))
             .DataType()
             .Discard<DataType>(d => d.Name == "SimpleType")
             .Modify<DataType>(
@@ -55,7 +55,7 @@ public class L5XImportTests
         var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(TestFiles.Modules.TestCard)
+            .From(TestContent.PathTo(TestFiles.Modules.TestCard))
             .Module()
         );
 
@@ -68,7 +68,7 @@ public class L5XImportTests
         var content = TestContent.Empty;
 
         content.Import(b => b
-            .From(TestFiles.Programs.TestProgram)
+            .From(TestContent.PathTo(TestFiles.Programs.TestProgram))
             .Program()
             .Rename("ImportedProgram")
             .ScheduleIn("Standard", t =>

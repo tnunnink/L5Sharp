@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
+using System.Runtime.CompilerServices;
 using L5Sharp.Core;
 
 namespace L5Sharp.Tests.Samples;
@@ -11,11 +11,6 @@ namespace L5Sharp.Tests.Samples;
 /// </summary>
 public static class TestContent
 {
-    /// <summary>
-    /// The base directory of the current application domain, used to locate test sample files.
-    /// </summary>
-    private static readonly string BaseDirectory = AppContext.BaseDirectory;
-
     /// <summary>
     /// Represents an L5X project resource loaded from the predefined local example file path.
     /// Provides access to query, manipulate, and manage Logix components and entities.
@@ -41,6 +36,22 @@ public static class TestContent
     public static L5X Simple => Load(TestFiles.Projects.Simple);
 
     /// <summary>
+    /// Resolves the full file system path to a specified relative file path.
+    /// </summary>
+    /// <param name="relativePath">The relative path to the file to locate.</param>
+    /// <returns>The full file system path corresponding to the specified relative path.</returns>
+    /// <exception cref="FileNotFoundException">Thrown if the file at the resolved path does not exist.</exception>
+    public static string PathTo(string relativePath)
+    {
+        var path = Path.Combine(GetSourceDirectory(), relativePath);
+
+        if (!File.Exists(path))
+            throw new FileNotFoundException($"Test file not found at path: {path}");
+
+        return path;
+    }
+
+    /// <summary>
     /// Loads an L5X instance from a specified relative file path.
     /// </summary>
     /// <param name="relativePath">The relative path to the L5X file to load.</param>
@@ -48,16 +59,20 @@ public static class TestContent
     /// <exception cref="FileNotFoundException">Thrown when the file at the specified relative path is not found.</exception>
     public static L5X Load(string relativePath)
     {
-        var path = Path.Combine(BaseDirectory, relativePath);
+        var path = Path.Combine(GetSourceDirectory(), relativePath);
 
         if (!File.Exists(path))
-        {
-            throw new FileNotFoundException(
-                $"Test file missing: {path} " +
-                "Ensure 'L5Sharp.Tests.Samples' is referenced and files are set to 'Copy to Output'.");
-        }
+            throw new FileNotFoundException($"Test file not found at path: {path}");
 
         Console.WriteLine($"Loading test file from: {path}");
         return L5X.Load(path);
+    }
+
+    /// <summary>
+    /// Gets the directory containing this source file using CallerFilePath.
+    /// </summary>
+    private static string GetSourceDirectory([CallerFilePath] string? path = null)
+    {
+        return Path.GetDirectoryName(path) ?? AppContext.BaseDirectory;
     }
 }

@@ -153,7 +153,7 @@ public class ModuleCatalogTests
     public Task Create_ExistingValidCatalogNumber_ShouldBeVerified()
     {
         var catalog = new ModuleCatalogBuilder()
-            .WithModulesFromL5X(TestFiles.Projects.Test)
+            .WithModulesFromL5X(TestContent.PathTo(TestFiles.Projects.Test))
             .Build();
 
         var module = catalog.Create("NewName", "1756-EN2T", m =>
