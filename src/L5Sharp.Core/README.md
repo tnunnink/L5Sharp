@@ -330,6 +330,78 @@ project.Save("Updated.L5X");
 
 ### Tag Data
 
+L5Sharp.Core features a strongly typed data system centered around the `LogixData` base class. This system
+is designed to handle everything from simple atomic values (like `DINT`, `REAL`, `BOOL`) to complex nested structures
+and arrays. 
+
+Every `Tag` has a `Value` property of type `LogixData`. Depending on the tag's underlying data type, this value can
+be navigated and manipulated in various ways.
+
+#### Atomic Data
+
+```csharp
+// Create a new tag of type DINT with the value 123.
+var tag = new Tag("MyTag", new DINT(123)); 
+
+// Or with the implicit conversions defined on LogixData, specifying just the value does the same thing.
+var tag = new Tag("MyTag", 123);
+
+// Update the tag value directly.
+tag.Value = 456;
+```
+
+#### Strongly Typed Data Types
+
+For many common Logix types, L5Sharp.Core provides predefined classes that offer strongly typed property access.
+You can use the `.As<T>()` method to cast a `LogixData` instance to a specific type.
+
+```csharp
+// Strongly typed access to a TIMER.
+var timer = tag.Value.As<TIMER>();
+timer.PRE = 2000;
+timer.DN = true;
+
+// Strongly typed access to atomic values.
+var count = project.Tags.Get("MyCounter").Value.As<DINT>();
+int val = count; // Implicit conversion to native C# types.
+```
+
+#### Working with Arrays
+
+Arrays are represented by the `ArrayData` class. You can access array elements using the indexer and even work
+with multi-dimensional arrays.
+
+```csharp
+var arrayTag = project.Tags.Get("MyArray");
+var array = arrayTag.Value.As<ArrayData<DINT>>();
+
+// Access elements by index.
+var first = array[0];
+array[1] = 123;
+
+// Iterate over array elements.
+foreach (var element in array)
+{
+    // ...
+}
+```
+
+#### Custom Structures
+
+For User Defined Types (UDTs) or other structures not predefined in the library, you can use the `StructureData`
+class. This provides a dictionary-like interface to members.
+
+```csharp
+var udtTag = project.Tags.Get("MyUdtTag");
+var udt = udtTag.Value.As<StructureData>();
+
+// Access members by name.
+var memberValue = udt["SomeMember"];
+
+// Navigate nested structures.
+var nestedValue = udt["Header"]["Status"]["ErrorCode"];
+```
+
 ### Controller Instance
 
 The `L5X` class also contains access to the top level `Controller` object. This object contains all the high level
@@ -368,15 +440,6 @@ var targetType = file.Content.TargetType;
 ```
 
 ### Importing Content
-
-## Components
-
-L5Sharp.Core provides strongly typed representations of all major Logix component types found in L5X files.
-Each component type offers intuitive properties and methods for inspection and modification, allowing you to work
-with Logix project elements as native C# objects. The following sections will outline some of the key components
-and common usage patterns.
-
-### Working with Tags
 
 ## Architecture
 
@@ -422,6 +485,34 @@ identified by a name property. This class also adds functions for finding refere
 a new L5X
 
 ### LogixCode
+
+
+### Components Elements
+
+L5Sharp.Core provides strongly typed representations of all major Logix component types found in L5X files.
+Each component type offers intuitive properties and methods for inspection and modification, allowing you to work
+with Logix project elements as native C# objects.
+
+| Component Type     | Description                                                                                                       |
+|--------------------|-------------------------------------------------------------------------------------------------------------------|
+| `Tag`              | Represents a controller-scoped or program-scoped tag with its associated data value, description, and attributes. |
+| `DataType`         | Represents a User Defined Type (UDT) or predefined data type with its members and structure definition.           |
+| `AddOnInstruction` | Represents an Add-On Instruction (AOI) including its logic, parameters, local tags, and routines.                 |
+| `Module`           | Represents an I/O module or communication module in the controller's hardware configuration.                      |
+| `Program`          | Represents a program container that holds routines, tags, and execution logic.                                    |
+| `Routine`          | Represents a routine containing executable logic in RLL (Ladder), ST (Structured Text), FBD, or SFC format.       |
+| `Task`             | Represents a task that schedules program execution (Continuous, Periodic, or Event-driven).                       |
+| `Trend`            | Represents a trend configuration for monitoring tag values over time.                                             |
+| `WatchList`        | Represents a watch list configuration for monitoring multiple tags.                                               |
+
+### Code Elements
+
+
+| Code Type | Description                                                                                                       |
+|-----------|-------------------------------------------------------------------------------------------------------------------|
+| `Rung`    | Represents a single rung of ladder logic code within a routine.                                                   |
+| `Line`    | Represents a line of Structured Text code within an ST routine.                                                   |
+| `Sheet`   | Represents a sheet of Function Block Diagram logic within an FBD routine.                                         |
 
 ## Feedback & Support
 

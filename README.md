@@ -29,117 +29,7 @@ Install-Package L5Sharp
 
 ## Quick Start
 
-### Load an Existing L5X File
 
-``` csharp
-// Load an L5X file
-var content = L5X.Load("C:\\PathToMyFile\\FileName.L5X");
-
-// Parse and L5X string
-var content = L5X.Parse("<RSLogix5000Content... />");
-
-// Parse and L5X string
-var content = L5X.New("Test", "1756-L83E", 33.1);
-```
-
-### Query L5X Components
-
-``` csharp
-// Get all controller tags
-var tags = content.Tags.ToList();
-
-// Find a specific tag by name
-var myTag = content.Tags.Find("MyTag");
-
-// Query all TIMER tags across the entire project
-var timerTags = content.Query<Tag>()
-    .Where(t => t.DataType == "TIMER")
-    .ToList();
-
-// Query nested tag members
-var results = content.Query<Tag>()
-    .SelectMany(t => t.Members())
-    .Where(t => t.DataType == "TIMER")
-    .Select(t => new {t.TagName, t.Description, Preset = t["PRE"].Value})
-    .OrderBy(v => v.TagName)
-    .ToList();
-```
-
-### Entity Lookup API
-
-To index the L5X on load or parse, you must supply the `L5XOptions.Index`.
-
-```csharp
-var content = L5X.Load("MyTestFile.L5X");
-```
-
-Then use `ILogixLookup` API `Get`, `TryGet`, `Find`, or `Contains`.
-
-``` csharp
-// Get controller scoped tag.
-Tag controlelrTag = content.Get<Tag>("MyTagName")
-
-// Get program scoped tag.
-Tag programTag = content.Get<Tag>("/MyProgram/Tag/MyTagName")
-
-// Find all tags with name (could be in multiple different programs).
-IEnumerable<Tag> tags = content.Find<Tag>("MyTagName")
-
-// Get a nested controller tag member
-Tag tagMember = content.Get<Tag>("MyTag.Member[1].SubMember.1");
-
-// Try get single tag.
-var result = content.TryGet("/Tag/MyTagName", out var tag);
-```
-
-### Modify L5X Content
-
-``` csharp
-// Create and add a new tag
-var newTag = new Tag { Name = "MyTag", Value = 100 };
-content.Tags.Add(newTag);
-
-// Remove a tag
-content.Tags.Remove("OldTag");
-
-// Modify tag properties
-var tag = content.Tags.Find("ExistingTag");
-tag.Value = 50;
-tag.Description = "Updated tag description";
-tag.ExternalAccess = ExternalAccess.ReadOnly;
-
-// Bulk update components
-content.Tags.Update(
-    t => t.DataType == "TIMER", //update condition
-    t => t.Description = "Updated TIMER description" //update action
-);
-
-// Save changes
-content.Save("C:\\PathToMyOutputFile\\UpdatedFile.L5X");
-```
-
-## Component Types
-
-L5Sharp provides support for all primary Logix components:
-
-- Controller
-- DataType
-- AddOnInstruction
-- Module
-- Tag
-- Program
-- Routine
-- Task
-- Trend
-- WatchList
-
-## Use Cases
-
-- Automation of PLC development tasks
-- Consistency checks across multiple PLC projects
-- Tag documentation and reporting
-- PLC code generation
-- Automation tool development.
 
 ## DeepWiki Documentation
 
@@ -149,11 +39,6 @@ questions about the codebase.
 (From Perplexity)
 
 [https://deepwiki.com/tnunnink/L5Sharp](https://deepwiki.com/tnunnink/L5Sharp)
-
-## Requirements
-
-- .NET Standard 2.0 or .NET 8.0 compatible framework
-- C# 12.0 support
 
 ## License
 

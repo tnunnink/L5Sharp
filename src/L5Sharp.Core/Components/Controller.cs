@@ -383,9 +383,9 @@ public sealed class Controller : LogixElement
     /// and the physical Ethernet ports. The CIP™ EtherNet/IP™ port can be configured as one of two modes:
     /// Dual-IP, Linear/DLR
     /// </summary>
-    public string? EtherNetIPMode
+    public EthernetIpMode? EtherNetIPMode
     {
-        get => GetValue();
+        get => GetValue(EthernetIpMode.Parse);
         set => SetValue(value);
     }
 

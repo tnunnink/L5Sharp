@@ -514,7 +514,7 @@ public abstract class LogixElement : ILogixElement
 
         return attribute is not null
             ? DateTime.ParseExact(attribute.Value, format, CultureInfo.CurrentCulture)
-            : default;
+            : null;
     }
 
     /// <summary>

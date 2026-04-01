@@ -28,6 +28,8 @@ public class AddOnInstructionTests
         instruction.AdditionalHelpText.Should().BeNull();
         instruction.IsEncrypted.Should().BeFalse();
         instruction.EncryptionConfig.Should().Be(0);
+        instruction.SignatureID.Should().BeNull();
+        instruction.SignatureTimestamp.Should().BeNull();
         instruction.Parameters.Should().HaveCount(2);
         instruction.LocalTags.Should().BeEmpty();
         instruction.Routines.Should().HaveCount(1);

@@ -500,14 +500,14 @@ public class LogixElementTests
     }
 
     [Test]
-    public void GetDateTime_NoValue_ShouldBeDefault()
+    public void GetDateTime_NoValue_ShouldBeNull()
     {
         var xml = new XElement("Test");
         var element = new TestElement(xml);
 
         var value = element.Date;
 
-        value.Should().Be(default);
+        value.Should().BeNull();
     }
 
     [Test]
