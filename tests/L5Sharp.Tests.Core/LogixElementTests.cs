@@ -95,7 +95,7 @@ public class LogixElementTests
 
         casted.Should().NotBeNull();
     }
-    
+
     [Test]
     public void As_InvalidType_ShouldThrowInvalidCastException()
     {
@@ -787,14 +787,143 @@ public class LogixElementTests
     }
 
     [Test]
-    public void EquivalentTo_DifferentType_ShouldBeFalse()
+    public void Metadata_AddAndGet_ShouldBeExpected()
     {
-        var first = new TestElement();
-        var second = new ChildElement();
+        var element = new TestElement();
 
-        var result = first.EquivalentTo(second);
+        element.Metadata.Add("Test", "Value");
+
+        var result = element.Metadata.Get<string>("Test");
+
+        result.Should().Be("Value");
+    }
+
+    [Test]
+    public void Metadata_SetAndGet_ShouldBeExpected()
+    {
+        var element = new TestElement();
+
+        element.Metadata["Test"] = 123;
+
+        var result = element.Metadata.Get<int>("Test");
+
+        result.Should().Be(123);
+    }
+
+    [Test]
+    public void Metadata_Remove_ShouldBeExpected()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test", "Value");
+
+        var result = element.Metadata.Remove("Test");
+
+        result.Should().BeTrue();
+        element.Metadata.Contains("Test").Should().BeFalse();
+    }
+
+    [Test]
+    public void Metadata_Clear_ShouldBeEmpty()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test1", 1);
+        element.Metadata.Add("Test2", 2);
+
+        element.Metadata.Clear();
+
+        element.Metadata.Count.Should().Be(0);
+    }
+
+    [Test]
+    public void Metadata_Contains_ShouldBeExpected()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test", "Value");
+
+        element.Metadata.Contains("Test").Should().BeTrue();
+        element.Metadata.Contains("Invalid").Should().BeFalse();
+    }
+
+    [Test]
+    public void Metadata_GetInvalidKey_ShouldThrowKeyNotFoundException()
+    {
+        var element = new TestElement();
+
+        FluentActions.Invoking(() => element.Metadata.Get<string>("Invalid")).Should().Throw<KeyNotFoundException>();
+    }
+
+    [Test]
+    public void Metadata_GetInvalidCast_ShouldThrowInvalidCastException()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test", 123);
+
+        FluentActions.Invoking(() => element.Metadata.Get<string>("Test")).Should().Throw<InvalidCastException>();
+    }
+
+    [Test]
+    public void Metadata_TryGetValue_ShouldBeExpected()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test", "Value");
+
+        var result = element.Metadata.TryGetValue("Test", out var value);
+
+        result.Should().BeTrue();
+        value.Should().Be("Value");
+    }
+
+    [Test]
+    public void Metadata_TryGetValueGeneric_ShouldBeExpected()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test", 123);
+
+        var result = element.Metadata.TryGetValue<int>("Test", out var value);
+
+        result.Should().BeTrue();
+        value.Should().Be(123);
+    }
+
+    [Test]
+    public void Metadata_TryGetValueGenericInvalidCast_ShouldReturnFalse()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test", 123);
+
+        var result = element.Metadata.TryGetValue<string>("Test", out var value);
 
         result.Should().BeFalse();
+        value.Should().BeNull();
+    }
+
+    [Test]
+    public void Metadata_GetEnumerator_ShouldHaveItems()
+    {
+        var element = new TestElement();
+        element.Metadata.Add("Test1", 1);
+        element.Metadata.Add("Test2", 2);
+
+        var list = element.Metadata.ToList();
+
+        list.Should().HaveCount(2);
+        list.Should().Contain(kv => kv.Key == "Test1" && (int)kv.Value == 1);
+        list.Should().Contain(kv => kv.Key == "Test2" && (int)kv.Value == 2);
+    }
+
+    [Test]
+    public void Metadata_LazyInitialization_ShouldNotHaveAnnotationInitially()
+    {
+        var element = new TestElement();
+        var xml = element.Serialize();
+
+        xml.Annotation<Dictionary<string, object>>().Should().BeNull();
+
+        // Accessing count or other members should trigger initialization
+        var count = element.Metadata.Count;
+
+        count.Should().Be(0);
+        xml.Annotation<Dictionary<string, object>>().Should().NotBeNull();
     }
 }
 

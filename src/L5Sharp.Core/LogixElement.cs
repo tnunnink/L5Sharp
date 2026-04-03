@@ -17,6 +17,21 @@ namespace L5Sharp.Core;
 public interface ILogixElement
 {
     /// <summary>
+    /// Gets the metadata information for the current <see cref="ILogixElement"/>.
+    /// </summary>
+    /// <value>
+    /// A <see cref="LogixMetadata"/> instance containing metadata such as element name, L5X type information,
+    /// and other attributes associated with the underlying XML element.
+    /// </value>
+    /// <remarks>
+    /// Metadata enables the association of additional information with the backing <see cref="XElement"/>,
+    /// ensuring that element-specific data remains accessible even when the object is recreated during
+    /// later serialization or deserialization operations. This capability supports scenarios where
+    /// preserving contextual information or state across object lifecycles is required.
+    /// </remarks>
+    LogixMetadata Metadata { get; }
+
+    /// <summary>
     /// Returns the underlying <see cref="XElement"/> for the <see cref="ILogixElement"/>.
     /// </summary>
     /// <returns>A <see cref="XElement"/> representing the serialized logix element.</returns>
@@ -124,6 +139,9 @@ public abstract class LogixElement : ILogixElement
     /// in the underlying parent element. 
     /// </summary>
     protected virtual List<string> ElementOrder { get; } = [];
+
+    /// <inheritdoc />
+    public LogixMetadata Metadata => new(Element);
 
     /// <inheritdoc />
     public virtual XElement Serialize() => Element;
