@@ -376,6 +376,19 @@ public class Tag : LogixComponent<Tag>
     public Tag? Alias => GetAliasTag();
 
     /// <summary>
+    /// Gets the <see cref="Core.Program"/> component that contains this tag, if any.
+    /// </summary>
+    /// <value>
+    /// A <see cref="Core.Program"/> representing the program scope that contains this tag,
+    /// or <c>null</c> if the tag is not contained within a program (i.e., it is a controller-scoped tag).
+    /// </value>
+    /// <remarks>
+    /// This property traverses up the component hierarchy to find the nearest ancestor program component.
+    /// Controller-scoped tags will return <c>null</c> since they are not contained within a program.
+    /// </remarks>
+    public Program? Program => GetAncestor<Program>();
+
+    /// <summary>
     /// The collection of <see cref="Comment"/> configured for this tag.
     /// </summary>
     /// <value>A <see cref="LogixContainer{TObject}"/> wrapping the root collection of tag units.</value>
