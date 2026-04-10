@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -873,13 +873,15 @@ public class Tag : LogixComponent<Tag>
         // This will recursively traverse the tag tree.
         var description = GetDefinitionComment(doc) ?? Parent?.Description;
 
-        // If EnableWithAppend, then we need to concat the base tag description with the member description.
-        // Otherwise, we can just return the result of the previous line.
-        return doc.Controller.PassThroughConfiguration?.Name switch
+        // When EnabledWithAppend is enabled, and we are in a member tag,
+        // then concatenate the base description with the member description. 
+        if (Parent is not null && Equals(doc.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
         {
-            nameof(PassThroughOption.EnabledWithAppend) => string.Concat(Base.Description, " ", description).Trim(),
-            _ => description
-        };
+            return string.Concat(Base.Description, " ", description).Trim();
+        }
+
+        // In all other cases, just return the result of the computed member description.
+        return description;
     }
 
     /// <summary>
