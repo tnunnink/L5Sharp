@@ -872,7 +872,7 @@ public class Tag : LogixComponent<Tag>
         if (Equals(doc.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
         {
             var description = type.Members.FirstOrDefault(m => m.Name == Name)?.Description;
-            return Parent.Description + " " + description;
+            return string.Concat(Parent.Description, " ", description).Trim();
         }
 
         //Disable means we don't use pass-through. Default to Inherited description.
