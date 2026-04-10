@@ -861,35 +861,69 @@ public class Tag : LogixComponent<Tag>
     /// </summary>
     private string? GetTagDescription()
     {
-        if (Parent is null)
-            return Element.Element(L5XName.Description)?.Value;
+        // Return any custom comment for a base tag or tag member if found.
+        if (TryGetCustomComment(out var comment))
+            return comment;
 
-        //Local member comments always override pass-through and inherited descriptions
-        var comment = Comments?.FirstOrDefault(c => TagName.Contains(c.Operand));
-        if (comment is not null) return comment.Value;
+        //If there is no attached document or the pass-through configuration is disabled, return the parent description.
+        if (!TryGetDocument(out var doc) || Equals(doc.Controller.PassThroughConfiguration, PassThroughOption.Disabled))
+            return Parent?.Description;
 
-        //If there is no attached document or the corresponding data type is not available, default to the inherited description.
-        //Note that we need to always use the parent type. If we are here, we know we have a parent and could
-        //potentially be some user-defined type.
-        if (!TryGetDocument(out var doc) || !doc.TryGet<DataType>(Parent.DataType, out var type))
-            return Parent.Description;
+        // Attempt to get the type definition description and if null, then fall back to the parent description
+        // This will recursively traverse the tag tree.
+        var description = GetDefinitionComment(doc) ?? Parent?.Description;
 
-        //Here we have the corresponding type definition and can use the description to emulate pass-through.
-        //Enable means returning the definition description.
-        if (Equals(doc.Controller.PassThroughConfiguration, PassThroughOption.Enabled))
+        // If EnableWithAppend, then we need to concat the base tag description with the member description.
+        // Otherwise, we can just return the result of the previous line.
+        return doc.Controller.PassThroughConfiguration?.Name switch
         {
-            return type.Description;
+            nameof(PassThroughOption.EnabledWithAppend) => string.Concat(Base.Description, " ", description).Trim(),
+            _ => description
+        };
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a custom comment associated with the tag.
+    /// </summary>
+    /// <param name="comment">When this method returns, contains the custom comment if one is found; otherwise, null.</param>
+    /// <returns><c>true</c> if a custom comment is found; otherwise, <c>false</c>.</returns>
+    private bool TryGetCustomComment(out string comment)
+    {
+        // Try to get the overriden comment (either on description element for root tag or comments element for members)
+        var result = Parent is null
+            ? Element.Element(L5XName.Description)?.Value
+            : Comments?.FirstOrDefault(c => TagName.Contains(c.Operand))?.Value;
+
+        if (result is null)
+        {
+            comment = null!;
+            return false;
         }
 
-        //EnableWithAppend means append the definition description to the parent.
-        if (Equals(doc.Controller.PassThroughConfiguration, PassThroughOption.EnabledWithAppend))
+        comment = result;
+        return true;
+    }
+
+    /// <summary>
+    /// Retrieves the definition comment associated with the tag or its parent from the provided L5X document.
+    /// </summary>
+    /// <param name="doc">The L5X document to search for the definition comment.</param>
+    /// <returns>The definition comment if found; otherwise, null.</returns>
+    private string? GetDefinitionComment(L5X doc)
+    {
+        if (Parent is null && doc.TryGet<DataType>(DataType, out var root))
+            return root.Description;
+
+        if (Parent is not null && doc.TryGet<DataType>(Parent.DataType, out var parent))
         {
-            var description = type.Members.FirstOrDefault(m => m.Name == Name)?.Description;
-            return string.Concat(Parent.Description, " ", description).Trim();
+            // If the parent is an array, we need to return the type description.
+            // If it is a structure, we need the corresponding member description.
+            return Parent.Dimensions.IsEmpty
+                ? parent.Members.FirstOrDefault(m => m.Name == Name)?.Description
+                : parent.Description;
         }
 
-        //Disable means we don't use pass-through. Default to Inherited description.
-        return Parent.Description;
+        return null;
     }
 
     /// <summary>

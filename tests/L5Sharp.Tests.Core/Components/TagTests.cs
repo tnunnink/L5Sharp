@@ -162,8 +162,8 @@ public class TagTests
         var parent = tag["Simple.M1"].Parent;
 
         parent.Should().NotBeNull();
-        parent?.Value.Should().BeOfType<MySimpleData>();
-        parent?.TagName.Should().Be("Test.Simple");
+        parent.Value.Should().BeOfType<MySimpleData>();
+        parent.TagName.Should().Be("Test.Simple");
     }
 
     [Test]
@@ -913,16 +913,60 @@ public class TagTests
     }
 
     [Test]
-    public void GetDescription_FromUserDefinedWithPassThroughEnabled_ShouldHavePassThroughDescription()
+    public void GetDescription_FromUserDefinedWithPassThroughEnabledWithAppend_ShouldHavePassThroughDescription()
     {
         const string expectedBase = "Base";
-        var expectedMember = string.Concat(expectedBase, " ", "User defined complex type", " ", "Test Bool");
+        var expectedMember = string.Concat(expectedBase, " ", "Test Bool");
         var content = TestContent.Test;
+        content.Controller.PassThroughConfiguration = PassThroughOption.EnabledWithAppend;
 
         var tag = content.Get<Tag>("TestComplexTag");
 
         tag.Description.Should().Be(expectedBase);
         tag["SimpleMember.BoolMember"].Description.Should().Be(expectedMember);
+    }
+
+    [Test]
+    public void GetDescription_ComplexArrayElementWithPassThroughEnabledWithAppend_ShouldHavePassThroughDescription()
+    {
+        const string expectedBase = "Base";
+        var expectedMember = string.Concat(expectedBase, " ",
+            "This is a test data type that contains simple atomic types with an updated description"
+        );
+        var content = TestContent.Test;
+        content.Controller.PassThroughConfiguration = PassThroughOption.EnabledWithAppend;
+
+        var tag = content.Get<Tag>("TestComplexTag");
+
+        tag.Description.Should().Be(expectedBase);
+        tag["SimplArray[0]"].Description.Should().Be(expectedMember);
+    }
+
+    [Test]
+    public void GetDescription_FromUserDefinedWithPassThroughEnabled_ShouldHavePassThroughDescription()
+    {
+        const string expectedBase = "Base";
+        const string expectedMember = "Test Bool";
+        var content = TestContent.Test;
+        content.Controller.PassThroughConfiguration = PassThroughOption.Enabled;
+
+        var tag = content.Get<Tag>("TestComplexTag");
+
+        tag.Description.Should().Be(expectedBase);
+        tag["SimpleMember.BoolMember"].Description.Should().Be(expectedMember);
+    }
+
+    [Test]
+    public void GetDescription_FromUserDefinedWithPassThroughDisabled_ShouldHavePassThroughDescription()
+    {
+        var content = TestContent.Test;
+        content.Controller.PassThroughConfiguration = PassThroughOption.Disabled;
+
+        var tag = content.Get<Tag>("TestComplexTag");
+        tag.Description = null; //clear just in case
+
+        tag.Description.Should().BeNull();
+        tag["SimpleMember.BoolMember"].Description.Should().BeNull();
     }
 
     #endregion
@@ -974,7 +1018,7 @@ public class TagTests
         tag.Value.Should().BeOfType<DINT>();
         tag.Value.Should().Be(0);
     }
-    
+
     [Test]
     public void New_ComplexTypeAndName_ShouldBeExpected()
     {
