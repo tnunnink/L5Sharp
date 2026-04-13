@@ -26,9 +26,9 @@ public static class L5XExtensions
         /// </summary>
         /// <param name="client">The PLC client used to communicate with the controller.</param>
         /// <param name="token">A cancellation token to cancel the upload operation.</param>
-        /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResults"/> with the results.</returns>
+        /// <returns>A task that represents the asynchronous upload operation containing a <see cref="TagResults"/> with the results.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> is null.</exception>
-        public Task<TagResults> Upload(IPlcClient client, CancellationToken token = default)
+        public Task<TagResults> UploadAsync(IPlcClient client, CancellationToken token = default)
         {
             if (client is null) throw new ArgumentNullException(nameof(client));
 
@@ -44,9 +44,9 @@ public static class L5XExtensions
         /// <param name="client">The PLC client used to communicate with the controller.</param>
         /// <param name="predicate">A function to filter which tags should be uploaded.</param>
         /// <param name="token">A cancellation token to cancel the upload operation.</param>
-        /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResults"/> with the results.</returns>
+        /// <returns>A task that represents the asynchronous upload operation containing a <see cref="TagResults"/> with the results.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> or <paramref name="predicate"/> is null.</exception>
-        public Task<TagResults> Upload(IPlcClient client, Func<Tag, bool> predicate, CancellationToken token = default)
+        public Task<TagResults> UploadAsync(IPlcClient client, Func<Tag, bool> predicate, CancellationToken token = default)
         {
             if (client is null) throw new ArgumentNullException(nameof(client));
             if (predicate is null) throw new ArgumentNullException(nameof(predicate));
@@ -63,9 +63,9 @@ public static class L5XExtensions
         /// <param name="client">The PLC client used to communicate with the controller.</param>
         /// <param name="scope">The scope that filters which tags should be uploaded (e.g., controller or program scope).</param>
         /// <param name="token">A cancellation token to cancel the upload operation.</param>
-        /// <returns>A task that represents the asynchronous upload operation, containing a <see cref="TagResults"/> with the results.</returns>
+        /// <returns>A task that represents the asynchronous upload operation containing a <see cref="TagResults"/> with the results.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> is null.</exception>
-        public Task<TagResults> Upload(IPlcClient client, Scope scope, CancellationToken token = default)
+        public Task<TagResults> UploadAsync(IPlcClient client, Scope scope, CancellationToken token = default)
         {
             if (client is null) throw new ArgumentNullException(nameof(client));
 

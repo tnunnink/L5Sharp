@@ -11,7 +11,7 @@ namespace L5Sharp.Tests.Gateway;
 public class ExtensionTests : PlcTestBase
 {
     [Test]
-    public async Task Upload_AllTags_ShouldHaveExpectedResponse()
+    public async Task UploadAsync_AllTags_ShouldHaveExpectedResponse()
     {
         var content = TestContent.Simple;
         //To ensure we read updated data, clear all the in memory tag values first.
@@ -19,7 +19,7 @@ public class ExtensionTests : PlcTestBase
 
         using var client = CreateClient();
 
-        var result = await content.Upload(client);
+        var result = await content.UploadAsync(client);
 
         result.Success.Should().BeTrue();
         result.Tags.Should().HaveCountGreaterThan(1000);

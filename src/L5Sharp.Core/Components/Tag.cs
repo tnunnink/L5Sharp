@@ -916,13 +916,24 @@ public class Tag : LogixComponent<Tag>
         if (Parent is null && doc.TryGet<DataType>(DataType, out var root))
             return root.Description;
 
+        // Logix will use parent type member comments first. 
         if (Parent is not null && doc.TryGet<DataType>(Parent.DataType, out var parent))
         {
             // If the parent is an array, we need to return the type description.
             // If it is a structure, we need the corresponding member description.
-            return Parent.Dimensions.IsEmpty
+            var description = Parent.Dimensions.IsEmpty
                 ? parent.Members.FirstOrDefault(m => m.Name == Name)?.Description
                 : parent.Description;
+
+            if (!string.IsNullOrEmpty(description))
+                return description;
+        }
+
+        // If no member description is configured, logix will attempt to use the type
+        // definition description for complex types.
+        if (doc.TryGet<DataType>(DataType, out var definition))
+        {
+            return definition.Description;
         }
 
         return null;
