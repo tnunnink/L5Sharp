@@ -3,7 +3,7 @@
 on:
   push:
     branches: [ main ]
-    tags: [ 'v*' ]
+    tags: [ '**v*' ]
   pull_request:
     branches: [ main ]
 
@@ -30,7 +30,7 @@ jobs:
       run: dotnet test src/L5Sharp.sln --configuration Release --no-build --verbosity normal
 
     - name: Pack
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: contains(github.ref, 'v')
       run: |
         dotnet pack src/L5Sharp.Core/L5Sharp.Core.csproj --configuration Release --no-build --output nupkg
         dotnet pack src/L5Sharp.Catalog/L5Sharp.Catalog.csproj --configuration Release --no-build --output nupkg
@@ -39,5 +39,5 @@ jobs:
         dotnet pack src/L5Sharp.Generators.Data/L5Sharp.Generators.Data.csproj --configuration Release --no-build --output nupkg
 
     - name: Publish to NuGet
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: contains(github.ref, 'v')
       run: dotnet nuget push nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
