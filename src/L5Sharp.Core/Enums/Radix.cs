@@ -24,11 +24,8 @@ public abstract class Radix : LogixEnum<Radix, string>
     }
 
     /// <summary>
-    /// Represents a Null radix, or absence of a Radix value.
+    /// Represents a null or undefined radix type.
     /// </summary>
-    /// <remarks>
-    /// All non value/atomic type data elements will have a null radix format.
-    /// </remarks>
     public static readonly Radix Null = new NullRadix();
 
     /// <summary>
@@ -1227,21 +1224,11 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="sbyte"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static sbyte ConvertToSByte(string value, int baseNumber)
     {
-        return Convert.ToSByte(value, baseNumber);
-    }
-
-    /// <summary>
-    /// Converts the specified string representation of a number in a specified base to its <see cref="byte"/> equivalent.
-    /// </summary>
-    /// <param name="value">The string representation of the number to convert.</param>
-    /// <param name="baseNumber">The base of the number in the specified string.</param>
-    /// <returns>The <see cref="byte"/> equivalent of the number contained in <paramref name="value"/>.</returns>
-    private static byte ConvertToByte(string value, int baseNumber)
-    {
-        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // Found L5X instances where Logix exported atomic values out of range of a specified type.
+        // For safety do conversion of the larger type and perform unchecked cast to avoid overflow exceptions.
         return baseNumber == 10 && value.StartsWith("-")
-            ? (byte)Convert.ToSByte(value, baseNumber)
-            : Convert.ToByte(value, baseNumber);
+            ? Convert.ToSByte(value, baseNumber)
+            : unchecked((sbyte)Convert.ToInt32(value, baseNumber));
     }
 
     /// <summary>
@@ -1252,7 +1239,11 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="short"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static short ConvertToInt16(string value, int baseNumber)
     {
-        return Convert.ToInt16(value, baseNumber);
+        // Found L5X instances where Logix exported atomic values out of range of a specified type.
+        // For safety do conversion of the larger type and perform unchecked cast to avoid overflow exceptions.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? Convert.ToInt16(value, baseNumber)
+            : unchecked((short)Convert.ToInt32(value, baseNumber));
     }
 
     /// <summary>
@@ -1263,7 +1254,11 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="int"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static int ConvertToInt32(string value, int baseNumber)
     {
-        return Convert.ToInt32(value, baseNumber);
+        // Found L5X instances where Logix exported atomic values out of range of a specified type.
+        // For safety do conversion of the larger type and perform unchecked cast to avoid overflow exceptions.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? Convert.ToInt32(value, baseNumber)
+            : unchecked((int)Convert.ToInt64(value, baseNumber));
     }
 
     /// <summary>
@@ -1274,7 +1269,26 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="long"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static long ConvertToInt64(string value, int baseNumber)
     {
-        return Convert.ToInt64(value, baseNumber);
+        // Found L5X instances where Logix exported atomic values out of range of a specified type.
+        // For safety do conversion of the larger type and perform unchecked cast to avoid overflow exceptions.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? Convert.ToInt64(value, baseNumber)
+            : unchecked((long)Convert.ToUInt64(value, baseNumber));
+    }
+
+    /// <summary>
+    /// Converts the specified string representation of a number in a specified base to its <see cref="byte"/> equivalent.
+    /// </summary>
+    /// <param name="value">The string representation of the number to convert.</param>
+    /// <param name="baseNumber">The base of the number in the specified string.</param>
+    /// <returns>The <see cref="byte"/> equivalent of the number contained in <paramref name="value"/>.</returns>
+    private static byte ConvertToByte(string value, int baseNumber)
+    {
+        // This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // Do signed conversion unchecked cast to avoid overflow exceptions. This appears similar to what Logix does.
+        return baseNumber == 10 && value.StartsWith("-")
+            ? unchecked((byte)Convert.ToSByte(value, baseNumber))
+            : Convert.ToByte(value, baseNumber);
     }
 
     /// <summary>
@@ -1285,9 +1299,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="ushort"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static ushort ConvertToUInt16(string value, int baseNumber)
     {
-        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // Do signed conversion unchecked cast to avoid overflow exceptions. This appears similar to what Logix does.
         return baseNumber == 10 && value.StartsWith("-")
-            ? (byte)Convert.ToInt16(value, baseNumber)
+            ? unchecked((ushort)Convert.ToInt16(value, baseNumber))
             : Convert.ToUInt16(value, baseNumber);
     }
 
@@ -1299,9 +1314,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="uint"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static uint ConvertToUInt32(string value, int baseNumber)
     {
-        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // Do signed conversion unchecked cast to avoid overflow exceptions. This appears similar to what Logix does.
         return baseNumber == 10 && value.StartsWith("-")
-            ? (byte)Convert.ToUInt32(value, baseNumber)
+            ? unchecked((uint)Convert.ToInt32(value, baseNumber))
             : Convert.ToUInt32(value, baseNumber);
     }
 
@@ -1313,9 +1329,10 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// <returns>The <see cref="ulong"/> equivalent of the number contained in <paramref name="value"/>.</returns>
     private static ulong ConvertToUInt64(string value, int baseNumber)
     {
-        //This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // This is because I found L5X instances where Logix exported unsigned atomic values as negative numbers.
+        // Do signed conversion unchecked cast to avoid overflow exceptions. This appears similar to what Logix does.
         return baseNumber == 10 && value.StartsWith("-")
-            ? (byte)Convert.ToUInt64(value, baseNumber)
+            ? unchecked((ulong)Convert.ToInt64(value, baseNumber))
             : Convert.ToUInt64(value, baseNumber);
     }
 

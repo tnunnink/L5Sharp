@@ -12,7 +12,7 @@ public class EthernetIpMode  : LogixEnum<EthernetIpMode, string>
     /// <summary>
     /// Represents the Dual-IP <see cref="EthernetIpMode"/> value.
     /// </summary>
-    public static readonly EthernetIpMode DualIp = new(nameof(DualIp), "Dual-IP");
+    public static readonly EthernetIpMode DualIp = new(nameof(DualIp), "A1/A2: Dual-IP");
         
     /// <summary>
     /// Represents the Linear/DLR (Device Level Ring) <see cref="EthernetIpMode"/> value.
