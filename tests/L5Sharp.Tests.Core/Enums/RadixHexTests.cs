@@ -84,11 +84,13 @@ namespace L5Sharp.Tests.Core.Enums
         }
 
         [Test]
-        public void Parse_OutOfRangeValue_ShouldWrapValue()
+        public void Parse_HexValueWithTooManyBits_ShouldTruncateToLowerBits()
         {
-            var value = Radix.Hex.Parse<short>("16#0000_0000_0000_0000_0024_0000");
+            // 0x0024_ABCD -> Truncated to 16 bits is 0xABCD. 
+            // 0xABCD as a signed short is -21555
+            var value = Radix.Hex.Parse<short>("16#0024_ABCD");
 
-            value.Should().Be(0);
+            value.Should().Be(-21555);
         }
 
         [Test]
