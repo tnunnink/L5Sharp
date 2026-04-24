@@ -15,7 +15,7 @@
         <Description>A gateway library for reading and writing Allen-Bradley Logix controller data using L5Sharp and libplctag</Description>
         <Authors>Timothy Nunnink</Authors>
         <Copyright>Copyright (c) Timothy Nunnink 2026</Copyright>
-        <Version>1.1.0</Version>
+        <Version>1.1.1</Version>
         <RepositoryUrl>https://github.com/tnunnink/L5Sharp</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>csharp allen-bradely l5x logix plc-programming rockwell-automation logix5000</PackageTags>
