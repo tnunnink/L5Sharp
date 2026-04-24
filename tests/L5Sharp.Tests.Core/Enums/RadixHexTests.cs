@@ -84,10 +84,11 @@ namespace L5Sharp.Tests.Core.Enums
         }
 
         [Test]
-        public void Parse_OutOfRangeValue_ShouldThrowException()
+        public void Parse_OutOfRangeValue_ShouldWrapValue()
         {
-            FluentActions.Invoking(() => Radix.Hex.Parse<short>("16#0000_0000_0000_0000_0024_0000"))
-                .Should().Throw<OverflowException>();
+            var value = Radix.Hex.Parse<short>("16#0000_0000_0000_0000_0024_0000");
+
+            value.Should().Be(0);
         }
 
         [Test]
