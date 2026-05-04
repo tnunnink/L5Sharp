@@ -82,5 +82,15 @@ namespace L5Sharp.Tests.Core.Enums
 
             result.Should().Be(1641016800000000000);
         }
+        
+        [Test]
+        public void Parse_ValidTimeExample3_ShouldBeExpectedFormat()
+        {
+            var radix = Radix.DateTimeNs;
+            
+            var result = radix.Parse<long>("LDT#2026-04-29-14:45:44.498115739Z");
+
+            result.Should().Be(1777473944498115700);
+        }
     }
 }

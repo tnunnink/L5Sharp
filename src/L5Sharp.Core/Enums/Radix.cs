@@ -686,10 +686,9 @@ public abstract class Radix : LogixEnum<Radix, string>
             ValidateFormat(value);
 
             //Trim any formatting characters we don't need.
-            var formatted = value
-                .Remove(0, Specifier.Length)
-                .Replace(Separator, string.Empty)
-                .Replace(Suffix, string.Empty);
+            var start = Specifier.Length;
+            var length = value.Length - (Specifier.Length + Suffix.Length);
+            var formatted = value.Substring(start, length).Replace(Separator, string.Empty);
 
             var dateTime = System.DateTime.ParseExact(
                 formatted,
@@ -745,11 +744,9 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             ValidateFormat(value);
 
-            //Trim any formatting characters we don't need.
-            var formatted = value
-                .Remove(0, Specifier.Length)
-                .Replace(Separator, string.Empty)
-                .Replace(Suffix, string.Empty);
+            var start = Specifier.Length;
+            var length = value.Length - (Specifier.Length + Suffix.Length);
+            var formatted = value.Substring(start, length).Replace(Separator, string.Empty);
 
             var dateTime = System.DateTime.ParseExact(
                 formatted,
