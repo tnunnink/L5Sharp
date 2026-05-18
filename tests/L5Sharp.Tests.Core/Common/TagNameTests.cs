@@ -169,7 +169,7 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase(".Member[32].Value", "")]
         [TestCase("Member[32].Value", "Member")]
         [TestCase("[32].Value", "[32]")]
-        public void Base_WhenCalled_ShouldBeExpected(string value, string expected)
+        public void BaseName_WhenCalled_ShouldBeExpected(string value, string expected)
         {
             var tagName = new TagName(value);
 
@@ -179,7 +179,7 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Base_WhenCalledManyTimes_ShouldBeEfficient()
+        public void BaseName_WhenCalledManyTimes_ShouldBeEfficient()
         {
             var tags = Enumerable.Range(0, 1000000)
                 .Select(i => $"MyTagName_{i}.SomeMember.21")
@@ -202,7 +202,7 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase("MyTag[1].SomeMember.1", "[1].SomeMember.1")]
         [TestCase("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12",
             "TagName.Member[1].SubTag.Another[12,13,14].Value.12")]
-        public void Member_WhenCalled_ShouldBeExpected(string value, string expected)
+        public void MemberPath_WhenCalled_ShouldBeExpected(string value, string expected)
         {
             var tagName = new TagName(value);
 
@@ -212,7 +212,7 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Member_CalledOnLargeList_ShouldExecuteInExpectedTime()
+        public void MemberPath_CalledOnLargeList_ShouldExecuteInExpectedTime()
         {
             var tags = Enumerable.Range(0, 1000000)
                 .Select(i => $"MyTagName_{i}.SomeMember.Target")
@@ -233,7 +233,7 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase("", "")]
         [TestCase("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12", "12")]
         [TestCase("MyTag.Member[1]", "[1]")]
-        public void Element_WhenCalled_ShouldBeExpected(string value, string expected)
+        public void MemberName_WhenCalled_ShouldBeExpected(string value, string expected)
         {
             var tagName = new TagName(value);
 
@@ -243,7 +243,7 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Element_CalledOnLargeList_ShouldExecuteInExpectedTime()
+        public void MemberName_CalledOnLargeList_ShouldExecuteInExpectedTime()
         {
             var tags = Enumerable.Range(0, 1000000)
                 .Select(i => $"MyTagName_{i}.SomeMember.Target")
