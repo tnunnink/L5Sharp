@@ -968,7 +968,7 @@ public class Tag : LogixComponent<Tag>
             return;
         }
 
-        Comments!.Add(new Comment(TagName.Operand, value));
+        Comments!.Add(new Comment(TagName.RelativePath, value));
     }
 
     /// <summary>
@@ -998,7 +998,7 @@ public class Tag : LogixComponent<Tag>
             return;
         }
 
-        Units!.Add(new Unit(TagName.Operand, value));
+        Units!.Add(new Unit(TagName.RelativePath, value));
     }
 
     /// <summary>

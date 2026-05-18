@@ -110,37 +110,33 @@ public sealed class TagName : IComparable<TagName>
     /// <summary>
     /// Represents the hierarchical portion of the tag name that excludes the base tag name and is stripped of the leading separator.
     /// This property returns the remaining portion of the tag name, starting from the first member or array notation,
-    /// if applicable, after the base tag. It is derived from the <see cref="Operand"/> property by removing the leading separator.
+    /// if applicable, after the base tag. It is derived from the <see cref="RelativePath"/> property by removing the leading separator.
     /// Commonly used for accessing specific levels of a tag's hierarchy within complex or structured tag definitions.
     /// </summary>
-    public string MemberPath => GetOperand(_path).TrimStart(Separator);
+    public string MemberPath => GetRelativePath(_path).TrimStart(Separator);
 
     /// <summary>
-    /// Represents the operand portion of the tag path, including all members, elements, and indices,
-    /// excluding the base portion of the tag path. This string begins with the separator used between
-    /// the base and later members, providing a detailed representation of the tag structure beyond the base.
-    /// Used for operations requiring deeper levels of the tag hierarchy.
+    /// Represents the portion of the tag name that follows the base tag name, containing all members,
+    /// elements, and indices if present, including the leading separator for context.
+    /// The relative path provides a hierarchical breakdown of the tag's structure beyond its base name.
     /// </summary>
-    public string Operand => GetOperand(_path);
+    public string RelativePath => GetRelativePath(_path);
 
     /// <summary>
-    /// Gets the base portion of the tag name or an empty string if not defined.
+    /// The base name of the tag represented by the <see cref="TagName"/> instance.
+    /// This string corresponds to the root tag name, excluding any member accessor,
+    /// indices, or hierarchy information. It is derived from the full path and is used
+    /// in scenarios where only the top-level tag name is required.
     /// </summary>
-    /// <remarks>
-    /// The <c>Base</c> part of a tag name is the beginning part of the tag name up to the first member
-    /// separator character (e.g., '.' or '['). For Module-defined tags, this includes the colon separator.
-    /// </remarks>
     public string BaseName => GetBase(_path);
 
     /// <summary>
-    /// Retrieves the terminal component or final segment of the tag path represented by the instance.
+    /// Gets the immediate member name of the tag represented by the current <see cref="TagName"/> instance.
+    /// The member name refers to the most specific, non-hierarchical segment of the tag, typically
+    /// the final component following any hierarchical path or indexing.
+    /// If the tag does not include any hierarchical or member path, the value will be an empty string.
     /// </summary>
-    /// <remarks>
-    /// This property isolates the most specific portion of the logical reference, such as the last member,
-    /// submember, or indexed element in a hierarchical path structure.
-    /// It is particularly useful for identifying the immediate target or endpoint in a tag hierarchy.
-    /// </remarks>
-    public string MemberName => GetMember(_path);
+    public string? MemberName => GetMember(_path);
 
     /// <summary>
     /// A zero-based number representing the depth of the tag name. In other words, the number of members
@@ -302,7 +298,7 @@ public sealed class TagName : IComparable<TagName>
     /// the structural path intact. For example, renaming "OldTag.Member[1].Value" with the base name "NewTag"
     /// would result in "NewTag.Member[1].Value".
     /// </remarks>
-    public TagName Rename(string baseName) => Combine(baseName, Operand);
+    public TagName Rename(string baseName) => Combine(baseName, RelativePath);
 
     /// <inheritdoc />
     public int CompareTo(TagName? other)
@@ -337,7 +333,7 @@ public sealed class TagName : IComparable<TagName>
     /// rung of neutral text in which multiple tag names are embedded.
     /// </param>
     /// <returns>A collection of <see cref="TagName"/> objects representing the tags found within the input text.</returns>
-    public static IEnumerable<TagName> Scrape(string text)
+    public static IEnumerable<TagName> ExtractAll(string text)
     {
         return TagNamePattern.Matches(text).Cast<Match>().Select(m => new TagName(m.Value));
     }
@@ -441,7 +437,7 @@ public sealed class TagName : IComparable<TagName>
     /// <summary>
     /// Retrieves the operand portion of a tag name from the provided path string.
     /// </summary>
-    private static string GetOperand(string path)
+    private static string GetRelativePath(string path)
     {
         var tagName = GetLocalTagName(path);
         var separator = tagName.IndexOfAny([Separator, ArrayOpen]);
@@ -452,12 +448,12 @@ public sealed class TagName : IComparable<TagName>
     /// Gets the last member of the tag name path, or the portion of the string from the last member separator to the
     /// end of the string. We are calling this the element.
     /// </summary>
-    private static string GetMember(string path)
+    private static string? GetMember(string path)
     {
         var tagName = GetLocalTagName(path);
 
         var lastSeparator = tagName.LastIndexOfAny([Separator, ArrayOpen]);
-        if (lastSeparator < 0) return string.Empty;
+        if (lastSeparator < 0) return null;
 
         var length = tagName.Length - lastSeparator;
         return tagName.Substring(lastSeparator, length).TrimStart(Separator);

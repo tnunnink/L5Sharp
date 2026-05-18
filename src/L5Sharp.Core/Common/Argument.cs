@@ -221,7 +221,7 @@ public class Argument
             return [argument];
 
         if (type == ArgumentType.Expression)
-            return TagName.Scrape(argument);
+            return TagName.ExtractAll(argument);
 
         return [];
     }
