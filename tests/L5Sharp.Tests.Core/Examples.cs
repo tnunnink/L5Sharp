@@ -18,15 +18,6 @@ namespace L5Sharp.Tests.Core
                 .ToList();
 
             results.Should().NotBeEmpty();
-
-            var program = new Program();
-            // Create a duplicate with updated config.
-            var duplicate = program.Duplicate(p =>
-            {
-                p.Name = "Program_02";
-                p.Description = "This is a different instance";
-                p.Replace("Tag_01", "Tag_02"); //This method will perform find/replace of text in the new object.
-            });
         }
 
         [Test]

@@ -94,7 +94,7 @@ public sealed class TagName : IComparable<TagName>
     /// equality and value comparison methods.
     /// </summary>
     // ReSharper disable once ConvertToAutoPropertyWhenPossible
-    public string Path => _path;
+    public string FullPath => _path;
 
     /// <summary>
     /// Gets the local portion of the tag name, excluding any program scope prefix.
@@ -102,19 +102,18 @@ public sealed class TagName : IComparable<TagName>
     /// <remarks>
     /// If the tag name is program-scoped (begins with "Program:"), this property returns
     /// only the tag name portion after the program prefix and separator. For controller-scoped
-    /// tags, this property returns the same value as <see cref="Path"/>.
+    /// tags, this property returns the same value as <see cref="FullPath"/>.
     /// For example, "Program:MyProgram.MyTag" would return "MyTag".
     /// </remarks>
     public string LocalPath => GetLocalTagName(_path);
 
     /// <summary>
-    /// Gets the base portion of the tag name or an empty string if not defined.
+    /// Represents the hierarchical portion of the tag name that excludes the base tag name and is stripped of the leading separator.
+    /// This property returns the remaining portion of the tag name, starting from the first member or array notation,
+    /// if applicable, after the base tag. It is derived from the <see cref="Operand"/> property by removing the leading separator.
+    /// Commonly used for accessing specific levels of a tag's hierarchy within complex or structured tag definitions.
     /// </summary>
-    /// <remarks>
-    /// The <c>Base</c> part of a tag name is the beginning part of the tag name up to the first member
-    /// separator character (e.g., '.' or '['). For Module-defined tags, this includes the colon separator.
-    /// </remarks>
-    public string Base => GetBase(_path);
+    public string MemberPath => GetOperand(_path).TrimStart(Separator);
 
     /// <summary>
     /// Represents the operand portion of the tag path, including all members, elements, and indices,
@@ -125,14 +124,13 @@ public sealed class TagName : IComparable<TagName>
     public string Operand => GetOperand(_path);
 
     /// <summary>
-    /// Gets the portion of the tag name that represents the member path.
+    /// Gets the base portion of the tag name or an empty string if not defined.
     /// </summary>
-    /// /// <remarks>
-    /// The member is derived by stripping the base tag name and any leading separators
-    /// from the operand. This property encapsulates the hierarchical component
-    /// beneath the base, including nested structures or indices when applicable.
+    /// <remarks>
+    /// The <c>Base</c> part of a tag name is the beginning part of the tag name up to the first member
+    /// separator character (e.g., '.' or '['). For Module-defined tags, this includes the colon separator.
     /// </remarks>
-    public string Member => GetOperand(_path).TrimStart(Separator);
+    public string BaseName => GetBase(_path);
 
     /// <summary>
     /// Retrieves the terminal component or final segment of the tag path represented by the instance.
@@ -142,7 +140,7 @@ public sealed class TagName : IComparable<TagName>
     /// submember, or indexed element in a hierarchical path structure.
     /// It is particularly useful for identifying the immediate target or endpoint in a tag hierarchy.
     /// </remarks>
-    public string Element => GetElement(_path);
+    public string MemberName => GetMember(_path);
 
     /// <summary>
     /// A zero-based number representing the depth of the tag name. In other words, the number of members
@@ -291,7 +289,7 @@ public sealed class TagName : IComparable<TagName>
 
         return _path.IndexOf(tagName._path, StringComparison.OrdinalIgnoreCase) >= 0;
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="TagName"/> by replacing the base portion of the current tag name
     /// with the specified base name while preserving the operand (member path, indices, and elements).
@@ -301,7 +299,7 @@ public sealed class TagName : IComparable<TagName>
     /// <returns>A new <see cref="TagName"/> instance with the updated base name and the original operand.</returns>
     /// <remarks>
     /// This method is useful when you need to change the root portion of a tag reference while keeping
-    /// the structural path intact. For example, renaming "OldTag.Member[1].Value" with base name "NewTag"
+    /// the structural path intact. For example, renaming "OldTag.Member[1].Value" with the base name "NewTag"
     /// would result in "NewTag.Member[1].Value".
     /// </remarks>
     public TagName Rename(string baseName) => Combine(baseName, Operand);
@@ -454,7 +452,7 @@ public sealed class TagName : IComparable<TagName>
     /// Gets the last member of the tag name path, or the portion of the string from the last member separator to the
     /// end of the string. We are calling this the element.
     /// </summary>
-    private static string GetElement(string path)
+    private static string GetMember(string path)
     {
         var tagName = GetLocalTagName(path);
 
@@ -521,7 +519,7 @@ public sealed class TagName : IComparable<TagName>
     /// <summary>
     /// Determines if the tag name path contains a program prefix name and if so uses that to return a new
     /// <see cref="Scope"/> object to identify the scope of the tag name. If no program prefix is present, we always assume
-    /// a controller scoped tag name.
+    /// a controller-scoped tag name.
     /// </summary>
     private static Scope GetScope(string path)
     {
@@ -552,8 +550,11 @@ public sealed class TagName : IComparable<TagName>
     }
 
     /// <summary>
-    /// Handles combining an enumerable containing string member names into a single <see cref="TagName"/> value.
+    /// Concatenates the provided collection of tag members into a single string representation
+    /// using appropriate delimiters.
     /// </summary>
+    /// <param name="members">The collection of tag members to concatenate.</param>
+    /// <returns>A string representing the concatenated tag members.</returns>
     private static string ConcatenateMembers(IEnumerable<string> members)
     {
         var builder = new StringBuilder();
@@ -569,6 +570,11 @@ public sealed class TagName : IComparable<TagName>
         return builder.ToString();
     }
 
+    /// <summary>
+    /// Determines whether the specified string value represents a valid qualified tag name.
+    /// </summary>
+    /// <param name="value">The string value to validate as a qualified tag name.</param>
+    /// <returns>True if the value is a qualified tag name; otherwise, false.</returns>
     private static bool IsQualifiedTagName(string value)
     {
         if (value.IsEmpty()) return false;

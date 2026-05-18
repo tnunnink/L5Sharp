@@ -28,10 +28,10 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = TagName.Empty;
 
-            tagName.Base.Should().BeEmpty();
+            tagName.BaseName.Should().BeEmpty();
             tagName.Operand.Should().BeEmpty();
-            tagName.Member.Should().BeEmpty();
-            tagName.Element.Should().BeEmpty();
+            tagName.MemberPath.Should().BeEmpty();
+            tagName.MemberName.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
             tagName.IsEmpty.Should().BeTrue();
             tagName.IsQualified.Should().BeFalse();
@@ -42,11 +42,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag");
 
-            tagName.Path.Should().Be("MyTag");
-            tagName.Base.Should().Be("MyTag");
+            tagName.FullPath.Should().Be("MyTag");
+            tagName.BaseName.Should().Be("MyTag");
             tagName.Operand.Should().BeEmpty();
-            tagName.Member.Should().BeEmpty();
-            tagName.Element.Should().BeEmpty();
+            tagName.MemberPath.Should().BeEmpty();
+            tagName.MemberName.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
         }
 
@@ -55,11 +55,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag.MemberName");
 
-            tagName.Path.Should().Be("MyTag.MemberName");
-            tagName.Base.Should().Be("MyTag");
+            tagName.FullPath.Should().Be("MyTag.MemberName");
+            tagName.BaseName.Should().Be("MyTag");
             tagName.Operand.Should().Be(".MemberName");
-            tagName.Member.Should().Be("MemberName");
-            tagName.Element.Should().Be("MemberName");
+            tagName.MemberPath.Should().Be("MemberName");
+            tagName.MemberName.Should().Be("MemberName");
             tagName.Depth.Should().Be(1);
         }
 
@@ -68,11 +68,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag.MemberName.SubMember");
 
-            tagName.Path.Should().Be("MyTag.MemberName.SubMember");
-            tagName.Base.Should().Be("MyTag");
+            tagName.FullPath.Should().Be("MyTag.MemberName.SubMember");
+            tagName.BaseName.Should().Be("MyTag");
             tagName.Operand.Should().Be(".MemberName.SubMember");
-            tagName.Member.Should().Be("MemberName.SubMember");
-            tagName.Element.Should().Be("SubMember");
+            tagName.MemberPath.Should().Be("MemberName.SubMember");
+            tagName.MemberName.Should().Be("SubMember");
             tagName.Depth.Should().Be(2);
         }
 
@@ -81,11 +81,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag[13].MemberName");
 
-            tagName.Path.Should().Be("MyTag[13].MemberName");
-            tagName.Base.Should().Be("MyTag");
+            tagName.FullPath.Should().Be("MyTag[13].MemberName");
+            tagName.BaseName.Should().Be("MyTag");
             tagName.Operand.Should().Be("[13].MemberName");
-            tagName.Member.Should().Be("[13].MemberName");
-            tagName.Element.Should().Be("MemberName");
+            tagName.MemberPath.Should().Be("[13].MemberName");
+            tagName.MemberName.Should().Be("MemberName");
             tagName.Depth.Should().Be(2);
         }
 
@@ -94,11 +94,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag.MemberName.1");
 
-            tagName.Path.Should().Be("MyTag.MemberName.1");
-            tagName.Base.Should().Be("MyTag");
+            tagName.FullPath.Should().Be("MyTag.MemberName.1");
+            tagName.BaseName.Should().Be("MyTag");
             tagName.Operand.Should().Be(".MemberName.1");
-            tagName.Member.Should().Be("MemberName.1");
-            tagName.Element.Should().Be("1");
+            tagName.MemberPath.Should().Be("MemberName.1");
+            tagName.MemberName.Should().Be("1");
             tagName.Depth.Should().Be(2);
         }
 
@@ -107,11 +107,11 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
 
-            tagName.Path.Should().Be("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-            tagName.Base.Should().Be("Module:1:I");
+            tagName.FullPath.Should().Be("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            tagName.BaseName.Should().Be("Module:1:I");
             tagName.Operand.Should().Be(".TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-            tagName.Member.Should().Be("TagName.Member[1].SubTag.Another[12,13,14].Value.12");
-            tagName.Element.Should().Be("12");
+            tagName.MemberPath.Should().Be("TagName.Member[1].SubTag.Another[12,13,14].Value.12");
+            tagName.MemberName.Should().Be("12");
             tagName.Depth.Should().Be(8);
         }
 
@@ -138,12 +138,12 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("Program:SomeProgram.MyTag");
 
-            tagName.Path.Should().Be("Program:SomeProgram.MyTag");
+            tagName.FullPath.Should().Be("Program:SomeProgram.MyTag");
             tagName.LocalPath.Should().Be("MyTag");
-            tagName.Base.Should().Be("MyTag");
+            tagName.BaseName.Should().Be("MyTag");
             tagName.Operand.Should().BeEmpty();
-            tagName.Member.Should().BeEmpty();
-            tagName.Element.Should().BeEmpty();
+            tagName.MemberPath.Should().BeEmpty();
+            tagName.MemberName.Should().BeEmpty();
             tagName.Depth.Should().Be(0);
         }
 
@@ -152,12 +152,12 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("Program:SomeProgram.MyTag.Member[0].Value.12");
 
-            tagName.Path.Should().Be("Program:SomeProgram.MyTag.Member[0].Value.12");
+            tagName.FullPath.Should().Be("Program:SomeProgram.MyTag.Member[0].Value.12");
             tagName.LocalPath.Should().Be("MyTag.Member[0].Value.12");
-            tagName.Base.Should().Be("MyTag");
+            tagName.BaseName.Should().Be("MyTag");
             tagName.Operand.Should().Be(".Member[0].Value.12");
-            tagName.Member.Should().Be("Member[0].Value.12");
-            tagName.Element.Should().Be("12");
+            tagName.MemberPath.Should().Be("Member[0].Value.12");
+            tagName.MemberName.Should().Be("12");
             tagName.Depth.Should().Be(4);
         }
 
@@ -173,7 +173,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName(value);
 
-            var path = tagName.Base;
+            var path = tagName.BaseName;
 
             path.Should().Be(expected);
         }
@@ -187,7 +187,7 @@ namespace L5Sharp.Tests.Core.Common
                 .ToList();
 
             var stopwatch = Stopwatch.StartNew();
-            var elements = tags.Select(t => t.Base).ToList();
+            var elements = tags.Select(t => t.BaseName).ToList();
             stopwatch.Stop();
 
             Console.WriteLine(stopwatch.Elapsed);
@@ -206,7 +206,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName(value);
 
-            var path = tagName.Member;
+            var path = tagName.MemberPath;
 
             path.Should().Be(expected);
         }
@@ -220,7 +220,7 @@ namespace L5Sharp.Tests.Core.Common
                 .ToList();
 
             var stopwatch = Stopwatch.StartNew();
-            var elements = tags.Select(t => t.Member).ToList();
+            var elements = tags.Select(t => t.MemberPath).ToList();
             stopwatch.Stop();
 
             Console.WriteLine(stopwatch.Elapsed);
@@ -237,7 +237,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName(value);
 
-            var element = tagName.Element;
+            var element = tagName.MemberName;
 
             element.Should().Be(expected);
         }
@@ -251,7 +251,7 @@ namespace L5Sharp.Tests.Core.Common
                 .ToList();
 
             var stopwatch = Stopwatch.StartNew();
-            var elements = tags.Select(t => t.Element).ToList();
+            var elements = tags.Select(t => t.MemberName).ToList();
             stopwatch.Stop();
 
             Console.WriteLine(stopwatch.Elapsed);

@@ -36,8 +36,8 @@ public class Tag : LogixComponent<Tag>
         L5XName.Description,
         L5XName.Comments,
         L5XName.EngineeringUnits,
-        L5XName.Mins,
         L5XName.Maxes,
+        L5XName.Mins,
         L5XName.State0s,
         L5XName.State1s,
         L5XName.Data,
@@ -481,14 +481,14 @@ public class Tag : LogixComponent<Tag>
             if (tagName is null) throw new ArgumentNullException(nameof(tagName));
             if (tagName.IsEmpty) return this;
 
-            var member = Value.GetMember(tagName.Base);
+            var member = Value.GetMember(tagName.BaseName);
 
             if (member is null)
                 throw new ArgumentException(
-                    $"No member with name '{tagName.Base}' exists in the tag data structure for type {DataType}.");
+                    $"No member with name '{tagName.BaseName}' exists in the tag data structure for type {DataType}.");
 
             var tag = new Tag(member, this);
-            return tagName.Depth == 0 ? tag : tag[tagName.Member];
+            return tagName.Depth == 0 ? tag : tag[tagName.MemberPath];
         }
     }
 
@@ -547,11 +547,11 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return this;
 
-        var member = Value.GetMember(tagName.Base);
+        var member = Value.GetMember(tagName.BaseName);
         if (member is null) return null;
 
         var tag = new Tag(member, this);
-        return tagName.Depth == 0 ? tag : tag.Member(tagName.Member);
+        return tagName.Depth == 0 ? tag : tag.Member(tagName.MemberPath);
     }
 
     /// <summary>
@@ -644,7 +644,7 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return Members();
 
-        var member = Value.GetMember(tagName.Base);
+        var member = Value.GetMember(tagName.BaseName);
         if (member is null) return [];
 
         var tag = new Tag(member, this);
