@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core;
 
@@ -12,6 +13,16 @@ namespace L5Sharp.Core;
 /// </summary>
 public class Argument
 {
+    /// <summary>
+    /// A compiled regular expression pattern used to identify atomic values within an argument.
+    /// The pattern supports various formats, including hexadecimal, binary, octal, floating-point,
+    /// signed integers, boolean literals, and special markers like #QNAN and #IND.
+    /// This enables parsing and validation of diverse atomic data types in instruction arguments.
+    /// </summary>
+    private static readonly Regex AtomicPattern = new(
+        @"(?:16#[0-9a-fA-F_]+)|(?:2#[01_]+)|(?:8#[0-7_]+)|(?:[A-Z]{1,4}#[^ ]+)|(?:[+-]?\d+\.\d+(?:[eE][+-]?\d+)?)|(?:[+-]?\d+)|(?:#QNAN|#IND)",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     /// <summary>
     /// The value typically found in Studio for undefined argument values in certain instructions.
     /// </summary>
@@ -237,9 +248,12 @@ public class Argument
             return [AtomicData.Parse(argument)];
 
         if (type == ArgumentType.Expression)
-            //todo handle nested values in expression
-            return [];
-        
+        {
+            return AtomicPattern.Matches(argument)
+                .Cast<Match>()
+                .Select(m => AtomicData.Parse(m.Value));
+        }
+
         return [];
     }
 

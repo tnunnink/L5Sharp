@@ -158,4 +158,56 @@ public class ArgumentTests
 
         values.Should().HaveCount(1);
     }
+
+    [Test]
+    public void Values_ExpressionWithSingleAtomic_ShouldHaveExpectedValue()
+    {
+        Argument argument = "MyTag > 100";
+
+        var values = argument.Values;
+
+        values.Should().HaveCount(1);
+        values[0].Should().Be(new DINT(100));
+    }
+
+    [Test]
+    public void Values_ExpressionWithMultipleAtomics_ShouldHaveExpectedValues()
+    {
+        Argument argument = "MyTag > 100 AND MyOtherTag < 16#ABCD";
+
+        var values = argument.Values;
+
+        values.Should().HaveCount(2);
+        values[0].Should().Be(new DINT(100));
+        values[1].Should().Be(new DINT(43981)); // 16#ABCD
+    }
+
+    [Test]
+    public void Values_ExpressionWithVariousAtomicFormats_ShouldExtractAll()
+    {
+        Argument argument = "16#1234 + 2#1010 + 8#77 + DT#2023-05-18-11:08:00Z + 1.23 + 123 + 1.#QNAN";
+
+        var values = argument.Values;
+
+        values.Should().HaveCount(7);
+        values.Select(v => v.ToString()).Should().Contain([
+            "16#0000_1234",
+            "2#0000_0000_0000_0000_0000_0000_0000_1010",
+            "8#0000_0000_077",
+            "DT#2023-05-18-11:08:00Z",
+            "1.23",
+            "123",
+            "1.#QNAN"
+        ]);
+    }
+
+    [Test]
+    public void Values_ExpressionWithNoAtomics_ShouldBeEmpty()
+    {
+        Argument argument = "MyTag + OtherTag";
+
+        var values = argument.Values;
+
+        values.Should().BeEmpty();
+    }
 }
