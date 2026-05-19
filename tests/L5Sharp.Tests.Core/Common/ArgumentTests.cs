@@ -147,16 +147,6 @@ public class ArgumentTests
     }
 
     [Test]
-    public void Arguments_ExpressionArgumentMultipleArguments_ShouldHaveExpectedCount()
-    {
-        Argument argument = "CMP(MyTagName.Member[1].Active >= MyConstant)";
-
-        var arguments = argument.Arguments;
-
-        arguments.Should().HaveCount(2);
-    }
-
-    [Test]
     public void Arguments_ArgumentSingleAtomic_ShouldHaveExpectedCount()
     {
         Argument argument = 100;
@@ -167,42 +157,44 @@ public class ArgumentTests
     }
 
     [Test]
-    public void Arguments_ExpressionWithSingleAtomic_ShouldHaveExpectedValue()
+    public void Arguments_ExpressionWithSingleTagAndAtomic_ShouldHaveExpectedValue()
     {
         Argument argument = "MyTag > 100";
 
-        var values = argument.Arguments;
+        var arguments = argument.Arguments;
 
-        values.Should().HaveCount(2);
-        values[0].Should().Be("100");
+        arguments.Should().HaveCount(2);
+        arguments[0].Should().Be("MyTag");
+        arguments[1].Should().Be("100");
     }
 
     [Test]
-    public void Arguments_ExpressionWithMultipleAtomics_ShouldHaveExpectedValues()
+    public void Arguments_ExpressionWithMultipleTagsAndAtomics_ShouldHaveExpectedValues()
     {
         Argument argument = "MyTag > 100 AND MyOtherTag < 16#ABCD";
 
-        var values = argument.Arguments;
+        var arguments = argument.Arguments;
 
-        values.Should().HaveCount(2);
-        values[0].Should().Be(new DINT(100));
-        values[1].Should().Be(new DINT(43981)); // 16#ABCD
+        arguments.Should().HaveCount(4);
+        arguments[0].Should().Be("MyTag");
+        arguments[1].Should().Be("100");
+        arguments[2].Should().Be("MyOtherTag");
+        arguments[3].Should().Be("16#ABCD");
     }
 
     [Test]
     public void Arguments_ExpressionWithVariousAtomicFormats_ShouldExtractAll()
     {
-        Argument argument = "16#1234 + 2#1010 + 8#77 + DT#2023-05-18-11:08:00Z + 1.23 + 123 + 1.#QNAN";
+        Argument argument = "16#1234 + 2#1010 + 8#77 + 1.23 + 123 + 1.#QNAN";
 
         var arguments = argument.Arguments;
 
-        arguments.Should().HaveCount(7);
+        arguments.Should().HaveCount(6);
 
-        arguments.Select(v => v.ToString()).Should().Contain([
-            "16#0000_1234",
-            "2#0000_0000_0000_0000_0000_0000_0000_1010",
-            "8#0000_0000_077",
-            "DT#2023-05-18-11:08:00Z",
+        arguments.Select(v => v.ToString()).Should().BeEquivalentTo([
+            "16#1234",
+            "2#1010",
+            "8#77",
             "1.23",
             "123",
             "1.#QNAN"

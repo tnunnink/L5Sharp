@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core;
 
@@ -15,7 +16,8 @@ public class Argument
     /// <summary>
     /// A cached array of all known Logix operator symbols used for splitting and parsing expression arguments.
     /// </summary>
-    private static readonly string[] Operators = Operator.All().Select(x => x.Value).ToArray();
+    private static readonly string[] Operators =
+        Operator.All().Select(x => x.Value).OrderByDescending(x => x.Length).ToArray();
 
     /// <summary>
     /// The value typically found in Studio for undefined argument values in certain instructions.
@@ -60,7 +62,7 @@ public class Argument
     /// <value>
     /// <c>true</c> if the argument type is <see cref="ArgumentType.Atomic"/> or <see cref="ArgumentType.String"/>; otherwise, <c>false</c>.
     /// </value>
-    public bool IsLiteral => Type == ArgumentType.Atomic || this == ArgumentType.String;
+    public bool IsLiteral => Type == ArgumentType.Atomic || Type == ArgumentType.String;
 
     /// <summary>
     /// Gets a value indicating whether this argument represents a tag name reference.
@@ -122,7 +124,6 @@ public class Argument
         if (Type != ArgumentType.Tag)
             throw new InvalidOperationException(
                 $"Cannot convert argument '{_value}' to TagName. The argument type is {Type}, but expected {ArgumentType.Tag}.");
-
         return new TagName(_value);
     }
 
@@ -136,14 +137,21 @@ public class Argument
         if (Type != ArgumentType.Atomic)
             throw new InvalidOperationException(
                 $"Cannot convert argument '{_value}' to AtomicData. The argument type is {Type}, but expected {ArgumentType.Atomic}.");
-
         return AtomicData.Parse(_value);
     }
 
     #region Equality
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => _value.Equals(obj?.ToString());
+    public override bool Equals(object? obj)
+    {
+        return obj switch
+        {
+            Argument other => _value.Equals(other._value),
+            string value => _value.Equals(value),
+            _ => false
+        };
+    }
 
     /// <inheritdoc />
     public override int GetHashCode() => _value.GetHashCode();
@@ -278,10 +286,22 @@ public class Argument
     /// or an empty array if not an expression.</returns>
     private Argument[] ExtractArguments()
     {
+        // If this is a tag or literal, then just return itself.
         if (!IsExpression) return [this];
 
+        // If it looks like a function call "NAME(ARGS)", extract the arguments inside the parentheses
+        // and return the nested argument.
+        var functionMatch = Regex.Match(_value, @"^[A-Z_]+\((.*)\)$", RegexOptions.IgnoreCase);
+        if (functionMatch.Success)
+        {
+            Argument nested = functionMatch.Groups[1].Value;
+            return nested.ExtractArguments();
+        }
+
+        // Split expression on known operators...
         return _value
             .Split(Operators, StringSplitOptions.RemoveEmptyEntries)
+            .Select(t => t.Trim())
             .Select(x => new Argument(x))
             .ToArray();
     }
