@@ -29,9 +29,9 @@ namespace L5Sharp.Tests.Core.Common
             var tagName = TagName.Empty;
 
             tagName.BaseName.Should().BeEmpty();
-            tagName.RelativePath.Should().BeEmpty();
-            tagName.MemberPath.Should().BeEmpty();
-            tagName.MemberName.Should().BeEmpty();
+            tagName.RelativePath.Should().BeNull();
+            tagName.MemberPath.Should().BeNull();
+            tagName.MemberName.Should().BeNull();
             tagName.Depth.Should().Be(0);
             tagName.IsEmpty.Should().BeTrue();
             tagName.IsQualified.Should().BeFalse();
@@ -43,10 +43,10 @@ namespace L5Sharp.Tests.Core.Common
             var tagName = new TagName("MyTag");
 
             tagName.FullPath.Should().Be("MyTag");
-            tagName.RelativePath.Should().BeEmpty();
-            tagName.MemberPath.Should().BeEmpty();
+            tagName.RelativePath.Should().BeNull();
+            tagName.MemberPath.Should().BeNull();
             tagName.BaseName.Should().Be("MyTag");
-            tagName.MemberName.Should().BeEmpty();
+            tagName.MemberName.Should().BeNull();
             tagName.Depth.Should().Be(0);
         }
 
@@ -140,10 +140,10 @@ namespace L5Sharp.Tests.Core.Common
 
             tagName.FullPath.Should().Be("Program:SomeProgram.MyTag");
             tagName.LocalPath.Should().Be("MyTag");
-            tagName.RelativePath.Should().BeEmpty();
-            tagName.MemberPath.Should().BeEmpty();
+            tagName.RelativePath.Should().BeNull();
+            tagName.MemberPath.Should().BeNull();
             tagName.BaseName.Should().Be("MyTag");
-            tagName.MemberName.Should().BeEmpty();
+            tagName.MemberName.Should().BeNull();
             tagName.Depth.Should().Be(0);
         }
 
@@ -197,12 +197,12 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        [TestCase("", "")]
+        [TestCase("", null)]
         [TestCase("MyTag.SomeMember.1", "SomeMember.1")]
         [TestCase("MyTag[1].SomeMember.1", "[1].SomeMember.1")]
         [TestCase("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12",
             "TagName.Member[1].SubTag.Another[12,13,14].Value.12")]
-        public void MemberPath_WhenCalled_ShouldBeExpected(string value, string expected)
+        public void MemberPath_WhenCalled_ShouldBeExpected(string value, string? expected)
         {
             var tagName = new TagName(value);
 
@@ -230,10 +230,10 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        [TestCase("", "")]
+        [TestCase("", null)]
         [TestCase("Module:1:I.TagName.Member[1].SubTag.Another[12,13,14].Value.12", "12")]
         [TestCase("MyTag.Member[1]", "[1]")]
-        public void MemberName_WhenCalled_ShouldBeExpected(string value, string expected)
+        public void MemberName_WhenCalled_ShouldBeExpected(string value, string? expected)
         {
             var tagName = new TagName(value);
 

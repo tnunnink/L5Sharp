@@ -65,22 +65,19 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Parse_Null_ShouldThrowArgumentNullException()
         {
-            FluentActions.Invoking(() => Radix.Hex.Parse<int>(null!))
-                .Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Hex.Parse<int>(null!)).Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Parse_InvalidSpecifier_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Hex.Parse<int>("0000_0024"))
-                .Should().Throw<FormatException>();
+            FluentActions.Invoking(() => Radix.Hex.Parse<int>("0000_0024")).Should().Throw<FormatException>();
         }
 
         [Test]
         public void Parse_LengthZero_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Hex.Parse<int>("16#"))
-                .Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Hex.Parse<int>("16#")).Should().Throw<FormatException>();
         }
 
         [Test]
@@ -131,6 +128,22 @@ namespace L5Sharp.Tests.Core.Enums
             var value = Radix.Hex.Parse<long>("16#0000_0000_0000_0014");
 
             value.Should().Be(20);
+        }
+
+        [Test]
+        [TestCase("16#1234", true)]
+        [TestCase("16#ABCD", true)]
+        [TestCase("16#abcd", true)]
+        [TestCase("16#1234_ABCD", true)]
+        [TestCase("16#", false)]
+        [TestCase("16#GHIJ", false)]
+        [TestCase("1234", false)]
+        [TestCase(null, false)]
+        public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+        {
+            var result = Radix.Hex.IsValid(value);
+
+            result.Should().Be(expected);
         }
     }
 }

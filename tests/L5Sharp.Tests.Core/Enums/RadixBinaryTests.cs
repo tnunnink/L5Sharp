@@ -24,6 +24,23 @@ namespace L5Sharp.Tests.Core.Enums
             first.Should().BeSameAs(second);
         }
 
+        [TestCase("2#0", true)]
+        [TestCase("2#1", true)]
+        [TestCase("2#0000_0000", true)]
+        [TestCase("2#1010_1100", true)]
+        [TestCase("2#10101100", true)]
+        [TestCase("2#", false)]
+        [TestCase("2#2", false)]
+        [TestCase("100", false)]
+        [TestCase("16#FF", false)]
+        [TestCase(null, false)]
+        public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+        {
+            var result = Radix.Binary.IsValid(value);
+
+            result.Should().Be(expected);
+        }
+
         [Test]
         [TestCase(false, "2#0")]
         [TestCase(true, "2#1")]
@@ -141,8 +158,7 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Parse_LengthZero_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Binary.Parse<int>("2#"))
-                .Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Binary.Parse<int>("2#")).Should().Throw<FormatException>();
         }
 
         [Test]

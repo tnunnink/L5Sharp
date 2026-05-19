@@ -104,5 +104,26 @@ namespace L5Sharp.Tests.Core.Enums
 
             result.Should().Be(float.NaN);
         }
+
+        [Test]
+        [TestCase("1.23", true)]
+        [TestCase("-1.23", true)]
+        [TestCase("+1.23", true)]
+        [TestCase("0.0", true)]
+        [TestCase("1.#QNAN", true)]
+        [TestCase("-1.#QNAN", true)]
+        [TestCase("#QNAN", true)]
+        [TestCase("1.#IND", true)]
+        [TestCase("-1.#IND", true)]
+        [TestCase("#IND", true)]
+        [TestCase("123", false)]
+        [TestCase("1.23e10", false)]
+        [TestCase(null, false)]
+        public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+        {
+            var result = Radix.Float.IsValid(value);
+
+            result.Should().Be(expected);
+        }
     }
 }

@@ -36,7 +36,7 @@ public sealed class REAL : AtomicData, IComparable, IConvertible, IAtomicValue<f
     /// <inheritdoc />
     public float Value
     {
-        get => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false ? GetAtomicValue<float>() : float.NaN;
+        get => GetAtomicValue<float>();
         set => SetAtomicValue(value);
     }
 

@@ -112,15 +112,17 @@ public sealed class TagName : IComparable<TagName>
     /// This property returns the remaining portion of the tag name, starting from the first member or array notation,
     /// if applicable, after the base tag. It is derived from the <see cref="RelativePath"/> property by removing the leading separator.
     /// Commonly used for accessing specific levels of a tag's hierarchy within complex or structured tag definitions.
+    /// Returns <c>null</c> if the tag has no member path.
     /// </summary>
-    public string MemberPath => GetRelativePath(_path).TrimStart(Separator);
+    public string? MemberPath => GetRelativePath(_path)?.TrimStart(Separator);
 
     /// <summary>
     /// Represents the portion of the tag name that follows the base tag name, containing all members,
     /// elements, and indices if present, including the leading separator for context.
     /// The relative path provides a hierarchical breakdown of the tag's structure beyond its base name.
+    /// Returns <c>null</c> if the tag has no relative path.
     /// </summary>
-    public string RelativePath => GetRelativePath(_path);
+    public string? RelativePath => GetRelativePath(_path);
 
     /// <summary>
     /// The base name of the tag represented by the <see cref="TagName"/> instance.
@@ -134,7 +136,7 @@ public sealed class TagName : IComparable<TagName>
     /// Gets the immediate member name of the tag represented by the current <see cref="TagName"/> instance.
     /// The member name refers to the most specific, non-hierarchical segment of the tag, typically
     /// the final component following any hierarchical path or indexing.
-    /// If the tag does not include any hierarchical or member path, the value will be an empty string.
+    /// If the tag does not include any hierarchical or member path, the value will be <c>null</c>.
     /// </summary>
     public string? MemberName => GetMember(_path);
 
@@ -437,11 +439,11 @@ public sealed class TagName : IComparable<TagName>
     /// <summary>
     /// Retrieves the operand portion of a tag name from the provided path string.
     /// </summary>
-    private static string GetRelativePath(string path)
+    private static string? GetRelativePath(string path)
     {
         var tagName = GetLocalTagName(path);
         var separator = tagName.IndexOfAny([Separator, ArrayOpen]);
-        return separator >= 0 ? tagName.Substring(separator) : string.Empty;
+        return separator >= 0 ? tagName.Substring(separator) : null;
     }
 
     /// <summary>

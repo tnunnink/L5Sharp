@@ -15,6 +15,23 @@ namespace L5Sharp.Tests.Core.Enums
         }
 
         [Test]
+        [TestCase("123", true)]
+        [TestCase("-123", true)]
+        [TestCase("+123", true)]
+        [TestCase("0", true)]
+        [TestCase("true", true)]
+        [TestCase("false", true)]
+        [TestCase("1.23", false)]
+        [TestCase("16#FF", false)]
+        [TestCase(null, false)]
+        public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+        {
+            var result = Radix.Decimal.IsValid(value);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
         [TestCase(false, "0")]
         [TestCase(true, "1")]
         public void Format_Bool_ShouldBeExpectedFormat(bool value, string expected)

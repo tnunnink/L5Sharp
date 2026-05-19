@@ -16,6 +16,20 @@ public class RadixTime32Tests
     }
 
     [Test]
+    [TestCase("T32#35m_47s", true)]
+    [TestCase("T32#-500ms", true)]
+    [TestCase("T32#0us", true)]
+    [TestCase("T32#35m_47s_483ms_647us", true)]
+    [TestCase("T32#1d", false)] // Time32 doesn't support 'd' unit in Radix.cs
+    [TestCase(null, false)]
+    public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+    {
+        var result = Radix.Time32.IsValid(value);
+
+        result.Should().Be(expected);
+    }
+
+    [Test]
     [TestCase(0, "T32#0us")]
     [TestCase(1, "T32#1us")]
     [TestCase(-1, "T32#-1us")]

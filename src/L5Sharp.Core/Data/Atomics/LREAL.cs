@@ -36,9 +36,7 @@ public sealed class LREAL : AtomicData, IComparable, IConvertible, IAtomicValue<
     /// <inheritdoc />
     public double Value
     {
-        get => Element.Attribute(L5XName.Value)?.Value.Contains("QNAN") is false
-            ? GetAtomicValue<double>()
-            : double.NaN;
+        get => GetAtomicValue<double>();
         set => SetAtomicValue(value);
     }
 
