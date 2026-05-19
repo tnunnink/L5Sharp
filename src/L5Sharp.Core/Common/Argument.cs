@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core;
 
@@ -14,14 +13,9 @@ namespace L5Sharp.Core;
 public class Argument
 {
     /// <summary>
-    /// A compiled regular expression pattern used to identify atomic values within an argument.
-    /// The pattern supports various formats, including hexadecimal, binary, octal, floating-point,
-    /// signed integers, boolean literals, and special markers like #QNAN and #IND.
-    /// This enables parsing and validation of diverse atomic data types in instruction arguments.
+    /// A cached array of all known Logix operator symbols used for splitting and parsing expression arguments.
     /// </summary>
-    private static readonly Regex AtomicPattern = new(
-        @"(?:16#[0-9a-fA-F_]+)|(?:2#[01_]+)|(?:8#[0-7_]+)|(?:[A-Z]{1,4}#[^ ]+)|(?:[+-]?\d+\.\d+(?:[eE][+-]?\d+)?)|(?:[+-]?\d+)|(?:#QNAN|#IND)",
-        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly string[] Operators = Operator.All().Select(x => x.Value).ToArray();
 
     /// <summary>
     /// The value typically found in Studio for undefined argument values in certain instructions.
@@ -53,26 +47,56 @@ public class Argument
     public ArgumentType Type => ArgumentType.Of(_value);
 
     /// <summary>
-    /// The collection of <see cref="TagName"/> values found in the argument.
+    /// Gets a value indicating whether this argument is invalid (either empty or unknown).
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values.</value>
-    /// <remarks>
-    /// Since an argument could represent a complex expression, it may contain more than one tag name value.
-    /// We need a way to get all tag names from a single argument, whether it's a single tag name or expression or
-    /// multiple tag names.
-    /// </remarks>
-    public IReadOnlyList<TagName> Tags => ExtractTags(_value).ToArray();
+    /// <value>
+    /// <c>true</c> if the argument type is <see cref="ArgumentType.Empty"/> or <see cref="ArgumentType.Unknown"/>; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsInvalid => Type == ArgumentType.Empty || Type == ArgumentType.Unknown;
 
     /// <summary>
-    /// The collection of <see cref="TagName"/> values found in the argument.
+    /// Gets a value indicating whether this argument represents an immediate value (atomic or string).
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> values.</value>
+    /// <value>
+    /// <c>true</c> if the argument type is <see cref="ArgumentType.Atomic"/> or <see cref="ArgumentType.String"/>; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsLiteral => Type == ArgumentType.Atomic || this == ArgumentType.String;
+
+    /// <summary>
+    /// Gets a value indicating whether this argument represents a tag name reference.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the argument type is <see cref="ArgumentType.Tag"/>; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsTag => Type == ArgumentType.Tag;
+
+    /// <summary>
+    /// Gets a value indicating whether this argument represents an atomic value.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the argument type is <see cref="ArgumentType.Atomic"/>; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsAtomic => Type == ArgumentType.Atomic;
+
+    /// <summary>
+    /// Gets a value indicating whether this argument represents an expression containing operators.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the argument type is <see cref="ArgumentType.Expression"/>; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsExpression => Type == ArgumentType.Expression;
+
+    /// <summary>
+    /// Retrieves a read-only collection of arguments derived from the current argument string value.
+    /// Useful for parsing and analyzing composite argument structures within expressions.
+    /// </summary>
     /// <remarks>
-    /// Since an argument could represent a complex expression, it may contain more than one tag name value.
-    /// We need a way to get all tag names from a single argument, whether it's a single tag name or expression or
-    /// multiple tag names.
+    /// If the argument type is <see cref="ArgumentType.Expression"/>, this property returns a collection of
+    /// individual component arguments extracted by splitting the expression on known Logix operators.
+    /// If the argument is not an expression (e.g., a tag name, atomic value, or string literal),
+    /// this property returns a single-item collection containing the argument itself.
     /// </remarks>
-    public IReadOnlyList<AtomicData> Values => ExtractValues(_value).ToArray();
+    public IReadOnlyList<Argument> Arguments => ExtractArguments();
 
     /// <summary>
     /// Represents an unknown argument that can be found in certain instruction text.
@@ -87,6 +111,34 @@ public class Argument
     /// Some instruction has an empty/optional argument(s) (GSV), and therefore we will support empty arguments instances.
     /// </remarks>
     public static Argument Empty => new(string.Empty);
+
+    /// <summary>
+    /// Converts this argument to a <see cref="TagName"/> instance.
+    /// </summary>
+    /// <returns>A <see cref="TagName"/> representing the tag reference in this argument.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the argument type is not <see cref="ArgumentType.Tag"/>.</exception>
+    public TagName ToTag()
+    {
+        if (Type != ArgumentType.Tag)
+            throw new InvalidOperationException(
+                $"Cannot convert argument '{_value}' to TagName. The argument type is {Type}, but expected {ArgumentType.Tag}.");
+
+        return new TagName(_value);
+    }
+
+    /// <summary>
+    /// Converts this argument to an <see cref="AtomicData"/> instance by parsing its immediate atomic value.
+    /// </summary>
+    /// <returns>An <see cref="AtomicData"/> representing the parsed atomic value from this argument.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the argument type is not <see cref="ArgumentType.Atomic"/>.</exception>
+    public AtomicData ToAtomic()
+    {
+        if (Type != ArgumentType.Atomic)
+            throw new InvalidOperationException(
+                $"Cannot convert argument '{_value}' to AtomicData. The argument type is {Type}, but expected {ArgumentType.Atomic}.");
+
+        return AtomicData.Parse(_value);
+    }
 
     #region Equality
 
@@ -211,51 +263,26 @@ public class Argument
     public static implicit operator Argument(double value) => new(value.ToString(CultureInfo.InvariantCulture));
 
     /// <summary>
-    /// Explicitly converts the provided <see cref="Argument"/> to a <see cref="TagName"/>.
+    /// Explicitly converts the provided <see cref="Argument"/> to a <see cref="string"/>.
     /// </summary>
     /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
-    /// <returns>A <see cref="TagName"/> object representing the value of the argument.</returns>
+    /// <returns>A <see cref="string"/> object representing the value of the argument.</returns>
     public static implicit operator string(Argument argument) => argument._value;
 
     #endregion
 
-    #region Internal
-
     /// <summary>
-    /// Extracts all tag names from the provided text based on a predefined search pattern.
+    /// Extracts individual component arguments from an expression by splitting on known Logix operators.
     /// </summary>
-    private static IEnumerable<TagName> ExtractTags(string argument)
+    /// <returns>An array of <see cref="Argument"/> objects representing each component of the expression,
+    /// or an empty array if not an expression.</returns>
+    private Argument[] ExtractArguments()
     {
-        var type = ArgumentType.Of(argument);
+        if (!IsExpression) return [this];
 
-        if (type == ArgumentType.Tag)
-            return [argument];
-
-        if (type == ArgumentType.Expression)
-            return TagName.ExtractAll(argument);
-
-        return [];
+        return _value
+            .Split(Operators, StringSplitOptions.RemoveEmptyEntries)
+            .Select(x => new Argument(x))
+            .ToArray();
     }
-
-    /// <summary>
-    /// Extracts a collection of <see cref="AtomicData"/> from the given argument string.
-    /// </summary>
-    private static IEnumerable<AtomicData> ExtractValues(string argument)
-    {
-        var type = ArgumentType.Of(argument);
-
-        if (type == ArgumentType.Atomic)
-            return [AtomicData.Parse(argument)];
-
-        if (type == ArgumentType.Expression)
-        {
-            return AtomicPattern.Matches(argument)
-                .Cast<Match>()
-                .Select(m => AtomicData.Parse(m.Value));
-        }
-
-        return [];
-    }
-
-    #endregion
 }

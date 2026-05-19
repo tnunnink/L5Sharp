@@ -469,7 +469,7 @@ public class Block : LogixObject<Block>
     {
         var operand = element.GetBlockOperand();
 
-        if (operand.Type.IsInvalid) return [];
+        if (operand.IsInvalid) return [];
 
         return element.Attributes()
             .Where(a => PinNames.Contains(a.Name.LocalName))

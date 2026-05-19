@@ -1826,7 +1826,7 @@ public sealed class Instruction
         var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
 
         //And then anything else return all tag arguments.
-        return arguments.SelectMany(a => a.Tags).ToArray();
+        return arguments.SelectMany(a => a.Arguments.Where(x => x.IsTag).Select(t => t.ToTag())).ToArray();
     }
 
     /// <summary>
@@ -1840,7 +1840,7 @@ public sealed class Instruction
         //Skip the first argument of a routine instruction as it does not refer to a tag name.
         var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
 
-        return arguments.SelectMany(a => a.Values).ToArray();
+        return arguments.SelectMany(a => a.Arguments.Where(x => x.IsAtomic).Select(t => t.ToAtomic())).ToArray();
     }
 
     /// <summary>

@@ -34,23 +34,6 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
     }
 
     /// <summary>
-    /// Determines whether the current argument type is either <see cref="Empty"/> or <see cref="Unknown"/>.
-    /// </summary>
-    public bool IsInvalid => this == Empty || this == Unknown;
-
-    /// <summary>
-    /// Indicates whether the argument type represents an immediate value. Immediate values are <see cref="Atomic"/>
-    /// or <see cref="String"/> type arguments.
-    /// </summary>
-    public bool IsValue => this == Atomic || this == String;
-
-    /// <summary>
-    /// Determines whether the argument type represents a <see cref="Tag"/> value. Tag arguments are references to
-    /// values and not values themselves.
-    /// </summary>
-    public bool IsTag => this == Tag;
-
-    /// <summary>
     /// Represents an argument type that is specifically empty.
     /// This value is used when no argument type has been defined or assigned.
     /// </summary>

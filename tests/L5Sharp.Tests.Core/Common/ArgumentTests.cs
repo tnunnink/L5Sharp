@@ -12,6 +12,7 @@ public class ArgumentTests
 
         argument.Should().Be(string.Empty);
         argument.Type.Should().Be(ArgumentType.Empty);
+        argument.IsInvalid.Should().BeTrue();
     }
 
     [Test]
@@ -21,6 +22,7 @@ public class ArgumentTests
 
         argument.Should().Be("?");
         argument.Type.Should().Be(ArgumentType.Unknown);
+        argument.IsInvalid.Should().BeTrue();
     }
 
     [Test]
@@ -30,6 +32,8 @@ public class ArgumentTests
 
         argument.Should().Be("100");
         argument.Type.Should().Be(ArgumentType.Atomic);
+        argument.IsLiteral.Should().BeTrue();
+        argument.IsAtomic.Should().BeTrue();
     }
 
     [Test]
@@ -39,6 +43,7 @@ public class ArgumentTests
 
         argument.Should().Be("MyTagName.Member[1].Active.1");
         argument.Type.Should().Be(ArgumentType.Tag);
+        argument.IsTag.Should().BeTrue();
     }
 
     [Test]
@@ -48,6 +53,7 @@ public class ArgumentTests
 
         argument.Should().Be("'This is a test string'");
         argument.Type.Should().Be(ArgumentType.String);
+        argument.IsLiteral.Should().BeTrue();
     }
 
     [Test]
@@ -57,6 +63,7 @@ public class ArgumentTests
 
         argument.Should().Be("SomeTag.Value > 100");
         argument.Type.Should().Be(ArgumentType.Expression);
+        argument.IsExpression.Should().BeTrue();
     }
 
     [Test]
@@ -130,52 +137,52 @@ public class ArgumentTests
     }
 
     [Test]
-    public void Tags_ArgumentWithSingleTag_ShouldHaveExpectedCount()
+    public void Arguments_ArgumentWithSingleTag_ShouldHaveExpectedCount()
     {
         var argument = new Argument("MyTagName.Member[1].Active.1");
 
-        var tags = argument.Tags.ToArray();
+        var args = argument.Arguments.ToArray();
 
-        tags.Should().HaveCount(1);
+        args.Should().HaveCount(1);
     }
 
     [Test]
-    public void Tags_ExpressionArgumentMultipleTags_ShouldHaveExpectedCount()
+    public void Arguments_ExpressionArgumentMultipleArguments_ShouldHaveExpectedCount()
     {
         Argument argument = "CMP(MyTagName.Member[1].Active >= MyConstant)";
 
-        var tags = argument.Tags;
+        var arguments = argument.Arguments;
 
-        tags.Should().HaveCount(2);
+        arguments.Should().HaveCount(2);
     }
 
     [Test]
-    public void Values_ArgumentSingleAtomic_ShouldHaveExpectedCount()
+    public void Arguments_ArgumentSingleAtomic_ShouldHaveExpectedCount()
     {
         Argument argument = 100;
 
-        var values = argument.Values;
+        var values = argument.Arguments;
 
         values.Should().HaveCount(1);
     }
 
     [Test]
-    public void Values_ExpressionWithSingleAtomic_ShouldHaveExpectedValue()
+    public void Arguments_ExpressionWithSingleAtomic_ShouldHaveExpectedValue()
     {
         Argument argument = "MyTag > 100";
 
-        var values = argument.Values;
+        var values = argument.Arguments;
 
-        values.Should().HaveCount(1);
-        values[0].Should().Be(new DINT(100));
+        values.Should().HaveCount(2);
+        values[0].Should().Be("100");
     }
 
     [Test]
-    public void Values_ExpressionWithMultipleAtomics_ShouldHaveExpectedValues()
+    public void Arguments_ExpressionWithMultipleAtomics_ShouldHaveExpectedValues()
     {
         Argument argument = "MyTag > 100 AND MyOtherTag < 16#ABCD";
 
-        var values = argument.Values;
+        var values = argument.Arguments;
 
         values.Should().HaveCount(2);
         values[0].Should().Be(new DINT(100));
@@ -183,14 +190,15 @@ public class ArgumentTests
     }
 
     [Test]
-    public void Values_ExpressionWithVariousAtomicFormats_ShouldExtractAll()
+    public void Arguments_ExpressionWithVariousAtomicFormats_ShouldExtractAll()
     {
         Argument argument = "16#1234 + 2#1010 + 8#77 + DT#2023-05-18-11:08:00Z + 1.23 + 123 + 1.#QNAN";
 
-        var values = argument.Values;
+        var arguments = argument.Arguments;
 
-        values.Should().HaveCount(7);
-        values.Select(v => v.ToString()).Should().Contain([
+        arguments.Should().HaveCount(7);
+
+        arguments.Select(v => v.ToString()).Should().Contain([
             "16#0000_1234",
             "2#0000_0000_0000_0000_0000_0000_0000_1010",
             "8#0000_0000_077",
@@ -199,15 +207,5 @@ public class ArgumentTests
             "123",
             "1.#QNAN"
         ]);
-    }
-
-    [Test]
-    public void Values_ExpressionWithNoAtomics_ShouldBeEmpty()
-    {
-        Argument argument = "MyTag + OtherTag";
-
-        var values = argument.Values;
-
-        values.Should().BeEmpty();
     }
 }
