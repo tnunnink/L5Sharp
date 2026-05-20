@@ -51,41 +51,31 @@ public class Argument
     /// <summary>
     /// Gets a value indicating whether this argument is invalid (either empty or unknown).
     /// </summary>
-    /// <value>
-    /// <c>true</c> if the argument type is <see cref="ArgumentType.Empty"/> or <see cref="ArgumentType.Unknown"/>; otherwise, <c>false</c>.
-    /// </value>
     public bool IsInvalid => Type == ArgumentType.Empty || Type == ArgumentType.Unknown;
 
     /// <summary>
     /// Gets a value indicating whether this argument represents an immediate value (atomic or string).
     /// </summary>
-    /// <value>
-    /// <c>true</c> if the argument type is <see cref="ArgumentType.Atomic"/> or <see cref="ArgumentType.String"/>; otherwise, <c>false</c>.
-    /// </value>
     public bool IsLiteral => Type == ArgumentType.Atomic || Type == ArgumentType.String;
 
     /// <summary>
-    /// Gets a value indicating whether this argument represents a tag name reference.
+    /// Indicates whether the current argument is of type <see cref="ArgumentType.Reference"/>.
     /// </summary>
-    /// <value>
-    /// <c>true</c> if the argument type is <see cref="ArgumentType.Tag"/>; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsTag => Type == ArgumentType.Tag;
+    public bool IsReference => Type == ArgumentType.Reference;
 
     /// <summary>
     /// Gets a value indicating whether this argument represents an atomic value.
     /// </summary>
-    /// <value>
-    /// <c>true</c> if the argument type is <see cref="ArgumentType.Atomic"/>; otherwise, <c>false</c>.
-    /// </value>
     public bool IsAtomic => Type == ArgumentType.Atomic;
+
+    /// <summary>
+    /// Indicates whether the argument represents a string literal type.
+    /// </summary>
+    public bool IsString => Type == ArgumentType.String;
 
     /// <summary>
     /// Gets a value indicating whether this argument represents an expression containing operators.
     /// </summary>
-    /// <value>
-    /// <c>true</c> if the argument type is <see cref="ArgumentType.Expression"/>; otherwise, <c>false</c>.
-    /// </value>
     public bool IsExpression => Type == ArgumentType.Expression;
 
     /// <summary>
@@ -118,12 +108,13 @@ public class Argument
     /// Converts this argument to a <see cref="TagName"/> instance.
     /// </summary>
     /// <returns>A <see cref="TagName"/> representing the tag reference in this argument.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the argument type is not <see cref="ArgumentType.Tag"/>.</exception>
-    public TagName ToTag()
+    /// <exception cref="InvalidOperationException">Thrown when the argument type is not <see cref="ArgumentType.Reference"/>.</exception>
+    public TagName ToTagName()
     {
-        if (Type != ArgumentType.Tag)
+        if (Type != ArgumentType.Reference)
             throw new InvalidOperationException(
-                $"Cannot convert argument '{_value}' to TagName. The argument type is {Type}, but expected {ArgumentType.Tag}.");
+                $"Cannot convert argument '{_value}' to TagName. The argument type is {Type}, but expected {ArgumentType.Reference}.");
+
         return new TagName(_value);
     }
 
@@ -137,6 +128,7 @@ public class Argument
         if (Type != ArgumentType.Atomic)
             throw new InvalidOperationException(
                 $"Cannot convert argument '{_value}' to AtomicData. The argument type is {Type}, but expected {ArgumentType.Atomic}.");
+
         return AtomicData.Parse(_value);
     }
 
@@ -286,7 +278,7 @@ public class Argument
     /// or an empty array if not an expression.</returns>
     private Argument[] ExtractArguments()
     {
-        // If this is a tag or literal, then just return itself.
+        // If this is a reference or literal, then just return itself.
         if (!IsExpression) return [this];
 
         // If it looks like a function call "NAME(ARGS)", extract the arguments inside the parentheses
@@ -294,15 +286,18 @@ public class Argument
         var functionMatch = Regex.Match(_value, @"^[A-Z_]+\((.*)\)$", RegexOptions.IgnoreCase);
         if (functionMatch.Success)
         {
-            Argument nested = functionMatch.Groups[1].Value;
-            return nested.ExtractArguments();
+            Argument function = functionMatch.Groups[1].Value;
+            return function.ExtractArguments();
         }
 
-        // Split expression on known operators...
+        // Split expression on known operators. Trim spaces and parenthesis since they are not important.
         return _value
             .Split(Operators, StringSplitOptions.RemoveEmptyEntries)
             .Select(t => t.Trim())
+            .Select(t => t.TrimStart('('))
+            .Select(t => t.TrimEnd(')'))
             .Select(x => new Argument(x))
+            .SelectMany(a => a.ExtractArguments())
             .ToArray();
     }
 }

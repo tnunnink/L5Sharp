@@ -19,7 +19,7 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
     /// Returns <see cref="ArgumentType.Empty"/> if the input is null or empty,
     /// <see cref="ArgumentType.String"/> if the input is enclosed with single quotes,
     /// <see cref="ArgumentType.Atomic"/> if the input infers a valid radix/numeric format,
-    /// <see cref="ArgumentType.Tag"/> if the input matches a valid tag name,
+    /// <see cref="Reference"/> if the input matches a valid tag name,
     /// <see cref="ArgumentType.Expression"/> if the input contains expression characters,
     /// or <see cref="ArgumentType.Unknown"/> otherwise.
     /// </returns>
@@ -28,7 +28,9 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
         if (string.IsNullOrEmpty(value)) return Empty;
         if (value.StartsWith('\'') && value.EndsWith('\'')) return String;
         if (Radix.TryInfer(value, out _)) return Atomic;
-        if (TagName.IsTag(value)) return Tag;
+        // We can use the tag name patter match because system components should pass this as well
+        if (TagName.IsTag(value)) return Reference;
+        // todo I think we need to include bitwise operators (AND, OR, XOR, etc.)
         if (value.IndexOfAny(['=', '>', '<', '+', '-', '*', '/', '(', ')']) >= 0) return Expression;
         return Unknown;
     }
@@ -58,10 +60,11 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
     public static readonly ArgumentType String = new(nameof(String), nameof(String));
 
     /// <summary>
-    /// Represents an argument type that is specifically a tag.
-    /// This value is used for arguments defined as a reference to a specific tag.
+    /// Represents an argument type that corresponds to a tag or system component reference.
+    /// A value of this type signifies that the input matches a valid tag name
+    /// and adheres to the specific syntax and format required for tag references.
     /// </summary>
-    public static readonly ArgumentType Tag = new(nameof(Tag), nameof(Tag));
+    public static readonly ArgumentType Reference = new(nameof(Reference), nameof(Reference));
 
     /// <summary>
     /// Represents an argument type that is an expression.

@@ -359,9 +359,10 @@ public sealed class TagName : IComparable<TagName>
     /// two strings to join together, as it does not iterate a collection or use a string builder class.
     /// This method simply concatenates to strings.
     /// </remarks>
-    public static TagName Concat(string left, string right)
+    public static TagName Concat(string left, string? right)
     {
-        if (string.IsNullOrEmpty(right)) return left;
+        if (right is null || right.IsEmpty())
+            return left;
 
         if (right[0] == ArrayOpen || right[0] == Separator)
             return new TagName(left + right);
@@ -376,7 +377,7 @@ public sealed class TagName : IComparable<TagName>
     /// <param name="members">The series of strings that, in order, comprise the full tag name value.</param>
     /// <returns>A new <see cref="TagName"/>value that represents the combination of all provided member names.</returns>
     /// <exception cref="ArgumentException">If any provided member does not match the member pattern format.</exception>
-    public static TagName Combine(params string[] members) => new(ConcatenateMembers(members.AsEnumerable()));
+    public static TagName Combine(params string?[] members) => new(ConcatenateMembers(members.AsEnumerable()));
 
     /// <summary>
     /// Combines a collection of member names into a single <see cref="TagName"/> value.
@@ -384,7 +385,7 @@ public sealed class TagName : IComparable<TagName>
     /// <param name="members">The collection of strings that represent the member names of the tag name value.</param>
     /// <returns>A new <see cref="TagName"/>A new <see cref="TagName"/> value that is the combination of all provided member names.</returns>
     /// <exception cref="ArgumentException">If a provided name does not match the member pattern format.</exception>
-    public static TagName Combine(IEnumerable<string> members) => new(ConcatenateMembers(members));
+    public static TagName Combine(IEnumerable<string?> members) => new(ConcatenateMembers(members));
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -553,12 +554,14 @@ public sealed class TagName : IComparable<TagName>
     /// </summary>
     /// <param name="members">The collection of tag members to concatenate.</param>
     /// <returns>A string representing the concatenated tag members.</returns>
-    private static string ConcatenateMembers(IEnumerable<string> members)
+    private static string ConcatenateMembers(IEnumerable<string?> members)
     {
         var builder = new StringBuilder();
 
         foreach (var member in members)
         {
+            if (member is null) continue;
+
             if (!(member.StartsWith(ArrayOpen) || member.StartsWith(Separator)) && builder.Length > 1)
                 builder.Append(Separator);
 

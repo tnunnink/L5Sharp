@@ -32,7 +32,7 @@ public class ArgumentTypeTests
     [Test]
     public void Tag_WhenCalled_ShouldNotBeNull()
     {
-        ArgumentType.Tag.Should().NotBeNull();
+        ArgumentType.Reference.Should().NotBeNull();
     }
 
     [Test]
@@ -102,6 +102,6 @@ public class ArgumentTypeTests
     {
         var type = ArgumentType.Of("MyTag.Member[0].1");
 
-        type.Should().Be(ArgumentType.Tag);
+        type.Should().Be(ArgumentType.Reference);
     }
 }

@@ -1826,7 +1826,7 @@ public sealed class Instruction
         var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
 
         //And then anything else return all tag arguments.
-        return arguments.SelectMany(a => a.Arguments.Where(x => x.IsTag).Select(t => t.ToTag())).ToArray();
+        return arguments.SelectMany(a => a.Arguments.Where(x => x.IsReference).Select(t => t.ToTagName())).ToArray();
     }
 
     /// <summary>
