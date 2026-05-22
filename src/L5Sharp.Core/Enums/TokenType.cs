@@ -8,7 +8,7 @@ namespace L5Sharp.Core;
 /// Represents the type of token identified during lexical analysis of Logix neutral text.
 /// Used by the internal lexer to parse Logix code structures such as instructions, tag names, and expressions.
 /// </summary>
-public class TokenType : LogixEnum<TokenType, int>
+public class TokenType : LogixEnum<TokenType, string>
 {
     /// <summary>
     /// Represents a collection of token types corresponding to various operators
@@ -18,70 +18,88 @@ public class TokenType : LogixEnum<TokenType, int>
     private static readonly HashSet<string> Operators =
         new(Core.Operator.All().Select(x => x.Value), StringComparer.OrdinalIgnoreCase);
 
-    private TokenType(string name, int value) : base(name, value)
+    private TokenType(string name, string value) : base(name, value)
     {
     }
+
+    /// <summary>
+    /// Represents a token type that indicates the absence of a token or a null state.
+    /// This token type can be used as a default or uninitialized value in scenarios
+    /// where no specific token type is applicable or has been defined.
+    /// </summary>
+    public static readonly TokenType None = new(nameof(None), nameof(None));
 
     /// <summary>
     /// Represents an undefined or unrecognized token type encountered during lexical analysis of Logix neutral text.
     /// Typically used as a placeholder when a token does not match any predefined token types.
     /// </summary>
-    public static readonly TokenType Unknown = new(nameof(Unknown), 0);
+    public static readonly TokenType Unknown = new(nameof(Unknown), nameof(Unknown));
 
     /// <summary>
     /// Represents an identifier token such as instruction names (XIC, ADD), tag names (MyTag), or AOI names (My_AOI).
     /// </summary>
-    public static readonly TokenType Identifier = new(nameof(Identifier), 1);
+    public static readonly TokenType Identifier = new(nameof(Identifier), nameof(Identifier));
 
     /// <summary>
     /// Represents a literal value token such as numeric literals (100, 16#FF) or string literals ('String').
     /// </summary>
-    public static readonly TokenType Literal = new(nameof(Literal), 2);
+    public static readonly TokenType Literal = new(nameof(Literal), nameof(Literal));
 
     /// <summary>
     /// Represents an operator token such as arithmetic (+, -, *, /), assignment (:=), or logical (AND, OR) operators.
     /// </summary>
-    public static readonly TokenType Operator = new(nameof(Operator), 3);
+    public static readonly TokenType Operator = new(nameof(Operator), nameof(Operator));
 
     /// <summary>
     /// Represents an opening parenthesis token '(' used for instruction arguments and expression grouping.
     /// </summary>
-    public static readonly TokenType OpenParen = new(nameof(OpenParen), 4);
+    public static readonly TokenType OpenParen = new(nameof(OpenParen), nameof(OpenParen));
 
     /// <summary>
     /// Represents a closing parenthesis token ')' used for instruction arguments and expression grouping.
     /// </summary>
-    public static readonly TokenType CloseParen = new(nameof(CloseParen), 5);
+    public static readonly TokenType CloseParen = new(nameof(CloseParen), nameof(CloseParen));
 
     /// <summary>
     /// Represents an opening bracket token '[' used for array indexing and branch logic in rungs.
     /// </summary>
-    public static readonly TokenType OpenBracket = new(nameof(OpenBracket), 6);
+    public static readonly TokenType OpenBracket = new(nameof(OpenBracket), nameof(OpenBracket));
 
     /// <summary>
     /// Represents a closing bracket token ']' used for array indexing and branch logic in rungs.
     /// </summary>
-    public static readonly TokenType CloseBracket = new(nameof(CloseBracket), 7);
+    public static readonly TokenType CloseBracket = new(nameof(CloseBracket), nameof(CloseBracket));
 
     /// <summary>
     /// Represents a comma token ',' used to separate instruction arguments or array dimensions.
     /// </summary>
-    public static readonly TokenType Comma = new(nameof(Comma), 8);
+    public static readonly TokenType Comma = new(nameof(Comma), nameof(Comma));
 
     /// <summary>
     /// Represents a dot token '.' used for member access in tag names and data structures.
     /// </summary>
-    public static readonly TokenType Dot = new(nameof(Dot), 9);
+    public static readonly TokenType Dot = new(nameof(Dot), nameof(Dot));
+
+    /// <summary>
+    /// Represents a token type corresponding to a colon (":") character in the Logix neutral text.
+    /// </summary>
+    public static readonly TokenType Colon = new(nameof(Colon), nameof(Colon));
 
     /// <summary>
     /// Represents a semicolon token ';' used to terminate instructions or rungs.
     /// </summary>
-    public static readonly TokenType SemiColon = new(nameof(SemiColon), 10);
+    public static readonly TokenType SemiColon = new(nameof(SemiColon), nameof(SemiColon));
+
+    /// <summary>
+    /// Represents a token type that corresponds to a question mark symbol ('?'). This symbol is found in some
+    /// instruction text like timers or counters for unspecified arguments.
+    /// </summary>
+    public static readonly TokenType QuestionMark = new(nameof(QuestionMark), nameof(QuestionMark));
 
     /// <summary>
     /// Represents the end-of-file token indicating the completion of input text parsing.
     /// </summary>
-    public static readonly TokenType EOF = new(nameof(EOF), 11);
+    public static readonly TokenType EOF = new(nameof(EOF), nameof(EOF));
 
     /// <summary>
     /// Determines the <see cref="TokenType"/> based on the given token string.
@@ -109,12 +127,14 @@ public class TokenType : LogixEnum<TokenType, int>
             ']' when token.Length == 1 => CloseBracket,
             ',' when token.Length == 1 => Comma,
             '.' when token.Length == 1 => Dot,
+            ':' when token.Length == 1 => Colon,
             ';' when token.Length == 1 => SemiColon,
+            '?' when token.Length == 1 => QuestionMark,
 
             // Verify balanced quotes for string literals
             '\'' when token.Length >= 2 && token[token.Length - 1] == '\'' => Literal,
 
-            // Literals start with a digit (100, 16#FF, 2#1011, etc.)
+            // Literals start with a digit (100, 0.123, 16#FF, 2#1011, etc.)
             _ when char.IsDigit(token[0]) => Literal,
 
             // Identifiers start with a letter or underscore

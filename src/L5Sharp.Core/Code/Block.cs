@@ -474,7 +474,7 @@ public class Block : LogixObject<Block>
         return element.Attributes()
             .Where(a => PinNames.Contains(a.Name.LocalName))
             .SelectMany(a => a.Value.Split(' '))
-            .Select(t => TagName.Concat(operand, t));
+            .Select(t => operand.ToTagName().Append(t));
     }
 
     /// <summary>
@@ -511,7 +511,7 @@ public class Block : LogixObject<Block>
         foreach (var wire in inputWires)
         {
             var operand = sheet.Elements().Single(e => e.Attribute(L5XName.ID)?.Value == wire.Id).GetBlockOperand();
-            tagNames.Add(TagName.Concat(operand, wire.Param ?? TagName.Empty));
+            tagNames.Add(operand.ToTagName().Append(wire.Param));
         }
 
         return tagNames;
@@ -543,7 +543,7 @@ public class Block : LogixObject<Block>
         foreach (var wire in outputWires)
         {
             var operand = sheet.Elements().Single(e => e.Attribute(L5XName.ID)?.Value == wire.Id).GetBlockOperand();
-            tagNames.Add(TagName.Concat(operand, wire.Param ?? TagName.Empty));
+            tagNames.Add(operand.ToTagName().Append(wire.Param));
         }
 
         return tagNames;

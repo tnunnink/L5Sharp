@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-// ReSharper disable ReplaceSubstringWithRangeIndexer we want to keep SubString for NET Standard
-
 namespace L5Sharp.Core;
 
 /// <summary>
@@ -23,23 +21,11 @@ public sealed class TagName : IComparable<TagName>
     private const char ArrayClose = ']';
 
     /// <summary>
-    /// The internal storage for the full tag path represented by the <see cref="TagName"/> instance.
-    /// This string encapsulates the hierarchical representation of a Logix tag, including its members,
-    /// elements, and indices if applicable. Used for operations and methods related to tag analysis,
-    /// validation, and manipulation.
+    /// The underlying string representation of a Logix tag name encapsulated within the TagName class.
+    /// This private field is used to store and manage the full path or name of a tag, ensuring that
+    /// tag operations such as parsing, validation, and formatting are performed on a consistent data structure.
     /// </summary>
-    private readonly string _path;
-
-    /// <summary>
-    /// A regular expression pattern used for validating and analyzing Logix tag names.
-    /// This pattern ensures compliance with specific naming conventions, including formats for
-    /// base names, indexed elements, members, and operands within the hierarchical structure
-    /// of Logix tag definitions.
-    /// </summary>
-    private static readonly Regex TagNamePattern = new(
-        @"(?!\w*\()[A-Za-z_][\w+:]{1,39}(?:(?:\[\d+\]|\[\d+,\d+\]|\[\d+,\d+,\d+\])?(?:\.[A-Za-z_]\w{1,39})?)+(?:\.[0-9][0-9]?)?",
-        RegexOptions.Compiled
-    );
+    private readonly string _tagName;
 
     /// <summary>
     /// A regular expression pattern used to validate the base name of a Logix tag.
@@ -85,7 +71,7 @@ public sealed class TagName : IComparable<TagName>
     /// <exception cref="ArgumentNullException">tagName is null.</exception>
     public TagName(string name)
     {
-        _path = name ?? throw new ArgumentNullException(nameof(name));
+        _tagName = name ?? throw new ArgumentNullException(nameof(name));
     }
 
     /// <summary>
@@ -94,7 +80,7 @@ public sealed class TagName : IComparable<TagName>
     /// equality and value comparison methods.
     /// </summary>
     // ReSharper disable once ConvertToAutoPropertyWhenPossible
-    public string FullPath => _path;
+    public string FullPath => _tagName;
 
     /// <summary>
     /// Gets the local portion of the tag name, excluding any program scope prefix.
@@ -105,16 +91,17 @@ public sealed class TagName : IComparable<TagName>
     /// tags, this property returns the same value as <see cref="FullPath"/>.
     /// For example, "Program:MyProgram.MyTag" would return "MyTag".
     /// </remarks>
-    public string LocalPath => GetLocalTagName(_path);
+    public string LocalPath => GetLocalTagName();
 
     /// <summary>
     /// Represents the hierarchical portion of the tag name that excludes the base tag name and is stripped of the leading separator.
-    /// This property returns the remaining portion of the tag name, starting from the first member or array notation,
-    /// if applicable, after the base tag. It is derived from the <see cref="RelativePath"/> property by removing the leading separator.
-    /// Commonly used for accessing specific levels of a tag's hierarchy within complex or structured tag definitions.
-    /// Returns <c>null</c> if the tag has no member path.
     /// </summary>
-    public string? MemberPath => GetRelativePath(_path)?.TrimStart(Separator);
+    /// <remarks>
+    /// This property returns the remaining portion of the tag name, starting from the first member or array notation,
+    /// if applicable, after the base tag. Commonly used for accessing specific levels of a tag's hierarchy
+    /// within complex or structured tag definitions. Returns <c>null</c> if the tag has no member path.
+    /// </remarks>
+    public string? MemberPath => GetMemberPath();
 
     /// <summary>
     /// Represents the portion of the tag name that follows the base tag name, containing all members,
@@ -122,7 +109,7 @@ public sealed class TagName : IComparable<TagName>
     /// The relative path provides a hierarchical breakdown of the tag's structure beyond its base name.
     /// Returns <c>null</c> if the tag has no relative path.
     /// </summary>
-    public string? RelativePath => GetRelativePath(_path);
+    public string? RelativePath => GetRelativePath();
 
     /// <summary>
     /// The base name of the tag represented by the <see cref="TagName"/> instance.
@@ -130,7 +117,7 @@ public sealed class TagName : IComparable<TagName>
     /// indices, or hierarchy information. It is derived from the full path and is used
     /// in scenarios where only the top-level tag name is required.
     /// </summary>
-    public string BaseName => GetBase(_path);
+    public string BaseName => GetBaseName();
 
     /// <summary>
     /// Gets the immediate member name of the tag represented by the current <see cref="TagName"/> instance.
@@ -138,7 +125,7 @@ public sealed class TagName : IComparable<TagName>
     /// the final component following any hierarchical path or indexing.
     /// If the tag does not include any hierarchical or member path, the value will be <c>null</c>.
     /// </summary>
-    public string? MemberName => GetMember(_path);
+    public string? MemberName => GetMemberName();
 
     /// <summary>
     /// A zero-based number representing the depth of the tag name. In other words, the number of members
@@ -150,7 +137,7 @@ public sealed class TagName : IComparable<TagName>
     /// indices are also considered a member name. For example, 'MyTag[1].Value' has a depth of 2 since '[1]' and 'Value'
     /// are descendent member names of the root tag 'MyTag' member.
     /// </remarks>
-    public int Depth => GetDepth(_path);
+    public int Depth => GetDepth();
 
     /// <summary>
     /// Retrieves the scope level and container information of the tag name represented by this <see cref="TagName"/> instance.
@@ -160,17 +147,25 @@ public sealed class TagName : IComparable<TagName>
     /// the scope is identified as program-scoped, and the container is set to the program name. Otherwise, it is identified
     /// as controller-scoped with an empty container.
     /// </remarks>
-    public Scope Scope => GetScope(_path);
+    public Scope Scope => GetScope();
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="TagName"/> value is empty.
     /// </summary>
-    public bool IsEmpty => _path.IsEmpty();
+    public bool IsEmpty => _tagName.IsEmpty();
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="TagName"/> is a valid representation of a tag name.
     /// </summary>
-    public bool IsQualified => IsQualifiedTagName(_path);
+    public bool IsQualified => IsQualifiedTagName();
+
+    /// <summary>
+    /// Indicates whether the tag name is relative.
+    /// A tag name is considered relative if it begins with a separator or array-opening character,
+    /// suggesting it is not a fully qualified path but instead references a member or element relative
+    /// to a parent context.
+    /// </summary>
+    public bool IsRelative => _tagName.IndexOfAny([Separator, ArrayOpen]) == 0;
 
     /// <summary>
     /// Gets the static empty <see cref="TagName"/> value.
@@ -189,7 +184,7 @@ public sealed class TagName : IComparable<TagName>
     /// for analyzing tag structure and hierarchy. For example, "MyTag[1].Value.12" would return
     /// ["MyTag", "[1]", "Value", "12"].
     /// </remarks>
-    public IEnumerable<string> Members() => GetMembers(_path);
+    public IEnumerable<string> Members() => GetMembers();
 
     /// <summary>
     /// Retrieves member components of the tag name path up to a specified depth.
@@ -205,7 +200,7 @@ public sealed class TagName : IComparable<TagName>
     /// For instance, calling Members(2) on "MyTag[1].Value.12" would return ["MyTag", "[1]"].
     /// The depth parameter allows for efficient filtering of tag descendants without processing the entire path.
     /// </remarks>
-    public IEnumerable<string> Members(int count) => GetMembers(_path, count);
+    public IEnumerable<string> Members(int count) => GetMembers(count);
 
     /// <summary>
     /// Determines whether the current tag name is a direct member (child) of the specified parent tag name.
@@ -285,7 +280,7 @@ public sealed class TagName : IComparable<TagName>
         if (tagName is null)
             throw new ArgumentNullException(nameof(tagName));
 
-        return _path.IndexOf(tagName._path, StringComparison.OrdinalIgnoreCase) >= 0;
+        return _tagName.IndexOf(tagName._tagName, StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     /// <summary>
@@ -300,14 +295,38 @@ public sealed class TagName : IComparable<TagName>
     /// the structural path intact. For example, renaming "OldTag.Member[1].Value" with the base name "NewTag"
     /// would result in "NewTag.Member[1].Value".
     /// </remarks>
-    public TagName Rename(string baseName) => Combine(baseName, RelativePath);
+    public TagName Rename(string baseName)
+    {
+        return baseName.ToTagName().Append(MemberPath);
+    }
+
+    /// <summary>
+    /// Appends a specified member to the current <see cref="TagName"/> and returns a new updated instance.
+    /// </summary>
+    /// <param name="member">The member string to append. This can be null or empty, in which case the current <see cref="TagName"/> is returned unchanged.</param>
+    /// <returns>A new <see cref="TagName"/> instance with the specified member appended to the current tag name.</returns>
+    /// <remarks>
+    /// This method automatically inserts a dot (.) separator before the member name unless the member already begins
+    /// with a separator character (either '.' for member access or '[' for array indexing). For example, appending
+    /// "Value" to "MyTag" results in "MyTag.Value", while appending "[0]" results in "MyTag[0]" without an extra separator.
+    /// </remarks>
+    public TagName Append(string? member)
+    {
+        if (member is null || member.IsEmpty())
+            return new TagName(_tagName);
+
+        if (member[0] is '[' or '.')
+            return new TagName(_tagName + member);
+
+        return new TagName(_tagName + '.' + member);
+    }
 
     /// <inheritdoc />
     public int CompareTo(TagName? other)
     {
         return ReferenceEquals(this, other) ? 0
             : ReferenceEquals(null, other) ? 1
-            : StringComparer.OrdinalIgnoreCase.Compare(_path, other._path);
+            : StringComparer.OrdinalIgnoreCase.Compare(_tagName, other._tagName);
     }
 
     /// <inheritdoc />
@@ -315,60 +334,24 @@ public sealed class TagName : IComparable<TagName>
     {
         return obj switch
         {
-            TagName other => StringComparer.OrdinalIgnoreCase.Equals(_path, other._path),
-            string other => StringComparer.OrdinalIgnoreCase.Equals(_path, other),
+            TagName other => StringComparer.OrdinalIgnoreCase.Equals(_tagName, other._tagName),
+            string other => StringComparer.OrdinalIgnoreCase.Equals(_tagName, other),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_path);
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_tagName);
 
     /// <inheritdoc />
-    public override string ToString() => _path;
-
-    /// <summary>
-    /// Extracts all <see cref="TagName"/> instances from the specified text based on the predefined tag name pattern.
-    /// </summary>
-    /// <param name="text">
-    /// The text from which tag names are to be extracted. This is typically an expression or
-    /// rung of neutral text in which multiple tag names are embedded.
-    /// </param>
-    /// <returns>A collection of <see cref="TagName"/> objects representing the tags found within the input text.</returns>
-    public static IEnumerable<TagName> ExtractAll(string text)
-    {
-        return TagNamePattern.Matches(text).Cast<Match>().Select(m => new TagName(m.Value));
-    }
+    public override string ToString() => _tagName;
 
     /// <summary>
     /// Determines if the provided string value is a valid tag name.
     /// </summary>
     /// <param name="value">The <see cref="string"/> to test.</param>
     /// <returns><c>true</c> if the value is a valid and qualified tag name; Otherwise, <c>false</c>.</returns>
-    public static bool IsTag(string value) => IsQualifiedTagName(value);
-
-    /// <summary>
-    /// Concatenates two strings to produce a new <see cref="TagName"/> value. This method will also insert the '.'
-    /// member separator character if not found at the beginning of <c>right</c>.
-    /// </summary>
-    /// <param name="left">The first or left side of the tag name to concatenate.</param>
-    /// <param name="right">The second or right side of the tag name to concatenate.</param>
-    /// <returns>A <see cref="TagName"/> representing the combination of <c>left</c> and <c>right</c>.</returns>
-    /// <remarks>
-    /// This method would be more performant than <see cref="Combine(string[])"/>, assuming there are just
-    /// two strings to join together, as it does not iterate a collection or use a string builder class.
-    /// This method simply concatenates to strings.
-    /// </remarks>
-    public static TagName Concat(string left, string? right)
-    {
-        if (right is null || right.IsEmpty())
-            return left;
-
-        if (right[0] == ArrayOpen || right[0] == Separator)
-            return new TagName(left + right);
-
-        return new TagName(left + Separator + right);
-    }
+    public static bool IsTag(string? value) => value is not null && value.ToTagName().IsQualified;
 
     /// <summary>
     /// Combines a series of strings into a single <see cref="TagName"/> value, inserting member separator
@@ -386,6 +369,65 @@ public sealed class TagName : IComparable<TagName>
     /// <returns>A new <see cref="TagName"/>A new <see cref="TagName"/> value that is the combination of all provided member names.</returns>
     /// <exception cref="ArgumentException">If a provided name does not match the member pattern format.</exception>
     public static TagName Combine(IEnumerable<string?> members) => new(ConcatenateMembers(members));
+
+    /// <summary>
+    /// Parses a <see cref="NeutralText"/> object into a collection of <see cref="TagName"/> objects based on its tokenized content.
+    /// </summary>
+    /// <param name="text">The <see cref="NeutralText"/> object to parse into tag names.</param>
+    /// <returns>A collection of <see cref="TagName"/> objects extracted from the given <see cref="NeutralText"/>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="text"/> is null.</exception>
+    public static IEnumerable<TagName> Parse(NeutralText text)
+    {
+        if (text is null)
+            throw new ArgumentNullException(nameof(text));
+
+        using var stream = new NeutralStream(text);
+        var tagNames = new List<TagName>();
+        var tagCache = new Dictionary<int, TagName>();
+        var depth = 0;
+
+        while (stream.Read(out var token))
+        {
+            // This is the termination point. When we hit a non-tag token, we can add the constructed tag names and reset.
+            // Advance until we find the beginning of a potentially new tag name string.
+            if (!IsTagToken(token.Type))
+            {
+                // We need to skip any identifier that precedes an open parenthesis because this
+                // represents an instruction or a function and not a tag name.
+                if (tagCache.Count > 0 && token.Type != TokenType.OpenParen)
+                    tagNames.AddRange(tagCache.Values);
+
+                tagCache.Clear();
+                depth = 0;
+                continue;
+            }
+
+            // Handle array bracket depth to track nested tag name.
+            // We also need to ignore any array brackets while not "inside" of a tag name,
+            // as these likely represent rung branch tokens.
+            if (tagCache.Count > 0 && token.Type == TokenType.OpenBracket) depth++;
+            if (tagCache.Count > 0 && token.Type == TokenType.CloseBracket) depth--;
+
+            // Build up a tag name path for each level/depth in the stream.
+            for (var i = 0; i <= depth; i++)
+            {
+                if (tagCache.TryGetValue(i, out var current))
+                {
+                    tagCache[i] = current + token.Value;
+                    continue;
+                }
+
+                // Only add nested tags if the token is an identifier (nested tag name).
+                // We don't care about literal index or commas.
+                if (token.Type == TokenType.Identifier)
+                {
+                    tagCache[i] = token.Value;
+                }
+            }
+        }
+
+        return tagNames;
+    }
 
     /// <summary>
     /// Determines if the provided objects are equal.
@@ -408,14 +450,45 @@ public sealed class TagName : IComparable<TagName>
     /// </summary>
     /// <param name="tagName">The <see cref="TagName"/> value to convert.</param>
     /// <returns>A new <see cref="string"/> value representing the value of the tag name.</returns>
-    public static implicit operator string(TagName tagName) => tagName._path;
+    public static implicit operator string(TagName tagName) => tagName._tagName;
 
     /// <summary>
     /// Converts a <see cref="string"/> to a <see cref="TagName"/> value.
     /// </summary>
     /// <param name="tagName">The <see cref="string"/> value to convert.</param>
     /// <returns>A new <see cref="TagName"/> value representing the value of the tag name.</returns>
-    public static implicit operator TagName(string tagName) => new(tagName);
+    public static implicit operator TagName(string? tagName) => tagName is null ? Empty : new TagName(tagName);
+
+    /// <summary>
+    /// Retrieves the relative path portion of a tag name by parsing the associated token stream.
+    /// </summary>
+    /// <returns>
+    /// A string representing the relative path of the tag name, or null if no relative path is found.
+    /// </returns>
+    private string? GetRelativePath()
+    {
+        var tagName = GetLocalTagName();
+        var separator = tagName.IndexOfAny([Separator, ArrayOpen]);
+        return separator >= 0 ? tagName.Substring(separator) : null;
+    }
+
+    /// <summary>
+    /// Retrieves the member path portion of a tag name, excluding the base name and any leading separator.
+    /// This represents the hierarchical structure after the base tag, including members, array indices, and elements.
+    /// </summary>
+    /// <returns>
+    /// A string representing the member path of the tag name without the leading separator, or null if no member path exists.
+    /// </returns>
+    private string? GetMemberPath()
+    {
+        var tagName = GetLocalTagName();
+
+        var separator = tagName.IndexOfAny([Separator, ArrayOpen]);
+        if (separator < 0) return null;
+
+        var startIndex = tagName[separator] is Separator ? separator + 1 : separator;
+        return tagName.Substring(startIndex);
+    }
 
     /// <summary>
     /// Retrieves the base portion of a tag name from the specified path.
@@ -423,43 +496,30 @@ public sealed class TagName : IComparable<TagName>
     /// Returns an empty string if the tag name is empty or starts with a separator.
     /// Otherwise, returns the portion of the tag name up to the first separator.
     /// </summary>
-    private static string GetBase(string path)
+    private string GetBaseName()
     {
-        var tagName = GetLocalTagName(path);
+        var tagName = GetLocalTagName();
 
-        if (tagName.IsEmpty() || tagName.StartsWith(Separator))
+        if (tagName.IsEmpty() || tagName.StartsWith(Separator) || tagName.StartsWith(ArrayOpen))
             return string.Empty;
 
-        var end = tagName.StartsWith(ArrayOpen)
-            ? tagName.IndexOf(ArrayClose) + 1
-            : tagName.IndexOfAny([Separator, ArrayOpen]);
-
+        var end = tagName.IndexOfAny([Separator, ArrayOpen]);
         return end > 0 ? tagName.Substring(0, end) : tagName;
-    }
-
-    /// <summary>
-    /// Retrieves the operand portion of a tag name from the provided path string.
-    /// </summary>
-    private static string? GetRelativePath(string path)
-    {
-        var tagName = GetLocalTagName(path);
-        var separator = tagName.IndexOfAny([Separator, ArrayOpen]);
-        return separator >= 0 ? tagName.Substring(separator) : null;
     }
 
     /// <summary>
     /// Gets the last member of the tag name path, or the portion of the string from the last member separator to the
     /// end of the string. We are calling this the element.
     /// </summary>
-    private static string? GetMember(string path)
+    private string? GetMemberName()
     {
-        var tagName = GetLocalTagName(path);
+        var tagName = GetLocalTagName();
 
         var lastSeparator = tagName.LastIndexOfAny([Separator, ArrayOpen]);
         if (lastSeparator < 0) return null;
 
-        var length = tagName.Length - lastSeparator;
-        return tagName.Substring(lastSeparator, length).TrimStart(Separator);
+        var startIndex = tagName[lastSeparator] is Separator ? lastSeparator + 1 : lastSeparator;
+        return tagName.Substring(startIndex);
     }
 
     /// <summary>
@@ -467,10 +527,9 @@ public sealed class TagName : IComparable<TagName>
     /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
     /// of tag names this can get called on.
     /// </summary>
-    private static IEnumerable<string> GetMembers(string path, int count = 0)
+    private IEnumerable<string> GetMembers(int count = 0)
     {
-        // Only parse the local tag name string.
-        var tagName = GetLocalTagName(path);
+        var tagName = GetLocalTagName();
         var start = 0;
         var depth = 0;
 
@@ -500,13 +559,12 @@ public sealed class TagName : IComparable<TagName>
     }
 
     /// <summary>
-    /// Gets the zero-based depth or number of members between this member and the root.
-    /// We are no longer using regex to make this as efficient as possible since there could realistically be millions
-    /// of tag names this can get called on.
+    /// Calculates the depth of the tag hierarchy represented by this instance.
     /// </summary>
-    private static int GetDepth(string path)
+    /// <returns>The number of hierarchical levels (or depth) in the tag name.</returns>
+    private int GetDepth()
     {
-        var tagName = GetLocalTagName(path);
+        var tagName = GetLocalTagName();
 
         if (tagName.IsEmpty())
             return 0;
@@ -520,14 +578,14 @@ public sealed class TagName : IComparable<TagName>
     /// <see cref="Scope"/> object to identify the scope of the tag name. If no program prefix is present, we always assume
     /// a controller-scoped tag name.
     /// </summary>
-    private static Scope GetScope(string path)
+    private Scope GetScope()
     {
-        if (!path.StartsWith(ProgramPrefix, StringComparison.OrdinalIgnoreCase))
+        if (!_tagName.StartsWith(ProgramPrefix, StringComparison.OrdinalIgnoreCase))
             return Scope.Controller;
 
-        var memberIndex = path.IndexOf(Separator);
-        var endIndex = memberIndex > 0 ? memberIndex : path.Length;
-        var programName = path.Substring(ProgramPrefix.Length, endIndex - ProgramPrefix.Length);
+        var memberIndex = _tagName.IndexOf(Separator);
+        var endIndex = memberIndex > 0 ? memberIndex : _tagName.Length;
+        var programName = _tagName.Substring(ProgramPrefix.Length, endIndex - ProgramPrefix.Length);
         return Scope.Program(programName);
     }
 
@@ -535,17 +593,17 @@ public sealed class TagName : IComparable<TagName>
     /// Gets the portion of the tag name without the leading program prefix if present. This is needed to analyze
     /// the remaining portion of the actual localized tag name value.
     /// </summary>
-    private static string GetLocalTagName(string path)
+    private string GetLocalTagName()
     {
-        if (!path.StartsWith(ProgramPrefix, StringComparison.OrdinalIgnoreCase))
-            return path;
+        if (!_tagName.StartsWith(ProgramPrefix, StringComparison.OrdinalIgnoreCase))
+            return _tagName;
 
-        var memberIndex = path.IndexOf(Separator);
+        var memberIndex = _tagName.IndexOf(Separator);
 
-        if (memberIndex == -1 || memberIndex == path.Length - 1)
+        if (memberIndex == -1 || memberIndex == _tagName.Length - 1)
             return string.Empty;
 
-        return path.Substring(memberIndex + 1);
+        return _tagName.Substring(memberIndex + 1);
     }
 
     /// <summary>
@@ -562,8 +620,8 @@ public sealed class TagName : IComparable<TagName>
         {
             if (member is null) continue;
 
-            if (!(member.StartsWith(ArrayOpen) || member.StartsWith(Separator)) && builder.Length > 1)
-                builder.Append(Separator);
+            if (!(member.StartsWith('[') || member.StartsWith('.')) && builder.Length > 1)
+                builder.Append('.');
 
             builder.Append(member);
         }
@@ -571,16 +629,11 @@ public sealed class TagName : IComparable<TagName>
         return builder.ToString();
     }
 
-    /// <summary>
-    /// Determines whether the specified string value represents a valid qualified tag name.
-    /// </summary>
-    /// <param name="value">The string value to validate as a qualified tag name.</param>
-    /// <returns>True if the value is a qualified tag name; otherwise, false.</returns>
-    private static bool IsQualifiedTagName(string value)
-    {
-        if (value.IsEmpty()) return false;
 
-        var members = GetMembers(value).ToArray();
+    private bool IsQualifiedTagName()
+    {
+        if (IsEmpty) return false;
+        var members = GetMembers().ToArray();
         if (members.Length == 0) return false;
 
         for (var i = 0; i < members.Length; i++)
@@ -612,6 +665,25 @@ public sealed class TagName : IComparable<TagName>
 
         bool IsValidBitNumber(string member) =>
             int.TryParse(member, out var bit) && bit is >= 0 and <= 63;
+    }
+
+    /// <summary>
+    /// Determines whether the specified token type represents a tag token.
+    /// </summary>
+    /// <param name="type">The <see cref="TokenType"/> to evaluate.</param>
+    /// <returns>
+    /// true if the token type is one of the defined tag-related tokens such as Identifier, Dot, OpenBracket, CloseBracket,
+    /// Comma, or Colon; otherwise, false.
+    /// </returns>
+    private static bool IsTagToken(TokenType type)
+    {
+        return type == TokenType.Identifier
+               || type == TokenType.Literal
+               || type == TokenType.Dot
+               || type == TokenType.OpenBracket
+               || type == TokenType.CloseBracket
+               || type == TokenType.Comma
+               || type == TokenType.Colon;
     }
 }
 

@@ -14,6 +14,15 @@ public class NeutralTextTests
     }
 
     [Test]
+    public void Constructor_ValidText_ShouldHaveExpectedValue()
+    {
+        var text = new NeutralText("Test");
+
+        text.Should().NotBeNull();
+        text.ToString().Should().Be("Test");
+    }
+
+    [Test]
     public void Tokenize_SimpleIdentifier_ShouldReturnIdentifierAndEOF()
     {
         var text = new NeutralText("MyTag");
@@ -25,7 +34,129 @@ public class NeutralTextTests
         tokens[0].Value.Should().Be("MyTag");
         tokens[0].Index.Should().Be(0);
         tokens[1].Type.Should().Be(TokenType.EOF);
+        tokens[1].Value.Should().BeEmpty();
         tokens[1].Index.Should().Be(5);
+    }
+
+    [Test]
+    public void Tokenize_Colon_ShouldReturnColonAndEOF()
+    {
+        var text = new NeutralText(":");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(2);
+        tokens[0].Type.Should().Be(TokenType.Colon);
+        tokens[0].Value.Should().Be(":");
+        tokens[1].Type.Should().Be(TokenType.EOF);
+    }
+
+    [Test]
+    public void Tokenize_IOTagName_ShouldReturnExpectedTokens()
+    {
+        var text = new NeutralText("Local:1:I.Data[0].0");
+
+        var tokens = text.Tokenize().ToList();
+
+        // Local, :, 1, :, I, ., Data, [, 0, ], ., 0, EOF
+        tokens.Should().HaveCount(13);
+        tokens[0].Value.Should().Be("Local");
+        tokens[1].Type.Should().Be(TokenType.Colon);
+        tokens[2].Value.Should().Be("1");
+        tokens[3].Type.Should().Be(TokenType.Colon);
+        tokens[4].Value.Should().Be("I");
+        tokens[5].Type.Should().Be(TokenType.Dot);
+        tokens[6].Value.Should().Be("Data");
+        tokens[7].Type.Should().Be(TokenType.OpenBracket);
+        tokens[8].Value.Should().Be("0");
+        tokens[9].Type.Should().Be(TokenType.CloseBracket);
+        tokens[10].Type.Should().Be(TokenType.Dot);
+        tokens[11].Value.Should().Be("0");
+        tokens[12].Type.Should().Be(TokenType.EOF);
+    }
+
+    [Test]
+    public void Tokenize_ProgramScopedTagName_ShouldReturnExpectedTokens()
+    {
+        var text = new NeutralText("Program:MainProgram.MyTag");
+
+        var tokens = text.Tokenize().ToList();
+
+        // Program, :, MainProgram, ., MyTag, EOF
+        tokens.Should().HaveCount(6);
+        tokens[0].Value.Should().Be("Program");
+        tokens[1].Type.Should().Be(TokenType.Colon);
+        tokens[2].Value.Should().Be("MainProgram");
+        tokens[3].Type.Should().Be(TokenType.Dot);
+        tokens[4].Value.Should().Be("MyTag");
+    }
+
+    [Test]
+    public void Tokenize_Assignment_ShouldReturnOperatorAndEOF()
+    {
+        var text = new NeutralText("MyTag := 10;");
+
+        var tokens = text.Tokenize().ToList();
+
+        // MyTag, :=, 10, ;, EOF
+        tokens.Should().HaveCount(5);
+        tokens[0].Value.Should().Be("MyTag");
+        tokens[1].Type.Should().Be(TokenType.Operator);
+        tokens[1].Value.Should().Be(":=");
+        tokens[2].Value.Should().Be("10");
+        tokens[3].Type.Should().Be(TokenType.SemiColon);
+    }
+
+    [Test]
+    public void Tokenize_ConsecutiveColons_ShouldReturnMultipleColons()
+    {
+        var text = new NeutralText(":::");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(4);
+        tokens[0].Type.Should().Be(TokenType.Colon);
+        tokens[1].Type.Should().Be(TokenType.Colon);
+        tokens[2].Type.Should().Be(TokenType.Colon);
+        tokens[3].Type.Should().Be(TokenType.EOF);
+    }
+
+    [Test]
+    public void Tokenize_ColonNextToOtherOperators_ShouldReturnCorrectTokens()
+    {
+        var text = new NeutralText(":+:-:");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(6);
+        tokens[0].Type.Should().Be(TokenType.Colon);
+        tokens[1].Type.Should().Be(TokenType.Operator);
+        tokens[2].Type.Should().Be(TokenType.Colon);
+        tokens[3].Type.Should().Be(TokenType.Operator);
+        tokens[4].Type.Should().Be(TokenType.Colon);
+        tokens[5].Type.Should().Be(TokenType.EOF);
+    }
+
+    [Test]
+    public void Tokenize_ComplexTagName_ShouldReturnExpectedTokens()
+    {
+        var text = new NeutralText("MyTag.SomeMember[1,2,3].Value.14");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(15);
+    }
+
+    [Test]
+    public void Tokenize_ComplexTagNameWithReferenceIndex_ShouldReturnExpectedTokens()
+    {
+        var text = new NeutralText("MyTag.SomeMember[IndexTag].Value.14");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(11);
+        tokens[4].Type.Should().Be(TokenType.Identifier);
+        tokens[4].Value.Should().Be("IndexTag");
     }
 
     [Test]
@@ -115,7 +246,7 @@ public class NeutralTextTests
 
         // XIC, (, MyTag, ), ADD, (, 1, ,, 2, ,, Result, ), ;, EOF
         tokens.Should().HaveCount(14);
-        
+
         tokens[0].Value.Should().Be("XIC");
         tokens[1].Value.Should().Be("(");
         tokens[2].Value.Should().Be("MyTag");

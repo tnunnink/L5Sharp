@@ -1,5 +1,4 @@
 using FluentAssertions;
-using L5Sharp.Core;
 
 namespace L5Sharp.Tests.Core.Common;
 
@@ -19,7 +18,7 @@ public class NeutralTokenTests
     [Test]
     public void Constructor_NullType_ShouldThrowArgumentNullException()
     {
-        Action act = () => new NeutralToken(null!, "value", 0);
+        Action act = () => _ = new NeutralToken(null!, "value", 0);
 
         act.Should().Throw<ArgumentNullException>().WithParameterName("type");
     }
@@ -27,7 +26,7 @@ public class NeutralTokenTests
     [Test]
     public void Constructor_NullValue_ShouldThrowArgumentNullException()
     {
-        Action act = () => new NeutralToken(TokenType.Identifier, null!, 0);
+        Action act = () => _ = new NeutralToken(TokenType.Identifier, null!, 0);
 
         act.Should().Throw<ArgumentNullException>().WithParameterName("value");
     }
@@ -51,22 +50,12 @@ public class NeutralTokenTests
     }
 
     [Test]
-    public void EOF_DefaultIndex_ShouldHaveExpectedProperties()
+    public void None_WhenCalled_ShouldHaveExpectedProperties()
     {
-        var token = NeutralToken.EOF();
+        var token = NeutralToken.None;
 
-        token.Type.Should().Be(TokenType.EOF);
+        token.Type.Should().Be(TokenType.None);
         token.Value.Should().BeEmpty();
         token.Index.Should().Be(-1);
-    }
-
-    [Test]
-    public void EOF_CustomIndex_ShouldHaveExpectedIndex()
-    {
-        var token = NeutralToken.EOF(100);
-
-        token.Type.Should().Be(TokenType.EOF);
-        token.Value.Should().BeEmpty();
-        token.Index.Should().Be(100);
     }
 }

@@ -281,23 +281,6 @@ public class Argument
         // If this is a reference or literal, then just return itself.
         if (!IsExpression) return [this];
 
-        // If it looks like a function call "NAME(ARGS)", extract the arguments inside the parentheses
-        // and return the nested argument.
-        var functionMatch = Regex.Match(_value, @"^[A-Z_]+\((.*)\)$", RegexOptions.IgnoreCase);
-        if (functionMatch.Success)
-        {
-            Argument function = functionMatch.Groups[1].Value;
-            return function.ExtractArguments();
-        }
-
-        // Split expression on known operators. Trim spaces and parenthesis since they are not important.
-        return _value
-            .Split(Operators, StringSplitOptions.RemoveEmptyEntries)
-            .Select(t => t.Trim())
-            .Select(t => t.TrimStart('('))
-            .Select(t => t.TrimEnd(')'))
-            .Select(x => new Argument(x))
-            .SelectMany(a => a.ExtractArguments())
-            .ToArray();
+        throw new NotImplementedException();
     }
 }

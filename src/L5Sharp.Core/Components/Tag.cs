@@ -743,7 +743,7 @@ public class Tag : LogixComponent<Tag>
     private TagName GetTagName()
     {
         if (Parent is not null)
-            return TagName.Concat(Parent.TagName, Name);
+            return Parent.TagName.Append(Name);
 
         if (Scope.IsProgram)
             return new TagName($"Program:{Scope.Container}.{Name}");

@@ -120,8 +120,10 @@ namespace L5Sharp.Tests.Core.Common
         {
             var tagName = new TagName("MyTag");
 
-            tagName.Scope.Level.Should().Be(ScopeLevel.Controller);
-            tagName.Scope.Container.Should().BeEmpty();
+            var scope = tagName.Scope;
+
+            scope.Level.Should().Be(ScopeLevel.Controller);
+            scope.Container.Should().BeEmpty();
         }
 
         [Test]
@@ -167,8 +169,9 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase("MyTag[1].SomeMember.1", "MyTag")]
         [TestCase("Module:1:I.Data[1].SubTag.Value.12", "Module:1:I")]
         [TestCase(".Member[32].Value", "")]
-        [TestCase("Member[32].Value", "Member")]
-        [TestCase("[32].Value", "[32]")]
+        [TestCase("[32].Value", "")]
+        [TestCase("Program:MyProgram.MyTag[32].Value", "MyTag")]
+        [TestCase("Program:MyProgram.[32].Value", "")]
         public void BaseName_WhenCalled_ShouldBeExpected(string value, string expected)
         {
             var tagName = new TagName(value);
@@ -450,6 +453,100 @@ namespace L5Sharp.Tests.Core.Common
             TagName tagName = "MyTagName";
 
             tagName.Should().Be("MyTagName");
+        }
+
+        [Test]
+        public void Parse_SimpleBaseTagName_ShouldReturnSingleBaseTag()
+        {
+            NeutralText text = "MyTag";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(1);
+            tags[0].Should().Be("MyTag");
+        }
+
+        [Test]
+        public void Parse_ComplexTagNamePath_ShouldReturnSingleTagName()
+        {
+            NeutralText text = "MyTag.SubMember[1].Value.32";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(1);
+            tags[0].Should().Be("MyTag.SubMember[1].Value.32");
+        }
+
+        [Test]
+        public void Parse_ComplexTagNameWithNestedIndexReference_ShouldReturnBothTagNames()
+        {
+            NeutralText text = "MyTag.SubMember[IndexTag].Value.32";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(2);
+            tags[0].Should().Be("MyTag.SubMember[IndexTag].Value.32");
+            tags[1].Should().Be("IndexTag");
+        }
+
+        [Test]
+        public void Parse_TagNameWithProgramSpecifier_ShouldReturnFullPath()
+        {
+            NeutralText text = "Program:MyProgramName.MyTag.Member.Value";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(1);
+            tags[0].Should().Be("Program:MyProgramName.MyTag.Member.Value");
+        }
+
+        [Test]
+        public void Parse_MultipleTagsInInstructionText_ShouldReturnOnlyTagNames()
+        {
+            NeutralText text = "XIC(MySimpleTag) XIO(MyArrayTag[1]) OTE(MyComplexTag.Member.12);";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(3);
+            tags[0].Should().Be("MySimpleTag");
+            tags[1].Should().Be("MyArrayTag[1]");
+            tags[2].Should().Be("MyComplexTag.Member.12");
+        }
+
+        [Test]
+        public void Parse_MultipleTagsInInstructionTextWithNestedIndexName_ShouldReturnExpectedTagNames()
+        {
+            NeutralText text = "XIC(MySimpleTag) XIO(MyArrayTag[IndexTagName]) OTE(MyComplexTag.Member.12);";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(4);
+            tags[0].Should().Be("MySimpleTag");
+            tags[1].Should().Be("MyArrayTag[IndexTagName]");
+            tags[2].Should().Be("IndexTagName");
+            tags[3].Should().Be("MyComplexTag.Member.12");
+        }
+        
+        [Test]
+        public void Parse_MultipleTagsInRungTextWithBranchTokens_ShouldReturnExpectedTagNames()
+        {
+            NeutralText text = "[XIC(MySimpleTag) XIO(MyArrayTag[IndexTagName])] OTE(MyComplexTag.Member.12);";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(4);
+            tags[0].Should().Be("MySimpleTag");
+            tags[1].Should().Be("MyArrayTag[IndexTagName]");
+            tags[2].Should().Be("IndexTagName");
+            tags[3].Should().Be("MyComplexTag.Member.12");
+        }
+
+        [Test]
+        public void ImplicitOperator_Null_ShouldBeEmpty()
+        {
+            TagName tagName = (string)null!;
+
+            tagName.Should().Be(TagName.Empty);
         }
 
         [Test]
