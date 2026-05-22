@@ -47,25 +47,30 @@ public class NeutralText
 
             var token = current switch
             {
+                // Handle special case 2 character operators
+                ':' when PeekNext(_text, position) is '=' => Consume(_text, ref position, 2),
+                '<' or '>' when PeekNext(_text, position) is '=' => Consume(_text, ref position, 2),
+                '<' when PeekNext(_text, position) is '>' => Consume(_text, ref position, 2),
+                '*' when PeekNext(_text, position) is '*' => Consume(_text, ref position, 2),
+                // Handle all other single character operators
+                _ when IsOperator(current) => Consume(_text, ref position),
                 _ when IsStructural(current) => Consume(_text, ref position),
-                _ when IsOperator(current) => Consume(_text, ref position, GetOperatorLength(position, _text)),
-                _ when IsStringQuote(current) => ConsumeString(_text, ref position),
-                //todo just not sure if we need to cover date times. I don't think we do, so this should work.
+                _ when IsString(current) => ConsumeString(_text, ref position),
                 _ when char.IsDigit(current) => ConsumeWhile(_text, ref position, IsLiteral),
                 _ when char.IsLetter(current) || current is '_' => ConsumeWhile(_text, ref position, IsIdentifier),
                 _ => throw new ArgumentException(
-                    $"Unexpected character '{current}' at position {position} of text {_text}")
+                    $"Unexpected character '{current}' at position {position} of text: {_text}")
             };
 
             yield return token;
         }
 
-        yield return NeutralToken.EOF(position);
+        yield return new NeutralToken(TokenType.EOF, string.Empty, position);
         yield break;
 
-        bool IsStructural(char c) => c is '(' or ')' or '[' or ']' or ',' or '.' or ';';
-        bool IsOperator(char c) => c is '+' or '-' or '/' or '*' or '=' or '<' or '>' or ':';
-        bool IsStringQuote(char c) => c is '\'';
+        bool IsOperator(char c) => c is '+' or '-' or '/' or '*' or '=' or '<' or '>';
+        bool IsStructural(char c) => c is '(' or ')' or '[' or ']' or ',' or '.' or ':' or ';' or '?';
+        bool IsString(char c) => c is '\'';
         bool IsLiteral(char c) => char.IsLetterOrDigit(c) || c is '#' or '.';
         bool IsIdentifier(char c) => char.IsLetterOrDigit(c) || c is '_';
     }
@@ -150,31 +155,6 @@ public class NeutralText
     }
 
     /// <summary>
-    /// Determines the length of an operator at the specified position in the given text.
-    /// </summary>
-    /// <param name="position">The current position in the text from which to check the operator.</param>
-    /// <param name="text">The text in which the operator's length is to be determined.</param>
-    /// <returns>The length of the operator at the specified position, typically 1 or 2 characters.</returns>
-    private static int GetOperatorLength(int position, string text)
-    {
-        if (position >= text.Length)
-            return 0;
-
-        var current = text[position];
-
-        switch (current)
-        {
-            case ':' when Peek(position, text) is '=':
-            case '<' or '>' when Peek(position, text) is '=':
-            case '<' when Peek(position, text) is '>':
-            case '*' when Peek(position, text) is '*':
-                return 2;
-            default:
-                return 1;
-        }
-    }
-
-    /// <summary>
     /// Retrieves the character at the specified position plus one in the given text,
     /// or returns the minimum value of the <see cref="char"/> type if the index is out of range.
     /// </summary>
@@ -182,7 +162,7 @@ public class NeutralText
     /// <param name="text">The string from which the character is to be retrieved.</param>
     /// <returns>The character at the position <paramref name="index"/> + 1 in the given string,
     /// or <see cref="char.MinValue"/> if the position is out of the text's bounds.</returns>
-    private static char Peek(int index, string text) => index + 1 < text.Length ? text[index + 1] : char.MinValue;
+    private static char PeekNext(string text, int index) => index + 1 < text.Length ? text[index + 1] : char.MinValue;
 
 
     /// <inheritdoc />
@@ -214,5 +194,5 @@ public class NeutralText
     /// </summary>
     /// <param name="text">The string value to convert.</param>
     /// <returns>A new <see cref="NeutralText"/> instance wrapping the provided string.</returns>
-    public static implicit operator NeutralText(string text) => new NeutralText(text);
+    public static implicit operator NeutralText(string text) => new(text);
 }

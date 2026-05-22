@@ -58,9 +58,9 @@ public readonly struct NeutralToken
     public override string ToString() => $"[{Type.Name}] {Value} (at {Index})";
 
     /// <summary>
-    /// Creates an end-of-file (EOF) NeutralToken with an optional position index.
+    /// Gets a predefined instance of <see cref="NeutralToken"/> representing the absence of a token or a null state.
+    /// This property is commonly used as a default or uninitialized value to indicate that no meaningful token
+    /// has been parsed or assigned in a specific context.
     /// </summary>
-    /// <param name="index">The zero-based position index where the EOF token is created. Default is -1.</param>
-    /// <returns>A NeutralToken that represents the EOF, with an empty value and the specified index.</returns>
-    public static NeutralToken EOF(int index = -1) => new(TokenType.EOF, string.Empty, index);
+    public static NeutralToken None => new(TokenType.None, string.Empty, -1);
 }
