@@ -6,9 +6,21 @@ namespace L5Sharp.Tests.Core.Common
     public class InstructionTests
     {
         [Test]
+        public void New_Null_ShouldThrowException()
+        {
+            FluentActions.Invoking(() => _ = new Instruction(null!)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void New_EmptyString_ShouldThrowException()
+        {
+            FluentActions.Invoking(() => _ = new Instruction(string.Empty)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
         public void New_KeyNoArgs_ShouldHaveExpectedValues()
         {
-            var instruction = new Instruction("Test");
+            var instruction = new Instruction("Test", []);
 
             instruction.Should().Be("Test()");
             instruction.Key.Should().Be("Test");
@@ -62,14 +74,15 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        [TestCase("")]
         [TestCase("Test")]
         [TestCase("()")]
         [TestCase("(SomeTag > 1.0)/100")]
         [TestCase("ABS(SomeTag) / 100  > 1")]
-        public void New_InvalidFormats_ShouldThrowException(string text)
+        public void IsValid_InvalidFormats_ShouldBeFalse(string text)
         {
-            FluentActions.Invoking(() => _ = new Instruction(text)).Should().Throw<ArgumentException>();
+            var instruction = new Instruction(text);
+
+            instruction.IsValid.Should().BeFalse();
         }
 
         [Test]

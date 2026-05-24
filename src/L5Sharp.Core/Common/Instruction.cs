@@ -107,18 +107,36 @@ public sealed class Instruction
     public string Key => ParseKey();
 
     /// <summary>
-    /// The collection of <see cref="Argument"/> values the instruction contains.
+    /// Gets the collection of arguments that make up the instruction signature.
     /// </summary>
     /// <value>
-    /// A collection of  <see cref="Argument"/> value objects.
-    /// These could represent literal values, tag names, or nested expressions.
+    /// An <see cref="IEnumerable{Argument}"/> containing all arguments parsed from the instruction text.
+    /// Arguments are extracted from the parentheses-enclosed signature portion of the instruction.
+    /// For example, in "XIC(Tag1)", this returns a single argument "Tag1".
+    /// Returns an empty collection if the instruction has no arguments (e.g., "NOP()").
     /// </value>
     public IEnumerable<Argument> Arguments => ParseArguments();
 
     /// <summary>
-    /// 
+    /// Gets a value indicating whether the instruction has a valid text format.
     /// </summary>
-    public bool IsValid => ValidateText(_text);
+    /// <value>
+    /// <c>true</c> if the instruction text is well-formed with a valid key, proper parentheses,
+    /// and valid arguments; otherwise, <c>false</c>.
+    /// </value>
+    /// <remarks>
+    /// This property performs structural validation, including:
+    /// <list type="bullet">
+    /// <item><description>The text is not null or empty.</description></item>
+    /// <item><description>The key is present and non-empty.</description></item>
+    /// <item><description>Opening and closing parentheses are correctly positioned.</description></item>
+    /// <item><description>All arguments have valid types (no empty arguments).</description></item>
+    /// </list>
+    /// Note that this does not validate whether the instruction key is a known Rockwell instruction
+    /// or whether the argument count matches the expected signature. Use <see cref="IsNative"/> to
+    /// determine if the instruction is a known built-in instruction.
+    /// </remarks>
+    public bool IsValid => ValidateText();
 
     /// <summary>
     /// Indicates whether the instruction is a native Rockwell built-in instruction.
@@ -1784,14 +1802,19 @@ public sealed class Instruction
     }
 
     /// <summary>
-    /// 
+    /// Validates the syntax and structure of the provided text according to the predefined format.
+    /// Ensures the text is neither null nor empty, contains the required opening and closing characters,
+    /// has a valid key, and does not include arguments with an empty type.
     /// </summary>
-    /// <param name="text"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    private static bool ValidateText(string text)
+    /// <returns>True if the text is valid; otherwise, false.</returns>
+    private bool ValidateText()
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(_text)) return false;
+        if (_text.IndexOf(Open) <= 0) return false;
+        if (!_text.EndsWith(Close)) return false;
+        if (Key.IsEmpty()) return false;
+        if (Arguments.Any(a => a.Type == ArgumentType.Empty)) return false;
+        return true;
     }
 
     /// <summary>
