@@ -38,13 +38,6 @@ public sealed class Instruction
     private const char Close = ')';
 
     /// <summary>
-    /// Pattern for identifying any instruction and the contents of its signature. This expression should
-    /// capture everything enclosed or between the instruction parentheses. This includes nested parenthesis.
-    /// This works on the assumption that the text has balanced opening/closing parentheses.
-    /// </summary>
-    private const string Pattern = @"[A-Za-z_]\w{1,39}\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)";
-
-    /// <summary>
     /// A regex pattern that finds all commas not contained in array brackets so that we can split the arguments
     /// of an instruction signature into separate parsable values.
     /// </summary>
@@ -96,14 +89,10 @@ public sealed class Instruction
     /// Creates a new <see cref="Instruction"/> from the provided neutral text value.
     /// </summary>
     /// <param name="text">The neutral text that represents the instruction value.</param>
-    private Instruction(string text)
+    public Instruction(string text)
     {
         if (string.IsNullOrEmpty(text))
             throw new ArgumentException("Instruction text can not be null or empty.", nameof(text));
-
-        //Open parenthesis must not be the first character and string must end with close parenthesis.
-        if (text != "UNK" && (text.IndexOf(Open) < 1 || !text.EndsWith(Close)))
-            throw new ArgumentException($"Instruction text '{text}' is not a valid neutral text instruction.");
 
         _text = text;
     }
@@ -118,25 +107,36 @@ public sealed class Instruction
     public string Key => ParseKey();
 
     /// <summary>
-    /// The collection of <see cref="Argument"/> values the instruction contains.
+    /// Gets the collection of arguments that make up the instruction signature.
     /// </summary>
     /// <value>
-    /// A collection of  <see cref="Argument"/> value objects.
-    /// These could represent literal values, tag names, or nested expressions.
+    /// An <see cref="IEnumerable{Argument}"/> containing all arguments parsed from the instruction text.
+    /// Arguments are extracted from the parentheses-enclosed signature portion of the instruction.
+    /// For example, in "XIC(Tag1)", this returns a single argument "Tag1".
+    /// Returns an empty collection if the instruction has no arguments (e.g., "NOP()").
     /// </value>
-    public Argument[] Arguments => ParseArguments();
+    public IEnumerable<Argument> Arguments => ParseArguments();
 
     /// <summary>
-    /// Retrieves all referenced tag name values found in this instruction.
+    /// Gets a value indicating whether the instruction has a valid text format.
     /// </summary>
-    /// <returns>A collection of <see cref="TagName"/> values cotnained by the instruction.</returns>
-    public TagName[] Tags => ParseTags();
-
-    /// <summary>
-    /// Retrieves all immediate atomic type values found in this instruction.
-    /// </summary>
-    /// <returns>A collection of <see cref="AtomicData"/> values cotnained by the instruction.</returns>
-    public AtomicData[] Values => ParseValues();
+    /// <value>
+    /// <c>true</c> if the instruction text is well-formed with a valid key, proper parentheses,
+    /// and valid arguments; otherwise, <c>false</c>.
+    /// </value>
+    /// <remarks>
+    /// This property performs structural validation, including:
+    /// <list type="bullet">
+    /// <item><description>The text is not null or empty.</description></item>
+    /// <item><description>The key is present and non-empty.</description></item>
+    /// <item><description>Opening and closing parentheses are correctly positioned.</description></item>
+    /// <item><description>All arguments have valid types (no empty arguments).</description></item>
+    /// </list>
+    /// Note that this does not validate whether the instruction key is a known Rockwell instruction
+    /// or whether the argument count matches the expected signature. Use <see cref="IsNative"/> to
+    /// determine if the instruction is a known built-in instruction.
+    /// </remarks>
+    public bool IsValid => ValidateText();
 
     /// <summary>
     /// Indicates whether the instruction is a native Rockwell built-in instruction.
@@ -173,56 +173,45 @@ public sealed class Instruction
     public static Instruction Unkown => new("UNK");
 
     /// <summary>
-    /// Parses the provided string neutral text into a <see cref="Instruction"/> instance.
+    /// Parses the provided neutral text representation to extract and construct a sequence of <see cref="Instruction"/> objects.
     /// </summary>
-    /// <param name="text">The neutral text to parse.</param>
-    /// <returns>A <see cref="Instruction"/> object representing the parsed text.</returns>
-    /// <exception cref="ArgumentException"><c>text</c> is null, empty, or open/close parenthesis is not in valid
-    /// locations in the provided text.</exception>
-    public static Instruction Parse(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            throw new ArgumentException("Instruction text can not be null or empty.", nameof(text));
-
-        text = text.Trim(';');
-
-        return new Instruction(text);
-    }
-
-    /// <summary>
-    /// Attempts to parse the specified text into an <see cref="Instruction"/> object.
-    /// </summary>
-    /// <param name="text">The string representation of the instruction to parse. Null or empty values are invalid.</param>
-    /// <param name="parsed">When the method returns, contains the parsed <see cref="Instruction"/> object if the parsing is successful; otherwise, null.</param>
-    /// <returns>True if the parsing succeeds and an <see cref="Instruction"/> object is created; otherwise, false.</returns>
-    public static bool TryParse(string? text, out Instruction parsed)
-    {
-        parsed = null!;
-
-        //Rung line terminators may be present, and we should trim those to get just the instruction text.
-        text = text?.TrimEnd(';') ?? string.Empty;
-
-        if (text.IsEmpty()) return false;
-        if (text.IndexOf(Open) < 1 || !text.EndsWith(Close)) return false;
-
-        parsed = new Instruction(text);
-        return true;
-    }
-
-    /// <summary>
-    /// Splits the provided text into an array of <see cref="Instruction"/> objects found in the provided neutral text string.
-    /// </summary>
-    /// <param name="text">The neutral text value to be parsed and split into instructions.</param>
+    /// <param name="text">
+    /// The <see cref="NeutralText"/> containing the instruction code to parse. This represents the textual format of
+    /// instructions as they appear in Rockwell Automation's Logix neutral text format (structured text or ladder logic).
+    /// </param>
     /// <returns>
-    /// An array of <see cref="Instruction"/> objects parsed from the input text.
-    /// Returns an empty array if the input string is null or empty.
+    /// An <see cref="IEnumerable{Instruction}"/> containing all instructions successfully parsed from the provided text.
     /// </returns>
-    public static Instruction[] Split(string text)
+    /// <remarks>
+    /// This method tokenizes the input text using a <see cref="NeutralStream"/> and identifies instruction boundaries
+    /// by tracking parentheses depth. Nested parentheses (from nested expressions or array indices) are handled
+    /// by maintaining a depth counter. The parsing process is designed to work with both simple
+    /// instructions (e.g., "XIC(Tag)") up to full rungs with many instrcutions.
+    /// </remarks>
+    public static IEnumerable<Instruction> Parse(NeutralText text)
     {
-        if (string.IsNullOrEmpty(text))
-            return [];
+        using var stream = new NeutralStream(text);
+        var start = 0;
+        var depth = 0;
 
-        return Regex.Matches(text, Pattern).Cast<Match>().Select(m => Parse(m.Value)).ToArray();
+        while (stream.Read(out var token))
+        {
+            if (token.Type == TokenType.Identifier && stream.Match(TokenType.OpenParen) && depth == 0)
+            {
+                start = token.Index;
+                continue;
+            }
+
+            if (token.Type == TokenType.CloseParen)
+            {
+                depth--;
+                if (depth > 0) continue;
+                yield return new Instruction(text.ToString().Substring(start, token.Index + 1 - start));
+            }
+
+            if (token.Type == TokenType.OpenParen)
+                depth++;
+        }
     }
 
     /// <summary>
@@ -270,18 +259,19 @@ public sealed class Instruction
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(this, obj)) return true;
+        if (ReferenceEquals(this, obj))
+            return true;
 
         return obj switch
         {
-            Instruction other => Equals(_text, other._text),
+            Instruction other => _text.IsEquivalent(other._text),
             string text => _text.IsEquivalent(text),
             _ => false
         };
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => _text.GetHashCode();
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(_text);
 
     /// <inheritdoc />
     public override string ToString() => _text;
@@ -1812,35 +1802,19 @@ public sealed class Instruction
     }
 
     /// <summary>
-    /// Find all tag name arguments in the current instruction and returns them as a flat list of <see cref="TagName"/>.
+    /// Validates the syntax and structure of the provided text according to the predefined format.
+    /// Ensures the text is neither null nor empty, contains the required opening and closing characters,
+    /// has a valid key, and does not include arguments with an empty type.
     /// </summary>
-    private TagName[] ParseTags()
+    /// <returns>True if the text is valid; otherwise, false.</returns>
+    private bool ValidateText()
     {
-        //Ingore task calling instructions since they don't refer to a tag name.
-        if (IsTaskCall) return [];
-
-        //For GSV and SSV instruction only the last argument represents an actual tag name reference.
-        if (IsSystemCall) return [Arguments.Last().ToString()];
-
-        //Skip the first argument of a routine instruction as it does not refer to a tag name.
-        var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
-
-        //And then anything else return all tag arguments.
-        return arguments.SelectMany(a => a.Tags).ToArray();
-    }
-
-    /// <summary>
-    /// Find all atomic value arguments in the current instruction and returns them as a flat list of <see cref="AtomicData"/>.
-    /// </summary>
-    private AtomicData[] ParseValues()
-    {
-        //Ingore any system or task calling instructions since they don't refer to a tag name.
-        if (IsSystemCall || IsTaskCall) return [];
-
-        //Skip the first argument of a routine instruction as it does not refer to a tag name.
-        var arguments = IsRoutineCall ? Arguments.Skip(1) : Arguments;
-
-        return arguments.SelectMany(a => a.Values).ToArray();
+        if (string.IsNullOrWhiteSpace(_text)) return false;
+        if (_text.IndexOf(Open) <= 0) return false;
+        if (!_text.EndsWith(Close)) return false;
+        if (Key.IsEmpty()) return false;
+        if (Arguments.Any(a => a.Type == ArgumentType.Empty)) return false;
+        return true;
     }
 
     /// <summary>
@@ -1864,7 +1838,8 @@ public sealed class Instruction
     /// </summary>
     private static IEnumerable<KeyValuePair<string, Func<Instruction>>> Factories()
     {
-        var methods = typeof(Instruction).GetMethods(BindingFlags.Public | BindingFlags.Static)
+        var methods = typeof(Instruction)
+            .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Where(m => m.ReturnType == typeof(Instruction) && m.Name.All(char.IsUpper));
 
         foreach (var method in methods)

@@ -32,7 +32,7 @@ public class ArgumentTypeTests
     [Test]
     public void Tag_WhenCalled_ShouldNotBeNull()
     {
-        ArgumentType.Tag.Should().NotBeNull();
+        ArgumentType.Reference.Should().NotBeNull();
     }
 
     [Test]
@@ -102,62 +102,6 @@ public class ArgumentTypeTests
     {
         var type = ArgumentType.Of("MyTag.Member[0].1");
 
-        type.Should().Be(ArgumentType.Tag);
-    }
-
-    [Test]
-    public void IsInvalid_Empty_ShouldBeTrue()
-    {
-        var type = ArgumentType.Empty;
-
-        type.IsInvalid.Should().BeTrue();
-    }
-    
-    [Test]
-    public void IsInvalid_Tag_ShouldBeFalse()
-    {
-        var type = ArgumentType.Tag;
-
-        type.IsInvalid.Should().BeFalse();
-    }
-    
-    [Test]
-    public void IsValue_Empty_ShouldBeFalse()
-    {
-        var type = ArgumentType.Empty;
-
-        type.IsValue.Should().BeFalse();
-    }
-    
-    [Test]
-    public void IsValue_Tag_ShouldBeFalse()
-    {
-        var type = ArgumentType.Tag;
-
-        type.IsValue.Should().BeFalse();
-    }
-    
-    [Test]
-    public void IsValue_Atomic_ShouldBeTrue()
-    {
-        var type = ArgumentType.Atomic;
-
-        type.IsValue.Should().BeTrue();
-    }
-    
-    [Test]
-    public void IsValue_String_ShouldBeTrue()
-    {
-        var type = ArgumentType.String;
-
-        type.IsValue.Should().BeTrue();
-    }
-    
-    [Test]
-    public void IsTag_Tag_ShouldBeTrue()
-    {
-        var type = ArgumentType.Tag;
-
-        type.IsTag.Should().BeTrue();
+        type.Should().Be(ArgumentType.Reference);
     }
 }

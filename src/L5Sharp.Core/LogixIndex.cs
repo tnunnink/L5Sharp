@@ -304,10 +304,8 @@ internal class LogixIndex
 
             AddOrUpdateReference(instruction.Key, reference);
 
-            foreach (var tag in instruction.Arguments.Where(a => a.Type.IsTag))
+            foreach (var tag in instruction.Arguments.Where(a => a.IsReference))
                 AddOrUpdateReference(tag, reference);
-            
-            
         }
     }
 

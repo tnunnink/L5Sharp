@@ -209,8 +209,8 @@ public class Block : LogixObject<Block>
         if (target is null || target.IsEmpty)
             throw new ArgumentException("Can not wire block with null or empty target tag name.");
 
-        var operand = target.Base;
-        var pin = target.Member;
+        var operand = target.BaseName;
+        var pin = target.MemberPath ?? TagName.Empty;
 
         var to = Element.Parent?.Elements().FirstOrDefault(e =>
             e.GetBlockOperand() == operand
@@ -256,8 +256,8 @@ public class Block : LogixObject<Block>
         if (source is null || source.IsEmpty)
             throw new ArgumentException("Can not wire block with null or empty target tag name.");
 
-        var operand = source.Base;
-        var pin = source.Member;
+        var operand = source.BaseName;
+        var pin = source.MemberPath ?? TagName.Empty;
 
         var from = Element.Parent?.Elements().FirstOrDefault(e =>
             e.GetBlockOperand() == operand
@@ -377,7 +377,7 @@ public class Block : LogixObject<Block>
 
         builder.Append(")");
 
-        return Instruction.Parse(builder.ToString());
+        return new Instruction(builder.ToString());
     }
 
     /// <inheritdoc />
@@ -469,12 +469,12 @@ public class Block : LogixObject<Block>
     {
         var operand = element.GetBlockOperand();
 
-        if (operand.Type.IsInvalid) return [];
+        if (operand.IsValid) return [];
 
         return element.Attributes()
             .Where(a => PinNames.Contains(a.Name.LocalName))
             .SelectMany(a => a.Value.Split(' '))
-            .Select(t => TagName.Concat(operand, t));
+            .Select(t => operand.ToTagName().Append(t));
     }
 
     /// <summary>
@@ -511,7 +511,7 @@ public class Block : LogixObject<Block>
         foreach (var wire in inputWires)
         {
             var operand = sheet.Elements().Single(e => e.Attribute(L5XName.ID)?.Value == wire.Id).GetBlockOperand();
-            tagNames.Add(TagName.Concat(operand, wire.Param ?? TagName.Empty));
+            tagNames.Add(operand.ToTagName().Append(wire.Param));
         }
 
         return tagNames;
@@ -543,7 +543,7 @@ public class Block : LogixObject<Block>
         foreach (var wire in outputWires)
         {
             var operand = sheet.Elements().Single(e => e.Attribute(L5XName.ID)?.Value == wire.Id).GetBlockOperand();
-            tagNames.Add(TagName.Concat(operand, wire.Param ?? TagName.Empty));
+            tagNames.Add(operand.ToTagName().Append(wire.Param));
         }
 
         return tagNames;

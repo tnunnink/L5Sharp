@@ -120,8 +120,9 @@ public sealed class Reference
     /// <returns>True if the <see cref="Reference"/> contains a valid logic instruction; otherwise, false.</returns>
     public bool HasLogic(out Instruction logic)
     {
-        if (Type.IsLogic && Instruction.TryParse(Fragment, out logic))
+        if (Type.IsLogic && Fragment is not null && !Fragment.IsEmpty())
         {
+            logic = new Instruction(Fragment);
             return true;
         }
 

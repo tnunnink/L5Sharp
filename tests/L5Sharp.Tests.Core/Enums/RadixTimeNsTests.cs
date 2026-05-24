@@ -16,6 +16,20 @@ public class RadixTimeNsTests
     }
 
     [Test]
+    [TestCase("LT#10d_7h", true)]
+    [TestCase("LT#-500ns", true)]
+    [TestCase("LT#1d_2h_3m_4s_5ms_6us_7ns", true)]
+    [TestCase("LT#0ns", true)]
+    [TestCase("123ns", false)]
+    [TestCase(null, false)]
+    public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+    {
+        var result = Radix.TimeNs.IsValid(value);
+
+        result.Should().Be(expected);
+    }
+
+    [Test]
     [TestCase(0, "LT#0ns")]
     [TestCase(1, "LT#1ns")]
     [TestCase(-1, "LT#-1ns")]
@@ -33,29 +47,25 @@ public class RadixTimeNsTests
     [Test]
     public void Parse_NullValue_ShouldThrowArgumentException()
     {
-        FluentActions.Invoking(() => Radix.TimeNs.Parse<long>(null!))
-            .Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => Radix.TimeNs.Parse<long>(null!)).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void Parse_EmptyValue_ShouldThrowArgumentException()
     {
-        FluentActions.Invoking(() => Radix.TimeNs.Parse<long>(string.Empty))
-            .Should().Throw<ArgumentException>();
+        FluentActions.Invoking(() => Radix.TimeNs.Parse<long>(string.Empty)).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void Parse_NoSpecifier_ShouldThrowFormatException()
     {
-        FluentActions.Invoking(() => Radix.TimeNs.Parse<long>("123us"))
-            .Should().Throw<FormatException>();
+        FluentActions.Invoking(() => Radix.TimeNs.Parse<long>("123us")).Should().Throw<FormatException>();
     }
 
     [Test]
     public void Parse_InvalidType_ShouldThrowNotSupportedException()
     {
-        FluentActions.Invoking(() => Radix.TimeNs.Parse<int>("LT#1ns"))
-            .Should().Throw<NotSupportedException>();
+        FluentActions.Invoking(() => Radix.TimeNs.Parse<int>("LT#1ns")).Should().Throw<NotSupportedException>();
     }
 
     [Test]

@@ -51,4 +51,18 @@ public class RadixTimeTests
 
         result.Should().Be(expected);
     }
+
+    [Test]
+    [TestCase("T#12h_30m", true)]
+    [TestCase("T#-500ms", true)]
+    [TestCase("T#1d_2h_3m_4s_5ms_6us", true)]
+    [TestCase("T#0us", true)]
+    [TestCase("123us", false)]
+    [TestCase(null, false)]
+    public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+    {
+        var result = Radix.Time.IsValid(value);
+
+        result.Should().Be(expected);
+    }
 }

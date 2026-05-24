@@ -481,14 +481,14 @@ public class Tag : LogixComponent<Tag>
             if (tagName is null) throw new ArgumentNullException(nameof(tagName));
             if (tagName.IsEmpty) return this;
 
-            var member = Value.GetMember(tagName.Base);
+            var member = Value.GetMember(tagName.BaseName);
 
             if (member is null)
                 throw new ArgumentException(
-                    $"No member with name '{tagName.Base}' exists in the tag data structure for type {DataType}.");
+                    $"No member with name '{tagName.BaseName}' exists in the tag data structure for type {DataType}.");
 
             var tag = new Tag(member, this);
-            return tagName.Depth == 0 ? tag : tag[tagName.Member];
+            return tagName.Depth == 0 ? tag : tag[tagName.MemberPath];
         }
     }
 
@@ -547,11 +547,11 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return this;
 
-        var member = Value.GetMember(tagName.Base);
+        var member = Value.GetMember(tagName.BaseName);
         if (member is null) return null;
 
         var tag = new Tag(member, this);
-        return tagName.Depth == 0 ? tag : tag.Member(tagName.Member);
+        return tagName.Depth == 0 ? tag : tag.Member(tagName.MemberPath);
     }
 
     /// <summary>
@@ -644,7 +644,7 @@ public class Tag : LogixComponent<Tag>
         if (tagName is null) throw new ArgumentNullException(nameof(tagName));
         if (tagName.IsEmpty) return Members();
 
-        var member = Value.GetMember(tagName.Base);
+        var member = Value.GetMember(tagName.BaseName);
         if (member is null) return [];
 
         var tag = new Tag(member, this);
@@ -743,7 +743,7 @@ public class Tag : LogixComponent<Tag>
     private TagName GetTagName()
     {
         if (Parent is not null)
-            return TagName.Concat(Parent.TagName, Name);
+            return Parent.TagName.Append(Name);
 
         if (Scope.IsProgram)
             return new TagName($"Program:{Scope.Container}.{Name}");
@@ -968,7 +968,7 @@ public class Tag : LogixComponent<Tag>
             return;
         }
 
-        Comments!.Add(new Comment(TagName.Operand, value));
+        Comments!.Add(new Comment(TagName.RelativePath, value));
     }
 
     /// <summary>
@@ -998,7 +998,7 @@ public class Tag : LogixComponent<Tag>
             return;
         }
 
-        Units!.Add(new Unit(TagName.Operand, value));
+        Units!.Add(new Unit(TagName.RelativePath, value));
     }
 
     /// <summary>

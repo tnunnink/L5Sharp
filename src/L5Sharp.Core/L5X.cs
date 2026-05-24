@@ -315,11 +315,11 @@ public sealed class L5X
         var tagName = reference.Id.ToTagName();
 
         // Always search the index using the base name and the reference's explicit scope.
-        var baseReference = Reference.To<Tag>(tagName.Base, reference.Scope);
+        var baseReference = Reference.To<Tag>(tagName.BaseName, reference.Scope);
         var tag = _index.GetElement<Tag>(baseReference);
 
         // Navigate to the specified member (this will return the base tag if no member is specified).
-        return tag[tagName.Member];
+        return tag[tagName.MemberPath];
     }
 
     /// <summary>
@@ -349,9 +349,9 @@ public sealed class L5X
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var tagName = name.ToTagName();
-        var reference = Reference.To<TComponent>(tagName.Base, tagName.Scope);
+        var reference = Reference.To<TComponent>(tagName.BaseName, tagName.Scope);
         var element = _index.GetElement<TComponent>(reference);
-        return element is Tag tag ? tag[tagName.Member].As<TComponent>() : element;
+        return element is Tag tag ? tag[tagName.MemberPath].As<TComponent>() : element;
     }
 
     /// <summary>
@@ -388,9 +388,9 @@ public sealed class L5X
         var tagName = reference.Id.ToTagName();
 
         // Always search the index using the base name and the reference's explicit scope.
-        if (_index.TryGetElement<Tag>(Reference.To<Tag>(tagName.Base, reference.Scope), out var tag))
+        if (_index.TryGetElement<Tag>(Reference.To<Tag>(tagName.BaseName, reference.Scope), out var tag))
         {
-            var target = tag.Member(tagName.Member);
+            var target = tag.Member(tagName.MemberPath);
             return target.IsNull(out entity);
         }
 
@@ -412,11 +412,11 @@ public sealed class L5X
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
 
         var tagName = name.ToTagName();
-        var reference = Reference.To<TComponent>(tagName.Base, tagName.Scope);
+        var reference = Reference.To<TComponent>(tagName.BaseName, tagName.Scope);
 
         if (_index.TryGetElement<TComponent>(reference, out var element))
         {
-            var target = element is Tag tag ? tag.Member(tagName.Member)?.As<TComponent>() : element;
+            var target = element is Tag tag ? tag.Member(tagName.MemberPath)?.As<TComponent>() : element;
             return target.IsNull(out component);
         }
 

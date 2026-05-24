@@ -115,6 +115,13 @@ public class StringData : LogixData, IEnumerable<char>
     }
 
     /// <inheritdoc />
+    public override void ClearData()
+    {
+        SetLength(0);
+        SetString(string.Empty);
+    }
+
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj switch

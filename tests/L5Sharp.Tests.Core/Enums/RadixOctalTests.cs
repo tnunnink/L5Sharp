@@ -153,15 +153,13 @@ namespace L5Sharp.Tests.Core.Enums
         [Test]
         public void Parse_NoSpecifier_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Parse<int>("00_000_000_024"))
-                .Should().Throw<FormatException>();
+            FluentActions.Invoking(() => Radix.Octal.Parse<int>("00_000_000_024")).Should().Throw<FormatException>();
         }
 
         [Test]
         public void Parse_LengthZero_ShouldThrowException()
         {
-            FluentActions.Invoking(() => Radix.Octal.Parse<int>("8#"))
-                .Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => Radix.Octal.Parse<int>("8#")).Should().Throw<FormatException>();
         }
 
         [Test]
@@ -222,6 +220,22 @@ namespace L5Sharp.Tests.Core.Enums
         public void Parse_ValidLint_ShouldBeExpected(string value, long expected)
         {
             var result = Radix.Octal.Parse<long>(value);
+
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        [TestCase("8#0", true)]
+        [TestCase("8#7", true)]
+        [TestCase("8#07", true)]
+        [TestCase("8#12_34", true)]
+        [TestCase("8#", false)]
+        [TestCase("8#8", false)]
+        [TestCase("123", false)]
+        [TestCase(null, false)]
+        public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+        {
+            var result = Radix.Octal.IsValid(value);
 
             result.Should().Be(expected);
         }

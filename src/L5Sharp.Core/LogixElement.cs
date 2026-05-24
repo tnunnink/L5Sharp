@@ -54,6 +54,27 @@ public interface ILogixElement
     bool TryGetDocument(out L5X document);
 
     /// <summary>
+    /// Retrieves the nearest ancestor of the current element that matches the specified type.
+    /// </summary>
+    /// <typeparam name="TElement">The type of the ancestor element to retrieve, which must implement <see cref="ILogixElement"/>.</typeparam>
+    /// <returns>An instance of the ancestor element of type <typeparamref name="TElement"/>, or <see langword="null"/> if no matching ancestor is found.</returns>
+    /// <remarks>
+    /// This method traverses the hierarchy of elements upwards, starting from the current element, to locate the first ancestor
+    /// that matches the specified type. If no such ancestor exists, it returns <see langword="null"/>.
+    /// </remarks>
+    TElement? GetParent<TElement>() where TElement : ILogixElement;
+
+    /// <summary>
+    /// Attempts to retrieve the parent element of the current <see cref="ILogixElement"/> as the specified type.
+    /// </summary>
+    /// <typeparam name="TElement">The type of the parent element to retrieve.</typeparam>
+    /// <param name="element">When this method returns, contains the parent element if found; otherwise, the default value for <typeparamref name="TElement"/>.</param>
+    /// <returns>
+    /// <see langword="true"/> if the parent element of the specified type is found; otherwise, <see langword="false"/>.
+    /// </returns>
+    bool TryGetParent<TElement>(out TElement element) where TElement : ILogixElement;
+
+    /// <summary>
     /// Casts the current instance into the specified <typeparamref name="TElement"/> type,
     /// which must implement <see cref="ILogixElement"/>.
     /// </summary>
@@ -133,11 +154,17 @@ public abstract class LogixElement : ILogixElement
     protected readonly XElement Element;
 
     /// <summary>
-    /// A list containing the order of any child elements for the current logix element.
-    /// By default, this is an empty collection, but derived classes can override this. When this collection contains names,
-    /// any adding of properties, containers, or complex types will then use this list to sort the order of the elements
-    /// in the underlying parent element. 
+    /// Gets the explicit ordering of child elements for the current <see cref="LogixElement"/>.
     /// </summary>
+    /// <value>
+    /// A <see cref="List{T}"/> of <see cref="string"/> representing the sequence in which child elements
+    /// should be arranged within the underlying L5X XML structure.
+    /// </value>
+    /// <remarks>
+    /// ElementOrder defines the hierarchy and serialization order of L5X elements, ensuring proper structure
+    /// and compliance with the L5X schema during export or import operations. Overriding this property allows
+    /// derived classes to specify a unique sequence tailored to their respective XML representations.
+    /// </remarks>
     protected virtual List<string> ElementOrder { get; } = [];
 
     /// <inheritdoc />
@@ -156,6 +183,20 @@ public abstract class LogixElement : ILogixElement
 
         document = l5X;
         return true;
+    }
+
+    /// <inheritdoc />
+    public TElement? GetParent<TElement>() where TElement : ILogixElement
+    {
+        return GetAncestor<TElement>();
+    }
+
+    /// <inheritdoc />
+    public bool TryGetParent<TElement>(out TElement element) where TElement : ILogixElement
+    {
+        var ancestor = GetAncestor<TElement>();
+        element = ancestor!;
+        return ancestor is not null;
     }
 
     /// <inheritdoc />
@@ -438,12 +479,12 @@ public abstract class LogixElement : ILogixElement
     /// to a <c>L5X</c> document then this will return null. Note that we only get parent but don't set it. A parent is
     /// defined by adding a given logix element to the corresponding parent logix container.
     /// </remarks>
-    protected TElement? GetAncestor<TElement>(string? ancestorName = null) where TElement : LogixElement
+    protected TElement? GetAncestor<TElement>(string? ancestorName = null) where TElement : ILogixElement
     {
         ancestorName ??= LogixSerializer.NamesFor(typeof(TElement)).First();
 
         if (!Element.TryGetAncestor(e => e.Name.LocalName == ancestorName, out var ancestor))
-            return null;
+            return default;
 
         return ancestor.Deserialize<TElement>();
     }

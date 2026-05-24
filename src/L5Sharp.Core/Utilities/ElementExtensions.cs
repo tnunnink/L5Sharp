@@ -143,7 +143,7 @@ public static class ElementExtensions
             var memberName = current.MemberName();
 
             if (!memberName.IsEmpty())
-                tagName = TagName.Concat(memberName, tagName);
+                tagName = memberName.ToTagName().Append(tagName);
 
             if (current.Name.LocalName is L5XName.Tag) break;
             current = current.Parent;

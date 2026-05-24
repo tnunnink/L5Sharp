@@ -575,7 +575,7 @@ public class PlcClient : IPlcClient
 
         void OnTagValueChanged(object? sender, XObjectChangeEventArgs args)
         {
-            //We only care about value changes (todo need to check with string CDATA though)
+            //We only care about value changes
             if (args.ObjectChange != XObjectChange.Value) return;
 
             // Should be an XObject from which we can get the parent element which should be the data member.

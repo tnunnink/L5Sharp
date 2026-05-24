@@ -92,5 +92,17 @@ namespace L5Sharp.Tests.Core.Enums
 
             result.Should().Be(1777473944498115700);
         }
+
+        [Test]
+        [TestCase("LDT#2023-05-18-11:08:00.000000000Z", true)]
+        [TestCase("LDT#2023-05-18-11:08:00Z", true)]
+        [TestCase("LDT#2023-05-18-11:08:00.000000000", false)]
+        [TestCase(null, false)]
+        public void IsValid_WhenCalled_ShouldBeExpected(string? value, bool expected)
+        {
+            var result = Radix.DateTimeNs.IsValid(value);
+
+            result.Should().Be(expected);
+        }
     }
 }

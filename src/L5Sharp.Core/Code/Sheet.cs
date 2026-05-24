@@ -87,7 +87,9 @@ public class Sheet : LogixCode<Sheet>
     /// <inheritdoc />
     public override IEnumerable<TagName> Tags()
     {
-        return Blocks().Select(b => b.ToInstruction()).SelectMany(i => i.Tags);
+        return Blocks().Select(b => b.ToInstruction()).SelectMany(x =>
+            x.Arguments.Where(a => a.IsReference).Select(a => a.ToTagName())
+        );
     }
 
     /// <inheritdoc />
@@ -291,16 +293,17 @@ public class Sheet : LogixCode<Sheet>
         if (from is null) throw new ArgumentNullException(nameof(from));
         if (to is null) throw new ArgumentNullException(nameof(to));
 
-        var source = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == from.Base)?.Deserialize<Block>();
-        var target = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == to.Base)?.Deserialize<Block>();
+        var source = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == from.BaseName)
+            ?.Deserialize<Block>();
+        var target = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == to.BaseName)?.Deserialize<Block>();
 
         if (source is null)
-            throw new InvalidOperationException($"No source block with operand '{from.Base}' exists in the sheet.");
+            throw new InvalidOperationException($"No source block with operand '{from.BaseName}' exists in the sheet.");
 
         if (target is null)
-            throw new InvalidOperationException($"No target block with operand '{to.Base}' exists in the sheet.");
+            throw new InvalidOperationException($"No target block with operand '{to.BaseName}' exists in the sheet.");
 
-        WireBlocks(source.ID, target.ID, from.Member, to.Member);
+        WireBlocks(source.ID, target.ID, from.MemberPath, to.MemberPath);
 
         return this;
     }

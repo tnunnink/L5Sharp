@@ -19,7 +19,7 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
     /// Returns <see cref="ArgumentType.Empty"/> if the input is null or empty,
     /// <see cref="ArgumentType.String"/> if the input is enclosed with single quotes,
     /// <see cref="ArgumentType.Atomic"/> if the input infers a valid radix/numeric format,
-    /// <see cref="ArgumentType.Tag"/> if the input matches a valid tag name,
+    /// <see cref="Reference"/> if the input matches a valid tag name,
     /// <see cref="ArgumentType.Expression"/> if the input contains expression characters,
     /// or <see cref="ArgumentType.Unknown"/> otherwise.
     /// </returns>
@@ -28,27 +28,12 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
         if (string.IsNullOrEmpty(value)) return Empty;
         if (value.StartsWith('\'') && value.EndsWith('\'')) return String;
         if (Radix.TryInfer(value, out _)) return Atomic;
-        if (TagName.IsTag(value)) return Tag;
+        // We can use the tag name patter match because system components should pass this as well
+        if (TagName.IsTag(value)) return Reference;
+        // todo I think we need to include bitwise operators (AND, OR, XOR, etc.)
         if (value.IndexOfAny(['=', '>', '<', '+', '-', '*', '/', '(', ')']) >= 0) return Expression;
         return Unknown;
     }
-
-    /// <summary>
-    /// Determines whether the current argument type is either <see cref="Empty"/> or <see cref="Unknown"/>.
-    /// </summary>
-    public bool IsInvalid => this == Empty || this == Unknown;
-
-    /// <summary>
-    /// Indicates whether the argument type represents an immediate value. Immediate values are <see cref="Atomic"/>
-    /// or <see cref="String"/> type arguments.
-    /// </summary>
-    public bool IsValue => this == Atomic || this == String;
-
-    /// <summary>
-    /// Determines whether the argument type represents a <see cref="Tag"/> value. Tag arguments are references to
-    /// values and not values themselves.
-    /// </summary>
-    public bool IsTag => this == Tag;
 
     /// <summary>
     /// Represents an argument type that is specifically empty.
@@ -75,10 +60,11 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
     public static readonly ArgumentType String = new(nameof(String), nameof(String));
 
     /// <summary>
-    /// Represents an argument type that is specifically a tag.
-    /// This value is used for arguments defined as a reference to a specific tag.
+    /// Represents an argument type that corresponds to a tag or system component reference.
+    /// A value of this type signifies that the input matches a valid tag name
+    /// and adheres to the specific syntax and format required for tag references.
     /// </summary>
-    public static readonly ArgumentType Tag = new(nameof(Tag), nameof(Tag));
+    public static readonly ArgumentType Reference = new(nameof(Reference), nameof(Reference));
 
     /// <summary>
     /// Represents an argument type that is an expression.

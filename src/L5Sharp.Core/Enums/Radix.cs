@@ -229,10 +229,11 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int BaseNumber = 2;
         private const int SegmentSize = 4;
         private const string Separator = "_";
+        private static readonly Regex ValidPattern = new("^2#[01_]*[01][01_]*$", RegexOptions.Compiled);
 
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
@@ -273,10 +274,11 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int BaseNumber = 8;
         private const int SegmentSize = 3;
         private const string Separator = "_";
+        private static readonly Regex ValidPattern = new("^8#[0-7_]*[0-7][0-7_]*$", RegexOptions.Compiled);
 
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
@@ -311,17 +313,12 @@ public abstract class Radix : LogixEnum<Radix, string>
     {
         private const int BaseNumber = 10;
 
+        //Decimal needs to handle true/false values since L5X contains specialized tag data formats which use these values.
+        private static readonly Regex ValidPattern = new(@"^(?:[+-]?\d+|true|false)$", RegexOptions.Compiled);
+
         public override bool IsValid(string? value)
         {
-            if (value is null)
-                return false;
-
-            return value.ToLower() switch
-            {
-                "true" => true,
-                "false" => true,
-                _ => value.All(c => char.IsDigit(c) || c == '+' || c == '-')
-            };
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
@@ -358,9 +355,12 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const int SegmentSize = 4;
         private const string Separator = "_";
 
+        private static readonly Regex ValidPattern =
+            new("^16#[0-9a-fA-F_]*[0-9a-fA-F][0-9a-fA-F_]*$", RegexOptions.Compiled);
+
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         public override string Format<TValue>(TValue value) where TValue : struct
@@ -393,27 +393,16 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     private class FloatRadix() : Radix(nameof(Float), nameof(Float))
     {
-        // This is IEEE 754 floating-point representation known as Indeterminate (NaN).
-        // Not sure why Rockwell uses both this and QNAN, but we want to avoid parsing exceptions.
-        // ReSharper disable once InconsistentNaming
-        private const string IND = "#IND";
-        private const string QNAN = "#QNAN";
+        private const string QNAN = "1.#QNAN";
         private const string DoubleFormat = "0.0##############";
         private const string SingleFormat = "0.0######";
-        private static readonly HashSet<char> ValidCharacters = ['.', '+', '-'];
+
+        private static readonly Regex ValidPattern =
+            new(@"^(?:[+-]?\d+\.\d+|(?:[+-]?\d+\.)?#QNAN|(?:[+-]?\d+\.)?#IND)$", RegexOptions.Compiled);
 
         public override bool IsValid(string? value)
         {
-            if (value is null || string.IsNullOrEmpty(value)) return false;
-            if (value.EndsWith(QNAN) || value.EndsWith(IND)) return true;
-
-            foreach (var c in value)
-            {
-                if (char.IsDigit(c)) continue;
-                if (!ValidCharacters.Contains(c)) return false;
-            }
-
-            return true;
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         protected override bool IsSupportedType(Type type)
@@ -429,8 +418,8 @@ public abstract class Radix : LogixEnum<Radix, string>
             return value switch
             {
                 float.NaN => QNAN,
-                float a => a.ToString(SingleFormat, CultureInfo.InvariantCulture),
                 double.NaN => QNAN,
+                float a => a.ToString(SingleFormat, CultureInfo.InvariantCulture),
                 double a => a.ToString(DoubleFormat, CultureInfo.InvariantCulture),
                 _ => base.Format(value)
             };
@@ -455,30 +444,16 @@ public abstract class Radix : LogixEnum<Radix, string>
     /// </summary>
     private class ExponentialRadix() : Radix(nameof(Exponential), nameof(Exponential))
     {
-        // This is IEEE 754 floating-point representation known as Indeterminate (NaN).
-        // Not sure why Rockwell uses both this and QNAN, but we want to avoid parsing exceptions.
-        // ReSharper disable once InconsistentNaming
-        private const string IND = "#IND";
-        private const string QNAN = "#QNAN";
+        private const string QNAN = "1.#QNAN";
         private const string DoubleExponent = "e16";
         private const string SingleExponent = "e8";
-        private static readonly HashSet<char> ValidCharacters = ['.', '+', '-', 'e', 'E'];
+
+        private static readonly Regex ValidPattern =
+            new(@"^(?:[+-]?\d+\.\d+[eE][+-]?\d+|(?:[+-]?\d+\.)?#QNAN|(?:[+-]?\d+\.)?#IND)$", RegexOptions.Compiled);
 
         public override bool IsValid(string? value)
         {
-            if (value is null || string.IsNullOrEmpty(value)) return false;
-            if (value.EndsWith(QNAN) || value.EndsWith(IND)) return true;
-
-            var hasExponent = false;
-            foreach (var c in value)
-            {
-                if (char.IsDigit(c)) continue;
-                if (!ValidCharacters.Contains(c)) return false;
-                if (c is 'e' or 'E') hasExponent = true;
-            }
-
-            // Strict: If there's no 'e'/'E', it's NOT exponential (it's likely Float or Decimal)
-            return hasExponent;
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         protected override bool IsSupportedType(Type type)
@@ -493,6 +468,8 @@ public abstract class Radix : LogixEnum<Radix, string>
 
             return value switch
             {
+                float.NaN => QNAN,
+                double.NaN => QNAN,
                 float a => a.ToString(SingleExponent, CultureInfo.InvariantCulture),
                 double a => a.ToString(DoubleExponent, CultureInfo.InvariantCulture),
                 _ => base.Format(value)
@@ -647,6 +624,8 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Separator = "_";
         private const string Suffix = "Z";
         private const string DateTimeFormat = "yyyy-MM-dd-HH:mm:ss.ffffff";
+        private static readonly Regex ValidPattern = new(@"^DT#[\d\-_:.]+Z$", RegexOptions.Compiled);
+
         private const long TicksPerMicrosecond = TimeSpan.TicksPerMillisecond / 1000;
         private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         private static readonly Func<long, long> ValueConverter = l => l;
@@ -654,7 +633,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         protected override bool IsSupportedType(Type type)
@@ -674,7 +653,6 @@ public abstract class Radix : LogixEnum<Radix, string>
             var time = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).AddTicks(ticks);
 
             var formatted = time.ToString(DateTimeFormat);
-            //var str = Regex.Replace(formatted, InsertPattern, Separator);
             return $"{Specifier}{formatted}{Suffix}";
         }
 
@@ -708,6 +686,7 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Separator = "_";
         private const string Suffix = "00Z";
         private const string DateTimeFormat = "yyyy-MM-dd-HH:mm:ss.fffffff";
+        private static readonly Regex ValidPattern = new(@"^LDT#[\d\-_:.]+Z$", RegexOptions.Compiled);
         private const long NanosecondsPerTick = 100;
         private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         private static readonly Func<long, long> ValueConverter = l => l;
@@ -715,7 +694,7 @@ public abstract class Radix : LogixEnum<Radix, string>
 
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         protected override bool IsSupportedType(Type type)
@@ -765,10 +744,11 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Specifier = "T32#";
         private const string Separator = "_";
         private static readonly Func<int, int> ValueConverter = l => l;
+        private static readonly Regex ValidPattern = new(@"^T32#[+-]?(?:\d+[msu]s?_?)+$", RegexOptions.Compiled);
 
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         protected override bool IsSupportedType(Type type)
@@ -844,10 +824,11 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Specifier = "T#";
         private const string Separator = "_";
         private static readonly Func<long, long> ValueConverter = l => l;
+        private static readonly Regex ValidPattern = new(@"^T#[+-]?(?:\d+[dhmsu]s?_?)+$", RegexOptions.Compiled);
 
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         protected override bool IsSupportedType(Type type)
@@ -929,10 +910,11 @@ public abstract class Radix : LogixEnum<Radix, string>
         private const string Specifier = "LT#";
         private const string Separator = "_";
         private static readonly Func<long, long> ValueConverter = l => l;
+        private static readonly Regex ValidPattern = new(@"^LT#[+-]?(?:\d+[dhmsun]s?_?)+$", RegexOptions.Compiled);
 
         public override bool IsValid(string? value)
         {
-            return value is not null && value.StartsWith(Specifier);
+            return value is not null && ValidPattern.IsMatch(value);
         }
 
         protected override bool IsSupportedType(Type type)
@@ -1362,7 +1344,7 @@ public abstract class Radix : LogixEnum<Radix, string>
     {
         //So far I have found Logix export both #QNAN and #IND for undefined or not-a-number floating point values.
         if (value.EndsWith("#QNAN") || value.EndsWith("#IND"))
-            return float.NaN;
+            return double.NaN;
 
         return Convert.ToDouble(value, CultureInfo.InvariantCulture);
     }
@@ -1393,6 +1375,6 @@ public abstract class Radix : LogixEnum<Radix, string>
             throw new ArgumentException("Value can not be null or empty.", nameof(value));
 
         if (!IsValid(value))
-            throw new FormatException($"Invalid {Name} format: '{value}' ");
+            throw new FormatException($"Invalid {Name} format: '{value}'");
     }
 }
