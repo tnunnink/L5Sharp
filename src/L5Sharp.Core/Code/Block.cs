@@ -210,7 +210,7 @@ public class Block : LogixObject<Block>
             throw new ArgumentException("Can not wire block with null or empty target tag name.");
 
         var operand = target.BaseName;
-        var pin = target.MemberPath;
+        var pin = target.MemberPath ?? TagName.Empty;
 
         var to = Element.Parent?.Elements().FirstOrDefault(e =>
             e.GetBlockOperand() == operand
@@ -257,7 +257,7 @@ public class Block : LogixObject<Block>
             throw new ArgumentException("Can not wire block with null or empty target tag name.");
 
         var operand = source.BaseName;
-        var pin = source.MemberPath;
+        var pin = source.MemberPath ?? TagName.Empty;
 
         var from = Element.Parent?.Elements().FirstOrDefault(e =>
             e.GetBlockOperand() == operand
@@ -377,7 +377,7 @@ public class Block : LogixObject<Block>
 
         builder.Append(")");
 
-        return Instruction.Parse(builder.ToString());
+        return new Instruction(builder.ToString());
     }
 
     /// <inheritdoc />
@@ -469,7 +469,7 @@ public class Block : LogixObject<Block>
     {
         var operand = element.GetBlockOperand();
 
-        if (operand.IsInvalid) return [];
+        if (operand.IsValid) return [];
 
         return element.Attributes()
             .Where(a => PinNames.Contains(a.Name.LocalName))

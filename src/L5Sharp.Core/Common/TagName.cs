@@ -371,11 +371,23 @@ public sealed class TagName : IComparable<TagName>
     public static TagName Combine(IEnumerable<string?> members) => new(ConcatenateMembers(members));
 
     /// <summary>
-    /// Parses a <see cref="NeutralText"/> object into a collection of <see cref="TagName"/> objects based on its tokenized content.
+    /// Parses a <see cref="NeutralText"/> stream and extracts all valid tag names found within the text.
     /// </summary>
-    /// <param name="text">The <see cref="NeutralText"/> object to parse into tag names.</param>
-    /// <returns>A collection of <see cref="TagName"/> objects extracted from the given <see cref="NeutralText"/>.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the provided <paramref name="text"/> is null.</exception>
+    /// <param name="text">The <see cref="NeutralText"/> containing the neutral text code to parse for tag names.</param>
+    /// <returns>
+    /// An enumerable collection of <see cref="TagName"/> instances representing all valid tag names discovered
+    /// during the parsing process. Tag names are extracted by analyzing token sequences and building hierarchical
+    /// paths based on identifiers, array indices, and member accessors found in the neutral text stream.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="text"/> is <c>null</c>.</exception>
+    /// <remarks>
+    /// This method tokenizes the provided neutral text and identifies tag name patterns by tracking identifiers,
+    /// member separators (dots), and array indexing (brackets). It constructs tag names at multiple depth levels
+    /// to capture nested references within arrays and complex data structures. The method automatically handles
+    /// array bracket depth tracking and filters out instruction names by ignoring identifiers that precede
+    /// open parentheses. Tag names are collected and returned once a non-tag token is encountered, ensuring
+    /// complete tag paths are captured before moving to the next potential tag sequence.
+    /// </remarks>
     public static IEnumerable<TagName> Parse(NeutralText text)
     {
         if (text is null)
@@ -500,11 +512,17 @@ public sealed class TagName : IComparable<TagName>
     {
         var tagName = GetLocalTagName();
 
-        if (tagName.IsEmpty() || tagName.StartsWith(Separator) || tagName.StartsWith(ArrayOpen))
+        if (tagName.IsEmpty() || tagName.StartsWith(Separator))
             return string.Empty;
+        
+        if (tagName.StartsWith(ArrayOpen))
+        {
+            var endBracket = tagName.IndexOf(ArrayClose);
+            return endBracket > 0 ? tagName.Substring(0, endBracket + 1) : tagName;
+        }
 
-        var end = tagName.IndexOfAny([Separator, ArrayOpen]);
-        return end > 0 ? tagName.Substring(0, end) : tagName;
+        var endSeparator = tagName.IndexOfAny([Separator, ArrayOpen]);
+        return endSeparator > 0 ? tagName.Substring(0, endSeparator) : tagName;
     }
 
     /// <summary>

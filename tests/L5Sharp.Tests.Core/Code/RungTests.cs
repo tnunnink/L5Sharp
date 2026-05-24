@@ -117,7 +117,7 @@ public class RungTests
         var instructions = rung.Instructions().ToList();
 
         instructions.Should().HaveCount(1);
-        instructions[0].Tags.Should().Contain("DintTest.[Offset]");
+        instructions[0].Arguments.Should().Contain("DintTest.[Offset]");
     }
 
     [Test]

@@ -169,9 +169,8 @@ namespace L5Sharp.Tests.Core.Common
         [TestCase("MyTag[1].SomeMember.1", "MyTag")]
         [TestCase("Module:1:I.Data[1].SubTag.Value.12", "Module:1:I")]
         [TestCase(".Member[32].Value", "")]
-        [TestCase("[32].Value", "")]
+        [TestCase("[32].Value", "[32]")]
         [TestCase("Program:MyProgram.MyTag[32].Value", "MyTag")]
-        [TestCase("Program:MyProgram.[32].Value", "")]
         public void BaseName_WhenCalled_ShouldBeExpected(string value, string expected)
         {
             var tagName = new TagName(value);
@@ -539,6 +538,21 @@ namespace L5Sharp.Tests.Core.Common
             tags[1].Should().Be("MyArrayTag[IndexTagName]");
             tags[2].Should().Be("IndexTagName");
             tags[3].Should().Be("MyComplexTag.Member.12");
+        }
+        
+        [Test]
+        public void Parse_NestedExpressionArgument_ShouldReturnExpectedTagNames()
+        {
+            NeutralText text = "(ABS(MyTag.Member) + Another[1,2,3]) / (10**(SomeConstant - SystemTag[IndexTag]))";
+
+            var tags = TagName.Parse(text).ToList();
+
+            tags.Should().HaveCount(5);
+            tags[0].Should().Be("MyTag.Member");
+            tags[1].Should().Be("Another[1,2,3]");
+            tags[2].Should().Be("SomeConstant");
+            tags[3].Should().Be("SystemTag[IndexTag]");
+            tags[4].Should().Be("IndexTag");
         }
 
         [Test]

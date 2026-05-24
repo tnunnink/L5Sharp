@@ -18,7 +18,7 @@ public class ArgumentTests
 
         argument.Should().Be(string.Empty);
         argument.Type.Should().Be(ArgumentType.Empty);
-        argument.IsInvalid.Should().BeTrue();
+        argument.IsValid.Should().BeFalse();
     }
 
     [Test]
@@ -28,7 +28,7 @@ public class ArgumentTests
 
         argument.Should().Be("?");
         argument.Type.Should().Be(ArgumentType.Unknown);
-        argument.IsInvalid.Should().BeTrue();
+        argument.IsValid.Should().BeFalse();
     }
 
     [Test]
@@ -123,69 +123,43 @@ public class ArgumentTests
     }
 
     [Test]
-    public void Arguments_ArgumentWithSingleTag_ShouldHaveExpectedCount()
+    public void ToAtomic_ValidAtomicValue_ShouldBeExpected()
     {
-        var argument = new Argument("MyTagName.Member[1].Active.1");
+        Argument argument = "123";
 
-        var args = argument.Arguments.ToArray();
+        var atomic = argument.ToAtomic();
 
-        args.Should().HaveCount(1);
+        atomic.Should().NotBeNull();
+        atomic.ToString().Should().Be("123");
     }
 
     [Test]
-    public void Arguments_ArgumentSingleAtomic_ShouldHaveExpectedCount()
+    public void ToAtomic_RealValue_ShouldBeExpected()
     {
-        Argument argument = 100;
+        Argument argument = "1.23";
 
-        var args = argument.Arguments;
+        var atomic = argument.ToAtomic();
 
-        args.Should().HaveCount(1);
+        atomic.Should().NotBeNull();
+        atomic.ToString().Should().Be("1.23");
     }
 
     [Test]
-    public void Arguments_ExpressionWithSingleTagAndAtomic_ShouldHaveExpectedValue()
+    public void ToAtomic_NonAtomicValue_ShouldThrowException()
     {
-        Argument argument = "MyTag > 100";
+        Argument argument = "TagName";
 
-        var args = argument.Arguments;
-
-        args.Should().HaveCount(2);
-        args[0].Should().Be("MyTag");
-        args[1].Should().Be("100");
+        FluentActions.Invoking(argument.ToAtomic).Should().Throw<Exception>();
     }
 
     [Test]
-    public void Arguments_ExpressionWithMultipleTagsAndAtomics_ShouldHaveExpectedValues()
+    public void ToNeutralText_WhenCalled_ShouldBeExpected()
     {
-        Argument argument = "MyTag > 100 AND MyOtherTag < 16#ABCD";
+        Argument argument = "SomeTag > 100";
 
-        var args = argument.Arguments;
+        var text = argument.ToNeutralText();
 
-        args.Should().HaveCount(4);
-        args[0].Should().Be("MyTag");
-        args[1].Should().Be("100");
-        args[2].Should().Be("MyOtherTag");
-        args[3].Should().Be("16#ABCD");
-    }
-
-    [Test]
-    public void Arguments_ExpressionWithVariousAtomicFormats_ShouldExtractAll()
-    {
-        Argument argument = "16#1234 + 2#1010 + 8#77 + 1.23 + 123 + 1.#QNAN";
-
-        var args = argument.Arguments;
-
-        args.Should().HaveCount(6);
-        args.Select(v => v.ToString()).Should().BeEquivalentTo("16#1234", "2#1010", "8#77", "1.23", "123", "1.#QNAN");
-    }
-
-    [Test]
-    public void Argument_ExpressionWithNestedFunctions_ShouldReturnAllNestedArguments()
-    {
-        Argument argument = "(ABS(MyTag.Member) + Another[1,2,3]) / (10**(SomeConstant - SystemTag[IndexReference]))";
-
-        var args = argument.Arguments;
-
-        args.Should().HaveCount(6);
+        text.Should().NotBeNull();
+        text.ToString().Should().Be("SomeTag > 100");
     }
 }

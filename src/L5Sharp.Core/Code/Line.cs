@@ -39,13 +39,15 @@ public sealed class Line : LogixCode<Line>
     /// <inheritdoc />
     public override IEnumerable<Instruction> Instructions()
     {
-        return Instruction.Split(Element.Value);
+        return Instruction.Parse(Element.Value);
     }
 
     /// <inheritdoc />
     public override IEnumerable<TagName> Tags()
     {
-        return Instruction.Split(Element.Value).SelectMany(x => x.Tags);
+        return Instruction.Parse(Element.Value).SelectMany(x =>
+            x.Arguments.Where(a => a.IsReference).Select(a => a.ToTagName())
+        );
     }
 
     /// <inheritdoc />

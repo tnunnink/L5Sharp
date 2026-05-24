@@ -15,12 +15,24 @@ public class NeutralStream : IDisposable
     private readonly IEnumerator<NeutralToken> _enumerator;
 
     /// <summary>
+    /// Indicates whether the stream has reached the end of the input tokens.
+    /// </summary>
+    private bool _atEnd;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="NeutralStream"/> class with the specified neutral text.
     /// </summary>
     /// <param name="text">The neutral text to tokenize and stream.</param>
     public NeutralStream(NeutralText text)
     {
+        if (text is null)
+            throw new ArgumentNullException(nameof(text));
+
         _enumerator = text.Tokenize().GetEnumerator();
+
+        // Prime the enumerator to the first token.
+        // If none exists, flag the end of the stream immediately.
+        _atEnd = !_enumerator.MoveNext();
     }
 
     /// <summary>
@@ -35,14 +47,10 @@ public class NeutralStream : IDisposable
     /// </remarks>
     public bool Read(out NeutralToken token)
     {
-        if (_enumerator.MoveNext())
-        {
-            token = _enumerator.Current;
-            return true;
-        }
-
         token = _enumerator.Current;
-        return false;
+        if (_atEnd) return false;
+        _atEnd = !_enumerator.MoveNext();
+        return true;
     }
 
     /// <summary>
@@ -65,8 +73,7 @@ public class NeutralStream : IDisposable
     public bool Advance(int count = 1)
     {
         if (count < 0)
-            throw new ArgumentException("Count cannot be negative. Use Reset() to move to the beginning of the stream.",
-                nameof(count));
+            throw new ArgumentException("Count cannot be negative.", nameof(count));
 
         var index = 0;
 
@@ -101,17 +108,6 @@ public class NeutralStream : IDisposable
     }
 
     /// <summary>
-    /// Resets the stream's position to the beginning of the token sequence.
-    /// </summary>
-    /// <remarks>
-    /// This operation enables reprocessing of tokens from the start of the stream.
-    /// </remarks>
-    public void Reset()
-    {
-        _enumerator.Reset();
-    }
-
-    /// <summary>
     /// Determines whether the current token matches the specified token type.
     /// </summary>
     /// <param name="type">The token type to match against the current token.</param>
@@ -121,8 +117,5 @@ public class NeutralStream : IDisposable
     /// <summary>
     /// Releases all resources used by the current instance of the <see cref="NeutralStream"/> class.
     /// </summary>
-    public void Dispose()
-    {
-        _enumerator.Dispose();
-    }
+    public void Dispose() => _enumerator.Dispose();
 }

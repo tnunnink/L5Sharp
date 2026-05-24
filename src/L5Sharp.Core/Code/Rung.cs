@@ -81,13 +81,16 @@ public class Rung : LogixCode<Rung>
     /// <inheritdoc />
     public override IEnumerable<Instruction> Instructions()
     {
-        return Instruction.Split(Text);
+        return Instruction.Parse(Text);
     }
 
     /// <inheritdoc />
     public override IEnumerable<TagName> Tags()
     {
-        return Instruction.Split(Text).SelectMany(x => x.Tags);
+        
+        return Instruction.Parse(Text).SelectMany(x =>
+            x.Arguments.Where(a => a.IsReference).Select(a => a.ToTagName())
+        );
     }
 
     /// <inheritdoc />

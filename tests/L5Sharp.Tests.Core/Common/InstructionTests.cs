@@ -45,6 +45,34 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
+        [TestCase("XIC(MyTagKey);", "XIC", 1)]
+        [TestCase("TON(SomeTimer,5000,0);", "TON", 3)]
+        [TestCase("TON(SomeTimer,?,?);", "TON", 3)]
+        [TestCase("CMP(ATN(_Test) > 1.0);", "CMP", 1)]
+        [TestCase("JSR(Routine,2,in1,in2,out1,out2,out3);", "JSR", 7)]
+        [TestCase("SBR(Routine,in1,in2);", "SBR", 3)]
+        [TestCase("RET(Routine,out1,out2);", "RET", 3)]
+        public void New_ValidFormats_ShouldHaveExpectedKeyAndArgumentCount(string text, string key, int args)
+        {
+            var instruction = new Instruction(text);
+
+            instruction.Should().NotBeNull();
+            instruction.Key.Should().Be(key);
+            instruction.Arguments.Should().HaveCount(args);
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase("Test")]
+        [TestCase("()")]
+        [TestCase("(SomeTag > 1.0)/100")]
+        [TestCase("ABS(SomeTag) / 100  > 1")]
+        public void New_InvalidFormats_ShouldThrowException(string text)
+        {
+            FluentActions.Invoking(() => _ = new Instruction(text)).Should().Throw<ArgumentException>();
+        }
+
+        [Test]
         public void Unknown_WhenCalled_ShouldBeExpected()
         {
             var instruction = Instruction.Unkown;
@@ -119,48 +147,49 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void Tags_SimpleInstruction_ShouldHaveExpected()
+        public void Arguments_SimpleInstruction_ShouldHaveExpected()
         {
             var instruction = Instruction.MOVE("MyTagValue", "SomeTagName.Member.Value");
 
-            var tags = instruction.Tags;
+            var args = instruction.Arguments.ToArray();
 
-            tags.Should().HaveCount(2);
-            tags[0].Should().Be("MyTagValue");
-            tags[1].Should().Be("SomeTagName.Member.Value");
+            args.Should().HaveCount(2);
+            args[0].Should().Be("MyTagValue");
+            args[1].Should().Be("SomeTagName.Member.Value");
         }
 
         [Test]
-        public void Tags_TaskReference_ShouldBeExpected()
+        public void Arguments_TaskReference_ShouldBeExpected()
         {
             var instruction = Instruction.EVENT("MyTask");
 
-            var tags = instruction.Tags;
+            var args = instruction.Arguments.ToArray();
 
-            tags.Should().BeEmpty();
+            args.Should().HaveCount(1);
         }
 
         [Test]
-        public void Tags_RoutineReference_ShouldBeExpected()
+        public void Arguments_RoutineReference_ShouldBeExpected()
         {
             var instruction = Instruction.JSR("Routine", 1, "In1", "Out1");
 
-            var tags = instruction.Tags;
+            var args = instruction.Arguments.ToArray();
 
-            tags.Should().HaveCount(2);
-            tags[0].Should().Be("In1");
-            tags[1].Should().Be("Out1");
+            args.Should().HaveCount(4);
+            args[0].Should().Be("Routine");
+            args[1].Should().Be(1);
+            args[2].Should().Be("In1");
+            args[3].Should().Be("Out1");
         }
 
         [Test]
-        public void Tags_SystemInstruction_ShouldBeExpected()
+        public void Arguments_SystemInstruction_ShouldBeExpected()
         {
             var instruction = Instruction.GSV("Program", "MyProgram", "LastScanTime", "MyTagName");
 
-            var tags = instruction.Tags;
+            var args = instruction.Arguments.ToArray();
 
-            tags.Should().HaveCount(1);
-            tags[0].Should().Be("MyTagName");
+            args.Should().HaveCount(4);
         }
 
         [Test]
@@ -184,7 +213,7 @@ namespace L5Sharp.Tests.Core.Common
             result.Arguments.Should().HaveCount(1);
             result.Arguments.Should().Contain("arg1");
         }
-        
+
         [Test]
         public void Append_MultipleArgs_ShouldBeExpected()
         {
@@ -198,31 +227,15 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        [TestCase("XIC(MyTagKey);", "XIC", 1)]
-        [TestCase("TON(SomeTimer,5000,0);", "TON", 3)]
-        [TestCase("TON(SomeTimer,?,?);", "TON", 3)]
-        [TestCase("CMP(ATN(_Test) > 1.0);", "CMP", 1)]
-        [TestCase("JSR(Routine,2,in1,in2,out1,out2,out3);", "JSR", 7)]
-        [TestCase("SBR(Routine,in1,in2);", "SBR", 3)]
-        [TestCase("RET(Routine,out1,out2);", "RET", 3)]
-        public void Parse_ValidFormats_ShouldHaveExpectedKeyAndArgumentCount(string text, string key, int args)
+        [TestCase("XIC(MyTagKey);", 1)]
+        [TestCase("TON(SomeTimer,5000,0);", 1)]
+        [TestCase("JSR(Routine,2,in1,in2,out1,out2,out3);", 1)]
+        [TestCase("XIC(MySimpleTag) XIO(MyArrayTag[1]) OTE(MyComplexTag.Member.12);", 3)]
+        public void Read_ValidText_ShouldHaveExpectedCount(string text, int count)
         {
-            var instruction = Instruction.Parse(text);
+            var instructions = Instruction.Parse(text).ToArray();
 
-            instruction.Should().NotBeNull();
-            instruction.Key.Should().Be(key);
-            instruction.Arguments.Should().HaveCount(args);
-        }
-
-        [Test]
-        [TestCase("")]
-        [TestCase("Test")]
-        [TestCase("()")]
-        [TestCase("(SomeTag > 1.0)/100")]
-        [TestCase("ABS(SomeTag) / 100  > 1")]
-        public void Parse_InvalidFormats_ShouldThrowException(string text)
-        {
-            FluentActions.Invoking(() => Instruction.Parse(text)).Should().Throw<ArgumentException>();
+            instructions.Should().HaveCount(count);
         }
 
         [Test]
@@ -230,7 +243,7 @@ namespace L5Sharp.Tests.Core.Common
         {
             var instruction = Instruction.ADD(1, 1, "Test");
 
-            var argument = instruction.Arguments[1];
+            var argument = instruction.Arguments.ToArray()[1];
 
             argument.Should().Be("1");
         }
@@ -302,13 +315,13 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
-        public void GetHasCode_WhenCalled_ReturnsHashOfInstructionText()
+        public void GetHashCode_WhenCalled_ReturnsHashOfInstructionText()
         {
             var instruction = Instruction.XIC("MyTag");
 
             var result = instruction.GetHashCode();
 
-            result.Should().Be("XIC(MyTag)".GetHashCode());
+            result.Should().Be(StringComparer.OrdinalIgnoreCase.GetHashCode("XIC(MyTag)"));
         }
 
         [Test]

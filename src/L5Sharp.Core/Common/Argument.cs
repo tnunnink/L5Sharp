@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace L5Sharp.Core;
 
@@ -13,12 +10,6 @@ namespace L5Sharp.Core;
 /// </summary>
 public class Argument
 {
-    /// <summary>
-    /// A cached array of all known Logix operator symbols used for splitting and parsing expression arguments.
-    /// </summary>
-    private static readonly string[] Operators =
-        Operator.All().Select(x => x.Value).OrderByDescending(x => x.Length).ToArray();
-
     /// <summary>
     /// The value typically found in Studio for undefined argument values in certain instructions.
     /// </summary>
@@ -51,7 +42,7 @@ public class Argument
     /// <summary>
     /// Gets a value indicating whether this argument is invalid (either empty or unknown).
     /// </summary>
-    public bool IsInvalid => Type == ArgumentType.Empty || Type == ArgumentType.Unknown;
+    public bool IsValid => Type != ArgumentType.Empty && Type != ArgumentType.Unknown;
 
     /// <summary>
     /// Gets a value indicating whether this argument represents an immediate value (atomic or string).
@@ -79,18 +70,6 @@ public class Argument
     public bool IsExpression => Type == ArgumentType.Expression;
 
     /// <summary>
-    /// Retrieves a read-only collection of arguments derived from the current argument string value.
-    /// Useful for parsing and analyzing composite argument structures within expressions.
-    /// </summary>
-    /// <remarks>
-    /// If the argument type is <see cref="ArgumentType.Expression"/>, this property returns a collection of
-    /// individual component arguments extracted by splitting the expression on known Logix operators.
-    /// If the argument is not an expression (e.g., a tag name, atomic value, or string literal),
-    /// this property returns a single-item collection containing the argument itself.
-    /// </remarks>
-    public IReadOnlyList<Argument> Arguments => ExtractArguments();
-
-    /// <summary>
     /// Represents an unknown argument that can be found in certain instruction text.
     /// </summary>
     /// <remarks>This is literally the '?' character, as often seen in the Timer and Counter instructions.</remarks>
@@ -109,41 +88,23 @@ public class Argument
     /// </summary>
     /// <returns>A <see cref="TagName"/> representing the tag reference in this argument.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the argument type is not <see cref="ArgumentType.Reference"/>.</exception>
-    public TagName ToTagName()
-    {
-        if (Type != ArgumentType.Reference)
-            throw new InvalidOperationException(
-                $"Cannot convert argument '{_value}' to TagName. The argument type is {Type}, but expected {ArgumentType.Reference}.");
-
-        return new TagName(_value);
-    }
+    public TagName ToTagName() => new(_value);
 
     /// <summary>
     /// Converts this argument to an <see cref="AtomicData"/> instance by parsing its immediate atomic value.
     /// </summary>
     /// <returns>An <see cref="AtomicData"/> representing the parsed atomic value from this argument.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the argument type is not <see cref="ArgumentType.Atomic"/>.</exception>
-    public AtomicData ToAtomic()
-    {
-        if (Type != ArgumentType.Atomic)
-            throw new InvalidOperationException(
-                $"Cannot convert argument '{_value}' to AtomicData. The argument type is {Type}, but expected {ArgumentType.Atomic}.");
+    public AtomicData ToAtomic() => AtomicData.Parse(_value);
 
-        return AtomicData.Parse(_value);
-    }
-
-    #region Equality
+    /// <summary>
+    /// Converts the current <see cref="Argument"/> value to a <see cref="NeutralText"/> representation.
+    /// </summary>
+    /// <returns>A <see cref="NeutralText"/> instance containing the converted value of the current <see cref="Argument"/>.</returns>
+    public NeutralText ToNeutralText() => new(_value);
 
     /// <inheritdoc />
-    public override bool Equals(object? obj)
-    {
-        return obj switch
-        {
-            Argument other => _value.Equals(other._value),
-            string value => _value.Equals(value),
-            _ => false
-        };
-    }
+    public override bool Equals(object? obj) => _value.Equals(obj?.ToString());
 
     /// <inheritdoc />
     public override int GetHashCode() => _value.GetHashCode();
@@ -166,10 +127,6 @@ public class Argument
     /// <param name="right">The right Argument object.</param>
     /// <returns>true if the left Argument is not equal to the right Argument; otherwise, false.</returns>
     public static bool operator !=(Argument left, Argument right) => Equals(left, right);
-
-    #endregion
-
-    #region Operators
 
     /// <summary>
     /// Implicitly converts the provided <see cref="TagName"/> to an <see cref="Argument"/>.
@@ -268,19 +225,4 @@ public class Argument
     /// <param name="argument">The <see cref="Argument"/> object to convert.</param>
     /// <returns>A <see cref="string"/> object representing the value of the argument.</returns>
     public static implicit operator string(Argument argument) => argument._value;
-
-    #endregion
-
-    /// <summary>
-    /// Extracts individual component arguments from an expression by splitting on known Logix operators.
-    /// </summary>
-    /// <returns>An array of <see cref="Argument"/> objects representing each component of the expression,
-    /// or an empty array if not an expression.</returns>
-    private Argument[] ExtractArguments()
-    {
-        // If this is a reference or literal, then just return itself.
-        if (!IsExpression) return [this];
-
-        throw new NotImplementedException();
-    }
 }

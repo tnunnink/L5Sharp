@@ -87,7 +87,9 @@ public class Sheet : LogixCode<Sheet>
     /// <inheritdoc />
     public override IEnumerable<TagName> Tags()
     {
-        return Blocks().Select(b => b.ToInstruction()).SelectMany(i => i.Tags);
+        return Blocks().Select(b => b.ToInstruction()).SelectMany(x =>
+            x.Arguments.Where(a => a.IsReference).Select(a => a.ToTagName())
+        );
     }
 
     /// <inheritdoc />
@@ -291,7 +293,8 @@ public class Sheet : LogixCode<Sheet>
         if (from is null) throw new ArgumentNullException(nameof(from));
         if (to is null) throw new ArgumentNullException(nameof(to));
 
-        var source = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == from.BaseName)?.Deserialize<Block>();
+        var source = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == from.BaseName)
+            ?.Deserialize<Block>();
         var target = Element.Elements().SingleOrDefault(e => e.GetBlockOperand() == to.BaseName)?.Deserialize<Block>();
 
         if (source is null)
