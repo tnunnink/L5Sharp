@@ -47,6 +47,9 @@ public class NeutralText
 
             var token = current switch
             {
+                // Handle comments first
+                '/' when PeekNext(_text, position) is '/' => ConsumeComment(_text, ref position),
+                '/' when PeekNext(_text, position) is '*' => ConsumeComment(_text, ref position),
                 // Handle special case 2 character operators
                 ':' when PeekNext(_text, position) is '=' => Consume(_text, ref position, 2),
                 '<' or '>' when PeekNext(_text, position) is '=' => Consume(_text, ref position, 2),
@@ -152,6 +155,45 @@ public class NeutralText
 
         var token = text.Substring(start, position - start);
         return new NeutralToken(TokenType.Literal, token, start);
+    }
+
+    /// <summary>
+    /// Consumes a comment from the provided text starting at the given position.
+    /// Supports both single-line ('//') and multi-line ('/* */') comment formats.
+    /// </summary>
+    /// <param name="text">The text to parse, containing the comment. Cannot be null or empty.</param>
+    /// <param name="position">
+    /// The current position in the text where the comment begins.
+    /// This value will be updated to reflect the position after the comment is consumed.
+    /// </param>
+    /// <returns>
+    /// A <see cref="NeutralToken"/> representing the consumed comment, including its type, value, and starting index.
+    /// </returns>
+    private static NeutralToken ConsumeComment(string text, ref int position)
+    {
+        var isMultiLine = text[position + 1] == '*';
+        var start = position;
+        position += 2; // skip /*
+
+        while (position < text.Length)
+        {
+            if (isMultiLine && text[position] is '*' && PeekNext(text, position) is '/')
+            {
+                position += 2;
+                break;
+            }
+
+            if (!isMultiLine && text[position] is '\n' or '\r')
+            {
+                position++;
+                break;
+            }
+
+            position++;
+        }
+
+        var token = text.Substring(start, position - start);
+        return new NeutralToken(TokenType.Comment, token, start);
     }
 
     /// <summary>

@@ -97,6 +97,12 @@ public class TokenType : LogixEnum<TokenType, string>
     public static readonly TokenType QuestionMark = new(nameof(QuestionMark), nameof(QuestionMark));
 
     /// <summary>
+    /// Represents a token type that corresponds to comment notation within the Logix neutral text framework.
+    /// This token is used to identify and parse comments in the input source during processing.
+    /// </summary>
+    public static readonly TokenType Comment = new(nameof(Comment), nameof(Comment));
+
+    /// <summary>
     /// Represents the end-of-file token indicating the completion of input text parsing.
     /// </summary>
     public static readonly TokenType EOF = new(nameof(EOF), nameof(EOF));

@@ -196,6 +196,9 @@ public sealed class Instruction
 
         while (stream.Read(out var token))
         {
+            if (token.Type == TokenType.Comment)
+                continue;
+            
             if (token.Type == TokenType.Identifier && stream.Match(TokenType.OpenParen) && depth == 0)
             {
                 start = token.Index;

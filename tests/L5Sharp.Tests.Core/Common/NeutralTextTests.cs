@@ -309,6 +309,49 @@ public class NeutralTextTests
     }
 
     [Test]
+    public void Tokenize_SingleLineComment_ShouldReturnCommentToken()
+    {
+        var text = new NeutralText("// This is a comment");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(2);
+        tokens[0].Type.Should().Be(TokenType.Comment);
+        tokens[0].Value.Should().Be("// This is a comment");
+        tokens[1].Type.Should().Be(TokenType.EOF);
+    }
+
+    [Test]
+    public void Tokenize_MultiLineComment_ShouldReturnCommentToken()
+    {
+        var text = new NeutralText("/* This is a \n multi-line comment */");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(2);
+        tokens[0].Type.Should().Be(TokenType.Comment);
+        tokens[0].Value.Should().Be("/* This is a \n multi-line comment */");
+        tokens[1].Type.Should().Be(TokenType.EOF);
+    }
+
+    [Test]
+    public void Tokenize_InstructionWithComment_ShouldReturnExpectedTokens()
+    {
+        var text = new NeutralText("XIC(MyTag) // trailing comment");
+
+        var tokens = text.Tokenize().ToList();
+
+        tokens.Should().HaveCount(6);
+        tokens[0].Value.Should().Be("XIC");
+        tokens[1].Value.Should().Be("(");
+        tokens[2].Value.Should().Be("MyTag");
+        tokens[3].Value.Should().Be(")");
+        tokens[4].Type.Should().Be(TokenType.Comment);
+        tokens[4].Value.Should().Be("// trailing comment");
+        tokens[5].Type.Should().Be(TokenType.EOF);
+    }
+
+    [Test]
     public void Tokenize_UnexpectedCharacter_ShouldThrowArgumentException()
     {
         var text = new NeutralText("MyTag #"); // # alone is not valid at start of token

@@ -556,6 +556,18 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
+        public void Parse_WithComments_ShouldSkipComments()
+        {
+            var text = new NeutralText("MyTag // comment\n.Member /* another comment */ [IndexTag]");
+
+            var tagNames = TagName.Parse(text).ToList();
+
+            // Should find the full MyTag.Member[IndexTag] and nested IndexTag
+            tagNames.Should().Contain(t => t == "IndexTag");
+            tagNames.Should().Contain(t => t == "MyTag.Member[IndexTag]");
+        }
+
+        [Test]
         public void ImplicitOperator_Null_ShouldBeEmpty()
         {
             TagName tagName = (string)null!;

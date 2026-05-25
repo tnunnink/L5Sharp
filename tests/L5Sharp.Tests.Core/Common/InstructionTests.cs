@@ -240,6 +240,18 @@ namespace L5Sharp.Tests.Core.Common
         }
 
         [Test]
+        public void Parse_WithComments_ShouldSkipComments()
+        {
+            var text = new NeutralText("XIC(MyTag) // trailing comment\n/* multi-line\ncomment */ OTE(MyOtherTag)");
+
+            var instructions = Instruction.Parse(text).ToList();
+
+            instructions.Should().HaveCount(2);
+            instructions[0].Key.Should().Be("XIC");
+            instructions[1].Key.Should().Be("OTE");
+        }
+
+        [Test]
         [TestCase("XIC(MyTagKey);", 1)]
         [TestCase("TON(SomeTimer,5000,0);", 1)]
         [TestCase("JSR(Routine,2,in1,in2,out1,out2,out3);", 1)]

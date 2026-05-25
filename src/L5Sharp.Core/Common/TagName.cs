@@ -400,6 +400,9 @@ public sealed class TagName : IComparable<TagName>
 
         while (stream.Read(out var token))
         {
+            if (token.Type == TokenType.Comment)
+                continue;
+
             // This is the termination point. When we hit a non-tag token, we can add the constructed tag names and reset.
             // Advance until we find the beginning of a potentially new tag name string.
             if (!IsTagToken(token.Type))
@@ -514,7 +517,7 @@ public sealed class TagName : IComparable<TagName>
 
         if (tagName.IsEmpty() || tagName.StartsWith(Separator))
             return string.Empty;
-        
+
         if (tagName.StartsWith(ArrayOpen))
         {
             var endBracket = tagName.IndexOf(ArrayClose);
