@@ -88,43 +88,45 @@ public sealed class Scope
     /// <returns>
     /// <c>true</c> if the <see cref="Scope"/> is at the controller level; otherwise, <c>false</c>.
     /// </returns>
-    public bool IsController => Level == ScopeLevel.Controller;
+    public bool IsGlobal => Level == ScopeLevel.Controller;
 
     /// <summary>
-    /// Gets a value indicating whether the current <see cref="Scope"/> object represents a program scope.
+    /// Gets a value indicating whether the current <see cref="Scope"/> is at the program level.
     /// </summary>
     /// <remarks>
-    /// A scope is considered a program if its <see cref="ScopeLevel"/> is equivalent to <see cref="ScopeLevel.Program"/>.
+    /// A program scope is defined as one that resides at the program level, meaning
+    /// it is confined to a specific program and its associated routines. This property enables determining
+    /// whether the scope applies to a program-specific namespace rather than the global controller level.
     /// </remarks>
     /// <returns>
-    /// A <c>true</c> value if the scope is at the program level; otherwise, <c>false</c>.
+    /// <c>true</c> if the <see cref="Scope"/> is at the program level; otherwise, <c>false</c>.
     /// </returns>
+    public bool IsLocal => Level != ScopeLevel.Controller && Level != ScopeLevel.None;
+
+    /// <summary>
+    /// Gets a value indicating whether the current <see cref="Scope"/> is at the program level.
+    /// </summary>
+    /// <returns>
+    /// <c>true</c> if the <see cref="Scope"/> is at the program level; otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>
+    /// A program scope represents a hierarchical level within a Logix project where program-specific
+    /// elements such as tags and routines are defined. This is distinct from the controller level (global)
+    /// and definition level (Add-On Instructions or custom DataTypes).
+    /// </remarks>
     public bool IsProgram => Level == ScopeLevel.Program;
 
     /// <summary>
-    /// Gets a value indicating whether the current <see cref="Scope"/> object represents an Add-On Instruction (AOI).
+    /// Gets a value indicating whether the current <see cref="Scope"/> is at the definition level.
     /// </summary>
     /// <returns>
-    /// <c>true</c> if the <see cref="Scope.Level"/> is set to <see cref="ScopeLevel.Aoi"/>; otherwise, <c>false</c>.
+    /// <c>true</c> if the <see cref="Scope"/> is at the definition level (Add-On Instruction or custom DataType); otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This property evaluates the <see cref="Scope.Level"/> of the object to determine if it corresponds to an Add-On Instruction.
+    /// A definition scope represents Add-On Instruction (AOI) definitions or custom DataType definitions in a Logix project.
+    /// These are reusable instruction blocks or data structures that encapsulate logic and can contain local tags, parameters, and routines.
     /// </remarks>
-    public bool IsAoi => Level == ScopeLevel.Aoi;
-
-    /// <summary>
-    /// Gets a value indicating whether the current <see cref="Scope"/> is local.
-    /// </summary>
-    /// <remarks>
-    /// A scope is considered local if its level is either <see cref="ScopeLevel.Program"/> or
-    /// <see cref="ScopeLevel.Aoi"/>. Local scopes represent functional or hierarchical containers
-    /// within a specific program or routine, as opposed to global scopes which span the entire controller.
-    /// </remarks>
-    /// <returns>
-    /// <c>true</c> if the scope level is <see cref="ScopeLevel.Program"/> or <see cref="ScopeLevel.Aoi"/>;
-    /// otherwise, <c>false</c>.
-    /// </returns>
-    public bool IsLocal => Level == ScopeLevel.Program || Level == ScopeLevel.Aoi;
+    public bool IsDefinition => Level == ScopeLevel.Definition;
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="Scope"/> object represents a logical context.
@@ -136,7 +138,7 @@ public sealed class Scope
     /// A logical context is determined by the scope being on the Program or Routine level and having an associated routine.
     /// This property is typically used to identify cases where specific logic elements are defined within a contained scope.
     /// </remarks>
-    public bool IsLogic => IsLocal && Routine is not null;
+    public bool IsCode => IsLocal && Routine is not null;
 
     /// <summary>
     /// Determines if the current <see cref="Scope"/> is local to the specified container.
@@ -148,7 +150,7 @@ public sealed class Scope
     /// </returns>
     public bool IsIn(string? container)
     {
-        if (IsController && string.IsNullOrEmpty(container)) return true;
+        if (IsGlobal && string.IsNullOrEmpty(container)) return true;
         return Container.IsEquivalent(container);
     }
 
@@ -170,7 +172,7 @@ public sealed class Scope
         if (scope is null)
             throw new ArgumentNullException(nameof(scope));
 
-        if (scope.IsController || IsController) return true;
+        if (scope.IsGlobal || IsGlobal) return true;
         return scope.IsLocal && IsLocal && scope.Container.IsEquivalent(Container);
     }
 
@@ -258,20 +260,20 @@ public sealed class Scope
     public static Scope Program(string name, string? routine = null) => new(ScopeLevel.Program, name, routine);
 
     /// <summary>
-    /// Creates a new <see cref="Scope"/> instance representing an Add-On Instruction (AOI) scope.
+    /// Creates a new <see cref="Scope"/> instance representing a definition-level scope.
     /// </summary>
-    /// <param name="name">The name of the Add-On Instruction container.</param>
-    /// <param name="routine">Optional. The name of the routine within the AOI scope.</param>
+    /// <param name="name">The name of the definition container (Add-On Instruction or custom DataType).</param>
+    /// <param name="routine">Optional. The name of the routine within the definition scope.</param>
     /// <returns>
-    /// A <see cref="Scope"/> object with the <see cref="ScopeLevel"/> set to <see cref="ScopeLevel.Aoi"/>
+    /// A <see cref="Scope"/> object with the <see cref="ScopeLevel"/> set to <see cref="ScopeLevel.Definition"/>
     /// and the specified container and routine names.
     /// </returns>
     /// <remarks>
-    /// AOI scopes represent Add-On Instruction definitions in a Logix project. These are reusable
-    /// instruction blocks that encapsulate logic and can contain local tags and routines. If a routine
-    /// name is provided, the scope will represent a logical context within that AOI.
+    /// Definition scopes represent Add-On Instruction (AOI) definitions or custom DataType definitions in a Logix project.
+    /// These are reusable instruction blocks or data structures that encapsulate logic and can contain local tags, parameters, and routines.
+    /// If a routine name is provided, the scope will also represent a logical context within that definition.
     /// </remarks>
-    public static Scope Aoi(string name, string? routine = null) => new(ScopeLevel.Aoi, name, routine);
+    public static Scope Definition(string name, string? routine = null) => new(ScopeLevel.Definition, name, routine);
 
     /// <summary>
     /// Creates a new <see cref="Scope"/> instance based on the provided <see cref="XElement"/>.
@@ -310,9 +312,9 @@ public sealed class Scope
 
         return container.Name.LocalName switch
         {
-            L5XName.Program => ScopeLevel.Program,
-            L5XName.AddOnInstructionDefinition => ScopeLevel.Aoi,
             L5XName.Controller => ScopeLevel.Controller,
+            L5XName.Program => ScopeLevel.Program,
+            L5XName.AddOnInstructionDefinition or L5XName.DataType => ScopeLevel.Definition,
             _ => ScopeLevel.None
         };
     }
@@ -332,6 +334,7 @@ public sealed class Scope
         {
             L5XName.Program => container.LogixName(),
             L5XName.AddOnInstructionDefinition => container.LogixName(),
+            L5XName.DataType => container.LogixName(),
             _ => string.Empty
         };
     }
@@ -363,5 +366,6 @@ public sealed class Scope
         element.Name.LocalName
             is L5XName.Controller
             or L5XName.Program
-            or L5XName.AddOnInstructionDefinition;
+            or L5XName.AddOnInstructionDefinition
+            or L5XName.DataType;
 }

@@ -13,7 +13,6 @@ namespace L5Sharp.Core;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [LogixElement(L5XName.Parameter)]
-/*[LogixElement(L5XName.LocalTag)]*/
 public class Parameter : LogixEntity<Parameter>
 {
     /// <inheritdoc />
@@ -24,6 +23,18 @@ public class Parameter : LogixEntity<Parameter>
     ];
 
     /// <summary>
+    /// Creates a new <see cref="Parameter"/> with the specified element name.
+    /// </summary>
+    /// <param name="element">The L5X element name to use for the parameter.</param>
+    /// <remarks>
+    /// This constructor is protected and intended for use by derived classes that need to create
+    /// a parameter with a different underlying XML element name (e.g., LocalTag).
+    /// </remarks>
+    protected Parameter(string element) : base(element)
+    {
+    }
+
+    /// <summary>
     /// Creates a new <see cref="Parameter"/> with default values.
     /// </summary>
     public Parameter() : base(L5XName.Parameter)
@@ -32,6 +43,7 @@ public class Parameter : LogixEntity<Parameter>
         TagType = TagType.Base;
         DataType = string.Empty;
         Dimensions = Dimensions.Empty;
+        // ReSharper disable once VirtualMemberCallInConstructor
         Usage = TagUsage.Input;
         Radix = Radix.Null;
         Required = false;
@@ -96,10 +108,22 @@ public class Parameter : LogixEntity<Parameter>
     /// Default is <see cref="string.Empty"/>.
     /// Valid value is required for valid import.
     /// </value>
-    public string DataType
+    public string? DataType
     {
-        get => GetValue() ?? GetAliasTag()?.DataType ?? throw Element.L5XError(L5XName.DataType);
+        get => GetValue() ?? GetAlias()?.DataType;
         set => SetValue(value);
+    }
+
+    /// <summary>
+    /// The <see cref="TagUsage"/> option indicating the scope in which the parameter is visible or usable from.
+    /// </summary>
+    /// <remarks>
+    /// Default is <see cref="TagUsage.Input"/>. The only valid options for AoiBlock are Input, Output, and InOut.
+    /// </remarks>
+    public virtual TagUsage Usage
+    {
+        get => GetRequiredValue(TagUsage.Parse);
+        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -154,18 +178,6 @@ public class Parameter : LogixEntity<Parameter>
     {
         get => GetValue(TagType.Parse);
         set => SetValue(value);
-    }
-
-    /// <summary>
-    /// The <see cref="TagUsage"/> option indicating the scope in which the parameter is visible or usable from.
-    /// </summary>
-    /// <remarks>
-    /// Default is <see cref="TagUsage.Input"/>. The only valid options for AoiBlock are Input, Output, and InOut.
-    /// </remarks>
-    public TagUsage Usage
-    {
-        get => GetRequiredValue(TagUsage.Parse);
-        set => SetRequiredValue(value);
     }
 
     /// <summary>
@@ -228,7 +240,7 @@ public class Parameter : LogixEntity<Parameter>
     /// Represents the associated alias of the parameter if one is defined.
     /// Provides a way to reference a <see cref="LocalTag"/> that serves as an alias for this parameter.
     /// </summary>
-    public LocalTag? Alias => GetAliasTag();
+    public Parameter? Alias => GetAlias();
 
     /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
@@ -307,13 +319,13 @@ public class Parameter : LogixEntity<Parameter>
     public override string ToString() => Name;
 
     /// <summary>
-    /// Retrieves the alias tag associated with the current parameter, if it exists.
+    /// Retrieves the parameter instance that this parameter aliases, if any.
     /// </summary>
     /// <returns>
-    /// A <see cref="LocalTag"/> that represents the alias tag associated with the current parameter,
-    /// or null if no matching alias tag is found.
+    /// The <see cref="Parameter"/> instance this parameter aliases,
+    /// or null if the parameter does not alias another parameter.
     /// </returns>
-    private LocalTag? GetAliasTag()
+    private Parameter? GetAlias()
     {
         return GetAncestor<AddOnInstruction>()?.LocalTags.SingleOrDefault(t => t.Name == AliasFor);
     }

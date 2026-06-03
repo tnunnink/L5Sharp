@@ -95,17 +95,6 @@ public class Tag : LogixComponent<Tag>
     }
 
     /// <summary>
-    /// Creates a new <see cref="Tag"/> initialized with default value and having an element with the provided name.
-    /// </summary>
-    /// <param name="element">the name of the tag element.</param>
-    protected Tag(string element) : base(element)
-    {
-        TagType = TagType.Base;
-        ExternalAccess = Access.ReadWrite;
-        Constant = false;
-    }
-
-    /// <summary>
     /// Creates a new nested member <see cref="Tag"/> initialized with the provided <see cref="LogixMember"/> element
     /// and parent tag.
     /// </summary>

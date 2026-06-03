@@ -120,7 +120,7 @@ public sealed class Reference
     /// <returns>True if the <see cref="Reference"/> contains a valid logic instruction; otherwise, false.</returns>
     public bool HasLogic(out Instruction logic)
     {
-        if (Type.IsLogic && Fragment is not null && !Fragment.IsEmpty())
+        if (Type.IsCode && Fragment is not null && !Fragment.IsEmpty())
         {
             logic = new Instruction(Fragment);
             return true;
@@ -168,11 +168,21 @@ public sealed class Reference
         var builder = new StringBuilder();
         
         builder.Append(L5XName.Controller);
-        builder.AppendIf(Scope, s => s.IsProgram, s => $"/Programs/Program[@Name='{s.Container}']");
-        builder.AppendIf(Scope, s => s.IsAoi, s => $"/AddOnInstructionDefinitions/AddOnInstructionDefinition[@Name='{s.Container}']");
-        builder.AppendIf(Scope, s => s.IsLogic, s => $"/Routines/Routine[@Name='{s.Routine}']");
-        builder.Append(Type.GetXPath(Id));
 
+        builder.AppendIf(this,
+            r => r.Type == ReferenceType.DataType && r.Scope.IsLocal,
+            r => $"/DataType/Member[@Name='{r.Scope.Container}']"
+        );
+            
+        builder.AppendIf(this,
+            r => r.Type == ReferenceType.Aoi  && r.Scope.IsLocal,
+            r => $"/AddOnInstructionDefinitions/AddOnInstructionDefinition[@Name='{r.Scope.Container}']"
+        );
+        
+        builder.AppendIf(Scope, s => s.IsProgram, s => $"/Programs/Program[@Name='{s.Container}']");
+        builder.AppendIf(Scope, s => s.IsCode, s => $"/Routines/Routine[@Name='{s.Routine}']");
+        
+        builder.Append(Type.GetXPath(Id));
         return builder.ToString();
     }
 
@@ -199,8 +209,7 @@ public sealed class Reference
     /// provided name and scope to construct a reference path. If no scope is specified, the reference defaults
     /// to the controller scope.
     /// </remarks>
-    public static Reference To<TComponent>(string name, Scope? scope = null) 
-        where TComponent : LogixComponent<TComponent>
+    public static Reference To<TComponent>(string name, Scope? scope = null) where TComponent : class, ILogixComponent
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name is required to build valid reference.");
@@ -223,8 +232,7 @@ public sealed class Reference
     /// This factory method uses the type parameter to determine the reference type (Rung, Line, or Sheet) and combines it with the
     /// provided number, program, and routine to construct a reference path for a code element within a routine.
     /// </remarks>
-    public static Reference To<TCode>(uint number, string program, string routine) 
-        where TCode : LogixCode<TCode>
+    public static Reference To<TCode>(uint number, string program, string routine) where TCode : class, ILogixCode
     {
         if (string.IsNullOrEmpty(program))
             throw new ArgumentException("Program is required to build valid reference.");
@@ -271,20 +279,21 @@ public sealed class Reference
         if (element is null)
             throw new ArgumentNullException(nameof(element));
         
-        //Module tags are a special case. We need to view these as controller tags.
+        // Handle module tags since their id needs to be computed.
         if (element.IsModuleTagElement())
             return new Reference(ReferenceType.Tag, Scope.Controller, element.ModuleTagName());
         
         var scope = Scope.Of(element);
         var id = element.LogixId();
         
+        // Handle encoded elements where we need to determine the type from an attribute instead of the element name.
         if (element.Name.LocalName is L5XName.EncodedData 
             && element.TryGetAttribute(L5XName.EncodedType, out var encodedTypeName) 
-            && ReferenceType.TryParse(encodedTypeName, out var encodedReferenceType))
+            && ReferenceType.TryParse(encodedTypeName, out var encodedType))
         {
-            return new Reference(encodedReferenceType, scope, id);
+            return new Reference(encodedType, scope, id);
         }
-
+        
         if (!ReferenceType.TryParse(element.Name.LocalName, out var type))
             throw new ArgumentException($"Provided element {element.Name.LocalName} is not a valid reference type.");
 
@@ -330,7 +339,7 @@ public sealed class Reference
 
         builder.Append($"{type.Name}://");
         builder.AppendIf(scope, s => s.IsLocal, s => $"{s.Container}/");
-        builder.AppendIf(scope, s => s.IsLogic, s => $"{s.Routine}/");
+        builder.AppendIf(scope, s => s.IsCode, s => $"{s.Routine}/");
         builder.Append(id);
         builder.AppendIf(fragment, x => x is not null, x => $"#{x}");
 

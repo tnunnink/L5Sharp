@@ -37,11 +37,12 @@ public class ScopeLevel : LogixEnum<ScopeLevel, string>
     public static readonly ScopeLevel Program = new(nameof(Program), nameof(Program));
 
     /// <summary>
-    /// Represents the AOI (Add-On Instruction) scope level within the Logix system.
+    /// Represents the <see cref="ScopeLevel"/> option for entities scoped to an AddOnInstruction or DataType definition.
     /// </summary>
     /// <remarks>
-    /// The AOI scope corresponds to a scope level associated with Add-On Instructions in a Logix controller project.
-    /// It is used to define and manage elements that belong specifically to an AOI context.
+    /// The <c>Definition</c> scope identifies elements such as parameters, local tags, or members that are encapsulated
+    /// within an AOI or DataType definition. These entities exist as part of the type definition itself
+    /// rather than at the controller or program level, and are instantiated as members when the type is used.
     /// </remarks>
-    public static readonly ScopeLevel Aoi = new(nameof(Aoi), nameof(Aoi));
+    public static readonly ScopeLevel Definition = new(nameof(Definition), nameof(Definition));
 }

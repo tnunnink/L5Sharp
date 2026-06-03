@@ -264,7 +264,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     public LogixContainer<Parameter> Parameters
     {
         get => GetContainer<Parameter>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -273,7 +273,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     public LogixContainer<LocalTag> LocalTags
     {
         get => GetContainer<LocalTag>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>
@@ -282,7 +282,7 @@ public class AddOnInstruction : LogixComponent<AddOnInstruction>
     public LogixContainer<Routine> Routines
     {
         get => GetContainer<Routine>();
-        set => SetContainer(value);
+        private set => SetContainer(value);
     }
 
     /// <summary>

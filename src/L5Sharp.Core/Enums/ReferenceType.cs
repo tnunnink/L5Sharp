@@ -17,18 +17,19 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     /// <summary>
     /// Indicates whether the reference type is associated with a tag element.
     /// </summary>
-    public bool IsTag => this == Tag || this == Parameter || this == LocalTag;
+    public bool IsTag => this == Tag;
 
     /// <summary>
     /// Indicates whether the reference type is related to logic elements such as Rung, Line, or Sheet.
     /// </summary>
-    public bool IsLogic => this == Rung || this == Line || this == Sheet;
+    public bool IsCode => this == Rung || this == Line || this == Sheet;
 
     /// <summary>
     /// Determines whether the reference type is contextual, meaning it represents an element that can be contained
     /// in different scopes within an L5X project (Tag, Routine, Rung, Line, or Sheet).
     /// </summary>
-    public bool IsContextual => this == Tag || this == Routine || IsLogic;
+    public bool IsContextual =>
+        IsTag || IsCode || this == Routine || this == Parameter || this == LocalTag || this == Member;
 
     /// <summary>
     /// Generates an XPath expression based on the current reference type and the provided identifier.
@@ -41,7 +42,7 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
         var builder = new StringBuilder();
 
         var container = GetContainer();
-        var attribute = IsLogic ? "@Number" : "@Name";
+        var attribute = IsCode ? "@Number" : "@Name";
         builder.Append($"/{container}/{Value}[{attribute}='{identifier}']");
 
         return builder.ToString();
@@ -67,15 +68,19 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     protected abstract string GetContainer();
 
     /// <summary>
-    /// Represents a Null <see cref="ReferenceType"/> value.
+    /// Represents a null or default reference type, indicating the absence of a specific type or value.
     /// </summary>
-    /// <remarks>A <c>Null</c> scope will occur on element objects that have not been added to a container.</remarks>
-    public static readonly ReferenceType Null = new NullReferenceType();
+    public static readonly ReferenceType None = new NoneReferenceType();
 
     /// <summary>
     /// Represents a DataType <see cref="ReferenceType"/> value.
     /// </summary>
     public static readonly ReferenceType DataType = new DataTypeReferenceType();
+
+    /// <summary>
+    /// Represents a Member (DataType child element) <see cref="ReferenceType"/> value.
+    /// </summary>
+    public static readonly ReferenceType Member = new MemberReferenceType();
 
     /// <summary>
     /// Represents a Aoi (AddOnInstruction) <see cref="ReferenceType"/> value.
@@ -123,6 +128,11 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     public static readonly ReferenceType WatchList = new WatchListReferenceType();
 
     /// <summary>
+    /// Represents a Trend <see cref="ReferenceType"/> value.
+    /// </summary>
+    public static readonly ReferenceType Trend = new TrendReferenceType();
+
+    /// <summary>
     /// Represents a Rung <see cref="ReferenceType"/> value.
     /// </summary>
     public static readonly ReferenceType Rung = new RungReferenceType();
@@ -138,7 +148,7 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     public static readonly ReferenceType Sheet = new SheetReferenceType();
 
 
-    private class NullReferenceType() : ReferenceType(nameof(Null), string.Empty)
+    private class NoneReferenceType() : ReferenceType(nameof(None), string.Empty)
     {
         protected override string GetContainer() => string.Empty;
     }
@@ -146,6 +156,11 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     private class DataTypeReferenceType() : ReferenceType("datatype", "DataType")
     {
         protected override string GetContainer() => "DataTypes";
+    }
+
+    private class MemberReferenceType() : ReferenceType("member", "Member")
+    {
+        protected override string GetContainer() => "Members";
     }
 
     private class AoiReferenceType() : ReferenceType("aoi", "AddOnInstructionDefinition")
@@ -186,6 +201,11 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     private class TaskReferenceType() : ReferenceType("task", "Task")
     {
         protected override string GetContainer() => "Tasks";
+    }
+
+    private class TrendReferenceType() : ReferenceType("trend", "Trend")
+    {
+        protected override string GetContainer() => "Trends";
     }
 
     private class WatchListReferenceType() : ReferenceType("watchlist", "QuickWatchList")
