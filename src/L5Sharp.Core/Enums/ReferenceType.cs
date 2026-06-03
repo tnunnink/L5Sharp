@@ -55,7 +55,7 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     /// Must implement <see cref="ILogixEntity"/>.
     /// </typeparam>
     /// <returns>The <see cref="ReferenceType"/> corresponding to the entity type <typeparamref name="TEntity"/>.</returns>
-    public static ReferenceType FromType<TEntity>() where TEntity : ILogixEntity
+    public static ReferenceType FromType<TEntity>() where TEntity : class, ILogixEntity
     {
         return Parse(LogixSerializer.NamesFor(typeof(TEntity)).First());
     }
@@ -116,6 +116,11 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     /// Represents a Task <see cref="ReferenceType"/> value.
     /// </summary>
     public static readonly ReferenceType Task = new TaskReferenceType();
+
+    /// <summary>
+    /// Represents a WatchList <see cref="ReferenceType"/> value.
+    /// </summary>
+    public static readonly ReferenceType WatchList = new WatchListReferenceType();
 
     /// <summary>
     /// Represents a Rung <see cref="ReferenceType"/> value.
@@ -181,6 +186,11 @@ public abstract class ReferenceType : LogixEnum<ReferenceType, string>
     private class TaskReferenceType() : ReferenceType("task", "Task")
     {
         protected override string GetContainer() => "Tasks";
+    }
+
+    private class WatchListReferenceType() : ReferenceType("watchlist", "QuickWatchList")
+    {
+        protected override string GetContainer() => "QuickWatchLists";
     }
 
     private class RungReferenceType() : ReferenceType("rung", "Rung")

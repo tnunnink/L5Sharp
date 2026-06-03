@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
+// ReSharper disable ConvertToExtensionBlock
+
 namespace L5Sharp.Core;
 
 /// <summary>
 /// A static deserialization class for <see cref="ILogixElement"/> objects and their derivatives.
 /// </summary>
-/// <remarks>
-/// 
-/// </remarks>
 public static class LogixSerializer
 {
     /// <summary>
@@ -96,7 +95,12 @@ public static class LogixSerializer
     /// <returns>An <see cref="HashSet{T}"/> of strings containing the element names associated with the specified type.</returns>
     public static HashSet<string> NamesFor(Type type)
     {
-        return Types.TryGetValue(type, out var names) ? names : [];
+        if (type.IsClass)
+            return Types.TryGetValue(type, out var names) ? names : [];
+
+        //This lets us use the query method to find any type that implements an interface like ILogixEntity
+        var types = Types.Where(t => type.IsAssignableFrom(t.Key));
+        return [..types.SelectMany(t => t.Value).Distinct()];
     }
 
     /// <summary>

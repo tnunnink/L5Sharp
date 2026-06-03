@@ -13,7 +13,8 @@ namespace L5Sharp.Core;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [LogixElement(L5XName.Parameter)]
-public class Parameter : LogixObject<Parameter>
+/*[LogixElement(L5XName.LocalTag)]*/
+public class Parameter : LogixEntity<Parameter>
 {
     /// <inheritdoc />
     protected override List<string> ElementOrder =>
@@ -30,7 +31,7 @@ public class Parameter : LogixObject<Parameter>
         Name = string.Empty;
         TagType = TagType.Base;
         DataType = string.Empty;
-        Dimension = Dimensions.Empty;
+        Dimensions = Dimensions.Empty;
         Usage = TagUsage.Input;
         Radix = Radix.Null;
         Required = false;
@@ -97,7 +98,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public string DataType
     {
-        get => GetValue() ?? Alias?.DataType ?? throw Element.L5XError(L5XName.DataType);
+        get => GetValue() ?? GetAliasTag()?.DataType ?? throw Element.L5XError(L5XName.DataType);
         set => SetValue(value);
     }
 
@@ -105,11 +106,11 @@ public class Parameter : LogixObject<Parameter>
     /// The array dimension of the <c>Parameter</c>.
     /// </summary>
     /// <value>
-    /// A <see cref="Dimensions"/> representing the array dimensions of the <c>Parameter</c>.
+    /// A <see cref="Core.Dimensions"/> representing the array dimensions of the <c>Parameter</c>.
     /// Default is <see cref="Dimensions.Empty"/>.
     /// Members should not have multidimensional arrays.
     /// </value>
-    public Dimensions Dimension
+    public Dimensions Dimensions
     {
         get => GetValue(Dimensions.Parse) ?? Dimensions.Empty;
         set => SetValue(value);
@@ -151,7 +152,7 @@ public class Parameter : LogixObject<Parameter>
     /// </value>
     public TagType? TagType
     {
-        get => GetValue(TagType.Parse); 
+        get => GetValue(TagType.Parse);
         set => SetValue(value);
     }
 
@@ -227,7 +228,13 @@ public class Parameter : LogixObject<Parameter>
     /// Represents the associated alias of the parameter if one is defined.
     /// Provides a way to reference a <see cref="LocalTag"/> that serves as an alias for this parameter.
     /// </summary>
-    public LocalTag? Alias => GetAncestor<AddOnInstruction>()?.LocalTags.SingleOrDefault(t => t.Name == AliasFor);
+    public LocalTag? Alias => GetAliasTag();
+
+    /// <inheritdoc />
+    public override IEnumerable<ILogixEntity> Dependencies()
+    {
+        throw new NotImplementedException();
+    }
 
     /// <summary>
     /// Creates a new <see cref="Tag"/> instance from this <see cref="Parameter"/> configuration.
@@ -241,13 +248,13 @@ public class Parameter : LogixObject<Parameter>
     /// </remarks>
     public Tag ToTag(string tagName)
     {
-        var isArray = Dimension.Length > 0;
+        var isArray = Dimensions.Length > 0;
 
         var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
             ? registered
             : new StructureData(DataType));
 
-        var value = !isArray ? data : ArrayData.New(data, Dimension);
+        var value = !isArray ? data : ArrayData.New(data, Dimensions);
 
         return new Tag(tagName, value);
     }
@@ -270,19 +277,19 @@ public class Parameter : LogixObject<Parameter>
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)
             throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
 
-        var isArray = Dimension.Length > 0;
+        var isArray = Dimensions.Length > 0;
 
         //If the parameter has default data, we can opt to return a member with the correcly initialized data value.
         if (Default is not null)
         {
-            LogixData defaultValue = isArray ? ArrayData.New(Default, Dimension) : Default;
+            LogixData defaultValue = isArray ? ArrayData.New(Default, Dimensions) : Default;
             return new LogixMember(Name, defaultValue);
         }
 
         //If the type is registered, we can create the instance using the registered factory.
         if (LogixType.TryCreate(DataType, out var registered))
         {
-            var value = isArray ? ArrayData.New(registered, Dimension) : registered;
+            var value = isArray ? ArrayData.New(registered, Dimensions) : registered;
             return new LogixMember(Name, value);
         }
 
@@ -292,10 +299,22 @@ public class Parameter : LogixObject<Parameter>
             ? definition.ToData()
             : new StructureData(DataType);
 
-        var structure = isArray ? ArrayData.New(data, Dimension) : data;
+        var structure = isArray ? ArrayData.New(data, Dimensions) : data;
         return new LogixMember(Name, structure);
     }
 
     /// <inheritdoc />
     public override string ToString() => Name;
+
+    /// <summary>
+    /// Retrieves the alias tag associated with the current parameter, if it exists.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="LocalTag"/> that represents the alias tag associated with the current parameter,
+    /// or null if no matching alias tag is found.
+    /// </returns>
+    private LocalTag? GetAliasTag()
+    {
+        return GetAncestor<AddOnInstruction>()?.LocalTags.SingleOrDefault(t => t.Name == AliasFor);
+    }
 }

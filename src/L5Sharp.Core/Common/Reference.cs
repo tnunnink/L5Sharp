@@ -275,12 +275,19 @@ public sealed class Reference
         if (element.IsModuleTagElement())
             return new Reference(ReferenceType.Tag, Scope.Controller, element.ModuleTagName());
         
-        if (!ReferenceType.TryParse(element.Name.LocalName, out var type))
-            throw new ArgumentException($"Provided element {element.Name.LocalName} is not a valid reference type.");
-        
         var scope = Scope.Of(element);
         var id = element.LogixId();
         
+        if (element.Name.LocalName is L5XName.EncodedData 
+            && element.TryGetAttribute(L5XName.EncodedType, out var encodedTypeName) 
+            && ReferenceType.TryParse(encodedTypeName, out var encodedReferenceType))
+        {
+            return new Reference(encodedReferenceType, scope, id);
+        }
+
+        if (!ReferenceType.TryParse(element.Name.LocalName, out var type))
+            throw new ArgumentException($"Provided element {element.Name.LocalName} is not a valid reference type.");
+
         return new Reference(type, scope, id);
     }
 

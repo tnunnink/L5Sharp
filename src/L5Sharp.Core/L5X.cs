@@ -252,7 +252,7 @@ public sealed class L5X
     /// more complex queries.
     ///</para>
     /// </remarks>
-    public IEnumerable<TEntity> Query<TEntity>() where TEntity : LogixEntity<TEntity>
+    public IEnumerable<TEntity> Query<TEntity>() where TEntity : ILogixEntity
     {
         var types = LogixSerializer.NamesFor(typeof(TEntity));
 
@@ -274,7 +274,7 @@ public sealed class L5X
     /// more complex queries.
     ///</para>
     /// </remarks>
-    public IEnumerable<TEntity> Query<TEntity>(Func<TEntity, bool> predicate) where TEntity : LogixEntity<TEntity>
+    public IEnumerable<TEntity> Query<TEntity>(Func<TEntity, bool> predicate) where TEntity : ILogixEntity
     {
         var types = LogixSerializer.NamesFor(typeof(TEntity));
 

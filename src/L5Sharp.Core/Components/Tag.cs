@@ -35,7 +35,7 @@ public class Tag : LogixComponent<Tag>
         L5XName.ProduceInfo,
         L5XName.Description,
         L5XName.Comments,
-        L5XName.EngineeringUnits,       
+        L5XName.EngineeringUnits,
         L5XName.Maxes,
         L5XName.Mins,
         L5XName.State0s,
@@ -430,6 +430,27 @@ public class Tag : LogixComponent<Tag>
         set => SetContainer(value);
     }
 
+    /// <summary>
+    /// Indicates whether the tag is publicly accessible.
+    /// This property evaluates to <c>true</c> if the <see cref="ExternalAccess"/> property
+    /// is set and not equal to <see cref="Access.None"/>; otherwise, it returns <c>false</c>.
+    /// </summary>
+    public bool IsPublic => ExternalAccess is not null && ExternalAccess != Access.None;
+
+    /// <summary>
+    /// Gets a value indicating whether the current tag instance represents a module tag.
+    /// A module tag is a specialized tag type used to interface with hardware modules
+    /// in a Logix-based control system.
+    /// </summary>
+    public bool IsModuleTag => Element.IsModuleTagElement();
+
+    /// <summary>
+    /// Indicates whether the tag is scoped to a program level.
+    /// This property evaluates the <see cref="Scope"/> of the tag and returns
+    /// true if the scope level is defined as a program.
+    /// </summary>
+    public bool IsProgramTag => Scope.IsProgram;
+
     /// <inheritdoc />
     public override IEnumerable<Reference> References()
     {
@@ -660,14 +681,6 @@ public class Tag : LogixComponent<Tag>
     /// A <see cref="IEnumerable{T}"/> of <see cref="TagName"/> containing the tag name and all child tag names.
     /// </returns>
     public IEnumerable<TagName> TagNames() => Members().Select(t => t.TagName);
-
-    /// <summary>
-    /// Determines if the tag is publicly accessible based on the external access configuration.
-    /// </summary>
-    /// <returns>
-    /// True if the tag has an external access configuration that is not <see cref="Access.None"/>; otherwise, false.
-    /// </returns>
-    public bool IsPublic() => ExternalAccess is not null && ExternalAccess != Access.None;
 
     /// <inheritdoc />
     public override string ToString() => TagName;
