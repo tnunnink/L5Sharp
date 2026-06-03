@@ -18,6 +18,10 @@ public sealed class LocalTag : Parameter
     /// </summary>
     public LocalTag() : base(L5XName.LocalTag)
     {
+        Name = string.Empty;
+        DataType = nameof(DINT);
+        Radix = Radix.Decimal;
+        ExternalAccess = Access.None;
     }
 
     /// <summary>
@@ -34,11 +38,13 @@ public sealed class LocalTag : Parameter
     /// <param name="name">The name of the LocalTag.</param>
     /// <param name="value">The <see cref="LogixData"/> value of the LocalTag.</param>
     /// <param name="description">the optional description of the LocalTag.</param>
-    public LocalTag(string name, AtomicData value, string? description = null) : base(L5XName.LocalTag)
+    public LocalTag(string name, AtomicData value, string? description = null) : this()
     {
-        Element.SetAttributeValue(L5XName.Name, name);
+        Name = name;
+        DataType = value.Name;
+        Radix = value.Radix;
         Default = value;
-        SetProperty(description, nameof(Description));
+        Description = description;
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace L5Sharp.Core;
@@ -11,7 +12,7 @@ namespace L5Sharp.Core;
 /// `Logix 5000 Controllers Import/Export`</a> for more information.
 /// </footer>
 [LogixElement(L5XName.Member)]
-public class DataTypeMember : LogixObject<DataTypeMember>
+public class DataTypeMember : LogixEntity<DataTypeMember>
 {
     /// <summary>
     /// Creates a new <see cref="DataTypeMember"/> with default values.
@@ -171,22 +172,14 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     /// <value>A <see cref="Core.DataType"/> representing the parent type for this member.</value>
     public DataType? Parent => GetAncestor<DataType>();
 
-    /// <summary>
-    /// Attempts to retrieve the <see cref="DataType"/> definition associated with this member.
-    /// </summary>
-    /// <param name="definition">When this method returns, contains the <see cref="DataType"/> associated with this member if found; otherwise, null.</param>
-    /// <returns>True if the definition is successfully retrieved; otherwise, false.</returns>
-    /// <remarks>Typically, all member types are defined</remarks>
-    public bool TryGetDefinition(out DataType definition)
+    /// <inheritdoc />
+    public override IEnumerable<ILogixEntity> Dependencies()
     {
-        // If this member has access to the document and can find the definition, return that.
-        if (TryGetDocument(out var doc) && doc.TryGet(DataType, out definition))
+        if (TryResolveType(DataType, out var dataType))
         {
-            return true;
+            yield return dataType;
+            foreach (var dependency in dataType.Dependencies()) yield return dependency;
         }
-
-        definition = null!;
-        return false;
     }
 
     /// <summary>
@@ -203,10 +196,18 @@ public class DataTypeMember : LogixObject<DataTypeMember>
     public LogixMember ToMember()
     {
         // Typically, a member type will be defined in the current L5X context if available.
-        if (TryGetDefinition(out var definition))
+        if (TryResolveType(DataType, out var type))
         {
-            var instance = definition.ToData();
-            return new LogixMember(Name, Dimension.Length > 0 ? ArrayData.New(instance, Dimension) : instance);
+            Func<LogixData> factory = type switch
+            {
+                DataType dataType => () => dataType.ToData(),
+                AddOnInstruction aoi => () => aoi.ToData(),
+                _ => throw new InvalidOperationException(
+                    $"Resolved type '{type.GetType().Name}' for member '{Name}' is not a supported type. Expected DataType or AddOnInstruction.")
+            };
+
+            var instance = Dimension.Length > 0 ? ArrayData.New(factory(), Dimension) : factory();
+            return new LogixMember(Name, instance);
         }
 
         // See if the type is registered (atomic/predefined or other registered user-defined).

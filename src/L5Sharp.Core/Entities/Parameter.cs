@@ -41,15 +41,12 @@ public class Parameter : LogixEntity<Parameter>
     {
         Name = string.Empty;
         TagType = TagType.Base;
-        DataType = string.Empty;
-        Dimensions = Dimensions.Empty;
-        // ReSharper disable once VirtualMemberCallInConstructor
-        Usage = TagUsage.Input;
-        Radix = Radix.Null;
+        DataType = nameof(DINT);
+        Element.SetAttributeValue(L5XName.Usage, TagUsage.Input);
+        Radix = Radix.Decimal;
         Required = false;
         Visible = false;
         ExternalAccess = Access.ReadWrite;
-        Constant = false;
     }
 
     /// <summary>
@@ -75,9 +72,9 @@ public class Parameter : LogixEntity<Parameter>
     {
         Element.SetAttributeValue(L5XName.Name, name);
         DataType = value.Name;
+        Element.SetAttributeValue(L5XName.Usage, usage ?? TagUsage.Input);
         Radix = value.Radix;
         Default = value;
-        Usage = usage ?? TagUsage.Input;
     }
 
     /// <summary>
@@ -108,9 +105,9 @@ public class Parameter : LogixEntity<Parameter>
     /// Default is <see cref="string.Empty"/>.
     /// Valid value is required for valid import.
     /// </value>
-    public string? DataType
+    public string DataType
     {
-        get => GetValue() ?? GetAlias()?.DataType;
+        get => GetValue() ?? GetAlias()?.DataType ?? throw Element.L5XError(L5XName.DataType);
         set => SetValue(value);
     }
 
@@ -291,7 +288,7 @@ public class Parameter : LogixEntity<Parameter>
 
         var isArray = Dimensions.Length > 0;
 
-        //If the parameter has default data, we can opt to return a member with the correcly initialized data value.
+        //If the parameter has default data, we can opt to return a member with the correctly initialized data value.
         if (Default is not null)
         {
             LogixData defaultValue = isArray ? ArrayData.New(Default, Dimensions) : Default;
