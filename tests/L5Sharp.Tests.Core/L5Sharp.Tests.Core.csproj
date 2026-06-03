@@ -195,10 +195,6 @@
       <None Update="Components\ProgramTests.AddRoutine_ValidRoutine_ShouldBeVerified.verified.txt">
         <DependentUpon>ProgramTests.cs</DependentUpon>
       </None>
-      <None Update="Elements\DataTypeMemberTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
-        <DependentUpon>DataTypeMemberTests.cs</DependentUpon>
-        <ParentFile>DataTypeMemberTests</ParentFile>
-      </None>
       <None Update="LogixElementTests.SetValue_ToValueHasValue_ShouldBeVerified.verified.txt">
         <DependentUpon>LogixElementTests.cs</DependentUpon>
       </None>
@@ -361,12 +357,6 @@
       <None Update="LogixContainerTests.Add_ValidType_ShouldBeVerified.verified.xml">
         <DependentUpon>LogixContainerTests.cs</DependentUpon>
       </None>
-      <None Update="Elements\ParameterTests.Serialize_NameAndValue_ShouldBeVerified.verified.xml">
-        <DependentUpon>ParameterTests.cs</DependentUpon>
-      </None>
-      <None Update="Elements\ParameterTests.Serialize_OverrideParameters_ShouldBeVerified.verified.xml">
-        <DependentUpon>ParameterTests.cs</DependentUpon>
-      </None>
       <None Update="LogixSerializerTests.Serialize_WhenCalled_ShouldBeVerified.verified.xml">
         <DependentUpon>LogixSerializerTests.cs</DependentUpon>
       </None>
@@ -432,6 +422,49 @@
       </None>
       <None Update="Components\RoutineTests.Rll_Complex_ShouldBeVerified.verified.xml">
         <DependentUpon>RoutineTests.cs</DependentUpon>
+      </None>
+      <None Update="Entities\DataTypeMemberTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
+        <DependentUpon>DataTypeMemberTests.cs</DependentUpon>
+        <ParentFile>DataTypeMemberTests</ParentFile>
+      </None>
+      <None Update="Elements\CommunicationsTests.New_Default_ShouldBeVerified.verified.txt">
+        <DependentUpon>CommunicationsTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ConsumeInfoTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>ConsumeInfoTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\EventInfoTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>EventInfoTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ParameterConnectionTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>ParameterConnectionTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\PenTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>PenTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\PortTests.New_WithValues_ShouldBeVerified.verified.txt">
+        <DependentUpon>PortTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\ProduceInfoTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>ProduceInfoTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\RedundancyInfoTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>RedundancyInfoTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\SecurityTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>SecurityTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\UnitTests.Serialize_WhenCalled_ShouldBeVerified.verified.txt">
+        <DependentUpon>UnitTests.cs</DependentUpon>
+      </None>
+      <None Update="Elements\WatchTagTests.New_Overridden_ShouldBeVerified.verified.txt">
+        <DependentUpon>WatchTagTests.cs</DependentUpon>
+      </None>
+      <None Update="Entities\LocalTagTests.Serialize_Default_ShouldBeVerified.verified.xml">
+        <DependentUpon>LocalTagTests.cs</DependentUpon>
+      </None>
+      <None Update="Entities\LocalTagTests.Serialize_WithNameAndValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>LocalTagTests.cs</DependentUpon>
       </None>
     </ItemGroup>
 
