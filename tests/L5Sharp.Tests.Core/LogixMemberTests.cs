@@ -376,8 +376,6 @@ public class LogixMemberTests
         return Verify(xml);
     }
 
-    #region InternalsTests
-
     [Test]
     public void New_ElementOverload_ShouldHaveExpectedValues()
     {
@@ -390,6 +388,4 @@ public class LogixMemberTests
         member.Value.Should().BeOfType<DINT>();
         member.Value.Should().Be(123);
     }
-
-    #endregion
 }

@@ -12,11 +12,11 @@ public class ScopeTests
 
         scope.Level.Should().Be(ScopeLevel.None);
         scope.Container.Should().BeEmpty();
-        scope.IsController.Should().BeFalse();
-        scope.IsProgram.Should().BeFalse();
-        scope.IsAoi.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeFalse();
-        scope.IsLogic.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsDefinition.Should().BeFalse();
+        scope.IsCode.Should().BeFalse();
     }
 
     [Test]
@@ -26,11 +26,11 @@ public class ScopeTests
 
         scope.Level.Should().Be(ScopeLevel.Controller);
         scope.Container.Should().BeEmpty();
-        scope.IsController.Should().BeTrue();
-        scope.IsProgram.Should().BeFalse();
-        scope.IsAoi.Should().BeFalse();
+        scope.IsGlobal.Should().BeTrue();
         scope.IsLocal.Should().BeFalse();
-        scope.IsLogic.Should().BeFalse();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsDefinition.Should().BeFalse();
+        scope.IsCode.Should().BeFalse();
     }
 
     [Test]
@@ -40,24 +40,24 @@ public class ScopeTests
 
         scope.Level.Should().Be(ScopeLevel.Program);
         scope.Container.Should().Be("MyProgram");
-        scope.IsController.Should().BeFalse();
-        scope.IsProgram.Should().BeTrue();
-        scope.IsAoi.Should().BeFalse();
+        scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
-        scope.IsLogic.Should().BeFalse();
+        scope.IsProgram.Should().BeTrue();
+        scope.IsDefinition.Should().BeFalse();
+        scope.IsCode.Should().BeFalse();
     }
 
     [Test]
-    public void Aoi_ValidName_ShouldHaveExpectedProperties()
+    public void Definition_ValidName_ShouldHaveExpectedProperties()
     {
-        var scope = Scope.Aoi("MyAoi");
+        var scope = Scope.Definition("MyDefinition");
 
-        scope.Level.Should().Be(ScopeLevel.Aoi);
-        scope.Container.Should().Be("MyAoi");
-        scope.IsController.Should().BeFalse();
-        scope.IsProgram.Should().BeFalse();
-        scope.IsAoi.Should().BeTrue();
+        scope.Level.Should().Be(ScopeLevel.Definition);
+        scope.Container.Should().Be("MyDefinition");
+        scope.IsGlobal.Should().BeFalse();
         scope.IsLocal.Should().BeTrue();
+        scope.IsProgram.Should().BeFalse();
+        scope.IsDefinition.Should().BeTrue();
     }
 
     [Test]

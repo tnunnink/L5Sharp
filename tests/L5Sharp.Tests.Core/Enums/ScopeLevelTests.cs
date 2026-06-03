@@ -36,13 +36,13 @@ namespace L5Sharp.Tests.Core.Enums
         }
         
         [Test]
-        public void Aoi_WhenCalled_ShouldBeExpected()
+        public void Definition_WhenCalled_ShouldBeExpected()
         {
-            var level = ScopeLevel.Aoi;
+            var level = ScopeLevel.Definition;
 
             level.Should().NotBeNull();
-            level.Name.Should().Be("Aoi");
-            level.Value.Should().Be("Aoi");
+            level.Name.Should().Be("Definition");
+            level.Value.Should().Be("Definition");
         }
 
     }

@@ -109,8 +109,7 @@ public class LogixTypeTests
     [Test]
     public void Create_NonRegistered_ShouldThrowException()
     {
-        FluentActions.Invoking(() => LogixType.Create("Fake"))
-            .Should().Throw<InvalidOperationException>();
+        FluentActions.Invoking(() => LogixType.Create("Fake")).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -286,5 +285,152 @@ public class LogixTypeTests
         var result = LogixType.NameFor(type);
 
         result.Should().Be(name);
+    }
+
+    [Test]
+    public void Register_AlreadyRegistered_ShouldReturnEarly()
+    {
+        LogixType.Register<DINT>("DINT");
+
+        LogixType.IsRegistered(typeof(DINT)).Should().BeTrue();
+    }
+
+    [Test]
+    public void Create_NullDataType_ShouldUseTypeName()
+    {
+        var result = LogixType.Create<DINT>();
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<DINT>();
+    }
+
+    [Test]
+    public void Create_UnregisteredType_ShouldThrowInvalidOperationException()
+    {
+        FluentActions.Invoking(() => LogixType.Create("Unregistered"))
+            .Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void CreateGeneric_UnregisteredType_ShouldThrowInvalidOperationException()
+    {
+        FluentActions.Invoking(() => LogixType.Create<DINT>("Unregistered"))
+            .Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void TryCreateGeneric_NullDataType_ShouldUseTypeName()
+    {
+        var result = LogixType.TryCreate<DINT>(out var data);
+
+        result.Should().BeTrue();
+        data.Should().NotBeNull();
+    }
+
+    [Test]
+    public void TryCreateGeneric_UnregisteredType_ShouldBeFalse()
+    {
+        var result = LogixType.TryCreate<DINT>(out var data, "Unregistered");
+
+        result.Should().BeFalse();
+        data.Should().BeNull();
+    }
+
+    [Test]
+    public void CreateOrDefault_UnregisteredType_ShouldReturnStructureData()
+    {
+        var result = LogixType.CreateOrDefault("Unregistered");
+
+        result.Should().BeOfType<StructureData>();
+        result.Name.Should().Be("Unregistered");
+    }
+
+    [Test]
+    public void Deserialize_MissingDataType_ShouldThrowException()
+    {
+        var xml = new XElement("Data");
+
+        FluentActions.Invoking(() => LogixType.Deserialize(xml)).Should().Throw<Exception>();
+    }
+
+    [Test]
+    public void Deserialize_UnregisteredType_ShouldThrowInvalidOperationException()
+    {
+        var xml = new XElement("DataValue", new XAttribute("DataType", "Unregistered"));
+
+        FluentActions.Invoking(() => LogixType.Deserialize(xml)).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void TryDeserialize_MissingDataType_ShouldThrowException()
+    {
+        var xml = new XElement("Data");
+
+        FluentActions.Invoking(() => LogixType.TryDeserialize(xml, out _)).Should().Throw<Exception>();
+    }
+
+    [Test]
+    public void TryDeserialize_UnregisteredType_ShouldBeFalse()
+    {
+        var xml = new XElement("DataValue", new XAttribute("DataType", "Unregistered"));
+
+        var result = LogixType.TryDeserialize(xml, out var data);
+
+        result.Should().BeFalse();
+        data.Should().BeNull();
+    }
+
+    [Test]
+    public void NameFor_UnregisteredType_ShouldThrowInvalidOperationException()
+    {
+        FluentActions.Invoking(() => LogixType.NameFor(typeof(string))).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    [TestCase("BOOL", 1)]
+    [TestCase("SINT", 1)]
+    [TestCase("USINT", 1)]
+    [TestCase("INT", 2)]
+    [TestCase("UINT", 2)]
+    [TestCase("DINT", 4)]
+    [TestCase("UDINT", 4)]
+    [TestCase("REAL", 4)]
+    [TestCase("TIME32", 4)]
+    [TestCase("LINT", 8)]
+    [TestCase("ULINT", 8)]
+    [TestCase("LREAL", 8)]
+    public void SizeOf_AtomicTypes_ShouldBeExpected(string typeName, int expectedSize)
+    {
+        var result = LogixType.SizeOf(typeName);
+
+        result.Should().Be(expectedSize);
+    }
+
+    [Test]
+    public void SizeOf_ComplexType_ShouldBeExpected()
+    {
+        // TIMER size is typically 12 bytes
+        var result = LogixType.SizeOf("TIMER");
+
+        result.Should().Be(12);
+    }
+
+    [Test]
+    public void SizeOf_UnregisteredType_ShouldThrowInvalidOperationException()
+    {
+        FluentActions.Invoking(() => LogixType.SizeOf("Unregistered")).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void IsAtomic_CaseInsensitive_ShouldBeTrue()
+    {
+        LogixType.IsAtomic("dint").Should().BeTrue();
+        LogixType.IsAtomic("DINT").Should().BeTrue();
+    }
+
+    [Test]
+    public void IsRegistered_TypeOverload_Unregistered_ShouldBeFalse()
+    {
+        LogixType.IsRegistered(typeof(string)).Should().BeFalse();
     }
 }

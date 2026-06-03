@@ -8,10 +8,10 @@ public class ReferenceTypeTests
     [Test]
     public void Empty_WhenCalled_ShouldBeExpected()
     {
-        var type = ReferenceType.Null;
+        var type = ReferenceType.None;
 
         type.Should().NotBeNull();
-        type.Name.Should().Be("Null");
+        type.Name.Should().Be("None");
         type.Value.Should().Be("");
     }
 

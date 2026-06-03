@@ -5,13 +5,13 @@
     <AddOnInstructionDefinitions>
       <AddOnInstructionDefinition Name="" Revision="1.0" ExecutePreScan="false" ExecutePostScan="false" ExecuteEnableInFalse="false" CreatedDate="Scrubbed" CreatedBy="Scrubbed" EditedDate="Scrubbed" EditedBy="Scrubbed" Use="Target">
         <Parameters>
-          <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Dimension="0" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
+          <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Dimensions="0" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
             <Description><![CDATA[Enable Input - System Defined Parameter]]></Description>
             <DefaultData Format="Decorated">
               <DataValue DataType="BOOL" Radix="Decimal" Value="0" />
             </DefaultData>
           </Parameter>
-          <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Dimension="0" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
+          <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Dimensions="0" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only" Constant="false">
             <Description><![CDATA[Enable Output - System Defined Parameter]]></Description>
             <DefaultData Format="Decorated">
               <DataValue DataType="BOOL" Radix="Decimal" Value="0" />

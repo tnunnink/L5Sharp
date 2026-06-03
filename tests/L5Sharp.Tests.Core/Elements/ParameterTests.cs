@@ -13,7 +13,7 @@ public class ParameterTests
         parameter.Name.Should().BeEmpty();
         parameter.Description.Should().BeNull();
         parameter.DataType.Should().BeEmpty();
-        parameter.Dimension.Should().Be(Dimensions.Empty);
+        parameter.Dimensions.Should().Be(Dimensions.Empty);
         parameter.Radix.Should().Be(Radix.Null);
         parameter.ExternalAccess.Should().Be(Access.ReadWrite);
         parameter.TagType.Should().Be(TagType.Base);

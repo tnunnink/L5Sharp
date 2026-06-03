@@ -101,7 +101,7 @@ public class LogixElementTests
     {
         var element = XElement.Parse("<Test/>").Deserialize<ILogixElement>();
 
-        FluentActions.Invoking(() => element.As<ChildElement>()).Should().Throw<InvalidCastException>();
+        FluentActions.Invoking(() => _ = element.As<ChildElement>()).Should().Throw<InvalidCastException>();
     }
 
     [Test]

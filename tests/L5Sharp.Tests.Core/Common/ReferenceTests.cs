@@ -159,7 +159,7 @@ public class ReferenceTests
         var reference = Reference.To(path);
 
         reference.Path.Should().Be(path);
-        reference.Type.IsLogic.Should().BeTrue();
+        reference.Type.IsCode.Should().BeTrue();
         reference.Scope.Container.Should().Be("MyProgram");
         reference.Scope.Routine.Should().Be("MyRoutine");
         reference.Id.Should().Be("1");
