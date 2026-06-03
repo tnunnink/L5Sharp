@@ -27,7 +27,7 @@ public static class L5XExtensions
     {
         if (client is null) throw new ArgumentNullException(nameof(client));
 
-        var tags = project.Query<Tag>().Where(t => t.IsPublic()).ToArray();
+        var tags = project.Query<Tag>().Where(t => t.IsPublic).ToArray();
         var response = client.ReadTags(tags, token);
         return response;
     }
@@ -46,7 +46,7 @@ public static class L5XExtensions
         if (client is null) throw new ArgumentNullException(nameof(client));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var tags = project.Query(predicate).Where(t => t.IsPublic()).ToArray();
+        var tags = project.Query(predicate).Where(t => t.IsPublic).ToArray();
         var response = client.ReadTags(tags, token);
         return response;
     }
@@ -64,7 +64,7 @@ public static class L5XExtensions
     {
         if (client is null) throw new ArgumentNullException(nameof(client));
 
-        var tags = project.Query<Tag>().Where(t => t.Scope == scope && t.IsPublic()).ToArray();
+        var tags = project.Query<Tag>().Where(t => t.Scope == scope && t.IsPublic).ToArray();
         var response = client.ReadTags(tags, token);
         return response;
     }

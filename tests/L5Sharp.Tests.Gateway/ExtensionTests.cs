@@ -28,7 +28,7 @@ public class ExtensionTests : PlcTestBase
 
         //Get the 1000 auto-generated tags to verify they read a value.
         var tags = content.Query<Tag>()
-            .Where(t => t.IsPublic() && t.TagName.BaseName.StartsWith("Tag_") && t.TagName != "Tag_0")
+            .Where(t => t.IsPublic && t.TagName.BaseName.StartsWith("Tag_") && t.TagName != "Tag_0")
             .SelectMany(t => t.Members())
             .ToList();
 
