@@ -64,7 +64,7 @@ internal record LogixMemberInfo(
             parameter.Parent?.Name.SanitizeName() ?? "StructureData",
             parameter.Name,
             parameter.DataType.SanitizeName(),
-            parameter.Dimension.Length,
+            parameter.Dimensions.Length,
             parameter.Description
         );
     }
