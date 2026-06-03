@@ -19,6 +19,7 @@ public static class TestFiles
         public static readonly string LotOfTags = Path.Combine("Projects", "LotOfTags.L5X");
         public static readonly string Simple = Path.Combine("Projects", "Simple.L5X");
         public static readonly string Test = Path.Combine("Projects", "Test.L5X");
+        public static readonly string Example = @"C:\Users\tnunn\Documents\Rockwell\Example.L5X";
     }
 
     /// <summary>

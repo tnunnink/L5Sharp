@@ -15,7 +15,7 @@ public static class TestContent
     /// Represents an L5X project resource loaded from the predefined local example file path.
     /// Provides access to query, manipulate, and manage Logix components and entities.
     /// </summary>
-    public static L5X Example => Test;
+    public static L5X Example => Load(TestFiles.Projects.Example);
 
     /// <summary>
     /// Gets the L5X instance representing the "Test.L5X" embedded project resource.
