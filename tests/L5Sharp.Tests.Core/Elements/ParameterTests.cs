@@ -12,16 +12,16 @@ public class ParameterTests
 
         parameter.Name.Should().BeEmpty();
         parameter.Description.Should().BeNull();
-        parameter.DataType.Should().BeEmpty();
-        parameter.Dimensions.Should().Be(Dimensions.Empty);
-        parameter.Radix.Should().Be(Radix.Null);
-        parameter.ExternalAccess.Should().Be(Access.ReadWrite);
         parameter.TagType.Should().Be(TagType.Base);
+        parameter.DataType.Should().Be("DINT");
         parameter.Usage.Should().Be(TagUsage.Input);
+        parameter.Dimensions.Should().BeNull();
+        parameter.Radix.Should().Be(Radix.Decimal);
+        parameter.ExternalAccess.Should().Be(Access.ReadWrite);
         parameter.Default.Should().BeNull();
         parameter.Required.Should().BeFalse();
         parameter.Visible.Should().BeFalse();
-        parameter.Constant.Should().BeFalse();
+        parameter.Constant.Should().BeNull();
         parameter.AliasFor.Should().BeNull();
     }
 
@@ -68,6 +68,7 @@ public class ParameterTests
             Description = "This is a test",
             DataType = "MyType",
             Usage = TagUsage.InOut,
+            Radix = Radix.Null,
             Required = true,
             Visible = true,
             Constant = true,

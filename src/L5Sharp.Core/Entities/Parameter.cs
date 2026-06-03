@@ -131,9 +131,9 @@ public class Parameter : LogixEntity<Parameter>
     /// Default is <see cref="Dimensions.Empty"/>.
     /// Members should not have multidimensional arrays.
     /// </value>
-    public Dimensions Dimensions
+    public Dimensions? Dimensions
     {
-        get => GetValue(Dimensions.Parse) ?? Dimensions.Empty;
+        get => GetValue(Dimensions.Parse);
         set => SetValue(value);
     }
 
@@ -257,13 +257,11 @@ public class Parameter : LogixEntity<Parameter>
     /// </remarks>
     public Tag ToTag(string tagName)
     {
-        var isArray = Dimensions.Length > 0;
-
         var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
             ? registered
             : new StructureData(DataType));
 
-        var value = !isArray ? data : ArrayData.New(data, Dimensions);
+        var value = Dimensions?.IsEmpty is true ? ArrayData.New(data, Dimensions) : data;
 
         return new Tag(tagName, value);
     }
@@ -286,19 +284,17 @@ public class Parameter : LogixEntity<Parameter>
         if (Usage != TagUsage.Input && Usage != TagUsage.Output)
             throw new InvalidOperationException("Can only generate Member for Input or Output type parameters.");
 
-        var isArray = Dimensions.Length > 0;
-
         //If the parameter has default data, we can opt to return a member with the correctly initialized data value.
         if (Default is not null)
         {
-            LogixData defaultValue = isArray ? ArrayData.New(Default, Dimensions) : Default;
+            LogixData defaultValue = Dimensions?.IsEmpty is true ? ArrayData.New(Default, Dimensions) : Default;
             return new LogixMember(Name, defaultValue);
         }
 
         //If the type is registered, we can create the instance using the registered factory.
         if (LogixType.TryCreate(DataType, out var registered))
         {
-            var value = isArray ? ArrayData.New(registered, Dimensions) : registered;
+            var value = Dimensions?.IsEmpty is true ? ArrayData.New(registered, Dimensions) : registered;
             return new LogixMember(Name, value);
         }
 
@@ -308,7 +304,7 @@ public class Parameter : LogixEntity<Parameter>
             ? definition.ToData()
             : new StructureData(DataType);
 
-        var structure = isArray ? ArrayData.New(data, Dimensions) : data;
+        var structure = Dimensions?.IsEmpty is true ? ArrayData.New(data, Dimensions) : data;
         return new LogixMember(Name, structure);
     }
 
