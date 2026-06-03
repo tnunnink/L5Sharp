@@ -212,12 +212,12 @@ public class Connection : LogixObject<Connection>
     /// <summary>
     /// Gets the Tag that represents the input channel data for the <see cref="Connection"/> element.
     /// </summary>
-    /// <value>A <see cref="Tag"/> component containing the module defined data structure for the input connection data.</value>
+    /// <value>A <see cref="Tag"/> component containing the module-defined data structure for the input connection data.</value>
     public Tag? InputTag => GetComplex<Tag>();
 
     /// <summary>
     /// Gets the Tag that represents the output channel data for the <see cref="Connection"/> element.
     /// </summary>
-    /// <value>A <see cref="Tag"/> component containing the module defined data structure for the output connection data.</value>
+    /// <value>A <see cref="Tag"/> component containing the module-defined data structure for the output connection data.</value>
     public Tag? OutputTag => GetComplex<Tag>();
 }
