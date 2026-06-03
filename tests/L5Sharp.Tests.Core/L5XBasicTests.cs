@@ -142,6 +142,44 @@ public class L5XBasicTests
     }
 
     [Test]
+    public void Query_ComponentInterface_ShouldHaveExpectedTypes()
+    {
+        var content = TestContent.Test;
+
+        var results = content.Query<ILogixComponent>().ToList();
+
+        results.Any(r => r is DataType).Should().BeTrue();
+        results.Any(r => r is AddOnInstruction).Should().BeTrue();
+        results.Any(r => r is Module).Should().BeTrue();
+        results.Any(r => r is Program).Should().BeTrue();
+        results.Any(r => r is Tag).Should().BeTrue();
+        results.Any(r => r is Routine).Should().BeTrue();
+        results.Any(r => r is LTask).Should().BeTrue();
+    }
+    
+    [Test]
+    public void Query_EntityInterface_ShouldHaveExpectedTypes()
+    {
+        var content = TestContent.Test;
+
+        var results = content.Query<ILogixEntity>().ToList();
+
+        results.Any(r => r is DataType).Should().BeTrue();
+        results.Any(r => r is AddOnInstruction).Should().BeTrue();
+        results.Any(r => r is Module).Should().BeTrue();
+        results.Any(r => r is Program).Should().BeTrue();
+        results.Any(r => r is Tag).Should().BeTrue();
+        results.Any(r => r is Routine).Should().BeTrue();
+        results.Any(r => r is LTask).Should().BeTrue();
+        results.Any(r => r is Parameter).Should().BeTrue();
+        results.Any(r => r is LocalTag).Should().BeTrue();
+        results.Any(r => r is DataTypeMember).Should().BeTrue();
+        results.Any(r => r is Rung).Should().BeTrue();
+        results.Any(r => r is Line).Should().BeTrue();
+        results.Any(r => r is Sheet).Should().BeTrue();
+    }
+
+    [Test]
     public void Contains_KnownElement_ShouldBeTrue()
     {
         var content = TestContent.Test;

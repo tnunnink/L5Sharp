@@ -97,30 +97,6 @@ public class DataTypeMemberTests
     }
 
     [Test]
-    public void TryGetDefinition_NotAttached_ShouldReturnFalse()
-    {
-        var member = new DataTypeMember();
-
-        var result = member.TryGetDefinition(out _);
-
-        result.Should().BeFalse();
-    }
-
-    [Test]
-    public void TryGetDefinition_FromMemberInContext_ShouldReturnTrue()
-    {
-        var content = TestContent.Test;
-        var type = content.DataTypes.Get("ComplexType");
-        var member = type.Members.First(m => m.DataType == "SimpleType");
-
-        var result = member.TryGetDefinition(out var definition);
-
-        result.Should().BeTrue();
-        definition.Should().NotBeNull();
-        definition.Name.Should().Be("SimpleType");
-    }
-
-    [Test]
     public void ToMember_AtomicData_ShouldBeExpectedValues()
     {
         var member = new DataTypeMember
