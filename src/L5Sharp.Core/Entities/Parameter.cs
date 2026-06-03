@@ -70,7 +70,7 @@ public class Parameter : LogixEntity<Parameter>
     /// </remarks>
     public Parameter(string name, AtomicData value, TagUsage? usage = null) : this()
     {
-        Element.SetAttributeValue(L5XName.Name, name);
+        Name = name;
         DataType = value.Name;
         Element.SetAttributeValue(L5XName.Usage, usage ?? TagUsage.Input);
         Radix = value.Radix;
