@@ -6,6 +6,12 @@ namespace L5Sharp.Tests.Core.Entities;
 public class ParameterTests
 {
     [Test]
+    public void New_NullTagName_ShouldThrowException()
+    {
+        FluentActions.Invoking(() => new Parameter(null!, new DINT())).Should().Throw<ArgumentException>();
+    }
+
+    [Test]
     public void New_DefaultInstance_ShouldHaveExpectedValues()
     {
         var parameter = new Parameter();
@@ -106,5 +112,33 @@ public class ParameterTests
         tag.Name.Should().Be("MyParameterTag");
         tag.DataType.Should().Be("MyDataType");
         tag.Value.Should().BeOfType<StructureData>();
+    }
+    [Test]
+    public void Clone_WhenCalled_ShouldReturnExpectedType()
+    {
+        var parameter = new Parameter
+        {
+            Name = "Test",
+            Description = "This is a test",
+            DataType = "MyType",
+            Usage = TagUsage.InOut,
+            Required = true,
+            Visible = true,
+            Constant = true,
+            AliasFor = "TestTag"
+        };
+
+        var clone = parameter.Clone();
+
+        clone.Should().BeOfType<Parameter>();
+        clone.Should().NotBeSameAs(parameter);
+        clone.Name.Should().Be(parameter.Name);
+        clone.Description.Should().Be(parameter.Description);
+        clone.DataType.Should().Be(parameter.DataType);
+        clone.Usage.Should().Be(parameter.Usage);
+        clone.Required.Should().Be(parameter.Required);
+        clone.Visible.Should().Be(parameter.Visible);
+        clone.Constant.Should().Be(parameter.Constant);
+        clone.AliasFor.Should().Be(parameter.AliasFor);
     }
 }

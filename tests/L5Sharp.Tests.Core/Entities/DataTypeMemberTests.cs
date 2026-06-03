@@ -6,6 +6,18 @@ namespace L5Sharp.Tests.Core.Elements;
 public class DataTypeMemberTests
 {
     [Test]
+    public void New_NullTagName_ShouldThrowException()
+    {
+        FluentActions.Invoking(() => new DataTypeMember(null!, "DINT")).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void New_NullDataType_ShouldThrowException()
+    {
+        FluentActions.Invoking(() => new DataTypeMember("Test", null!)).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
     public void New_Default_ShouldHaveExpectedValues()
     {
         var member = new DataTypeMember { Name = "Test", DataType = "BOOL" };
@@ -116,5 +128,19 @@ public class DataTypeMemberTests
 
         instance.Name.Should().Be("Test");
         instance.Value.Should().Be(new REAL());
+    }
+    [Test]
+    public void ToMember_StructureData_ShouldBeExpectedValues()
+    {
+        var member = new DataTypeMember
+        {
+            Name = "Test",
+            DataType = "TIMER",
+        };
+
+        var instance = member.ToMember();
+
+        instance.Name.Should().Be("Test");
+        instance.Value.Should().BeOfType<TIMER>();
     }
 }

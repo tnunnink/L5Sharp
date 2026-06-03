@@ -1,0 +1,6 @@
+﻿<LocalTag Name="TestTag" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+  <Description><![CDATA[Test Description]]></Description>
+  <DefaultData Format="Decorated">
+    <DataValue DataType="BOOL" Radix="Decimal" Value="1" />
+  </DefaultData>
+</LocalTag>
