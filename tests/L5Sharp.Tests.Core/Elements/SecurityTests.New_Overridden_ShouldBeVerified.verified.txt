@@ -1,0 +1,1 @@
+﻿<Security Code="1234567890" SecurityAuthorityID="TestID" SecurityAuthorityURI="TestURI" PermissionSet="TestSet" ChangesToDetect="TestChanges" TrustedSlots="TestSlots" />

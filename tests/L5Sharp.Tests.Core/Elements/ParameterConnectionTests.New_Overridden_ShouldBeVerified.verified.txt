@@ -1,0 +1,1 @@
+﻿<ParameterConnection EndPoint1="Program:MainProgram.Tag1" EndPoint2="Program:MainProgram.Tag2" />

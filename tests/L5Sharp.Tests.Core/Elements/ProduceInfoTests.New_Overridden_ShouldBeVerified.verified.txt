@@ -1,0 +1,1 @@
+﻿<ProduceInfo ProduceCount="5" ProgrammaticallySendEventTrigger="true" UnicastPermitted="true" MinimumRPI="1" MaximumRPI="100" DefaultRPI="10" />

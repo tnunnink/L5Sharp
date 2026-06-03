@@ -1,0 +1,4 @@
+﻿<Communications>
+  <ConfigTag />
+  <Connections />
+</Communications>

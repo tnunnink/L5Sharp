@@ -1,0 +1,1 @@
+﻿<EventInfo EventTrigger="Module Input Data State Change" EventTag="TestTag" EnableTimeout="true" />

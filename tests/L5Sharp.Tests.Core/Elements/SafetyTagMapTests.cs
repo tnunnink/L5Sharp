@@ -8,6 +8,7 @@ public class SafetyTagMapTests
     [Test]
     public void New_Default_ShouldNotBeNull()
     {
+        // ReSharper disable once CollectionNeverUpdated.Local
         var map = new SafetyTagMap();
 
         map.Should().NotBeNull();
@@ -16,6 +17,7 @@ public class SafetyTagMapTests
     [Test]
     public Task New_WithTags_ShouldBeVerified()
     {
+        // ReSharper disable once UseObjectOrCollectionInitializer
         var map = new SafetyTagMap();
         
         map.Add("TestTag1");

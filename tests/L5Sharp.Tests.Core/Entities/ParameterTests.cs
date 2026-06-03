@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace L5Sharp.Tests.Core.Elements;
+namespace L5Sharp.Tests.Core.Entities;
 
 [TestFixture]
 public class ParameterTests

@@ -43,5 +43,20 @@ namespace L5Sharp.Tests.Core.Elements
             port.Address.Should().Be(new Address("0"));
             port.BusSize.Should().Be(17);
         }
+
+        [Test]
+        public Task New_WithValues_ShouldBeVerified()
+        {
+            var port = new Port
+            {
+                Id = 1,
+                Type = "ICP",
+                Address = "0",
+                Upstream = true,
+                BusSize = 17
+            };
+
+            return Verify(port.Serialize().ToString());
+        }
     }
 }

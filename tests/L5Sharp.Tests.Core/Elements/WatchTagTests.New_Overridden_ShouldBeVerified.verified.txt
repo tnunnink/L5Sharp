@@ -1,0 +1,1 @@
+﻿<WatchTag Specifier="TestTag" Scope="MainProgram" />
