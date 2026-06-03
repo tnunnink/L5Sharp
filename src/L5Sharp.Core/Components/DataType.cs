@@ -101,16 +101,7 @@ public class DataType : LogixComponent<DataType>
     /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {
-        var dependencies = new List<ILogixEntity>();
-
-        foreach (var member in Members)
-        {
-            if (!TryResolveType(member.DataType, out var type)) continue;
-            dependencies.Add(type);
-            dependencies.AddRange(type.Dependencies());
-        }
-
-        return dependencies.Distinct(c => c.Reference);
+        return Members.SelectMany(m => m.Dependencies()).Distinct(c => c.Reference);
     }
 
     /// <summary>
