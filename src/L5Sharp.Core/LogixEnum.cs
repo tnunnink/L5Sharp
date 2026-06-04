@@ -222,6 +222,16 @@ public abstract class LogixEnum<TEnum, TValue> : LogixEnum,
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the current enumeration instance is contained within the specified collection of options.
+    /// </summary>
+    /// <param name="options">A parameter array of enumeration values to check against.</param>
+    /// <returns><c>true</c> if the current instance is found in the specified options; otherwise, <c>false</c>.</returns>
+    public bool Is(params TEnum[] options)
+    {
+        return options.Contains(this);
+    }
+
     /// <inheritdoc />
     public override string ToString() => Value.ToString()!;
 
