@@ -1280,6 +1280,7 @@ public class TagTests
     #region ReferencesTests
 
     [Test]
+    [Explicit("Requires usage of local test file that is not in remote project")]
     public void References_ForAllTagsExampleFile_ShouldNotTakeForever()
     {
         var content = TestContent.Example;
@@ -1290,6 +1291,7 @@ public class TagTests
     }
 
     [Test]
+    [Explicit("Requires usage of local test file that is not in remote project")]
     public void TagCount()
     {
         var content = TestContent.Example;

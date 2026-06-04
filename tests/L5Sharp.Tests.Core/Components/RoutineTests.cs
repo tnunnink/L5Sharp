@@ -176,6 +176,7 @@ public class RoutineTests
     }
 
     [Test]
+    [Explicit("Requires usage of local test file that is not in remote project")]
     public void ListAllRoutinesInProjectWithRoutinesOfSameNameShouldReturnNoneEmptyCollection()
     {
         var content = TestContent.Example;
@@ -187,6 +188,7 @@ public class RoutineTests
 
     [Test]
     [Description("GitHub Issue #54: All routines should get correct parent program reference")]
+    [Explicit("Requires usage of local test file that is not in remote project")]
     public void AllRoutinesParentProgramShouldMatchScopeProgramName()
     {
         var content = TestContent.Example;

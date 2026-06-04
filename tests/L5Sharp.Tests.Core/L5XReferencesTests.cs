@@ -96,6 +96,7 @@ public class L5XReferencesTests
     #region ExampleFile
 
     [Test]
+    [Explicit("Requires usage of local test file that is not in remote project")]
     public void References_ExampleDataType_ShouldHaveNoUnused()
     {
         var content = TestContent.Example;
@@ -109,6 +110,7 @@ public class L5XReferencesTests
     }
 
     [Test]
+    [Explicit("Requires usage of local test file that is not in remote project")]
     public void References_ExampleAgainstAllTags_ShouldNotBeEmpty()
     {
         var content = TestContent.Example;

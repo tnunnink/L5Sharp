@@ -279,6 +279,7 @@ public class ReferenceTests
     }
 
     [Test]
+    [Explicit("Requires usage of local test file that is not in remote project")]
     public void PerformanceOfGettingAllTagMemberReferencesShouldBeNotTerrible()
     {
         var content = TestContent.Example;
