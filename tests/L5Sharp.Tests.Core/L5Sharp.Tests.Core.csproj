@@ -472,6 +472,9 @@
       <None Update="Entities\ParameterTests.Serialize_WithDimensions_ShouldBeVerified.verified.xml">
         <DependentUpon>ParameterTests.cs</DependentUpon>
       </None>
+      <None Update="Entities\DataTypeMemberTests.Serialize_WithAllProperties_ShouldBeVerified.verified.txt">
+        <DependentUpon>DataTypeMemberTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,0 +1,3 @@
+﻿<Member Name="FullMember" DataType="DINT" Dimension="3" Radix="Hex" ExternalAccess="Read Only" Hidden="true" Target="TargetMember" BitNumber="7">
+  <Description><![CDATA[Complete test member]]></Description>
+</Member>
