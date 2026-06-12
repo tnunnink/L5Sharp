@@ -55,16 +55,16 @@ public class Connection : LogixObject<Connection>
     /// <summary>
     /// Gets the value of the Request Packet Interval for the <see cref="Connection"/>. 
     /// </summary>
-    public int RPI
+    public int? RPI
     {
-        get => GetRequiredValue(int.Parse);
-        set => SetRequiredValue(value);
+        get => GetValue(int.Parse);
+        set => SetValue(value);
     }
 
     /// <summary>
     /// Gets the input connection point for the primary <see cref="Connection"/>.
     /// </summary>
-    public ushort InputCxnPoint
+    public ushort? InputCxnPoint
     {
         get => GetValue(ushort.Parse);
         set => SetValue(value);
@@ -73,7 +73,7 @@ public class Connection : LogixObject<Connection>
     /// <summary>
     /// Gets the input size for the <see cref="Connection"/>.
     /// </summary>
-    public ushort InputSize
+    public ushort? InputSize
     {
         get => GetValue(ushort.Parse);
         set => SetValue(value);
@@ -82,7 +82,7 @@ public class Connection : LogixObject<Connection>
     /// <summary>
     /// Gets the output connection point for the primary <see cref="Connection"/>.
     /// </summary>
-    public ushort OutputCxnPoint
+    public ushort? OutputCxnPoint
     {
         get => GetValue(ushort.Parse);
         set => SetValue(value);
@@ -91,7 +91,7 @@ public class Connection : LogixObject<Connection>
     /// <summary>
     /// Gets the output size for the <see cref="Connection"/>.
     /// </summary>
-    public ushort OutputSize
+    public ushort? OutputSize
     {
         get => GetValue(ushort.Parse);
         set => SetValue(value);
@@ -189,9 +189,9 @@ public class Connection : LogixObject<Connection>
     /// This value is used in determining the module tag name. Not all modules serialize this property
     /// but still use 'I' as the suffix character for input tags. Therefore, we will default to 'I' if not found.
     /// </remarks>
-    public string InputTagSuffix
+    public string? InputTagSuffix
     {
-        get => GetValue() ?? "I";
+        get => GetValue();
         set => SetValue(value);
     }
 
@@ -203,9 +203,9 @@ public class Connection : LogixObject<Connection>
     /// This value is used in determining the module tag name. Not all modules serialize this property
     /// but still use 'O' as the suffix character for output tags. Therefore, we will default to 'O' if not found.
     /// </remarks>
-    public string OutputTagSuffix
+    public string? OutputTagSuffix
     {
-        get => GetValue() ?? "O";
+        get => GetValue();
         set => SetValue(value);
     }
 
