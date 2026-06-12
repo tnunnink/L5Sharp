@@ -9,7 +9,7 @@ public class L5XReferencesTests
     [Test]
     public void TagReferences_ProjectWithSimpleRungReferences_ShouldBeExpectedCount()
     {
-        var project = L5X.New("MyProject", "1756-L84E", 34.1)
+        var project = L5X.New("MyProject", "1756-L84E", "34.1")
             .Add(Tag.Named("MyTag").WithValue(123).Build())
             .Add(Tag.Named("Program:MyProgram.LocalTag").WithValue<TIMER>(t => t.PRE = 5000).Build())
             .Add(Routine.Rll("MyRoutine").InProgram("MyProgram")
