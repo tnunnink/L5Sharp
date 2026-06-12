@@ -160,8 +160,9 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// </returns>
     public bool Remove(TElement element)
     {
-        // This way we use the equality override of the object if it has one.
-        var target = this.FirstOrDefault(e => Equals(e, element));
+        // This way we use the equality override of the object if it has one,
+        // or just fall back to the underlying element.
+        var target = this.FirstOrDefault(e => Equals(e, element) || e.Serialize().Equals(element.Serialize()));
 
         if (target is not null)
         {
