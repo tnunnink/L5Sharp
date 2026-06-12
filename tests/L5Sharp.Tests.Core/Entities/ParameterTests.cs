@@ -64,7 +64,7 @@ public class ParameterTests
 
         return VerifyXml(xml);
     }
-    
+
     [Test]
     public Task Serialize_OverrideParameters_ShouldBeVerified()
     {
@@ -98,22 +98,6 @@ public class ParameterTests
     }
 
     [Test]
-    public void ToTag_ValidName_ShouldBeExpected()
-    {
-        var parameter = new Parameter
-        {
-            Name = "Test",
-            DataType = "MyDataType"
-        };
-
-        var tag = parameter.ToTag("MyParameterTag");
-
-        tag.Should().NotBeNull();
-        tag.Name.Should().Be("MyParameterTag");
-        tag.DataType.Should().Be("MyDataType");
-        tag.Value.Should().BeOfType<StructureData>();
-    }
-    [Test]
     public void Clone_WhenCalled_ShouldReturnExpectedType()
     {
         var parameter = new Parameter
@@ -140,5 +124,144 @@ public class ParameterTests
         clone.Visible.Should().Be(parameter.Visible);
         clone.Constant.Should().Be(parameter.Constant);
         clone.AliasFor.Should().Be(parameter.AliasFor);
+    }
+
+    [Test]
+    public void New_NameAndDataType_ShouldHaveExpectedValues()
+    {
+        var parameter = new Parameter("TestParam", new REAL());
+
+        parameter.Name.Should().Be("TestParam");
+        parameter.DataType.Should().Be("REAL");
+        parameter.Usage.Should().Be(TagUsage.Input);
+    }
+
+    [Test]
+    public void New_NameDataTypeAndUsage_ShouldHaveExpectedValues()
+    {
+        var parameter = new Parameter("OutputParam", new BOOL(), TagUsage.Output);
+
+        parameter.Name.Should().Be("OutputParam");
+        parameter.DataType.Should().Be("BOOL");
+        parameter.Usage.Should().Be(TagUsage.Output);
+    }
+
+    [Test]
+    public void Dimensions_WhenSet_ShouldBeExpected()
+    {
+        var parameter = new Parameter
+        {
+            Name = "ArrayParam",
+            DataType = "DINT",
+            Dimensions = new Dimensions(10)
+        };
+
+        parameter.Dimensions.Should().NotBeNull();
+        parameter.Dimensions!.Length.Should().Be(10);
+    }
+
+    [Test]
+    public void Radix_WhenSet_ShouldBeExpected()
+    {
+        var parameter = new Parameter
+        {
+            Name = "HexParam",
+            DataType = "DINT",
+            Radix = Radix.Hex
+        };
+
+        parameter.Radix.Should().Be(Radix.Hex);
+    }
+
+    [Test]
+    public void ExternalAccess_WhenSet_ShouldBeExpected()
+    {
+        var parameter = new Parameter
+        {
+            Name = "ReadOnlyParam",
+            DataType = "DINT",
+            ExternalAccess = Access.ReadOnly
+        };
+
+        parameter.ExternalAccess.Should().Be(Access.ReadOnly);
+    }
+
+    [Test]
+    public void Default_WhenSet_ShouldBeExpected()
+    {
+        var parameter = new Parameter
+        {
+            Name = "DefaultParam",
+            DataType = "DINT",
+            Default = new DINT(42)
+        };
+
+        parameter.Default.Should().NotBeNull();
+        parameter.Default.Should().BeOfType<DINT>();
+    }
+
+    [Test]
+    public void ToMember_OutputParameter_ShouldBeExpected()
+    {
+        var parameter = new Parameter("OutputParam", new BOOL(true)) { Usage = TagUsage.Output };
+
+        var member = parameter.ToMember();
+
+        member.Name.Should().Be("OutputParam");
+        member.Value.Should().BeOfType<BOOL>();
+    }
+
+    [Test]
+    public void ToMember_InOutParameter_ShouldThrowException()
+    {
+        var parameter = new Parameter("InOutParam", new REAL(3.14f)) { Usage = TagUsage.InOut };
+
+        FluentActions.Invoking(() => _ = parameter.ToMember()).Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public Task Serialize_WithDimensions_ShouldBeVerified()
+    {
+        var parameter = new Parameter
+        {
+            Name = "ArrayParam",
+            DataType = "DINT",
+            Dimensions = new Dimensions(10)
+        };
+
+        var xml = parameter.Serialize().ToString();
+
+        return VerifyXml(xml);
+    }
+
+    [Test]
+    public Task Serialize_WithDefaultValue_ShouldBeVerified()
+    {
+        var parameter = new Parameter
+        {
+            Name = "ParamWithDefault",
+            DataType = "DINT",
+            Default = new DINT(100)
+        };
+
+        var xml = parameter.Serialize().ToString();
+
+        return VerifyXml(xml);
+    }
+
+    [Test]
+    public void Description_WhenNull_ShouldBeNull()
+    {
+        var parameter = new Parameter { Name = "Test", Description = null };
+
+        parameter.Description.Should().BeNull();
+    }
+
+    [Test]
+    public void AliasFor_WhenEmpty_ShouldBeEmpty()
+    {
+        var parameter = new Parameter { Name = "Test", AliasFor = string.Empty };
+
+        parameter.AliasFor.Should().Be(TagName.Empty);
     }
 }

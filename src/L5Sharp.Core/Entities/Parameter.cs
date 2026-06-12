@@ -242,28 +242,11 @@ public class Parameter : LogixEntity<Parameter>
     /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="Tag"/> instance from this <see cref="Parameter"/> configuration.
-    /// </summary>
-    /// <param name="tagName">The name of the tag.</param>
-    /// <returns>A <see cref="Tag"/> instance with the specified name and value populated using this parameter's configuration.</returns>
-    /// <exception cref="InvalidOperationException"><see cref="DataType"/> is null or empty.</exception>
-    /// <remarks>
-    /// This is a helper to allow us to generate a default tag instance from a parameter element. This will internally
-    /// generate a default <see cref="LogixData"/> instance using the configured data typ name of the parameter.
-    /// </remarks>
-    public Tag ToTag(string tagName)
-    {
-        var data = Default ?? (LogixType.TryCreate(DataType, out var registered)
-            ? registered
-            : new StructureData(DataType));
-
-        var value = Dimensions?.IsEmpty is true ? ArrayData.New(data, Dimensions) : data;
-
-        return new Tag(tagName, value);
+        if (TryResolveType(DataType, out var dataType))
+        {
+            yield return dataType;
+            foreach (var dependency in dataType.Dependencies()) yield return dependency;
+        }
     }
 
     /// <summary>
@@ -287,8 +270,8 @@ public class Parameter : LogixEntity<Parameter>
         //If the parameter has default data, we can opt to return a member with the correctly initialized data value.
         if (Default is not null)
         {
-            LogixData defaultValue = Dimensions?.IsEmpty is true ? ArrayData.New(Default, Dimensions) : Default;
-            return new LogixMember(Name, defaultValue);
+            var defaultData = Dimensions?.IsEmpty is true ? ArrayData.New(Default, Dimensions) : Default;
+            return new LogixMember(Name, defaultData);
         }
 
         //If the type is registered, we can create the instance using the registered factory.

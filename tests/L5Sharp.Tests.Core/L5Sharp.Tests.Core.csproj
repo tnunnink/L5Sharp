@@ -466,6 +466,12 @@
       <None Update="Entities\LocalTagTests.Serialize_WithNameAndValue_ShouldBeVerified.verified.xml">
         <DependentUpon>LocalTagTests.cs</DependentUpon>
       </None>
+      <None Update="Entities\ParameterTests.Serialize_WithDefaultValue_ShouldBeVerified.verified.xml">
+        <DependentUpon>ParameterTests.cs</DependentUpon>
+      </None>
+      <None Update="Entities\ParameterTests.Serialize_WithDimensions_ShouldBeVerified.verified.xml">
+        <DependentUpon>ParameterTests.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

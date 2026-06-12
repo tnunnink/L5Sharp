@@ -1,0 +1,1 @@
+﻿<Parameter Name="ArrayParam" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read/Write" Dimensions="10" />
