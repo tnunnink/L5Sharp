@@ -835,19 +835,16 @@ public abstract class LogixElement : ILogixElement
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="majorName"/> or <paramref name="minorName"/> is null or an empty string.
     /// </exception>
-    protected void SetRevision(Revision revision, string majorName, string minorName)
+    protected void SetRevision(Revision? revision, string majorName, string minorName)
     {
-        if (revision is null)
-            throw new ArgumentNullException(nameof(revision));
-
         if (string.IsNullOrEmpty(majorName))
             throw new ArgumentException("majorName can not be null or empty", nameof(majorName));
 
         if (string.IsNullOrEmpty(minorName))
             throw new ArgumentException("minorName can not be null or empty", nameof(minorName));
 
-        Element.SetAttributeValue(majorName, revision.Major);
-        Element.SetAttributeValue(minorName, revision.Minor);
+        Element.SetAttributeValue(majorName, revision?.Major);
+        Element.SetAttributeValue(minorName, revision?.Minor);
     }
 
     /// <summary>
