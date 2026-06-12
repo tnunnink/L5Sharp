@@ -64,7 +64,7 @@ internal record LogixMemberInfo(
             parameter.Parent?.Name.SanitizeName() ?? "StructureData",
             parameter.Name,
             parameter.DataType.SanitizeName(),
-            parameter.Dimensions.Length,
+            parameter.Dimensions?.Length ?? 0,
             parameter.Description
         );
     }
@@ -171,7 +171,7 @@ internal record LogixMemberInfo(
             return ComputeDimensionalSize(registered.GetSize(), Dimension);
         }
 
-        //todo these needs the context of the generator ...
+        //todo these need the context of the generator ...
         /*context.ReportDiagnostic(
             Diagnostic.Create(DiagnosticDescriptors.L5XParseWarning, Location.None, project.Path, e.Message)
         );*/
@@ -179,11 +179,14 @@ internal record LogixMemberInfo(
     }
 
     /// <summary>
-    /// 
+    /// Calculates the total size of a data structure based on its base size and dimensions.
     /// </summary>
-    /// <param name="size"></param>
-    /// <param name="dimensions"></param>
-    /// <returns></returns>
+    /// <param name="size">The base size of the data structure, typically determined by the data type.</param>
+    /// <param name="dimensions">The number of elements in the dimension, representing array size or similar structure.</param>
+    /// <returns>
+    /// The calculated size of the data structure accounting for its dimensions.
+    /// Returns the base size when dimensions are zero or non-positive; otherwise, returns the base size multiplied by the dimensions.
+    /// </returns>
     private static int ComputeDimensionalSize(int size, int dimensions)
     {
         return dimensions > 0 ? size * dimensions : size;
@@ -196,117 +199,117 @@ internal record LogixMemberInfo(
 /// </summary>
 internal static class LogixMembersInfoExtension
 {
-    /// <summary>
-    /// Generates a string containing the property definitions for a collection of <see cref="LogixMemberInfo"/> objects.
-    /// </summary>
     /// <param name="members">The collection of <see cref="LogixMemberInfo"/> objects for which to generate property definitions.</param>
-    /// <returns>
-    /// A string containing the concatenated property definitions for the provided <see cref="LogixMemberInfo"/> objects.
-    /// </returns>
-    internal static string GenerateProperties(this IEnumerable<LogixMemberInfo> members)
+    extension(IEnumerable<LogixMemberInfo> members)
     {
-        var builder = new StringBuilder();
-
-        foreach (var member in members)
+        /// <summary>
+        /// Generates a string containing the property definitions for a collection of <see cref="LogixMemberInfo"/> objects.
+        /// </summary>
+        /// <returns>
+        /// A string containing the concatenated property definitions for the provided <see cref="LogixMemberInfo"/> objects.
+        /// </returns>
+        internal string GenerateProperties()
         {
-            if (member.Hidden) continue;
-            builder.AppendLine(member.GenerateProperty());
-            builder.AppendLine();
-        }
+            var builder = new StringBuilder();
 
-        return builder.ToString().TrimEnd();
-    }
-
-    /// <summary>
-    /// Generates a string containing the initializer expressions for a collection of <see cref="LogixMemberInfo"/> objects.
-    /// </summary>
-    /// <param name="members">The collection of <see cref="LogixMemberInfo"/> objects for which to generate initializer expressions.</param>
-    /// <returns>
-    /// A string containing the concatenated initializer expressions for the provided <see cref="LogixMemberInfo"/> objects.
-    /// </returns>
-    internal static string GenerateInitializers(this IEnumerable<LogixMemberInfo> members)
-    {
-        var builder = new StringBuilder();
-
-        foreach (var member in members)
-        {
-            if (member.Hidden) continue;
-            builder.Append(member.GenerateInitializer());
-            builder.Append("\n        ");
-        }
-
-        return builder.ToString().TrimEnd();
-    }
-
-    /// <summary>
-    /// Generates the UpdateData override method implementation for a collection of <see cref="LogixMemberInfo"/> objects,
-    /// handling byte-level data updates including bit packing for boolean members and proper offset calculations for all data types.
-    /// </summary>
-    /// <param name="members">The collection of <see cref="LogixMemberInfo"/> objects for which to generate the UpdateData override implementation.</param>
-    /// <param name="context">A dictionary mapping type names to <see cref="LogixTypeInfo"/> objects,
-    /// providing size and structure information for nested complex types to calculate proper byte offsets.</param>
-    /// <returns>
-    /// A string containing the generated C# code statements for the UpdateData method body, with each member's
-    /// UpdateData call positioned at the correct byte offset within the data buffer.
-    /// </returns>
-    internal static string GenerateUpdateOverride(this IEnumerable<LogixMemberInfo> members,
-        Dictionary<string, LogixTypeInfo> context)
-    {
-        var builder = new StringBuilder();
-        var offset = 0;
-        var bitNumber = 0;
-        var hidden = new Dictionary<string, int>();
-
-        foreach (var member in members)
-        {
-            switch (member)
+            foreach (var member in members)
             {
-                // For bit members with a target backing field, we have the necessary info to determine the bit location.
-                // The backing field handles the offset, so we just need to generate the function.
-                case { DataType: "BIT", Target: not null, Hidden: false }
-                    when hidden.TryGetValue(member.Target, out var target):
+                if (member.Hidden) continue;
+                builder.AppendLine(member.GenerateProperty());
+                builder.AppendLine();
+            }
+
+            return builder.ToString().TrimEnd();
+        }
+
+        /// <summary>
+        /// Generates a string containing the initializer expressions for a collection of <see cref="LogixMemberInfo"/> objects.
+        /// </summary>
+        /// <returns>
+        /// A string containing the concatenated initializer expressions for the provided <see cref="LogixMemberInfo"/> objects.
+        /// </returns>
+        internal string GenerateInitializers()
+        {
+            var builder = new StringBuilder();
+
+            foreach (var member in members)
+            {
+                if (member.Hidden) continue;
+                builder.Append(member.GenerateInitializer());
+                builder.Append("\n        ");
+            }
+
+            return builder.ToString().TrimEnd();
+        }
+
+        /// <summary>
+        /// Generates the UpdateData override method implementation for a collection of <see cref="LogixMemberInfo"/> objects,
+        /// handling byte-level data updates including bit packing for boolean members and proper offset calculations for all data types.
+        /// </summary>
+        /// <param name="context">A dictionary mapping type names to <see cref="LogixTypeInfo"/> objects,
+        /// providing size and structure information for nested complex types to calculate proper byte offsets.</param>
+        /// <returns>
+        /// A string containing the generated C# code statements for the UpdateData method body, with each member's
+        /// UpdateData call positioned at the correct byte offset within the data buffer.
+        /// </returns>
+        internal string GenerateUpdateOverride(Dictionary<string, LogixTypeInfo> context)
+        {
+            var builder = new StringBuilder();
+            var offset = 0;
+            var bitNumber = 0;
+            var hidden = new Dictionary<string, int>();
+
+            foreach (var member in members)
+            {
+                switch (member)
                 {
-                    // Calculate which specific byte in the 4-byte DINT the bit belongs to
-                    var byteOffset = target + member.BitNumber / 8;
-                    var bitInByte = member.BitNumber % 8;
+                    // For bit members with a target backing field, we have the necessary info to determine the bit location.
+                    // The backing field handles the offset, so we just need to generate the function.
+                    case { DataType: "BIT", Target: not null, Hidden: false }
+                        when hidden.TryGetValue(member.Target, out var target):
+                    {
+                        // Calculate which specific byte in the 4-byte DINT the bit belongs to
+                        var byteOffset = target + member.BitNumber / 8;
+                        var bitInByte = member.BitNumber % 8;
 
-                    var line = $"{member.Name}.UpdateData((data[offset + {byteOffset}] & (1 << {bitInByte})) != 0);";
-                    builder.AppendLine(line);
-                    builder.Append("        ");
-                    continue;
+                        var line = $"{member.Name}.UpdateData((data[offset + {byteOffset}] & (1 << {bitInByte})) != 0);";
+                        builder.AppendLine(line);
+                        builder.Append("        ");
+                        continue;
+                    }
+                    // For some reason, certain types (Predefined/AOIs/Manipulated UDTs) can still have bool members that need
+                    // to handle packing as well. The best we can do is count each bit member until we hit the next byte.
+                    case { DataType: nameof(BOOL), Dimension: 0, Hidden: false }:
+                    {
+                        //todo this is wrong for some scenarios. Sometimes Logix uses full 4 bytes for even 1 bool. But we can't know since there is no backing field shown.
+                        if (bitNumber == 0) offset++;
+                        //todo I'm actually not sure how we know where the offset is if the bit number won't reset it might just be the location of the first boolean
+                        var line = $"{member.Name}.UpdateData((data[offset + {offset}] & (1 << {bitNumber})) != 0);";
+                        builder.AppendLine(line);
+                        builder.Append("        ");
+
+                        bitNumber = (bitNumber + 1) % 8;
+                        continue;
+                    }
                 }
-                // For some reason, certain types (Predefined/AOIs/Manipulated UDTs) can still have bool members that need
-                // to handle packing as well. The best we can do is count each bit member until we hit the next byte.
-                case { DataType: nameof(BOOL), Dimension: 0, Hidden: false }:
+
+                // If we get here, we have a non-boolean member, and it's either a hidden member that we need to track
+                // or a public member that we can generate a function for.
+                if (member.Hidden)
                 {
-                    //todo this is wrong for some scenarios. Sometimes Logix uses full 4 bytes for even 1 bool. But we can't know since there is no backing field shown.
-                    if (bitNumber == 0) offset++;
-                    //todo I'm actually not sure how we know where the offset is if the bit number won't reset it might just be the location of the first boolean
-                    var line = $"{member.Name}.UpdateData((data[offset + {offset}] & (1 << {bitNumber})) != 0);";
-                    builder.AppendLine(line);
-                    builder.Append("        ");
-
-                    bitNumber = (bitNumber + 1) % 8;
-                    continue;
+                    hidden.Add(member.Name, offset);
                 }
+                else
+                {
+                    builder.AppendLine($"{member.Name}.UpdateData(data, offset + {offset});");
+                    builder.Append("        ");
+                }
+
+                // Increment the offset by the size of the member. We don't care about alignment here.
+                offset += member.ComputeSize(context, out _);
             }
 
-            // If we get here, we have a non-boolean member, and it's either a hidden member that we need to track
-            // or a public member that we can generate a function for.
-            if (member.Hidden)
-            {
-                hidden.Add(member.Name, offset);
-            }
-            else
-            {
-                builder.AppendLine($"{member.Name}.UpdateData(data, offset + {offset});");
-                builder.Append("        ");
-            }
-
-            // Increment the offset by the size of the member. We don't care about alignment here.
-            offset += member.ComputeSize(context, out _);
+            return builder.ToString();
         }
-
-        return builder.ToString();
     }
 }
