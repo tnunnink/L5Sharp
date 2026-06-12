@@ -29,7 +29,7 @@ public class ModuleCatalogTests
     public void Create_ValidCatalogNumberAndRevision_ShouldReturnModule()
     {
         var catalog = new ModuleCatalogBuilder()
-            .AddDefinitionFor(new Module { CatalogNumber = "1756-IB16", Revision = 1.1 })
+            .AddDefinitionFor(new Module { CatalogNumber = "1756-IB16", Revision = "1.1" })
             .Build();
 
         var module = catalog.Create("MyModule", "1756-IB16", new Revision(1, 1));
@@ -158,7 +158,7 @@ public class ModuleCatalogTests
 
         var module = catalog.Create("NewName", "1756-EN2T", m =>
         {
-            m.Revision = 1.23;
+            m.Revision = "1.23";
             m.Description = "This is a new module instance based on an existing template";
             m.Inhibited = true;
         });

@@ -2,7 +2,6 @@
   <EKey State="CompatibleModule" />
   <Ports />
   <Communications>
-    <ConfigTag />
     <Connections />
   </Communications>
 </Module>

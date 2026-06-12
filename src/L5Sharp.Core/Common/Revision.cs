@@ -69,7 +69,6 @@ public sealed class Revision : IComparable
         {
             null => 1,
             Revision other => CompareRevisions(other),
-            double number => CompareRevisions(number),
             string text => CompareRevisions(text),
             _ => throw new ArgumentException($"Can not compare {obj.GetType()} with Revision value.")
         };
@@ -93,7 +92,6 @@ public sealed class Revision : IComparable
         return obj switch
         {
             Revision other => IsEqual(other),
-            double number => IsEqual(number),
             string text => IsEqual(text),
             _ => false
         };
@@ -147,32 +145,42 @@ public sealed class Revision : IComparable
     }
 
     /// <summary>
-    /// Tries to parse the provided string into a <see cref="Revision"/> value.
+    /// Attempts to parse the specified string representation of a <see cref="Revision"/> object.
     /// </summary>
-    /// <param name="value">The string to parse.</param>
-    /// <returns>A <see cref="Revision"/> representing the parsed value if successful; Otherwise, <c>null</c>.</returns>
-    public static Revision? TryParse(string? value)
+    /// <param name="value">The string representation of the revision to parse.</param>
+    /// <param name="revision">
+    /// When this method returns, contains the <see cref="Revision"/> object created from the string,
+    /// if the parsing succeeded; otherwise, null.
+    /// </param>
+    /// <returns>
+    /// true if the string representation of the revision was successfully parsed;
+    /// otherwise, false.
+    /// </returns>
+    public static bool TryParse(string? value, out Revision revision)
     {
+        revision = null!;
+
         if (value is null || value.IsEmpty())
-            return null;
+            return false;
 
         var match = RevisionPattern.Match(value);
 
         if (!match.Success)
-            return null;
+            return false;
 
         if (!ushort.TryParse(match.Groups[1].Value, out var major))
-            return null;
+            return false;
 
         ushort minor = 0;
         if (!match.Groups[2].Value.IsEmpty() && !ushort.TryParse(match.Groups[2].Value, out minor))
-            return null;
+            return false;
 
         ushort build = 0;
         if (!match.Groups[3].Value.IsEmpty() && !ushort.TryParse(match.Groups[3].Value, out build))
-            return null;
+            return false;
 
-        return new Revision(major, minor, build);
+        revision = new Revision(major, minor, build);
+        return true;
     }
 
     /// <summary>
@@ -236,18 +244,4 @@ public sealed class Revision : IComparable
     /// <param name="revision">The revision value to convert.</param>
     /// <returns>A new <see cref="Revision"/> value representing a major and minor revision.</returns>
     public static implicit operator Revision(string revision) => Parse(revision);
-
-    /// <summary>
-    /// Converts a <see cref="Revision"/> to a <see cref="string"/>.
-    /// </summary>
-    /// <param name="revision">The revision value to convert.</param>
-    /// <returns>A new <see cref="string"/> value representing a major and minor revision.</returns>
-    public static explicit operator double(Revision revision) => double.Parse($"{revision.Major}.{revision.Minor}");
-
-    /// <summary>
-    /// Converts a <see cref="string"/> to a <see cref="Revision"/>.
-    /// </summary>
-    /// <param name="revision">The revision value to convert.</param>
-    /// <returns>A new <see cref="Revision"/> value representing a major and minor revision.</returns>
-    public static implicit operator Revision(double revision) => Parse(revision.ToString(CultureInfo.InvariantCulture));
 }

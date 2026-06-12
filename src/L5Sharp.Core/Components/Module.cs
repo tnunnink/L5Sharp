@@ -41,12 +41,9 @@ public class Module : LogixComponent<Module>
         SafetyEnabled = false;
         Keying = ElectronicKeying.CompatibleModule;
 
-        //Initialize ports collection element.
+        //Initialize collection elements os we at least don't get exceptions when reading properties.
         Element.Add(new XElement(L5XName.Ports));
-
-        //Initialize private communications child element.
-        // ReSharper disable once ExplicitCallerInfoArgument
-        SetComplex(new Communications(), L5XName.Communications);
+        Element.Add(new XElement(L5XName.Communications, new XElement(L5XName.Connections)));
     }
 
     /// <inheritdoc />
@@ -124,7 +121,7 @@ public class Module : LogixComponent<Module>
     /// The revision number or hardware version of the module.
     /// </summary>
     /// <value>A <see cref="Core.Revision"/> object representing the major and minor version.</value>
-    public Revision Revision
+    public Revision? Revision
     {
         get => GetRevision(L5XName.Major, L5XName.Minor);
         set => SetRevision(value, L5XName.Major, L5XName.Minor);
@@ -210,7 +207,7 @@ public class Module : LogixComponent<Module>
     /// When creating a new module, this collection is initialized, but no connections are added since it is driven by
     /// the internals of the software. To build modules with initialized connections, you can duplicate from existing L5X or...
     /// </remarks>
-    public LogixContainer<Connection> Connections => GetComms().Connections;
+    public LogixContainer<Connection> Connections => new(GetConnections());
 
     /// <summary>
     /// Gets the slot number of the current module if one exists. If the module does not have a slot, it returns null.
@@ -242,11 +239,11 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// Returns the module's config tag object contained in the communications element.
+    /// Returns the module's config tag object contained in the communications element if it exists.
     /// </summary>
     /// <returns>A <see cref="Tag"/> containing the module's config tag data.</returns>
     /// <remarks>This is a simple helper to make accessing the module config data more concise.</remarks>
-    public Tag? Config => GetComms().ConfigTag;
+    public Tag? Config => GetConfigTag();
 
     /// <summary>
     /// Gets the parent module of this module component defined in the current L5X document.
@@ -358,20 +355,28 @@ public class Module : LogixComponent<Module>
     }
 
     /// <summary>
-    /// Retrieves the communications configuration for the module.
+    /// Retrieves the configuration tag associated with the current module.
     /// </summary>
-    /// <returns>A <see cref="Communications"/> object representing the communications configuration of the module.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown if the communications element is not found within the module's XML structure.
-    /// </exception>
-    private Communications GetComms()
+    /// <returns>
+    /// A <see cref="Tag"/> object representing the configuration tag if it exists; otherwise, null.
+    /// </returns>
+    private Tag? GetConfigTag()
     {
-        var element = Element.Element(L5XName.Communications);
+        var element = Element.Element(L5XName.Communications)?.Element(L5XName.ConfigTag);
 
         if (element is null)
-            throw Element.L5XError(L5XName.Communications);
+            return null;
 
-        return new Communications(element);
+        return new Tag(element);
+    }
+
+    /// <summary>
+    /// Retrieves a collection of connections defined within the module.
+    /// </summary>
+    /// <returns>A collection of <see cref="Connection"/> instances representing the connections within the module.</returns>
+    private IEnumerable<Connection> GetConnections()
+    {
+        return Element.Descendants(L5XName.Connection).Select(e => new Connection(e));
     }
 
     /// <summary>

@@ -37,7 +37,7 @@ public class ModuleTests
         module.Keying.Should().Be(ElectronicKeying.CompatibleModule);
         module.Ports.Should().NotBeNull();
         module.Connections.Should().BeEmpty();
-        module.Config.Should().NotBeNull();
+        module.Config.Should().BeNull();
     }
 
     [Test]
@@ -48,7 +48,7 @@ public class ModuleTests
             Name = "Test",
             Description = "This is a test module",
             CatalogNumber = "ABCD-1234",
-            Revision = 1.3,
+            Revision = "1.3",
             Vendor = 1,
             ProductType = 10,
             ProductCode = 1,
@@ -107,7 +107,7 @@ public class ModuleTests
             Name = "Test",
             Description = "This is a test module",
             CatalogNumber = "ABCD-1234",
-            Revision = 1.3,
+            Revision = "1.3",
             Vendor = 1,
             ProductType = 10,
             ProductCode = 1,

@@ -44,7 +44,7 @@ namespace L5Sharp.Tests.Core.Common
             revision.Build.Should().Be(0);
             revision.ToString().Should().Be("10.5");
         }
-        
+
         [Test]
         public void New_MajorMinorBuild_ShouldHaveExpectedValues()
         {
@@ -55,7 +55,7 @@ namespace L5Sharp.Tests.Core.Common
             revision.Build.Should().Be(13);
             revision.ToString().Should().Be("10.5.13");
         }
-        
+
         [Test]
         public void New_DoubleValue_ShouldHaveExpectedValues()
         {
@@ -71,34 +71,34 @@ namespace L5Sharp.Tests.Core.Common
         public void Parse_ValidMajorMinor_ShouldBeExpected()
         {
             var revision = Revision.Parse("1.23");
-            
+
             revision.Major.Should().Be(1);
             revision.Minor.Should().Be(23);
             revision.Build.Should().Be(0);
             revision.ToString().Should().Be("1.23");
         }
-        
+
         [Test]
         public void Parse_ValidMajorMinorBuild_ShouldBeExpected()
         {
             var revision = Revision.Parse("1.23.45");
-            
+
             revision.Major.Should().Be(1);
             revision.Minor.Should().Be(23);
             revision.Build.Should().Be(45);
             revision.ToString().Should().Be("1.23.45");
         }
-        
+
         /// <summary>
         /// Issue #42: This is according to Rockwell website.
-        /// Since leading zeros don't imact the value or the revision we treat each part as a numeric value
+        /// Since leading zeros don't impact the value or the revision, we treat each part as a numeric value
         /// and not a string. 
         /// </summary>
         [Test]
         public void Parse_ValidWithLeadingZeros_ShouldBeExpected()
         {
             var revision = Revision.Parse("7.010.001");
-            
+
             revision.Major.Should().Be(7);
             revision.Minor.Should().Be(10);
             revision.Build.Should().Be(1);
@@ -116,19 +116,19 @@ namespace L5Sharp.Tests.Core.Common
         {
             FluentActions.Invoking(() => Revision.Parse("1")).Should().Throw<FormatException>();
         }
-        
+
         [Test]
         public void Parse_InvalidMajorVersion_ShouldThrowFormatException()
         {
             FluentActions.Invoking(() => Revision.Parse("1234567.12")).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Parse_InvalidMinorVersion_ShouldThrowFormatException()
         {
             FluentActions.Invoking(() => Revision.Parse("12.1234567")).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void Parse_InvalidBuildVersion_ShouldThrowFormatException()
         {
@@ -146,84 +146,91 @@ namespace L5Sharp.Tests.Core.Common
         {
             FluentActions.Invoking(() => Revision.Parse(string.Empty)).Should().Throw<ArgumentException>();
         }
-        
+
         [Test]
         public void TryParse_ValidMajorMinor_ShouldBeExpected()
         {
-            var revision = Revision.TryParse("1.23");
-            
+            var result = Revision.TryParse("1.23", out var revision);
+
+            result.Should().BeTrue();
             revision.Should().NotBeNull();
-            revision?.Major.Should().Be(1);
-            revision?.Minor.Should().Be(23);
-            revision?.Build.Should().Be(0);
-            revision?.ToString().Should().Be("1.23");
+            revision.Major.Should().Be(1);
+            revision.Minor.Should().Be(23);
+            revision.Build.Should().Be(0);
         }
-        
+
         [Test]
         public void TryParse_ValidMajorMinorBuild_ShouldBeExpected()
         {
-            var revision = Revision.TryParse("1.23.45");
-            
+            var result = Revision.TryParse("1.23.45", out var revision);
+
+            result.Should().BeTrue();
             revision.Should().NotBeNull();
-            revision?.Major.Should().Be(1);
-            revision?.Minor.Should().Be(23);
-            revision?.Build.Should().Be(45);
-            revision?.ToString().Should().Be("1.23.45");
+            revision.Major.Should().Be(1);
+            revision.Minor.Should().Be(23);
+            revision.Build.Should().Be(45);
         }
-        
+
         [Test]
-        public void TryParse_NoMajorVersion_ShouldThrowFormatException()
+        public void TryParse_NoMajorVersion_ShouldBeFalse()
         {
-            var revision = Revision.TryParse(".12");
-            
+            var result = Revision.TryParse(".12", out var revision);
+
+            result.Should().BeFalse();
             revision.Should().BeNull();
         }
 
         [Test]
-        public void TryParse_NoMinorVersion_ShouldThrowFormatException()
+        public void TryParse_NoMinorVersion_ShouldBeFalse()
         {
-            var revision = Revision.TryParse("1");
-            
-            revision.Should().BeNull();
-        }
-        
-        [Test]
-        public void TryParse_InvalidMajorVersion_ShouldThrowFormatException()
-        {
-            var revision = Revision.TryParse("1234567.12");
-            
-            revision.Should().BeNull();
-        }
-        
-        [Test]
-        public void TryParse_InvalidMinorVersion_ShouldThrowFormatException()
-        {
-            var revision = Revision.TryParse("12.1234567");
-            
-            revision.Should().BeNull();
-        }
-        
-        [Test]
-        public void TryParse_InvalidBuildVersion_ShouldThrowFormatException()
-        {
-            var revision = Revision.TryParse("12.1.234567");
-            
+            var result = Revision.TryParse("1", out var revision);
+
+            result.Should().BeFalse();
             revision.Should().BeNull();
         }
 
         [Test]
-        public void TryParse_NullString_ShouldThrowArgumentException()
+        public void TryParse_InvalidMajorVersion_ShouldBeFalse()
         {
-            var revision = Revision.TryParse(null!);
-            
+            var result = Revision.TryParse("1234567.12", out var revision);
+
+            result.Should().BeFalse();
             revision.Should().BeNull();
         }
 
         [Test]
-        public void TryParse_EmptyString_ShouldThrowArgumentException()
+        public void TryParse_InvalidMinorVersion_ShouldBeFalse()
         {
-            var revision = Revision.TryParse(string.Empty);
-            
+            var result = Revision.TryParse("12.1234567", out var revision);
+
+            result.Should().BeFalse();
+            revision.Should().BeNull();
+        }
+
+        [Test]
+        public void TryParse_InvalidBuildVersion_ShouldBeFalse()
+        {
+            var result = Revision.TryParse("12.1.234567", out var revision);
+
+            result.Should().BeFalse();
+            revision.Should().BeNull();
+        }
+
+        [Test]
+        public void TryParse_NullString_ShouldBeFalse()
+        {
+            var result = Revision.TryParse(null!, out var revision);
+
+            result.Should().BeFalse();
+            revision.Should().BeNull();
+        }
+
+        [Test]
+        public void TryParse_EmptyString_ShouldBeFalse()
+        {
+            var result = Revision.TryParse(string.Empty, out var revision);
+
+            result.Should().BeFalse();
             revision.Should().BeNull();
         }
 
@@ -312,7 +319,7 @@ namespace L5Sharp.Tests.Core.Common
 
             result.Should().BeTrue();
         }
-        
+
         [Test]
         public void OperatorGreaterThan_FirstGreaterThanSecondWithBuild_ShouldBeTrue()
         {
@@ -334,7 +341,7 @@ namespace L5Sharp.Tests.Core.Common
 
             result.Should().BeFalse();
         }
-        
+
         [Test]
         public void OperatorLessThan_FirstGreaterThanSecondWithBuild_ShouldBeFalse()
         {
@@ -394,14 +401,6 @@ namespace L5Sharp.Tests.Core.Common
             string result = revision;
 
             result.Should().Be("1.0");
-        }
-
-        [Test]
-        public void Operator_Double_ShouldBeExpectedValue()
-        {
-            Revision revision = 1.23;
-
-            revision.Should().Be("1.23");
         }
     }
 }

@@ -194,39 +194,6 @@ public sealed class L5X
     public static L5X Empty() => new(LogixContent.Empty());
 
     /// <summary>
-    /// Retrieves a collection of <see cref="ILogixComponent"/> objects from the L5X content, optionally filtered by a specified predicate.
-    /// </summary>
-    /// <param name="predicate">
-    /// A function to test each <see cref="ILogixComponent"/> for a condition.
-    /// If null, all components are returned.
-    /// </param>
-    /// <returns>
-    /// A collection of <see cref="ILogixComponent"/> objects from the L5X content that match the specified predicate, if provided.
-    /// </returns>
-    public IEnumerable<ILogixComponent> Components(Func<ILogixComponent, bool>? predicate = null)
-    {
-        var results = Element.Descendants()
-            .Where(x => x.IsComponentElement() || x.IsModuleTagElement())
-            .Select(e => e.Deserialize<ILogixComponent>());
-
-        return predicate is not null ? results.Where(predicate) : results;
-    }
-
-    /// <summary>
-    /// Retrieves a collection of <see cref="ILogixCode"/> elements from the content, optionally filtered by a specified predicate.
-    /// </summary>
-    /// <param name="predicate">An optional function to filter the elements. The function takes an <see cref="ILogixCode"/> as input and returns a boolean indicating whether the item should be included.</param>
-    /// <returns>A filtered collection of <see cref="ILogixCode"/> elements satisfying the given predicate, or the entire collection if no predicate is provided.</returns>
-    public IEnumerable<ILogixCode> Code(Func<ILogixCode, bool>? predicate = null)
-    {
-        var results = Element.Descendants()
-            .Where(x => x.IsCodeElement())
-            .Select(e => e.Deserialize<ILogixCode>());
-
-        return predicate is not null ? results.Where(predicate) : results;
-    }
-
-    /// <summary>
     /// Retrieves a collection of <see cref="ILogixEntity"/> objects based on the specified <see cref="ReferenceType"/>.
     /// </summary>
     /// <param name="type">The <see cref="ReferenceType"/> that defines the criteria for the query.</param>
@@ -406,7 +373,8 @@ public sealed class L5X
     /// <param name="component">When this method returns, contains the component of the specified type if found,
     /// or null if the component does not exist.</param>
     /// <returns>True if the component is found; otherwise, false.</returns>
-    public bool TryGet<TComponent>(string name, out TComponent component) where TComponent : LogixComponent<TComponent>
+    public bool TryGet<TComponent>(string name, out TComponent component)
+        where TComponent : class, ILogixComponent
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name can not be null or empty.", nameof(name));
@@ -434,7 +402,7 @@ public sealed class L5X
     /// <param name="code">When this method returns, contains the retrieved <typeparamref name="TCode"/> if the operation is successful, or null if unsuccessful.</param>
     /// <returns><c>true</c> if the <typeparamref name="TCode"/> is retrieved; otherwise, <c>false</c>.</returns>
     public bool TryGet<TCode>(uint number, string program, string routine, out TCode code)
-        where TCode : LogixCode<TCode>
+        where TCode : class, ILogixCode
     {
         var reference = Reference.To<TCode>(number, program, routine);
 

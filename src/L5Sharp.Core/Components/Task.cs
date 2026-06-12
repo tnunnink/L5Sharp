@@ -104,7 +104,7 @@ public sealed class Task : LogixComponent<Task>
     /// The scan rate (ms) of the task component. Default of 10.
     /// </summary>
     /// <value>>A <see cref="ScanRate"/> value type representing the <see cref="float"/> rate of the task.</value>
-    public ScanRate Rate
+    public ScanRate? Rate
     {
         get => GetValue(ScanRate.Parse);
         set => SetValue(value);
@@ -173,7 +173,10 @@ public sealed class Task : LogixComponent<Task>
     /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
     /// <remarks>This member just returns the read-only list of scheduled programs. To modify the list, use
     /// the methods <see cref="Schedule"/> or <see cref="Cancel"/>.</remarks>
-    public IEnumerable<string> Scheduled => Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName());
+    public IEnumerable<string> Scheduled
+    {
+        get { return Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName()); }
+    }
 
     /// <inheritdoc />
     public override IEnumerable<Reference> References()

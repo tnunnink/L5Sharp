@@ -57,50 +57,6 @@ public class L5XBasicTests
     }
 
     [Test]
-    public void Components_WhenCalled_ShouldAllDeriveFromLogixComponent()
-    {
-        var content = TestContent.Test;
-
-        var components = content.Components().ToArray();
-
-        components.Should().NotBeEmpty();
-        components.Should().AllSatisfy(c => c.Should().BeAssignableTo<ILogixComponent>());
-    }
-
-    [Test]
-    public void Components_WithPredicate_ShouldReturnExpected()
-    {
-        var content = TestContent.Test;
-
-        var components = content.Components(c => c.Name.Contains("Test")).ToArray();
-
-        components.Should().NotBeEmpty();
-        components.Should().AllSatisfy(c => c.Name.Should().Contain("Test"));
-    }
-
-    [Test]
-    public void Code_WhenCalled_ShouldNotBeEmptyAndAssignableToLogixCode()
-    {
-        var content = TestContent.Test;
-
-        var code = content.Code().ToArray();
-
-        code.Should().NotBeEmpty();
-        code.Should().AllSatisfy(c => c.Should().BeAssignableTo<ILogixCode>());
-    }
-
-    [Test]
-    public void Code_ValidPredicate_ShouldHaveExpectedResults()
-    {
-        var content = TestContent.Test;
-
-        var code = content.Code(c => c.Scope.IsIn("MainProgram")).ToArray();
-
-        code.Should().NotBeEmpty();
-        code.Should().AllSatisfy(c => c.Reference.Scope.Container.Should().Be("MainProgram"));
-    }
-
-    [Test]
     public void Query_TypeNameOverload_ShouldNotBeEmpty()
     {
         var content = TestContent.Test;
@@ -156,7 +112,7 @@ public class L5XBasicTests
         results.Any(r => r is Routine).Should().BeTrue();
         results.Any(r => r is LTask).Should().BeTrue();
     }
-    
+
     [Test]
     public void Query_EntityInterface_ShouldHaveExpectedTypes()
     {
