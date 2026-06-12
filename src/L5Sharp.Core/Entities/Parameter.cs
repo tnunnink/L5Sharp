@@ -209,9 +209,9 @@ public class Parameter : LogixEntity<Parameter>
     /// A default value of the <c>Parameter</c> when instantiated.
     /// </summary>
     /// <value>An <see cref="AtomicData"/> representing the default value/data. Default is <c>null</c>.</value>
-    public AtomicData? Default
+    public LogixData? Default
     {
-        get => Element.TryGetFormattedData(out var data) ? data.As<AtomicData>() : null;
+        get => Element.TryGetFormattedData(out var data) ? data.As<LogixData>() : null;
         set => SetElement(DataFormat.Format(value, GetType()));
     }
 
