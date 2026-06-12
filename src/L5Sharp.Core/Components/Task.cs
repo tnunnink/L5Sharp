@@ -45,7 +45,6 @@ public sealed class Task : LogixComponent<Task>
         Watchdog = new Watchdog(500);
         InhibitTask = false;
         DisableUpdateOutputs = false;
-        ScheduledPrograms = [];
     }
 
     /// <summary>
