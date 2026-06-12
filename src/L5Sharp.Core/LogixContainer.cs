@@ -14,6 +14,8 @@ namespace L5Sharp.Core;
 /// <typeparam name="TElement">The type of elements in the container, constrained to <see cref="LogixElement"/>.</typeparam>
 public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, ICollection where TElement : LogixElement
 {
+    private Action? _onAttached;
+
     /// <summary>
     /// Creates a new container initialized with the provided <see cref="XElement"/>. 
     /// </summary>
@@ -21,6 +23,16 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// <exception cref="ArgumentNullException"><c>container</c> is null.</exception>
     public LogixContainer(XElement element) : base(element)
     {
+    }
+
+    /// <summary>
+    /// Creates a new container initialized with the provided <see cref="XElement"/> and an attachment callback. 
+    /// </summary>
+    /// <param name="element">The <see cref="XElement"/> containing a collection of child elements.</param>
+    /// <param name="onAttached">The callback to invoke when the container is first modified.</param>
+    internal LogixContainer(XElement element, Action onAttached) : base(element)
+    {
+        _onAttached = onAttached;
     }
 
     /// <summary>
@@ -63,7 +75,11 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     public TElement this[int index]
     {
         get => Element.Elements().ElementAt(index).Deserialize<TElement>();
-        set => Element.Elements().ElementAt(index).ReplaceWith(value.Serialize());
+        set
+        {
+            EnsureAttached();
+            Element.Elements().ElementAt(index).ReplaceWith(value.Serialize());
+        }
     }
 
     /// <summary>
@@ -73,6 +89,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// <remarks>If the provided element is null, nothing is added to the container.</remarks>
     public void Add(TElement? element)
     {
+        EnsureAttached();
         Element.Add(element?.Serialize());
     }
 
@@ -83,6 +100,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// <exception cref="ArgumentNullException"><paramref name="elements"/> is null.</exception>
     public void AddRange(IEnumerable<TElement?> elements)
     {
+        EnsureAttached();
         Element.Add(elements.Select(e => e?.Serialize()));
     }
 
@@ -91,6 +109,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// </summary>
     public void Clear()
     {
+        EnsureAttached();
         Element.RemoveNodes();
     }
 
@@ -148,6 +167,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
         if (element is null)
             throw new ArgumentNullException(nameof(element));
 
+        EnsureAttached();
         Element.Elements().ElementAt(index).AddBeforeSelf(element.Serialize());
     }
 
@@ -166,6 +186,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
 
         if (target is not null)
         {
+            EnsureAttached();
             target.Serialize().Remove();
             return true;
         }
@@ -182,6 +203,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// </exception>
     public void RemoveAt(int index)
     {
+        EnsureAttached();
         Element.Elements().ElementAt(index).Remove();
     }
 
@@ -195,6 +217,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
         if (condition is null)
             throw new ArgumentNullException(nameof(condition));
 
+        EnsureAttached();
         Element.Elements().Where(e => condition.Invoke(e.Deserialize<TElement>())).Remove();
     }
 
@@ -214,6 +237,12 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     bool ICollection<TElement>.IsReadOnly => false;
     bool ICollection.IsSynchronized => true;
     object ICollection.SyncRoot => Element;
+
+    private void EnsureAttached()
+    {
+        _onAttached?.Invoke();
+        _onAttached = null;
+    }
 }
 
 /// <summary>

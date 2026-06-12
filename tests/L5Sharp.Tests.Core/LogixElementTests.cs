@@ -405,12 +405,28 @@ public class LogixElementTests
     }
 
     [Test]
-    public void GetContainer_NoContainerElement_ShouldThrowException()
+    public void GetContainer_NoContainerElement_ShouldNotThrowAndReturnEmptyContainer()
     {
         var xml = new XElement("Test");
         var element = new TestElement(xml);
 
-        FluentActions.Invoking(() => element.ChildElements).Should().Throw<InvalidOperationException>();
+        var container = element.ChildElements;
+
+        container.Should().NotBeNull();
+        container.Should().BeEmpty();
+    }
+
+    [Test]
+    public void GetContainer_NoContainerElement_AddShouldAttachContainerAndElement()
+    {
+        var xml = new XElement("Test");
+        var element = new TestElement(xml);
+        var container = element.ChildElements;
+
+        container.Add(new ChildElement());
+
+        element.Serialize().Element("ChildElements").Should().NotBeNull();
+        element.Serialize().Element("ChildElements")!.Elements().Should().HaveCount(1);
     }
 
     [Test]

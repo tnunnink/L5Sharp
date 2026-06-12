@@ -436,10 +436,14 @@ public abstract class LogixElement : ILogixElement
 
         var container = Element.Element(name);
 
-        if (container is null)
-            throw Element.L5XError(name);
+        if (container is not null) return new LogixContainer<TElement>(container);
 
-        return new LogixContainer<TElement>(container);
+        container = new XElement(name);
+        return new LogixContainer<TElement>(container, () =>
+        {
+            Element.Add(container);
+            EnsureOrder();
+        });
     }
 
     /// <summary>
