@@ -1,1 +1,3 @@
-﻿<Task Name="" Type="PERIODIC" Priority="10" Rate="10" Watchdog="500" InhibitTask="false" DisableUpdateOutputs="false" />
+﻿<Task Name="" Type="PERIODIC" Priority="10" Rate="10" Watchdog="500" InhibitTask="false" DisableUpdateOutputs="false">
+  <ScheduledPrograms />
+</Task>

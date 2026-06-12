@@ -31,7 +31,7 @@ internal class ImportProgramBuilder(Import import) :
                 throw new InvalidOperationException(
                     $"No task with name '{taskName}' exists in the current project.");
 
-            task.Schedule(program.Name);
+            task.ScheduledPrograms.Add(program.Name);
         }));
 
         return this;

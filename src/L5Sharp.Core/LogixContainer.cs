@@ -160,12 +160,12 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     /// </returns>
     public bool Remove(TElement element)
     {
-        var xml = element.Serialize();
+        // This way we use the equality override of the object if it has one.
+        var target = this.FirstOrDefault(e => Equals(e, element));
 
-        foreach (var child in Element.Elements())
+        if (target is not null)
         {
-            if (!child.Equals(xml)) continue;
-            xml.Remove();
+            target.Serialize().Remove();
             return true;
         }
 

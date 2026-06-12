@@ -256,9 +256,12 @@ public class Program : LogixComponent<Program>
     /// or when the task with the specified name cannot be retrieved.</exception>
     public void Schedule(string? taskName = null)
     {
-        //First, unschedule if schedule already and return early if no task is provided.
-        Task?.Cancel(Name);
-        if (taskName is null || taskName.IsEmpty()) return;
+        // Unschedule from the current task if already scheduled.
+        Task?.ScheduledPrograms.Single(s => s.Name == Name).Remove();
+
+        // Exit early if null or empty.
+        if (taskName is null || taskName.IsEmpty())
+            return;
 
         if (!TryGetDocument(out var doc))
             throw new InvalidOperationException("The current program instance is not attached to a L5X document");
@@ -266,7 +269,7 @@ public class Program : LogixComponent<Program>
         if (doc.TryGet<Task>(taskName, out var task))
             throw new InvalidOperationException($"Could not retrieve task: {taskName}");
 
-        task.Schedule(Name);
+        task.ScheduledPrograms.Add(Name);
     }
 
     /// <summary>
@@ -277,7 +280,9 @@ public class Program : LogixComponent<Program>
     /// </returns>
     private Task? GetScheduledTask()
     {
-        if (!TryGetDocument(out var doc)) return null;
-        return doc.Tasks.FirstOrDefault(t => t.Scheduled.Any(p => p.IsEquivalent(Name)));
+        if (!TryGetDocument(out var doc)) 
+            return null;
+        
+        return doc.Tasks.FirstOrDefault(t => t.ScheduledPrograms.Any(s => s.Name.IsEquivalent(Name)));
     }
 }

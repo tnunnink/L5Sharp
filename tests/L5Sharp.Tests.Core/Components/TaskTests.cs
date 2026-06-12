@@ -26,7 +26,7 @@ namespace L5Sharp.Tests.Core.Components
             task.Watchdog.Should().Be(new Watchdog(500));
             task.InhibitTask.Should().BeFalse();
             task.DisableUpdateOutputs.Should().BeFalse();
-            task.Scheduled.Should().BeEmpty();
+            task.ScheduledPrograms.Should().BeEmpty();
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace L5Sharp.Tests.Core.Components
             task.Watchdog.Should().Be(new Watchdog(501));
             task.InhibitTask.Should().BeTrue();
             task.DisableUpdateOutputs.Should().BeTrue();
-            task.Scheduled.Should().BeEmpty();
+            task.ScheduledPrograms.Should().BeEmpty();
         }
 
         [Test]
@@ -95,9 +95,9 @@ namespace L5Sharp.Tests.Core.Components
         {
             var task = new LTask();
 
-            task.Schedule("Test");
+            task.ScheduledPrograms.Add(new ScheduledProgram("Test"));
 
-            task.Scheduled.Should().HaveCount(1);
+            task.ScheduledPrograms.Should().HaveCount(1);
         }
 
         [Test]
@@ -105,11 +105,11 @@ namespace L5Sharp.Tests.Core.Components
         {
             var task = new LTask();
 
-            task.Schedule("Test");
-            task.Scheduled.Should().HaveCount(1);
+            task.ScheduledPrograms.Add("Test");
+            task.ScheduledPrograms.Should().HaveCount(1);
 
-            task.Cancel("Test");
-            task.Scheduled.Should().BeEmpty();
+            task.ScheduledPrograms.Remove("Test");
+            task.ScheduledPrograms.Should().BeEmpty();
         }
 
         [Test]
@@ -137,10 +137,10 @@ namespace L5Sharp.Tests.Core.Components
                 DisableUpdateOutputs = true
             };
 
-            task.Schedule("Program1");
-            task.Schedule("Test");
-            task.Schedule("Another");
-            task.Schedule("Another");
+            task.ScheduledPrograms.Add("Program1");
+            task.ScheduledPrograms.Add("Test");
+            task.ScheduledPrograms.Add("Another");
+            task.ScheduledPrograms.Add("Another");
 
             var xml = task.Serialize().ToString();
 

@@ -45,6 +45,7 @@ public sealed class Task : LogixComponent<Task>
         Watchdog = new Watchdog(500);
         InhibitTask = false;
         DisableUpdateOutputs = false;
+        ScheduledPrograms = [];
     }
 
     /// <summary>
@@ -164,18 +165,16 @@ public sealed class Task : LogixComponent<Task>
     /// scheduled name, this will return an empty collection.
     /// </remarks>
     public IEnumerable<Program> Programs => TryGetDocument(out var doc)
-        ? doc.Programs.Where(p => Scheduled.Contains(p.Name))
+        ? doc.Programs.Where(p => ScheduledPrograms.Any(s => s.Name.IsEquivalent(p.Name)))
         : [];
 
     /// <summary>
-    /// The collection of program names that are scheduled for the task.
+    /// 
     /// </summary>
-    /// <value>A <see cref="IEnumerable{T}"/> containing the string program names.</value>
-    /// <remarks>This member just returns the read-only list of scheduled programs. To modify the list, use
-    /// the methods <see cref="Schedule"/> or <see cref="Cancel"/>.</remarks>
-    public IEnumerable<string> Scheduled
+    public LogixContainer<ScheduledProgram> ScheduledPrograms
     {
-        get { return Element.Descendants(L5XName.ScheduledProgram).Select(e => e.LogixName()); }
+        get => GetContainer<ScheduledProgram>();
+        set => SetContainer(value);
     }
 
     /// <inheritdoc />
@@ -188,7 +187,7 @@ public sealed class Task : LogixComponent<Task>
     public override IEnumerable<ILogixEntity> Dependencies()
     {
         if (!TryGetDocument(out var doc)) return [];
-        return doc.Programs.Where(p => Scheduled.Contains(p.Name));
+        return doc.Programs.Where(p => ScheduledPrograms.Contains(p.Name));
     }
 
     /// <inheritdoc />
@@ -204,41 +203,11 @@ public sealed class Task : LogixComponent<Task>
         if (!TryGetDocument(out var doc)) return;
 
         doc.Programs
-            .Where(p => Scheduled.Contains(p.Name))
+            .Where(p => ScheduledPrograms.Contains(p.Name))
             .ToList()
             .ForEach(p => p.Delete());
 
         Element.Remove();
-    }
-
-    /// <summary>
-    /// Adds the provided program name to the underlying list of <see cref="Scheduled"/>.
-    /// </summary>
-    /// <param name="program">The name of the program to schedule.</param>
-    public void Schedule(string program)
-    {
-        var element = new XElement(L5XName.ScheduledProgram, new XAttribute(L5XName.Name, program));
-
-        if (Element.Element(L5XName.ScheduledPrograms) is null)
-            Element.Add(new XElement(L5XName.ScheduledPrograms));
-
-        Element.Element(L5XName.ScheduledPrograms)!.Add(element);
-    }
-
-    /// <summary>
-    /// Removes the specified program name from the underlying list of <see cref="Scheduled"/> programs.
-    /// </summary>
-    /// <param name="program">The name of the program to cancel.</param>
-    public void Cancel(string program)
-    {
-        var scheduled = Element.Element(L5XName.ScheduledPrograms);
-
-        if (scheduled is null) return;
-
-        scheduled.Elements(L5XName.ScheduledProgram).FirstOrDefault(p => p.LogixName() == program)?.Remove();
-
-        if (!scheduled.Elements().Any())
-            scheduled.Remove();
     }
 
     /// <summary>
@@ -255,6 +224,6 @@ public sealed class Task : LogixComponent<Task>
             throw new InvalidOperationException("Can not add program to detached Task component.");
 
         doc.Programs.Add(program);
-        Schedule(program.Name);
+        ScheduledPrograms.Add(new ScheduledProgram(program.Name));
     }
 }
