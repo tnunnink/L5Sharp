@@ -31,8 +31,8 @@ public class ConnectionTests
         connection.OutputRedundantOwner.Should().BeNull();
         connection.Unicast.Should().BeNull();
         connection.EventId.Should().Be(0);
-        connection.InputTagSuffix.Should().Be("I");
-        connection.OutputTagSuffix.Should().Be("O");
+        connection.InputTagSuffix.Should().BeNull();
+        connection.OutputTagSuffix.Should().BeNull();
     }
 
     [Test]
