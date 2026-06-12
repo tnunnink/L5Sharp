@@ -231,7 +231,7 @@ public class Parameter : LogixEntity<Parameter>
     /// This property navigates the hierarchy to find the nearest ancestor of type <see cref="AddOnInstruction"/>,
     /// or returns null if no such ancestor exists.
     /// </summary>
-    public AddOnInstruction? Parent => GetAncestor<AddOnInstruction>();
+    public AddOnInstruction? Parent => GetParentInstruction();
 
     /// <summary>
     /// Represents the associated alias of the parameter if one is defined.
@@ -304,5 +304,32 @@ public class Parameter : LogixEntity<Parameter>
     private Parameter? GetAlias()
     {
         return GetAncestor<AddOnInstruction>()?.LocalTags.SingleOrDefault(t => t.Name == AliasFor);
+    }
+
+    /// <summary>
+    /// Retrieves the parent <see cref="AddOnInstruction"/> of the current parameter, if one exists.
+    /// </summary>
+    /// <returns>
+    /// An instance of <see cref="AddOnInstruction"/> representing the parent Add-On Instruction,
+    /// or null if the parameter is not part of an Add-On Instruction.
+    /// </returns>
+    private AddOnInstruction? GetParentInstruction()
+    {
+        var parent = Element
+            .Ancestors()
+            .FirstOrDefault(e =>
+            {
+                switch (e.Name.LocalName)
+                {
+                    case L5XName.AddOnInstructionDefinition:
+                    case L5XName.EncodedData when
+                        (e.Attribute(L5XName.EncodedType)?.Value == L5XName.AddOnInstructionDefinition):
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+        return parent is not null ? new AddOnInstruction(parent) : null;
     }
 }
