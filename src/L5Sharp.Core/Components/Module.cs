@@ -207,7 +207,7 @@ public class Module : LogixComponent<Module>
     /// When creating a new module, this collection is initialized, but no connections are added since it is driven by
     /// the internals of the software. To build modules with initialized connections, you can duplicate from existing L5X or...
     /// </remarks>
-    public LogixContainer<Connection> Connections => new(GetConnections());
+    public LogixContainer<Connection> Connections => GetConnections();
 
     /// <summary>
     /// Gets the slot number of the current module if one exists. If the module does not have a slot, it returns null.
@@ -374,9 +374,25 @@ public class Module : LogixComponent<Module>
     /// Retrieves a collection of connections defined within the module.
     /// </summary>
     /// <returns>A collection of <see cref="Connection"/> instances representing the connections within the module.</returns>
-    private IEnumerable<Connection> GetConnections()
+    private LogixContainer<Connection> GetConnections()
     {
-        return Element.Descendants(L5XName.Connection).Select(e => new Connection(e));
+        var container = Element.Element(L5XName.Communications)?.Element(L5XName.Connections);
+
+        if (container is not null)
+            return new LogixContainer<Connection>(container);
+
+        // We have to account for user attempting to add a connection to an empty/orphaned collection
+        return new LogixContainer<Connection>(e =>
+        {
+            var comms = Element.Element(L5XName.Communications);
+
+            if (comms is null)
+                Element.Add(new XElement(L5XName.Communications, e));
+            else
+                comms.Add(e);
+
+            EnsureOrder();
+        });
     }
 
     /// <summary>

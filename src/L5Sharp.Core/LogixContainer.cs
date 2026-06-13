@@ -14,7 +14,7 @@ namespace L5Sharp.Core;
 /// <typeparam name="TElement">The type of elements in the container, constrained to <see cref="LogixElement"/>.</typeparam>
 public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, ICollection where TElement : LogixElement
 {
-    private Action? _onAttached;
+    private Action<XElement>? _onAttached;
 
     /// <summary>
     /// Creates a new container initialized with the provided <see cref="XElement"/>. 
@@ -26,11 +26,10 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
     }
 
     /// <summary>
-    /// Creates a new container initialized with the provided <see cref="XElement"/> and an attachment callback. 
+    /// Creates an empty container with a callback action that is invoked when the container is first attached to a parent element.
     /// </summary>
-    /// <param name="element">The <see cref="XElement"/> containing a collection of child elements.</param>
-    /// <param name="onAttached">The callback to invoke when the container is first modified.</param>
-    internal LogixContainer(XElement element, Action onAttached) : base(element)
+    /// <param name="onAttached">The action to invoke when the container element is attached, receiving the container's XElement as a parameter.</param>
+    internal LogixContainer(Action<XElement> onAttached) : this()
     {
         _onAttached = onAttached;
     }
@@ -240,7 +239,7 @@ public sealed class LogixContainer<TElement> : LogixElement, IList<TElement>, IC
 
     private void EnsureAttached()
     {
-        _onAttached?.Invoke();
+        _onAttached?.Invoke(Element);
         _onAttached = null;
     }
 }

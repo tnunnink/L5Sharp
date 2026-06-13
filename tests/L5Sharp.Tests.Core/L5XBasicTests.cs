@@ -310,6 +310,22 @@ public class L5XBasicTests
             .ScrubMember("LastModifiedDate");
     }
 
+    /// <summary>
+    /// This was to test a bug I found in the code for creating new LogixContainer
+    /// that need proper callback to add to the L5X tree to get parents.
+    /// </summary>
+    [Test]
+    public void GetParent_FromConnection_ShouldNotBeNull()
+    {
+        var content = TestContent.Test;
+
+        var connections = content.Modules.SelectMany(m => m.Connections).ToList();
+
+        var invalid = connections.Where(c => c.GetParent<Module>() is null);
+
+        invalid.Should().BeEmpty();
+    }
+
 
     [DotMemoryUnit(FailIfRunWithoutSupport = false)]
     [Test]

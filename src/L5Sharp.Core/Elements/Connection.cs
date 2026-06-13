@@ -8,6 +8,7 @@ namespace L5Sharp.Core;
 /// A component of a <see cref="Module"/> that represents the properties and data of the connection to the field device.
 /// </summary>
 [LogixElement(L5XName.Connection)]
+[LogixElement(L5XName.RackConnection)]
 public class Connection : LogixObject<Connection>
 {
     /// <inheritdoc />
@@ -46,10 +47,10 @@ public class Connection : LogixObject<Connection>
     /// <summary>
     /// Gets the name of the <see cref="Connection"/> component.
     /// </summary>
-    public string Name
+    public string? Name
     {
-        get => GetRequiredValue();
-        set => SetRequiredValue(value);
+        get => GetValue();
+        set => SetValue(value);
     }
 
     /// <summary>
