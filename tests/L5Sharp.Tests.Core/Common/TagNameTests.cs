@@ -688,5 +688,19 @@ namespace L5Sharp.Tests.Core.Common
 
             result.Should().Be(1);
         }
+
+        [TestCase("MyTag")]
+        [TestCase("Motor1.Status")]
+        public void IsTag_ValidTagName_ShouldReturnTrue(string value)
+        {
+            TagName.IsTag(value).Should().BeTrue();
+        }
+
+        [TestCase(" MyTag")]
+        [TestCase(" Motor1.Status")]
+        public void IsTag_TagWithLeadingSpace_ShouldReturnFalse(string value)
+        {
+            TagName.IsTag(value).Should().BeFalse();
+        }
     }
 }

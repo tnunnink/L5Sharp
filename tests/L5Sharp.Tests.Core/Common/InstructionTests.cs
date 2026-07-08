@@ -356,5 +356,17 @@ namespace L5Sharp.Tests.Core.Common
 
             text.Should().Be("OTE(MyTag)");
         }
+
+        [TestCase("MOV(Motor1.Status, PanelLights.Green)", 2)]
+        [TestCase("ADD(Tank_Level.PV, Tank_Level.Offset, Tank_Level.Corrected)", 3)]
+        public void Parse_CommaSeparatedArgsWithWhitespace_ShouldParseAllAsReferences(string text, int expectedCount)
+        {
+            var instructions = Instruction.Parse(text).ToList();
+
+            var arguments = instructions[0].Arguments.ToList();
+
+            arguments.Should().HaveCount(expectedCount);
+            arguments.Should().AllSatisfy(a => a.IsReference.Should().BeTrue());
+        }
     }
 }

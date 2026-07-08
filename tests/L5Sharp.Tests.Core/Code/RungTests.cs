@@ -204,4 +204,54 @@ public class RungTests
 
         return VerifyXml(xml);
     }
+
+    [TestCase("MOV(Flow_Rate, Flow_Rate_Scaled);", new[] { "Flow_Rate", "Flow_Rate_Scaled" })]
+    [TestCase("ADD(Tank_Level.PV, Tank_Level.Offset, Tank_Level.Corrected);", new[] { "Tank_Level.PV", "Tank_Level.Offset", "Tank_Level.Corrected" })]
+    [TestCase("MOV(Motor1.Status, PanelLights.Green);", new[] { "Motor1.Status", "PanelLights.Green" })]
+    [TestCase("TON(Motor1_Timer, Timer_Preset, Timer_Accum);", new[] { "Motor1_Timer", "Timer_Preset", "Timer_Accum" })]
+    [TestCase("MOV(5000, Motor1_Timer.PRE);", new[] { "Motor1_Timer.PRE" })]
+    public void Tags_RungWithMultipleArgs_ShouldCountAllTagReferences(string text, string[] expectedTags)
+    {
+        var rung = new Rung(text);
+
+        var tags = rung.Tags().ToList();
+
+        tags.Should().HaveCount(expectedTags.Length);
+        foreach (var expected in expectedTags)
+        {
+            tags.Should().Contain(t => (string)t == expected);
+        }
+    }
+
+    [TestCase("XIC(Motor1_Start)OTE(Motor1_Start);", new[] { "Motor1_Start" }, new[] { 2 })]
+    [TestCase("XIC(Motor1_Start)XIO(Motor1_Stop)OTE(Motor1_Start);", new[] { "Motor1_Start", "Motor1_Stop" }, new[] { 2, 1 })]
+    [TestCase("XIC(Motor1_Status.Running)OTE(Motor1_Status.Running);", new[] { "Motor1_Status.Running" }, new[] { 2 })]
+    public void Tags_RungWithDuplicateTagInMultipleInstructions_ShouldCountEachOccurrence(
+        string text, string[] tagNames, int[] expectedCounts)
+    {
+        var rung = new Rung(text);
+
+        var tags = rung.Tags().ToList();
+
+        tags.Should().HaveCount(expectedCounts.Sum());
+        for (var i = 0; i < tagNames.Length; i++)
+        {
+            tags.Count(t => (string)t == tagNames[i]).Should().Be(expectedCounts[i]);
+        }
+    }
+
+    [Test]
+    public void Tags_RungWithBranchAndNestedInstructions_ShouldCountAllReferences()
+    {
+        var rung = new Rung("[XIC(Start),XIO(Stop)]OTE(Motor);MOV(Motor_Status, Log);");
+
+        var tags = rung.Tags().ToList();
+
+        tags.Should().HaveCount(5);
+        tags.Count(t => (string)t == "Start").Should().Be(1);
+        tags.Count(t => (string)t == "Stop").Should().Be(1);
+        tags.Count(t => (string)t == "Motor").Should().Be(1);
+        tags.Count(t => (string)t == "Motor_Status").Should().Be(1);
+        tags.Count(t => (string)t == "Log").Should().Be(1);
+    }
 }

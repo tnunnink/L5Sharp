@@ -22,6 +22,52 @@ public class L5XReferencesTests
         references.Should().HaveCount(3);
     }
 
+    [Test]
+    public void TagReferences_RungWithCommaSeparatedArgs_ShouldCountAllOccurrences()
+    {
+        var project = L5X.New("MyProject", "1756-L84E", "34.1")
+            .Add(Tag.Named("Source").WithValue(100).Build())
+            .Add(Tag.Named("Source.Member").WithValue(200).Build())
+            .Add(Routine.Rll("MyRoutine").InProgram("MyProgram")
+                .WithRung("MOV(Source, Source.Member);")
+                .Build());
+
+        var sourceRefs = project.Tags.Get("Source").References().ToList();
+        var memberRefs = project.Tags.Get("Source.Member").References().ToList();
+
+        sourceRefs.Should().HaveCount(1);
+        memberRefs.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void TagReferences_SameTagUsedTwiceInDifferentInstructions_ShouldCountBoth()
+    {
+        var project = L5X.New("MyProject", "1756-L84E", "34.1")
+            .Add(Tag.Named("MyTag").WithValue(123).Build())
+            .Add(Routine.Rll("MyRoutine").InProgram("MyProgram")
+                .WithRung("XIC(MyTag)OTE(MyTag);")
+                .Build());
+
+        var references = project.Tags.Get("MyTag").References().ToList();
+
+        references.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void TagReferences_SameTagUsedTwiceInSameInstruction_ShouldCountBoth()
+    {
+        var project = L5X.New("MyProject", "1756-L84E", "34.1")
+            .Add(Tag.Named("MyTag").WithValue(100).Build())
+            .Add(Tag.Named("Dest").WithValue(0).Build())
+            .Add(Routine.Rll("MyRoutine").InProgram("MyProgram")
+                .WithRung("ADD(MyTag, MyTag, Dest);")
+                .Build());
+
+        var references = project.Tags.Get("MyTag").References().ToList();
+
+        references.Should().HaveCount(2);
+    }
+
     #region TestFile
 
     [Test]

@@ -162,4 +162,14 @@ public class ArgumentTests
         text.Should().NotBeNull();
         text.ToString().Should().Be("SomeTag > 100");
     }
+
+    [TestCase(" Motor1.Status")]
+    [TestCase(" MyTag")]
+    public void New_TagWithLeadingWhitespace_ShouldBeReference(string value)
+    {
+        Argument argument = value;
+
+        argument.Type.Should().Be(ArgumentType.Reference);
+        argument.IsReference.Should().BeTrue();
+    }
 }
