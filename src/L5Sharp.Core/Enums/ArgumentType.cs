@@ -26,12 +26,15 @@ public sealed class ArgumentType : LogixEnum<ArgumentType, string>
     public static ArgumentType Of(string value)
     {
         if (string.IsNullOrEmpty(value)) return Empty;
-        if (value.StartsWith('\'') && value.EndsWith('\'')) return String;
-        if (Radix.TryInfer(value, out _)) return Atomic;
+
+        var trimmed = value.Trim();
+
+        if (trimmed.StartsWith('\'') && trimmed.EndsWith('\'')) return String;
+        if (Radix.TryInfer(trimmed, out _)) return Atomic;
         // We can use the tag name patter match because system components should pass this as well
-        if (TagName.IsTag(value)) return Reference;
+        if (TagName.IsTag(trimmed)) return Reference;
         // todo I think we need to include bitwise operators (AND, OR, XOR, etc.)
-        if (value.IndexOfAny(['=', '>', '<', '+', '-', '*', '/', '(', ')']) >= 0) return Expression;
+        if (trimmed.IndexOfAny(['=', '>', '<', '+', '-', '*', '/', '(', ')']) >= 0) return Expression;
         return Unknown;
     }
 
