@@ -205,7 +205,7 @@ public sealed class Instruction
                 continue;
             }
 
-            if (token.Type == TokenType.CloseParen)
+            if (token.Type == TokenType.CloseParen && depth > 0)
             {
                 depth--;
                 if (depth > 0) continue;
