@@ -371,14 +371,15 @@ public class NeutralTextTests
     }
 
     [Test]
-    public void Tokenize_UnexpectedCharacter_ShouldThrowArgumentException()
+    public void Tokenize_UnexpectedCharacter_ShouldBeUnknown()
     {
-        var text = new NeutralText("MyTag #"); // # alone is not valid at start of token
+        var text = new NeutralText("MyTag #");
+        
+        var tokens = text.Tokenize().ToList();
 
-        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-        Action act = () => text.Tokenize().ToList();
-
-        act.Should().Throw<ArgumentException>().WithMessage("*Unexpected character '#'*");
+        tokens.Should().HaveCount(3);
+        tokens[1].Value.Should().Be("#");
+        tokens[1].Type.Should().Be(TokenType.Unknown);
     }
 
     [Test]
