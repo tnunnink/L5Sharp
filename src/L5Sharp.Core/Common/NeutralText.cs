@@ -61,8 +61,7 @@ public class NeutralText
                 _ when IsString(current) => ConsumeString(_text, ref position),
                 _ when char.IsDigit(current) => ConsumeWhile(_text, ref position, IsLiteral),
                 _ when char.IsLetter(current) || current is '_' => ConsumeWhile(_text, ref position, IsIdentifier),
-                _ => throw new ArgumentException(
-                    $"Unexpected character '{current}' at position {position} of text: {_text}")
+                _ => ConsumeUnknown(current, ref position)
             };
 
             yield return token;
@@ -195,9 +194,19 @@ public class NeutralText
         var token = text.Substring(start, position - start);
         return new NeutralToken(TokenType.Comment, token, start);
     }
+    
+    /// <summary>
+    /// Creates a new instance of the <see cref="NeutralToken"/> representing an invalid token.
+    /// </summary>
+    private static NeutralToken ConsumeUnknown(char current, ref int position)
+    {
+        var start = position;
+        position++;
+        return new NeutralToken(TokenType.Unknown, current.ToString(), start);
+    }
 
     /// <summary>
-    /// Retrieves the character at the specified position plus one in the given text,
+    /// Retrieves the character at the specified position plus one in the given text
     /// or returns the minimum value of the <see cref="char"/> type if the index is out of range.
     /// </summary>
     /// <param name="index">The base zero position of the character to peek at.</param>
