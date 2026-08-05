@@ -104,4 +104,13 @@ public class ArgumentTypeTests
 
         type.Should().Be(ArgumentType.Reference);
     }
+
+    [TestCase(" MyTag")]
+    [TestCase(" Motor1.Status")]
+    public void Of_TagWithLeadingSpace_ShouldBeReference(string value)
+    {
+        var type = ArgumentType.Of(value);
+
+        type.Should().Be(ArgumentType.Reference);
+    }
 }
