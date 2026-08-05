@@ -12,7 +12,6 @@
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
         <Title>L5Sharp.Generators.Data</Title>
         <Authors>Timothy Nunnink</Authors>
-        <Version>7.6.3</Version>
         <Description>Includes source generators for automatically generating user defined data types from L5X projects.</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
