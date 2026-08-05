@@ -295,17 +295,26 @@ internal class LogixIndex
     {
         if (!element.IsCodeElement()) return;
 
-        var code = element.Deserialize<ILogixCode>();
-        AddOrUpdateElement(code.Reference, element);
-
-        foreach (var instruction in code.Instructions())
+        try
         {
-            var reference = code.Reference.At(instruction);
+            var code = element.Deserialize<ILogixCode>();
+            AddOrUpdateElement(code.Reference, element);
 
-            AddOrUpdateReference(instruction.Key, reference);
+            foreach (var instruction in code.Instructions())
+            {
+                var reference = code.Reference.At(instruction);
 
-            foreach (var tag in instruction.Arguments.Where(a => a.IsReference))
-                AddOrUpdateReference(tag, reference);
+                AddOrUpdateReference(instruction.Key, reference);
+
+                foreach (var tag in instruction.Arguments.Where(a => a.IsReference))
+                    AddOrUpdateReference(tag, reference);
+            }
+        }
+        catch (Exception)
+        {
+            // Never let a single unparseable code element fail the entire project index.
+            // Worst case, this element's references are simply not indexed.
+            // This is temporary and will be going away anyway in the next major release.
         }
     }
 

@@ -350,16 +350,36 @@ public class NeutralTextTests
         tokens[4].Value.Should().Be("// trailing comment");
         tokens[5].Type.Should().Be(TokenType.EOF);
     }
+    
+    [Test]
+    public void Tokenize_UnrecognizedCharacters_ShouldNotThrow()
+    {
+        string[] samples =
+        [
+            @"\DCM0.i_bOffsetCalcExe := 1;",   // program parameter reference
+            "myTag.@Alarms.almMyAlarm",        // alarm manager syntax
+            "#region ExampleCSharpRegion",     // arbitrary CDATA content
+            "Change#1: ",                      // hash after identifier
+            "%unquoted% )stray paren("         // stray percent + unbalanced parens
+        ];
+
+        foreach (NeutralText text in samples)
+        {
+            FluentActions.Invoking(() => text.Tokenize().ToList()).Should().NotThrow();
+            FluentActions.Invoking(() => Instruction.Parse(text).ToList()).Should().NotThrow();
+        }
+    }
 
     [Test]
-    public void Tokenize_UnexpectedCharacter_ShouldThrowArgumentException()
+    public void Tokenize_UnexpectedCharacter_ShouldBeUnknown()
     {
-        var text = new NeutralText("MyTag #"); // # alone is not valid at start of token
+        var text = new NeutralText("MyTag #");
+        
+        var tokens = text.Tokenize().ToList();
 
-        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-        Action act = () => text.Tokenize().ToList();
-
-        act.Should().Throw<ArgumentException>().WithMessage("*Unexpected character '#'*");
+        tokens.Should().HaveCount(3);
+        tokens[1].Value.Should().Be("#");
+        tokens[1].Type.Should().Be(TokenType.Unknown);
     }
 
     [Test]
