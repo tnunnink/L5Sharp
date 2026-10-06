@@ -122,19 +122,29 @@ internal class LogixIndex
     /// Retrieves all references associated with the specified name.
     /// </summary>
     /// <param name="name">The name for which references are to be found. Must not be null or empty.</param>
+    /// <param name="includeSubmembers">Whether to include tag submembers of the specified name in the search</param>
     /// <returns>
     /// A collection of <see cref="Reference"/> objects representing the references associated with the given name.
     /// If no references are found, an empty collection is returned.
     /// </returns>
     /// <exception cref="ArgumentException">Thrown when the provided name is null or empty.</exception>
-    public IEnumerable<Reference> FindReferences(string name)
+    public IEnumerable<Reference> FindReferences(string name, bool includeSubmembers = false)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Name cannot be null or empty.", nameof(name));
-
+        
         IndexIfRequired();
+        
+        if (!includeSubmembers)
+            return _references.TryGetValue(name, out var references) ? references : [];
+        
+        var referenceKeys = _references.Keys.Where(key =>
+            key.StartsWith($"{name}.", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(key, name, StringComparison.OrdinalIgnoreCase));
+        var allReferences = referenceKeys.SelectMany(key =>
+            _references.TryGetValue(key, out var references) ? references : []);
 
-        return _references.TryGetValue(name, out var references) ? references : [];
+        return allReferences;
     }
 
     /// <summary>

@@ -449,6 +449,19 @@ public class Tag : LogixComponent<Tag>
         return document.References(TagName.LocalPath).Where(r => r.Scope.IsVisibleTo(Scope));
     }
 
+    /// <summary>
+    /// Retrieves a collection of <see cref="Reference"/> objects associated with the current tag.
+    /// </summary>
+    /// <param name="includeSubmembers">Specifies whether to include references for submembers of the tag.</param>
+    /// <returns>A collection of <see cref="Reference"/> that represent the references of the tag in the project.</returns>
+    public IEnumerable<Reference> References(bool includeSubmembers)
+    {
+        if (!TryGetDocument(out var document))
+            return [];
+
+        return document.References(TagName.LocalPath, includeSubmembers).Where(r => r.Scope.IsVisibleTo(Scope));
+    }
+
     /// <inheritdoc />
     public override IEnumerable<ILogixEntity> Dependencies()
     {

@@ -420,6 +420,7 @@ public sealed class L5X
     /// provided string name.
     /// </summary>
     /// <param name="name">The name ot find references for in the project.</param>
+    /// <param name="includeSubmembers">Whether to include tag submembers of the specified name in the search</param>
     /// <returns>A collection of <see cref="Reference"/> objects that represent references to the name.</returns>
     /// <remarks>
     /// The name typically represents a logix component such as a <c>Tag</c>, <c>DataType</c>, <c>AOI</c>, etc.
@@ -427,9 +428,9 @@ public sealed class L5X
     /// repeated lookups in read-only scenarios, frequent modifications to the underlying XML will trigger reindexing,
     /// which may impact performance.
     /// </remarks>
-    public IEnumerable<Reference> References(string name)
+    public IEnumerable<Reference> References(string name, bool includeSubmembers = false)
     {
-        return _index.FindReferences(name);
+        return _index.FindReferences(name, includeSubmembers);
     }
 
     /// <summary>

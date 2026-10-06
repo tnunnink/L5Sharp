@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using L5Sharp.Tests.Core.Data.Custom;
 
 
 namespace L5Sharp.Tests.Core;
@@ -17,9 +18,38 @@ public class L5XReferencesTests
                 .WithRung("XIC(MyTag)OTE(MyTag);")
                 .Build());
 
-        var references = project.Tags.Get("MyTag").References().ToList();
+        var references = project.Tags.Get("MyTag").References(true).ToList();
         
         references.Should().HaveCount(3);
+    }
+
+    [Test]
+    public void TagReferences_RungWithBitAddressedDintTag_ShouldCountAllOccurrences()
+    {
+        var project = L5X.New("MyProject", "1756-L84E", "34.1")
+            .Add(Tag.Named("SingleDint").WithValue(123).Build())
+            .Add(Routine.Rll("MyRoutine").InProgram("MyProgram")
+                .WithRung("XIC(SingleDint.0)TON(LocalTag,?,?);")
+                .WithRung("XIC(SingleDint.1)OTE(SingleDint.2);")
+                .Build());
+
+        var references = project.Tags.Get("SingleDint").References(true).ToList();
+
+        references.Should().HaveCount(3);
+    }
+
+    [Test]
+    public void TagReferences_RungWithTagSubmembers_ShouldCountAllOccurrences()
+    {
+        var project = L5X.New("MyProject", "1756-L84E", "34.1")
+            .Add(Tag.Named("NestedTag").WithValue(new MyNestedData()).Build())
+            .Add(Routine.Rll("MyRoutine").InProgram("MyProgram")
+                .WithRung("XIC(NestedTag.Indy)OTE(NestedTag.Flags[0]);")
+                .Build());
+
+        var references = project.Tags.Get("NestedTag").References(true).ToList();
+
+        references.Should().HaveCount(2);
     }
 
     [Test]
